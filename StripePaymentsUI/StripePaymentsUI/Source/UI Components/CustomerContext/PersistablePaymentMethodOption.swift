@@ -5,43 +5,44 @@
 
 import Foundation
 
-@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) public enum PersistablePaymentMethodOptionError: Error {
+@_spi(PrivateBetaSavedPaymentMethodsSheet) public enum PersistablePaymentMethodOptionError: Error {
     case unableToEncode(PersistablePaymentMethodOption)
     case unableToDecode(String?)
 }
 
-@objc @_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) public class PersistablePaymentMethodOption: NSObject, Codable {
+@objc @_spi(PrivateBetaSavedPaymentMethodsSheet) public class PersistablePaymentMethodOption: NSObject {
     public enum PersistablePaymentMethodOptionType: Codable {
         case applePay
         case link
+        // We'd prefer an enum with an associated value for this case, but it needs to remain Objective-C compatible
         case stripe
     }
     public let stripePaymentMethodId: String?
     public let type: PersistablePaymentMethodOptionType
-    public var value: String? {
+    public var value: String {
         switch type {
         case .applePay:
             return "apple_pay"
         case .link:
             return "link"
         case .stripe:
-            return stripePaymentMethodId
+            return stripePaymentMethodId! // It isn't possible to initialize PersistablePaymentMethodOption with a nil string
         }
     }
 
     public static func applePay() -> PersistablePaymentMethodOption {
-        return PersistablePaymentMethodOption(type: .applePay, stripePaymentMethodId: nil)
+        return PersistablePaymentMethodOption(type: .applePay)
     }
     public static func link() -> PersistablePaymentMethodOption {
-        return PersistablePaymentMethodOption(type: .link, stripePaymentMethodId: nil)
+        return PersistablePaymentMethodOption(type: .link)
     }
 
     public static func stripePaymentMethod(_ paymentMethodId: String) -> PersistablePaymentMethodOption {
-        return PersistablePaymentMethodOption(type: .stripe, stripePaymentMethodId: paymentMethodId)
+        return PersistablePaymentMethodOption(stripePaymentMethodId: paymentMethodId)
     }
 
-    public init?(legacyValue: String) {
-        switch legacyValue {
+    public init(value: String) {
+        switch value {
         case "apple_pay":
             self.type = .applePay
             self.stripePaymentMethodId = nil
@@ -49,16 +50,19 @@ import Foundation
             self.type = .link
             self.stripePaymentMethodId = nil
         default:
-            if legacyValue.hasPrefix("pm_") {
-                self.type = .stripe
-                self.stripePaymentMethodId = legacyValue
-            } else {
-                 return nil
-            }
+            self.type = .stripe
+            self.stripePaymentMethodId = value
         }
     }
-    private init(type: PersistablePaymentMethodOptionType, stripePaymentMethodId: String?) {
+    
+    private init(type: PersistablePaymentMethodOptionType) {
         self.type = type
+        self.stripePaymentMethodId = nil
+        assert(type != .stripe) // Can't initialize a Stripe type without an ID string
+    }
+
+    private init(stripePaymentMethodId: String) {
+        self.type = .stripe
         self.stripePaymentMethodId = stripePaymentMethodId
     }
 
@@ -71,16 +75,8 @@ import Foundation
         var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
 
         let key = customerID ?? ""
+        customerToDefaultPaymentMethodID[key] = paymentMethodOption.value
 
-        let encoder = JSONEncoder()
-        do {
-            let data = try encoder.encode(paymentMethodOption)
-            if let data_string = String(data: data, encoding: .utf8) {
-                customerToDefaultPaymentMethodID[key] = data_string
-            }
-        } catch {
-            // no-op
-        }
         UserDefaults.standard.customerToLastSelectedPaymentMethod = customerToDefaultPaymentMethodID
     }
 
@@ -90,17 +86,23 @@ import Foundation
     static public func defaultPaymentMethod(for customerID: String?) -> PersistablePaymentMethodOption? {
         let key = customerID ?? ""
 
-        guard let value = UserDefaults.standard.customerToLastSelectedPaymentMethod?[key],
-              let data = value.data(using: .utf8) else {
+        guard let value = UserDefaults.standard.customerToLastSelectedPaymentMethod?[key] else {
             return nil
         }
 
-        let decoder = JSONDecoder()
-        do {
-            return try decoder.decode(PersistablePaymentMethodOption.self, from: data)
-        } catch {
-            return PersistablePaymentMethodOption(legacyValue: value)
+        return PersistablePaymentMethodOption(value: value)
+    }
+    
+    public override func isEqual(_ object: Any?) -> Bool {
+        if self === (object as? PersistablePaymentMethodOption) {
+            return true
         }
-
+        if object == nil || !(object is PersistablePaymentMethodOption) {
+            return false
+        }
+        if let object = object as? PersistablePaymentMethodOption {
+            return (self.value == object.value)
+        }
+        return false
     }
 }

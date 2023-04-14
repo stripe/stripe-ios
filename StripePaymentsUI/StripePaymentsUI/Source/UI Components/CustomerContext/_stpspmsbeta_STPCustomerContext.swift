@@ -354,8 +354,8 @@ import Foundation
         })
     }
 
-    @_spi(STP) public func saveLastSelectedPaymentMethodID(
-        forCustomer paymentMethodID: String?,
+    @_spi(STP) public func saveLastSelectedPaymentMethodIDForCustomer(
+        paymentMethodID: String?,
         completion: STPErrorBlock?
     ) {
         keyManager.getOrCreateKey({ ephemeralKey, retrieveKeyError in
@@ -412,42 +412,18 @@ import Foundation
     }
     @objc public func setSelectedPaymentMethodOption(paymentOption: PersistablePaymentMethodOption?, completion: @escaping(Error?) -> Void
     ) {
-        guard let paymentOption = paymentOption else {
-            self.saveLastSelectedPaymentMethodID(forCustomer: nil, completion: completion)
-            return
-        }
-        let encoder = JSONEncoder()
-        do {
-            let data = try encoder.encode(paymentOption)
-            guard let data_string = String(data: data, encoding: .utf8) else {
-                completion(PersistablePaymentMethodOptionError.unableToEncode(paymentOption))
-                return
-            }
-            self.saveLastSelectedPaymentMethodID(forCustomer: data_string, completion: completion)
-        } catch {
-            completion(PersistablePaymentMethodOptionError.unableToEncode(paymentOption))
-            return
+        self.saveLastSelectedPaymentMethodIDForCustomer(paymentMethodID: paymentOption?.value) { error in
+            completion(error)
         }
     }
     @objc public func retrieveSelectedPaymentMethodOption(completion: @escaping (PersistablePaymentMethodOption?, Error?) -> Void
     ) {
-        self.retrieveLastSelectedPaymentMethodIDForCustomer { paymentMethod, _ in
-            guard let paymentMethod = paymentMethod,
-                  let data = paymentMethod.data(using: .utf8) else {
-                completion(nil, nil)
+        self.retrieveLastSelectedPaymentMethodIDForCustomer { paymentMethod, error in
+            guard let paymentMethod = paymentMethod else {
+                completion(nil, error)
                 return
             }
-            let decoder = JSONDecoder()
-            do {
-                let decoded = try decoder.decode(PersistablePaymentMethodOption.self, from: data)
-                completion(decoded, nil)
-            } catch {
-                if let legacyValue = PersistablePaymentMethodOption(legacyValue: paymentMethod) {
-                    completion(legacyValue, nil)
-                    return
-                }
-                completion(nil, PersistablePaymentMethodOptionError.unableToDecode(paymentMethod))
-            }
+            completion(PersistablePaymentMethodOption(value: paymentMethod), nil)
         }
     }
 }
