@@ -38,7 +38,7 @@ extension SavedPaymentMethodsSheet {
             }
         if case .new(let confirmParams) = paymentOption,
            case .setupIntent(let setupIntent) = intent {
-            let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret)
+            let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret, paymentMethodID: nil)
             setupIntentParams.returnURL = configuration.returnURL
             setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
             paymentHandler.confirmSetupIntent(
