@@ -66,7 +66,8 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
         apiClient
             .consumerSessionLookup(
-                emailAddress: emailAddress
+                emailAddress: emailAddress,
+                clientSecret: clientSecret
             )
             .chained { [weak self] lookupConsumerSessionResponse in
                 self?.consumerSession = lookupConsumerSessionResponse.consumerSession

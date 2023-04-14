@@ -57,7 +57,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     }
 
     func lookup(emailAddress: String) -> Future<LookupConsumerSessionResponse> {
-        return apiClient.consumerSessionLookup(emailAddress: emailAddress)
+        return apiClient.consumerSessionLookup(emailAddress: emailAddress, clientSecret: clientSecret)
     }
 
     func saveToLink(emailAddress: String, phoneNumber: String, countryCode: String) -> Future<Void> {
