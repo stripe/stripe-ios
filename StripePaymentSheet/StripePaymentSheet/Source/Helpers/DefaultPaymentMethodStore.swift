@@ -37,7 +37,7 @@ final class DefaultPaymentMethodStore {
             }
         }
         func persistablePaymentMethodOption() -> PersistablePaymentMethodOption {
-            switch(self) {
+            switch self {
             case .applePay:
                 return .applePay()
             case .link:
