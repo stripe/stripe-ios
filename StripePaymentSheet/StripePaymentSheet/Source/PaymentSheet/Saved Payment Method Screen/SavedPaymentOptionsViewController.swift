@@ -11,6 +11,7 @@ import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
 protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
@@ -36,12 +37,12 @@ class SavedPaymentOptionsViewController: UIViewController {
         case saved(paymentMethod: STPPaymentMethod)
         case add
 
-        static func ==(lhs: Selection, rhs: DefaultPaymentMethodStore.PaymentMethodIdentifier?) -> Bool {
+        static func ==(lhs: Selection, rhs: PersistablePaymentMethodOption?) -> Bool {
             switch lhs {
             case .link:
-                return rhs == .link
+                return rhs?.type == .link
             case .applePay:
-                return rhs == .applePay
+                return rhs?.type == .applePay
             case .saved(let paymentMethod):
                 return paymentMethod.stripeId == rhs?.value
             case .add:
@@ -200,7 +201,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Private methods
     private func updateUI() {
-        let defaultPaymentMethod = DefaultPaymentMethodStore.defaultPaymentMethod(for: configuration.customerID)
+        let defaultPaymentMethod = PersistablePaymentMethodOption.defaultPaymentMethod(for: configuration.customerID)
 
         // Move default to front
         var savedPaymentMethods = self.savedPaymentMethods
@@ -256,8 +257,8 @@ class SavedPaymentOptionsViewController: UIViewController {
             return
         }
 
-        DefaultPaymentMethodStore.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
-        selectedViewModelIndex = viewModels.firstIndex(where: { $0 == .link })
+        PersistablePaymentMethodOption.setDefaultPaymentMethod(.link(), forCustomer: configuration.customerID)
+        selectedViewModelIndex = viewModels.firstIndex(where: { $0 == .link() })
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredHorizontally)
     }
 }
@@ -317,12 +318,12 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             // Should have been handled in shouldSelectItemAt: before we got here!
             assertionFailure()
         case .applePay:
-            DefaultPaymentMethodStore.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
+            PersistablePaymentMethodOption.setDefaultPaymentMethod(.applePay(), forCustomer: configuration.customerID)
         case .link:
-            DefaultPaymentMethodStore.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+            PersistablePaymentMethodOption.setDefaultPaymentMethod(.link(), forCustomer: configuration.customerID)
         case .saved(let paymentMethod):
-            DefaultPaymentMethodStore.setDefaultPaymentMethod(
-                .stripe(id: paymentMethod.stripeId),
+            PersistablePaymentMethodOption.setDefaultPaymentMethod(
+                .stripePaymentMethod(paymentMethod.stripeId),
                 forCustomer: configuration.customerID
             )
         }

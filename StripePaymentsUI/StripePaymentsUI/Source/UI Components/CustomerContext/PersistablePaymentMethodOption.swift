@@ -5,12 +5,12 @@
 
 import Foundation
 
-public enum PersistablePaymentMethodOptionError: Error {
+@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) public enum PersistablePaymentMethodOptionError: Error {
     case unableToEncode(PersistablePaymentMethodOption)
     case unableToDecode(String?)
 }
 
-@objc public class PersistablePaymentMethodOption: NSObject, Codable {
+@objc @_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) public class PersistablePaymentMethodOption: NSObject, Codable {
     public enum PersistablePaymentMethodOptionType: Codable {
         case applePay
         case link
@@ -60,5 +60,47 @@ public enum PersistablePaymentMethodOptionError: Error {
     private init(type: PersistablePaymentMethodOptionType, stripePaymentMethodId: String?) {
         self.type = type
         self.stripePaymentMethodId = stripePaymentMethodId
+    }
+
+
+    /// Sets the default payment method for a given customer.
+    /// - Parameters:
+    ///   - identifier: Payment method identifier.
+    ///   - customerID: ID of the customer. Pass `nil` for anonymous users.
+    static public func setDefaultPaymentMethod(_ paymentMethodOption: PersistablePaymentMethodOption, forCustomer customerID: String?) {
+        var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
+
+        let key = customerID ?? ""
+
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(paymentMethodOption)
+            if let data_string = String(data: data, encoding: .utf8) {
+                customerToDefaultPaymentMethodID[key] = data_string
+            }
+        } catch {
+            // no-op
+        }
+        UserDefaults.standard.customerToLastSelectedPaymentMethod = customerToDefaultPaymentMethodID
+    }
+
+    /// Returns the identifier of the default payment method for a customer.
+    /// - Parameter customerID: ID of the customer. Pass `nil` for anonymous users.
+    /// - Returns: Default payment method.
+    static public func defaultPaymentMethod(for customerID: String?) -> PersistablePaymentMethodOption? {
+        let key = customerID ?? ""
+
+        guard let value = UserDefaults.standard.customerToLastSelectedPaymentMethod?[key],
+              let data = value.data(using: .utf8) else {
+            return nil
+        }
+
+        let decoder = JSONDecoder()
+        do {
+            return try decoder.decode(PersistablePaymentMethodOption.self, from: data)
+        } catch {
+            return PersistablePaymentMethodOption(legacyValue: value)
+        }
+
     }
 }
