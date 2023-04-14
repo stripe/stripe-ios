@@ -11,6 +11,7 @@ import SwiftUI
 import UIKit
 
 @testable import Stripe
+@_spi(STP) import StripePaymentsUI
 
 class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate,
     STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate

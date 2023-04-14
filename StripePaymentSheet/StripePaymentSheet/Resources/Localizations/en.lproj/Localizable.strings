@@ -79,6 +79,9 @@
 /* Text of a notification shown to the user when a login code is successfully sent via SMS. */
 "Code sent" = "Code sent";
 
+/* A button used to confirm selecting a saved payment method */
+"Confirm" = "Confirm";
+
 /* Title for the contact information section */
 "Contact information" = "Contact information";
 

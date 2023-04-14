@@ -8,20 +8,19 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 import UIKit
 
-protocol STPEphemeralKeyManagerProtocol {
+@_spi(STP) public protocol _stpspmsbeta_STPEphemeralKeyManagerProtocol {
     /// If the retriever's stored ephemeral key has not expired, it will be
     /// returned immediately to the given callback. If the stored key is expiring, a
     /// new key will be requested from the key provider, and returned to the callback.
     /// If the retriever is unable to provide an unexpired key, an error will be returned.
     /// - Parameter completion: The callback to be run with the returned key, or an error.
-    func getOrCreateKey(_ completion: @escaping STPEphemeralKeyCompletionBlock)
+    func getOrCreateKey(_ completion: @escaping _stpspmsbeta_STPEphemeralKeyCompletionBlock)
 }
 
-typealias STPEphemeralKeyCompletionBlock = (STPEphemeralKey?, Error?) -> Void
-class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
+@_spi(STP) public typealias _stpspmsbeta_STPEphemeralKeyCompletionBlock = (_stpspmsbeta_STPEphemeralKey?, Error?) -> Void
+@_spi(STP) public class _stpspmsbeta_STPEphemeralKeyManager: NSObject, _stpspmsbeta_STPEphemeralKeyManagerProtocol {
     private var _expirationInterval: TimeInterval = 0.0
     /// If the current ephemeral key expires in less than this time interval, a call
     /// to `getOrCreateKey` will request a new key from the manager's key provider.
@@ -43,15 +42,15 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
     ///   - apiVersion:                The Stripe API version the manager will use.
     ///   - performsEagerFetching:     If the manager should eagerly refresh its key on app foregrounding.
     /// - Returns: the newly-initiated `STPEphemeralKeyManager`.
-    @objc init(
+    @objc @_spi(STP) public init(
         keyProvider: Any?,
         apiVersion: String,
         performsEagerFetching: Bool
     ) {
         super.init()
         assert(
-            keyProvider is STPCustomerEphemeralKeyProvider
-                || keyProvider is STPIssuingCardEphemeralKeyProvider,
+            keyProvider is _stpspmsbeta_STPCustomerEphemeralKeyProvider
+                || keyProvider is _stpspmsbeta_STPIssuingCardEphemeralKeyProvider,
             "Your STPEphemeralKeyProvider must either implement `STPCustomerEphemeralKeyProvider` or `STPIssuingCardEphemeralKeyProvider`."
         )
         expirationInterval = DefaultExpirationInterval
@@ -66,7 +65,7 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
         )
     }
 
-    @objc dynamic func getOrCreateKey(_ completion: @escaping STPEphemeralKeyCompletionBlock) {
+    @objc @_spi(STP) public dynamic func getOrCreateKey(_ completion: @escaping _stpspmsbeta_STPEphemeralKeyCompletionBlock) {
         if currentKeyIsUnexpired() {
             completion(ephemeralKey, nil)
         } else {
@@ -78,7 +77,7 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
                     completion(nil, error)
                 })
             } else {
-                createKeyPromise = STPPromise<STPEphemeralKey>.init().onSuccess({ key in
+                createKeyPromise = STPPromise<_stpspmsbeta_STPEphemeralKey>.init().onSuccess({ key in
                     self.ephemeralKey = key
                     completion(key, nil)
                 }).onFailure({ error in
@@ -89,11 +88,11 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
         }
     }
 
-    @objc internal var ephemeralKey: STPEphemeralKey?
+    @objc internal var ephemeralKey: _stpspmsbeta_STPEphemeralKey?
     private var apiVersion: String?
     private var keyProvider: Any?
     @objc internal var lastEagerKeyRefresh: Date?
-    private var createKeyPromise: STPPromise<STPEphemeralKey>?
+    private var createKeyPromise: STPPromise<_stpspmsbeta_STPEphemeralKey>?
 
     deinit {
         NotificationCenter.default.removeObserver(
@@ -129,7 +128,7 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
     func _createKey() {
         let jsonCompletion =
             { (jsonResponse: [AnyHashable: Any]?, error: Error?) in
-                let key = STPEphemeralKey.decodedObject(fromAPIResponse: jsonResponse)
+                let key = _stpspmsbeta_STPEphemeralKey.decodedObject(fromAPIResponse: jsonResponse)
                 if let key = key {
                     self.createKeyPromise?.succeed(key)
                 } else {
@@ -139,12 +138,12 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
                     } else {
                         // the ephemeral key could not be decoded
                         self.createKeyPromise?.fail(NSError.stp_ephemeralKeyDecodingError())
-                        if self.keyProvider is STPCustomerEphemeralKeyProvider {
+                        if self.keyProvider is _stpspmsbeta_STPCustomerEphemeralKeyProvider {
                             assert(
                                 false,
                                 "Could not parse the ephemeral key response following protocol STPCustomerEphemeralKeyProvider. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/basic#prepare-your-api"
                             )
-                        } else if self.keyProvider is STPIssuingCardEphemeralKeyProvider {
+                        } else if self.keyProvider is _stpspmsbeta_STPIssuingCardEphemeralKeyProvider {
                             assert(
                                 false,
                                 "Could not parse the ephemeral key response following protocol STPIssuingCardEphemeralKeyProvider. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/basic#prepare-your-api"
@@ -159,14 +158,14 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
                 self.createKeyPromise = nil
             } as STPJSONResponseCompletionBlock
 
-        if keyProvider is STPCustomerEphemeralKeyProvider {
-            weak var provider = keyProvider as? STPCustomerEphemeralKeyProvider
+        if keyProvider is _stpspmsbeta_STPCustomerEphemeralKeyProvider {
+            weak var provider = keyProvider as? _stpspmsbeta_STPCustomerEphemeralKeyProvider
             provider?.createCustomerKey(
                 withAPIVersion: apiVersion ?? "",
                 completion: jsonCompletion
             )
-        } else if keyProvider is STPIssuingCardEphemeralKeyProvider {
-            weak var provider = keyProvider as? STPIssuingCardEphemeralKeyProvider
+        } else if keyProvider is _stpspmsbeta_STPIssuingCardEphemeralKeyProvider {
+            weak var provider = keyProvider as? _stpspmsbeta_STPIssuingCardEphemeralKeyProvider
             provider?.createIssuingCardKey(
                 withAPIVersion: apiVersion ?? "",
                 completion: jsonCompletion

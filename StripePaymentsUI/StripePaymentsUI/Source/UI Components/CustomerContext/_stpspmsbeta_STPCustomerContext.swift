@@ -8,7 +8,6 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 
 /// An `STPCustomerContext` retrieves and updates a Stripe customer and their attached
 /// payment methods using an ephemeral key, a short-lived API key scoped to a specific
@@ -16,7 +15,7 @@ import Foundation
 /// be sure to either create a new instance of `STPCustomerContext` or clear the current
 /// instance's cache. On your backend, be sure to create and return a
 /// new ephemeral key for the Customer object associated with the new user.
-open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
+@_spi(PrivateBetaSavedPaymentMethodsSheet) open class _stpspmsbeta_STPCustomerContext: NSObject, _stpspmsbeta_STPBackendAPIAdapter {
     /// Initializes a new `STPCustomerContext` with the specified key provider.
     /// Upon initialization, a CustomerContext will fetch a new ephemeral key from
     /// your backend and use it to prefetch the customer object specified in the key.
@@ -27,7 +26,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
     /// - Returns: the newly-instantiated customer context.
     @objc(initWithKeyProvider:)
     public convenience init(
-        keyProvider: STPCustomerEphemeralKeyProvider
+        keyProvider: _stpspmsbeta_STPCustomerEphemeralKeyProvider
     ) {
         self.init(keyProvider: keyProvider, apiClient: STPAPIClient.shared)
     }
@@ -44,10 +43,10 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
     /// - Returns: the newly-instantiated customer context.
     @objc(initWithKeyProvider:apiClient:)
     public convenience init(
-        keyProvider: STPCustomerEphemeralKeyProvider?,
+        keyProvider: _stpspmsbeta_STPCustomerEphemeralKeyProvider?,
         apiClient: STPAPIClient
     ) {
-        let keyManager = STPEphemeralKeyManager(
+        let keyManager = _stpspmsbeta_STPEphemeralKeyManager(
             keyProvider: keyProvider,
             apiVersion: STPAPIClient.apiVersion,
             performsEagerFetching: true
@@ -119,17 +118,18 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
         }
     }
     @objc internal var paymentMethodsRetrievedDate: Date?
-    private var keyManager: STPEphemeralKeyManagerProtocol
+    private var keyManager: _stpspmsbeta_STPEphemeralKeyManagerProtocol
     private var apiClient: STPAPIClient
 
     init(
-        keyManager: STPEphemeralKeyManagerProtocol,
+        keyManager: _stpspmsbeta_STPEphemeralKeyManagerProtocol,
         apiClient: STPAPIClient
     ) {
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPCustomerContext.self)
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: _stpspmsbeta_STPCustomerContext.self)
         self.keyManager = keyManager
         self.apiClient = apiClient
         _includeApplePayPaymentMethods = false
+
         super.init()
         retrieveCustomer(nil)
         listPaymentMethodsForCustomer(completion: nil)
@@ -354,8 +354,8 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
         })
     }
 
-    func saveLastSelectedPaymentMethodID(
-        forCustomer paymentMethodID: String?,
+    @_spi(STP) public func saveLastSelectedPaymentMethodIDForCustomer(
+        paymentMethodID: String?,
         completion: STPErrorBlock?
     ) {
         keyManager.getOrCreateKey({ ephemeralKey, retrieveKeyError in
@@ -387,7 +387,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
         })
     }
 
-    func retrieveLastSelectedPaymentMethodIDForCustomer(
+    @_spi(STP) public func retrieveLastSelectedPaymentMethodIDForCustomer(
         completion: @escaping (String?, Error?) -> Void
     ) {
         keyManager.getOrCreateKey({ ephemeralKey, retrieveKeyError in
@@ -397,14 +397,34 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
                 })
                 return
             }
+            guard let customerID = ephemeralKey.customerID else {
+                completion(nil, NSError.stp_ephemeralKeyDecodingError())
+                return
+            }
 
             let customerToDefaultPaymentMethodID =
                 (UserDefaults.standard.dictionary(forKey: kLastSelectedPaymentMethodDefaultsKey))
                 as? [String: String] ?? [:]
             stpDispatchToMainThreadIfNecessary({
-                completion(customerToDefaultPaymentMethodID[ephemeralKey.customerID ?? ""], nil)
+                completion(customerToDefaultPaymentMethodID[customerID], nil)
             })
         })
+    }
+    @objc public func setSelectedPaymentMethodOption(paymentOption: PersistablePaymentMethodOption?, completion: @escaping(Error?) -> Void
+    ) {
+        self.saveLastSelectedPaymentMethodIDForCustomer(paymentMethodID: paymentOption?.value) { error in
+            completion(error)
+        }
+    }
+    @objc public func retrieveSelectedPaymentMethodOption(completion: @escaping (PersistablePaymentMethodOption?, Error?) -> Void
+    ) {
+        self.retrieveLastSelectedPaymentMethodIDForCustomer { paymentMethod, error in
+            guard let paymentMethod = paymentMethod else {
+                completion(nil, error)
+                return
+            }
+            completion(PersistablePaymentMethodOption(value: paymentMethod), nil)
+        }
     }
 }
 
@@ -414,6 +434,6 @@ private let kLastSelectedPaymentMethodDefaultsKey =
 private let CachedCustomerMaxAge: TimeInterval = 60
 
 /// :nodoc:
-@_spi(STP) extension STPCustomerContext: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "STPCustomerContext"
+@_spi(STP) extension _stpspmsbeta_STPCustomerContext: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "_stpspmsbeta_STPCustomerContext"
 }
