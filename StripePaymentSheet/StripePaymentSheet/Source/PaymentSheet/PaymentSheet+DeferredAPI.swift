@@ -85,6 +85,7 @@ extension PaymentSheet {
                             intent: intent,
                             paymentOption: deferredIntentContext.paymentOption,
                             paymentHandler: deferredIntentContext.paymentHandler,
+                            paymentMethodID: paymentMethod.stripeId,
                             completion: deferredIntentContext.completion)
                 }
 

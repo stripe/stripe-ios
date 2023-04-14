@@ -33,6 +33,7 @@ extension PaymentSheet {
         intent: Intent,
         paymentOption: PaymentOption,
         paymentHandler: STPPaymentHandler,
+        paymentMethodID: String? = nil,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
         // Translates a STPPaymentHandler result to a PaymentResult
@@ -109,7 +110,8 @@ extension PaymentSheet {
                 } else {
                     let paymentIntentParams = confirmParams.makeParams(
                         paymentIntentClientSecret: paymentIntent.clientSecret,
-                        configuration: configuration
+                        configuration: configuration,
+                        paymentMethodID: paymentMethodID
                     )
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
@@ -128,7 +130,8 @@ extension PaymentSheet {
                 }
             // MARK: ↪ SetupIntent
             case .setupIntent(let setupIntent):
-                let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret)
+                let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret,
+                                                                 paymentMethodID: paymentMethodID)
                 setupIntentParams.returnURL = configuration.returnURL
                 // Paypal requires mandate_data if setting up
                 if confirmParams.paymentMethodType.stpPaymentMethodType == .payPal {
