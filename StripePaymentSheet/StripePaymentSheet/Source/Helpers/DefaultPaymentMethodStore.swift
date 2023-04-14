@@ -36,6 +36,16 @@ final class DefaultPaymentMethodStore {
                 self = .stripe(id: value)
             }
         }
+        func persistablePaymentMethodOption() -> PersistablePaymentMethodOption {
+            switch(self) {
+            case .applePay:
+                return .applePay()
+            case .link:
+                return .link()
+            case .stripe(let id):
+                return .stripePaymentMethod(id)
+            }
+        }
     }
 
     /// Sets the default payment method for a given customer.
@@ -46,19 +56,16 @@ final class DefaultPaymentMethodStore {
         var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
 
         let key = customerID ?? ""
-        // Set Default to legacy behavior
-        customerToDefaultPaymentMethodID[key] = identifier.value
 
-        if let paymentMethodOption = PersistablePaymentMethodOption(legacyValue: identifier.value) {
-            let encoder = JSONEncoder()
-            do {
-                let data = try encoder.encode(paymentMethodOption)
-                if let data_string = String(data: data, encoding: .utf8) {
-                    customerToDefaultPaymentMethodID[key] = data_string
-                }
-            } catch {
-                // no-op
+        let paymentMethodOption = identifier.persistablePaymentMethodOption()
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(paymentMethodOption)
+            if let data_string = String(data: data, encoding: .utf8) {
+                customerToDefaultPaymentMethodID[key] = data_string
             }
+        } catch {
+            // no-op
         }
         UserDefaults.standard.customerToLastSelectedPaymentMethod = customerToDefaultPaymentMethodID
     }
