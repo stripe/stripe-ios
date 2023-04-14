@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodSheet.swift
+//  SavedPaymentMethodsSheet.swift
 //  StripePaymentSheet
 //
 //
@@ -189,8 +189,6 @@ extension SavedPaymentMethodsSheet: LoadingViewControllerDelegate {
     ) {
         self.listPaymentMethodsForCustomer { paymentMethods, error in
             guard let paymentMethods = paymentMethods, error == nil else {
-                // TODO: Pass errors from the customerContext
-                let error = PaymentSheetError.unknown(debugDescription: "Failed to retrieve PaymentMethods for the customer")
                 completion(nil, error)
                 return
             }
