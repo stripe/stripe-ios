@@ -18,13 +18,7 @@ class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: SavedPaymentMethodsAddPaymentMethodViewControllerDelegate?
     lazy var paymentMethodTypes: [PaymentSheet.PaymentMethodType] = {
-        guard let intent = intent else {
-            return [.card]
-        }
-        let paymentMethodTypes = PaymentSheet.PaymentMethodType.recommendedPaymentMethodTypes(from: intent)
-            .filter { $0 == .card }
-        assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
-        return paymentMethodTypes
+        return [.card]
     }()
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         return paymentMethodTypesView.selected
@@ -38,7 +32,6 @@ class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
         return nil
     }
     // MARK: - Writable Properties
-    private let intent: Intent?
     private let configuration: SavedPaymentMethodsSheet.Configuration
 
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
@@ -67,12 +60,10 @@ class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
     }
 
     required init(
-        intent: Intent?,
         configuration: SavedPaymentMethodsSheet.Configuration,
         delegate: SavedPaymentMethodsAddPaymentMethodViewControllerDelegate
     ) {
         self.configuration = configuration
-        self.intent = intent
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = configuration.appearance.colors.background
@@ -137,7 +128,6 @@ class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
 
     private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
         let formElement = SavedPaymentMethodsFormFactory(
-            intent: intent,
             configuration: configuration,
             paymentMethod: type
         ).make()! // TODO(wooj) Don't force unwrap

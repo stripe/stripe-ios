@@ -148,8 +148,9 @@ extension SavedPaymentMethodsSheet {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension SavedPaymentMethodsSheet: SavedPaymentMethodsViewControllerDelegate {
-    func savedPaymentMethodsViewControllerShouldConfirm(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController, with paymentOption: PaymentOption, completion: @escaping (SavedPaymentMethodsSheetResult) -> Void) {
-        guard let intent = savedPaymentMethodsViewController.intent else {
+    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?, with paymentOption: PaymentOption, completion: @escaping (SavedPaymentMethodsSheetResult) -> Void) {
+        guard let intent = intent,
+              case .setupIntent = intent else {
             assertionFailure("Payment intent not available")
             completion(.failed(error: SavedPaymentMethodsSheetError.unknown(debugDescription: "No payment intent available")))
             return
