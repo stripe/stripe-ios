@@ -148,7 +148,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
     }
 
     func consumerSessionLookup(
-        emailAddress: String
+        emailAddress: String,
+        clientSecret: String
     ) -> Future<StripeFinancialConnections.LookupConsumerSessionResponse> {
         return Promise<StripeFinancialConnections.LookupConsumerSessionResponse>()
     }

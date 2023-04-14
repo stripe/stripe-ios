@@ -58,7 +58,8 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
     func startVerificationSession() -> Future<ConsumerSessionResponse> {
         apiClient
             .consumerSessionLookup(
-                emailAddress: consumerSession.emailAddress
+                emailAddress: consumerSession.emailAddress,
+                clientSecret: clientSecret
             )
             .chained { [weak self] (lookupConsumerSessionResponse: LookupConsumerSessionResponse) in
                 guard let self = self else {
