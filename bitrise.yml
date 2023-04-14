@@ -218,6 +218,12 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: FinancialConnections Example
+    - pagerduty@0:
+        is_always_run: true
+        run_if: .IsBuildFailed
+        inputs:
+          - event_description: iOS E2E tests failing! $BITRISE_BUILD_URL.
+          - integration_key: $AUX_PAGERDUTY_INTEGRATION_KEY
     - slack@3:
         is_always_run: true
         run_if: .IsBuildFailed
