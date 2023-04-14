@@ -108,11 +108,12 @@ protocol FinancialConnectionsAPIClient {
         clientSecret: String
     ) -> Future<FinancialConnectionsSessionManifest>
 
-    // MARK: - Link API's
-
     func consumerSessionLookup(
-        emailAddress: String
+        emailAddress: String,
+        clientSecret: String
     ) -> Future<LookupConsumerSessionResponse>
+
+    // MARK: - Link API's
 
     func consumerSessionStartVerification(
         otpType: String,
@@ -537,20 +538,21 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return post(resource: APIEndpointLinkStepUpAuthenticationVerified, parameters: parameters)
     }
 
-    // MARK: - Link API's
-
     func consumerSessionLookup(
-        emailAddress: String
+        emailAddress: String,
+        clientSecret: String
     ) -> Future<LookupConsumerSessionResponse> {
         let parameters: [String: Any] = [
-            "request_surface": "ios_connections",
             "email_address":
                 emailAddress
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .lowercased(),
+            "client_secret": clientSecret,
         ]
-        return post(resource: "consumers/sessions/lookup", parameters: parameters)
+        return post(resource: APIEndpointConsumerSessions, parameters: parameters)
     }
+
+    // MARK: - Link API's
 
     func consumerSessionStartVerification(
         otpType: String,
@@ -611,3 +613,4 @@ private let APIEndpointLinkVerified = "link_account_sessions/link_verified"
 private let APIEndpointNetworkedAccounts = "link_account_sessions/networked_accounts"
 private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts_to_link"
 private let APIEndpointShareNetworkedAccount = "link_account_sessions/share_networked_account"
+private let APIEndpointConsumerSessions = "connections/link_account_sessions/consumer_sessions"
