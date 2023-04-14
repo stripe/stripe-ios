@@ -54,7 +54,7 @@ import Foundation
             self.stripePaymentMethodId = value
         }
     }
-    
+
     private init(type: PersistablePaymentMethodOptionType) {
         self.type = type
         self.stripePaymentMethodId = nil
@@ -65,7 +65,6 @@ import Foundation
         self.type = .stripe
         self.stripePaymentMethodId = stripePaymentMethodId
     }
-
 
     /// Sets the default payment method for a given customer.
     /// - Parameters:
@@ -92,11 +91,8 @@ import Foundation
 
         return PersistablePaymentMethodOption(value: value)
     }
-    
+
     public override func isEqual(_ object: Any?) -> Bool {
-        if self === (object as? PersistablePaymentMethodOption) {
-            return true
-        }
         if object == nil || !(object is PersistablePaymentMethodOption) {
             return false
         }
