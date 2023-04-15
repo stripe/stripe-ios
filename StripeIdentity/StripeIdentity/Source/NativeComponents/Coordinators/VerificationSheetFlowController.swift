@@ -319,30 +319,24 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     sheetController: sheetController
                 )
             )
-        } else if !missingRequirements.isDisjoint(with: [.name, .dob]) {
-            // if missing .name or .dob, then verification type is not document.
-            // Transition to IndividualWelcomeViewController.
-            return completion(
-                makeIndividualWelcomeViewController(
-                    staticContent: staticContent,
-                    sheetController: sheetController
-                )
-            )
-        } else if missingRequirements.contains(.biometricConsent) {
+        }
+        
+        switch(missingRequirements.nextDestination(collectedData: sheetController.collectedData)) {
+        case .consentDestination:
             return completion(
                 makeBiometricConsentViewController(
                     staticContent: staticContent,
                     sheetController: sheetController
                 )
             )
-        } else if missingRequirements.contains(.idDocumentType) {
+        case .docSelectionDestination:
             return completion(
                 makeDocumentTypeSelectViewController(
                     sheetController: sheetController,
                     staticContent: staticContent
                 )
             )
-        } else if !missingRequirements.isDisjoint(with: [.idDocumentFront, .idDocumentBack]) {
+        case .documentCaptureDestination:
             return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) {
                 [weak self] result in
                 guard let self = self else { return }
@@ -354,7 +348,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     )
                 )
             }
-        } else if missingRequirements.contains(.face) {
+        case .selfieCaptureDestination:
             return sheetController.mlModelLoader.faceModelsFuture.observe(on: .main) {
                 [weak self] result in
                 guard let self = self else { return }
@@ -366,7 +360,16 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     )
                 )
             }
-        } else if !missingRequirements.isDisjoint(with: [.address, .idNumber]) {
+        case .individualWelcomeDestination:
+            // if missing .name or .dob, then verification type is not document.
+            // Transition to IndividualWelcomeViewController.
+            return completion(
+                makeIndividualWelcomeViewController(
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                )
+            )
+        case .individualDestination:
             // if missing .address or .idNumber but not missing .name or .dob, then verification type is document.
             // IndividualViewController is the screen after document collection.
             return completion(
@@ -375,19 +378,25 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     sheetController: sheetController
                 )
             )
-        }
-
-        // The client cannot create a screen for the missing requirement
-        return completion(
-            ErrorViewController(
-                sheetController: sheetController,
-                error: .error(
-                    VerificationSheetFlowControllerError.noScreenForRequirements(
-                        missingRequirements
+        case .confirmationDestination:
+            return completion(
+                SuccessViewController(
+                    successContent: staticContent.success,
+                    sheetController: sheetController
+                )
+            )
+        case .errorDestination:
+            return completion(
+                ErrorViewController(
+                    sheetController: sheetController,
+                    error: .error(
+                        VerificationSheetFlowControllerError.noScreenForRequirements(
+                            missingRequirements
+                        )
                     )
                 )
             )
-        )
+        }
     }
 
     func makeIndividualWelcomeViewController(
@@ -653,5 +662,35 @@ extension VerificationSheetFlowController: VerificationFlowWebViewControllerDele
 extension VerificationSheetFlowController: SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         delegate?.verificationSheetFlowControllerDidDismissWebView(self)
+    }
+}
+
+extension Set<StripeAPI.VerificationPageFieldType> {
+    func nextDestination(collectedData: StripeAPI.VerificationPageCollectedData) -> IdentityTopLevelDestination {
+        if(self.contains(.biometricConsent)) {
+            return .consentDestination
+        }
+        else if(self.contains(.idDocumentType)) {
+            return .docSelectionDestination
+        }
+        else if(!self.isDisjoint(with: [.idDocumentFront, .idDocumentBack])) {
+            if let unwrappedDocumentType = collectedData.idDocumentType {
+                // if idDocumentType is collected, continue capture this type
+                return .documentCaptureDestination(documentType: unwrappedDocumentType)
+            } else {
+                // if idDocumentType is not collected, this is a session started half way, reacapture document type
+                return .docSelectionDestination
+            }
+        } else if(self.contains(.face)) {
+            return .selfieCaptureDestination
+        } else if(!self.isDisjoint(with: [.name, .dob])) {
+            return .individualWelcomeDestination
+        } else if(!self.isDisjoint(with: [.idNumber, .address])) {
+            return .individualDestination
+        } else if(self.isEmpty) {
+            return .confirmationDestination
+        } else {
+            return .errorDestination
+        }
     }
 }
