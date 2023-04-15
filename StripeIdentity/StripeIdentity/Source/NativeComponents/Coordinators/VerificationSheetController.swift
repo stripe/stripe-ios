@@ -68,7 +68,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
 
     /// Transition to IndividualViewController without any API request
     func transitionToIndividual()
-    
+
     /// Clear a certain type from collected data
     func clearCollectedData(field: StripeAPI.VerificationPageFieldType)
 }
@@ -379,13 +379,13 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             )
         }
     }
-    
+
     // MARK: - Update internal states
-    
+
     func clearCollectedData(field: StripeAPI.VerificationPageFieldType) {
         self.collectedData.clearData(field: field)
     }
-    
+
     /// Check the result of VerificationPageData and update status. Callback successPageData if successful.
     private func handleVerificationPageDataResult(
         collectedData: StripeAPI.VerificationPageCollectedData? = nil,
@@ -398,17 +398,17 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             self.transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
             return
         }
-        
+
         // update collectedData if there are no errors.
-        if(resultData.requirements.errors.isEmpty) {
+        if resultData.requirements.errors.isEmpty {
             if let collectedData = collectedData {
                 self.collectedData.merge(collectedData)
             }
         }
-        
+
         successPageData(resultData)
     }
-    
+
     /// 1. If the save was successful, caches the collectedData
     /// 2. If all fields have been collected, submits the verification page
     /// 3. Transitions to the next screen
@@ -417,12 +417,12 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>,
         completion: @escaping () -> Void
     ) {
-        handleVerificationPageDataResult(collectedData: collectedData, updateDataResult: updateDataResult, completion: completion) { successData in
+        handleVerificationPageDataResult(collectedData: collectedData, updateDataResult: updateDataResult, completion: completion) { _ in
             self.checkSubmitAndTransition(
                 updateDataResult: updateDataResult,
                 completion: completion
             )
-            
+
         }
     }
 
@@ -431,7 +431,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     private func calculateClearData(
         dataToBeCollected: StripeAPI.VerificationPageCollectedData
     ) -> StripeAPI.VerificationPageClearData {
-        
+
         let initialMissings: Set<StripeAPI.VerificationPageFieldType>
         do {
             initialMissings = try verificationPageResponse?.get().requirements.missing ?? Set()

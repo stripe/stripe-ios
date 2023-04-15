@@ -320,8 +320,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             )
         }
-        
-        switch(missingRequirements.nextDestination(collectedData: sheetController.collectedData)) {
+
+        switch missingRequirements.nextDestination(collectedData: sheetController.collectedData) {
         case .consentDestination:
             return completion(
                 makeBiometricConsentViewController(
@@ -667,13 +667,11 @@ extension VerificationSheetFlowController: SFSafariViewControllerDelegate {
 
 extension Set<StripeAPI.VerificationPageFieldType> {
     func nextDestination(collectedData: StripeAPI.VerificationPageCollectedData) -> IdentityTopLevelDestination {
-        if(self.contains(.biometricConsent)) {
+        if self.contains(.biometricConsent) {
             return .consentDestination
-        }
-        else if(self.contains(.idDocumentType)) {
+        } else if self.contains(.idDocumentType) {
             return .docSelectionDestination
-        }
-        else if(!self.isDisjoint(with: [.idDocumentFront, .idDocumentBack])) {
+        } else if !self.isDisjoint(with: [.idDocumentFront, .idDocumentBack]) {
             if let unwrappedDocumentType = collectedData.idDocumentType {
                 // if idDocumentType is collected, continue capture this type
                 return .documentCaptureDestination(documentType: unwrappedDocumentType)
@@ -681,13 +679,13 @@ extension Set<StripeAPI.VerificationPageFieldType> {
                 // if idDocumentType is not collected, this is a session started half way, reacapture document type
                 return .docSelectionDestination
             }
-        } else if(self.contains(.face)) {
+        } else if self.contains(.face) {
             return .selfieCaptureDestination
-        } else if(!self.isDisjoint(with: [.name, .dob])) {
+        } else if !self.isDisjoint(with: [.name, .dob]) {
             return .individualWelcomeDestination
-        } else if(!self.isDisjoint(with: [.idNumber, .address])) {
+        } else if !self.isDisjoint(with: [.idNumber, .address]) {
             return .individualDestination
-        } else if(self.isEmpty) {
+        } else if self.isEmpty {
             return .confirmationDestination
         } else {
             return .errorDestination

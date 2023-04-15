@@ -79,7 +79,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertTrue(mockMLModelLoader.didStartLoadingDocumentModels)
         XCTAssertTrue(mockMLModelLoader.didStartLoadingFaceModels)
     }
-    
+
     func testLoadSubmittedValidResponse() throws {
         let mockResponse = try VerificationPageMock.response200Submitted.make()
 

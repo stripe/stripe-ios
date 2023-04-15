@@ -169,7 +169,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         )
         wait(for: [exp], timeout: 1)
     }
-    
+
     func testNoSelfieConfigError() throws {
         let exp = expectation(description: "testNoSelfieConfigError")
         try nextViewController(
