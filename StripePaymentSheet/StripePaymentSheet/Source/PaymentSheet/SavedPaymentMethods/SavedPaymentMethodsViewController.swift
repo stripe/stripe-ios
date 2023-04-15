@@ -389,7 +389,7 @@ class SavedPaymentMethodsViewController: UIViewController {
         })
     }
 
-    func confirm(intent: Intent?, paymentOption: PaymentOption) -> Void {
+    func confirm(intent: Intent?, paymentOption: PaymentOption) {
         self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(intent, with: paymentOption, completion: { result in
             self.processingInFlight = false
             switch result {
@@ -596,7 +596,7 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
             switch paymentMethodSelection {
             case .add:
                 error = nil
-                if let _ = self.configuration.createSetupIntentHandler {
+                if self.configuration.createSetupIntentHandler != nil {
                     mode =  .addingNewWithSetupIntent
                 } else {
                     mode = .addingNewPaymentMethodAttachToCustomer
