@@ -48,6 +48,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
         return formView
     }()
     private var footerView: NetworkingLinkSignupFooterView?
+    private var viewDidAppear: Bool = false
 
     init(dataSource: NetworkingLinkSignupDataSource) {
         self.dataSource = dataSource
@@ -64,28 +65,37 @@ final class NetworkingLinkSignupViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
 
         showLoadingView(true)
-        dataSource.synchronize()
-            .observe { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let networkingLinkSignup):
-                    self.showContent(networkingLinkSignup: networkingLinkSignup)
-                case .failure(let error):
-                    self.dataSource
-                        .analyticsClient
-                        .logUnexpectedError(
-                            error,
-                            errorName: "NetworkingLinkSignupSynchronizeError",
-                            pane: .networkingLinkSignupPane
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // delay executing logic until `viewDidAppear` because
+        // of janky keyboard animations
+        if !viewDidAppear {
+            viewDidAppear = true
+            dataSource.synchronize()
+                .observe { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let networkingLinkSignup):
+                        self.showContent(networkingLinkSignup: networkingLinkSignup)
+                    case .failure(let error):
+                        self.dataSource
+                            .analyticsClient
+                            .logUnexpectedError(
+                                error,
+                                errorName: "NetworkingLinkSignupSynchronizeError",
+                                pane: .networkingLinkSignupPane
+                            )
+                        self.delegate?.networkingLinkSignupViewControllerDidFinish(
+                            self,
+                            saveToLinkWithStripeSucceeded: nil,
+                            withError: error
                         )
-                    self.delegate?.networkingLinkSignupViewControllerDidFinish(
-                        self,
-                        saveToLinkWithStripeSucceeded: nil,
-                        withError: error
-                    )
+                    }
+                    self.showLoadingView(false) // first set to `true` from `viewDidLoad`
                 }
-                self.showLoadingView(false)
-            }
+        }
     }
 
     private func showContent(networkingLinkSignup: FinancialConnectionsNetworkingLinkSignup) {
