@@ -37,7 +37,7 @@ class SavedPaymentMethodsFormFactory {
         if paymentMethod == .card {
             return makeCard(theme: theme)
         }
-        
+
         assertionFailure("Currently only support cards")
         return nil
     }
