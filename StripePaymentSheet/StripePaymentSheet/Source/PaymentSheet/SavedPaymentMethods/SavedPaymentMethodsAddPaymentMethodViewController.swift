@@ -17,9 +17,7 @@ protocol SavedPaymentMethodsAddPaymentMethodViewControllerDelegate: AnyObject {
 class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: SavedPaymentMethodsAddPaymentMethodViewControllerDelegate?
-    var paymentMethodTypes: [PaymentSheet.PaymentMethodType] = {
-        return [.card]
-    }()
+    let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.card]
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         return paymentMethodTypesView.selected
     }
