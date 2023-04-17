@@ -140,7 +140,7 @@ class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
             intent: intent,
             configuration: configuration,
             paymentMethod: type
-        ).make()
+        ).make()! // TODO(wooj) Don't force unwrap
         formElement.delegate = self
         return formElement
     }

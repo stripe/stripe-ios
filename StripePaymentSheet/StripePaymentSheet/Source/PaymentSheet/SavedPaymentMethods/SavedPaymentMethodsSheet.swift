@@ -150,8 +150,9 @@ extension SavedPaymentMethodsSheet {
 extension SavedPaymentMethodsSheet: SavedPaymentMethodsViewControllerDelegate {
     func savedPaymentMethodsViewControllerShouldConfirm(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController, with paymentOption: PaymentOption, completion: @escaping (SavedPaymentMethodsSheetResult) -> Void) {
         guard let intent = savedPaymentMethodsViewController.intent else {
-            assert(false, "Payment intent not available")
+            assertionFailure("Payment intent not available")
             completion(.failed(error: SavedPaymentMethodsSheetError.unknown(debugDescription: "No payment intent available")))
+            return
         }
         self.confirmIntent(intent: intent, paymentOption: paymentOption) { result in
             completion(result)
