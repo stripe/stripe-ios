@@ -226,7 +226,7 @@ class SavedPaymentMethodsViewController: UIViewController {
         }
 
         if processingInFlight {
-            actionButtonStatus = .processing
+            actionButtonStatus = .spinnerWithInteractionDisabled
         }
 
         self.actionButton.update(
@@ -285,7 +285,10 @@ class SavedPaymentMethodsViewController: UIViewController {
                 "A button used to confirm selecting a saved payment method"
             ))
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
-            return .setup
+            return .custom(title: STPLocalizedString(
+                "Add",
+                "A button used for adding a new payment method"
+            ))
         }
     }
 
@@ -376,7 +379,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                     self.updateUI()
                 } onSuccess: {
                     self.processingInFlight = false
-                    self.actionButton.update(state: .succeeded, animated: true) {
+                    self.actionButton.update(state: .disabled, animated: true) {
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                             self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
                         }
@@ -417,7 +420,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                         self.savedPaymentMethodsSheetDelegate?.didFail(with: .setSelectedPaymentMethodOption(error))
                     } onSuccess: {
                         self.processingInFlight = false
-                        self.actionButton.update(state: .succeeded, animated: true) {
+                        self.actionButton.update(state: .disabled, animated: true) {
                             self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                                 self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
                             }
@@ -461,7 +464,7 @@ class SavedPaymentMethodsViewController: UIViewController {
             self.updateUI()
             onError(error)
         } onSuccess: {
-            self.actionButton.update(state: .succeeded, animated: true) {
+            self.actionButton.update(state: .disabled, animated: true) {
                 onSuccess()
             }
         }
