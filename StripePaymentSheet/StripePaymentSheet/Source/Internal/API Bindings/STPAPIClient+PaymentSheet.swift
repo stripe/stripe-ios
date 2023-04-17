@@ -218,7 +218,6 @@ extension PaymentSheet.IntentConfiguration {
 
         var deferredIntent = [String: Any]()
         deferredIntent["payment_method_types"] = paymentMethodTypes
-        print(onBehalfOf ?? "nil")
         deferredIntent["on_behalf_of"] = onBehalfOf
 
         switch mode {
