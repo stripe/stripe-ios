@@ -143,10 +143,11 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         let returnedPromise = Promise<StripeAPI.VerificationPage>()
         // Only update `verificationPageResponse` on main
         apiClient.getIdentityVerificationPage().observe(on: .main) { [weak self] result in
-            self?.verificationPageResponse = result
+            guard let self = self else { return }
+            self.verificationPageResponse = result
             if case .success(let verificationPage) = result {
-                self?.startLoadingMLModels(from: verificationPage)
-                self?.isVerificationPageSubmitted = verificationPage.submitted
+                self.startLoadingMLModels(from: verificationPage)
+                self.isVerificationPageSubmitted = verificationPage.submitted
                 // if result success and requires address, load address spec before continue
                 if verificationPage.requirements.missing.contains(.address) {
                     AddressSpecProvider.shared.loadAddressSpecs {
