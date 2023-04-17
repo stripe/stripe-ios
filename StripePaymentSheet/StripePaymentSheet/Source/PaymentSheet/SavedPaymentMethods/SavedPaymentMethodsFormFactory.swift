@@ -33,11 +33,13 @@ class SavedPaymentMethodsFormFactory {
         self.addressSpecProvider = addressSpecProvider
     }
 
-    func make() -> PaymentMethodElement {
+    func make() -> PaymentMethodElement? {
         if paymentMethod == .card {
             return makeCard(theme: theme)
         }
-        assert(false, "Currently only support cards")
+
+        assertionFailure("Currently only support cards")
+        return nil
     }
 
     func makeCard(theme: ElementsUITheme = .default) -> PaymentMethodElement {
