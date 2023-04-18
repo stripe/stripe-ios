@@ -386,7 +386,7 @@ extension STPBINRange {
         return binRanges
     }()
 
-    private var sAllRanges: [STPBINRange] = {
+    var sAllRanges: [STPBINRange] = {
         return STPBINRangeInitialRanges
     }()
 
