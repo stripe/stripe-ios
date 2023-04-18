@@ -1,6 +1,9 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 
+/* A button used for adding a new payment method */
+"Add" = "Add";
+
 /* Title shown above a card entry form */
 "Add a card" = "Add a card";
 

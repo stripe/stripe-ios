@@ -47,7 +47,7 @@ struct FinancialConnectionsAuthSession: Decodable {
     var requiresNativeRedirect: Bool {
         return url?.hasNativeRedirectPrefix ?? false
     }
-    
+
     struct Display: Decodable {
         let text: Text?
 
