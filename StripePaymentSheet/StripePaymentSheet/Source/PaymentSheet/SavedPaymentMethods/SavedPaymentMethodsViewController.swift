@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 protocol SavedPaymentMethodsViewControllerDelegate: AnyObject {
-    func savedPaymentMethodsViewControllerShouldConfirm(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController,
+    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?,
                                                         with paymentOption: PaymentOption,
                                                         completion: @escaping(SavedPaymentMethodsSheetResult) -> Void)
     func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController, completion: @escaping () -> Void)
@@ -40,12 +40,16 @@ class SavedPaymentMethodsViewController: UIViewController {
     private(set) var error: Error?
     private var processingInFlight: Bool = false
     private(set) var intent: Intent?
-    private var addPaymentMethodViewController: SavedPaymentMethodsAddPaymentMethodViewController?
+    private lazy var addPaymentMethodViewController: SavedPaymentMethodsAddPaymentMethodViewController = {
+        return SavedPaymentMethodsAddPaymentMethodViewController(
+            configuration: configuration,
+            delegate: self)
+    }()
 
     var selectedPaymentOption: PaymentOption? {
         switch mode {
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
-            if let paymentOption = addPaymentMethodViewController?.paymentOption {
+            if let paymentOption = addPaymentMethodViewController.paymentOption {
                 return paymentOption
             }
             return nil
@@ -113,9 +117,16 @@ class SavedPaymentMethodsViewController: UIViewController {
         self.isApplePayEnabled = isApplePayEnabled
         self.savedPaymentMethodsSheetDelegate = savedPaymentMethodsSheetDelegate
         self.delegate = delegate
-        self.mode = .selectingSaved
-        self.addPaymentMethodViewController = nil
-                super.init(nibName: nil, bundle: nil)
+        if savedPaymentMethods.isEmpty {
+            if configuration.createSetupIntentHandler != nil {
+                self.mode = .addingNewWithSetupIntent
+            } else {
+                self.mode = .addingNewPaymentMethodAttachToCustomer
+            }
+        } else {
+            self.mode = .selectingSaved
+        }
+        super.init(nibName: nil, bundle: nil)
 
         self.view.backgroundColor = configuration.appearance.colors.background
     }
@@ -271,7 +282,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                     self.navigationBar.additionalButton.removeTarget(
                         self, action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside)
-                    return .back
+                    return savedPaymentMethods.isEmpty ? .close(showAdditionalButton: false) : .back
                 }
             }())
 
@@ -310,12 +321,12 @@ class SavedPaymentMethodsViewController: UIViewController {
 
         switch mode {
         case .addingNewWithSetupIntent:
-            guard let newPaymentOption = addPaymentMethodViewController?.paymentOption else {
+            guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
                 return
             }
             addPaymentOption(paymentOption: newPaymentOption)
         case .addingNewPaymentMethodAttachToCustomer:
-            guard let newPaymentOption = addPaymentMethodViewController?.paymentOption else {
+            guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
                 return
             }
             addPaymentOptionToCustomer(paymentOption: newPaymentOption)
@@ -350,12 +361,36 @@ class SavedPaymentMethodsViewController: UIViewController {
     }
 
     private func addPaymentOption(paymentOption: PaymentOption) {
-        guard case .new = paymentOption else {
+        guard case .new = paymentOption,
+        let createSetupIntentHandler = self.configuration.createSetupIntentHandler else {
             return
         }
         self.processingInFlight = true
         updateUI(animated: false)
-        self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(self, with: paymentOption, completion: { result in
+
+        createSetupIntentHandler({ result in
+            guard let clientSecret = result else {
+                self.processingInFlight = false
+                self.updateUI()
+                self.savedPaymentMethodsSheetDelegate?.didFail(with: .setupIntentClientSecretInvalid)
+                return
+            }
+            self.fetchSetupIntent(clientSecret: clientSecret) { result in
+                switch result {
+                case .success(let stpSetupIntent):
+                    let setupIntent = Intent.setupIntent(stpSetupIntent)
+                    self.confirm(intent: setupIntent, paymentOption: paymentOption)
+                case .failure(let error):
+                    self.processingInFlight = false
+                    self.updateUI()
+                    self.savedPaymentMethodsSheetDelegate?.didFail(with: .setupIntentFetchError(error))
+                }
+            }
+        })
+    }
+
+    func confirm(intent: Intent?, paymentOption: PaymentOption) {
+        self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(intent, with: paymentOption, completion: { result in
             self.processingInFlight = false
             switch result {
             case .canceled:
@@ -558,52 +593,22 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
     func didUpdateSelection(
         viewController: SavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: SavedPaymentMethodsCollectionViewController.Selection) {
-            // TODO: Add some boolean flag here to avoid making duplicate calls
             switch paymentMethodSelection {
             case .add:
                 error = nil
-                if let createSetupIntentHandler = self.configuration.createSetupIntentHandler {
+                if self.configuration.createSetupIntentHandler != nil {
                     mode =  .addingNewWithSetupIntent
-                    if let intent = self.intent, !intent.isInTerminalState {
-                        initAddPaymentMethodViewController(intent: intent)
-                        self.updateUI()
-                    } else {
-                        createSetupIntentHandler({ result in
-                            guard let clientSecret = result else {
-                                self.savedPaymentMethodsSheetDelegate?.didFail(with: .setupIntentClientSecretInvalid)
-                                return
-                            }
-                            self.fetchSetupIntent(clientSecret: clientSecret) { result in
-                                switch result {
-                                case .success(let stpSetupIntent):
-                                    let setupIntent = Intent.setupIntent(stpSetupIntent)
-                                    self.intent = setupIntent
-                                    self.initAddPaymentMethodViewController(intent: setupIntent)
-                                case .failure(let error):
-                                    self.savedPaymentMethodsSheetDelegate?.didFail(with: .setupIntentFetchError(error))
-                                }
-                                self.updateUI()
-                            }
-                        })
-                    }
                 } else {
                     mode = .addingNewPaymentMethodAttachToCustomer
-                    self.initAddPaymentMethodViewController(intent: nil)
-                    self.updateUI()
                 }
+                self.updateUI()
             case .saved:
                 updateUI(animated: true)
             case .applePay:
                 updateUI(animated: true)
             }
         }
-    private func initAddPaymentMethodViewController(intent: Intent?) {
-        self.addPaymentMethodViewController = SavedPaymentMethodsAddPaymentMethodViewController(
-            intent: intent,
-            configuration: self.configuration,
-            delegate: self
-        )
-    }
+
     func didSelectRemove(
         viewController: SavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: SavedPaymentMethodsCollectionViewController.Selection) {
