@@ -174,6 +174,7 @@ class STPBinRangeTest: XCTestCase {
                 country: "CN"
             ),
         ]
+
         STPBINController.shared.sRetrievedRanges["624478"] = mockedRanges
         STPBINController.shared.sAllRanges += mockedRanges
 
@@ -181,5 +182,9 @@ class STPBinRangeTest: XCTestCase {
         XCTAssertEqual(binRange.accountRangeLow, "6244780000000000")
         XCTAssertEqual(binRange.accountRangeHigh, "6244789999999999")
         XCTAssertEqual(binRange.brand, .unionPay)
+
+        // Cleanup added values to avoid issues caused by singleton state.
+        STPBINController.shared.sRetrievedRanges["624478"] = nil
+        STPBINController.shared.sAllRanges = STPBINController.STPBINRangeInitialRanges
     }
 }
