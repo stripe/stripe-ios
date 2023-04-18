@@ -15,6 +15,9 @@ import XCTest
 @testable import StripeIdentity
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
+    func clearCollectedData(field: StripeCore.StripeAPI.VerificationPageFieldType) {
+        // no-op
+    }
     var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
 
     var apiClient: IdentityAPIClient
