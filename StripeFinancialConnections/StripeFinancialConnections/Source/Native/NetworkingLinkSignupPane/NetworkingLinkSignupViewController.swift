@@ -49,6 +49,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
     }()
     private var footerView: NetworkingLinkSignupFooterView?
     private var viewDidAppear: Bool = false
+    private var willNavigateToReturningConsumer = false
 
     init(dataSource: NetworkingLinkSignupDataSource) {
         self.dataSource = dataSource
@@ -95,6 +96,16 @@ final class NetworkingLinkSignupViewController: UIViewController {
                     }
                     self.showLoadingView(false) // first set to `true` from `viewDidLoad`
                 }
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if willNavigateToReturningConsumer {
+            willNavigateToReturningConsumer = false
+            // in case a user decides to go back from verification pane,
+            // we clear the email so they can re-enter
+            formView.emailElement.emailAddressElement.setText("")
         }
     }
 
@@ -224,6 +235,14 @@ final class NetworkingLinkSignupViewController: UIViewController {
         let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid
         footerView?.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
     }
+    
+    private func foundReturningConsumer(withSession consumerSession: ConsumerSessionData) {
+        willNavigateToReturningConsumer = true
+        delegate?.networkingLinkSignupViewController(
+            self,
+            foundReturningConsumerWithSession: consumerSession
+        )
+    }
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -247,10 +266,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                         )
                         if let consumerSession = response.consumerSession {
                             // TODO(kgaidis): check whether its fair to assume that we will always have a consumer sesion here
-                            self.delegate?.networkingLinkSignupViewController(
-                                self,
-                                foundReturningConsumerWithSession: consumerSession
-                            )
+                            self.foundReturningConsumer(withSession: consumerSession)
                         } else {
                             self.delegate?.networkingLinkSignupViewControllerDidFinish(
                                 self,
