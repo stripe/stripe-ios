@@ -29,12 +29,12 @@ class WalletModeUITest: XCTestCase {
         let selectButton = app.staticTexts["Select"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
-        let addButton = app.buttons["+ Add"]
+        let addButton = app.buttons["Add"]
         XCTAssertTrue(addButton.waitForExistence(timeout: 60.0))
         addButton.tap()
         try! fillCardData(app, postalEnabled: false)
         app.buttons["Add"].tap()
-        let paymentMethodButton = app.staticTexts["Finished with: ••••4242"]  // The card should be saved now
+        let paymentMethodButton = app.staticTexts["Success: ••••4242"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
     }
 }
