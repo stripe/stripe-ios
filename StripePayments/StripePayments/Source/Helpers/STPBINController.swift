@@ -94,9 +94,21 @@ extension STPBINRange {
     }
 
     func compare(_ other: STPBINRange) -> ComparisonResult {
-        return NSNumber(value: accountRangeLow.count).compare(
+        let result = NSNumber(value: accountRangeLow.count).compare(
             NSNumber(value: other.accountRangeLow.count)
         )
+
+        // If they are the same range unknown brands go first.
+        if result == .orderedSame {
+            if brand == .unknown && other.brand != .unknown {
+                return .orderedAscending
+            } else if brand != .unknown && other.brand == .unknown {
+                return .orderedDescending
+            }
+        }
+
+        return result
+
     }
 }
 
