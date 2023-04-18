@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
-final class NetworkingLinkLoginWarmupBodyView: UIView {
+final class NetworkingLinkLoginWarmupBodyView: HitTestView {
 
     private let didSelectContinue: () -> Void
 
@@ -22,7 +22,7 @@ final class NetworkingLinkLoginWarmupBodyView: UIView {
     ) {
         self.didSelectContinue = didSelectContinue
         super.init(frame: .zero)
-        let verticalStackView = UIStackView(
+        let verticalStackView = HitTestStackView(
             arrangedSubviews: [
                 CreateContinueButton(
                     email: email,
