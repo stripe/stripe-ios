@@ -105,7 +105,16 @@ import UIKit
 
     /// Returns this color in a "disabled" state by reducing the alpha by 40%
     var disabledColor: UIColor {
-        return self.withAlphaComponent(0.6)
+        let (_, _, _, alpha) = rgba
+        return self.withAlphaComponent(alpha * 0.6)
+    }
+
+    /// Returns this color in a "disabled" state by reducing the alpha by 40% if `isDisabled` is `true`,
+    /// or the original color if `false`.
+    func disabled(_ isDisabled: Bool = true) -> UIColor {
+        guard isDisabled else { return self }
+
+        return disabledColor
     }
 
     /// The rgba space of the color
