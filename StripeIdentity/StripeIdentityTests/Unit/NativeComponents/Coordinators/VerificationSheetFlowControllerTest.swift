@@ -140,40 +140,30 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         wait(for: [staticAPIErrExp, updateAPIErrExp, reqDataErrExp], timeout: 1)
     }
 
-    func testNoMoreMissingFieldsError() throws {
+    func testNoMoreMissingFieldsReturnSuccessViewController() throws {
         let exp = expectation(description: "No more missing fields")
         flowController.nextViewController(
             staticContentResult: .success(try VerificationPageMock.response200.make()),
             updateDataResult: .success(try VerificationPageDataMock.noErrors.make()),
             sheetController: mockSheetController,
             completion: { nextVC in
-                XCTAssertIs(nextVC, ErrorViewController.self)
-                XCTAssertEqual(
-                    (nextVC as? ErrorViewController)?.model,
-                    .error(VerificationSheetFlowControllerError.noScreenForRequirements([]))
-                )
+                XCTAssertIs(nextVC, SuccessViewController.self)
                 exp.fulfill()
             }
         )
         wait(for: [exp], timeout: 1)
     }
 
-    // Requires document photo but user has not selected type
-    func testDocumentPhotoNoTypeError() throws {
+    // Requires document photo without type - should return DocumentTypeSelectViewController
+    func testMissingDocFrontNoType() throws {
         // Mock that document ML models successfully loaded
         mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
 
-        let exp = expectation(description: "testDocumentPhotoNoTypeError")
+        let exp = expectation(description: "testMissingDocFrontNoType")
         try nextViewController(
             missingRequirements: [.idDocumentFront],
             completion: { nextVC in
-                XCTAssertIs(nextVC, ErrorViewController.self)
-                XCTAssertEqual(
-                    (nextVC as? ErrorViewController)?.model,
-                    .error(
-                        VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType])
-                    )
-                )
+                XCTAssertIs(nextVC, DocumentTypeSelectViewController.self)
                 exp.fulfill()
             }
         )
