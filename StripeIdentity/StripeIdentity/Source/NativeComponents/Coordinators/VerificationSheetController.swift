@@ -33,7 +33,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
 
     var delegate: VerificationSheetControllerDelegate? { get set }
 
-    func loadAndUpdateUI()
+    func loadAndUpdateUI(skipTestMode: Bool)
 
     func saveAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
@@ -71,6 +71,9 @@ protocol VerificationSheetControllerProtocol: AnyObject {
 
     /// Clear a certain type from collected data
     func clearCollectedData(field: StripeAPI.VerificationPageFieldType)
+
+    /// Override return result for testMode
+    func overrideTestModeReturnValue(result: IdentityVerificationSheet.VerificationFlowResult)
 }
 
 final class VerificationSheetController: VerificationSheetControllerProtocol {
@@ -109,6 +112,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
     }
 
+    var testModeReturnValue: IdentityVerificationSheet.VerificationFlowResult?
+
     // MARK: - Init
 
     init(
@@ -128,9 +133,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     // MARK: - Load
 
     /// Makes API calls to load the verification sheet. When the API response is complete, transitions to the first screen in the flow.
-    func loadAndUpdateUI() {
+    func loadAndUpdateUI(skipTestMode: Bool) {
         load().observe(on: .main) { result in
             self.flowController.transitionToNextScreen(
+                skipTestMode: skipTestMode,
                 staticContentResult: result,
                 updateDataResult: nil,
                 sheetController: self,
@@ -339,6 +345,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
 
         flowController.transitionToNextScreen(
+            skipTestMode: true,
             staticContentResult: verificationPageResponse,
             updateDataResult: result,
             sheetController: self,
@@ -385,6 +392,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     func clearCollectedData(field: StripeAPI.VerificationPageFieldType) {
         self.collectedData.clearData(field: field)
+    }
+
+    func overrideTestModeReturnValue(result: IdentityVerificationSheet.VerificationFlowResult) {
+        self.testModeReturnValue = result
     }
 
     /// Check the result of VerificationPageData and update status. Callback successPageData if successful.
@@ -458,7 +469,7 @@ extension VerificationSheetController: VerificationSheetFlowControllerDelegate {
     ) {
         delegate?.verificationSheetController(
             self,
-            didFinish: self.isVerificationPageSubmitted ? .flowCompleted : .flowCanceled
+            didFinish: self.testModeReturnValue ?? (self.isVerificationPageSubmitted ? .flowCompleted : .flowCanceled)
         )
     }
 

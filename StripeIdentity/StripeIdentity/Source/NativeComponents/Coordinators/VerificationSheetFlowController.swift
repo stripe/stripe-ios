@@ -28,6 +28,7 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var navigationController: UINavigationController { get }
 
     func transitionToNextScreen(
+        skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
@@ -91,12 +92,14 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     /// - Note: This may replace the navigation stack or push an additional view
     ///   controller onto the stack, depending on whether on where the user is in the flow.
     func transitionToNextScreen(
+        skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
         completion: @escaping () -> Void
     ) {
         nextViewController(
+            skipTestMode: skipTestMode,
             staticContentResult: staticContentResult,
             updateDataResult: updateDataResult,
             sheetController: sheetController
@@ -232,16 +235,23 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     ) {
         // If the only view in the stack is a loading screen, they should not be
         // able to hit the back button to get back into a loading state.
-        let isInitialLoadingState =
+        let isTransitioningFromLoading =
             navigationController.viewControllers.count == 1
             && navigationController.viewControllers.first is LoadingViewController
+
+        // If the only view in the stack is a debug screen, they just clicked
+        // "Preview" and should not be able to hit the back button to get back
+        // into a debug state.
+        let isTransitioningFromDebug =
+            navigationController.viewControllers.count == 1
+            && navigationController.viewControllers.first is DebugViewController
 
         // If the user is seeing the success screen, it means their session has
         // been submitted and they can't go back to edit their input.
         let isSuccessState = nextViewController is SuccessViewController
 
         // Don't display a back button, so replace the navigation stack
-        if isInitialLoadingState || isSuccessState {
+        if isTransitioningFromLoading || isTransitioningFromDebug || isSuccessState {
             navigationController.setViewControllers([nextViewController], animated: shouldAnimate)
         } else {
             navigationController.pushViewController(nextViewController, animated: shouldAnimate)
@@ -263,6 +273,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     /// Instantiates and returns the next view controller to display in the flow.
     /// - Note: This method should not be called directly from outside of this class except for tests
     func nextViewController(
+        skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
@@ -301,6 +312,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     staticContent: staticContent,
                     sheetController: sheetController
                 )
+            )
+        }
+
+        if !skipTestMode && !staticContent.livemode {
+            return completion(
+                makeDebugViewModeController(sheetController: sheetController)
             )
         }
 
@@ -581,6 +598,13 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         let safariVC = SFSafariViewController(url: url)
         safariVC.delegate = self
         return safariVC
+    }
+
+    func makeDebugViewModeController(
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        return DebugViewController(
+            sheetController: sheetController)
     }
 
     private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {

@@ -100,7 +100,7 @@
       "title": "Tora's catfood partners with Stripe for secure Identity verification"
     },
     "id": "VS_123",
-    "livemode": false,
+    "livemode": true,
     "object": "identity.verification_page",
     "requirements": {
         "missing": [
