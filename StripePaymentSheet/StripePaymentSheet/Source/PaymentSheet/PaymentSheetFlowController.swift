@@ -114,7 +114,15 @@ extension PaymentSheet {
             configuration: Configuration
         ) {
             AnalyticsHelper.shared.generateSessionID()
-            STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
+            let analyticsProductString: String = {
+                if case .deferredIntent = intent {
+                    return "PaymentSheet.FlowController; deferred-intent"
+                } else {
+                    return "PaymentSheet.FlowController"
+                }
+            }()
+            // Note: We don't use `STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary:)` like other products because the string we're adding isn't static
+            STPAnalyticsClient.sharedClient.productUsage.insert(analyticsProductString)
             STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true,
                                                                        configuration: configuration,
                                                                        intentConfig: intent.intentConfig)
@@ -457,14 +465,6 @@ extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerD
     ) {
         // no-op
     }
-}
-
-// MARK: - STPAnalyticsProtocol
-/// :nodoc:
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
-@_spi(STP) extension PaymentSheet.FlowController: STPAnalyticsProtocol {
-    @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
 }
 
 // MARK: - PaymentSheetAuthenticationContext

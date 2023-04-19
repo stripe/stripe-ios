@@ -88,7 +88,15 @@ public class PaymentSheet {
 
     required init(mode: InitializationMode, configuration: Configuration) {
         AnalyticsHelper.shared.generateSessionID()
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
+        let analyticsProductString: String = {
+            if case .deferredIntent = mode {
+                return "PaymentSheet; deferred-intent"
+            } else {
+                return "PaymentSheet"
+            }
+        }()
+        // Note: We don't use `STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary:)` like other products because the string we're adding isn't static
+        STPAnalyticsClient.sharedClient.productUsage.insert(analyticsProductString)
         self.mode = mode
         self.configuration = configuration
         STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration,
@@ -347,11 +355,6 @@ extension PaymentSheet: LoadingViewControllerDelegate {
             self.completion?(.canceled)
         }
     }
-}
-
-/// :nodoc:
-@_spi(STP) extension PaymentSheet: STPAnalyticsProtocol {
-    @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet"
 }
 
 @available(iOSApplicationExtension, unavailable)
