@@ -136,15 +136,12 @@ extension HTMLViewWithIconLabels {
         addAndPinSubview(vStack)
         vStack.addArrangedSubview(separatorView)
         vStack.addArrangedSubview(textView)
+        vStack.setCustomSpacing(Styling.separatorVerticalSpacing, after: separatorView)
     }
 
     fileprivate func installConstraints() {
         NSLayoutConstraint.activate([
             separatorView.heightAnchor.constraint(equalToConstant: IdentityUI.separatorHeight),
-            separatorView.bottomAnchor.constraint(
-                equalTo: textView.topAnchor,
-                constant: -Styling.separatorVerticalSpacing
-            ),
             separatorView.leadingAnchor.constraint(equalTo: vStack.leadingAnchor),
             separatorView.trailingAnchor.constraint(equalTo: vStack.trailingAnchor),
             textView.leadingAnchor.constraint(equalTo: vStack.leadingAnchor),
