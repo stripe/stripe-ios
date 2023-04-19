@@ -30,8 +30,6 @@ extension PaymentSheet {
                                                  paymentMethod: STPPaymentMethod?,
                                                  paymentMethodParams: STPPaymentMethodParams?,
                                                  shouldSavePaymentMethod: Bool) {
-        // Add deferred to payment analytics user agent
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: IntentConfiguration.self)
         Task {
             do {
                 // Create PM if necessary
@@ -147,11 +145,5 @@ class DeferredIntentContext {
                 completion(result)
             }
         }
-    }
-}
-
-extension PaymentSheet.IntentConfiguration: STPAnalyticsProtocol {
-    public static var stp_analyticsIdentifier: String {
-        return "deferred-intent"
     }
 }
