@@ -28,44 +28,6 @@ struct FinancialConnectionsAuthSession: Decodable {
         case truelayerOauth = "truelayer_oauth"
         case wellsFargo = "wells_fargo"
         case unparsable
-
-        func toPartner() -> FinancialConnectionsPartner? {
-            switch self {
-            case .finicityConnectV2Oauth:
-                fallthrough
-            case .finicityConnectV2OauthWebview:
-                fallthrough
-            case .finicityConnectV2Lite:
-                fallthrough
-            case .finicityConnectV2OauthRedirect:
-                return .finicity
-            case .mxConnect:
-                fallthrough
-            case .mxOauth:
-                fallthrough
-            case .mxOauthWebview:
-                return .mx
-            case .mxOauthAppToApp:
-                return .mx
-            case .truelayerEmbedded:
-                fallthrough
-            case .truelayerOauth:
-                return .trueLayer
-            case .wellsFargo:
-                return .wellsFargo
-            case .directWebview:
-                fallthrough
-            case .testmode:
-                fallthrough
-            case .testmodeOauth:
-                fallthrough
-            case .testmodeOauthWebview:
-                fallthrough
-            case .unparsable:
-                assertionFailure("Expected to never access \(self)")
-                return nil
-            }
-        }
     }
 
     let id: String
@@ -86,51 +48,11 @@ struct FinancialConnectionsAuthSession: Decodable {
         return url?.hasNativeRedirectPrefix ?? false
     }
 
-    var partner: FinancialConnectionsPartner? {
-        return (showPartnerDisclosure ?? false) ? flow?.toPartner() : nil
-    }
-
     struct Display: Decodable {
         let text: Text?
 
         struct Text: Decodable {
             let oauthPrepane: FinancialConnectionsOAuthPrepane?
-        }
-    }
-}
-
-// this is a client-side enum (doesn't come from server)
-enum FinancialConnectionsPartner {
-    case finicity
-    case mx
-    case trueLayer
-    case wellsFargo
-
-    var name: String {
-        switch self {
-        case .finicity:
-            return "Finicity"
-        case .mx:
-            return "MX"
-        case .trueLayer:
-            return "TrueLayer"
-        case .wellsFargo:
-            return "Wells Fargo"
-        }
-    }
-
-    var icon: UIImage? {
-        switch self {
-        case .finicity:
-            return Image.finicity.makeImage()
-        case .mx:
-            return Image.mx.makeImage()
-        case .wellsFargo:
-            // we never show icons for direct integrations
-            return nil
-        case .trueLayer:
-            // icon not needed until EU support
-            return nil
         }
     }
 }
