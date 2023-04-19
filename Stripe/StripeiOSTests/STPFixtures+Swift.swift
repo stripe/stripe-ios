@@ -65,3 +65,10 @@ extension PaymentSheet.Configuration {
         return configuration
     }
 }
+
+extension STPElementsSession {
+    static func _testValue() -> STPElementsSession {
+        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        return STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+    }
+}
