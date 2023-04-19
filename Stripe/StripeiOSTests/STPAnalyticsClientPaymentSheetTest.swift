@@ -12,10 +12,10 @@ import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeApplePay
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeUICore
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(ExperimentalPaymentSheetDecouplingAPI) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripeUICore
 
 class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     private var client: STPAnalyticsClient!
@@ -234,25 +234,26 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let duration = client.lastPayload?["duration"] as? TimeInterval
         XCTAssertNotNil(duration)
     }
-    
+
     func testPaymentUserAgent_PaymentSheet() {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD"), confirmHandler: { _, _ in })
         // PaymentSheet
+        STPAnalyticsClient.sharedClient.productUsage = .init()
         let basePaymentUserAgent = STPAPIClient.paramsAddingPaymentUserAgent([:])["payment_user_agent"] as! String
         _ = PaymentSheet(paymentIntentClientSecret: "", configuration: .init())
         XCTAssertEqual(STPAPIClient.paramsAddingPaymentUserAgent([:])["payment_user_agent"] as! String, basePaymentUserAgent + "; PaymentSheet")
-        
+
         // PaymentSheet; deferred-intent
         STPAnalyticsClient.sharedClient.productUsage = .init()
         _ = PaymentSheet(intentConfiguration: intentConfig, configuration: .init())
         XCTAssertEqual(STPAPIClient.paramsAddingPaymentUserAgent([:])["payment_user_agent"] as! String, basePaymentUserAgent + "; PaymentSheet; deferred-intent")
-        
+
         // PaymentSheet.FlowController
         _ = AddressSpecProvider.shared.loadAddressSpecs()
         STPAnalyticsClient.sharedClient.productUsage = .init()
         _ = PaymentSheet.FlowController(intent: .paymentIntent(STPFixtures.paymentIntent()), savedPaymentMethods: [], isLinkEnabled: false, configuration: .init())
         XCTAssertEqual(STPAPIClient.paramsAddingPaymentUserAgent([:])["payment_user_agent"] as! String, basePaymentUserAgent + "; PaymentSheet.FlowController")
-        
+
         // PaymentSheet.FlowController; deferred-intent
         STPAnalyticsClient.sharedClient.productUsage = .init()
         _ = PaymentSheet.FlowController(intent: .deferredIntent(elementsSession: ._testValue(), intentConfig: intentConfig), savedPaymentMethods: [], isLinkEnabled: false, configuration: .init())
