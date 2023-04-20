@@ -130,6 +130,7 @@ extension STPApplePayContext {
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
             applePayContext.shippingDetails = makeShippingDetails(from: configuration)
             applePayContext.apiClient = configuration.apiClient
+            applePayContext.returnUrl = configuration.returnURL
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
