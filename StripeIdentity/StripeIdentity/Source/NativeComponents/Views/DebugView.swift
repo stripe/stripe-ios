@@ -4,6 +4,8 @@
 //
 //  Created by Chen Cen on 4/18/23.
 //
+
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -71,7 +73,7 @@ class DebugView: UIView {
         ])
 
         let titleFirstLine = UILabel()
-        titleFirstLine.text = "You're currently in testmode"
+        titleFirstLine.text = .Localized.testModeTitle
         titleFirstLine.adjustsFontForContentSizeCategory = true
         titleFirstLine.font = sectionTitleFont
 
@@ -79,7 +81,7 @@ class DebugView: UIView {
         titleSecondLine.numberOfLines = 0
         titleSecondLine.adjustsFontForContentSizeCategory = true
         titleSecondLine.font = sectionContentFont
-        titleSecondLine.text = "This page is only shown in testmode."
+        titleSecondLine.text = .Localized.testModeContent
 
         let titleTextVstack = UIStackView(arrangedSubviews: [titleFirstLine, titleSecondLine])
         titleTextVstack.axis = .vertical
@@ -116,13 +118,13 @@ class DebugView: UIView {
         let finishMobileFlowFirstLine = UILabel()
         finishMobileFlowFirstLine.numberOfLines = 0
         finishMobileFlowFirstLine.font = sectionTitleFont
-        finishMobileFlowFirstLine.text = "Terminate mobile SDK flow"
+        finishMobileFlowFirstLine.text = .Localized.finishMobileFlow
         vStack.addArrangedSubview(finishMobileFlowFirstLine)
 
         let finishMobileFlowSecondLine = UILabel()
         finishMobileFlowSecondLine.numberOfLines = 0
         finishMobileFlowSecondLine.font = sectionContentFont
-        finishMobileFlowSecondLine.text = "Terminate mobile SDK flow locally with Completed, Cancelled or Failed without changing the verification session on server."
+        finishMobileFlowSecondLine.text = .Localized.finishMobileFlowDetails
         vStack.addArrangedSubview(finishMobileFlowSecondLine)
 
         vStack.addArrangedSubview(
@@ -152,13 +154,13 @@ class DebugView: UIView {
 
     private func configurePreviewUserExperienceSection() {
         let previewFirstLine = UILabel()
-        previewFirstLine.text = "Preview user experience"
+        previewFirstLine.text = .Localized.previewUserExperience
         previewFirstLine.numberOfLines = 0
         previewFirstLine.font = sectionTitleFont
         vStack.addArrangedSubview(previewFirstLine)
 
         let previewSecondLine = UILabel()
-        previewSecondLine.text = "Proceed to preview as an end user. Information provided will not be verified."
+        previewSecondLine.text = .Localized.previewUserExperienceDetails
         previewSecondLine.numberOfLines = 0
         previewSecondLine.font = sectionContentFont
         vStack.addArrangedSubview(previewFirstLine)
@@ -166,7 +168,7 @@ class DebugView: UIView {
 
         vStack.addArrangedSubview(
             Button(
-                title: "Preview",
+                title: .Localized.proceed,
                 target: self,
                 action: #selector(didTapPreview(button:))
             )

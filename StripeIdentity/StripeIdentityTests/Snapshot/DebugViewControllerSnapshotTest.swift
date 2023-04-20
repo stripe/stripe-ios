@@ -7,8 +7,8 @@
 
 import Foundation
 
-@testable import StripeIdentity
 import iOSSnapshotTestCase
+@testable import StripeIdentity
 
 final class DebugViewControllerSnapshotTest: FBSnapshotTestCase {
 
