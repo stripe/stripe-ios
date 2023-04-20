@@ -598,7 +598,7 @@
     address.email = @"test@example.com";
     address.city = @"London";
     address.postalCode = @"N1 7BE";
-    address.country = @"UK";
+    address.country = @"GB";
     address.phone = @"02012267709";
     STPDateOfBirth *dob = [[STPDateOfBirth alloc] init];
     dob.day = 11;
@@ -613,6 +613,7 @@
         XCTAssertNotNil(source);
         XCTAssertEqual(source.type, STPSourceTypeKlarna);
         XCTAssertEqualObjects(source.amount, @(600));
+        XCTAssertEqualObjects(source.owner.address.line1, address.line1);
         XCTAssertEqualObjects(source.klarnaDetails.purchaseCountry, @"GB");
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/return?redirect_merchant_name=xctest"]);
