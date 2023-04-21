@@ -275,12 +275,12 @@ public class STPPaymentHandler: NSObject {
     }
 
     /// Handles any `nextAction` required to authenticate the PaymentIntent.
-    /// Call this method if you are using manual confirmation.  - seealso: https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom
+    /// Call this method if you are using server-side confirmation.  - seealso: https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom
     /// - Parameters:
     ///   - paymentIntentClientSecret: The client secret of the PaymentIntent to handle next actions for.
     ///   - authenticationContext: The authentication context used to authenticate the payment.
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during PaymentIntent confirmation.
-    ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status will always be either STPPaymentIntentStatusSucceeded, or STPPaymentIntentStatusRequiresConfirmation, or STPPaymentIntentStatusRequiresCapture if you are using manual capture. In the latter two cases, confirm or capture the PaymentIntent on your backend to complete the payment.
+    ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
     @objc(handleNextActionForPayment:withAuthenticationContext:returnURL:completion:)
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
@@ -316,8 +316,9 @@ public class STPPaymentHandler: NSObject {
                 status == .succeeded
             {
                 let successIntentState =
-                    paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture
-                    || paymentIntent.status == .requiresConfirmation
+                paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture || paymentIntent.status == .requiresConfirmation
+                || (paymentIntent.status == .processing && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
+                || (paymentIntent.status == .requiresAction && strongSelf.isNextActionSuccessState(nextAction: paymentIntent.nextAction))
 
                 if error == nil && successIntentState {
                     completion(.succeeded, paymentIntent, nil)
@@ -517,8 +518,8 @@ public class STPPaymentHandler: NSObject {
             if status == .succeeded {
                 // Ensure the .succeeded case returns a PaymentIntent in the expected state.
                 if let setupIntent = setupIntent,
-                    error == nil,
-                    setupIntent.status == .succeeded
+                   error == nil,
+                   setupIntent.status == .succeeded
                 {
                     completion(.succeeded, setupIntent, nil)
                 } else {
