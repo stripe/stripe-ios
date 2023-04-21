@@ -198,7 +198,7 @@ final class UIColorStripeUICoreTests: XCTestCase {
         XCTAssertEqual(r, 0, accuracy: eps)
         XCTAssertEqual(g, 0, accuracy: eps)
         XCTAssertEqual(b, 0, accuracy: eps)
-        XCTAssertEqual(a, 0.6, accuracy: eps)
+        XCTAssertEqual(a, 0.4, accuracy: eps)
 
         (r, g, b, a) = color.disabled(false).rgba
         XCTAssertEqual(r, 0, accuracy: eps)
@@ -211,7 +211,7 @@ final class UIColorStripeUICoreTests: XCTestCase {
         XCTAssertEqual(r, 0, accuracy: eps)
         XCTAssertEqual(g, 0, accuracy: eps)
         XCTAssertEqual(b, 0, accuracy: eps)
-        XCTAssertEqual(a, 0.36, accuracy: eps)
+        XCTAssertEqual(a, 0.24, accuracy: eps)
 
         (r, g, b, a) = color.disabled(false).rgba
         XCTAssertEqual(r, 0, accuracy: eps)

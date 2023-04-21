@@ -103,10 +103,10 @@ import UIKit
         return contrastRatioToWhite > contrastRatioToBlack ? .white : .black
     }
 
-    /// Returns this color in a "disabled" state by reducing the alpha by 40%
+    /// Returns this color in a "disabled" state by reducing the alpha by 60%
     var disabledColor: UIColor {
         let (_, _, _, alpha) = rgba
-        return self.withAlphaComponent(alpha * 0.6)
+        return self.withAlphaComponent(alpha * 0.4)
     }
 
     /// Returns this color in a "disabled" state by reducing the alpha by 40% if `isDisabled` is `true`,
