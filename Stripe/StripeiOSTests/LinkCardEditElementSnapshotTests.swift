@@ -18,7 +18,7 @@ final class LinkCardEditElementSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        //        self.recordMode = true
+                self.recordMode = true
 
         // `LinkCardEditElement` depends on `AddressSectionElement`, which requires
         // address specs to be loaded in memory.
