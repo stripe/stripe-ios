@@ -1,7 +1,9 @@
-## 23.6.2 2023-04-20
+## x.x.x yyyy-mm-dd
 
 ### PaymentSheet
 * [Fixed] Fixed disabled text color, using a lower opacity version of the original color instead of the previous `.tertiaryLabel`.
+
+## 23.6.2 2023-04-20
 
 ### Payments
 * [Fixed] Fixed UnionPay cards appearing as invalid in some cases.
