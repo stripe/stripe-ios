@@ -298,6 +298,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
         }
         updateUI()
+        sendEventToSubviews(.viewDidAppear, from: view)
     }
 
     func didTapCallToActionButton(behavior: OverrideableBuyButtonBehavior, from viewController: UIViewController) {

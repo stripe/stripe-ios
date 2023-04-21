@@ -1,10 +1,13 @@
-## x.x.x yyyy-mm-dd
+## 23.6.2 2023-04-20
 
 ### PaymentSheet
 * [Fixed] Fixed disabled text color, using a lower opacity version of the original color instead of the previous `.tertiaryLabel`.
 
 ### Payments
 * [Fixed] Fixed UnionPay cards appearing as invalid in some cases.
+
+### PaymentSheet
+* [Fixed] Fixed a bug that prevents users from using SEPA Debit w/ PaymentIntents or SetupIntents and Paypal in PaymentIntent+setup_future_usage or SetupIntent.
 
 ## 23.6.1 2023-04-17
 ### All
