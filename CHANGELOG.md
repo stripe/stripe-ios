@@ -1,4 +1,4 @@
-## x.x.x yyyy-mm-dd
+## 23.6.2 2023-04-20
 
 ### Payments
 * [Fixed] Fixed UnionPay cards appearing as invalid in some cases.
