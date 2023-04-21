@@ -3,7 +3,9 @@
 ### Payments
 * [Fixed] Fixed UnionPay cards appearing as invalid in some cases.
 
-## 23.6.1 2023-04-17
+## 23.6.1 2023-04-17 (removed)
+This release was deleted due to a bug in PaymentSheet where payments could not be made for SEPA Debit.  This also affected Paypal when used with PaymentIntents+setup_future_usage or SetupIntents.
+
 ### All
 * Xcode 13 is [no longer supported by Apple](https://developer.apple.com/news/upcoming-requirements/). Please upgrade to Xcode 14.1 or later.
 ### PaymentSheet
