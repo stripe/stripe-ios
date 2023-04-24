@@ -15,7 +15,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
 
 class MockEphemeralKeyManager: STPEphemeralKeyManagerProtocol {
     var ephemeralKey: STPEphemeralKey?
@@ -30,6 +30,24 @@ class MockEphemeralKeyManager: STPEphemeralKeyManagerProtocol {
     }
 
     func getOrCreateKey(_ completion: @escaping STPEphemeralKeyCompletionBlock) {
+        completion(ephemeralKey, error)
+    }
+}
+
+
+class _stpspmsbeta_MockEphemeralKeyManager: _stpspmsbeta_STPEphemeralKeyManagerProtocol {
+    var ephemeralKey: _stpspmsbeta_STPEphemeralKey?
+    var error: Error?
+
+    init(
+        key: _stpspmsbeta_STPEphemeralKey?,
+        error: Error?
+    ) {
+        self.ephemeralKey = key
+        self.error = error
+    }
+
+    func getOrCreateKey(_ completion: @escaping StripePaymentsUI._stpspmsbeta_STPEphemeralKeyCompletionBlock) {
         completion(ephemeralKey, error)
     }
 }
@@ -666,6 +684,25 @@ class STPCustomerContextTests: APIStubbedTestCase {
             sut.retrieveCustomer { customer, _ in
                 // Apple Pay should be filtered out
                 XCTAssertEqual(customer!.sources.count, 2)
+                exp.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 2, handler: nil)
+    }
+
+    func testSaveLastSelectedPaymentMethodID() {
+        let pmOption = PersistablePaymentMethodOption(value: "pm_123456789")
+        let customerKey = STPFixtures.stpspmsbeta_ephemeralKey()
+        let apiClient = stubbedAPIClient()
+
+        let exp = expectation(description: "Set and get PM id")
+        let ekm = _stpspmsbeta_MockEphemeralKeyManager(key: customerKey, error: nil)
+        let sut = _stpspmsbeta_STPCustomerContext(keyManager: ekm, apiClient: apiClient)
+        sut.setSelectedPaymentMethodOption(paymentOption: pmOption) { error in
+            XCTAssertNil(error)
+            sut.retrieveSelectedPaymentMethodOption { savedPMOption, error in
+                XCTAssertNil(error)
+                XCTAssertEqual(pmOption, savedPMOption)
                 exp.fulfill()
             }
         }

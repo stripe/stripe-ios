@@ -187,6 +187,12 @@ extern NSString *const STPTestJSONSourceSofort;
 + (STPEphemeralKey *)ephemeralKey;
 
 /**
+ A customer-scoped ephemeral key that expires in 100 seconds.
+ // Temporary during stpspmsbeta: Will delete when _stpspmsbeta_ is merged.
+ */
++ (_stpspmsbeta_STPEphemeralKey *)stpspmsbeta_ephemeralKey;
+
+/**
  A customer-scoped ephemeral key that expires in 10 seconds.
  */
 + (STPEphemeralKey *)expiringEphemeralKey;
