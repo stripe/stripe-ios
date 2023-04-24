@@ -85,7 +85,6 @@ class IntentConfirmParams {
         } else {
             params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
             params.paymentMethodParams = paymentMethodParams
-            return params
         }
 
         let options = paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
