@@ -111,7 +111,16 @@ extension FinancialConnectionsAnalyticsClient {
             parameters["code"] = apiError.code
         } else {
             parameters["error_type"] = (error as NSError).domain
-            parameters["error_message"] = (error as NSError).localizedDescription
+            parameters["error_message"] = {
+                if let sheetError = error as? FinancialConnectionsSheetError {
+                    switch sheetError {
+                    case .unknown(let debugDescription):
+                        return debugDescription
+                    }
+                } else {
+                    return (error as NSError).localizedDescription
+                }
+            }() as String
             parameters["code"] = (error as NSError).code
         }
         log(eventName: eventName, parameters: parameters)

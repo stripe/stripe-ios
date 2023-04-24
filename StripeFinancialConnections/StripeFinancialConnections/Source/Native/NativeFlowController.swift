@@ -765,6 +765,16 @@ private func CreatePaneViewController(
                 eventName: "pane.launched",
                 parameters: ["pane": pane.rawValue]
             )
+    } else {
+        dataManager
+            .analyticsClient
+            .logUnexpectedError(
+                FinancialConnectionsSheetError.unknown(
+                    debugDescription: "Pane Not Found: either app state is invalid, or an unsupported pane was requested."
+                ),
+                errorName: "PaneNotFound",
+                pane: pane
+            )
     }
 
     return viewController
