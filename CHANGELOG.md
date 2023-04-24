@@ -3,6 +3,9 @@
 ### PaymentSheet
 * [Fixed] Fixed disabled text color, using a lower opacity version of the original color instead of the previous `.tertiaryLabel`.
 
+### Identity
+* [Added] Added test mode for the SDK.
+
 ## 23.6.2 2023-04-20
 
 ### Payments
@@ -10,9 +13,6 @@
 
 ### PaymentSheet
 * [Fixed] Fixed a bug that prevents users from using SEPA Debit w/ PaymentIntents or SetupIntents and Paypal in PaymentIntent+setup_future_usage or SetupIntent.
-
-### Identity
-* [Added] Added test mode for the SDK.
 
 ## 23.6.1 2023-04-17
 ### All
