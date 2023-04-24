@@ -1,4 +1,4 @@
-## x.x.x yyyy-mm-dd
+## 23.7.0 2023-04-24
 
 ### PaymentSheet
 * [Fixed] Fixed disabled text color, using a lower opacity version of the original color instead of the previous `.tertiaryLabel`.
