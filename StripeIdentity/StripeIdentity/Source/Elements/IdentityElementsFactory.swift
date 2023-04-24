@@ -49,11 +49,12 @@ struct IdentityElementsFactory {
         return SectionElement(
             title: String.Localized.name,
             elements: [
-                TextFieldElement(configuration: NameConfiguration(type: .given, defaultValue: nil)),
+                TextFieldElement(configuration: NameConfiguration(type: .given, defaultValue: nil), theme: IdentityUI.identityElementsUITheme),
                 TextFieldElement(
-                    configuration: NameConfiguration(type: .family, defaultValue: nil)
+                    configuration: NameConfiguration(type: .family, defaultValue: nil), theme: IdentityUI.identityElementsUITheme
                 ),
-            ]
+            ],
+            theme: IdentityUI.identityElementsUITheme
         )
     }
 
@@ -79,8 +80,9 @@ struct IdentityElementsFactory {
         return  SectionElement(
             title: String.Localized.date_of_birth,
             elements: [
-                TextFieldElement(configuration: TextFieldElement.IdentityDobConfiguration())
-            ]
+                TextFieldElement(configuration: TextFieldElement.IdentityDobConfiguration(), theme: IdentityUI.identityElementsUITheme)
+            ],
+            theme: IdentityUI.identityElementsUITheme
         )
     }
 
@@ -91,7 +93,8 @@ struct IdentityElementsFactory {
             title: String.Localized.address,
             countries: countries,
             locale: locale,
-            addressSpecProvider: addressSpecProvider
+            addressSpecProvider: addressSpecProvider,
+            theme: IdentityUI.identityElementsUITheme
         )
     }
 }
