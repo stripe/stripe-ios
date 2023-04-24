@@ -77,15 +77,12 @@ class IntentConfirmParams {
         configuration: PaymentSheet.Configuration,
         paymentMethodID: String?
     ) -> STPPaymentIntentParams {
-        let params: STPPaymentIntentParams
+        let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
         // If a payment method ID was provided use that, otherwise use the payment method params
         if let paymentMethodID = paymentMethodID {
-            params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret, paymentMethodType: paymentMethodParams.type)
             params.paymentMethodId = paymentMethodID
         } else {
-            params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
             params.paymentMethodParams = paymentMethodParams
-            return params
         }
 
         let options = paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
@@ -95,17 +92,16 @@ class IntentConfirmParams {
             customer: configuration.customer
         )
         params.paymentMethodOptions = options
+
         return params
     }
 
     func makeParams(setupIntentClientSecret: String, paymentMethodID: String?) -> STPSetupIntentConfirmParams {
-        let params: STPSetupIntentConfirmParams
+        let params = STPSetupIntentConfirmParams(clientSecret: setupIntentClientSecret)
         // If a payment method ID was provided use that, otherwise use the payment method params
         if let paymentMethodID = paymentMethodID {
-            params = STPSetupIntentConfirmParams(clientSecret: setupIntentClientSecret, paymentMethodType: paymentMethodParams.type)
             params.paymentMethodID = paymentMethodID
         } else {
-            params = STPSetupIntentConfirmParams(clientSecret: setupIntentClientSecret)
             params.paymentMethodParams = paymentMethodParams
         }
         return params
