@@ -147,4 +147,55 @@ extension String.Localized {
             "Error text displayed to the user when the device's camera is not available"
         )
     }
+
+    // MARK: - Debug View
+    static var testModeTitle: String {
+        STPLocalizedString(
+            "You're currently in testmode",
+            "Title of test mode screen"
+        )
+    }
+
+    static var testModeContent: String {
+        STPLocalizedString(
+            "This page is only shown in testmode.",
+            "Explains the usages of test mode screen."
+        )
+    }
+
+    static var finishMobileFlow: String {
+        STPLocalizedString(
+            "Terminate mobile SDK flow",
+            "Title to terminate mobile SDK flow in test mode"
+        )
+    }
+
+    static var finishMobileFlowDetails: String {
+        STPLocalizedString(
+            "Terminate mobile SDK flow locally with Completed, Cancelled or Failed without changing the verification session on server.",
+            "Explains how terminate works. Don't translate Completed, Cancelled and Failed."
+        )
+    }
+
+    static var previewUserExperience: String {
+        STPLocalizedString(
+            "Preview user experience",
+            "Label text for previewing user experience"
+        )
+    }
+
+    static var previewUserExperienceDetails: String {
+        STPLocalizedString(
+            "Proceed to preview as an end user. Information provided will not be verified.",
+            "Explains the usages of preview user experience"
+        )
+    }
+
+    static var proceed: String {
+        STPLocalizedString(
+            "Proceed",
+            "Proceed button text"
+        )
+    }
+
 }

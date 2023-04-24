@@ -11,6 +11,9 @@
 ### PaymentSheet
 * [Fixed] Fixed a bug that prevents users from using SEPA Debit w/ PaymentIntents or SetupIntents and Paypal in PaymentIntent+setup_future_usage or SetupIntent.
 
+### Identity
+* [Added] Added test mode for the SDK.
+
 ## 23.6.1 2023-04-17
 ### All
 * Xcode 13 is [no longer supported by Apple](https://developer.apple.com/news/upcoming-requirements/). Please upgrade to Xcode 14.1 or later.

@@ -129,7 +129,7 @@ final class VerificationSheetControllerTest: XCTestCase {
 
     func testLoadAndUpdateUI() throws {
         let mockResponse = try VerificationPageMock.response200.make()
-        controller.loadAndUpdateUI()
+        controller.loadAndUpdateUI(skipTestMode: true)
 
         // Respond to request with success
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
