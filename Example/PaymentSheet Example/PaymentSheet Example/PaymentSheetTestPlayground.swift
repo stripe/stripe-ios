@@ -753,8 +753,6 @@ extension PaymentSheetTestPlayground {
                 return
             }
 
-            print("client secret")
-            print(clientSecret)
             intentCreationCallback(.success(clientSecret))
         })
     }
