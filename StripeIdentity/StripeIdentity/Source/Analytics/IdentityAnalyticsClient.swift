@@ -72,6 +72,7 @@ final class IdentityAnalyticsClient {
         case individual_welcome = "individual_welcome"
         case error = "error"
         case countryNotListed = "country_not_listed"
+        case debug = "debug"
     }
 
     /// Name of the scanner logged in scanning performance events

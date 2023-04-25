@@ -28,6 +28,7 @@ class ConfirmButton: UIView {
         case enabled
         case disabled
         case processing
+        case spinnerWithInteractionDisabled
         case succeeded
     }
     enum Style {
@@ -378,7 +379,7 @@ class ConfirmButton: UIView {
             // Update the label with a crossfade UIView.transition; UIView.animate doesn't provide an animation for text changes
             let text: String? = {
                 switch status {
-                case .enabled, .disabled:
+                case .enabled, .disabled, .spinnerWithInteractionDisabled:
                     switch callToAction {
                     case .add(let paymentMethodType):
                         if paymentMethodType == .linkInstantDebit {
@@ -474,7 +475,7 @@ class ConfirmButton: UIView {
             UIView.animate(withDuration: animationDuration) {
                 self.titleLabel.alpha = {
                     switch status {
-                    case .disabled:
+                    case .disabled, .spinnerWithInteractionDisabled:
                         return 0.6
                     case .succeeded:
                         return 0
@@ -491,7 +492,7 @@ class ConfirmButton: UIView {
                     self.lockIcon.alpha = self.titleLabel.alpha
                     self.addIcon.alpha = self.titleLabel.alpha
                     self.spinner.alpha = 0
-                case .processing:
+                case .processing, .spinnerWithInteractionDisabled:
                     self.lockIcon.alpha = 0
                     self.addIcon.alpha = 0
                     self.spinner.alpha = 1
@@ -523,7 +524,7 @@ class ConfirmButton: UIView {
 
         private func backgroundColor(for status: Status) -> UIColor {
             switch status {
-            case .enabled, .disabled, .processing:
+            case .enabled, .disabled, .processing, .spinnerWithInteractionDisabled:
                 return tintColor
             case .succeeded:
                 return succeededBackgroundColor

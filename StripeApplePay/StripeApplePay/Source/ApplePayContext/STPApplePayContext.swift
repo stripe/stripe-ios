@@ -200,6 +200,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @_spi(STP) public var shippingDetails: StripeAPI.ShippingDetails?
     private weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
     @objc var authorizationController: PKPaymentAuthorizationController?
+    @_spi(STP) public var returnUrl: String?
     // Internal state
     private var paymentState: PaymentState = .notStarted
     private var error: Error?
@@ -516,6 +517,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                             )
                             confirmParams.paymentMethod = paymentMethod.id
                             confirmParams.useStripeSdk = true
+                            confirmParams.returnUrl = self.returnUrl
 
                             StripeAPI.SetupIntent.confirm(
                                 apiClient: self.apiClient,

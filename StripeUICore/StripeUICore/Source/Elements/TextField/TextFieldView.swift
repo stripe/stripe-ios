@@ -198,7 +198,7 @@ class TextFieldView: UIView {
             textField.accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
             layer.borderColor = viewModel.theme.colors.border.cgColor
-            textField.textColor = isUserInteractionEnabled ? viewModel.theme.colors.textFieldText : .tertiaryLabel
+            textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
             errorIconView.alpha = 0
             textField.accessibilityValue = viewModel.attributedText.string
         }

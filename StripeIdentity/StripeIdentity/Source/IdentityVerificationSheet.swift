@@ -175,7 +175,7 @@ final public class IdentityVerificationSheet {
             // Use native UI
             verificationSessionId = verificationSheetController.apiClient.verificationSessionId
             navigationController = verificationSheetController.flowController.navigationController
-            verificationSheetController.loadAndUpdateUI()
+            verificationSheetController.loadAndUpdateUI(skipTestMode: false)
 
             verificationSheetController.analyticsClient.logSheetPresented()
         } else if #available(iOS 14.3, *) {

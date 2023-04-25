@@ -30,7 +30,7 @@ extension PaymentSheet {
                                                  paymentMethod: STPPaymentMethod?,
                                                  paymentMethodParams: STPPaymentMethodParams?,
                                                  shouldSavePaymentMethod: Bool) {
-        // Add deferred to payment analytics user agent
+        // Hack: Add deferred to analytics product usage as a hack to get it into the payment_user_agent string in the request to create a PaymentMethod
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: IntentConfiguration.self)
         Task {
             do {

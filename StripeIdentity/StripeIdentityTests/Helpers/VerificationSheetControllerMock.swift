@@ -15,6 +15,17 @@ import XCTest
 @testable import StripeIdentity
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
+    func loadAndUpdateUI(skipTestMode: Bool) {
+        // no-op
+    }
+
+    func overrideTestModeReturnValue(result: StripeIdentity.IdentityVerificationSheet.VerificationFlowResult) {
+        // no-op
+    }
+
+    func clearCollectedData(field: StripeCore.StripeAPI.VerificationPageFieldType) {
+        // no-op
+    }
     var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
 
     var apiClient: IdentityAPIClient

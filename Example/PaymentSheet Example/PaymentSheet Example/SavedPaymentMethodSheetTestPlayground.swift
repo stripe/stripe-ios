@@ -221,9 +221,9 @@ extension SavedPaymentMethodSheetTestPlayground: SavedPaymentMethodsSheetDelegat
         self.updateButtons()
         let alertController = self.makeAlertController()
         if let paymentOptionSelection = paymentOptionSelection {
-            alertController.message = "Finished with: \(paymentOptionSelection.displayData().label)"
+            alertController.message = "Success: \(paymentOptionSelection.displayData().label)"
         } else {
-            alertController.message = "Finished, payment method unset"
+            alertController.message = "Success: payment method unset"
         }
         self.present(alertController, animated: true) {
             self.load()

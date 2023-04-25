@@ -39,11 +39,13 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     }
 
     func transitionToNextScreen(
+        skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
         completion: @escaping () -> Void
     ) {
+        // do something to skipTestMode
         transitionedWithStaticContentResult = staticContentResult
         transitionedWithUpdateDataResult = updateDataResult
         didTransitionToNextScreenExp.fulfill()

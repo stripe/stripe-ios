@@ -22,19 +22,16 @@ class WalletModeUITest: XCTestCase {
     }
 
     func testPaymentSheetStandard() throws {
-        app.staticTexts["Saved Payment Methods (test playground)"].tap()
-        let loadButton = app.staticTexts["Load customerInfo"]
+        app.staticTexts["SavedPaymentMethodsSheet (test playground)"].tap()
+        let loadButton = app.staticTexts["Load Ephemeral Key"]
         XCTAssertTrue(loadButton.waitForExistence(timeout: 60.0))
         loadButton.tap()
         let selectButton = app.staticTexts["Select"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
-        let addButton = app.buttons["+ Add"]
-        XCTAssertTrue(addButton.waitForExistence(timeout: 60.0))
-        addButton.tap()
         try! fillCardData(app, postalEnabled: false)
-        app.buttons["Set up"].tap()
-        let paymentMethodButton = app.staticTexts["••••4242"]  // The card should be saved now
+        app.buttons["Add"].tap()
+        let paymentMethodButton = app.staticTexts["Success: ••••4242"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
     }
 }
