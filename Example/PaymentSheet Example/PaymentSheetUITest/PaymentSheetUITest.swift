@@ -1042,6 +1042,36 @@ extension PaymentSheetUITest {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
+    func testDeferredPaymentIntent_FlowController_ServerSideConfirmation_ManualConfirmation() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred",
+                "confirm_mode": "Server",
+                "confirm_method": "Manual",
+                "automatic_payment_methods": "off",
+            ]
+        )
+
+        let selectButton = app.buttons["present_saved_pms"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
+        selectButton.tap()
+        let selectText = app.staticTexts["Select your payment method"]
+        XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
+
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
+        try? fillCardData(app, container: nil)
+
+        app.buttons["Continue"].tap()
+        app.buttons["Checkout (Custom)"].tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
     func testDeferredSetupIntent_FlowController_ServerSideConfirmation() {
         loadPlayground(
             app,
@@ -1132,6 +1162,25 @@ extension PaymentSheetUITest {
             settings: [
                 "init_mode": "Deferred",
                 "confirm_mode": "Server",
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+        let applePayButton = app.buttons["apple_pay_button"]
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
+        applePayButton.tap()
+
+        payWithApplePay()
+    }
+
+    func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation_ManualConfirmation() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Deferred",
+                "confirm_mode": "Server",
+                "confirm_method": "Manual",
+                "automatic_payment_methods": "off",
             ]
         )
 

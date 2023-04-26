@@ -45,6 +45,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var customCTALabelTextField: UITextField!
     @IBOutlet weak var initModeSelector: UISegmentedControl!
     @IBOutlet weak var confirmModeSelector: UISegmentedControl!
+    @IBOutlet weak var confirmMethodSelector: UISegmentedControl!
 
     @IBOutlet weak var attachDefaultSelector: UISegmentedControl!
     @IBOutlet weak var collectNameSelector: UISegmentedControl!
@@ -544,6 +545,7 @@ extension PaymentSheetTestPlayground {
             "mode": intentMode.rawValue,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
             "use_link": linkSelector.selectedSegmentIndex == 0,
+            "confirmation_method": confirmMethodSelector.selectedSegmentIndex == 0 ? "automatic" : "manual",
 //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
 
@@ -618,6 +620,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
     let modeSelectorValue: Int
     let initModeSelectorValue: Int
     let confirmModeSelector: Int
+    let confirmMethodSelector: Int
     let customerModeSelectorValue: Int
     let currencySelectorValue: Int
     let merchantCountryCode: Int
@@ -642,6 +645,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
             modeSelectorValue: 0,
             initModeSelectorValue: 0,
             confirmModeSelector: 0,
+            confirmMethodSelector: 0,
             customerModeSelectorValue: 0,
             currencySelectorValue: 0,
             merchantCountryCode: 0,
@@ -775,6 +779,7 @@ extension PaymentSheetTestPlayground {
             modeSelectorValue: modeSelector.selectedSegmentIndex,
             initModeSelectorValue: initModeSelector.selectedSegmentIndex,
             confirmModeSelector: confirmModeSelector.selectedSegmentIndex,
+            confirmMethodSelector: confirmMethodSelector.selectedSegmentIndex,
             customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
             currencySelectorValue: currencySelector.selectedSegmentIndex,
             merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
@@ -820,6 +825,7 @@ extension PaymentSheetTestPlayground {
         modeSelector.selectedSegmentIndex = settings.modeSelectorValue
         initModeSelector.selectedSegmentIndex = settings.initModeSelectorValue
         confirmModeSelector.selectedSegmentIndex = settings.confirmModeSelector
+        confirmMethodSelector.selectedSegmentIndex = settings.confirmMethodSelector
         defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
