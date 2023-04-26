@@ -236,7 +236,7 @@ public class STPBankAccountCollector: NSObject {
             completion: linkAccountSessionCallback
         )
     }
-
+    
     // MARK: Helper
     private func attachLinkAccountSessionToPaymentIntent(
         paymentIntentID: String,
@@ -457,6 +457,44 @@ public class STPBankAccountCollector: NSObject {
                 return
             }
             completion(setupIntent, nil)
+        }
+    }
+    
+    // MARK: - Collect Bank Account - Deferred Intent
+    @_spi(STP) public func collectBankAccountForDeferredIntent(
+        sessionId: String,
+        returnURL: String?,
+        onBehalfOf: String?,
+        from viewController: UIViewController,
+        financialConnectionsCompletion: @escaping (
+            FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?
+        ) -> Void
+    ) {
+        guard
+            let financialConnectionsAPI = FinancialConnectionsSDKAvailability.financialConnections()
+        else {
+            assertionFailure("FinancialConnections SDK has not been linked into your project")
+            financialConnectionsCompletion(nil, nil, error(for: .financialConnectionsSDKNotLinked))
+            return
+        }
+        
+        apiClient.createLinkAccountSessionForDeferredIntent(sessionId: sessionId, onBehalfOf: onBehalfOf) { linkAccountSession, error in
+            if let error = error {
+                financialConnectionsCompletion(nil, nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
+                return
+            }
+            guard let linkAccountSession = linkAccountSession else {
+                financialConnectionsCompletion(nil, nil, NSError.stp_genericFailedToParseResponseError())
+                return
+            }
+            financialConnectionsAPI.presentFinancialConnectionsSheet(
+                apiClient: self.apiClient,
+                clientSecret: linkAccountSession.clientSecret,
+                returnURL: returnURL,
+                from: viewController
+            ) { result in
+                financialConnectionsCompletion(result, linkAccountSession, nil)
+            }
         }
     }
 }

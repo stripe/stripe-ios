@@ -49,7 +49,27 @@ extension STPAPIClient {
             customerEmailAddress: customerEmailAddress,
             completion: completion
         )
-
+    }
+    
+    func createLinkAccountSessionForDeferredIntent(
+        sessionId: String,
+        onBehalfOf: String?,
+        completion: @escaping STPLinkAccountSessionBlock
+    ) {
+        let endpoint: String = "connections/link_account_sessions_for_deferred_payment"
+        var parameters: [String: Any] = [
+            "unique_id": sessionId,
+        ]
+        if let onBehalfOf {
+            parameters["on_behalf_of"] = onBehalfOf
+        }
+        APIRequest<LinkAccountSession>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { linkAccountSession, _, error in
+            completion(linkAccountSession, error)
+        }
     }
 
     // MARK: - Helper

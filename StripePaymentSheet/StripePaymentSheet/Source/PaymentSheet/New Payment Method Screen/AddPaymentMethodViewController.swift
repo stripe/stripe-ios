@@ -368,8 +368,16 @@ class AddPaymentMethodViewController: UIViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent): Support ACHv2")
+        case let .deferredIntent(elementsSession, intentConfig):
+            // I observed a blank webview unless the session ID is unique per attempt, so append a UUID.
+            let sessionId = elementsSession.sessionID + "--" + UUID().uuidString
+            client.collectBankAccountForDeferredIntent(
+                sessionId: sessionId,
+                returnURL: configuration.returnURL,
+                onBehalfOf: intentConfig.onBehalfOf,
+                from: viewController,
+                financialConnectionsCompletion: financialConnectionsCompletion
+            )
         }
     }
 }
