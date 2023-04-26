@@ -730,7 +730,7 @@ public class STPPaymentHandler: NSObject {
                 error: _error(
                     for: .intentStatusErrorCode,
                     userInfo: [
-                        "STPSetupIntent": setupIntent.description
+                        "STPSetupIntent": setupIntent.description,
                     ]
                 )
             )
@@ -751,7 +751,7 @@ public class STPPaymentHandler: NSObject {
                             for: .paymentErrorCode,
                             apiErrorCode: lastSetupError.code,
                             userInfo: [
-                                NSLocalizedDescriptionKey: lastSetupError.message ?? ""
+                                NSLocalizedDescriptionKey: lastSetupError.message ?? "",
                             ]
                         )
                     )
@@ -810,7 +810,7 @@ public class STPPaymentHandler: NSObject {
                 error: _error(
                     for: .intentStatusErrorCode,
                     userInfo: [
-                        "STPPaymentIntent": paymentIntent.description
+                        "STPPaymentIntent": paymentIntent.description,
                     ]
                 )
             )
@@ -834,7 +834,7 @@ public class STPPaymentHandler: NSObject {
                             for: .paymentErrorCode,
                             apiErrorCode: lastPaymentError.code,
                             userInfo: [
-                                NSLocalizedDescriptionKey: lastPaymentError.message ?? ""
+                                NSLocalizedDescriptionKey: lastPaymentError.message ?? "",
                             ]
                         )
                     )
@@ -902,7 +902,7 @@ public class STPPaymentHandler: NSObject {
                 error: _error(
                     for: .unsupportedAuthenticationErrorCode,
                     userInfo: [
-                        "STPIntentAction": authenticationAction.description
+                        "STPIntentAction": authenticationAction.description,
                     ]
                 )
             )
@@ -916,7 +916,7 @@ public class STPPaymentHandler: NSObject {
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
                         userInfo: [
-                            "STPIntentAction": authenticationAction.description
+                            "STPIntentAction": authenticationAction.description,
                         ]
                     )
                 )
@@ -935,7 +935,7 @@ public class STPPaymentHandler: NSObject {
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
                         userInfo: [
-                            "STPIntentAction": authenticationAction.description
+                            "STPIntentAction": authenticationAction.description,
                         ]
                     )
                 )
@@ -954,7 +954,7 @@ public class STPPaymentHandler: NSObject {
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
                         userInfo: [
-                            "STPIntentAction": authenticationAction.description
+                            "STPIntentAction": authenticationAction.description,
                         ]
                     )
                 )
@@ -969,7 +969,7 @@ public class STPPaymentHandler: NSObject {
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
                         userInfo: [
-                            "STPIntentAction": authenticationAction.description
+                            "STPIntentAction": authenticationAction.description,
                         ]
                     )
                 )
@@ -984,7 +984,7 @@ public class STPPaymentHandler: NSObject {
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
                         userInfo: [
-                            "STPIntentAction": authenticationAction.description
+                            "STPIntentAction": authenticationAction.description,
                         ]
                     )
                 )
@@ -999,7 +999,7 @@ public class STPPaymentHandler: NSObject {
                         error: _error(
                             for: .unsupportedAuthenticationErrorCode,
                             userInfo: [
-                                "STPIntentAction": authenticationAction.description
+                                "STPIntentAction": authenticationAction.description,
                             ]
                         )
                     )
@@ -1011,7 +1011,7 @@ public class STPPaymentHandler: NSObject {
                             error: _error(
                                 for: .stripe3DS2ErrorCode,
                                 userInfo: [
-                                    "description": "Failed to initialize STDSThreeDS2Service."
+                                    "description": "Failed to initialize STDSThreeDS2Service.",
                                 ]
                             )
                         )
@@ -1042,7 +1042,7 @@ public class STPPaymentHandler: NSObject {
                                     error: self._error(
                                         for: .stripe3DS2ErrorCode,
                                         userInfo: [
-                                            "exception": exception.description
+                                            "exception": exception.description,
                                         ]
                                     )
                                 )
@@ -1052,7 +1052,7 @@ public class STPPaymentHandler: NSObject {
                                 error: self._error(
                                     for: .stripe3DS2ErrorCode,
                                     userInfo: [
-                                        "exception": exception.description
+                                        "exception": exception.description,
                                     ]
                                 )
                             )
@@ -1153,7 +1153,7 @@ public class STPPaymentHandler: NSObject {
                                                             error: self._error(
                                                                 for: .stripe3DS2ErrorCode,
                                                                 userInfo: [
-                                                                    "exception": exception
+                                                                    "exception": exception,
                                                                 ]
                                                             )
                                                         )
@@ -1198,7 +1198,7 @@ public class STPPaymentHandler: NSObject {
                                         error: self._error(
                                             for: .unsupportedAuthenticationErrorCode,
                                             userInfo: [
-                                                "STPIntentAction": authenticationAction.description
+                                                "STPIntentAction": authenticationAction.description,
                                             ]
                                         )
                                     )
@@ -1218,7 +1218,7 @@ public class STPPaymentHandler: NSObject {
                             error: self._error(
                                 for: .unsupportedAuthenticationErrorCode,
                                 userInfo: [
-                                    "STPIntentAction": authenticationAction.description
+                                    "STPIntentAction": authenticationAction.description,
                                 ]
                             )
                         )
@@ -1246,7 +1246,7 @@ public class STPPaymentHandler: NSObject {
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
                         userInfo: [
-                            "STPIntentAction": authenticationAction.description
+                            "STPIntentAction": authenticationAction.description,
                         ]
                     )
                 )
@@ -1293,7 +1293,7 @@ public class STPPaymentHandler: NSObject {
                     error: _error(
                         for: .unsupportedAuthenticationErrorCode,
                         userInfo: [
-                            "STPIntentAction": authenticationAction.description
+                            "STPIntentAction": authenticationAction.description,
                         ]
                     )
                 )
@@ -1558,7 +1558,7 @@ public class STPPaymentHandler: NSObject {
         // redirect to a native app if the app has been installed.  If Safari is not the default browser, then users not be
         // automatically navigated to the native app.
         let options: [UIApplication.OpenExternalURLOptionsKey: Any] = [
-            UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: false
+            UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: false,
         ]
         UIApplication.shared.open(
             url,
@@ -1630,7 +1630,7 @@ public class STPPaymentHandler: NSObject {
                         error: self._error(
                             for: .requiredAppNotAvailable,
                             userInfo: [
-                                "STPIntentAction": currentAction.description
+                                "STPIntentAction": currentAction.description,
                             ]
                         )
                     )
@@ -1725,7 +1725,7 @@ public class STPPaymentHandler: NSObject {
                 for: .requiresAuthenticationContextErrorCode,
                 userInfo: errorMessage != nil
                     ? [
-                        STPError.errorMessageKey: errorMessage ?? ""
+                        STPError.errorMessageKey: errorMessage ?? "",
                     ] : nil
             )
         }
@@ -2105,7 +2105,7 @@ extension STPPaymentHandler {
                     error: self._error(
                         for: .notAuthenticatedErrorCode,
                         userInfo: [
-                            "transaction_status": transactionStatus
+                            "transaction_status": transactionStatus,
                         ]
                     )
                 )

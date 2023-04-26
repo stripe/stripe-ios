@@ -677,7 +677,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred"
+                "init_mode": "Deferred",
             ]
         )
 
@@ -694,7 +694,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred"
+                "init_mode": "Deferred",
             ]
         )
 
@@ -729,7 +729,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred"
+                "init_mode": "Deferred",
             ]
         )
 
@@ -838,7 +838,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred"
+                "init_mode": "Deferred",
             ]
         )
 
@@ -976,7 +976,7 @@ extension PaymentSheetUITest {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-    
+
     func testDeferredPaymentIntent_ServerSideConfirmation_SEPA() {
         loadPlayground(
             app,
@@ -989,10 +989,10 @@ extension PaymentSheetUITest {
         )
 
         app.buttons["Checkout (Complete)"].tap()
-        
+
         guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else { XCTFail("Couldn't find SEPA"); return; }
         sepa.tap()
-        
+
         app.textFields["Full name"].tap()
         app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
         app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)

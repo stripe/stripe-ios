@@ -5,9 +5,9 @@
 //  Created by Yuki Tokuhiro on 4/24/23.
 //
 
-import XCTest
 @testable import Stripe
 @_spi(STP) @testable import StripePayments
+import XCTest
 
 // You can add tests in here for payment methods that don't require customer actions (i.e. don't open webviews for customer authentication).
 // If they require customer action, use STPPaymentHandlerFunctionalTest.m instead
@@ -16,9 +16,9 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
     }
-    
+
     // MARK: - PaymentIntent tests
-    
+
     func test_card_payment_intent_server_side_confirmation() {
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let cardParams = STPPaymentMethodCardParams()
@@ -26,7 +26,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         cardParams.cvc = "123"
         cardParams.expYear = NSNumber(integerLiteral: Calendar.current.dateComponents([.year], from: Date()).year! + 1)
         cardParams.expMonth = 01
-        
+
         let e = self.expectation(description: "")
         apiClient.createPaymentMethod(with: .init(card: cardParams, billingDetails: nil, metadata: nil)) { paymentMethod, error in
             guard let paymentMethod = paymentMethod else {
@@ -46,7 +46,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                 }
                 let sut = STPPaymentHandler(apiClient: apiClient)
                 // Note: `waitForExpectations` can deadlock if this test is async. When we can use Xcode 14.3, we can switch this test to async and use fulfillment(of:) instead of waitForExpectations
-                sut.handleNextAction(forPayment: clientSecret, with: self, returnURL: "foo://z") { status, intent, error in
+                sut.handleNextAction(forPayment: clientSecret, with: self, returnURL: "foo://z") { status, intent, _ in
                     XCTAssertEqual(sut.apiClient, apiClient) // Reference sut in the closure so it doesn't get deallocated
                     XCTAssertEqual(intent?.status, .succeeded)
                     XCTAssertEqual(status, .succeeded)
@@ -56,21 +56,21 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         }
         self.waitForExpectations(timeout: 10)
     }
-    
+
     func test_sepa_debit_payment_intent_server_side_confirmation() {
         // SEPA Debit is a good payment method to test here because
         // - it's a "delayed" or "asynchronous" payment method
         // - it doesn't require customer actions (we can't simulate customer actions in XCTestCase)
-        
+
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        
+
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "SEPA Test Customer"
         billingDetails.email = "test@example.com"
-        
+
         let sepaDebitDetails = STPPaymentMethodSEPADebitParams()
         sepaDebitDetails.iban = "DE89370400440532013000"
-        
+
         let e = self.expectation(description: "")
         apiClient.createPaymentMethod(with: .init(sepaDebit: sepaDebitDetails, billingDetails: billingDetails, metadata: nil)) { paymentMethod, error in
             guard let paymentMethod = paymentMethod else {
@@ -89,9 +89,9 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                         "online": [
                             "user_agent": "123",
                             "ip_address": "172.18.117.125",
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ]) { clientSecret, error in
                 guard let clientSecret = clientSecret else {
                     XCTFail()
@@ -99,7 +99,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                 }
                 let sut = STPPaymentHandler(apiClient: apiClient)
                 // Note: `waitForExpectations` can deadlock if this test is async. When we can use Xcode 14.3, we can switch this test to async and use fulfillment(of:) instead of waitForExpectations
-                sut.handleNextAction(forPayment: clientSecret, with: self, returnURL: "foo://z") { status, intent, error in
+                sut.handleNextAction(forPayment: clientSecret, with: self, returnURL: "foo://z") { status, intent, _ in
                     XCTAssertEqual(sut.apiClient, apiClient) // Reference sut in the closure so it doesn't get deallocated
                     XCTAssertEqual(intent?.status, .processing)
                     XCTAssertEqual(status, .succeeded)
@@ -109,9 +109,9 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         }
         self.waitForExpectations(timeout: 10)
     }
-        
+
     // MARK: - SetupIntent tests
-    
+
     func test_card_setup_intent_server_side_confirmation() {
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let cardParams = STPPaymentMethodCardParams()
@@ -119,7 +119,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         cardParams.cvc = "123"
         cardParams.expYear = NSNumber(integerLiteral: Calendar.current.dateComponents([.year], from: Date()).year! + 1)
         cardParams.expMonth = 01
-        
+
         let e = self.expectation(description: "")
         apiClient.createPaymentMethod(with: .init(card: cardParams, billingDetails: nil, metadata: nil)) { paymentMethod, error in
             guard let paymentMethod = paymentMethod else {
@@ -138,7 +138,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                 }
                 let sut = STPPaymentHandler(apiClient: apiClient)
                 // Note: `waitForExpectations` can deadlock if this test is async. When we can use Xcode 14.3, we can switch this test to async and use fulfillment(of:) instead of waitForExpectations
-                sut.handleNextAction(forSetupIntent: clientSecret, with: self, returnURL: "foo://z") { status, intent, error in
+                sut.handleNextAction(forSetupIntent: clientSecret, with: self, returnURL: "foo://z") { status, intent, _ in
                     XCTAssertEqual(sut.apiClient, apiClient) // Reference sut in the closure so it doesn't get deallocated
                     XCTAssertEqual(intent?.status, .succeeded)
                     XCTAssertEqual(status, .succeeded)
@@ -148,21 +148,21 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         }
         self.waitForExpectations(timeout: 10)
     }
-    
+
     func test_sepa_debit_setup_intent_server_side_confirmation() {
         // SEPA Debit is a good payment method to test here because
         // - it's a "delayed" or "asynchronous" payment method
         // - it doesn't require customer actions (we can't simulate customer actions in XCTestCase)
-        
+
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        
+
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "SEPA Test Customer"
         billingDetails.email = "test@example.com"
-        
+
         let sepaDebitDetails = STPPaymentMethodSEPADebitParams()
         sepaDebitDetails.iban = "DE89370400440532013000"
-        
+
         let e = self.expectation(description: "")
         apiClient.createPaymentMethod(with: .init(sepaDebit: sepaDebitDetails, billingDetails: billingDetails, metadata: nil)) { paymentMethod, error in
             guard let paymentMethod = paymentMethod else {
@@ -180,9 +180,9 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                         "online": [
                             "user_agent": "123",
                             "ip_address": "172.18.117.125",
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ]) { clientSecret, error in
                 guard let clientSecret = clientSecret else {
                     XCTFail("\(String(describing: error))")
@@ -190,7 +190,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                 }
                 let sut = STPPaymentHandler(apiClient: apiClient)
                 // Note: `waitForExpectations` can deadlock if this test is async. When we can use Xcode 14.3, we can switch this test to async and use fulfillment(of:) instead of waitForExpectations
-                sut.handleNextAction(forSetupIntent: clientSecret, with: self, returnURL: "foo://z") { status, intent, error in
+                sut.handleNextAction(forSetupIntent: clientSecret, with: self, returnURL: "foo://z") { status, intent, _ in
                     XCTAssertEqual(sut.apiClient, apiClient) // Reference sut in the closure so it doesn't get deallocated
                     XCTAssertEqual(intent?.status, .succeeded) // Note: I think this should be .processing, but testmode disagrees
                     XCTAssertEqual(status, .succeeded)
