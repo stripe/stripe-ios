@@ -67,7 +67,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
 
         showLoadingView(true)
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // delay executing logic until `viewDidAppear` because
@@ -98,7 +98,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 }
         }
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if willNavigateToReturningConsumer {
@@ -235,7 +235,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
         let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid
         footerView?.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
     }
-    
+
     private func foundReturningConsumer(withSession consumerSession: ConsumerSessionData) {
         willNavigateToReturningConsumer = true
         delegate?.networkingLinkSignupViewController(
