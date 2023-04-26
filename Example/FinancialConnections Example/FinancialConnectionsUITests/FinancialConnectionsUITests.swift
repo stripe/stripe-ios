@@ -298,7 +298,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 }
 
 extension XCTestCase {
-    fileprivate func wait(timeout: TimeInterval) {
+    func wait(timeout: TimeInterval) {
         _ = XCTWaiter.wait(for: [XCTestExpectation(description: "")], timeout: timeout)
     }
 }

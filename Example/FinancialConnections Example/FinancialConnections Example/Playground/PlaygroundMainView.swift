@@ -77,11 +77,13 @@ struct PlaygroundMainView: View {
                             TextField("Email (existing Link consumer)", text: $viewModel.email)
                                 .keyboardType(.emailAddress)
                                 .autocapitalization(.none)
+                                .accessibility(identifier: "playground-email")
                         }
                     }
 
                     Section(header: Text("PERMISSIONS")) {
                         Toggle("Transactions \(viewModel.flow == .networking ? "(enable step-up verification)" : "")", isOn: $viewModel.enableTransactionsPermission)
+                            .accessibility(identifier: "playground-transactions-permission")
                     }
 
                     Section(header: Text("CUSTOM KEYS")) {
