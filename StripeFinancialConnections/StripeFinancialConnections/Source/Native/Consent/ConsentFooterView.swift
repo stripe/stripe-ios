@@ -24,6 +24,7 @@ class ConsentFooterView: HitTestView {
         NSLayoutConstraint.activate([
             agreeButton.heightAnchor.constraint(equalToConstant: 56)
         ])
+        agreeButton.accessibilityIdentifier = "consent_agree_button"
         return agreeButton
     }()
 

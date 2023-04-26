@@ -51,7 +51,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0))
         showAuthFlowButton.tap()
 
-        let consentAgreeButton = app.buttons["Agree"]
+        let consentAgreeButton = app.buttons["consent_agree_button"]
         XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
         consentAgreeButton.tap()
 
@@ -107,7 +107,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0))
         showAuthFlowButton.tap()
 
-        let consentAgreeButton = app.buttons["Agree"]
+        let consentAgreeButton = app.buttons["consent_agree_button"]
         XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
         consentAgreeButton.tap()
 
@@ -165,7 +165,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0))
         showAuthFlowButton.tap()
 
-        let consentAgreeButton = app.buttons["Agree"]
+        let consentAgreeButton = app.buttons["consent_agree_button"]
         XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
         consentAgreeButton.tap()
 
@@ -257,7 +257,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0))
         showAuthFlowButton.tap()
 
-        let consentAgreeButton = app.webViews.buttons["Agree"]
+        let consentAgreeButton = app.webViews.buttons["consent_agree_button"]
         XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to load
         consentAgreeButton.tap()
 
