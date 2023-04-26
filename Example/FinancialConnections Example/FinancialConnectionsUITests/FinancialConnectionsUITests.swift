@@ -33,15 +33,15 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(playgroundCell.waitForExistence(timeout: 60.0))
         playgroundCell.tap()
 
-        let dataSegmentPickerButton = app.collectionViews.buttons["Data"]
+        let dataSegmentPickerButton = app.segmentedControls.buttons["Data"]
         XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
         dataSegmentPickerButton.tap()
 
-        let nativeSegmentPickerButton = app.collectionViews.buttons["Native"]
+        let nativeSegmentPickerButton = app.segmentedControls.buttons["Native"]
         XCTAssertTrue(nativeSegmentPickerButton.waitForExistence(timeout: 60.0))
         nativeSegmentPickerButton.tap()
 
-        let enableTestModeSwitch = app.collectionViews.switches["Enable Test Mode"]
+        let enableTestModeSwitch = app.switches["Enable Test Mode"].firstMatch
         XCTAssertTrue(enableTestModeSwitch.waitForExistence(timeout: 60.0))
         if (enableTestModeSwitch.value as? String) == "0" {
             enableTestModeSwitch.tap()
@@ -89,15 +89,15 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(playgroundCell.waitForExistence(timeout: 60.0))
         playgroundCell.tap()
 
-        let dataSegmentPickerButton = app.collectionViews.buttons["Payments"]
+        let dataSegmentPickerButton = app.segmentedControls.buttons["Payments"]
         XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
         dataSegmentPickerButton.tap()
 
-        let nativeSegmentPickerButton = app.collectionViews.buttons["Native"]
+        let nativeSegmentPickerButton = app.segmentedControls.buttons["Native"]
         XCTAssertTrue(nativeSegmentPickerButton.waitForExistence(timeout: 60.0))
         nativeSegmentPickerButton.tap()
 
-        let enableTestModeSwitch = app.collectionViews.switches["Enable Test Mode"]
+        let enableTestModeSwitch = app.switches["Enable Test Mode"].firstMatch
         XCTAssertTrue(enableTestModeSwitch.waitForExistence(timeout: 60.0))
         if (enableTestModeSwitch.value as? String) == "0" {
             enableTestModeSwitch.tap()
@@ -147,15 +147,15 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(playgroundCell.waitForExistence(timeout: 60.0))
         playgroundCell.tap()
 
-        let dataSegmentPickerButton = app.collectionViews.buttons["Data"]
+        let dataSegmentPickerButton = app.segmentedControls.buttons["Data"]
         XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
         dataSegmentPickerButton.tap()
 
-        let nativeSegmentPickerButton = app.collectionViews.buttons["Native"]
+        let nativeSegmentPickerButton = app.segmentedControls.buttons["Native"]
         XCTAssertTrue(nativeSegmentPickerButton.waitForExistence(timeout: 60.0))
         nativeSegmentPickerButton.tap()
 
-        let enableTestModeSwitch = app.collectionViews.switches["Enable Test Mode"]
+        let enableTestModeSwitch = app.switches["Enable Test Mode"].firstMatch
         XCTAssertTrue(enableTestModeSwitch.waitForExistence(timeout: 60.0))
         if (enableTestModeSwitch.value as? String) == "1" {
             enableTestModeSwitch.tap()
@@ -239,15 +239,15 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(playgroundCell.waitForExistence(timeout: 60.0))
         playgroundCell.tap()
 
-        let dataSegmentPickerButton = app.collectionViews.buttons["Data"]
+        let dataSegmentPickerButton = app.segmentedControls.buttons["Data"]
         XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
         dataSegmentPickerButton.tap()
 
-        let nativeSegmentPickerButton = app.collectionViews.buttons["Web"]
+        let nativeSegmentPickerButton = app.segmentedControls.buttons["Web"]
         XCTAssertTrue(nativeSegmentPickerButton.waitForExistence(timeout: 60.0))
         nativeSegmentPickerButton.tap()
 
-        let enableTestModeSwitch = app.collectionViews.switches["Enable Test Mode"]
+        let enableTestModeSwitch = app.switches["Enable Test Mode"].firstMatch
         XCTAssertTrue(enableTestModeSwitch.waitForExistence(timeout: 60.0))
         if (enableTestModeSwitch.value as? String) == "1" {
             enableTestModeSwitch.tap()
@@ -257,7 +257,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0))
         showAuthFlowButton.tap()
 
-        let consentAgreeButton = app.webViews.buttons["consent_agree_button"]
+        let consentAgreeButton = app.webViews.buttons["Agree"]
         XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to load
         consentAgreeButton.tap()
 
