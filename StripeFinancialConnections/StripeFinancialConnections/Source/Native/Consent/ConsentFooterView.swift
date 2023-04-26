@@ -73,6 +73,7 @@ class ConsentFooterView: HitTestView {
                 belowCtaText,
                 action: didSelectURL
             )
+            manuallyVerifyLabel.accessibilityIdentifier = "consent_manually_verify_label"
             verticalStackView.addArrangedSubview(manuallyVerifyLabel)
             verticalStackView.setCustomSpacing(24, after: agreeButton)
         }

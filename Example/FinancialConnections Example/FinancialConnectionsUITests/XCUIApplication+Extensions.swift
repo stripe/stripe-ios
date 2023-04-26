@@ -24,6 +24,12 @@ extension XCUIApplication {
         return playgroundDataFlowButton
     }
 
+    var fc_playgroundPaymentFlowButton: XCUIElement {
+        let playgroundPaymentFlowButton = segmentedControls.buttons["Payments"]
+        XCTAssertTrue(playgroundPaymentFlowButton.waitForExistence(timeout: 60.0))
+        return playgroundPaymentFlowButton
+    }
+
     var fc_playgroundNativeButton: XCUIElement {
         let playgroundNativeButton = segmentedControls.buttons["Native"]
         XCTAssertTrue(playgroundNativeButton.waitForExistence(timeout: 60.0))

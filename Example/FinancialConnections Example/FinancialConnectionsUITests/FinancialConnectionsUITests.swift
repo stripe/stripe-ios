@@ -61,11 +61,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.launch()
 
         app.fc_playgroundCell.tap()
-
-        let dataSegmentPickerButton = app.segmentedControls.buttons["Payments"]
-        XCTAssertTrue(dataSegmentPickerButton.waitForExistence(timeout: 60.0))
-        dataSegmentPickerButton.tap()
-
+        app.fc_playgroundPaymentFlowButton.tap()
         app.fc_playgroundNativeButton.tap()
 
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
@@ -92,6 +88,57 @@ final class FinancialConnectionsUITests: XCTestCase {
             app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
                 .exists
         )
+    }
+
+    func testPaymentTestModeManualEntryNativeAuthFlow() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundPaymentFlowButton.tap()
+        app.fc_playgroundNativeButton.tap()
+
+        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
+        if (enableTestModeSwitch.value as? String) == "0" {
+            enableTestModeSwitch.tap()
+        }
+
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        let manuallyVerifyLabel = app.otherElements["consent_manually_verify_label"]
+        XCTAssertTrue(manuallyVerifyLabel.waitForExistence(timeout: 120.0))
+        manuallyVerifyLabel.tap()
+
+        let manualEntryRoutingNumberTextField = app.textFields["manual_entry_routing_number_text_field"]
+        XCTAssertTrue(manualEntryRoutingNumberTextField.waitForExistence(timeout: 60.0))
+        manualEntryRoutingNumberTextField.tap()
+        manualEntryRoutingNumberTextField.typeText("110000000")
+
+        app.scrollViews.firstMatch.swipeUp() // dismiss keyboard
+
+        let manualEntryAccountNumberTextField = app.textFields["manual_entry_account_number_text_field"]
+        XCTAssertTrue(manualEntryAccountNumberTextField.waitForExistence(timeout: 60.0))
+        manualEntryAccountNumberTextField.tap()
+        manualEntryAccountNumberTextField.typeText("000123456789")
+
+        app.scrollViews.firstMatch.swipeUp() // dismiss keyboard
+
+        let manualEntryAccountNumberConfirmationTextField = app.textFields["manual_entry_account_number_confirmation_text_field"]
+        XCTAssertTrue(manualEntryAccountNumberConfirmationTextField.waitForExistence(timeout: 60.0))
+        manualEntryAccountNumberConfirmationTextField.tap()
+        manualEntryAccountNumberConfirmationTextField.typeText("000123456789")
+
+        app.scrollViews.firstMatch.swipeUp() // dismiss keyboard
+
+        let manualEntryContinueButton = app.buttons["manual_entry_continue_button"]
+        XCTAssertTrue(manualEntryContinueButton.waitForExistence(timeout: 120.0))
+        manualEntryContinueButton.tap()
+
+        let manualEntrySuccessDoneButton = app.buttons["manual_entry_success_done_button"]
+        XCTAssertTrue(manualEntrySuccessDoneButton.waitForExistence(timeout: 120.0))
+        manualEntrySuccessDoneButton.tap()
+
+        XCTAssert(app.fc_playgroundSuccessAlertView.exists)
     }
 
     // note that this does NOT complete the Auth Flow, but its a decent check on
