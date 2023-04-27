@@ -11,7 +11,7 @@ import XCTest
 
 final class PaymentSheetConfigurationTests: XCTestCase {
 
-    func test_customerConfigurationInit_assertsWhenEphemeralKeyIsBlank() throws {
+    func test_customerConfigurationInit_assertsWhenEphemeralKeyIsBlank() {
         let exception = catchBadInstruction {
             _ = PaymentSheet.CustomerConfiguration(id: "foo", ephemeralKeySecret: "")
         }
