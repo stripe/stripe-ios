@@ -12,6 +12,7 @@ extension Project {
         public var includesSnapshots: Bool = false
         public var usesMocks: Bool = false
         public var usesStubs: Bool = false
+        public var usesPreconditionTesting: Bool = false
 
         /// Creates a `TestOptions` instance.
         ///
@@ -28,6 +29,8 @@ extension Project {
         ///     If `true`, the OCMock package will be linked.
         ///   - usesStubs: Whether the tests in this target use stubs.
         ///     If `true`, the OHHTTPStubs package will be linked.
+        ///   - usesPreconditionTesting: Whether the tests in this target uses precondition, assert, and/or fatal error testing.
+        ///     If `true`, the CwlPreconditionTesting package will be linked.
         /// - Returns: A `TestOptions` instance.
         public static func testOptions(
             resources: ResourceFileElements? = nil,
@@ -37,7 +40,8 @@ extension Project {
             ),
             includesSnapshots: Bool = false,
             usesMocks: Bool = false,
-            usesStubs: Bool = false
+            usesStubs: Bool = false,
+            usesPreconditionTesting: Bool = false
         ) -> TestOptions {
             return TestOptions(
                 resources: resources,
@@ -45,7 +49,8 @@ extension Project {
                 settings: settings,
                 includesSnapshots: includesSnapshots,
                 usesMocks: usesMocks,
-                usesStubs: usesStubs
+                usesStubs: usesStubs,
+                usesPreconditionTesting: usesPreconditionTesting
             )
         }
     }
@@ -160,6 +165,7 @@ extension Project {
                 )
             )
         }
+
         if testUtilsOptions?.usesMocks ?? false
             || unitTestOptions?.usesMocks ?? false
             || uiTestOptions?.usesMocks ?? false
@@ -168,6 +174,7 @@ extension Project {
                 .remote(url: "https://github.com/erikdoe/ocmock", requirement: .branch("master"))
             )
         }
+
         if testUtilsOptions?.usesStubs ?? false
             || unitTestOptions?.usesStubs ?? false
             || uiTestOptions?.usesStubs ?? false
@@ -179,6 +186,19 @@ extension Project {
                 )
             )
         }
+
+        if testUtilsOptions?.usesPreconditionTesting ?? false
+            || unitTestOptions?.usesPreconditionTesting ?? false
+            || uiTestOptions?.usesPreconditionTesting ?? false
+        {
+            packages.append(
+                .remote(
+                    url: "https://github.com/mattgallagher/CwlPreconditionTesting",
+                    requirement: .upToNextMajor(from: "2.1.2")
+                )
+            )
+        }
+
         return packages
     }
 
@@ -301,6 +321,10 @@ extension Project {
                 .package(product: "OHHTTPStubsSwift"),
             ]
         }
+        if testOptions.usesPreconditionTesting {
+            dependencies.append(.package(product: "CwlPreconditionTesting"))
+        }
+
         return dependencies + testOptions.dependencies
     }
 
