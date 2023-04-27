@@ -16,6 +16,7 @@
 
 @interface STPPaymentHandlerFunctionalTest : XCTestCase <STPAuthenticationContext>
 @property (nonatomic) id presentingViewController;
+@property (nonatomic) id applicationMock;
 @end
 
 @interface STPPaymentHandler (Test) <SFSafariViewControllerDelegate>
@@ -26,6 +27,12 @@
 
 - (void)setUp {
     self.presentingViewController = OCMClassMock([UIViewController class]);
+    // Mock UIApplication.shared, which is otherwise not available in XCTestCase, to always call its completion block with @NO (i.e. it couldn't open a native app with the URL)
+    self.applicationMock = OCMClassMock([UIApplication class]);
+    OCMStub([self.applicationMock sharedApplication]).andReturn(self.applicationMock);
+    OCMStub([self.applicationMock openURL:[OCMArg any]
+                             options:[OCMArg any]
+                   completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
     [STPAPIClient sharedClient].publishableKey = STPTestingDefaultPublishableKey;
 }
 
@@ -33,13 +40,6 @@
 - (void)testAlipayOpensWebviewAfterNativeURLUnavailable {
     
     __block NSString *clientSecret = @"pi_1GiohpFY0qyl6XeWw09oKwWi_secret_Co4Etlq8YhmB6p07LQTP1Yklg";
-    id applicationMock = OCMClassMock([UIApplication class]);
-    OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
-    // Simulate the customer not having the Alipay app installed
-    OCMStub([applicationMock openURL:[OCMArg any]
-                             options:[OCMArg any]
-                   completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
-    
     id paymentHandler = OCMPartialMock(STPPaymentHandler.sharedHandler);
     
     // Simulate the safari VC finishing after presenting it
@@ -56,7 +56,7 @@
     XCTestExpectation *e = [self expectationWithDescription:@""];
     [paymentHandler confirmPayment:confirmParams withAuthenticationContext:self completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * __unused paymentIntent, __unused NSError * _Nullable error) {
         // ...shouldn't attempt to open the native URL (ie the alipay app)
-        OCMReject([applicationMock openURL:[OCMArg any]
+        OCMReject([self.applicationMock openURL:[OCMArg any]
                                    options:[OCMArg any]
                          completionHandler:[OCMArg isNotNil]]);
         // ...and then open UIViewController
@@ -67,6 +67,49 @@
         [e fulfill];
     }];
     [self waitForExpectationsWithTimeout:4 handler:nil];
+    [paymentHandler stopMocking]; // paymentHandler is a singleton, so we need to manually call `stopMocking`
+}
+
+- (void)test_oxxo_payment_intent_server_side_confirmation {
+    // OXXO is interesting b/c the PI status after handling next actions is requires_action, not succeeded.
+    id paymentHandler = OCMPartialMock(STPPaymentHandler.sharedHandler);
+    
+    // Simulate the safari VC finishing after presenting it
+    OCMStub([self.presentingViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]).andDo(^(__unused NSInvocation *_) {
+        [paymentHandler safariViewControllerDidFinish:self.presentingViewController];
+    });
+    
+    STPAPIClient *apiClient = [[STPAPIClient alloc] initWithPublishableKey: STPTestingMEXPublishableKey];
+    [STPAPIClient sharedClient].publishableKey = STPTestingMEXPublishableKey;
+    
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    billingDetails.name = @"Test Customer";
+    billingDetails.email = @"test@example.com";
+    
+    XCTestExpectation *e = [self expectationWithDescription:@""];
+    STPPaymentMethodParams *params = [[STPPaymentMethodParams alloc] initWithOxxo:[STPPaymentMethodOXXOParams new] billingDetails:billingDetails metadata:nil];
+    [apiClient createPaymentMethodWithParams:params completion:^(STPPaymentMethod * paymentMethod, NSError * error) {
+        XCTAssertNil(error);
+        NSDictionary *pi_params = @{
+            @"confirm": @"true",
+            @"payment_method_types": @[@"oxxo"],
+            @"currency": @"mxn",
+            @"amount": @1099,
+            @"payment_method": paymentMethod.stripeId,
+            @"return_url": @"foo://z"
+        };
+        [[STPTestingAPIClient new] createPaymentIntentWithParams:pi_params account:@"mex" apiVersion:nil completion:^(NSString * clientSecret, NSError * error2) {
+            XCTAssertNil(error2);
+            [paymentHandler handleNextActionForPayment:clientSecret withAuthenticationContext:self returnURL:@"foo://z" completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * paymentIntent, NSError * error3) {
+                XCTAssertNil(error3);
+                XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+                XCTAssertEqual(status, STPPaymentHandlerActionStatusSucceeded);
+                [e fulfill];
+            }];
+        }];
+    }];
+    [self waitForExpectationsWithTimeout:4 handler:nil];
+    [paymentHandler stopMocking]; // paymentHandler is a singleton, so we need to manually call `stopMocking`
 }
 
 - (UIViewController *)authenticationPresentingViewController {
