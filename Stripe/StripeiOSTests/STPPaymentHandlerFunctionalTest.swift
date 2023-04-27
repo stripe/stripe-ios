@@ -24,7 +24,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "4242424242424242"
         cardParams.cvc = "123"
-        cardParams.expYear = NSNumber(integerLiteral: Calendar.current.dateComponents([.year], from: Date()).year! + 1)
+        cardParams.expYear = (Calendar.current.dateComponents([.year], from: Date()).year! + 1) as NSNumber
         cardParams.expMonth = 01
 
         let e = self.expectation(description: "")
@@ -41,7 +41,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                 "return_url": "foo://z",
             ]) { clientSecret, error in
                 guard let clientSecret = clientSecret else {
-                    XCTFail()
+                    XCTFail(String(describing: error))
                     return
                 }
                 let sut = STPPaymentHandler(apiClient: apiClient)
@@ -74,7 +74,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         let e = self.expectation(description: "")
         apiClient.createPaymentMethod(with: .init(sepaDebit: sepaDebitDetails, billingDetails: billingDetails, metadata: nil)) { paymentMethod, error in
             guard let paymentMethod = paymentMethod else {
-                XCTFail()
+                XCTFail(String(describing: error))
                 return
             }
             STPTestingAPIClient().createPaymentIntent(withParams: [
@@ -94,7 +94,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                 ],
             ]) { clientSecret, error in
                 guard let clientSecret = clientSecret else {
-                    XCTFail()
+                    XCTFail(String(describing: error))
                     return
                 }
                 let sut = STPPaymentHandler(apiClient: apiClient)
@@ -117,7 +117,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "4242424242424242"
         cardParams.cvc = "123"
-        cardParams.expYear = NSNumber(integerLiteral: Calendar.current.dateComponents([.year], from: Date()).year! + 1)
+        cardParams.expYear = Calendar.current.dateComponents([.year], from: Date()).year! + 1 as NSNumber
         cardParams.expMonth = 01
 
         let e = self.expectation(description: "")
@@ -133,7 +133,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
                 "return_url": "foo://z",
             ]) { clientSecret, error in
                 guard let clientSecret = clientSecret else {
-                    XCTFail()
+                    XCTFail(String(describing: error))
                     return
                 }
                 let sut = STPPaymentHandler(apiClient: apiClient)
