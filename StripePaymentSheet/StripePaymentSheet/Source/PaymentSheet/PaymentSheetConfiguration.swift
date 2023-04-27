@@ -172,7 +172,7 @@ extension PaymentSheet {
         /// See https://stripe.com/docs/api/customers/object#customer_object-id
         public let id: String
 
-        /// A short-lived token that allows the SDK to access a Customer's payment methods. Cannot be empty
+        /// A short-lived token that allows the SDK to access a Customer's payment methods. Cannot be empty.
         public let ephemeralKeySecret: String
 
         /// Initializes a CustomerConfiguration
