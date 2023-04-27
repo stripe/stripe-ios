@@ -236,7 +236,7 @@ public class STPBankAccountCollector: NSObject {
             completion: linkAccountSessionCallback
         )
     }
-    
+
     // MARK: Helper
     private func attachLinkAccountSessionToPaymentIntent(
         paymentIntentID: String,
@@ -459,7 +459,7 @@ public class STPBankAccountCollector: NSObject {
             completion(setupIntent, nil)
         }
     }
-    
+
     // MARK: - Collect Bank Account - Deferred Intent
     @_spi(STP) public func collectBankAccountForDeferredIntent(
         sessionId: String,
@@ -477,7 +477,7 @@ public class STPBankAccountCollector: NSObject {
             financialConnectionsCompletion(nil, nil, error(for: .financialConnectionsSDKNotLinked))
             return
         }
-        
+
         apiClient.createLinkAccountSessionForDeferredIntent(sessionId: sessionId, onBehalfOf: onBehalfOf) { linkAccountSession, error in
             if let error = error {
                 financialConnectionsCompletion(nil, nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))

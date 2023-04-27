@@ -50,7 +50,7 @@ extension STPAPIClient {
             completion: completion
         )
     }
-    
+
     func createLinkAccountSessionForDeferredIntent(
         sessionId: String,
         onBehalfOf: String?,
@@ -82,7 +82,7 @@ extension STPAPIClient {
         completion: @escaping STPLinkAccountSessionBlock
     ) {
         var parameters: [String: Any] = [
-            "client_secret": clientSecret
+            "client_secret": clientSecret,
         ]
         if let paymentMethodType = STPPaymentMethod.string(from: paymentMethodType) {
             parameters["payment_method_data[type]"] = paymentMethodType

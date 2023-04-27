@@ -5,11 +5,11 @@
 //  Created by Yuki Tokuhiro on 4/26/23.
 //
 
-import XCTest
 @testable import StripePayments
+import XCTest
 
 final class STPAPIClient_LinkAccountSessionTest: XCTestCase {
-    
+
     func testCreateLinkAccountSessionForDeferredIntent() {
         let e = expectation(description: "create link account session")
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
