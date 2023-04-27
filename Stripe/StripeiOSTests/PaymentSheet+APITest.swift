@@ -541,7 +541,7 @@ class PaymentSheetAPITest: XCTestCase {
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             true,
             paymentMethodType: PaymentSheet.PaymentMethodType.card,
-            customer: .init(id: "", ephemeralKeySecret: "")
+            customer: .init(id: "", ephemeralKeySecret: "foo")
         )
 
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
@@ -564,7 +564,7 @@ class PaymentSheetAPITest: XCTestCase {
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
             paymentMethodType: PaymentSheet.PaymentMethodType.card,
-            customer: .init(id: "", ephemeralKeySecret: "")
+            customer: .init(id: "", ephemeralKeySecret: "foo")
         )
 
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
