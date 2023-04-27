@@ -545,17 +545,24 @@ extension PaymentSheetTestPlayground {
             "mode": intentMode.rawValue,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
             "use_link": linkSelector.selectedSegmentIndex == 0,
-            "confirmation_method": confirmMethodSelector.selectedSegmentIndex == 0 ? "automatic" : "manual",
+            "use_manual_confirmation": confirmMethodSelector.selectedSegmentIndex == 1,
 //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
 
-        makeRequest(with: checkoutEndpoint, body: body) { data, _, error in
+        makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             guard
                 error == nil,
                 let data = data,
-                let json = try? JSONDecoder().decode([String: String].self, from: data)
+                let json = try? JSONDecoder().decode([String: String].self, from: data),
+                (response as? HTTPURLResponse)?.statusCode != 400
             else {
                 print(error as Any)
+                if let json = try? JSONDecoder().decode([String: String].self, from: data!),
+                   let errorMessage = json["error"] {
+                    DispatchQueue.main.async {
+                        UIAlertController.showAlert(title: "Invalid request", message: errorMessage, viewController: self)
+                    }
+                }
                 return
             }
 
@@ -856,5 +863,27 @@ extension AddressViewController.AddressDetails {
         postalAddress.country = address.country
 
         return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
+    }
+}
+
+extension UIAlertController {
+    static func showAlert(
+        title: String? = nil,
+        message: String? = nil,
+        viewController: UIViewController
+    ) {
+        let alertController = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        alertController.addAction(
+            UIAlertAction(
+                title: "Ok",
+                style: .default
+            )
+        )
+
+        viewController.present(alertController, animated: true)
     }
 }

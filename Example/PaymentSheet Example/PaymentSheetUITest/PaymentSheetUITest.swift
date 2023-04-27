@@ -146,7 +146,7 @@ class PaymentSheetUITest: XCTestCase {
         paymentMethodButton.tap()
 
         // Continue should be enabled since card details were preserved when closing payment sheet
-        app.buttons["Continue"].tap()
+        XCTAssertTrue(app.buttons["Continue"].waitForExistenceAndTap(timeout: 4.0))
 
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 4.0))
@@ -1079,7 +1079,7 @@ extension PaymentSheetUITest {
             settings: [
                 "init_mode": "Deferred",
                 "confirm_mode": "Server",
-                "confirm_method": "Manual",
+                "use_manual_confirmation": "on",
                 "automatic_payment_methods": "off",
             ]
         )
@@ -1210,7 +1210,7 @@ extension PaymentSheetUITest {
             settings: [
                 "init_mode": "Deferred",
                 "confirm_mode": "Server",
-                "confirm_method": "Manual",
+                "use_manual_confirmation": "on",
                 "automatic_payment_methods": "off",
             ]
         )
