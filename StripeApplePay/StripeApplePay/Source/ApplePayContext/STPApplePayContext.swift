@@ -89,6 +89,9 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
 /// - seealso: ApplePayExampleViewController for an example
 @objc(STPApplePayContext)
 public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
+
+    @_spi(STP) public static let FORCE_SUCCESS = "FORCE_SUCCESS"
+
     /// Initializes this class.
     /// @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks
     /// @note If using Swift, using ApplePayContextDelegate is recommended over STPApplePayContextDelegate.
@@ -489,6 +492,11 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                     self.authorizationController != nil
                 else {
                     handleFinalState(.error, intentCreationError)
+                    return
+                }
+
+                guard clientSecret != STPApplePayContext.FORCE_SUCCESS else {
+                    handleFinalState(.success, nil)
                     return
                 }
 
