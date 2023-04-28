@@ -216,7 +216,7 @@ class PaymentSheetTestPlayground: UIViewController {
         if initModeSelector.selectedSegmentIndex > 0 {
             return .deferred
         }
-        
+
         return .normal
     }
 
