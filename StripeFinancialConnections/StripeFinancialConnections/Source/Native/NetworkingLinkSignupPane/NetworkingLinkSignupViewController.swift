@@ -290,7 +290,10 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                             let didPrefillPhoneNumber = (self.formView.phoneNumberElement.phoneNumber?.number ?? "").count > 1
                             // if the phone number is pre-filled, we don't focus on the phone number field
                             if !didPrefillPhoneNumber {
-                                self.formView.beginEditingPhoneNumberField()
+                                // this disables the "Phone" label animating (we don't want that animation here)
+                                UIView.performWithoutAnimation {
+                                    self.formView.beginEditingPhoneNumberField()
+                                }
                             } else {
                                 // user is done with e-mail AND phone number, so dismiss the keyboard
                                 // so they can see the "Save to Link" button
