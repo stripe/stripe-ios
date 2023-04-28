@@ -67,7 +67,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
 
         showLoadingView(true)
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // delay executing logic until `viewDidAppear` because
@@ -98,7 +98,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 }
         }
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if willNavigateToReturningConsumer {
@@ -235,7 +235,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
         let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid
         footerView?.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
     }
-    
+
     private func foundReturningConsumer(withSession consumerSession: ConsumerSessionData) {
         willNavigateToReturningConsumer = true
         delegate?.networkingLinkSignupViewController(
@@ -290,7 +290,10 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                             let didPrefillPhoneNumber = (self.formView.phoneNumberElement.phoneNumber?.number ?? "").count > 1
                             // if the phone number is pre-filled, we don't focus on the phone number field
                             if !didPrefillPhoneNumber {
-                                self.formView.beginEditingPhoneNumberField()
+                                // this disables the "Phone" label animating (we don't want that animation here)
+                                UIView.performWithoutAnimation {
+                                    self.formView.beginEditingPhoneNumberField()
+                                }
                             } else {
                                 // user is done with e-mail AND phone number, so dismiss the keyboard
                                 // so they can see the "Save to Link" button
