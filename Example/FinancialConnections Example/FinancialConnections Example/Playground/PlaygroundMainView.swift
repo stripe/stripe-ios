@@ -90,6 +90,10 @@ struct PlaygroundMainView: View {
                         TextField("Public Key (pk_)", text: $viewModel.customPublicKey)
                         TextField("Secret Key (sk_)", text: $viewModel.customSecretKey)
                     }
+
+                    // extra space so keyboard doesn't cover the "CUSTOM KEYS" section
+                    // (SwiftUI, depending on iOS version, doesn't handle keyboard)
+                    Spacer(minLength: 300)
                 }
                 VStack {
                     Button(action: viewModel.didSelectShow) {
