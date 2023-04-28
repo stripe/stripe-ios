@@ -134,6 +134,7 @@ private func CreateFooterView(
     NSLayoutConstraint.activate([
         continueButton.heightAnchor.constraint(equalToConstant: 56)
     ])
+    continueButton.accessibilityIdentifier = "prepane_continue_button"
 
     let footerStackView = UIStackView()
     footerStackView.axis = .vertical

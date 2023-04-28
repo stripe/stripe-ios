@@ -24,6 +24,7 @@ class ConsentFooterView: HitTestView {
         NSLayoutConstraint.activate([
             agreeButton.heightAnchor.constraint(equalToConstant: 56)
         ])
+        agreeButton.accessibilityIdentifier = "consent_agree_button"
         return agreeButton
     }()
 
@@ -72,6 +73,7 @@ class ConsentFooterView: HitTestView {
                 belowCtaText,
                 action: didSelectURL
             )
+            manuallyVerifyLabel.accessibilityIdentifier = "consent_manually_verify_label"
             verticalStackView.addArrangedSubview(manuallyVerifyLabel)
             verticalStackView.setCustomSpacing(24, after: agreeButton)
         }

@@ -23,6 +23,7 @@ final class SuccessFooterView: UIView {
         NSLayoutConstraint.activate([
             doneButton.heightAnchor.constraint(equalToConstant: 56)
         ])
+        doneButton.accessibilityIdentifier = "success_done_button"
         return doneButton
     }()
 
