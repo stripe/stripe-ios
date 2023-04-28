@@ -677,7 +677,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
+                "init_mode": "Def CSC",
             ]
         )
 
@@ -694,7 +694,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
+                "init_mode": "Def CSC",
             ]
         )
 
@@ -711,7 +711,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
+                "init_mode": "Def CSC",
                 "mode": "Setup",
             ]
         )
@@ -729,7 +729,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
+                "init_mode": "Def CSC",
             ]
         )
 
@@ -756,7 +756,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
+                "init_mode": "Def CSC",
                 "mode": "Setup",
             ]
         )
@@ -838,7 +838,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
+                "init_mode": "Def CSC",
             ]
         )
 
@@ -857,7 +857,7 @@ extension PaymentSheetUITest {
                 "customer_mode": "new",
                 "automatic_payment_methods": "off",
                 "link": "on",
-                "init_mode": "Deferred",
+                "init_mode": "Def CSC",
             ]
         )
 
@@ -963,8 +963,25 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
+                "init_mode": "Def SSC",
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+        try? fillCardData(app, container: nil)
+
+        app.buttons["Pay $50.99"].tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testDeferredPaymentIntent_ServerSideConfirmation_Multiprocessor() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Def MC",
+                "automatic_payment_methods": "off",
             ]
         )
 
@@ -981,8 +998,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
+                "init_mode": "Def SSC",
                 "currency": "EUR",
                 "allows_delayed_pms": "true",
             ]
@@ -1012,8 +1028,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
+                "init_mode": "Def SSC",
             ]
         )
 
@@ -1030,9 +1045,8 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
+                "init_mode": "Def SSC",
                 "mode": "Setup",
-                "confirm_mode": "Server",
             ]
         )
 
@@ -1049,8 +1063,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
+                "init_mode": "Def SSC",
             ]
         )
 
@@ -1077,9 +1090,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
-                "use_manual_confirmation": "on",
+                "init_mode": "Def MC",
                 "automatic_payment_methods": "off",
             ]
         )
@@ -1107,9 +1118,8 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
+                "init_mode": "Def SSC",
                 "mode": "Setup",
-                "confirm_mode": "Server",
             ]
         )
 
@@ -1191,8 +1201,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
+                "init_mode": "Def SSC",
             ]
         )
 
@@ -1208,9 +1217,24 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
-                "use_manual_confirmation": "on",
+                "init_mode": "Def MC",
+                "automatic_payment_methods": "off",
+            ]
+        )
+
+        app.buttons["Checkout (Complete)"].tap()
+        let applePayButton = app.buttons["apple_pay_button"]
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
+        applePayButton.tap()
+
+        payWithApplePay()
+    }
+
+    func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation_Multiprocessor() {
+        loadPlayground(
+            app,
+            settings: [
+                "init_mode": "Def MC",
                 "automatic_payment_methods": "off",
             ]
         )
@@ -1233,8 +1257,7 @@ extension PaymentSheetUITest {
                 // so we must manually turn off Link.
                 "automatic_payment_methods": "off",
                 "link": "off",
-                "init_mode": "Deferred",
-                "confirm_mode": "Server",
+                "init_mode": "Def SSC",
             ]
         )
 
