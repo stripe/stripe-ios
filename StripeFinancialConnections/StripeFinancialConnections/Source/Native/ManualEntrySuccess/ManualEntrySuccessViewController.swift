@@ -98,6 +98,7 @@ private func CreateFooterView(_ buttonTarget: ManualEntrySuccessViewController) 
     NSLayoutConstraint.activate([
         doneButton.heightAnchor.constraint(equalToConstant: 56)
     ])
+    doneButton.accessibilityIdentifier = "manual_entry_success_done_button"
     let verticalStackView = UIStackView(
         arrangedSubviews: [
             doneButton

@@ -21,6 +21,7 @@ final class ManualEntryFooterView: UIView {
         NSLayoutConstraint.activate([
             continueButton.heightAnchor.constraint(equalToConstant: 56)
         ])
+        continueButton.accessibilityIdentifier = "manual_entry_continue_button"
         return continueButton
     }()
 
