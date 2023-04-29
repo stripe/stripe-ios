@@ -33,18 +33,6 @@ class StubbedBackendAPIAdapter: NSObject, _stpspmsbeta_STPBackendAPIAdapter {
     
 }
 
-class SPMSEmptyDelegate: NSObject, SavedPaymentMethodsSheetDelegate {
-    func didFinish(with paymentOptionSelection: StripePaymentSheet.SavedPaymentMethodsSheet.PaymentOptionSelection?) {
-    }
-    
-    func didCancel() {
-    }
-    
-    func didFail(with error: StripePaymentSheet.SavedPaymentMethodsSheetError) {
-    }
-    
-    
-}
 
 class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
 
@@ -60,7 +48,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         return window
     }
 
-    private var configuration = SavedPaymentMethodsSheet.Configuration(customerContext: StubbedBackendAPIAdapter(), applePayEnabled: false)
+    private var configuration = SavedPaymentMethodsSheet.Configuration(applePayEnabled: false)
 
     // Change this to true to hit the real glitch backend. This may be required
     // to capture data for new use cases
@@ -68,7 +56,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
-        configuration = SavedPaymentMethodsSheet.Configuration(customerContext: StubbedBackendAPIAdapter(), applePayEnabled: false)
+        configuration = SavedPaymentMethodsSheet.Configuration(applePayEnabled: false)
 
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
                 self.recordMode = true
@@ -81,7 +69,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
     public override func tearDown() {
         super.tearDown()
         HTTPStubs.removeAllStubs()
-        configuration = SavedPaymentMethodsSheet.Configuration(customerContext: StubbedBackendAPIAdapter(), applePayEnabled: false)
+        configuration = SavedPaymentMethodsSheet.Configuration(applePayEnabled: false)
     }
 
     private func stubbedAPIClient() -> STPAPIClient {
@@ -1025,18 +1013,16 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
             StripeAPI.defaultPublishableKey = publishableKey
 
             var config = self.configuration
-//            config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+            let customer = StripeCustomerAdapter {
+                .init(customerId: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+            }
             config.appearance = appearance
 
             if !applePayEnabled {
 //                TODO: This
 //                config.applePay = nil
             }
-            self.spms = SavedPaymentMethodsSheet(configuration: config, delegate: SPMSEmptyDelegate())
-            (
-                paymentIntentClientSecret: paymentIntentClientSecret,
-                configuration: config
-            )
+            self.spms = SavedPaymentMethodsSheet(configuration: config, customer: customer)
 
             requestExpectation.fulfill()
 
@@ -1051,7 +1037,9 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
                                          intentConfig: PaymentSheet.IntentConfiguration? = nil) {
         var config = self.configuration
 //        TODO
-//        config.customer = .init(id: "nobody", ephemeralKeySecret: "test")
+        let customer = StripeCustomerAdapter {
+            .init(customerId: "nobody", ephemeralKeySecret: "test")
+        }
         config.appearance = appearance
         config.apiClient = stubbedAPIClient()
         if !applePayEnabled {
@@ -1064,7 +1052,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
             mode = .deferredIntent(intentConfig)
         }
 
-        self.spms = SavedPaymentMethodsSheet(configuration: config, delegate: SPMSEmptyDelegate())
+        self.spms = SavedPaymentMethodsSheet(configuration: config, customer: customer)
     }
 
     private func presentSPMS(darkMode: Bool, preferredContentSizeCategory: UIContentSizeCategory = .large) {
@@ -1076,7 +1064,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         }
         testWindow.rootViewController = navController
 
-        spms.present(from: vc)
+        spms.present(from: vc) { _ in }
 
         // Payment sheet usually takes anywhere between 50ms-200ms (but once in a while 2-3 seconds).
         // to present with the expected content. When the sheet is presented, it initially shows a loading screen,

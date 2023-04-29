@@ -1878,7 +1878,8 @@ public class STPPaymentHandler: NSObject {
                     let setupIntent = setupIntentAction.setupIntent
                 {
                     currentAction.apiClient.retrieveSetupIntent(
-                        withClientSecret: setupIntent.clientSecret
+                        withClientSecret: setupIntent.clientSecret,
+                        expand: ["payment_method"]
                     ) { retrievedSetupIntent, retrieveError in
                         setupIntentAction.setupIntent = retrievedSetupIntent
                         completion(retrievedSetupIntent != nil, retrieveError)

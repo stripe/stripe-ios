@@ -40,9 +40,9 @@ class SavedPaymentOptionsViewController: UIViewController {
         static func ==(lhs: Selection, rhs: PersistablePaymentMethodOption?) -> Bool {
             switch lhs {
             case .link:
-                return rhs?.type == .link
+                return rhs == .link
             case .applePay:
-                return rhs?.type == .applePay
+                return rhs == .applePay
             case .saved(let paymentMethod):
                 return paymentMethod.stripeId == rhs?.value
             case .add:
@@ -257,8 +257,8 @@ class SavedPaymentOptionsViewController: UIViewController {
             return
         }
 
-        PersistablePaymentMethodOption.setDefaultPaymentMethod(.link(), forCustomer: configuration.customerID)
-        selectedViewModelIndex = viewModels.firstIndex(where: { $0 == .link() })
+        PersistablePaymentMethodOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+        selectedViewModelIndex = viewModels.firstIndex(where: { $0 == .link })
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredHorizontally)
     }
 }
@@ -318,12 +318,12 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             // Should have been handled in shouldSelectItemAt: before we got here!
             assertionFailure()
         case .applePay:
-            PersistablePaymentMethodOption.setDefaultPaymentMethod(.applePay(), forCustomer: configuration.customerID)
+            PersistablePaymentMethodOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
         case .link:
-            PersistablePaymentMethodOption.setDefaultPaymentMethod(.link(), forCustomer: configuration.customerID)
+            PersistablePaymentMethodOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
         case .saved(let paymentMethod):
             PersistablePaymentMethodOption.setDefaultPaymentMethod(
-                .stripePaymentMethod(paymentMethod.stripeId),
+                .stripeId(paymentMethod.stripeId),
                 forCustomer: configuration.customerID
             )
         }

@@ -147,11 +147,19 @@ import UIKit
     /// Returns the a client secret configured to attach a new payment method to a customer.
     /// See docs:
     func setupIntentClientSecretForCustomerAttach() async throws -> String
+    
+    /// Whether this backend adapter is able to create setup intents.
+    var canCreateSetupIntents: Bool { get }
 }
 
 @_spi(PrivateBetaSavedPaymentMethodsSheet) public struct CustomerEphemeralKey {
-    let id: String
-    let ephemeralKey: String
+    @_spi(PrivateBetaSavedPaymentMethodsSheet) public let id: String
+    @_spi(PrivateBetaSavedPaymentMethodsSheet) public let ephemeralKeySecret: String
+    
+    @_spi(PrivateBetaSavedPaymentMethodsSheet) public init(customerId: String, ephemeralKeySecret: String) {
+        self.id = customerId
+        self.ephemeralKeySecret = ephemeralKeySecret
+    }
 }
 
 // expose swift
@@ -179,13 +187,17 @@ import UIKit
     var customerEphemeralKey: CustomerEphemeralKey {
         get async throws {
             if let cachedKey = _cachedEphemeralKey,
-               cachedKey.cacheDate + CachedCustomerMaxAge < Date() {
+               cachedKey.cacheDate + CachedCustomerMaxAge > Date() {
                 return cachedKey.customerEphemeralKey
             }
             let newKey = try await self.customerEphemeralKeyProvider()
             _cachedEphemeralKey = CachedCustomerEphemeralKey(customerEphemeralKey: newKey)
             return newKey
         }
+    }
+    
+    public var canCreateSetupIntents: Bool {
+        return setupIntentClientSecretProvider != nil
     }
     
     /// Retrieves a list of Payment Methods attached to a customer.
@@ -204,7 +216,7 @@ import UIKit
             let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]  // hardcoded for now
             apiClient.listPaymentMethods(
                 forCustomer: customerEphemeralKey.id,
-                using: customerEphemeralKey.ephemeralKey,
+                using: customerEphemeralKey.ephemeralKeySecret,
                 types: savedPaymentMethodTypes
             ) { paymentMethods, error in
                 guard let paymentMethods = paymentMethods, error == nil else {
@@ -232,7 +244,7 @@ import UIKit
     open func attachPaymentMethod(_ paymentMethodId: String) async throws {
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
-            apiClient.attachPaymentMethod(paymentMethodId, customerID: customerEphemeralKey.id, ephemeralKeySecret: customerEphemeralKey.ephemeralKey) { error in
+            apiClient.attachPaymentMethod(paymentMethodId, customerID: customerEphemeralKey.id, ephemeralKeySecret: customerEphemeralKey.ephemeralKeySecret) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                     return
