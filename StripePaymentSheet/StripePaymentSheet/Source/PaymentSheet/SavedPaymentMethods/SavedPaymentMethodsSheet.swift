@@ -14,7 +14,8 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-enum SavedPaymentMethodsSheetResult {
+// For internal use
+internal enum SavedPaymentMethodsSheetResult {
     case completed(NSObject?)
     case canceled
     case failed(error: Error)
@@ -58,15 +59,31 @@ enum SavedPaymentMethodsSheetResult {
         return vc
     }()
 
+    /// For 
+    /// Use a StripeCustomerAdapter, or build your own.
     public init(configuration: SavedPaymentMethodsSheet.Configuration,
-                delegate: SavedPaymentMethodsSheetDelegate?) {
+                customer: CustomerAdapter) {
         self.configuration = configuration
-        self.savedPaymentMethodsSheetDelegate = delegate
+        self.customerAdapter = customer
     }
+    
+    var customerAdapter: CustomerAdapter
 
+    /// The result of the SavedPaymentMethodsSheet
+    public enum SheetResult {
+        /// The customer cancelled the sheet. (e.g. by tapping outside it or tapping the "X")
+        case cancelled
+        /// The customer selected a payment method.
+        case selected(PersistablePaymentMethodOption?)
+        /// An error occurred when presenting the sheet
+        case error(Error)
+    }
+    
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
-    public func present(from presentingViewController: UIViewController) {
+    public func present(from presentingViewController: UIViewController,
+                        completion: (SheetResult) -> Void
+    ) {
         // Retain self when being presented, it is not guarnteed that SavedPaymentMethodsSheet instance
         // will be retained by caller
         let completion: () -> Void = {
@@ -124,6 +141,7 @@ enum SavedPaymentMethodsSheetResult {
     }
     // MARK: - Internal Properties
     var completion: (() -> Void)?
+    var userCompletion: ((SheetResult) -> Void)?
 }
 
 extension SavedPaymentMethodsSheet {

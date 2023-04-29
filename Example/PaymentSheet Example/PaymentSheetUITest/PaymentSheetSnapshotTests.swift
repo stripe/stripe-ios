@@ -1133,7 +1133,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
 
 }
 
-private extension PaymentSheet.Appearance {
+fileprivate extension PaymentSheet.Appearance {
     static var snapshotTestTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
 

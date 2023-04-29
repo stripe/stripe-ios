@@ -14,7 +14,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentSheet
 @testable@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
 
 class MockEphemeralKeyManager: STPEphemeralKeyManagerProtocol {
@@ -705,6 +705,21 @@ class STPCustomerContextTests: APIStubbedTestCase {
                 XCTAssertEqual(pmOption, savedPMOption)
                 exp.fulfill()
             }
+        }
+        waitForExpectations(timeout: 2, handler: nil)
+    }
+
+    func testStaticEphemeralKeyProviderInit() {
+        let customerID = "cus_123"
+        let ephemeralKeySecret = "ek_123"
+        let exp = expectation(description: "Check key")
+        let context = _stpspmsbeta_STPCustomerContext(customerId: customerID, ephemeralKeySecret: ephemeralKeySecret)
+        // Check that the context uses the correct ephemeral key:
+        context.keyManager.getOrCreateKey { ephemeralKey, error in
+            XCTAssertNil(error)
+            XCTAssertEqual(ephemeralKey!.stripeID, customerID)
+            XCTAssertEqual(ephemeralKey!.secret, ephemeralKeySecret)
+            exp.fulfill()
         }
         waitForExpectations(timeout: 2, handler: nil)
     }

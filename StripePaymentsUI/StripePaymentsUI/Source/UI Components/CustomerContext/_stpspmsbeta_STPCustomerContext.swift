@@ -118,7 +118,7 @@ import Foundation
         }
     }
     @objc internal var paymentMethodsRetrievedDate: Date?
-    private var keyManager: _stpspmsbeta_STPEphemeralKeyManagerProtocol
+    internal var keyManager: _stpspmsbeta_STPEphemeralKeyManagerProtocol
     private var apiClient: STPAPIClient
 
     init(
@@ -409,22 +409,6 @@ import Foundation
                 completion(customerToDefaultPaymentMethodID[customerID], nil)
             })
         })
-    }
-    @objc public func setSelectedPaymentMethodOption(paymentOption: PersistablePaymentMethodOption?, completion: @escaping(Error?) -> Void
-    ) {
-        self.saveLastSelectedPaymentMethodIDForCustomer(paymentMethodID: paymentOption?.value) { error in
-            completion(error)
-        }
-    }
-    @objc public func retrieveSelectedPaymentMethodOption(completion: @escaping (PersistablePaymentMethodOption?, Error?) -> Void
-    ) {
-        self.retrieveLastSelectedPaymentMethodIDForCustomer { paymentMethod, error in
-            guard let paymentMethod = paymentMethod else {
-                completion(nil, error)
-                return
-            }
-            completion(PersistablePaymentMethodOption(value: paymentMethod), nil)
-        }
     }
 }
 

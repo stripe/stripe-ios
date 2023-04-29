@@ -941,6 +941,103 @@ extension STPAPIClient {
     }
 }
 
+extension STPAPIClient {
+    @_spi(STP) public func listPaymentMethods(
+        forCustomer customerID: String,
+        using ephemeralKeySecret: String,
+        types: [STPPaymentMethodType] = [.card],
+        completion: @escaping STPPaymentMethodsCompletionBlock
+    ) {
+        let header = authorizationHeader(using: ephemeralKeySecret)
+        // Unfortunately, this API only supports fetching saved pms for one type at a time
+        var shared_allPaymentMethods = [STPPaymentMethod]()
+        var shared_lastError: Error?
+        let group = DispatchGroup()
+
+        for type in types {
+            group.enter()
+            let params = [
+                "customer": customerID,
+                "type": STPPaymentMethod.string(from: type),
+            ]
+            APIRequest<STPPaymentMethodListDeserializer>.getWith(
+                self,
+                endpoint: APIEndpointPaymentMethods,
+                additionalHeaders: header,
+                parameters: params as [String: Any]
+            ) { deserializer, _, error in
+                DispatchQueue.global(qos: .userInteractive).async(flags: .barrier) {
+                    // .barrier ensures we're the only thing writing to shared_ vars
+                    if let error = error {
+                        shared_lastError = error
+                    }
+                    if let paymentMethods = deserializer?.paymentMethods {
+                        shared_allPaymentMethods.append(contentsOf: paymentMethods)
+                    }
+                    group.leave()
+                }
+            }
+        }
+
+        group.notify(queue: DispatchQueue.main) {
+            completion(shared_allPaymentMethods, shared_lastError)
+        }
+    }
+
+    @_spi(STP) public func detachPaymentMethod(
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String,
+        completion: @escaping STPErrorBlock
+    ) {
+        let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
+        APIRequest<STPPaymentMethod>.post(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
+            parameters: [:]
+        ) { _, _, error in
+            completion(error)
+        }
+    }
+    
+    @_spi(STP) public func attachPaymentMethod(
+        _ paymentMethodID: String,
+        customerID: String,
+        ephemeralKeySecret: String,
+        completion: @escaping STPErrorBlock
+    ) {
+        let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/attach"
+        APIRequest<STPPaymentMethod>.post(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
+            parameters: [
+                "customer": customerID
+            ]
+        ) { _, _, error in
+            completion(error)
+        }
+    }
+
+    /// Retrieve a customer
+    /// - seealso: https://stripe.com/docs/api#retrieve_customer
+    @_spi(STP) public func retrieveCustomer(
+        _ customerID: String,
+        using ephemeralKey: String,
+        completion: @escaping STPCustomerCompletionBlock
+    ) {
+        let endpoint = "\(APIEndpointCustomers)/\(customerID)"
+        APIRequest<STPCustomer>.getWith(
+            self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKey),
+            parameters: [:]
+        ) { object, _, error in
+            completion(object, error)
+        }
+    }
+}
+
 private let APIEndpointToken = "tokens"
 private let APIEndpointSources = "sources"
 @_spi(STP) public let APIEndpointCustomers = "customers"
@@ -950,3 +1047,4 @@ private let APIEndpointSetupIntents = "setup_intents"
 private let APIEndpoint3DS2 = "3ds2"
 private let PaymentMethodDataHash = "payment_method_data"
 private let SourceDataHash = "source_data"
+

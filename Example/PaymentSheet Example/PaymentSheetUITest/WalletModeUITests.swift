@@ -1,12 +1,12 @@
 //
-//  WalletModeUITest.swift
+//  SavedPaymentMethodsSheetUITest.swift
 //  PaymentSheetUITest
 //
 
 import Foundation
 import XCTest
 
-class WalletModeUITest: XCTestCase {
+class SavedPaymentMethodsSheetUITest: XCTestCase {
     var app: XCUIApplication!
 
     override func setUpWithError() throws {
