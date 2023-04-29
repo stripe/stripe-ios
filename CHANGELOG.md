@@ -3,7 +3,7 @@
 * [Fixed] STPPaymentHandler.handleNextAction allows payment methods that are delayed or require further customer action like like SEPA Debit or OXXO.
 
 ### PaymentSheet
-* [Added] Improved validation for ephemeral keys
+* [Added] Improved validation for ephemeral keys.
 
 ## 23.7.0 2023-04-24
 ### PaymentSheet

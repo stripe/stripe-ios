@@ -29,7 +29,7 @@ extension Project {
         ///     If `true`, the OCMock package will be linked.
         ///   - usesStubs: Whether the tests in this target use stubs.
         ///     If `true`, the OHHTTPStubs package will be linked.
-        ///   - usesPreconditionTesting: Whether the tests in this target uses precondition, assert, and/or fatal error testing.
+        ///   - usesPreconditionTesting: Whether the tests in this target use precondition, assert, and/or fatal error testing.
         ///     If `true`, the CwlPreconditionTesting package will be linked.
         /// - Returns: A `TestOptions` instance.
         public static func testOptions(
