@@ -34,13 +34,13 @@ extension SavedPaymentMethodsSheet {
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = STPAPIClient.shared
 
-        public var applePayEnabled: Bool
+        /// Whether to show Apple Pay as an option
+        public var applePayEnabled: Bool = false
 
         /// Optional configuration for setting the header text of the Payment Method selection screen
         public var headerTextForSelectionScreen: String?
 
-        public init (applePayEnabled: Bool) {
-            self.applePayEnabled = applePayEnabled
+        public init () {
         }
     }
 }

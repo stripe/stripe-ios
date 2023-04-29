@@ -200,7 +200,7 @@ extension SavedPaymentMethodsSheet: LoadingViewControllerDelegate {
 }
 
 @_spi(PrivateBetaSavedPaymentMethodsSheet) extension StripeCustomerAdapter {
-    /// Returns the selected Payment Option for this customer context.
+    /// Returns the selected Payment Option for this customer adapter.
     /// You can use this to obtain the selected payment method without loading the SavedPaymentMethodsSheet.
     public func retrievePaymentOptionSelection() async throws -> SavedPaymentMethodsSheet.PaymentOptionSelection?
      {

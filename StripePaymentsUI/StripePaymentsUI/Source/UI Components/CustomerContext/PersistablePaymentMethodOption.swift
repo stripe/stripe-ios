@@ -15,7 +15,7 @@ import Foundation
     case link
     case stripeId(String)
 
-    public init(value: String) {
+    @_spi(STP) public init(value: String) {
         switch value {
         case "apple_pay":
             self = .applePay
@@ -26,7 +26,7 @@ import Foundation
         }
     }
 
-    public var value: String {
+    @_spi(STP) public var value: String {
         switch self {
         case .applePay:
             return "apple_pay"
@@ -41,7 +41,7 @@ import Foundation
     /// - Parameters:
     ///   - identifier: Payment method identifier.
     ///   - customerID: ID of the customer. Pass `nil` for anonymous users.
-    static public func setDefaultPaymentMethod(_ paymentMethodOption: PersistablePaymentMethodOption?, forCustomer customerID: String?) {
+    @_spi(STP) public static func setDefaultPaymentMethod(_ paymentMethodOption: PersistablePaymentMethodOption?, forCustomer customerID: String?) {
         var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
 
         let key = customerID ?? ""
@@ -53,7 +53,7 @@ import Foundation
     /// Returns the identifier of the default payment method for a customer.
     /// - Parameter customerID: ID of the customer. Pass `nil` for anonymous users.
     /// - Returns: Default payment method.
-    static public func defaultPaymentMethod(for customerID: String?) -> PersistablePaymentMethodOption? {
+    @_spi(STP) public static func defaultPaymentMethod(for customerID: String?) -> PersistablePaymentMethodOption? {
         let key = customerID ?? ""
 
         guard let value = UserDefaults.standard.customerToLastSelectedPaymentMethod?[key] else {
