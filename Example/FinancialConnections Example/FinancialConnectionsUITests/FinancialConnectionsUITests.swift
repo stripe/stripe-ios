@@ -237,7 +237,10 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_playgroundShowAuthFlowButton.tap()
 
-        let consentAgreeButton = app.webViews.buttons["Agree"]
+        let consentAgreeButton = app.webViews
+            .buttons
+            .containing(NSPredicate(format: "label CONTAINS 'Agree'"))
+            .firstMatch
         XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to load
         consentAgreeButton.tap()
 
