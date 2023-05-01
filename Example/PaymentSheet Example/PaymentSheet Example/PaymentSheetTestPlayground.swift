@@ -351,6 +351,12 @@ class PaymentSheetTestPlayground: UIViewController {
 
         // Enable experimental payment methods.
 //        PaymentSheet.supportedPaymentMethods += [.link]
+        PaymentSheet.enableACHV2InDeferredFlow = true // TODO(https://jira.corp.stripe.com/browse/BANKCON-6731) Remove this.
+        
+        // Hack to ensure we don't force the native flow unless we're in a UI test
+        if ProcessInfo.processInfo.environment["UITesting"] == nil {
+            UserDefaults.standard.removeObject(forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
+        }
 
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
