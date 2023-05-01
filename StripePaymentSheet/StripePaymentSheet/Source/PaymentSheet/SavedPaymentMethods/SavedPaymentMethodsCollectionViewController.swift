@@ -8,7 +8,6 @@ import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
 protocol SavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {

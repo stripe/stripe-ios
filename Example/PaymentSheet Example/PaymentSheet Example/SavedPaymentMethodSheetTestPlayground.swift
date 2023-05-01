@@ -11,7 +11,6 @@ import Contacts
 import Foundation
 import PassKit
 @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentSheet
-@_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
 import SwiftUI
 import UIKit
 

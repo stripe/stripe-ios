@@ -10,18 +10,18 @@ import Foundation
 
 extension UserDefaults {
     /// Canonical list of all UserDefaults keys the SDK uses
-    @_spi(STP) public enum StripePaymentsUIKeys: String {
+    @_spi(STP) public enum StripeKeys: String {
         /// The key for a dictionary of Customer id to their last selected payment method ID
         case customerToLastSelectedPaymentMethod = "com.stripe.lib:STPStripeCustomerToLastSelectedPaymentMethodKey"
     }
 
     @_spi(STP) public var customerToLastSelectedPaymentMethod: [String: String]? {
         get {
-            let key = StripePaymentsUIKeys.customerToLastSelectedPaymentMethod.rawValue
+            let key = StripeKeys.customerToLastSelectedPaymentMethod.rawValue
             return dictionary(forKey: key) as? [String: String]
         }
         set {
-            let key = StripePaymentsUIKeys.customerToLastSelectedPaymentMethod.rawValue
+            let key = StripeKeys.customerToLastSelectedPaymentMethod.rawValue
             setValue(newValue, forKey: key)
         }
     }
