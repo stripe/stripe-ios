@@ -79,4 +79,11 @@ extension XCUIApplication {
         XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0))  // wait for accounts to link
         return successDoneButton
     }
+
+    func dismissKeyboard() {
+        let returnKey = keyboards.buttons["return"]
+        if returnKey.exists && returnKey.isHittable {
+            returnKey.tap()
+        }
+    }
 }
