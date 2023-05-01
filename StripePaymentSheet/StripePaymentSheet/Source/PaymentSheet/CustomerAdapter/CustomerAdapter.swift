@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 
 /// A "bridge" from wallet mode to your backend to fetch Customer-related information.
 /// Typically, you will not need to implement this protocol yourself. You
@@ -197,5 +198,5 @@ import UIKit
 
 /// Stores the key we use in NSUserDefaults to save a dictionary of Customer id to their last selected payment method ID
 private let kLastSelectedPaymentMethodDefaultsKey =
-    UserDefaults.StripePaymentsUIKeys.customerToLastSelectedPaymentMethod.rawValue
+    UserDefaults.StripePaymentSheetKeys.customerToLastSelectedPaymentMethod.rawValue
 private let CachedCustomerMaxAge: TimeInterval = 60 * 30 // 30 minutes, server-side timeout is 60
