@@ -246,14 +246,6 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
     return [STPEphemeralKey decodedObjectFromAPIResponse:response];
 }
 
-+ (_stpspmsbeta_STPEphemeralKey *)stpspmsbeta_ephemeralKey {
-    NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"EphemeralKey"] mutableCopy];
-    NSTimeInterval interval = 100;
-    response[@"expires"] = @([[NSDate dateWithTimeIntervalSinceNow:interval] timeIntervalSince1970]);
-    return [_stpspmsbeta_STPEphemeralKey decodedObjectFromAPIResponse:response];
-}
-
-
 + (STPEphemeralKey *)expiringEphemeralKey {
     NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"EphemeralKey"] mutableCopy];
     NSTimeInterval interval = 10;

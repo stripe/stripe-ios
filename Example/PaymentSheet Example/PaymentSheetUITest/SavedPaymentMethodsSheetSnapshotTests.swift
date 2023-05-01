@@ -14,7 +14,7 @@ import UIKit
 @_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaSavedPaymentMethodsSheet) @testable import StripePaymentsUI
 @_spi(STP)@testable import StripeUICore
 
-class StubbedBackendAPIAdapter: NSObject, _stpspmsbeta_STPBackendAPIAdapter {
+class StubbedBackendAPIAdapter: NSObject {
     func retrieveCustomer(_ completion: StripePayments.STPCustomerCompletionBlock?) {
 //        Make fake customer
         let customer = STPCustomer.decodedObject(fromAPIResponse: nil)

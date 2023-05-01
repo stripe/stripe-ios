@@ -34,24 +34,6 @@ class MockEphemeralKeyManager: STPEphemeralKeyManagerProtocol {
     }
 }
 
-
-class _stpspmsbeta_MockEphemeralKeyManager: _stpspmsbeta_STPEphemeralKeyManagerProtocol {
-    var ephemeralKey: _stpspmsbeta_STPEphemeralKey?
-    var error: Error?
-
-    init(
-        key: _stpspmsbeta_STPEphemeralKey?,
-        error: Error?
-    ) {
-        self.ephemeralKey = key
-        self.error = error
-    }
-
-    func getOrCreateKey(_ completion: @escaping StripePaymentsUI._stpspmsbeta_STPEphemeralKeyCompletionBlock) {
-        completion(ephemeralKey, error)
-    }
-}
-
 class STPCustomerContextTests: APIStubbedTestCase {
     func stubRetrieveCustomers(
         key: STPEphemeralKey,
@@ -686,40 +668,6 @@ class STPCustomerContextTests: APIStubbedTestCase {
                 XCTAssertEqual(customer!.sources.count, 2)
                 exp.fulfill()
             }
-        }
-        waitForExpectations(timeout: 2, handler: nil)
-    }
-
-    func testSaveLastSelectedPaymentMethodID() {
-        let pmOption = PersistablePaymentMethodOption(value: "pm_123456789")
-        let customerKey = STPFixtures.stpspmsbeta_ephemeralKey()
-        let apiClient = stubbedAPIClient()
-
-        let exp = expectation(description: "Set and get PM id")
-        let ekm = _stpspmsbeta_MockEphemeralKeyManager(key: customerKey, error: nil)
-        let sut = _stpspmsbeta_STPCustomerContext(keyManager: ekm, apiClient: apiClient)
-        sut.setSelectedPaymentMethodOption(paymentOption: pmOption) { error in
-            XCTAssertNil(error)
-            sut.retrieveSelectedPaymentMethodOption { savedPMOption, error in
-                XCTAssertNil(error)
-                XCTAssertEqual(pmOption, savedPMOption)
-                exp.fulfill()
-            }
-        }
-        waitForExpectations(timeout: 2, handler: nil)
-    }
-
-    func testStaticEphemeralKeyProviderInit() {
-        let customerID = "cus_123"
-        let ephemeralKeySecret = "ek_123"
-        let exp = expectation(description: "Check key")
-        let context = _stpspmsbeta_STPCustomerContext(customerId: customerID, ephemeralKeySecret: ephemeralKeySecret)
-        // Check that the context uses the correct ephemeral key:
-        context.keyManager.getOrCreateKey { ephemeralKey, error in
-            XCTAssertNil(error)
-            XCTAssertEqual(ephemeralKey!.stripeID, customerID)
-            XCTAssertEqual(ephemeralKey!.secret, ephemeralKeySecret)
-            exp.fulfill()
         }
         waitForExpectations(timeout: 2, handler: nil)
     }
