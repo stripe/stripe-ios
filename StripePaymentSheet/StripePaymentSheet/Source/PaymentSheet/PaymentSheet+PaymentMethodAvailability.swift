@@ -146,7 +146,7 @@ extension PaymentSheet {
             case .userSupportsDelayedPaymentMethods:
                 return "userSupportsDelayedPaymentMethods: PaymentSheet.Configuration.allowsDelayedPaymentMethods must be set to true."
             case .financialConnectionsSDK:
-                return "financialConnectionsSDK: The FinancialConnections SDK must be linked."
+                return "financialConnectionsSDK: The FinancialConnections SDK must be linked. See https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-ach"
             case .validUSBankVerificationMethod:
                 return "validUSBankVerificationMethod: Requires a valid US bank verification method."
             }
