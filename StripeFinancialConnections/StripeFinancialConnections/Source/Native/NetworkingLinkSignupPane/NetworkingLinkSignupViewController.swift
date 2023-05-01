@@ -156,8 +156,6 @@ final class NetworkingLinkSignupViewController: UIViewController {
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
         if let emailAddress = emailAddress, !emailAddress.isEmpty {
             formView.prefillEmailAddress(dataSource.manifest.accountholderCustomerEmailAddress)
-        } else {
-            formView.beginEditingEmailAddressField()
         }
 
         assert(self.footerView != nil, "footer view should be initialized as part of displaying content")
