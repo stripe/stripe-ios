@@ -10,9 +10,15 @@ import Foundation
     case unableToDecode(String?)
 }
 
+/// A representation of a Payment Method option, used for persisting the user's default payment method.
 @_spi(PrivateBetaSavedPaymentMethodsSheet) public enum PersistablePaymentMethodOption: Equatable {
+    /// The user's default payment method is Apple Pay.
+    /// This is not a specific Apple Pay card. Stripe will present an Apple Pay sheet to the user.
     case applePay
+    /// The user's default payment method is Link.
+    /// This is not a specific Link payment method. Stripe will present a Link sheet to the user.
     case link
+    /// A Stripe payment method backed by a Stripe PaymentMethod ID.
     case stripeId(String)
 
     @_spi(STP) public init(value: String) {
