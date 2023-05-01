@@ -14,22 +14,36 @@ import UIKit
 @_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaSavedPaymentMethodsSheet) @testable import StripePaymentsUI
 @_spi(STP)@testable import StripeUICore
 
-class StubbedBackendAPIAdapter: NSObject {
-    func retrieveCustomer(_ completion: StripePayments.STPCustomerCompletionBlock?) {
-//        Make fake customer
-        let customer = STPCustomer.decodedObject(fromAPIResponse: nil)
-        completion?(customer, nil)
-    }
 
-    func listPaymentMethodsForCustomer(completion: StripePayments.STPPaymentMethodsCompletionBlock?) {
-        let paymentMethods: [STPPaymentMethod] = []
-        completion?(paymentMethods, nil)
+// For backend example
+class StubCustomerAdapter: CustomerAdapter {
+    func fetchPaymentMethods() async throws -> [StripePayments.STPPaymentMethod] {
+        return []
     }
-
-    func attachPaymentMethod(toCustomer paymentMethod: StripePayments.STPPaymentMethod, completion: StripePayments.STPErrorBlock?) {
-        completion?(nil)
+    
+    func attachPaymentMethod(_ paymentMethodId: String) async throws {
+        
     }
-
+    
+    func detachPaymentMethod(paymentMethodId: String) async throws {
+        
+    }
+    
+    func setSelectedPaymentMethodOption(paymentOption: StripePaymentSheet.PersistablePaymentMethodOption?) async throws {
+        
+    }
+    
+    func fetchSelectedPaymentMethodOption() async throws -> StripePaymentSheet.PersistablePaymentMethodOption? {
+        return nil
+    }
+    
+    func setupIntentClientSecretForCustomerAttach() async throws -> String {
+        return "seti_123"
+    }
+    
+    var canCreateSetupIntents: Bool = true
+    
+    
 }
 
 class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
@@ -46,7 +60,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         return window
     }
 
-    private var configuration = SavedPaymentMethodsSheet.Configuration(applePayEnabled: false)
+    private var configuration = SavedPaymentMethodsSheet.Configuration()
 
     // Change this to true to hit the real glitch backend. This may be required
     // to capture data for new use cases
@@ -54,7 +68,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
-        configuration = SavedPaymentMethodsSheet.Configuration(applePayEnabled: false)
+        configuration = SavedPaymentMethodsSheet.Configuration()
 
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
                 self.recordMode = true
@@ -67,7 +81,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
     public override func tearDown() {
         super.tearDown()
         HTTPStubs.removeAllStubs()
-        configuration = SavedPaymentMethodsSheet.Configuration(applePayEnabled: false)
+        configuration = SavedPaymentMethodsSheet.Configuration()
     }
 
     private func stubbedAPIClient() -> STPAPIClient {
@@ -1035,9 +1049,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
                                          intentConfig: PaymentSheet.IntentConfiguration? = nil) {
         var config = self.configuration
 //        TODO
-        let customer = StripeCustomerAdapter {
-            .init(customerId: "nobody", ephemeralKeySecret: "test")
-        }
+        let customer = StubCustomerAdapter()
         config.appearance = appearance
         config.apiClient = stubbedAPIClient()
         if !applePayEnabled {
