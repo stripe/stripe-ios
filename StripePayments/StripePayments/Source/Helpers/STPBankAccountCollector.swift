@@ -464,6 +464,8 @@ public class STPBankAccountCollector: NSObject {
     @_spi(STP) public func collectBankAccountForDeferredIntent(
         sessionId: String,
         returnURL: String?,
+        amount: Int?,
+        currency: String?,
         onBehalfOf: String?,
         from viewController: UIViewController,
         financialConnectionsCompletion: @escaping (
@@ -478,7 +480,12 @@ public class STPBankAccountCollector: NSObject {
             return
         }
 
-        apiClient.createLinkAccountSessionForDeferredIntent(sessionId: sessionId, onBehalfOf: onBehalfOf) { linkAccountSession, error in
+        apiClient.createLinkAccountSessionForDeferredIntent(
+            sessionId: sessionId,
+            amount: amount,
+            currency: currency,
+            onBehalfOf: onBehalfOf
+        ) { linkAccountSession, error in
             if let error = error {
                 financialConnectionsCompletion(nil, nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
                 return

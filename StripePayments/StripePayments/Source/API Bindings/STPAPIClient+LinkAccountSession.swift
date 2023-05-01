@@ -53,16 +53,19 @@ extension STPAPIClient {
 
     func createLinkAccountSessionForDeferredIntent(
         sessionId: String,
+        amount: Int?,
+        currency: String?,
         onBehalfOf: String?,
         completion: @escaping STPLinkAccountSessionBlock
     ) {
         let endpoint: String = "connections/link_account_sessions_for_deferred_payment"
         var parameters: [String: Any] = [
             "unique_id": sessionId,
+            "verification_method": STPPaymentMethodOptions.USBankAccount.VerificationMethod.automatic.rawValue, // Hardcoded b/c the merchant can't choose in the deferred flow
         ]
-        if let onBehalfOf {
-            parameters["on_behalf_of"] = onBehalfOf
-        }
+        parameters["amount"] = amount
+        parameters["currency"] = currency
+        parameters["on_behalf_of"] = onBehalfOf
         APIRequest<LinkAccountSession>.post(
             with: self,
             endpoint: endpoint,

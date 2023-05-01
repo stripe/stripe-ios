@@ -369,11 +369,21 @@ class AddPaymentMethodViewController: UIViewController {
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
         case let .deferredIntent(elementsSession, intentConfig):
-            // I observed a blank webview unless the session ID is unique per attempt, so append a UUID.
-            let sessionId = elementsSession.sessionID + "--" + UUID().uuidString
+            let amount: Int?
+            let currency: String?
+            switch intentConfig.mode {
+            case let .payment(amount: _amount, currency: _currency, _, _):
+                amount = _amount
+                currency = _currency
+            case let .setup(currency: _currency, _):
+                amount = nil
+                currency = _currency
+            }
             client.collectBankAccountForDeferredIntent(
-                sessionId: sessionId,
+                sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
+                amount: amount,
+                currency: currency,
                 onBehalfOf: intentConfig.onBehalfOf,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
