@@ -117,7 +117,6 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
             }
         })
     }
-    
 
     func updateButtons() {
         // Update the payment method selection button
@@ -178,7 +177,6 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
             })
         }
 
-        
         self.customerAdapter = customerAdapter
         var configuration = SavedPaymentMethodsSheet.Configuration()
         configuration.appearance = appearance

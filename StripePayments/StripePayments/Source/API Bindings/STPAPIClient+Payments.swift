@@ -999,7 +999,7 @@ extension STPAPIClient {
             completion(error)
         }
     }
-    
+
     @_spi(STP) public func attachPaymentMethod(
         _ paymentMethodID: String,
         customerID: String,
@@ -1047,4 +1047,3 @@ private let APIEndpointSetupIntents = "setup_intents"
 private let APIEndpoint3DS2 = "3ds2"
 private let PaymentMethodDataHash = "payment_method_data"
 private let SourceDataHash = "source_data"
-

@@ -386,7 +386,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                 case .success(let stpSetupIntent):
                     let setupIntent = Intent.setupIntent(stpSetupIntent)
                     self.confirm(intent: setupIntent, paymentOption: paymentOption)
-                case .failure(_):
+                case .failure:
                     self.processingInFlight = false
                     self.updateUI()
                     // Communicate error to user, if any
@@ -415,7 +415,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                 }
 
                 let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.newPaymentMethod(paymentMethod)
-                self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
+                self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { _ in
                     self.processingInFlight = false
 //                    Communicate error to user?
                     self.updateUI()
@@ -458,7 +458,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                         // TODO: Communicate error to customer
                     }
                     let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
-                    self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
+                    self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { _ in
                         self.processingInFlight = false
                         // TODO: Communicate error to customer
                     } onSuccess: {
@@ -519,7 +519,7 @@ class SavedPaymentMethodsViewController: UIViewController {
         Task {
             let persistablePaymentOption = paymentOptionSelection.persistablePaymentMethodOption()
             do {
-                try await customerAdapter.setSelectedPaymentMethodOption(paymentOption:persistablePaymentOption)
+                try await customerAdapter.setSelectedPaymentMethodOption(paymentOption: persistablePaymentOption)
                 onSuccess()
             } catch {
                 onError(error)

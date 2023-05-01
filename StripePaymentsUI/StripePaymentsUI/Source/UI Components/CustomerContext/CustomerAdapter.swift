@@ -10,7 +10,6 @@ import UIKit
 
 @_spi(STP) import StripePayments
 
-
 /// A "bridge" from wallet mode to your backend to fetch Customer-related information.
 /// Typically, you will not need to implement this protocol yourself. You
 /// should instead use `StripeCustomerAdapter`, which implements <CustomerAdapter>
@@ -25,7 +24,7 @@ import UIKit
     /// with the Stripe customer. If this API call succeeds, return the list of payment methods.
     /// Otherwise, throw an error.
     func fetchPaymentMethods() async throws -> [STPPaymentMethod]
-    
+
     /// Adds a Payment Method to a customer.
     /// If you are implementing your own <CustomerAdapter>:
     /// On your backend, retrieve the Stripe customer associated with your logged-in user.
@@ -35,7 +34,7 @@ import UIKit
     /// - Parameters:
     ///   - paymentMethod:   A valid Stripe Payment Method ID
     func attachPaymentMethod(_ paymentMethodId: String) async throws
-    
+
     /// Deletes the given Payment Method from the customer.
     /// If you are implementing your own <CustomerAdapter>:
     /// Call the Detach method ( https://stripe.com/docs/api/payment_methods/detach )
@@ -44,31 +43,30 @@ import UIKit
     /// - Parameters:
     ///   - paymentMethod:   The Stripe Payment Method ID to delete from the customer
     func detachPaymentMethod(paymentMethodId: String) async throws
-    
+
     /// Set the last selected payment method for the customer.
     /// To unset the default payment method, pass `nil` as the `paymentOption`.
     /// If you are implementing your own <CustomerAdapter>:
     /// Save a representation of the passed `paymentOption` as the customer's default payment method.
     func setSelectedPaymentMethodOption(paymentOption: PersistablePaymentMethodOption?) async throws
-    
+
     /// Retrieve the last selected payment method for the customer.
     /// If you are implementing your own <CustomerAdapter>:
     /// Return a PersistablePaymentMethodOption for the customer's default selected payment method.
     /// If no default payment method is selected, return nil.
     func fetchSelectedPaymentMethodOption() async throws -> PersistablePaymentMethodOption?
-    
+
     /// Returns the a SetupIntent client secret configured to attach a new payment method to a customer.
     /// If you are implementing your own <CustomerAdapter>:
     /// Create a SetupIntent on your backend, then return the client secret.
     func setupIntentClientSecretForCustomerAttach() async throws -> String
-    
+
     /// Whether this CustomerAdapter is able to create Setup Intents.
     /// A Setup Intent is recommended when attaching a new card to a Customer, and required for non-card payment methods.
     /// If you are implementing your own <CustomerAdapter>:
     /// Return `true` if setupIntentClientSecretForCustomerAttach is implemented. Otherwise, return false.
     var canCreateSetupIntents: Bool { get }
 }
-
 
 /// An ephemeral key for the Stripe Customer
 @_spi(PrivateBetaSavedPaymentMethodsSheet) public struct CustomerEphemeralKey {
@@ -77,7 +75,7 @@ import UIKit
     @_spi(PrivateBetaSavedPaymentMethodsSheet) public let id: String
     /// A short-lived token that allows the SDK to access a Customer's payment methods
     @_spi(PrivateBetaSavedPaymentMethodsSheet) public let ephemeralKeySecret: String
-    
+
     /// Initializes a CustomerConfiguration
     @_spi(PrivateBetaSavedPaymentMethodsSheet) public init(customerId: String, ephemeralKeySecret: String) {
         self.id = customerId
@@ -113,7 +111,7 @@ import UIKit
         let customerEphemeralKey: CustomerEphemeralKey
         let cacheDate = Date()
     }
-    
+
     private var _cachedEphemeralKey: CachedCustomerEphemeralKey?
     var customerEphemeralKey: CustomerEphemeralKey {
         get async throws {
@@ -126,11 +124,11 @@ import UIKit
             return newKey
         }
     }
-    
+
     public var canCreateSetupIntents: Bool {
         return setupIntentClientSecretProvider != nil
     }
-    
+
     open func fetchPaymentMethods() async throws -> [STPPaymentMethod] {
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
@@ -150,7 +148,7 @@ import UIKit
             }
         })
     }
-    
+
     open func attachPaymentMethod(_ paymentMethodId: String) async throws {
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
@@ -163,7 +161,7 @@ import UIKit
             }
         })
     }
-  
+
     open func detachPaymentMethod(paymentMethodId: String) async throws {
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
@@ -176,19 +174,19 @@ import UIKit
             }
         })
     }
-    
+
     open func setSelectedPaymentMethodOption(paymentOption: PersistablePaymentMethodOption?) async throws {
         let customerEphemeralKey = try await customerEphemeralKey
-        
+
         PersistablePaymentMethodOption.setDefaultPaymentMethod(paymentOption, forCustomer: customerEphemeralKey.id)
     }
-    
+
     open func fetchSelectedPaymentMethodOption() async throws -> PersistablePaymentMethodOption? {
         let customerEphemeralKey = try await customerEphemeralKey
-        
+
         return PersistablePaymentMethodOption.defaultPaymentMethod(for: customerEphemeralKey.id)
     }
-    
+
     open func setupIntentClientSecretForCustomerAttach() async throws -> String {
         guard let setupIntentClientSecretProvider = setupIntentClientSecretProvider else {
             throw NSError() // no client secret provider!

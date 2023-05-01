@@ -42,7 +42,7 @@ import Foundation
             return stripeId
         }
     }
-    
+
     /// Sets the default payment method for a given customer.
     /// - Parameters:
     ///   - identifier: Payment method identifier.

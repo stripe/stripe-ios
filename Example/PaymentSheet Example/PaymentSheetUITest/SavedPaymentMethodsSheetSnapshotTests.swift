@@ -20,19 +20,17 @@ class StubbedBackendAPIAdapter: NSObject {
         let customer = STPCustomer.decodedObject(fromAPIResponse: nil)
         completion?(customer, nil)
     }
-    
+
     func listPaymentMethodsForCustomer(completion: StripePayments.STPPaymentMethodsCompletionBlock?) {
         let paymentMethods: [STPPaymentMethod] = []
         completion?(paymentMethods, nil)
     }
-    
+
     func attachPaymentMethod(toCustomer paymentMethod: StripePayments.STPPaymentMethod, completion: StripePayments.STPErrorBlock?) {
         completion?(nil)
     }
-    
-    
-}
 
+}
 
 class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
 

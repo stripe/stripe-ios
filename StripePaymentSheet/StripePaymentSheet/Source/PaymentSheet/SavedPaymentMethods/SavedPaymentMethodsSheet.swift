@@ -66,7 +66,7 @@ internal enum SavedPaymentMethodsSheetResult {
         self.configuration = configuration
         self.customerAdapter = customer
     }
-    
+
     var customerAdapter: CustomerAdapter
 
     /// The result of the SavedPaymentMethodsSheet
@@ -78,9 +78,9 @@ internal enum SavedPaymentMethodsSheetResult {
         /// An error occurred when presenting the sheet
         case error(Error)
     }
-    
+
     private var spmsCompletion: SPMSCompletion?
-    
+
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     public func present(from presentingViewController: UIViewController,
