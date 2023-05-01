@@ -119,10 +119,6 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         emailElement.emailAddressElement.setText(emailAddress)
     }
 
-    func beginEditingEmailAddressField() {
-        emailElement.beginEditing()
-    }
-
     func endEditingEmailAddressField() {
         emailElement.view.endEditing(true)
     }
