@@ -13,6 +13,8 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 final class BulletPointLabelView: HitTestView {
 
+    private(set) var topPadding: CGFloat = 0
+
     init(
         title: String?,
         content: String?,
@@ -23,25 +25,31 @@ final class BulletPointLabelView: HitTestView {
         verticalLabelStackView.axis = .vertical
         verticalLabelStackView.spacing = 2
         if let title = title {
-            let primaryLabel = ClickableLabel(
-                font: .stripeFont(forTextStyle: .body),
-                boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
-                linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            let font: FinancialConnectionsFont = .body(.medium)
+            let primaryLabel = ClickableLabelNew(
+                font: font,
+                boldFont: .body(.mediumEmphasized),
+                linkFont: .body(.mediumEmphasized),
                 textColor: .textPrimary
             )
             primaryLabel.setText(title, action: didSelectURL)
             verticalLabelStackView.addArrangedSubview(primaryLabel)
+            topPadding = font.topPadding
         }
         if let content = content {
             let displayingOnlyContent = (title == nil)
-            let subtitleLabel = ClickableLabel(
-                font: .stripeFont(forTextStyle: displayingOnlyContent ? .body : .detail),
-                boldFont: .stripeFont(forTextStyle: displayingOnlyContent ? .bodyEmphasized : .detailEmphasized),
-                linkFont: .stripeFont(forTextStyle: displayingOnlyContent ? .bodyEmphasized : .detailEmphasized),
+            let font: FinancialConnectionsFont = displayingOnlyContent ? .body(.medium) : .body(.small)
+            let subtitleLabel = ClickableLabelNew(
+                font: font,
+                boldFont: displayingOnlyContent ? .body(.mediumEmphasized) : .body(.smallEmphasized),
+                linkFont: displayingOnlyContent ? .body(.mediumEmphasized) : .body(.smallEmphasized),
                 textColor: .textSecondary
             )
             subtitleLabel.setText(content, action: didSelectURL)
             verticalLabelStackView.addArrangedSubview(subtitleLabel)
+            if displayingOnlyContent {
+                topPadding = font.topPadding
+            }
         }
         addAndPinSubview(verticalLabelStackView)
     }
