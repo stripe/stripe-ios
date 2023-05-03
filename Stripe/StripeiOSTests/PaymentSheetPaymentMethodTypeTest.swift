@@ -625,7 +625,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             ),
             .missingRequirements([.unsupportedForSetup])
         )
-        
+
         XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: paymentMethod,

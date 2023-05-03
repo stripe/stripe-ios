@@ -121,10 +121,10 @@ extension PaymentSheet {
 
         /// A special case that indicates the payment method is unsupported by PaymentSheet when using SetupIntents or SFU
         case unsupportedForSetup
-        
+
         /// A special case that indicates the payment method is unsupported by PaymentSheet for later reuse
         case unsupportedForReuse
-        
+
         /// Indicates that a payment method requires a return URL
         case returnURL
 
@@ -183,7 +183,7 @@ extension PaymentSheet {
             case .unactivated:
                 return "This payment method is enabled for test mode, but is not activated for live mode. Visit the Stripe Dashboard to activate the payment method. https://support.stripe.com/questions/activate-a-new-payment-method"
             case .missingRequirements(let missingRequirements):
-                return missingRequirements.map {$0.debugDescription}.joined(separator: "\n\t* ")
+                return missingRequirements.map { $0.debugDescription }.joined(separator: "\n\t* ")
             }
         }
 
