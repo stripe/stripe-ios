@@ -106,6 +106,7 @@ import Foundation
 
             /// Asynchronously capture funds when the customer authorizes the payment.
             /// - Note: Recommended over `CaptureMethod.automatic` due to improved latency, but may require additional integration changes.
+            /// - Seealso: https://stripe.com/docs/payments/payment-intents/asynchronous-capture-automatic-async
             case automaticAsync = "automatic_async"
         }
 
