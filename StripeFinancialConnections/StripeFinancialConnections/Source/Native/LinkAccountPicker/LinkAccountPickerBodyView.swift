@@ -50,8 +50,9 @@ final class LinkAccountPickerBodyView: UIView {
 
         // list all accounts
         accounts.forEach { account in
+            let isDisabled = (account.status != "active")
             let accountRowView = LinkAccountPickerRowView(
-                isDisabled: account.status != "active",
+                isDisabled: isDisabled,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.linkAccountPickerBodyView(
@@ -66,7 +67,7 @@ final class LinkAccountPickerBodyView: UIView {
                 institutionImageUrl: account.institution?.icon?.default,
                 leadingTitle: rowTitles.leadingTitle,
                 trailingTitle: rowTitles.trailingTitle,
-                subtitle: AccountPickerHelpers.rowSubtitle(forAccount: account),
+                subtitle: isDisabled ? STPLocalizedString("Disconnected", "A subtitle on a button that represents a bank account. It explains to the user that this bank account is disconnected and needs to be re-added.") : AccountPickerHelpers.rowSubtitle(forAccount: account),
                 isSelected: selectedAccount?.id == account.id
             )
             verticalStackView.addArrangedSubview(accountRowView)
