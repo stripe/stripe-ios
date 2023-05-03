@@ -24,14 +24,7 @@ class PaymentSheetUITest: XCTestCase {
             // This makes the Financial Connections SDK trigger the (testmode) production flow instead of a stub. See FinancialConnectionsSDKAvailability.isUnitTestOrUITest.
             "USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "true",
         ]
-        // This makes the Financial Connections SDK use the native UI instead of webview. Native is much easier to test.
-        UserDefaults.standard.set(true, forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
         app.launch()
-    }
-
-    override func tearDown() {
-        super.tearDown()
-        UserDefaults.standard.removeObject(forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
     }
 
     func testPaymentSheetStandard() throws {
@@ -1883,9 +1876,9 @@ extension PaymentSheetUITest {
         continueButton.tap()
 
         // Go through connections flow
-        app.buttons["Agree"].tap()
+        app.buttons["Agree and continue"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
-        app.staticTexts["Success"].tap()
+        app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
         app.buttons["Link account"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
