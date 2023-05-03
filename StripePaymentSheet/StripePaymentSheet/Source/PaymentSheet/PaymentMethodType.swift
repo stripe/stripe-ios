@@ -24,14 +24,14 @@ extension PaymentSheet {
             case .dynamic("zip"):
                 return [.returnURL]
             default:
-                return [.unavailable]
+                return [.unsupported]
             }
         }
 
         func supportsSaveAndReuseRequirements() -> [PaymentMethodTypeRequirement] {
             switch self {
             default:
-                return [.unavailable]
+                return [.unsupportedForSetup]
             }
         }
 
@@ -227,7 +227,7 @@ extension PaymentSheet {
                 if availabilityStatus != .supported {
                     // This payment method is being filtered out, log the reason/s why
                     #if DEBUG
-                    print("[Stripe SDK]: \(paymentMethodType.displayName) is not being displayed because one or more requirements are not being met or this payment method is not supported by PaymentSheet. \(availabilityStatus.description)\n")
+                    print("[Stripe SDK]: PaymentSheet could not offer \(paymentMethodType.displayName):\n* \(availabilityStatus.debugDescription)")
                     #endif
                 }
 
@@ -286,18 +286,18 @@ extension PaymentSheet {
                     case .iDEAL, .bancontact, .sofort:
                         // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
                         // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
-                        return [.returnURL, .userSupportsDelayedPaymentMethods, .unavailable]
+                        return [.returnURL, .userSupportsDelayedPaymentMethods, .unsupportedForSetup]
                     case .SEPADebit:
                         // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
-                        return [.userSupportsDelayedPaymentMethods, .unavailable]
+                        return [.userSupportsDelayedPaymentMethods, .unsupportedForSetup]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
                         .affirm, .cashApp, .unknown:
-                        return [.unavailable]
+                        return [.unsupportedForSetup]
                     @unknown default:
-                        return [.unavailable]
+                        return [.unsupportedForSetup]
                     }
                 }()
             } else {
@@ -320,9 +320,9 @@ extension PaymentSheet {
                     case .afterpayClearpay, .affirm:
                         return [.returnURL, .shippingAddress]
                     case .link, .unknown:
-                        return [.unavailable]
+                        return [.unsupported]
                     @unknown default:
-                        return [.unavailable]
+                        return [.unsupported]
                     }
                 }()
             }
@@ -369,7 +369,7 @@ extension PaymentSheet {
                 case .USBankAccount:
                     return [.userSupportsDelayedPaymentMethods]
                 default:
-                    return [.unavailable]
+                    return [.unsupportedForReuse]
                 }
             }()
             return Self.configurationSupports(
