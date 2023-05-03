@@ -181,7 +181,7 @@ extension PaymentSheet {
             case .unactivated:
                 return "This payment method is enabled for test mode, but is not activated for live mode. Visit the Stripe Dashboard to activate the payment method. https://support.stripe.com/questions/activate-a-new-payment-method"
             case .missingRequirements(let missingRequirements):
-                return missingRequirements.map {$0.debugDescription}.joined(separator: "\n* ")
+                return missingRequirements.map {$0.debugDescription}.joined(separator: "\n\t* ")
             }
         }
 

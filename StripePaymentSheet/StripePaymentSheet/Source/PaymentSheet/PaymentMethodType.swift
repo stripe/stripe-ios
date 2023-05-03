@@ -227,7 +227,7 @@ extension PaymentSheet {
                 if logAvailability && availabilityStatus != .supported {
                     // This payment method is being filtered out, log the reason/s why
                     #if DEBUG
-                    print("[Stripe SDK]: PaymentSheet could not offer \(paymentMethodType.displayName):\n* \(availabilityStatus.debugDescription)")
+                    print("[Stripe SDK]: PaymentSheet could not offer \(paymentMethodType.displayName):\n\t* \(availabilityStatus.debugDescription)")
                     #endif
                 }
 
