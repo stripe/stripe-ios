@@ -89,7 +89,9 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
 /// - seealso: ApplePayExampleViewController for an example
 @objc(STPApplePayContext)
 public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
-
+    
+    /// A special string that can be passed in place of a intent client secret to force showing success
+    /// - Note: Only intended to be used with advanced workflows, such as multiprocessor support.
     @_spi(STP) public static let FORCE_SUCCESS = "FORCE_SUCCESS"
 
     /// Initializes this class.
