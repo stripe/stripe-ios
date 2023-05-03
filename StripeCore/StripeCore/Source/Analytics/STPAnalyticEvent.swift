@@ -136,4 +136,7 @@ import Foundation
     case paymentMethodMessagingViewLoadSucceeded = "pmmv_load_succeeded"
     case paymentMethodMessagingViewLoadFailed = "pmmv_load_failed"
     case paymentMethodMessagingViewTapped = "pmmv_tapped"
+    
+    /// MARK: - PaymentSheet Force Success
+    case paymentSheetForceSuccess = "mc_force_success"
 }

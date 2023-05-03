@@ -45,6 +45,7 @@ extension PaymentSheet {
                 guard clientSecret != IntentConfiguration.FORCE_SUCCESS else {
                     // Force close PaymentSheet and early exit
                     deferredIntentContext.completion(.completed)
+                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetForceSuccess)
                     return
                 }
 
