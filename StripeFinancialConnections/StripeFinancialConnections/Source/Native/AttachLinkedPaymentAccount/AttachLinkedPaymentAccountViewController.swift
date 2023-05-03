@@ -14,7 +14,8 @@ import UIKit
 protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
     func attachLinkedPaymentAccountViewController(
         _ viewController: AttachLinkedPaymentAccountViewController,
-        didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
+        didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
+        saveToLinkWithStripeSucceeded: Bool?
     )
     func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(
         _ viewController: AttachLinkedPaymentAccountViewController
@@ -92,6 +93,13 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                 guard let self = self else { return }
                 switch result {
                 case .success(let paymentAccountResource):
+                    var saveToLinkWithStripeSucceeded: Bool?
+                    if self.dataSource.manifest.isNetworkingUserFlow == true {
+                        if self.dataSource.manifest.accountholderIsLinkConsumer == true {
+                            saveToLinkWithStripeSucceeded = paymentAccountResource.networkingSuccessful
+                        }
+                    }
+
                     self.dataSource
                         .analyticsClient
                         .log(
@@ -104,7 +112,8 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
 
                     self.delegate?.attachLinkedPaymentAccountViewController(
                         self,
-                        didFinishWithPaymentAccountResource: paymentAccountResource
+                        didFinishWithPaymentAccountResource: paymentAccountResource,
+                        saveToLinkWithStripeSucceeded: saveToLinkWithStripeSucceeded
                     )
                 // we don't remove `linkingAccountsLoadingView` on success
                 // because this is the last time the user will see this

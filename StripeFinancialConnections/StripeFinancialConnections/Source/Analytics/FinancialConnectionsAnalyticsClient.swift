@@ -25,9 +25,16 @@ final class FinancialConnectionsAnalyticsClient {
         additionalParameters["navigator_language"] = Locale.current.identifier
     }
 
-    public func log(eventName: String, parameters: [String: Any] = [:]) {
+    public func log(
+        eventName: String,
+        parameters: [String: Any] = [:],
+        pane: FinancialConnectionsSessionManifest.NextPane? = nil
+    ) {
         let eventName = "linked_accounts.\(eventName)"
-        let parameters = parameters.merging(
+
+        var parameters = parameters
+        parameters["pane"] = pane?.rawValue
+        parameters = parameters.merging(
             additionalParameters,
             uniquingKeysWith: { eventParameter, _ in
                 // prioritize event `parameters` over `additionalParameters`
@@ -70,7 +77,7 @@ extension FinancialConnectionsAnalyticsClient {
 
     func logExpectedError(
         _ error: Error,
-        errorName: String?,
+        errorName: String,
         pane: FinancialConnectionsSessionManifest.NextPane?
     ) {
         log(
@@ -83,7 +90,7 @@ extension FinancialConnectionsAnalyticsClient {
 
     func logUnexpectedError(
         _ error: Error,
-        errorName: String?,
+        errorName: String,
         pane: FinancialConnectionsSessionManifest.NextPane?
     ) {
         log(
@@ -96,7 +103,7 @@ extension FinancialConnectionsAnalyticsClient {
 
     private func log(
         error: Error,
-        errorName: String?,
+        errorName: String,
         eventName: String,
         pane: FinancialConnectionsSessionManifest.NextPane?
     ) {
@@ -177,6 +184,18 @@ extension FinancialConnectionsAnalyticsClient {
             return .resetFlow
         case is TerminalErrorViewController:
             return .terminalError
+        case is NetworkingLinkSignupViewController:
+            return .networkingLinkSignupPane
+        case is NetworkingLinkLoginWarmupViewController:
+            return .networkingLinkLoginWarmup
+        case is NetworkingLinkVerificationViewController:
+            return .networkingLinkVerification
+        case is NetworkingLinkStepUpVerificationViewController:
+            return .networkingLinkStepUpVerification
+        case is NetworkingSaveToLinkVerificationViewController:
+            return .networkingSaveToLinkVerification
+        case is LinkAccountPickerViewController:
+            return .linkAccountPicker
         default:
             return .unparsable
         }
