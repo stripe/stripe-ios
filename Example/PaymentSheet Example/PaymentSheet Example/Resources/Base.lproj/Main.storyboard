@@ -75,11 +75,11 @@
                                                 <viewLayoutGuide key="safeArea" id="cYV-Co-2qB"/>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="qqg-ri-Egw">
-                                                <rect key="frame" x="0.0" y="73.5" width="137.5" height="20.5"/>
+                                                <rect key="frame" x="0.0" y="73.5" width="120.5" height="20.5"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Initialization mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uMB-DW-y4f">
-                                                        <rect key="frame" x="0.0" y="0.0" width="137.5" height="20.5"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Integration type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uMB-DW-y4f">
+                                                        <rect key="frame" x="0.0" y="0.0" width="120.5" height="20.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -677,7 +677,7 @@
                         <outlet property="customCTALabelTextField" destination="BB8-x3-VG5" id="EVn-8V-Wkh"/>
                         <outlet property="customerModeSelector" destination="zJr-UB-CZ2" id="aHV-7c-JcC"/>
                         <outlet property="defaultBillingAddressSelector" destination="lcB-AI-7To" id="J2n-6M-xao"/>
-                        <outlet property="initModeSelector" destination="rTB-S1-NbZ" id="31j-qe-coy"/>
+                        <outlet property="integrationTypeSelector" destination="rTB-S1-NbZ" id="31j-qe-coy"/>
                         <outlet property="linkSelector" destination="hzL-b1-iX1" id="n02-ws-VBo"/>
                         <outlet property="loadButton" destination="Vls-MT-OoY" id="q7k-Hk-UdH"/>
                         <outlet property="merchantCountryCodeSelector" destination="yTS-DF-XVh" id="lPc-Qz-nmo"/>
@@ -1262,7 +1262,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="€8.99" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jVe-N9-tUa">
-                                                <rect key="frame" x="331" y="15.5" width="43" height="19.5"/>
+                                                <rect key="frame" x="331" y="15.499999999999998" width="43" height="19.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
@@ -1287,7 +1287,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="€0.74" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oun-mc-vjQ">
-                                                <rect key="frame" x="333" y="15.5" width="41" height="19.5"/>
+                                                <rect key="frame" x="333" y="15.499999999999998" width="41" height="19.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
@@ -1318,7 +1318,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="€9.73" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cac-8a-qDx">
-                                                <rect key="frame" x="332.5" y="15.5" width="41.5" height="19.5"/>
+                                                <rect key="frame" x="332.5" y="15.499999999999998" width="41.5" height="19.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
