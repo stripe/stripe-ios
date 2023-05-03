@@ -16,7 +16,7 @@ import Foundation
 
         /// Pass this into `intentCreationCallback` to force PaymentSheet to show success and dismiss.
         /// - Note: Only for advanced users, not required for most integrations.
-        public static let FORCE_SUCCESS = "FORCE_SUCCESS"
+        @_spi(STP) public static let FORCE_SUCCESS = "FORCE_SUCCESS"
 
         /// Called when the customer confirms payment.
         /// Your implementation should create a PaymentIntent or SetupIntent on your server and call the `intentCreationCallback` with its client secret or an error if one occurred.
