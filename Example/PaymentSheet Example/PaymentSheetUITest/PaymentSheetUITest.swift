@@ -980,7 +980,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Def MC",
+                "init_mode": "Def MP",
                 "automatic_payment_methods": "off",
             ]
         )
@@ -1234,7 +1234,7 @@ extension PaymentSheetUITest {
         loadPlayground(
             app,
             settings: [
-                "init_mode": "Def MC",
+                "init_mode": "Def MP",
                 "automatic_payment_methods": "off",
             ]
         )
