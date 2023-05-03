@@ -170,7 +170,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                     ),
                     supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
                 ),
-                .missingRequirements([.unavailable, .userSupportsDelayedPaymentMethods])
+                .missingRequirements([.unsupportedForSetup, .userSupportsDelayedPaymentMethods])
             )
 
             // ...and can't be set up
@@ -181,7 +181,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                     intent: .setupIntent(STPFixtures.setupIntent()),
                     supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
                 ),
-                .missingRequirements([.unavailable, .userSupportsDelayedPaymentMethods])
+                .missingRequirements([.unsupportedForSetup, .userSupportsDelayedPaymentMethods])
             )
         }
     }
@@ -617,16 +617,23 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
 
-        for intent in [Intent.setupIntent(setupIntent), Intent.paymentIntent(paymentIntent)] {
-            XCTAssertEqual(
-                PaymentSheet.PaymentMethodType.supportsAdding(
-                    paymentMethod: paymentMethod,
-                    configuration: configuration,
-                    intent: intent
-                ),
-                .missingRequirements([.unavailable])
-            )
-        }
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: paymentMethod,
+                configuration: configuration,
+                intent: Intent.setupIntent(setupIntent)
+            ),
+            .missingRequirements([.unsupportedForSetup])
+        )
+        
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: paymentMethod,
+                configuration: configuration,
+                intent: Intent.paymentIntent(paymentIntent)
+            ),
+            .missingRequirements([.unsupported])
+        )
     }
 
     func testSupport() {

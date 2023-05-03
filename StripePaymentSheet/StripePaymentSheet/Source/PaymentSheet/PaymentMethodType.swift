@@ -203,7 +203,7 @@ extension PaymentSheet {
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
         /// - Returns: An ordered list of `PaymentMethodType`s, including only the ones supported by this configuration.
-        static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration) -> [PaymentMethodType]
+        static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
             var recommendedPaymentMethodTypes = Self.recommendedPaymentMethodTypes(from: intent)
             if configuration.linkPaymentMethodsOnly {
@@ -224,7 +224,7 @@ extension PaymentSheet {
                         ? PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
                 )
 
-                if availabilityStatus != .supported {
+                if logAvailability && availabilityStatus != .supported {
                     // This payment method is being filtered out, log the reason/s why
                     #if DEBUG
                     print("[Stripe SDK]: PaymentSheet could not offer \(paymentMethodType.displayName):\n* \(availabilityStatus.debugDescription)")
