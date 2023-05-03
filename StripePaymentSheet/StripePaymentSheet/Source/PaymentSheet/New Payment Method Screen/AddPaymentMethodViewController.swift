@@ -369,8 +369,26 @@ class AddPaymentMethodViewController: UIViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent): Support ACHv2")
+        case let .deferredIntent(elementsSession, intentConfig):
+            let amount: Int?
+            let currency: String?
+            switch intentConfig.mode {
+            case let .payment(amount: _amount, currency: _currency, _, _):
+                amount = _amount
+                currency = _currency
+            case let .setup(currency: _currency, _):
+                amount = nil
+                currency = _currency
+            }
+            client.collectBankAccountForDeferredIntent(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                amount: amount,
+                currency: currency,
+                onBehalfOf: intentConfig.onBehalfOf,
+                from: viewController,
+                financialConnectionsCompletion: financialConnectionsCompletion
+            )
         }
     }
 }

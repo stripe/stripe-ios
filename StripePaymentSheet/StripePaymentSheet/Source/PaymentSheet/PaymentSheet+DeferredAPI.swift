@@ -22,7 +22,6 @@ extension PaymentSheet {
         guard let paymentMethodParams = paymentMethodParams else {
             throw PaymentSheetError.unknown(debugDescription: "paymentMethodParams unexpectedly nil")
         }
-
         return try await apiClient.createPaymentMethod(with: paymentMethodParams)
     }
 

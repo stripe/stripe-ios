@@ -19,7 +19,11 @@ class PaymentSheetUITest: XCTestCase {
         continueAfterFailure = false
 
         app = XCUIApplication()
-        app.launchEnvironment = ["UITesting": "true"]
+        app.launchEnvironment = [
+            "UITesting": "true",
+            // This makes the Financial Connections SDK trigger the (testmode) production flow instead of a stub. See FinancialConnectionsSDKAvailability.isUnitTestOrUITest.
+            "USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "true",
+        ]
         app.launch()
     }
 
@@ -554,6 +558,8 @@ class PaymentSheetUITest: XCTestCase {
     }
 
     func testUSBankAccountPaymentMethod() throws {
+        app.launchEnvironment = app.launchEnvironment.merging(["USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "false"]) { (_, new) in new }
+        app.launch()
         loadPlayground(
             app,
             settings: [
@@ -610,6 +616,14 @@ class PaymentSheetUITest: XCTestCase {
         )
 
         // no pay button tap because linked account is stubbed/fake in UI test
+    }
+
+    func testPaymentIntent_USBankAccount() {
+        _testUSBankAccount(mode: "Pay", initMode: "Normal")
+    }
+
+    func testSetupIntent_USBankAccount() {
+        _testUSBankAccount(mode: "Setup", initMode: "Normal")
     }
 
     func testUPIPaymentMethod() throws {
@@ -873,6 +887,23 @@ extension PaymentSheetUITest {
 
         payWithApplePay()
     }
+
+    func testDeferredIntentPaymentIntent_USBankAccount_ClientSideConfirmation() {
+        _testUSBankAccount(mode: "Pay", initMode: "Deferred", confirmMode: "Client")
+    }
+
+    func testDeferredIntentPaymentIntent_USBankAccount_ServerSideConfirmation() {
+        _testUSBankAccount(mode: "Pay", initMode: "Deferred", confirmMode: "Server")
+    }
+
+    func testDeferredIntentSetupIntent_USBankAccount_ClientSideConfirmation() {
+        _testUSBankAccount(mode: "Setup", initMode: "Deferred", confirmMode: "Client")
+    }
+
+    func testDeferredIntentSetupIntent_USBankAccount_ServerSideConfirmation() {
+        _testUSBankAccount(mode: "Setup", initMode: "Deferred", confirmMode: "Server")
+    }
+
 /* Disable Link test
     func testDeferredIntentLinkSignIn_ClientSideConfirmation() throws {
         loadPlayground(
@@ -1814,6 +1845,60 @@ extension PaymentSheetUITest {
 
 // MARK: Helpers
 extension PaymentSheetUITest {
+    func _testUSBankAccount(mode: String, initMode: String, confirmMode: String? = nil) {
+        var settings = [
+            "customer_mode": "new",
+            "automatic_payment_methods": "off",
+            "allows_delayed_pms": "true",
+            "init_mode": initMode,
+            "mode": mode,
+        ]
+        if let confirmMode {
+            settings["confirm_mode"] = confirmMode
+        }
+        loadPlayground(app, settings: settings)
+        app.buttons["Checkout (Complete)"].tap()
+
+        // Select US Bank Account
+        guard let usBankAccount = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account") else {
+            XCTFail()
+            return
+        }
+        usBankAccount.tap()
+
+        // Fill out name and email fields
+        let continueButton = app.buttons["Continue"]
+        XCTAssertFalse(continueButton.isEnabled)
+        app.textFields["Full name"].tap()
+        app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
+        XCTAssertTrue(continueButton.isEnabled)
+        continueButton.tap()
+
+        // Go through connections flow
+        app.buttons["Agree and continue"].tap()
+        app.staticTexts["Test Institution"].forceTapElement()
+        app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
+        app.buttons["Link account"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
+
+        // Confirm
+        let confirmButtonText = mode == "Pay" ? "Pay $50.99" : "Set up"
+        app.buttons[confirmButtonText].tap()
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        app.buttons["OK"].tap()
+
+        // Reload and pay with the now-saved us bank account
+        reload(app)
+        app.buttons["Checkout (Complete)"].tap()
+        XCTAssertTrue(app.buttons["••••6789"].waitForExistenceAndTap())
+        app.buttons[confirmButtonText].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        app.buttons["OK"].tap()
+    }
+
     private func payWithApplePay() {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
