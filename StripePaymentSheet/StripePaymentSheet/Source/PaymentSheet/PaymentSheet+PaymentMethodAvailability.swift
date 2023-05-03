@@ -27,6 +27,8 @@ extension PaymentSheet {
         .UPI,
         .cashApp,
     ]
+    /// Whether to enable ACHv2 in the deferred flow.  To be deleted when https://jira.corp.stripe.com/browse/BANKCON-6731 is completed.
+    @_spi(STP) public static var enableACHV2InDeferredFlow: Bool = false
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
     /// - Note: This is a var because it depends on the authenticated Link user
@@ -92,8 +94,8 @@ extension Intent: PaymentMethodRequirementProvider {
             }
             return reqs
         case .deferredIntent:
-            // TODO(DeferredIntent): Allow ACHv2
-            return []
+            // Verification method is always 'automatic'
+            return [.validUSBankVerificationMethod]
         }
     }
 }
@@ -144,7 +146,7 @@ extension PaymentSheet {
             case .userSupportsDelayedPaymentMethods:
                 return "userSupportsDelayedPaymentMethods: PaymentSheet.Configuration.allowsDelayedPaymentMethods must be set to true."
             case .financialConnectionsSDK:
-                return "financialConnectionsSDK: The FinancialConnections SDK must be linked."
+                return "financialConnectionsSDK: The FinancialConnections SDK must be linked. See https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-ach"
             case .validUSBankVerificationMethod:
                 return "validUSBankVerificationMethod: Requires a valid US bank verification method."
             }

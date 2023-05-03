@@ -72,6 +72,7 @@
     },
     "type": "payment_intent"
   },
+  "session_id": "123",
   "shipping_address_settings": {
     "autocomplete_allowed": false
   },

@@ -2,6 +2,9 @@
 ### Payments
 * [Fixed] STPPaymentHandler.handleNextAction allows payment methods that are delayed or require further customer action like like SEPA Debit or OXXO.
 
+### PaymentSheet
+* [Added] Added ACHv2 support to the decoupled flow. Note: the decoupled flow is in Private Beta.
+
 ## 23.7.0 2023-04-24
 ### PaymentSheet
 * [Fixed] Fixed disabled text color, using a lower opacity version of the original color instead of the previous `.tertiaryLabel`.
