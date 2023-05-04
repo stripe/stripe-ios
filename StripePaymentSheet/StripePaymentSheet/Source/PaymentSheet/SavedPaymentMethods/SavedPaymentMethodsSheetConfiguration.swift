@@ -46,30 +46,42 @@ extension SavedPaymentMethodsSheet {
 }
 
 extension SavedPaymentMethodsSheet {
+    /// A selected payment method from a SavedPaymentMethodSheet.
     public enum PaymentOptionSelection {
-
+        /// Display data for a payment method option.
         public struct PaymentOptionDisplayData {
+            /// An image to display to the user.
             public let image: UIImage
+            /// A label to display to the user.
             public let label: String
         }
+        /// Apple Pay is the selected payment option.
         case applePay(paymentOptionDisplayData: PaymentOptionDisplayData)
+        /// A saved payment method was selected.
         case saved(paymentMethod: STPPaymentMethod, paymentOptionDisplayData: PaymentOptionDisplayData)
+        /// A new payment method was saved and selected.
         case new(paymentMethod: STPPaymentMethod, paymentOptionDisplayData: PaymentOptionDisplayData)
 
+        /// Create a PaymentOptionSelection for a saved payment method.
         public static func savedPaymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
             let data = PaymentOptionDisplayData(image: paymentMethod.makeIcon(), label: paymentMethod.paymentSheetLabel)
             return .saved(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
         }
+
+        /// Create a PaymentOptionSelection for a new payment method.
         public static func newPaymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
             let data = PaymentOptionDisplayData(image: paymentMethod.makeIcon(), label: paymentMethod.paymentSheetLabel)
             return .new(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
         }
+
+        /// Create a PaymentOptionSelection for Apple Pay.
         public static func applePay() -> PaymentOptionSelection {
             let displayData = SavedPaymentMethodsSheet.PaymentOptionSelection.PaymentOptionDisplayData(image: Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal),
                                                                                                        label: String.Localized.apple_pay)
             return .applePay(paymentOptionDisplayData: displayData)
         }
 
+        /// Returns a PaymentOptionDisplayData to display to the user.
         public func displayData() -> PaymentOptionDisplayData {
             switch self {
             case .applePay(let paymentOptionDisplayData):
