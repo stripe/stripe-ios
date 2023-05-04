@@ -135,15 +135,15 @@ import UIKit
             let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]  // hardcoded for now
             apiClient.listPaymentMethods(
                 forCustomer: customerEphemeralKey.id,
-                using: customerEphemeralKey.ephemeralKeySecret
+                using: customerEphemeralKey.ephemeralKeySecret,
+                types: savedPaymentMethodTypes
             ) { paymentMethods, error in
                 guard let paymentMethods = paymentMethods, error == nil else {
                     let error = error ?? NSError() // TODO: make default error
                     continuation.resume(throwing: error)
                     return
                 }
-                let filteredPaymentMethods = paymentMethods.filter { savedPaymentMethodTypes.contains($0.type) }
-                continuation.resume(with: .success(filteredPaymentMethods))
+                continuation.resume(with: .success(paymentMethods))
             }
         })
     }
