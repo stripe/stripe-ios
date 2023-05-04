@@ -203,12 +203,12 @@ extension SavedPaymentMethodsSheet: LoadingViewControllerDelegate {
     /// You can use this to obtain the selected payment method without loading the SavedPaymentMethodsSheet.
     public func retrievePaymentOptionSelection() async throws -> SavedPaymentMethodsSheet.PaymentOptionSelection?
      {
-        let paymentMethods = try await self.fetchPaymentMethods()
         let selectedPaymentOption = try await self.fetchSelectedPaymentMethodOption()
         switch selectedPaymentOption {
         case .applePay:
             return .applePay()
         case .stripeId(let paymentMethodId):
+            let paymentMethods = try await self.fetchPaymentMethods()
             guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                 return nil
             }
