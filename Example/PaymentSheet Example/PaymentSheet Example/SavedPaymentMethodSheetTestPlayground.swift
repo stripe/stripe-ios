@@ -358,7 +358,7 @@ class SavedPaymentMethodsBackend {
         let (data, _) = try await session.data(for: urlRequest)
         let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
         guard let secret = jsonResponse?["client_secret"] as? String else {
-            throw NSError() // Throw more specific error
+            throw NSError(domain: "test", code: 0, userInfo: nil) // Throw more specific error
         }
         return secret
     }

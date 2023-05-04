@@ -112,8 +112,8 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
     }
 
     private func prepareMockSPMS(appearance: PaymentSheet.Appearance,
-                                         applePayEnabled: Bool = true,
-                                         intentConfig: PaymentSheet.IntentConfiguration? = nil) {
+                                 applePayEnabled: Bool = true,
+                                 intentConfig: PaymentSheet.IntentConfiguration? = nil) {
         var config = self.configuration
         let customer = StubCustomerAdapter()
         config.appearance = appearance

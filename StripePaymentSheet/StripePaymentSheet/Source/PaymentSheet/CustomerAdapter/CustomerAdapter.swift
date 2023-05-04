@@ -139,7 +139,7 @@ import UIKit
                 types: savedPaymentMethodTypes
             ) { paymentMethods, error in
                 guard let paymentMethods = paymentMethods, error == nil else {
-                    let error = error ?? NSError() // TODO: make default error
+                    let error = error ?? PaymentSheetError.unknown(debugDescription: "Unexpected response from Stripe API.") // TODO: make a better default error
                     continuation.resume(throwing: error)
                     return
                 }
@@ -188,7 +188,7 @@ import UIKit
 
     open func setupIntentClientSecretForCustomerAttach() async throws -> String {
         guard let setupIntentClientSecretProvider = setupIntentClientSecretProvider else {
-            throw NSError() // no client secret provider!
+            throw PaymentSheetError.unknown(debugDescription: "setupIntentClientSecretForCustomerAttach, but setupIntentClientSecretProvider is nil") // TODO: This is a programming error, setupIntentClientSecretForCustomerAttach should not be called if canCreateSetupIntents is false
         }
         return try await setupIntentClientSecretProvider()
     }
