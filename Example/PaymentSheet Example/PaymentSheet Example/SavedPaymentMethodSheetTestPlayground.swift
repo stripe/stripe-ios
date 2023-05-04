@@ -11,7 +11,6 @@ import Contacts
 import Foundation
 import PassKit
 @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentSheet
-@_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
 import SwiftUI
 import UIKit
 
@@ -65,7 +64,6 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
 
     var ephemeralKey: String?
     var customerId: String?
-    var customerContext: _stpspmsbeta_STPCustomerContext?
     var savedPaymentMethodEndpoint: String = defaultSavedPaymentMethodEndpoint
     var appearance = PaymentSheet.Appearance.default
 
@@ -95,7 +93,27 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
     }
     @objc
     func didTapSelectPaymentMethodButton() {
-        savedPaymentMethodsSheet?.present(from: self)
+        savedPaymentMethodsSheet?.present(from: self, completion: { result in
+            switch result {
+            case .canceled:
+                self.updateButtons()
+                let alertController = self.makeAlertController()
+                alertController.message = "Canceled"
+                self.present(alertController, animated: true)
+            case .selected(let paymentOptionSelection):
+                self.paymentOptionSelection = paymentOptionSelection
+                self.updateButtons()
+                let alertController = self.makeAlertController()
+                if let paymentOptionSelection = paymentOptionSelection {
+                    alertController.message = "Success: \(paymentOptionSelection.displayData().label)"
+                } else {
+                    alertController.message = "Success: payment method unset"
+                }
+                self.present(alertController, animated: true)
+            case .error(let error):
+                print("something went wrong: \(error)")
+            }
+        })
     }
 
     func updateButtons() {
@@ -141,28 +159,33 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
     }
 
     func savedPaymentMethodSheetConfiguration(customerId: String, ephemeralKey: String) -> SavedPaymentMethodsSheet.Configuration {
-        let customerContext = _stpspmsbeta_STPCustomerContext(customerId: customerId, ephemeralKeySecret: ephemeralKey)
-        self.customerContext = customerContext
-        var configuration = SavedPaymentMethodsSheet.Configuration(customerContext: customerContext,
-                                                                   applePayEnabled: applePayEnabled())
-        configuration.createSetupIntentHandler = setupIntentHandler(customerId: customerId)
+        var configuration = SavedPaymentMethodsSheet.Configuration()
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
         configuration.headerTextForSelectionScreen = headerTextForSelectionScreenTextField.text
 
         return configuration
     }
-    func setupIntentHandler(customerId: String) -> SavedPaymentMethodsSheet.Configuration.CreateSetupIntentHandlerCallback? {
+
+    func customerAdapter(customerId: String, ephemeralKey: String) -> StripeCustomerAdapter {
+        let customerAdapter: StripeCustomerAdapter
         switch paymentMethodMode {
         case .setupIntent:
-            return { completionBlock in
-                self.backend.createSetupIntent(customerId: customerId,
-                                               completion: completionBlock)
-            }
+            customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+                // This should be a block that fetches this from your server
+                .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+            }, setupIntentClientSecretProvider: {
+                return try await self.backend.createSetupIntent(customerId: customerId)
+            })
         case .createAndAttach:
-            return nil
+            customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+                // This should be a block that fetches this from your server
+                .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+            })
         }
+        return customerAdapter
     }
+
     func applePayEnabled() -> Bool {
         switch applePaySelector.selectedSegmentIndex {
         case 0:
@@ -189,6 +212,7 @@ extension SavedPaymentMethodSheetTestPlayground {
         let customerType = customerMode == .new ? "new" : "returning"
         self.backend = SavedPaymentMethodsBackend(endpoint: savedPaymentMethodEndpoint)
 
+//        TODO: Refactor this to make the ephemeral key and customerId fetching async
         self.backend.loadBackendCustomerEphemeralKey(customerType: customerType) { result in
             guard let json = result,
                   let ephemeralKey = json["customerEphemeralKeySecret"], !ephemeralKey.isEmpty,
@@ -200,56 +224,17 @@ extension SavedPaymentMethodSheetTestPlayground {
             self.customerId = customerId
             StripeAPI.defaultPublishableKey = publishableKey
 
-            DispatchQueue.main.async {
+            Task {
                 let configuration = self.savedPaymentMethodSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
-                self.savedPaymentMethodsSheet = SavedPaymentMethodsSheet(configuration: configuration, delegate: self)
+                let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey)
+                self.savedPaymentMethodsSheet = SavedPaymentMethodsSheet(configuration: configuration, customer: customerAdapter)
 
                 self.selectPaymentMethodButton.isEnabled = true
 
-                self.customerContext?.retrievePaymentOptionSelection { selection, _ in
-                    self.paymentOptionSelection = selection
-                    self.updateButtons()
-                }
+                let selection = try await customerAdapter.retrievePaymentOptionSelection()
+                self.paymentOptionSelection = selection
+                self.updateButtons()
             }
-        }
-    }
-}
-
-extension SavedPaymentMethodSheetTestPlayground: SavedPaymentMethodsSheetDelegate {
-    func didFinish(with paymentOptionSelection: SavedPaymentMethodsSheet.PaymentOptionSelection?) {
-        self.paymentOptionSelection = paymentOptionSelection
-        self.updateButtons()
-        let alertController = self.makeAlertController()
-        if let paymentOptionSelection = paymentOptionSelection {
-            alertController.message = "Success: \(paymentOptionSelection.displayData().label)"
-        } else {
-            alertController.message = "Success: payment method unset"
-        }
-        self.present(alertController, animated: true) {
-            self.load()
-        }
-
-    }
-
-    func didCancel() {
-        self.updateButtons()
-        let alertController = self.makeAlertController()
-        alertController.message = "Canceled"
-        self.present(alertController, animated: true) {
-            self.load()
-        }
-    }
-
-    func didFail(with error: SavedPaymentMethodsSheetError) {
-        switch error {
-        case .setupIntentClientSecretInvalid:
-            print("Intent invalid...")
-        case .errorFetchingSavedPaymentMethods(let error):
-            print("saved payment methods errored:\(error)")
-        case .setupIntentFetchError(let error):
-            print("fetching si errored: \(error)")
-        default:
-            print("something went wrong: \(error)")
         }
     }
 }
@@ -327,7 +312,6 @@ extension SavedPaymentMethodSheetTestPlayground {
 class SavedPaymentMethodsBackend {
 
     let endpoint: String
-    var clientSecret: String?
     public init(endpoint: String) {
         self.endpoint = endpoint
     }
@@ -359,11 +343,7 @@ class SavedPaymentMethodsBackend {
         task.resume()
     }
 
-    func createSetupIntent(customerId: String, completion: @escaping (String?) -> Void) {
-        guard clientSecret == nil else {
-            completion(clientSecret)
-            return
-        }
+    func createSetupIntent(customerId: String) async throws -> String {
         let body = [ "customer_id": customerId,
         ] as [String: Any]
         let url = URL(string: "\(endpoint)/create_setup_intent")!
@@ -374,22 +354,11 @@ class SavedPaymentMethodsBackend {
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = json
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
-        let task = session.dataTask(with: urlRequest) { data, _, error in
-            guard
-                error == nil,
-                let data = data,
-                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                print(error as Any)
-                completion(nil)
-                return
-            }
-            guard let secret = json["client_secret"] as? String else {
-                completion(nil)
-                return
-            }
-            self.clientSecret = secret
-            completion(secret)
+        let (data, _) = try await session.data(for: urlRequest)
+        let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        guard let secret = jsonResponse?["client_secret"] as? String else {
+            throw NSError(domain: "test", code: 0, userInfo: nil) // Throw more specific error
         }
-        task.resume()
+        return secret
     }
 }

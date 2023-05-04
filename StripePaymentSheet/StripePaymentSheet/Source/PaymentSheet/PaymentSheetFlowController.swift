@@ -9,7 +9,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -324,7 +324,7 @@ extension PaymentSheet {
 
                 if case .completed = result, case .link = paymentOption {
                     // Remember Link as default payment method for users who just created an account.
-                    PersistablePaymentMethodOption.setDefaultPaymentMethod(.link(), forCustomer: configuration.customer?.id)
+                    PersistablePaymentMethodOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
                 }
 
                 completion(result)
