@@ -64,7 +64,6 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
 
     var ephemeralKey: String?
     var customerId: String?
-    var customerAdapter: StripeCustomerAdapter?
     var savedPaymentMethodEndpoint: String = defaultSavedPaymentMethodEndpoint
     var appearance = PaymentSheet.Appearance.default
 
@@ -160,6 +159,15 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
     }
 
     func savedPaymentMethodSheetConfiguration(customerId: String, ephemeralKey: String) -> SavedPaymentMethodsSheet.Configuration {
+        var configuration = SavedPaymentMethodsSheet.Configuration()
+        configuration.appearance = appearance
+        configuration.returnURL = "payments-example://stripe-redirect"
+        configuration.headerTextForSelectionScreen = headerTextForSelectionScreenTextField.text
+
+        return configuration
+    }
+    
+    func customerAdapter(customerId: String, ephemeralKey: String) -> StripeCustomerAdapter {
         let customerAdapter: StripeCustomerAdapter
         switch paymentMethodMode {
         case .setupIntent:
@@ -175,15 +183,9 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
                 .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
             })
         }
-
-        self.customerAdapter = customerAdapter
-        var configuration = SavedPaymentMethodsSheet.Configuration()
-        configuration.appearance = appearance
-        configuration.returnURL = "payments-example://stripe-redirect"
-        configuration.headerTextForSelectionScreen = headerTextForSelectionScreenTextField.text
-
-        return configuration
+        return customerAdapter
     }
+    
     func applePayEnabled() -> Bool {
         switch applePaySelector.selectedSegmentIndex {
         case 0:
@@ -224,11 +226,12 @@ extension SavedPaymentMethodSheetTestPlayground {
 
             Task {
                 let configuration = self.savedPaymentMethodSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
-                self.savedPaymentMethodsSheet = SavedPaymentMethodsSheet(configuration: configuration, customer: self.customerAdapter!)
+                let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey)
+                self.savedPaymentMethodsSheet = SavedPaymentMethodsSheet(configuration: configuration, customer: customerAdapter)
 
                 self.selectPaymentMethodButton.isEnabled = true
 
-                let selection = try await self.customerAdapter?.retrievePaymentOptionSelection()
+                let selection = try await customerAdapter.retrievePaymentOptionSelection()
                 self.paymentOptionSelection = selection
                 self.updateButtons()
             }
@@ -309,7 +312,6 @@ extension SavedPaymentMethodSheetTestPlayground {
 class SavedPaymentMethodsBackend {
 
     let endpoint: String
-    var clientSecret: String?
     public init(endpoint: String) {
         self.endpoint = endpoint
     }
@@ -342,9 +344,6 @@ class SavedPaymentMethodsBackend {
     }
 
     func createSetupIntent(customerId: String) async throws -> String {
-        if let clientSecret = clientSecret {
-            return clientSecret
-        }
         let body = [ "customer_id": customerId,
         ] as [String: Any]
         let url = URL(string: "\(endpoint)/create_setup_intent")!
