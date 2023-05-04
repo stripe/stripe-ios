@@ -166,7 +166,7 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
 
         return configuration
     }
-    
+
     func customerAdapter(customerId: String, ephemeralKey: String) -> StripeCustomerAdapter {
         let customerAdapter: StripeCustomerAdapter
         switch paymentMethodMode {
@@ -185,7 +185,7 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
         }
         return customerAdapter
     }
-    
+
     func applePayEnabled() -> Bool {
         switch applePaySelector.selectedSegmentIndex {
         case 0:
