@@ -950,6 +950,11 @@ extension STPAPIClient {
     ) {
         let header = authorizationHeader(using: ephemeralKeySecret)
         // Unfortunately, this API only supports fetching saved pms for one type at a time
+        // Update 05/04/23: The API *does* now support fetching all PM types at once,
+        // but we're not using it because of pagination limitations.
+        // As an example, some unsupported PMs (such as SEPA) are saved once per payment,
+        // so a user with hundreds of SEPA payment methods would be stuck waiting for
+        // tens of requests.
         var shared_allPaymentMethods = [STPPaymentMethod]()
         var shared_lastError: Error?
         let group = DispatchGroup()
