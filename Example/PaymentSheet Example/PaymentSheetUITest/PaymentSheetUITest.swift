@@ -1917,7 +1917,7 @@ extension PaymentSheetUITest {
         reload(app)
         app.buttons["Checkout (Complete)"].tap()
         XCTAssertTrue(app.buttons["••••6789"].waitForExistenceAndTap())
-        app.buttons[confirmButtonText].tap()
+        XCTAssertTrue(app.buttons[confirmButtonText].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
         app.buttons["OK"].tap()
     }
