@@ -57,9 +57,7 @@ import UIKit
     /// If no default payment method is selected, return nil.
     func fetchSelectedPaymentMethodOption() async throws -> PersistablePaymentMethodOption?
 
-    /// Returns the a SetupIntent client secret configured to attach a new payment method to a customer.
-    /// If you are implementing your own <CustomerAdapter>:
-    /// Create a SetupIntent on your backend, then return the client secret.
+    /// Creates a SetupIntent configured to attach a new payment method to a customer, then returns the client secret for the created SetupIntent.
     func setupIntentClientSecretForCustomerAttach() async throws -> String
 
     /// Whether this CustomerAdapter is able to create Setup Intents.
