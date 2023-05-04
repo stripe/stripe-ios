@@ -33,11 +33,11 @@ extension PaymentSheet {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: IntentConfiguration.self)
         Task {
             do {
-                // Create PM if necessary
+                // 1. Create PM if necessary
                 let paymentMethod = try await createPaymentMethodIfNeeded(apiClient: deferredIntentContext.configuration.apiClient,
                                                                            paymentMethod: paymentMethod,
                                                                            paymentMethodParams: paymentMethodParams)
-                // Get Intent client secret from merchant
+                // 2. Get Intent client secret from merchant
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: deferredIntentContext.intentConfig,
                                                                                  paymentMethodID: paymentMethod.stripeId,
                                                                                  shouldSavePaymentMethod: shouldSavePaymentMethod)
@@ -47,57 +47,75 @@ extension PaymentSheet {
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetForceSuccess)
                     return
                 }
-
-                // Finish confirmation
-                if deferredIntentContext.isServerSideConfirmation {
-                    // Server-side confirmation
-                    func handleStatus(status: STPPaymentHandlerActionStatus, error: Error?) {
-                        switch status {
-                        case .succeeded:
-                            deferredIntentContext.completion(.completed)
-                        case .canceled:
-                            deferredIntentContext.completion(.canceled)
-                        case .failed:
-                            let error = error ?? PaymentSheetError.unknown(debugDescription: "Unknown error occured while handling intent next action")
-                            deferredIntentContext.completion(.failed(error: error))
-                        @unknown default:
-                            deferredIntentContext.completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Unrecognized intent status")))
+                
+                // 3. Retrieve the PaymentIntent or SetupIntent
+                switch deferredIntentContext.intentConfig.mode {
+                case .payment:
+                    let paymentIntent = try await deferredIntentContext.configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+                    // Check if it needs confirmation
+                    if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
+                        // 4a. Client-side confirmation
+                        confirm(configuration: deferredIntentContext.configuration,
+                                authenticationContext: deferredIntentContext.authenticationContext,
+                                intent: .paymentIntent(paymentIntent),
+                                paymentOption: deferredIntentContext.paymentOption,
+                                paymentHandler: deferredIntentContext.paymentHandler,
+                                paymentMethodID: paymentMethod.stripeId,
+                                completion: deferredIntentContext.completion)
+                    } else {
+                       // 4b. Server-side confirmation
+                        // TODO: Make a new handleNextAction version that takes a STPPaymentIntent to avoid re-fetching
+                        deferredIntentContext.paymentHandler.handleNextAction(
+                            forPayment: clientSecret,
+                            with: deferredIntentContext.authenticationContext,
+                            returnURL: deferredIntentContext.configuration.returnURL
+                        ) { status, _, error in
+                            deferredIntentContext.completion(paymentSheetResult(forPaymentHandlerActionStatus: status, error: error))
                         }
                     }
-
-                    switch deferredIntentContext.intentConfig.mode {
-                    case .payment:
-                        deferredIntentContext.paymentHandler.handleNextAction(forPayment: clientSecret,
-                                                                        with: deferredIntentContext.authenticationContext,
-                                                                        returnURL: deferredIntentContext.configuration.returnURL,
-                                                                        completion: { status, _, error in
-                            handleStatus(status: status, error: error)
-                        })
-                    case .setup:
-                        deferredIntentContext.paymentHandler.handleNextAction(forSetupIntent: clientSecret,
-                                                                        with: deferredIntentContext.authenticationContext,
-                                                                        returnURL: deferredIntentContext.configuration.returnURL,
-                                                                        completion: { status, _, error in
-                            handleStatus(status: status, error: error)
-                        })
+                case .setup:
+                    let setupIntent = try await deferredIntentContext.configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
+                    if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
+                        // 4a. Client-side confirmation
+                        confirm(configuration: deferredIntentContext.configuration,
+                                authenticationContext: deferredIntentContext.authenticationContext,
+                                intent: .setupIntent(setupIntent),
+                                paymentOption: deferredIntentContext.paymentOption,
+                                paymentHandler: deferredIntentContext.paymentHandler,
+                                paymentMethodID: paymentMethod.stripeId,
+                                completion: deferredIntentContext.completion)
+                    } else {
+                        // 4b. Server-side confirmation
+                        // TODO: Make a new handleNextAction version that takes an STPSetupIntent to avoid re-fetching
+                        deferredIntentContext.paymentHandler.handleNextAction(
+                            forSetupIntent: clientSecret,
+                            with: deferredIntentContext.authenticationContext,
+                            returnURL: deferredIntentContext.configuration.returnURL
+                        ) { status, _, error in
+                            deferredIntentContext.completion(paymentSheetResult(forPaymentHandlerActionStatus: status, error: error))
+                        }
                     }
-                } else {
-                    // Client-side confirmation
-                    // TODO(porter) Future optimization: Only fetch intent when strictly requried
-                    let intent = try await deferredIntentContext.configuration.apiClient.retrieveIntent(for: deferredIntentContext.intentConfig,
-                                                                                                        withClientSecret: clientSecret)
-                    confirm(configuration: deferredIntentContext.configuration,
-                            authenticationContext: deferredIntentContext.authenticationContext,
-                            intent: intent,
-                            paymentOption: deferredIntentContext.paymentOption,
-                            paymentHandler: deferredIntentContext.paymentHandler,
-                            paymentMethodID: paymentMethod.stripeId,
-                            completion: deferredIntentContext.completion)
                 }
-
             } catch {
                 deferredIntentContext.completion(.failed(error: error))
             }
+        }
+    }
+
+    // MARK: - Helper methods
+    
+    /// Convenience method that converts a STPPayymentHandlerActionStatus + error into a PaymentSheetResult
+    static func paymentSheetResult(forPaymentHandlerActionStatus status: STPPaymentHandlerActionStatus, error: Error?) -> PaymentSheetResult {
+        switch status {
+        case .succeeded:
+            return .completed
+        case .canceled:
+            return .canceled
+        case .failed:
+            let error = error ?? PaymentSheetError.unknown(debugDescription: "Unknown error occured while handling intent next action")
+            return .failed(error: error)
+        @unknown default:
+            return .failed(error: PaymentSheetError.unknown(debugDescription: "Unrecognized STPPaymentHandlerActionStatus status"))
         }
     }
 
@@ -131,10 +149,6 @@ class DeferredIntentContext {
     let authenticationContext: STPAuthenticationContext
     let paymentHandler: STPPaymentHandler
     let completion: PaymentSheetResultCompletionBlock
-
-    var isServerSideConfirmation: Bool {
-        return intentConfig.confirmHandlerForServerSideConfirmation != nil
-    }
 
     init(configuration: PaymentSheet.Configuration,
          intentConfig: PaymentSheet.IntentConfiguration,
