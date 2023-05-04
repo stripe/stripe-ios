@@ -41,6 +41,13 @@ extension PaymentSheet {
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: deferredIntentContext.intentConfig,
                                                                                  paymentMethodID: paymentMethod.stripeId,
                                                                                  shouldSavePaymentMethod: shouldSavePaymentMethod)
+                guard clientSecret != IntentConfiguration.FORCE_SUCCESS else {
+                    // Force close PaymentSheet and early exit
+                    deferredIntentContext.completion(.completed)
+                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetForceSuccess)
+                    return
+                }
+
                 // Finish confirmation
                 if deferredIntentContext.isServerSideConfirmation {
                     // Server-side confirmation

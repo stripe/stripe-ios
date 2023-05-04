@@ -43,9 +43,13 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var linkSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
     @IBOutlet weak var customCTALabelTextField: UITextField!
-    @IBOutlet weak var initModeSelector: UISegmentedControl!
-    @IBOutlet weak var confirmModeSelector: UISegmentedControl!
-    @IBOutlet weak var confirmMethodSelector: UISegmentedControl!
+    // Used for deferred workflows
+    // Normal: Normal client side confirmation non-deferred flow
+    // Def CSC: Deferred client side confirmation
+    // Def SSC: Deferred server side confirmation
+    // Def MC: Deferred server side confirmation with manual confirmation
+    // Def MP: Deferred multiprocessor flow
+    @IBOutlet weak var integrationTypeSelector: UISegmentedControl!
 
     @IBOutlet weak var attachDefaultSelector: UISegmentedControl!
     @IBOutlet weak var collectNameSelector: UISegmentedControl!
@@ -90,7 +94,7 @@ class PaymentSheetTestPlayground: UIViewController {
         case setup
     }
 
-    enum InitMode {
+    enum IntegrationType {
         case normal
         case deferred
     }
@@ -208,15 +212,12 @@ class PaymentSheetTestPlayground: UIViewController {
         }
     }
 
-    var initMode: InitMode {
-        switch initModeSelector.selectedSegmentIndex {
-        case 0:
-            return .normal
-        case 1:
+    var integrationType: IntegrationType {
+        if integrationTypeSelector.selectedSegmentIndex > 0 {
             return .deferred
-        default:
-            return .normal
         }
+
+        return .normal
     }
 
     var shippingMode: ShippingMode {
@@ -316,7 +317,7 @@ class PaymentSheetTestPlayground: UIViewController {
         }
 
         // Server-side confirmation - change the confirm handler
-        if confirmModeSelector.selectedSegmentIndex == 1 {
+        if integrationTypeSelector.selectedSegmentIndex > 1 {
             intentConfiguration.confirmHandler = nil
             intentConfiguration.confirmHandlerForServerSideConfirmation = confirmHandlerForServerSideConfirmation(_:_:_:)
         }
@@ -410,7 +411,7 @@ class PaymentSheetTestPlayground: UIViewController {
     func didTapCheckoutButton() {
         let mc: PaymentSheet
 
-        switch self.initMode {
+        switch self.integrationType {
         case .normal:
             switch self.intentMode {
             case .payment, .paymentWithSetup:
@@ -554,7 +555,7 @@ extension PaymentSheetTestPlayground {
             "mode": intentMode.rawValue,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
             "use_link": linkSelector.selectedSegmentIndex == 0,
-            "use_manual_confirmation": confirmMethodSelector.selectedSegmentIndex == 1,
+            "use_manual_confirmation": integrationTypeSelector.selectedSegmentIndex == 3,
 //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
 
@@ -602,7 +603,7 @@ extension PaymentSheetTestPlayground {
 
                 self.checkoutButton.isEnabled = true
 
-                switch self.initMode {
+                switch self.integrationType {
                 case .normal:
                     switch self.intentMode {
                     case .payment, .paymentWithSetup:
@@ -635,8 +636,6 @@ struct PaymentSheetPlaygroundSettings: Codable {
     static let nsUserDefaultsKey = "playgroundSettings"
     let modeSelectorValue: Int
     let initModeSelectorValue: Int
-    let confirmModeSelector: Int
-    let confirmMethodSelector: Int
     let customerModeSelectorValue: Int
     let currencySelectorValue: Int
     let merchantCountryCode: Int
@@ -660,8 +659,6 @@ struct PaymentSheetPlaygroundSettings: Codable {
         return PaymentSheetPlaygroundSettings(
             modeSelectorValue: 0,
             initModeSelectorValue: 0,
-            confirmModeSelector: 0,
-            confirmMethodSelector: 0,
             customerModeSelectorValue: 0,
             currencySelectorValue: 0,
             merchantCountryCode: 0,
@@ -721,6 +718,12 @@ extension PaymentSheetTestPlayground {
     func confirmHandlerForServerSideConfirmation(_ paymentMethodID: String,
                                                  _ shouldSavePaymentMethod: Bool,
                                                  _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        if integrationTypeSelector.selectedSegmentIndex == 4 {
+            // multiprocessor
+            intentCreationCallback(.success(PaymentSheet.IntentConfiguration.FORCE_SUCCESS))
+            return
+        }
+
         enum ServerSideConfirmationError: Error, LocalizedError {
             case clientSecretNotFound
             case confirmError(String)
@@ -793,9 +796,7 @@ extension PaymentSheetTestPlayground {
     func serializeSettingsToNSUserDefaults() {
         let settings = PaymentSheetPlaygroundSettings(
             modeSelectorValue: modeSelector.selectedSegmentIndex,
-            initModeSelectorValue: initModeSelector.selectedSegmentIndex,
-            confirmModeSelector: confirmModeSelector.selectedSegmentIndex,
-            confirmMethodSelector: confirmMethodSelector.selectedSegmentIndex,
+            initModeSelectorValue: integrationTypeSelector.selectedSegmentIndex,
             customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
             currencySelectorValue: currencySelector.selectedSegmentIndex,
             merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
@@ -839,9 +840,7 @@ extension PaymentSheetTestPlayground {
         currencySelector.selectedSegmentIndex = settings.currencySelectorValue
         merchantCountryCodeSelector.selectedSegmentIndex = settings.merchantCountryCode
         modeSelector.selectedSegmentIndex = settings.modeSelectorValue
-        initModeSelector.selectedSegmentIndex = settings.initModeSelectorValue
-        confirmModeSelector.selectedSegmentIndex = settings.confirmModeSelector
-        confirmMethodSelector.selectedSegmentIndex = settings.confirmMethodSelector
+        integrationTypeSelector.selectedSegmentIndex = settings.initModeSelectorValue
         defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
