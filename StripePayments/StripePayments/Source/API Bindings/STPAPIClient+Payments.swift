@@ -957,11 +957,13 @@ extension STPAPIClient {
             additionalHeaders: header,
             parameters: params as [String: Any]
         ) { deserializer, _, error in
-            if let error = error {
-                completion(nil, error)
-            }
-            if let paymentMethods = deserializer?.paymentMethods {
-                completion(paymentMethods, nil)
+            DispatchQueue.global(qos: .userInteractive).async(flags: .barrier) {
+                if let error = error {
+                    completion(nil, error)
+                }
+                if let paymentMethods = deserializer?.paymentMethods {
+                    completion(paymentMethods, nil)
+                }
             }
         }
     }
