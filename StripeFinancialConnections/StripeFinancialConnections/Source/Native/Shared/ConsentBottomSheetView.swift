@@ -42,7 +42,7 @@ final class ConsentBottomSheetView: UIView {
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 24
+        verticalStackView.spacing = 36 // space between content and footer
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: padding,
@@ -89,15 +89,67 @@ private func CreateContentView(
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalStackView = HitTestStackView(
+        arrangedSubviews: [
+            CreateHeaderView(
+                title: headerTitle,
+                subtitle: headerSubtitle,
+                didSelectURL: didSelectURL
+            ),
+            CreateBulletinAndExtraLabelView(
+                bulletItems: bulletItems,
+                extraNotice: extraNotice,
+                learnMoreText: learnMoreText,
+                didSelectURL: didSelectURL
+            ),
+        ]
+    )
+    verticalStackView.axis = .vertical
+    verticalStackView.spacing = 24
+    return verticalStackView
+}
+
+@available(iOSApplicationExtension, unavailable)
+private func CreateHeaderView(
+    title: String,
+    subtitle: String?,
+    didSelectURL: @escaping (URL) -> Void
+) -> UIView {
+    let verticalStack = UIStackView()
+    verticalStack.axis = .vertical
+    verticalStack.spacing = 4
+
+    let headerLabel = ClickableLabelNew(
+        font: .heading(.medium),
+        boldFont: .heading(.medium),
+        linkFont: .heading(.medium),
+        textColor: .textPrimary
+    )
+    headerLabel.setText(title, action: didSelectURL)
+    verticalStack.addArrangedSubview(headerLabel)
+
+    if let subtitle = subtitle {
+        let subtitleLabel = ClickableLabelNew(
+            font: .body(.medium),
+            boldFont: .body(.mediumEmphasized),
+            linkFont: .body(.mediumEmphasized),
+            textColor: .textSecondary
+        )
+        subtitleLabel.setText(subtitle, action: didSelectURL)
+        verticalStack.addArrangedSubview(subtitleLabel)
+    }
+    return verticalStack
+}
+
+@available(iOSApplicationExtension, unavailable)
+private func CreateBulletinAndExtraLabelView(
+    bulletItems: [FinancialConnectionsBulletPoint],
+    extraNotice: String?,
+    learnMoreText: String,
+    didSelectURL: @escaping (URL) -> Void
+) -> UIView {
+    let verticalStackView = HitTestStackView(
         arrangedSubviews: {
             var subviews: [UIView] = []
-            subviews.append(
-                CreateHeaderView(
-                    title: headerTitle,
-                    subtitle: headerSubtitle,
-                    didSelectURL: didSelectURL
-                )
-            )
             bulletItems.forEach { bulletItem in
                 subviews.append(
                     CreateBulletinView(
@@ -109,10 +161,10 @@ private func CreateContentView(
                 )
             }
             if let extraNotice = extraNotice {
-                let extraNoticeLabel = ClickableLabel(
-                    font: .stripeFont(forTextStyle: .detail),
-                    boldFont: .stripeFont(forTextStyle: .detailEmphasized),
-                    linkFont: .stripeFont(forTextStyle: .detailEmphasized),
+                let extraNoticeLabel = ClickableLabelNew(
+                    font: .body(.small),
+                    boldFont: .body(.smallEmphasized),
+                    linkFont: .body(.smallEmphasized),
                     textColor: .textSecondary
                 )
                 extraNoticeLabel.setText(extraNotice, action: didSelectURL)
@@ -128,40 +180,8 @@ private func CreateContentView(
         }()
     )
     verticalStackView.axis = .vertical
-    verticalStackView.spacing = 16
+    verticalStackView.spacing = 12
     return verticalStackView
-}
-
-@available(iOSApplicationExtension, unavailable)
-private func CreateHeaderView(
-    title: String,
-    subtitle: String?,
-    didSelectURL: @escaping (URL) -> Void
-) -> UIView {
-    let verticalStack = UIStackView()
-    verticalStack.axis = .vertical
-    verticalStack.spacing = 4
-
-    let headerLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .heading),
-        boldFont: .stripeFont(forTextStyle: .heading),
-        linkFont: .stripeFont(forTextStyle: .heading),
-        textColor: .textPrimary
-    )
-    headerLabel.setText(title, action: didSelectURL)
-    verticalStack.addArrangedSubview(headerLabel)
-
-    if let subtitle = subtitle {
-        let subtitleLabel = ClickableLabel(
-            font: .stripeFont(forTextStyle: .body),
-            boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
-            linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
-            textColor: .textPrimary
-        )
-        subtitleLabel.setText(subtitle, action: didSelectURL)
-        verticalStack.addArrangedSubview(subtitleLabel)
-    }
-    return verticalStack
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -185,6 +205,11 @@ private func CreateBulletinView(
         imageView.heightAnchor.constraint(equalToConstant: 16),
     ])
 
+    let bulletPointLabelView = BulletPointLabelView(
+        title: title,
+        content: subtitle,
+        didSelectURL: didSelectURL
+    )
     let horizontalStackView = HitTestStackView(
         arrangedSubviews: [
             {
@@ -192,18 +217,14 @@ private func CreateBulletinView(
                 let paddingStackView = UIStackView(arrangedSubviews: [imageView])
                 paddingStackView.isLayoutMarginsRelativeArrangement = true
                 paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-                    top: 2,
+                    top: bulletPointLabelView.topPadding,
                     leading: 0,
                     bottom: 0,
                     trailing: 0
                 )
                 return paddingStackView
             }(),
-            BulletPointLabelView(
-                title: title,
-                content: subtitle,
-                didSelectURL: didSelectURL
-            ),
+            bulletPointLabelView,
         ]
     )
     horizontalStackView.axis = .horizontal
@@ -217,10 +238,10 @@ private func CreateLearnMoreLabel(
     text: String,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
-    let label = ClickableLabel(
-        font: .stripeFont(forTextStyle: .detail),
-        boldFont: .stripeFont(forTextStyle: .detailEmphasized),
-        linkFont: .stripeFont(forTextStyle: .detailEmphasized),
+    let label = ClickableLabelNew(
+        font: .body(.small),
+        boldFont: .body(.smallEmphasized),
+        linkFont: .body(.smallEmphasized),
         textColor: .textSecondary
     )
     label.setText(text, action: didSelectURL)
@@ -232,7 +253,7 @@ private func CreateFooterView(
     cta: String,
     actionTarget: ConsentBottomSheetView
 ) -> UIView {
-    let okButton = Button(configuration: .financialConnectionsPrimary)
+    let okButton = Button(configuration: FinancialConnectionsPrimaryButtonConfiguration())
     okButton.title = cta
     okButton.addTarget(actionTarget, action: #selector(ConsentBottomSheetView.didSelectOK), for: .touchUpInside)
     okButton.translatesAutoresizingMaskIntoConstraints = false
@@ -259,16 +280,25 @@ private struct ConsentBottomSheetViewUIViewRepresentable: UIViewRepresentable {
                         FinancialConnectionsBulletPoint(
                             icon: FinancialConnectionsImage(default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--checkCircle-green-3x.png"),
                             title: nil,
-                            content: "Transferring money between your bank account and Merchant"
+                            content: "Content Only"
                         ),
                         FinancialConnectionsBulletPoint(
                             icon: FinancialConnectionsImage(default: nil),
                             title: nil,
-                            content: "Transferring money between your bank account and Merchant"
+                            content: "Content Only"
+                        ),
+                        FinancialConnectionsBulletPoint(
+                            icon: FinancialConnectionsImage(default: nil),
+                            title: "Title And Content",
+                            content: "Title And Content"
+                        ),
+                        FinancialConnectionsBulletPoint(
+                            icon: FinancialConnectionsImage(default: nil),
+                            title: "Title Only"
                         ),
                     ]
                 ),
-                extraNotice: nil,
+                extraNotice: "Extra Notice",
                 learnMore: "[Learn more](https://www.stripe.com)",
                 cta: "Got it"
             ),
@@ -289,7 +319,7 @@ struct ConsentBottomSheetView_Previews: PreviewProvider {
             VStack {
                 ConsentBottomSheetViewUIViewRepresentable()
                     .frame(width: 320)
-                    .frame(height: 350)
+                    .frame(height: 510)
 
             }
             .frame(maxWidth: .infinity)

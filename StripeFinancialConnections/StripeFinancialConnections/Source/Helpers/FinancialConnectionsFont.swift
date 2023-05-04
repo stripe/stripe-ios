@@ -22,6 +22,7 @@ struct FinancialConnectionsFont {
     }
 
     enum HeadingToken {
+        case medium
         case large
     }
     static func heading(_ token: HeadingToken) -> FinancialConnectionsFont {
@@ -29,8 +30,13 @@ struct FinancialConnectionsFont {
         let lineHeight: CGFloat
         let appleTextStyle: UIFont.TextStyle
         switch token {
+        case .medium:
+            // 20 size / 28 line height / 700 weight
+            font = UIFont.systemFont(ofSize: 20, weight: .bold)
+            lineHeight = 28
+            appleTextStyle = .title3
         case .large:
-            // 24 size / 32 line height / 600 weight
+            // 24 size / 32 line height / 700 weight
             font = UIFont.systemFont(ofSize: 24, weight: .bold)
             lineHeight = 32
             appleTextStyle = .title2
