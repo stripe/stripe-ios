@@ -14,33 +14,32 @@ import UIKit
 @_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaSavedPaymentMethodsSheet) @testable import StripePaymentsUI
 @_spi(STP)@testable import StripeUICore
 
-
 // For backend example
 class StubCustomerAdapter: CustomerAdapter {
     func fetchPaymentMethods() async throws -> [StripePayments.STPPaymentMethod] {
         return []
     }
-    
+
     func attachPaymentMethod(_ paymentMethodId: String) async throws {
-        
+
     }
-    
+
     func detachPaymentMethod(paymentMethodId: String) async throws {
-        
+
     }
-    
+
     func setSelectedPaymentMethodOption(paymentOption: StripePaymentSheet.PersistablePaymentMethodOption?) async throws {
-        
+
     }
-    
+
     func fetchSelectedPaymentMethodOption() async throws -> StripePaymentSheet.PersistablePaymentMethodOption? {
         return nil
     }
-    
+
     func setupIntentClientSecretForCustomerAttach() async throws -> String {
         return "seti_123"
     }
-    
+
     var canCreateSetupIntents: Bool = true
 }
 
