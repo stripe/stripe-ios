@@ -19,8 +19,8 @@ import UIKit
 
     static let isUnitOrUITest: Bool = {
         #if targetEnvironment(simulator)
-            return NSClassFromString("XCTest") != nil
-                || ProcessInfo.processInfo.environment["UITesting"] != nil
+        let useProductionSDK = ProcessInfo.processInfo.environment["USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK"] == "true"
+        return !useProductionSDK && (NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil)
         #else
             return false
         #endif

@@ -45,6 +45,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var customCTALabelTextField: UITextField!
     @IBOutlet weak var initModeSelector: UISegmentedControl!
     @IBOutlet weak var confirmModeSelector: UISegmentedControl!
+    @IBOutlet weak var confirmMethodSelector: UISegmentedControl!
 
     @IBOutlet weak var attachDefaultSelector: UISegmentedControl!
     @IBOutlet weak var collectNameSelector: UISegmentedControl!
@@ -350,6 +351,15 @@ class PaymentSheetTestPlayground: UIViewController {
 
         // Enable experimental payment methods.
 //        PaymentSheet.supportedPaymentMethods += [.link]
+        PaymentSheet.enableACHV2InDeferredFlow = true // TODO(https://jira.corp.stripe.com/browse/BANKCON-6731) Remove this.
+
+        // Hack to ensure we don't force the native flow unless we're in a UI test
+        if ProcessInfo.processInfo.environment["UITesting"] == nil {
+            UserDefaults.standard.removeObject(forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
+        } else {
+            // This makes the Financial Connections SDK use the native UI instead of webview. Native is much easier to test.
+            UserDefaults.standard.set(true, forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
+        }
 
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
@@ -544,16 +554,24 @@ extension PaymentSheetTestPlayground {
             "mode": intentMode.rawValue,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
             "use_link": linkSelector.selectedSegmentIndex == 0,
+            "use_manual_confirmation": confirmMethodSelector.selectedSegmentIndex == 1,
 //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
 
-        makeRequest(with: checkoutEndpoint, body: body) { data, _, error in
+        makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             guard
                 error == nil,
                 let data = data,
-                let json = try? JSONDecoder().decode([String: String].self, from: data)
+                let json = try? JSONDecoder().decode([String: String].self, from: data),
+                (response as? HTTPURLResponse)?.statusCode != 400
             else {
                 print(error as Any)
+                if let json = try? JSONDecoder().decode([String: String].self, from: data!),
+                   let errorMessage = json["error"] {
+                    DispatchQueue.main.async {
+                        UIAlertController.showAlert(title: "Invalid request", message: errorMessage, viewController: self)
+                    }
+                }
                 return
             }
 
@@ -618,6 +636,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
     let modeSelectorValue: Int
     let initModeSelectorValue: Int
     let confirmModeSelector: Int
+    let confirmMethodSelector: Int
     let customerModeSelectorValue: Int
     let currencySelectorValue: Int
     let merchantCountryCode: Int
@@ -642,6 +661,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
             modeSelectorValue: 0,
             initModeSelectorValue: 0,
             confirmModeSelector: 0,
+            confirmMethodSelector: 0,
             customerModeSelectorValue: 0,
             currencySelectorValue: 0,
             merchantCountryCode: 0,
@@ -775,6 +795,7 @@ extension PaymentSheetTestPlayground {
             modeSelectorValue: modeSelector.selectedSegmentIndex,
             initModeSelectorValue: initModeSelector.selectedSegmentIndex,
             confirmModeSelector: confirmModeSelector.selectedSegmentIndex,
+            confirmMethodSelector: confirmMethodSelector.selectedSegmentIndex,
             customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
             currencySelectorValue: currencySelector.selectedSegmentIndex,
             merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
@@ -820,6 +841,7 @@ extension PaymentSheetTestPlayground {
         modeSelector.selectedSegmentIndex = settings.modeSelectorValue
         initModeSelector.selectedSegmentIndex = settings.initModeSelectorValue
         confirmModeSelector.selectedSegmentIndex = settings.confirmModeSelector
+        confirmMethodSelector.selectedSegmentIndex = settings.confirmMethodSelector
         defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
@@ -850,5 +872,27 @@ extension AddressViewController.AddressDetails {
         postalAddress.country = address.country
 
         return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
+    }
+}
+
+extension UIAlertController {
+    static func showAlert(
+        title: String? = nil,
+        message: String? = nil,
+        viewController: UIViewController
+    ) {
+        let alertController = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        alertController.addAction(
+            UIAlertAction(
+                title: "Ok",
+                style: .default
+            )
+        )
+
+        viewController.present(alertController, animated: true)
     }
 }

@@ -1050,7 +1050,11 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         }
         testWindow.rootViewController = navController
 
-        paymentSheet.present(from: vc, completion: { _ in })
+        paymentSheet.present(from: vc) { result in
+            if case let .failed(error) = result {
+                XCTFail("Presentation failed: \(error)")
+            }
+        }
 
         // Payment sheet usually takes anywhere between 50ms-200ms (but once in a while 2-3 seconds).
         // to present with the expected content. When the sheet is presented, it initially shows a loading screen,

@@ -50,33 +50,10 @@ extension STPAPIClient {
         withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
         completion: @escaping STPElementsSessionCompletionBlock
     ) {
-        var parameters: [String: Any] = [:]
-        parameters["key"] = publishableKey
-        parameters["type"] = "deferred_intent" // TODO(porter) hardcoded to deferred for now
-        parameters["locale"] = Locale.current.toLanguageTag()
-
-        var deferredIntent = [String: Any]()
-        deferredIntent["payment_method_types"] = intentConfig.paymentMethodTypes
-
-        switch intentConfig.mode {
-        case .payment(amount: let amount, currency: let currency, setupFutureUsage: let setupFutureUsage, captureMethod: let captureMethod):
-            deferredIntent["mode"] = "payment"
-            deferredIntent["amount"] = amount
-            deferredIntent["currency"] = currency
-            deferredIntent["setup_future_usage"] = setupFutureUsage?.rawValue
-            deferredIntent["capture_method"] = captureMethod.rawValue
-        case .setup(currency: let currency, setupFutureUsage: let setupFutureUsage):
-            deferredIntent["mode"] = "setup"
-            deferredIntent["currency"] = currency
-            deferredIntent["setup_future_usage"] = setupFutureUsage.rawValue
-        }
-
-        parameters["deferred_intent"] = deferredIntent
-
         APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointIntentWithPreferences,
-            parameters: parameters
+            parameters: intentConfig.elementsSessionPayload(publishableKey: publishableKey)
         ) { elementsSession, _, error in
             guard let elementsSession = elementsSession else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
@@ -151,6 +128,35 @@ extension STPAPIClient {
                 }
             }
         }
+    }
+}
+
+extension PaymentSheet.IntentConfiguration {
+    func elementsSessionPayload(publishableKey: String?) -> [String: Any] {
+        var parameters: [String: Any] = [:]
+        parameters["key"] = publishableKey
+        parameters["type"] = "deferred_intent"
+        parameters["locale"] = Locale.current.toLanguageTag()
+
+        var deferredIntent = [String: Any]()
+        deferredIntent["payment_method_types"] = paymentMethodTypes
+        deferredIntent["on_behalf_of"] = onBehalfOf
+
+        switch mode {
+        case .payment(let amount, let currency, let setupFutureUsage, let captureMethod):
+            deferredIntent["mode"] = "payment"
+            deferredIntent["amount"] = amount
+            deferredIntent["currency"] = currency
+            deferredIntent["setup_future_usage"] = setupFutureUsage?.rawValue
+            deferredIntent["capture_method"] = captureMethod.rawValue
+        case .setup(let currency, let setupFutureUsage):
+            deferredIntent["mode"] = "setup"
+            deferredIntent["currency"] = currency
+            deferredIntent["setup_future_usage"] = setupFutureUsage.rawValue
+        }
+
+        parameters["deferred_intent"] = deferredIntent
+        return parameters
     }
 }
 

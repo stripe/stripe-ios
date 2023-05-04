@@ -15,14 +15,6 @@ struct FinancialConnectionsInstitution: Decodable, Hashable, Equatable {
     let url: String?
     let icon: FinancialConnectionsImage?
     let logo: FinancialConnectionsImage?
-
-    init(id: String, name: String, url: String?, smallImageUrl: String? = nil) {
-        self.id = id
-        self.name = name
-        self.url = url
-        self.icon = nil
-        self.logo = nil
-    }
 }
 
 // MARK: - Institution List
