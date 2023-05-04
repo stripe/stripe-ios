@@ -498,8 +498,7 @@ extension PaymentSheet {
         if let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret {
             configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,
-                using: ephemeralKey,
-                types: savedPaymentMethodTypes
+                using: ephemeralKey
             ) { paymentMethods, error in
                 guard let paymentMethods = paymentMethods, error == nil else {
                     let error =
@@ -510,7 +509,8 @@ extension PaymentSheet {
                     paymentMethodsPromise.reject(with: error)
                     return
                 }
-                paymentMethodsPromise.resolve(with: paymentMethods)
+                let filteredPaymentMethods = paymentMethods.filter { savedPaymentMethodTypes.contains($0.type) }
+                paymentMethodsPromise.resolve(with: filteredPaymentMethods)
             }
         } else {
             paymentMethodsPromise.resolve(with: [])
