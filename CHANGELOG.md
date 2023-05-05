@@ -1,3 +1,6 @@
+### Identity
+* [Added] Added test mode M1 for the SDK.
+
 ## 23.7.1 2023-05-02
 ### Payments
 * [Fixed] STPPaymentHandler.handleNextAction allows payment methods that are delayed or require further customer action like like SEPA Debit or OXXO.
