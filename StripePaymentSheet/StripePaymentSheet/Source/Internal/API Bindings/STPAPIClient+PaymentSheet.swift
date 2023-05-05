@@ -15,23 +15,23 @@ extension STPAPIClient {
     typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
     typealias STPElementsSessionCompletionBlock = ((Result<STPElementsSession, Error>) -> Void)
-    
+
     func retrievePaymentIntentWithPreferences(
         withClientSecret secret: String,
         completion: @escaping STPPaymentIntentWithPreferencesCompletionBlock
     ) {
         var parameters: [String: Any] = [:]
-        
+
         guard STPPaymentIntentParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
             completion(.failure(NSError.stp_clientSecretError()))
             return
         }
-        
+
         parameters["client_secret"] = secret
         parameters["type"] = "payment_intent"
         parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
-        
+
         APIRequest<STPPaymentIntent>.getWith(
             self,
             endpoint: APIEndpointIntentWithPreferences,
@@ -41,11 +41,11 @@ extension STPAPIClient {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
             }
-            
+
             completion(.success(paymentIntentWithPreferences))
         }
     }
-    
+
     func retrieveElementsSession(
         withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
         completion: @escaping STPElementsSessionCompletionBlock
@@ -59,42 +59,42 @@ extension STPAPIClient {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
             }
-            
+
             completion(.success(elementsSession))
         }
     }
-    
+
     func retrieveSetupIntentWithPreferences(
         withClientSecret secret: String,
         completion: @escaping STPSetupIntentWithPreferencesCompletionBlock
     ) {
         var parameters: [String: Any] = [:]
-        
+
         guard STPSetupIntentConfirmParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
             completion(.failure(NSError.stp_clientSecretError()))
             return
         }
-        
+
         parameters["client_secret"] = secret
         parameters["type"] = "setup_intent"
         parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
-        
+
         APIRequest<STPSetupIntent>.getWith(
             self,
             endpoint: APIEndpointIntentWithPreferences,
             parameters: parameters
         ) { setupIntentWithPreferences, _, error in
-            
+
             guard let setupIntentWithPreferences = setupIntentWithPreferences else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
             }
-            
+
             completion(.success(setupIntentWithPreferences))
         }
     }
-    
+
     /// Async helper version of `retrievePaymentIntent`
     func retrievePaymentIntent(clientSecret: String) async throws -> STPPaymentIntent {
         return try await withCheckedThrowingContinuation { continuation in
@@ -108,7 +108,6 @@ extension STPAPIClient {
         }
     }
 
-    
     /// Async helper version of `retrieveSetupIntent`
     func retrieveSetupIntent(clientSecret: String) async throws -> STPSetupIntent {
         return try await withCheckedThrowingContinuation { continuation in

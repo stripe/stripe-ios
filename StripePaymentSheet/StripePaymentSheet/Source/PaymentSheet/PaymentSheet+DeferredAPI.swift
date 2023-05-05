@@ -47,7 +47,7 @@ extension PaymentSheet {
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetForceSuccess)
                     return
                 }
-                
+
                 // 3. Retrieve the PaymentIntent or SetupIntent
                 switch deferredIntentContext.intentConfig.mode {
                 case .payment:
@@ -103,7 +103,7 @@ extension PaymentSheet {
     }
 
     // MARK: - Helper methods
-    
+
     /// Convenience method that converts a STPPayymentHandlerActionStatus + error into a PaymentSheetResult
     static func paymentSheetResult(forPaymentHandlerActionStatus status: STPPaymentHandlerActionStatus, error: Error?) -> PaymentSheetResult {
         switch status {
