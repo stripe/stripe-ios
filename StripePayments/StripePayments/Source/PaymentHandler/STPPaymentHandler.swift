@@ -308,7 +308,7 @@ public class STPPaymentHandler: NSObject {
             }
         }
     }
-    
+
     /// (Internal) Handles any `nextAction` required to authenticate the PaymentIntent.
     /// Call this method if you are using server-side confirmation.  - seealso: https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom
     /// - Parameters:
@@ -334,7 +334,7 @@ public class STPPaymentHandler: NSObject {
             assert(paymentIntent.paymentMethod != nil, "A PaymentIntent w/ attached paymentMethod must be retrieved w/ an expanded PaymentMethod")
         }
         Self.inProgress = true
-        
+
         weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = {
@@ -354,7 +354,7 @@ public class STPPaymentHandler: NSObject {
                 paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture || paymentIntent.status == .requiresConfirmation
                 || (paymentIntent.status == .processing && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
                 || (paymentIntent.status == .requiresAction && strongSelf.isNextActionSuccessState(nextAction: paymentIntent.nextAction))
-                
+
                 if error == nil && successIntentState {
                     completion(.succeeded, paymentIntent, nil)
                 } else {
@@ -369,7 +369,7 @@ public class STPPaymentHandler: NSObject {
             }
             completion(status, paymentIntent, error)
         }
-        
+
         if paymentIntent.status == .requiresConfirmation {
             // The caller forgot to confirm the paymentIntent on the backend before calling this method
             wrappedCompletion(
@@ -527,7 +527,7 @@ public class STPPaymentHandler: NSObject {
             }
         }
     }
-    
+
     /// Handles any `nextAction` required to authenticate the SetupIntent.
     /// Call this method if you are confirming the SetupIntent on your backend and get a status of requires_action.
     /// - Parameters:
