@@ -14,16 +14,26 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
     private lazy var institutionIconView: InstitutionIconView = {
         return InstitutionIconView(size: .medium)
     }()
-    private lazy var titleLabel: UILabel = {
-        let titleLabel = UILabel()
-        titleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        titleLabel.textColor = .textPrimary
+    private lazy var titleLabel: ClickableLabelNew = {
+        let titleLabel = ClickableLabelNew(
+            font: .label(.largeEmphasized),
+            boldFont: .label(.largeEmphasized),
+            linkFont: .label(.largeEmphasized),
+            textColor: .textPrimary
+        )
+        // the labels were interfering with UITableVIew tapping
+        titleLabel.isUserInteractionEnabled = false
         return titleLabel
     }()
-    private lazy var subtitleLabel: UILabel = {
-        let subtitleLabel = UILabel()
-        subtitleLabel.font = .stripeFont(forTextStyle: .captionTight)
-        subtitleLabel.textColor = .textDisabled
+    private lazy var subtitleLabel: ClickableLabelNew = {
+        let subtitleLabel = ClickableLabelNew(
+            font: .label(.small),
+            boldFont: .label(.small),
+            linkFont: .label(.small),
+            textColor: .textSecondary
+        )
+        // the labels were interfering with UITableVIew tapping
+        subtitleLabel.isUserInteractionEnabled = false
         return subtitleLabel
     }()
 
@@ -39,7 +49,7 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
             ]
         )
         labelStackView.axis = .vertical
-        labelStackView.spacing = 2
+        labelStackView.spacing = 0
 
         let cellStackView = UIStackView(
             arrangedSubviews: [
@@ -99,9 +109,10 @@ private func CreateSelectedBackgroundView() -> UIView {
 
 extension InstitutionSearchTableViewCell {
 
+    @available(iOSApplicationExtension, unavailable)
     func customize(with institution: FinancialConnectionsInstitution) {
         institutionIconView.setImageUrl(institution.icon?.default)
-        titleLabel.text = institution.name
-        subtitleLabel.text = AuthFlowHelpers.formatUrlString(institution.url)
+        titleLabel.setText(institution.name)
+        subtitleLabel.setText(AuthFlowHelpers.formatUrlString(institution.url) ?? "")
     }
 }
