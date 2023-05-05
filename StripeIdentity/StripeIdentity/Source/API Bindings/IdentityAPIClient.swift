@@ -28,6 +28,14 @@ protocol IdentityAPIClient: AnyObject {
         purpose: String,
         fileName: String
     ) -> Future<STPAPIClient.FileAndUploadMetrics>
+
+    func verifyTestVerificationSession(
+        simulateDelay: Bool
+    ) -> Promise<StripeAPI.VerificationPageData>
+
+    func unverifyTestVerificationSession(
+        simulateDelay: Bool
+    ) -> Promise<StripeAPI.VerificationPageData>
 }
 
 final class IdentityAPIClientImpl: IdentityAPIClient {
@@ -110,6 +118,20 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
             ownedBy: verificationSessionId
         )
     }
+
+    func verifyTestVerificationSession(simulateDelay: Bool) -> Promise<StripeAPI.VerificationPageData> {
+        return apiClient.post(
+            resource: APIEndpointVerificationPageTestingVerify(id: verificationSessionId),
+            parameters: ["simulate_delay": simulateDelay]
+        )
+    }
+
+    func unverifyTestVerificationSession(simulateDelay: Bool) -> Promise<StripeAPI.VerificationPageData> {
+        return apiClient.post(
+            resource: APIEndpointVerificationPageTestingUnverify(id: verificationSessionId),
+            parameters: ["simulate_delay": simulateDelay]
+        )
+    }
 }
 
 private func APIEndpointVerificationPage(id: String) -> String {
@@ -120,4 +142,10 @@ private func APIEndpointVerificationPageData(id: String) -> String {
 }
 private func APIEndpointVerificationPageSubmit(id: String) -> String {
     return "identity/verification_pages/\(id)/submit"
+}
+private func APIEndpointVerificationPageTestingVerify(id: String) -> String {
+    return "identity/verification_pages/\(id)/testing/verify"
+}
+private func APIEndpointVerificationPageTestingUnverify(id: String) -> String {
+    return "identity/verification_pages/\(id)/testing/unverify"
 }

@@ -12,12 +12,14 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 final class DebugViewController: IdentityFlowViewController {
     private let debugView = DebugView()
+
     init(
         sheetController: VerificationSheetControllerProtocol
     ) {
         super.init(
             sheetController: sheetController, analyticsScreenName: .debug, shouldShowCancelButton: false
         )
+        debugView.delegate = self
     }
 
     required init?(
@@ -38,10 +40,19 @@ final class DebugViewController: IdentityFlowViewController {
         configure(backButtonTitle: nil, viewModel: .init(headerViewModel: nil, contentView: debugView, buttons: []))
     }
 
-    private func didTapButton(_ type: DebugView.DebugButton) {
+    func didTapButton(_ type: DebugView.DebugButton) {
         switch type {
-        case .completed:
-            finishWithResult(result: .flowCompleted)
+        case .submit(let completeOption):
+            switch completeOption {
+            case .success:
+                self.sheetController?.verifyAndTransition(simulateDelay: false)
+            case .failure:
+                self.sheetController?.unverifyAndTransition(simulateDelay: false)
+            case .successAsync:
+                self.sheetController?.verifyAndTransition(simulateDelay: true)
+            case .failureAsync:
+                self.sheetController?.unverifyAndTransition(simulateDelay: true)
+            }
         case .cancelled:
             finishWithResult(result: .flowCanceled)
         case .failed:
@@ -67,5 +78,12 @@ extension StripeUICore.Button {
         self.title = title
         addTarget(target, action: action, for: .touchUpInside)
         self.configuration = .identityPrimary()
+    }
+}
+
+@available(iOSApplicationExtension, unavailable)
+extension DebugViewController: DebugViewDelegate {
+    func debugOptionsDidChange() {
+        self.updateUI()
     }
 }
