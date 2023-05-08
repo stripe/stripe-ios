@@ -478,10 +478,6 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension NativeFlowController: SuccessViewControllerDelegate {
 
-    func successViewControllerDidSelectLinkMoreAccounts(_ viewController: SuccessViewController) {
-        didSelectAnotherBank()
-    }
-
     func successViewControllerDidSelectDone(_ viewController: SuccessViewController) {
         closeAuthFlow(showConfirmationAlert: false, error: nil)
     }
