@@ -1905,7 +1905,7 @@ extension PaymentSheetUITest {
 
         // Confirm
         let confirmButtonText = mode == "Pay" ? "Pay $50.99" : "Set up"
-        app.buttons[confirmButtonText].tap()
+        app.buttons[confirmButtonText].waitForExistenceAndTap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         app.buttons["OK"].tap()
