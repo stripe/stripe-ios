@@ -619,11 +619,11 @@ class PaymentSheetUITest: XCTestCase {
     }
 
     func testPaymentIntent_USBankAccount() {
-        _testUSBankAccount(mode: "Pay", initMode: "Normal")
+        _testUSBankAccount(mode: "Pay", integrationType: "Normal")
     }
 
     func testSetupIntent_USBankAccount() {
-        _testUSBankAccount(mode: "Setup", initMode: "Normal")
+        _testUSBankAccount(mode: "Setup", integrationType: "Normal")
     }
 
     func testUPIPaymentMethod() throws {
@@ -889,19 +889,19 @@ extension PaymentSheetUITest {
     }
 
     func testDeferredIntentPaymentIntent_USBankAccount_ClientSideConfirmation() {
-        _testUSBankAccount(mode: "Pay", initMode: "Deferred", confirmMode: "Client")
+        _testUSBankAccount(mode: "Pay", integrationType: "Def CSC")
     }
 
     func testDeferredIntentPaymentIntent_USBankAccount_ServerSideConfirmation() {
-        _testUSBankAccount(mode: "Pay", initMode: "Deferred", confirmMode: "Server")
+        _testUSBankAccount(mode: "Pay", integrationType: "Def SSC")
     }
 
     func testDeferredIntentSetupIntent_USBankAccount_ClientSideConfirmation() {
-        _testUSBankAccount(mode: "Setup", initMode: "Deferred", confirmMode: "Client")
+        _testUSBankAccount(mode: "Setup", integrationType: "Def CSC")
     }
 
     func testDeferredIntentSetupIntent_USBankAccount_ServerSideConfirmation() {
-        _testUSBankAccount(mode: "Setup", initMode: "Deferred", confirmMode: "Server")
+        _testUSBankAccount(mode: "Setup", integrationType: "Def SSC")
     }
 
 /* Disable Link test
@@ -1868,17 +1868,14 @@ extension PaymentSheetUITest {
 
 // MARK: Helpers
 extension PaymentSheetUITest {
-    func _testUSBankAccount(mode: String, initMode: String, confirmMode: String? = nil) {
-        var settings = [
+    func _testUSBankAccount(mode: String, integrationType: String) {
+        let settings = [
             "customer_mode": "new",
             "automatic_payment_methods": "off",
             "allows_delayed_pms": "true",
-            "init_mode": initMode,
             "mode": mode,
+            "init_mode": integrationType,
         ]
-        if let confirmMode {
-            settings["confirm_mode"] = confirmMode
-        }
         loadPlayground(app, settings: settings)
         app.buttons["Checkout (Complete)"].tap()
 
