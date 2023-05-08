@@ -516,7 +516,7 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        apiClient.retrieveSetupIntent(withClientSecret: setupIntentClientSecret) { [weak self] setupIntent, error in
+        apiClient.retrieveSetupIntent(withClientSecret: setupIntentClientSecret, expand: ["payment_method"]) { [weak self] setupIntent, error in
             guard let self else {
                 return
             }
