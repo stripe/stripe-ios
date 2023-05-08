@@ -1,6 +1,4 @@
-# CHANGELOG
-
-## XX.XX.XX - 2023-XX-XX
+## x.x.x yyyy-mm-dd
 
 ## 23.8.0 2023-05-08
 ### Identity
