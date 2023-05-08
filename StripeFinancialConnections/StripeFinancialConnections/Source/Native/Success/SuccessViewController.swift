@@ -12,7 +12,6 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol SuccessViewControllerDelegate: AnyObject {
-    func successViewControllerDidSelectLinkMoreAccounts(_ viewController: SuccessViewController)
     func successViewControllerDidSelectDone(_ viewController: SuccessViewController)
 }
 
@@ -90,18 +89,7 @@ final class SuccessViewController: UIViewController {
                             parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
                         )
                     self.delegate?.successViewControllerDidSelectDone(self)
-                },
-                didSelectLinkAnotherAccount: dataSource.showLinkMoreAccountsButton
-                    ? { [weak self] in
-                        guard let self = self else { return }
-                        self.dataSource
-                            .analyticsClient
-                            .log(
-                                eventName: "click.link_another_account",
-                                parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
-                            )
-                        self.delegate?.successViewControllerDidSelectLinkMoreAccounts(self)
-                    } : nil
+                }
             )
         )
         paneWithHeaderLayoutView.addTo(view: view)

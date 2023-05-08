@@ -13,7 +13,6 @@ import UIKit
 final class SuccessFooterView: UIView {
 
     private let didSelectDone: (SuccessFooterView) -> Void
-    private let didSelectLinkAnotherAccount: (() -> Void)?
 
     private lazy var doneButton: Button = {
         let doneButton = Button(configuration: .financialConnectionsPrimary)
@@ -30,11 +29,9 @@ final class SuccessFooterView: UIView {
     init(
         showFailedToLinkNotice: Bool,
         businessName: String?,
-        didSelectDone: @escaping (SuccessFooterView) -> Void,
-        didSelectLinkAnotherAccount: (() -> Void)?
+        didSelectDone: @escaping (SuccessFooterView) -> Void
     ) {
         self.didSelectDone = didSelectDone
-        self.didSelectLinkAnotherAccount = didSelectLinkAnotherAccount
         super.init(frame: .zero)
 
         let footerStackView = UIStackView()
@@ -51,20 +48,6 @@ final class SuccessFooterView: UIView {
         let footerButtonStackView = UIStackView()
         footerButtonStackView.axis = .vertical
         footerButtonStackView.spacing = 12
-        if didSelectLinkAnotherAccount != nil {
-            let linkAnotherAccount = Button(configuration: .financialConnectionsSecondary)
-            linkAnotherAccount.title = String.Localized.link_another_account
-            linkAnotherAccount.addTarget(
-                self,
-                action: #selector(didSelectLinkAnotherAccountButton),
-                for: .touchUpInside
-            )
-            linkAnotherAccount.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                linkAnotherAccount.heightAnchor.constraint(equalToConstant: 56)
-            ])
-            footerButtonStackView.addArrangedSubview(linkAnotherAccount)
-        }
         footerButtonStackView.addArrangedSubview(doneButton)
         footerStackView.addArrangedSubview(footerButtonStackView)
 
@@ -77,10 +60,6 @@ final class SuccessFooterView: UIView {
 
     @objc private func didSelectDoneButton() {
         didSelectDone(self)
-    }
-
-    @objc private func didSelectLinkAnotherAccountButton() {
-        didSelectLinkAnotherAccount?()
     }
 
     func setIsLoading(_ isLoading: Bool) {
