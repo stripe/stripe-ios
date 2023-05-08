@@ -504,7 +504,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         if case let .scanning(_, scanningState?) = imageScanningSession.state, scanningState.matchesDocument(type: documentType, side: documentSide) && scannerOutputOptional == nil {
             imageScanningSession.startTimeoutTimer(expectedClassification: documentSide)
         }
-            
+
         // If this isn't the classification we're looking for, update the state
         // to display a different message to the user
         guard let scannerOutput = scannerOutputOptional,
