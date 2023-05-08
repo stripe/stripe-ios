@@ -124,23 +124,14 @@ extension PaymentSheet {
         }
     }
 
-    static func fetchIntentClientSecretFromMerchant(intentConfig: IntentConfiguration,
-                                                    paymentMethod: STPPaymentMethod,
-                                                    shouldSavePaymentMethod: Bool) async throws -> String {
+    static func fetchIntentClientSecretFromMerchant(
+        intentConfig: IntentConfiguration,
+        paymentMethod: STPPaymentMethod,
+        shouldSavePaymentMethod: Bool
+    ) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
-
-            if let confirmHandlerForServerSideConfirmation = intentConfig.confirmHandlerForServerSideConfirmation {
-                DispatchQueue.main.async {
-                    confirmHandlerForServerSideConfirmation(paymentMethod.stripeId, shouldSavePaymentMethod, { result in
-                        continuation.resume(with: result)
-                    })
-                }
-            } else if let confirmHandler = intentConfig.confirmHandler {
-                DispatchQueue.main.async {
-                    confirmHandler(paymentMethod, { result in
-                        continuation.resume(with: result)
-                    })
-                }
+            intentConfig.confirmHandler(paymentMethod, shouldSavePaymentMethod) { result in
+                continuation.resume(with: result)
             }
         }
     }

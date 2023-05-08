@@ -687,7 +687,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
     }
 
-    static func makeUnknownError(message: String) -> NSError {
+    @_spi(STP) public static func makeUnknownError(message: String) -> NSError {
         let userInfo = [
             NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage(),
             STPError.errorMessageKey: message,

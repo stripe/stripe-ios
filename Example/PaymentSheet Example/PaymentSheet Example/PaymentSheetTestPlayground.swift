@@ -43,12 +43,6 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var linkSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
     @IBOutlet weak var customCTALabelTextField: UITextField!
-    // Used for deferred workflows
-    // Normal: Normal client side confirmation non-deferred flow
-    // Def CSC: Deferred client side confirmation
-    // Def SSC: Deferred server side confirmation
-    // Def MC: Deferred server side confirmation with manual confirmation
-    // Def MP: Deferred multiprocessor flow
     @IBOutlet weak var integrationTypeSelector: UISegmentedControl!
 
     @IBOutlet weak var attachDefaultSelector: UISegmentedControl!
@@ -94,9 +88,17 @@ class PaymentSheetTestPlayground: UIViewController {
         case setup
     }
 
-    enum IntegrationType {
+    // Normal: Normal client side confirmation non-deferred flow
+    enum IntegrationType: Int {
         case normal
-        case deferred
+        /// Def CSC: Deferred client side confirmation
+        case deferred_csc
+        /// Def SSC: Deferred server side confirmation
+        case deferred_ssc
+        /// Def MC: Deferred server side confirmation with manual confirmation
+        case deferred_mc
+        /// Def MP: Deferred multiprocessor flow
+        case deferred_mp
     }
 
     enum ShippingMode {
@@ -213,11 +215,7 @@ class PaymentSheetTestPlayground: UIViewController {
     }
 
     var integrationType: IntegrationType {
-        if integrationTypeSelector.selectedSegmentIndex > 0 {
-            return .deferred
-        }
-
-        return .normal
+        return .init(rawValue: integrationTypeSelector.selectedSegmentIndex)!
     }
 
     var shippingMode: ShippingMode {
@@ -290,39 +288,33 @@ class PaymentSheetTestPlayground: UIViewController {
 
     var intentConfig: PaymentSheet.IntentConfiguration {
         var paymentMethodTypes: [String]?
-
         // if automatic payment methods is off use what is returned back from the intent
         if automaticPaymentMethodsSelector.selectedSegmentIndex == 1 {
             paymentMethodTypes = self.paymentMethodTypes
         }
-
-        var intentConfiguration: PaymentSheet.IntentConfiguration
-
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
+            self?.confirmHandler($0, $1, $2)
+        }
         switch intentMode {
         case .payment:
-            intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
-                                                                   setupFutureUsage: nil),
-                                                    paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandler: confirmHandler(_:_:))
+            return PaymentSheet.IntentConfiguration(
+                mode: .payment(amount: amount!, currency: currency.rawValue, setupFutureUsage: nil),
+                paymentMethodTypes: paymentMethodTypes,
+                confirmHandler: confirmHandler
+            )
         case .paymentWithSetup:
-            intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount!, currency: currency.rawValue,
-                                                                   setupFutureUsage: .offSession),
-                                                    paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandler: confirmHandler(_:_:))
+            return PaymentSheet.IntentConfiguration(
+                mode: .payment(amount: amount!, currency: currency.rawValue, setupFutureUsage: .offSession),
+                paymentMethodTypes: paymentMethodTypes,
+                confirmHandler: confirmHandler
+            )
         case .setup:
-            intentConfiguration = PaymentSheet.IntentConfiguration(mode: .setup(currency: currency.rawValue,
-                                                                   setupFutureUsage: .offSession),
-                                                    paymentMethodTypes: paymentMethodTypes,
-                                                    confirmHandler: confirmHandler(_:_:))
+            return PaymentSheet.IntentConfiguration(
+                mode: .setup(currency: currency.rawValue, setupFutureUsage: .offSession),
+                paymentMethodTypes: paymentMethodTypes,
+                confirmHandler: confirmHandler
+            )
         }
-
-        // Server-side confirmation - change the confirm handler
-        if integrationTypeSelector.selectedSegmentIndex > 1 {
-            intentConfiguration.confirmHandler = nil
-            intentConfiguration.confirmHandlerForServerSideConfirmation = confirmHandlerForServerSideConfirmation(_:_:_:)
-        }
-
-        return intentConfiguration
     }
 
     var addressDetails: AddressViewController.AddressDetails?
@@ -419,7 +411,7 @@ class PaymentSheetTestPlayground: UIViewController {
             case .setup:
                 mc = PaymentSheet(setupIntentClientSecret: self.clientSecret!, configuration: configuration)
             }
-        case .deferred:
+        case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
         }
 
@@ -555,7 +547,7 @@ extension PaymentSheetTestPlayground {
             "mode": intentMode.rawValue,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
             "use_link": linkSelector.selectedSegmentIndex == 0,
-            "use_manual_confirmation": integrationTypeSelector.selectedSegmentIndex == 3,
+            "use_manual_confirmation": integrationType == .deferred_mc,
 //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
 
@@ -620,7 +612,7 @@ extension PaymentSheetTestPlayground {
                         )
                     }
 
-                case .deferred:
+                case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
                     PaymentSheet.FlowController.create(
                         intentConfiguration: self.intentConfig,
                         configuration: self.configuration,
@@ -706,25 +698,29 @@ extension PaymentSheetTestPlayground: EndpointSelectorViewControllerDelegate {
 // MARK: Deferred intent callbacks
 extension PaymentSheetTestPlayground {
 
-    // Client-side confirmation handler
+    // Deferred confirmation handler
     func confirmHandler(_ paymentMethod: STPPaymentMethod,
+                        _ shouldSavePaymentMethod: Bool,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        DispatchQueue.global(qos: .background).async {
-            intentCreationCallback(.success(self.clientSecret!))
-        }
-    }
-
-    // Server-side confirmation handler
-    func confirmHandlerForServerSideConfirmation(_ paymentMethodID: String,
-                                                 _ shouldSavePaymentMethod: Bool,
-                                                 _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        if integrationTypeSelector.selectedSegmentIndex == 4 {
+        switch integrationType {
+        case .deferred_mp:
             // multiprocessor
             intentCreationCallback(.success(PaymentSheet.IntentConfiguration.FORCE_SUCCESS))
             return
+        case .deferred_csc:
+            if integrationType == .deferred_csc {
+                DispatchQueue.global(qos: .background).async {
+                    intentCreationCallback(.success(self.clientSecret!))
+                }
+            }
+            return
+        case .deferred_mc, .deferred_ssc:
+            break
+        case .normal:
+            assertionFailure()
         }
 
-        enum ServerSideConfirmationError: Error, LocalizedError {
+        enum ConfirmHandlerError: Error, LocalizedError {
             case clientSecretNotFound
             case confirmError(String)
             case unknown
@@ -743,7 +739,7 @@ extension PaymentSheetTestPlayground {
 
         let body = [
             "client_secret": clientSecret!,
-            "payment_method_id": paymentMethodID,
+            "payment_method_id": paymentMethod.stripeId,
             "merchant_country_code": merchantCountryCode.rawValue,
             "should_save_payment_method": shouldSavePaymentMethod,
             "mode": intentConfig.mode.requestBody,
@@ -760,15 +756,15 @@ extension PaymentSheetTestPlayground {
                    (response as? HTTPURLResponse)?.statusCode == 400,
                    let errorMessage = String(data: data, encoding: .utf8){
                     // read the error message
-                    intentCreationCallback(.failure(ServerSideConfirmationError.confirmError(errorMessage)))
+                    intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
-                    intentCreationCallback(.failure(error ?? ServerSideConfirmationError.unknown))
+                    intentCreationCallback(.failure(error ?? ConfirmHandlerError.unknown))
                 }
                 return
             }
 
             guard let clientSecret = json["client_secret"] as? String else {
-                intentCreationCallback(.failure(ServerSideConfirmationError.clientSecretNotFound))
+                intentCreationCallback(.failure(ConfirmHandlerError.clientSecretNotFound))
                 return
             }
 
