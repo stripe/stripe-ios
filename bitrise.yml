@@ -41,6 +41,7 @@ stages:
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
+    - payment-sheet-ui-tests-conditional: {}
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
@@ -489,6 +490,16 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
+        - run_if: git diff --quiet HEAD $REF -- Example/PaymentSheet Example || echo changed
+  payment-sheet-conditional-ui-tests:
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
+        - scheme: PaymentSheet Example
+        - run_if: git diff --quiet HEAD $REF -- Example/PaymentSheet Example || true
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
