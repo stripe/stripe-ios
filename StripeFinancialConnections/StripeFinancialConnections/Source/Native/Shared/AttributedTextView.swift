@@ -11,6 +11,9 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
+// Adds support for markdown links and markdown bold.
+//
+// `AttributedTextView` is also the `UITextView` version of `AttributedLabel`.
 final class AttributedTextView: HitTestView {
 
     private struct LinkDescriptor {
@@ -35,12 +38,15 @@ final class AttributedTextView: HitTestView {
         linkColor: UIColor = .textBrand,
         alignCenter: Bool = false
     ) {
-        let layoutManager = VerticalCenterLayoutManager(font: font)
         let textContainer = NSTextContainer(size: .zero)
-        let textStorage = NSTextStorage()
+        let layoutManager = VerticalCenterLayoutManager()
         layoutManager.addTextContainer(textContainer)
+        let textStorage = NSTextStorage()
         textStorage.addLayoutManager(layoutManager)
-        self.textView = IncreasedHitTestTextView(frame: .zero, textContainer: textContainer)
+        self.textView = IncreasedHitTestTextView(
+            frame: .zero,
+            textContainer: textContainer
+        )
         self.font = font
         self.boldFont = boldFont
         self.linkFont = linkFont
@@ -182,30 +188,21 @@ private class IncreasedHitTestTextView: UITextView {
 // UITextView with custom `lineHeight` via `NSParagraphStyle` was not properly
 // centering the text, so here we adjust it to be centered.
 private class VerticalCenterLayoutManager: NSLayoutManager {
-    
-    private let font: FinancialConnectionsFont
-    
-    init(font: FinancialConnectionsFont) {
-        self.font = font
-        super.init()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     override func drawGlyphs(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
         let range = characterRange(forGlyphRange: glyphsToShow, actualGlyphRange: nil)
-        guard let attributedString = textStorage?.attributedSubstring(from: range) else {
+        guard
+            let attributedString = textStorage?.attributedSubstring(from: range),
+            let font = attributedString.attributes(at: 0, effectiveRange: nil)[.font] as? UIFont,
+            let paragraphStyle = attributedString.attribute(.paragraphStyle, at: 0, effectiveRange: nil) as? NSParagraphStyle
+        else {
             super.drawGlyphs(forGlyphRange: glyphsToShow, at: origin)
             return
         }
-        let uiFontLineHeight = font.uiFont.lineHeight
-        if
-            let paragraphStyle = attributedString.attribute(.paragraphStyle, at: 0, effectiveRange: nil) as? NSParagraphStyle,
-            paragraphStyle.minimumLineHeight > uiFontLineHeight
-        {
-            let lineHeightDifference = (paragraphStyle.minimumLineHeight - uiFontLineHeight)
+        let uiFontLineHeight = font.lineHeight
+        let paragraphStyleLineHeight = paragraphStyle.minimumLineHeight
+        assert(paragraphStyle.minimumLineHeight == paragraphStyle.maximumLineHeight, "we are assuming that minimum and maximum are the same")
+        if paragraphStyleLineHeight > uiFontLineHeight {
+            let lineHeightDifference = (paragraphStyleLineHeight - uiFontLineHeight)
             let newOrigin = CGPoint(
                 x: origin.x,
                 y: origin.y - lineHeightDifference / 2
