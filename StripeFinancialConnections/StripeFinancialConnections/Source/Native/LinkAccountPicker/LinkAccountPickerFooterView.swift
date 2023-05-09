@@ -44,17 +44,21 @@ final class LinkAccountPickerFooterView: UIView {
 
         let verticalStackView = HitTestStackView(
             arrangedSubviews: [
-                CreateDataAccessDisclosureView(
+                MerchantDataAccessView(
                     isStripeDirect: isStripeDirect,
                     businessName: businessName,
                     permissions: permissions,
+                    isNetworking: true,
+                    font: .body(.small),
+                    boldFont: .body(.smallEmphasized),
+                    alignCenter: true,
                     didSelectLearnMore: didSelectMerchantDataAccessLearnMore
                 ),
                 connectAccountButton,
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 20
+        verticalStackView.spacing = 24
         addAndPinSubview(verticalStackView)
     }
 
@@ -69,37 +73,4 @@ final class LinkAccountPickerFooterView: UIView {
     func enableButton(_ enableButton: Bool) {
         connectAccountButton.isEnabled = enableButton
     }
-}
-
-@available(iOSApplicationExtension, unavailable)
-private func CreateDataAccessDisclosureView(
-    isStripeDirect: Bool,
-    businessName: String?,
-    permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
-    didSelectLearnMore: @escaping () -> Void
-) -> UIView {
-    let stackView = HitTestStackView(
-        arrangedSubviews: [
-            MerchantDataAccessView(
-                isStripeDirect: isStripeDirect,
-                businessName: businessName,
-                permissions: permissions,
-                isNetworking: true,
-                font: .body(.small),
-                boldFont: .body(.smallEmphasized),
-                alignCenter: true,
-                didSelectLearnMore: didSelectLearnMore
-            ),
-        ]
-    )
-    stackView.isLayoutMarginsRelativeArrangement = true
-    stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 10,
-        leading: 12,
-        bottom: 10,
-        trailing: 12
-    )
-    stackView.backgroundColor = .backgroundContainer
-    stackView.layer.cornerRadius = 8
-    return stackView
 }
