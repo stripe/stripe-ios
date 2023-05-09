@@ -21,7 +21,7 @@ class FeaturedInstitutionGridCell: UICollectionViewCell {
     private lazy var optionalTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .textPrimary
-        label.font = .stripeFont(forTextStyle: .detail)
+        label.font = FinancialConnectionsFont.body(.small).uiFont
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
