@@ -42,6 +42,7 @@ class FinancialConnectionsNavigationController: UINavigationController {
         // before a user can fully dismiss
         isModalInPresentation = true
         listenToInteractivePopGestureRecognizer()
+        navigationBar.accessibilityIdentifier = "fc_navigation_bar"
     }
 
     private func logNavigationBackEvent(fromViewController: UIViewController, source: String) {
