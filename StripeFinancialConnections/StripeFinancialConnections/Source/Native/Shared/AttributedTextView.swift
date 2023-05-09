@@ -24,7 +24,7 @@ final class AttributedTextView: HitTestView {
     private let linkFont: FinancialConnectionsFont
     private let textColor: UIColor
     private let alignCenter: Bool
-    private let textView = IncreasedHitTestTextView()
+    private let textView: IncreasedHitTestTextView
     private var linkURLStringToAction: [String: (URL) -> Void] = [:]
 
     init(
@@ -35,6 +35,12 @@ final class AttributedTextView: HitTestView {
         linkColor: UIColor = .textBrand,
         alignCenter: Bool = false
     ) {
+        let layoutManager = VerticalCenterLayoutManager(font: font)
+        let textContainer = NSTextContainer(size: .zero)
+        let textStorage = NSTextStorage()
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+        self.textView = IncreasedHitTestTextView(frame: .zero, textContainer: textContainer)
         self.font = font
         self.boldFont = boldFont
         self.linkFont = linkFont
@@ -170,5 +176,43 @@ private class IncreasedHitTestTextView: UITextView {
         // not happen.
         let largerBounds = bounds.insetBy(dx: -20, dy: -20)
         return largerBounds.contains(point)
+    }
+}
+
+// UITextView with custom `lineHeight` via `NSParagraphStyle` was not properly
+// centering the text, so here we adjust it to be centered.
+private class VerticalCenterLayoutManager: NSLayoutManager {
+    
+    private let font: FinancialConnectionsFont
+    
+    init(font: FinancialConnectionsFont) {
+        self.font = font
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func drawGlyphs(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
+        let range = characterRange(forGlyphRange: glyphsToShow, actualGlyphRange: nil)
+        guard let attributedString = textStorage?.attributedSubstring(from: range) else {
+            super.drawGlyphs(forGlyphRange: glyphsToShow, at: origin)
+            return
+        }
+        let uiFontLineHeight = font.uiFont.lineHeight
+        if
+            let paragraphStyle = attributedString.attribute(.paragraphStyle, at: 0, effectiveRange: nil) as? NSParagraphStyle,
+            paragraphStyle.minimumLineHeight > uiFontLineHeight
+        {
+            let lineHeightDifference = (paragraphStyle.minimumLineHeight - uiFontLineHeight)
+            let newOrigin = CGPoint(
+                x: origin.x,
+                y: origin.y - lineHeightDifference / 2
+            )
+            super.drawGlyphs(forGlyphRange: glyphsToShow, at: newOrigin)
+        } else {
+            super.drawGlyphs(forGlyphRange: glyphsToShow, at: origin)
+        }
     }
 }

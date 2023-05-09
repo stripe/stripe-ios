@@ -158,18 +158,18 @@ private func CreateRowLabelView(
     title: String,
     subtitle: String
 ) -> UIView {
-    let titleLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .bodyEmphasized),
-        boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
-        linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
+    let titleLabel = AttributedTextView(
+        font: .body(.mediumEmphasized),
+        boldFont: .body(.mediumEmphasized),
+        linkFont: .body(.mediumEmphasized),
         textColor: .textPrimary
     )
     titleLabel.setText(title)
 
-    let subtitleLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .captionTight),
-        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+    let subtitleLabel = AttributedTextView(
+        font: .label(.small),
+        boldFont: .label(.smallEmphasized),
+        linkFont: .label(.smallEmphasized),
         textColor: .textSecondary
     )
     subtitleLabel.setText(subtitle)
