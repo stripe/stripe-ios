@@ -65,7 +65,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         configuration = SavedPaymentMethodsSheet.Configuration()
 
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
-        self.recordMode = true
+//        self.recordMode = true
     }
 
     public override func tearDown() {
