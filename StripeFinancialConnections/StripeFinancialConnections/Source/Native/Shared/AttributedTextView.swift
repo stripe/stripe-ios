@@ -192,6 +192,7 @@ private class VerticalCenterLayoutManager: NSLayoutManager {
         let range = characterRange(forGlyphRange: glyphsToShow, actualGlyphRange: nil)
         guard
             let attributedString = textStorage?.attributedSubstring(from: range),
+            attributedString.length > 0, // `attributes(at:effectiveRange)` crashes if empty string
             let font = attributedString.attributes(at: 0, effectiveRange: nil)[.font] as? UIFont,
             let paragraphStyle = attributedString.attribute(.paragraphStyle, at: 0, effectiveRange: nil) as? NSParagraphStyle
         else {
