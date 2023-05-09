@@ -159,9 +159,9 @@ private func CreateRowLabelView(
     subtitle: String
 ) -> UIView {
     let titleLabel = AttributedTextView(
-        font: .body(.mediumEmphasized),
-        boldFont: .body(.mediumEmphasized),
-        linkFont: .body(.mediumEmphasized),
+        font: .label(.largeEmphasized),
+        boldFont: .label(.largeEmphasized),
+        linkFont: .label(.largeEmphasized),
         textColor: .textPrimary
     )
     titleLabel.setText(title)

@@ -19,8 +19,6 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
             font: .label(.largeEmphasized),
             textColor: .textPrimary
         )
-        // the labels were interfering with UITableVIew tapping
-        titleLabel.isUserInteractionEnabled = false
         return titleLabel
     }()
     private lazy var subtitleLabel: AttributedLabel = {
@@ -28,8 +26,6 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
             font: .label(.small),
             textColor: .textSecondary
         )
-        // the labels were interfering with UITableVIew tapping
-        subtitleLabel.isUserInteractionEnabled = false
         return subtitleLabel
     }()
 
