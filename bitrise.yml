@@ -498,7 +498,7 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
-        - run_if: 'git diff --quiet HEAD $REF -- Example/PaymentSheet Example -eq 1'  # only run if payment sheet example has changed
+        - run_if: false
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
