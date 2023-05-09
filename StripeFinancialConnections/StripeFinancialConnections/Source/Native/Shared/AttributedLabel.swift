@@ -14,6 +14,14 @@ final class AttributedLabel: UILabel {
     private let customFont: FinancialConnectionsFont
     private let customTextColor: UIColor
 
+    // one can accidentally forget to call `setText` instead of `text` so
+    // this makes it convenient to use `AttributedLabel`
+    override var text: String? {
+        didSet {
+            setText(text ?? "")
+        }
+    }
+
     init(font: FinancialConnectionsFont, textColor: UIColor) {
         self.customFont = font
         self.customTextColor = textColor
@@ -29,6 +37,7 @@ final class AttributedLabel: UILabel {
     override func drawText(in rect: CGRect) {
         guard
             let attributedText = self.attributedText,
+            attributedText.length > 0, // `attributes(at:effectiveRange)` crashes if empty string
             let font = attributedText.attributes(at: 0, effectiveRange: nil)[.font] as? UIFont,
             let paragraphStyle = attributedText.attribute(.paragraphStyle, at: 0, effectiveRange: nil) as? NSParagraphStyle
         else {

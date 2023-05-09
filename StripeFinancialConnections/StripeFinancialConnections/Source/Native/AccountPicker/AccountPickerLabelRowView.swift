@@ -11,17 +11,7 @@ import UIKit
 
 final class AccountPickerLabelRowView: UIView {
 
-    private lazy var topLevelHorizontalStackView: UIStackView = {
-        let topLevelHorizontalStackView = UIStackView()
-        topLevelHorizontalStackView.axis = .horizontal
-        topLevelHorizontalStackView.spacing = 8
-        topLevelHorizontalStackView.distribution = .fill
-        topLevelHorizontalStackView.alignment = .center
-        topLevelHorizontalStackView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        return topLevelHorizontalStackView
-    }()
-
-    private lazy var labelStackView: UIStackView = {
+    private lazy var verticalLabelStackView: UIStackView = {
         let labelStackView = UIStackView()
         labelStackView.axis = .vertical
         labelStackView.spacing = 0
@@ -29,34 +19,37 @@ final class AccountPickerLabelRowView: UIView {
         return labelStackView
     }()
 
-    private lazy var leadingTitleLabel: UILabel = {
-        let leadingTitleLabel = UILabel()
-        leadingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        leadingTitleLabel.textColor = .textPrimary
+    private lazy var leadingTitleLabel: AttributedLabel = {
+        let leadingTitleLabel = AttributedLabel(
+            font: .label(.largeEmphasized),
+            textColor: .textPrimary
+        )
         leadingTitleLabel.lineBreakMode = .byCharWrapping
         leadingTitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         leadingTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return leadingTitleLabel
     }()
 
-    private lazy var trailingTitleLabel: UILabel = {
-        let trailingTitleLabel = UILabel()
-        trailingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        trailingTitleLabel.textColor = .textPrimary
+    private lazy var trailingTitleLabel: AttributedLabel = {
+        let trailingTitleLabel = AttributedLabel(
+            font: .label(.largeEmphasized),
+            textColor: .textPrimary
+        )
         trailingTitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return trailingTitleLabel
     }()
 
-    private lazy var subtitleLabel: UILabel = {
-        let subtitleLabel = UILabel()
-        subtitleLabel.font = .stripeFont(forTextStyle: .captionTightEmphasized)
-        subtitleLabel.textColor = .textSecondary
+    private lazy var subtitleLabel: AttributedLabel = {
+        let subtitleLabel = AttributedLabel(
+            font: .label(.small),
+            textColor: .textSecondary
+        )
         return subtitleLabel
     }()
 
     init() {
         super.init(frame: .zero)
-        labelStackView.addArrangedSubview(
+        verticalLabelStackView.addArrangedSubview(
             {
                 let horizontalStackView = UIStackView(
                     arrangedSubviews: [
@@ -73,9 +66,7 @@ final class AccountPickerLabelRowView: UIView {
                 return horizontalStackView
             }()
         )
-
-        topLevelHorizontalStackView.addArrangedSubview(labelStackView)
-        addAndPinSubview(topLevelHorizontalStackView)
+        addAndPinSubview(verticalLabelStackView)
     }
 
     required init?(coder: NSCoder) {
@@ -93,7 +84,7 @@ final class AccountPickerLabelRowView: UIView {
         subtitleLabel.removeFromSuperview()
         if let subtitle = subtitle {
             subtitleLabel.text = subtitle
-            labelStackView.addArrangedSubview(subtitleLabel)
+            verticalLabelStackView.addArrangedSubview(subtitleLabel)
         }
     }
 }
