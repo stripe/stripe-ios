@@ -1,5 +1,5 @@
 //
-//  ClickableLabelNew.swift
+//  AttributedTextView.swift
 //  StripeFinancialConnections
 //
 //  Created by Krisjanis Gaidis on 5/2/23.
@@ -11,7 +11,7 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class ClickableLabelNew: HitTestView {
+final class AttributedTextView: HitTestView {
 
     private struct LinkDescriptor {
         let range: NSRange
@@ -89,7 +89,7 @@ final class ClickableLabelNew: HitTestView {
         setText(
             textLinks.linklessString,
             links: textLinks.links.map {
-                ClickableLabelNew.LinkDescriptor(
+                AttributedTextView.LinkDescriptor(
                     range: $0.range,
                     urlString: $0.urlString,
                     action: action
@@ -136,7 +136,7 @@ final class ClickableLabelNew: HitTestView {
 
 // MARK: <UITextViewDelegate>
 
-extension ClickableLabelNew: UITextViewDelegate {
+extension AttributedTextView: UITextViewDelegate {
 
     func textView(
         _ textView: UITextView,

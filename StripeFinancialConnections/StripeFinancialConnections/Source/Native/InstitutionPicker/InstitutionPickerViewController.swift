@@ -356,10 +356,8 @@ private func CreateHeaderView(
 
 @available(iOSApplicationExtension, unavailable)
 private func CreateHeaderTitleLabel() -> UIView {
-    let headerTitleLabel = ClickableLabelNew(
+    let headerTitleLabel = AttributedLabel(
         font: .heading(.large),
-        boldFont: .heading(.large),
-        linkFont: .heading(.large),
         textColor: .textPrimary
     )
     headerTitleLabel.setText(

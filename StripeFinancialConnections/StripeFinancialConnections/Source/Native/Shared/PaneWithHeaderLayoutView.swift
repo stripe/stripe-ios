@@ -87,7 +87,7 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String?) -> UIV
     labelStackView.axis = .vertical
     labelStackView.spacing = 8
 
-    let titleLabel = ClickableLabelNew(
+    let titleLabel = AttributedTextView(
         font: .heading(.large),
         boldFont: .heading(.large),
         linkFont: .heading(.large),
@@ -97,7 +97,7 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String?) -> UIV
     labelStackView.addArrangedSubview(titleLabel)
 
     if let subtitle = subtitle {
-        let subtitleLabel = ClickableLabelNew(
+        let subtitleLabel = AttributedTextView(
             font: .body(.medium),
             boldFont: .body(.mediumEmphasized),
             linkFont: .body(.mediumEmphasized),

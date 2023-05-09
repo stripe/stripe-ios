@@ -14,22 +14,18 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
     private lazy var institutionIconView: InstitutionIconView = {
         return InstitutionIconView(size: .medium)
     }()
-    private lazy var titleLabel: ClickableLabelNew = {
-        let titleLabel = ClickableLabelNew(
+    private lazy var titleLabel: AttributedLabel = {
+        let titleLabel = AttributedLabel(
             font: .label(.largeEmphasized),
-            boldFont: .label(.largeEmphasized),
-            linkFont: .label(.largeEmphasized),
             textColor: .textPrimary
         )
         // the labels were interfering with UITableVIew tapping
         titleLabel.isUserInteractionEnabled = false
         return titleLabel
     }()
-    private lazy var subtitleLabel: ClickableLabelNew = {
-        let subtitleLabel = ClickableLabelNew(
+    private lazy var subtitleLabel: AttributedLabel = {
+        let subtitleLabel = AttributedLabel(
             font: .label(.small),
-            boldFont: .label(.small),
-            linkFont: .label(.small),
             textColor: .textSecondary
         )
         // the labels were interfering with UITableVIew tapping
