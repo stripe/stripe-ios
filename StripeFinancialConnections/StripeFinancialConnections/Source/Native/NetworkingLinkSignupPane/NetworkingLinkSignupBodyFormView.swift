@@ -68,7 +68,7 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         theme.shadow = nil
         theme.fonts = {
             var fonts = ElementsUITheme.Font()
-            fonts.subheadline = .stripeFont(forTextStyle: .body)
+            fonts.subheadline = FinancialConnectionsFont.label(.large).uiFont
             return fonts
         }()
         theme.colors = {

@@ -88,7 +88,7 @@ private func CreateBulletPointView(
                 let extraPaddingView = UIStackView(arrangedSubviews: [imageView])
                 extraPaddingView.isLayoutMarginsRelativeArrangement = true
                 extraPaddingView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-                    top: 3,
+                    top: labelView.topPadding,
                     leading: 0,
                     bottom: 0,
                     trailing: 0
