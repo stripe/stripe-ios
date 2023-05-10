@@ -113,6 +113,9 @@ private func CreateDataAccessDisclosureView(
                 businessName: businessName,
                 permissions: permissions,
                 isNetworking: isNetworking,
+                font: .body(.small),
+                boldFont: .body(.smallEmphasized),
+                alignCenter: false,
                 didSelectLearnMore: didSelectLearnMore
             ),
         ]
