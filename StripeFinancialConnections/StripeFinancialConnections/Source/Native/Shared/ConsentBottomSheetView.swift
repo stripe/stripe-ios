@@ -118,7 +118,7 @@ private func CreateHeaderView(
     verticalStack.axis = .vertical
     verticalStack.spacing = 4
 
-    let headerLabel = ClickableLabelNew(
+    let headerLabel = AttributedTextView(
         font: .heading(.medium),
         boldFont: .heading(.medium),
         linkFont: .heading(.medium),
@@ -128,7 +128,7 @@ private func CreateHeaderView(
     verticalStack.addArrangedSubview(headerLabel)
 
     if let subtitle = subtitle {
-        let subtitleLabel = ClickableLabelNew(
+        let subtitleLabel = AttributedTextView(
             font: .body(.medium),
             boldFont: .body(.mediumEmphasized),
             linkFont: .body(.mediumEmphasized),
@@ -161,7 +161,7 @@ private func CreateBulletinAndExtraLabelView(
                 )
             }
             if let extraNotice = extraNotice {
-                let extraNoticeLabel = ClickableLabelNew(
+                let extraNoticeLabel = AttributedTextView(
                     font: .body(.small),
                     boldFont: .body(.smallEmphasized),
                     linkFont: .body(.smallEmphasized),
@@ -238,7 +238,7 @@ private func CreateLearnMoreLabel(
     text: String,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
-    let label = ClickableLabelNew(
+    let label = AttributedTextView(
         font: .body(.small),
         boldFont: .body(.smallEmphasized),
         linkFont: .body(.smallEmphasized),

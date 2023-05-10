@@ -26,8 +26,8 @@ class ConsentViewController: UIViewController {
     private let dataSource: ConsentDataSource
     weak var delegate: ConsentViewControllerDelegate?
 
-    private lazy var titleLabel: ClickableLabelNew = {
-        let titleLabel = ClickableLabelNew(
+    private lazy var titleLabel: AttributedTextView = {
+        let titleLabel = AttributedTextView(
             font: .heading(.large),
             boldFont: .heading(.large),
             linkFont: .heading(.large),

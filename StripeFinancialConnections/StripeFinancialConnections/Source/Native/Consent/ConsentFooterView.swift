@@ -40,7 +40,7 @@ class ConsentFooterView: HitTestView {
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
 
-        let termsAndPrivacyPolicyLabel = ClickableLabelNew(
+        let termsAndPrivacyPolicyLabel = AttributedTextView(
             font: .body(.small),
             boldFont: .body(.smallEmphasized),
             linkFont: .body(.smallEmphasized),
@@ -62,7 +62,7 @@ class ConsentFooterView: HitTestView {
         verticalStackView.spacing = 24
 
         if let belowCtaText = belowCtaText {
-            let manuallyVerifyLabel = ClickableLabelNew(
+            let manuallyVerifyLabel = AttributedTextView(
                 font: .body(.small),
                 boldFont: .body(.smallEmphasized),
                 linkFont: .body(.smallEmphasized),

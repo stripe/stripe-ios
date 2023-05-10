@@ -1,5 +1,5 @@
 //
-//  ClickableLabelNew.swift
+//  AttributedTextView.swift
 //  StripeFinancialConnections
 //
 //  Created by Krisjanis Gaidis on 5/2/23.
@@ -11,7 +11,10 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class ClickableLabelNew: HitTestView {
+// Adds support for markdown links and markdown bold.
+//
+// `AttributedTextView` is also the `UITextView` version of `AttributedLabel`.
+final class AttributedTextView: HitTestView {
 
     private struct LinkDescriptor {
         let range: NSRange
@@ -24,7 +27,7 @@ final class ClickableLabelNew: HitTestView {
     private let linkFont: FinancialConnectionsFont
     private let textColor: UIColor
     private let alignCenter: Bool
-    private let textView = IncreasedHitTestTextView()
+    private let textView: IncreasedHitTestTextView
     private var linkURLStringToAction: [String: (URL) -> Void] = [:]
 
     init(
@@ -35,6 +38,15 @@ final class ClickableLabelNew: HitTestView {
         linkColor: UIColor = .textBrand,
         alignCenter: Bool = false
     ) {
+        let textContainer = NSTextContainer(size: .zero)
+        let layoutManager = VerticalCenterLayoutManager()
+        layoutManager.addTextContainer(textContainer)
+        let textStorage = NSTextStorage()
+        textStorage.addLayoutManager(layoutManager)
+        self.textView = IncreasedHitTestTextView(
+            frame: .zero,
+            textContainer: textContainer
+        )
         self.font = font
         self.boldFont = boldFont
         self.linkFont = linkFont
@@ -89,7 +101,7 @@ final class ClickableLabelNew: HitTestView {
         setText(
             textLinks.linklessString,
             links: textLinks.links.map {
-                ClickableLabelNew.LinkDescriptor(
+                AttributedTextView.LinkDescriptor(
                     range: $0.range,
                     urlString: $0.urlString,
                     action: action
@@ -136,7 +148,7 @@ final class ClickableLabelNew: HitTestView {
 
 // MARK: <UITextViewDelegate>
 
-extension ClickableLabelNew: UITextViewDelegate {
+extension AttributedTextView: UITextViewDelegate {
 
     func textView(
         _ textView: UITextView,
@@ -170,5 +182,34 @@ private class IncreasedHitTestTextView: UITextView {
         // not happen.
         let largerBounds = bounds.insetBy(dx: -20, dy: -20)
         return largerBounds.contains(point)
+    }
+}
+
+// UITextView with custom `lineHeight` via `NSParagraphStyle` was not properly
+// centering the text, so here we adjust it to be centered.
+private class VerticalCenterLayoutManager: NSLayoutManager {
+    override func drawGlyphs(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
+        let range = characterRange(forGlyphRange: glyphsToShow, actualGlyphRange: nil)
+        guard
+            let attributedString = textStorage?.attributedSubstring(from: range),
+            let font = attributedString.attributes(at: 0, effectiveRange: nil)[.font] as? UIFont,
+            let paragraphStyle = attributedString.attribute(.paragraphStyle, at: 0, effectiveRange: nil) as? NSParagraphStyle
+        else {
+            super.drawGlyphs(forGlyphRange: glyphsToShow, at: origin)
+            return
+        }
+        let uiFontLineHeight = font.lineHeight
+        let paragraphStyleLineHeight = paragraphStyle.minimumLineHeight
+        assert(paragraphStyle.minimumLineHeight == paragraphStyle.maximumLineHeight, "we are assuming that minimum and maximum are the same")
+        if paragraphStyleLineHeight > uiFontLineHeight {
+            let lineHeightDifference = (paragraphStyleLineHeight - uiFontLineHeight)
+            let newOrigin = CGPoint(
+                x: origin.x,
+                y: origin.y - lineHeightDifference / 2
+            )
+            super.drawGlyphs(forGlyphRange: glyphsToShow, at: newOrigin)
+        } else {
+            super.drawGlyphs(forGlyphRange: glyphsToShow, at: origin)
+        }
     }
 }

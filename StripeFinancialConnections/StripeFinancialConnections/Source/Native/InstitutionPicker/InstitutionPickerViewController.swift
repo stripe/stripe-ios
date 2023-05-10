@@ -312,6 +312,7 @@ extension InstitutionPickerViewController {
 
 // MARK: - Helpers
 
+@available(iOSApplicationExtension, unavailable)
 private func CreateMainView(
     searchBar: UIView?,
     contentContainerView: UIView
@@ -329,6 +330,7 @@ private func CreateMainView(
     return verticalStackView
 }
 
+@available(iOSApplicationExtension, unavailable)
 private func CreateHeaderView(
     searchBar: UIView?
 ) -> UIView {
@@ -352,13 +354,17 @@ private func CreateHeaderView(
     return verticalStackView
 }
 
+@available(iOSApplicationExtension, unavailable)
 private func CreateHeaderTitleLabel() -> UIView {
-    let headerTitleLabel = UILabel()
-    headerTitleLabel.textColor = .textPrimary
-    headerTitleLabel.font = .stripeFont(forTextStyle: .subtitle)
-    headerTitleLabel.text = STPLocalizedString(
-        "Select your bank",
-        "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America)."
+    let headerTitleLabel = AttributedLabel(
+        font: .heading(.large),
+        textColor: .textPrimary
+    )
+    headerTitleLabel.setText(
+        STPLocalizedString(
+            "Select your bank",
+            "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America)."
+        )
     )
     return headerTitleLabel
 }

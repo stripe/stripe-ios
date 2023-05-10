@@ -13,7 +13,7 @@ final class InstitutionIconView: UIView {
 
     enum Size {
         case small  // 24x24
-        case medium  // 32x32
+        case medium  // 36x36
         case large  // 40x40
     }
 
@@ -34,7 +34,7 @@ final class InstitutionIconView: UIView {
             diameter = 24
             cornerRadius = 4
         case .medium:
-            diameter = 32
+            diameter = 36
             cornerRadius = 4
         case .large:
             diameter = 40
