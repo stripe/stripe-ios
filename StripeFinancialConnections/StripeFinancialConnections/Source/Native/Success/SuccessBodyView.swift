@@ -113,8 +113,8 @@ private func CreateDataAccessDisclosureView(
                 businessName: businessName,
                 permissions: permissions,
                 isNetworking: isNetworking,
-                font: .body(.small),
-                boldFont: .body(.smallEmphasized),
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
                 alignCenter: false,
                 didSelectLearnMore: didSelectLearnMore
             ),
@@ -154,10 +154,10 @@ private func CreateDisconnectAccountLabel(
         isEndUserFacing: isEndUserFacing
     )
 
-    let disconnectAccountLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .captionTight),
-        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+    let disconnectAccountLabel = AttributedTextView(
+        font: .body(.small),
+        boldFont: .body(.smallEmphasized),
+        linkFont: .body(.smallEmphasized),
         textColor: .textSecondary
     )
     disconnectAccountLabel.setText(
