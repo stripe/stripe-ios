@@ -26,7 +26,7 @@ final class BulletPointLabelView: HitTestView {
         verticalLabelStackView.spacing = 2
         if let title = title {
             let font: FinancialConnectionsFont = .body(.medium)
-            let primaryLabel = ClickableLabelNew(
+            let primaryLabel = AttributedTextView(
                 font: font,
                 boldFont: .body(.mediumEmphasized),
                 linkFont: .body(.mediumEmphasized),
@@ -39,7 +39,7 @@ final class BulletPointLabelView: HitTestView {
         if let content = content {
             let displayingOnlyContent = (title == nil)
             let font: FinancialConnectionsFont = displayingOnlyContent ? .body(.medium) : .body(.small)
-            let subtitleLabel = ClickableLabelNew(
+            let subtitleLabel = AttributedTextView(
                 font: font,
                 boldFont: displayingOnlyContent ? .body(.mediumEmphasized) : .body(.smallEmphasized),
                 linkFont: displayingOnlyContent ? .body(.mediumEmphasized) : .body(.smallEmphasized),
