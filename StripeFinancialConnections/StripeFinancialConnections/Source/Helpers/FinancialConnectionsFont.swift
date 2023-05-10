@@ -82,6 +82,7 @@ struct FinancialConnectionsFont {
     enum LabelToken {
         case small
         case smallEmphasized
+        case mediumEmphasized
         case largeEmphasized
     }
     static func label(_ token: LabelToken) -> FinancialConnectionsFont {
@@ -99,6 +100,11 @@ struct FinancialConnectionsFont {
             font = UIFont.systemFont(ofSize: 12, weight: .semibold)
             lineHeight = 16
             appleTextStyle = .caption1
+        case .mediumEmphasized:
+            // 14 size / 20 line height / 600 weight
+            font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+            lineHeight = 20
+            appleTextStyle = .footnote
         case .largeEmphasized:
             // 16 size / 24 line height / 600 weight
             font = UIFont.systemFont(ofSize: 16, weight: .semibold)
