@@ -82,12 +82,19 @@ extension String.Localized {
             "Button to select a file to upload"
         )
     }
+    
+    static var upload_your_photo_id: String {
+        STPLocalizedString(
+            "Upload your photo ID",
+            "Title of document upload screen"
+        )
+    }
 
     // MARK: - Camera Capturing
 
-    static var file_upload_button: String {
+    static var upload_a_photo: String {
         STPLocalizedString(
-            "File Upload",
+            "Upload a Photo",
             "Button that opens file upload screen"
         )
     }
