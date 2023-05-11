@@ -31,8 +31,6 @@ class IntentConfirmParams {
     var saveForFutureUseCheckboxState: SaveForFutureUseCheckboxState = .hidden
     /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
     var didDisplayMandate: Bool = false
-    /// - Note: PaymentIntent-only
-    var paymentMethodOptions: STPConfirmPaymentMethodOptions?
 
     var linkedBank: LinkedBank?
 
@@ -87,7 +85,7 @@ class IntentConfirmParams {
             params.paymentMethodParams = paymentMethodParams
         }
 
-        let options = paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
+        let options = STPConfirmPaymentMethodOptions()
         options.setSetupFutureUsageIfNecessary(
             saveForFutureUseCheckboxState == .selected,
             paymentMethodType: paymentMethodType,
@@ -119,8 +117,6 @@ class IntentConfirmParams {
         params.paymentMethodId = paymentMethodID
 
         // Dashboard only supports a specific payment flow today
-        assert(paymentMethodOptions == nil)
-
         let options = STPConfirmPaymentMethodOptions()
         options.setSetupFutureUsageIfNecessary(
             saveForFutureUseCheckboxState == .selected,

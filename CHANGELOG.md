@@ -1,3 +1,6 @@
+## x.x.x yyyy-mm-dd
+
+## 23.8.0 2023-05-08
 ### Identity
 * [Added] Added test mode M1 for the SDK.
 

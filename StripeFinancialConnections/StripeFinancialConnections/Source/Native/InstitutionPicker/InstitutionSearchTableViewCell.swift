@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeUICore
 import UIKit
 
 final class InstitutionSearchTableViewCell: UITableViewCell {
@@ -30,7 +31,6 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         contentView.backgroundColor = .customBackgroundColor
-        contentView.addSubview(institutionIconView)
 
         let labelStackView = UIStackView(
             arrangedSubviews: [
@@ -40,20 +40,24 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
         )
         labelStackView.axis = .vertical
         labelStackView.spacing = 2
-        contentView.addSubview(labelStackView)
 
-        let horizontalPadding: CGFloat = 24.0
-        institutionIconView.translatesAutoresizingMaskIntoConstraints = false
-        labelStackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            institutionIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalPadding),
-            institutionIconView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-
-            labelStackView.leftAnchor.constraint(equalTo: institutionIconView.rightAnchor, constant: 12),
-
-            labelStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            labelStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -horizontalPadding),
-        ])
+        let cellStackView = UIStackView(
+            arrangedSubviews: [
+                institutionIconView,
+                labelStackView,
+            ]
+        )
+        cellStackView.axis = .horizontal
+        cellStackView.spacing = 12
+        cellStackView.alignment = .center
+        cellStackView.isLayoutMarginsRelativeArrangement = true
+        cellStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 10,
+            leading: 24,
+            bottom: 10,
+            trailing: 24
+        )
+        contentView.addAndPinSubview(cellStackView)
 
         self.selectedBackgroundView = CreateSelectedBackgroundView()
     }
