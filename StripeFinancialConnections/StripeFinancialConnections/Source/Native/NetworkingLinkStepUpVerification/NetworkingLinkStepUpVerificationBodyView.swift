@@ -80,27 +80,29 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
 }
 
 private func CreateEmailLabel(email: String) -> UIView {
-    let emailLabel = UILabel()
+    let emailLabel = AttributedLabel(
+        font: .label(.medium),
+        textColor: .textSecondary
+    )
     emailLabel.text = "\(email)"
-    emailLabel.font = .stripeFont(forTextStyle: .captionTight)
-    emailLabel.textColor = .textSecondary
     return emailLabel
 }
 
 private func CreateCreateDotLabel() -> UIView {
-    let dotLabel = UILabel()
+    let dotLabel = AttributedLabel(
+        font: .label(.medium),
+        textColor: .textDisabled
+    )
     dotLabel.text = "•"
-    dotLabel.font = .stripeFont(forTextStyle: .captionTight)
-    dotLabel.textColor = .textDisabled
     return dotLabel
 }
 
 @available(iOSApplicationExtension, unavailable)
 private func CreateResendCodeLabel(isEnabled: Bool, didSelect: @escaping () -> Void) -> UIView {
-    let resendCodeLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .captionTightEmphasized),
-        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+    let resendCodeLabel = AttributedTextView(
+        font: .label(.medium),
+        boldFont: .label(.mediumEmphasized),
+        linkFont: .label(.mediumEmphasized),
         textColor: .textDisabled,
         alignCenter: false
     )
