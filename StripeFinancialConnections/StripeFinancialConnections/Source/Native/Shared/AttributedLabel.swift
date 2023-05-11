@@ -13,12 +13,19 @@ final class AttributedLabel: UILabel {
 
     private let customFont: FinancialConnectionsFont
     private let customTextColor: UIColor
+    private var customTextAlignment: NSTextAlignment?
 
     // one can accidentally forget to call `setText` instead of `text` so
     // this makes it convenient to use `AttributedLabel`
     override var text: String? {
         didSet {
             setText(text ?? "")
+        }
+    }
+
+    override var textAlignment: NSTextAlignment {
+        didSet {
+            self.customTextAlignment = textAlignment
         }
     }
 
@@ -66,6 +73,9 @@ final class AttributedLabel: UILabel {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.minimumLineHeight = customFont.lineHeight
         paragraphStyle.maximumLineHeight = customFont.lineHeight
+        if let customTextAlignment = customTextAlignment {
+            paragraphStyle.alignment = customTextAlignment
+        }
         let string = NSMutableAttributedString(
             string: text,
             attributes: [

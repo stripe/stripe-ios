@@ -14,6 +14,7 @@ import UIKit
 final class BulletPointLabelView: HitTestView {
 
     private(set) var topPadding: CGFloat = 0
+    private(set) var topLineHeight: CGFloat = 0
 
     init(
         title: String?,
@@ -35,6 +36,7 @@ final class BulletPointLabelView: HitTestView {
             primaryLabel.setText(title, action: didSelectURL)
             verticalLabelStackView.addArrangedSubview(primaryLabel)
             topPadding = font.topPadding
+            topLineHeight = font.lineHeight
         }
         if let content = content {
             let displayingOnlyContent = (title == nil)
@@ -49,6 +51,7 @@ final class BulletPointLabelView: HitTestView {
             verticalLabelStackView.addArrangedSubview(subtitleLabel)
             if displayingOnlyContent {
                 topPadding = font.topPadding
+                topLineHeight = font.lineHeight
             }
         }
         addAndPinSubview(verticalLabelStackView)

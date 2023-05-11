@@ -19,9 +19,10 @@ class FeaturedInstitutionGridCell: UICollectionViewCell {
 
     // only shown if logo fails loading
     private lazy var optionalTitleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .textPrimary
-        label.font = FinancialConnectionsFont.body(.small).uiFont
+        let label = AttributedLabel(
+            font: .body(.small),
+            textColor: .textPrimary
+        )
         label.numberOfLines = 0
         label.textAlignment = .center
         return label

@@ -22,7 +22,9 @@ struct FinancialConnectionsFont {
     }
 
     enum HeadingToken {
+        /// 20 size / 28 line height / 700 weight
         case medium
+        /// 24 size / 32 line height / 700 weight
         case large
     }
     static func heading(_ token: HeadingToken) -> FinancialConnectionsFont {
@@ -31,12 +33,10 @@ struct FinancialConnectionsFont {
         let appleTextStyle: UIFont.TextStyle
         switch token {
         case .medium:
-            // 20 size / 28 line height / 700 weight
             font = UIFont.systemFont(ofSize: 20, weight: .bold)
             lineHeight = 28
             appleTextStyle = .title3
         case .large:
-            // 24 size / 32 line height / 700 weight
             font = UIFont.systemFont(ofSize: 24, weight: .bold)
             lineHeight = 32
             appleTextStyle = .title2
@@ -45,9 +45,13 @@ struct FinancialConnectionsFont {
     }
 
     enum BodyToken {
+        /// 14 size / 20 line height / 400 weight
         case small
+        /// 14 size / 20 line height / 600 weight
         case smallEmphasized
+        /// 16 size / 24 line height / 400 weight
         case medium
+        /// 16 size / 24 line height / 600 weight
         case mediumEmphasized
     }
     static func body(_ token: BodyToken) -> FinancialConnectionsFont {
@@ -56,35 +60,37 @@ struct FinancialConnectionsFont {
         let appleTextStyle: UIFont.TextStyle
         switch token {
         case .small:
-            // 14 size / 20 line height / 400 weight
             font = UIFont.systemFont(ofSize: 14, weight: .regular)
             lineHeight = 20
             appleTextStyle = .footnote
         case .smallEmphasized:
-            // 14 size / 20 line height / 600 weight
             font = UIFont.systemFont(ofSize: 14, weight: .semibold)
             lineHeight = 20
             appleTextStyle = .footnote
         case .medium:
-            // 16 size / 24 line height / 400 weight
             font = UIFont.systemFont(ofSize: 16, weight: .regular)
             lineHeight = 24
-            appleTextStyle = .body
+            appleTextStyle = .callout
         case .mediumEmphasized:
-            // 16 size / 24 line height / 600 weight
             font = UIFont.systemFont(ofSize: 16, weight: .semibold)
             lineHeight = 24
-            appleTextStyle = .body
+            appleTextStyle = .callout
         }
         return .create(font: font, lineHeight: lineHeight, appleTextStyle: appleTextStyle)
     }
 
     enum LabelToken {
+        /// 12 size / 16 line height / 400 weight
         case small
+        /// 12 size / 16 line height / 600 weight
         case smallEmphasized
+        /// 14 size / 20 line height / 400 weight
         case medium
+        /// 14 size / 20 line height / 600 weight
         case mediumEmphasized
+        /// 16 size / 24 line height / 400 weight
         case large
+        /// 16 size / 24 line height / 600 weight
         case largeEmphasized
     }
     static func label(_ token: LabelToken) -> FinancialConnectionsFont {
@@ -93,33 +99,44 @@ struct FinancialConnectionsFont {
         let appleTextStyle: UIFont.TextStyle
         switch token {
         case .small:
-            // 12 size / 16 line height / 400 weight
             font = UIFont.systemFont(ofSize: 12, weight: .regular)
             lineHeight = 16
             appleTextStyle = .caption1
         case .smallEmphasized:
-            // 12 size / 16 line height / 600 weight
             font = UIFont.systemFont(ofSize: 12, weight: .semibold)
             lineHeight = 16
             appleTextStyle = .caption1
         case .medium:
-            // 14 size / 20 line height / 400 weight
             font = UIFont.systemFont(ofSize: 14, weight: .regular)
             lineHeight = 20
             appleTextStyle = .footnote
         case .mediumEmphasized:
-            // 14 size / 20 line height / 600 weight
             font = UIFont.systemFont(ofSize: 14, weight: .semibold)
             lineHeight = 20
             appleTextStyle = .footnote
         case .large:
-            // 16 size / 24 line height / 400 weight
             font = UIFont.systemFont(ofSize: 16, weight: .regular)
             lineHeight = 24
-            appleTextStyle = .body
+            appleTextStyle = .callout
         case .largeEmphasized:
-            // 16 size / 24 line height / 600 weight
             font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+            lineHeight = 24
+            appleTextStyle = .callout
+        }
+        return .create(font: font, lineHeight: lineHeight, appleTextStyle: appleTextStyle)
+    }
+
+    enum CodeToken {
+        /// 16 size / 24 line height / 600 weight
+        case largeEmphasized
+    }
+    static func code(_ token: CodeToken) -> FinancialConnectionsFont {
+        let font: UIFont
+        let lineHeight: CGFloat
+        let appleTextStyle: UIFont.TextStyle
+        switch token {
+        case .largeEmphasized:
+            font = UIFont.monospacedSystemFont(ofSize: 16, weight: .semibold)
             lineHeight = 24
             appleTextStyle = .body
         }

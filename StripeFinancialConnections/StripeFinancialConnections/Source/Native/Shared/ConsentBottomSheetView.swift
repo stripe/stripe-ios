@@ -200,9 +200,10 @@ private func CreateBulletinView(
         imageView.tintColor = .textPrimary
     }
     imageView.translatesAutoresizingMaskIntoConstraints = false
+    let imageDiameter: CGFloat = 16
     NSLayoutConstraint.activate([
-        imageView.widthAnchor.constraint(equalToConstant: 16),
-        imageView.heightAnchor.constraint(equalToConstant: 16),
+        imageView.widthAnchor.constraint(equalToConstant: imageDiameter),
+        imageView.heightAnchor.constraint(equalToConstant: imageDiameter),
     ])
 
     let bulletPointLabelView = BulletPointLabelView(
@@ -217,7 +218,8 @@ private func CreateBulletinView(
                 let paddingStackView = UIStackView(arrangedSubviews: [imageView])
                 paddingStackView.isLayoutMarginsRelativeArrangement = true
                 paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-                    top: bulletPointLabelView.topPadding,
+                    // center the image in the middle of the first line height
+                    top: max(0, (bulletPointLabelView.topLineHeight - imageDiameter) / 2),
                     leading: 0,
                     bottom: 0,
                     trailing: 0
