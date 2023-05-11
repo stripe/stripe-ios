@@ -1,7 +1,19 @@
 ## x.x.x yyyy-mm-dd
 
+## 23.8.0 2023-05-08
+### Identity
+* [Added] Added test mode M1 for the SDK.
+
+## 23.7.1 2023-05-02
+### Payments
+* [Fixed] STPPaymentHandler.handleNextAction allows payment methods that are delayed or require further customer action like like SEPA Debit or OXXO.
+
+## 23.7.0 2023-04-24
 ### PaymentSheet
 * [Fixed] Fixed disabled text color, using a lower opacity version of the original color instead of the previous `.tertiaryLabel`.
+
+### Identity
+* [Added] Added test mode for the SDK.
 
 ## 23.6.2 2023-04-20
 
@@ -10,9 +22,6 @@
 
 ### PaymentSheet
 * [Fixed] Fixed a bug that prevents users from using SEPA Debit w/ PaymentIntents or SetupIntents and Paypal in PaymentIntent+setup_future_usage or SetupIntent.
-
-### Identity
-* [Added] Added test mode for the SDK.
 
 ## 23.6.1 2023-04-17
 ### All

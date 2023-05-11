@@ -16,11 +16,11 @@ import XCTest
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
     func loadAndUpdateUI(skipTestMode: Bool) {
-        // no-op
+        self.skipTestMode = skipTestMode
     }
 
     func overrideTestModeReturnValue(result: StripeIdentity.IdentityVerificationSheet.VerificationFlowResult) {
-        // no-op
+        self.testModeReturnResult = result
     }
 
     func clearCollectedData(field: StripeCore.StripeAPI.VerificationPageFieldType) {
@@ -38,6 +38,10 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     var needBack: Bool = true
 
+    var testModeReturnResult: StripeIdentity.IdentityVerificationSheet.VerificationFlowResult?
+
+    var skipTestMode: Bool?
+
     private(set) var didLoadAndUpdateUI = false
 
     private(set) var savedData: StripeAPI.VerificationPageCollectedData?
@@ -52,6 +56,8 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     var missingType: StripeIdentity.IndividualFormElement.MissingType?
     var transitionedToIndividual: Bool = false
+
+    var completeOption: CompleteOptionView.CompleteOption?
 
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
@@ -131,6 +137,14 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
             self?.uploadedSelfieResult = result
             completion()
         }
+    }
+
+    func verifyAndTransition(simulateDelay: Bool) {
+        completeOption = simulateDelay ? .successAsync : .success
+    }
+
+    func unverifyAndTransition(simulateDelay: Bool) {
+        completeOption = simulateDelay ? .failureAsync : .failure
     }
 
     func transitionToCountryNotListed(missingType: StripeIdentity.IndividualFormElement.MissingType) {

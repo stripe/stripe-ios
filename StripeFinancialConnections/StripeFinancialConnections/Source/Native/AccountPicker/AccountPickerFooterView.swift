@@ -23,6 +23,7 @@ final class AccountPickerFooterView: UIView {
         NSLayoutConstraint.activate([
             linkAccountsButton.heightAnchor.constraint(equalToConstant: 56)
         ])
+        linkAccountsButton.accessibilityIdentifier = "account_picker_link_accounts_button"
         return linkAccountsButton
     }()
 
@@ -113,6 +114,7 @@ private func CreateDataAccessDisclosureView(
                 isStripeDirect: isStripeDirect,
                 businessName: businessName,
                 permissions: permissions,
+                isNetworking: false,
                 didSelectLearnMore: didSelectLearnMore
             ),
         ]

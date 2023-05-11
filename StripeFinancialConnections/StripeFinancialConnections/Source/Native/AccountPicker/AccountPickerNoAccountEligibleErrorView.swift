@@ -11,6 +11,7 @@ import Foundation
 import UIKit
 
 // Same as Stripe.js `AccountNoneEligibleForPaymentMethodFailure`
+@available(iOSApplicationExtension, unavailable)
 final class AccountPickerNoAccountEligibleErrorView: UIView {
 
     init(
@@ -46,13 +47,13 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
             if let bussinessName = bussinessName {
                 if numberOfIneligibleAccounts == 1 {
                     let localizedString = STPLocalizedString(
-                        "We found 1 %@ account but you can only link %@ to %@.",
+                        "We found 1 %@ account but you can only link %@ accounts to %@.",
                         "A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 1 Chase account but you can only link checking or savings to Coca-Cola Inc.'"
                     )
                     return String(format: localizedString, institution.name, supportedAccountTypes, bussinessName)
                 } else {
                     let localizedString = STPLocalizedString(
-                        "We found %d %@ accounts but you can only link %@ to %@.",
+                        "We found %d %@ accounts but you can only link %@ accounts to %@.",
                         "A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings to Coca-Cola Inc.'"
                     )
                     return String(
@@ -66,13 +67,13 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
             } else {
                 if numberOfIneligibleAccounts == 1 {
                     let localizedString = STPLocalizedString(
-                        "We found 1 %@ account but you can only link %@.",
+                        "We found 1 %@ account but you can only link %@ accounts.",
                         "A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 1 Chase account but you can only link checking or savings.'"
                     )
                     return String(format: localizedString, institution.name, supportedAccountTypes)
                 } else {
                     let localizedString = STPLocalizedString(
-                        "We found %d %@ accounts but you can only link %@.",
+                        "We found %d %@ accounts but you can only link %@ accounts.",
                         "A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings.'"
                     )
                     return String(
@@ -112,29 +113,20 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
             title: {
                 if institutionSkipAccountSelection {
                     if numberOfIneligibleAccounts == 1 {
-                        return String(
-                            format: STPLocalizedString(
-                                "The account you selected isn't a %@ account",
-                                "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the account they selected isn't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
-                            ),
-                            supportedAccountTypes
-                        )
+                        return STPLocalizedString(
+                                "The account you selected isn't available for payments",
+                                "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the account they selected isn't eligible."
+                            )
                     } else {
-                        return String(
-                            format: STPLocalizedString(
-                                "The accounts you selected aren't %@ accounts",
+                        return STPLocalizedString(
+                                "The accounts you selected aren't available for payments",
                                 "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
-                            ),
-                            supportedAccountTypes
-                        )
+                            )
                     }
                 } else {
-                    return String(
-                        format: STPLocalizedString(
-                            "No %@ account available",
-                            "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
-                        ),
-                        supportedAccountTypes
+                    return STPLocalizedString(
+                        "No payment accounts available",
+                        "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
                     )
                 }
             }(),
@@ -176,7 +168,13 @@ private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIVie
 
     func makeUIView(context: Context) -> AccountPickerNoAccountEligibleErrorView {
         AccountPickerNoAccountEligibleErrorView(
-            institution: FinancialConnectionsInstitution(id: "123", name: institutionName, url: nil),
+            institution: FinancialConnectionsInstitution(
+                id: "123",
+                name: institutionName,
+                url: nil,
+                icon: nil,
+                logo: nil
+            ),
             bussinessName: businessName,
             institutionSkipAccountSelection: institutionSkipAccountSelection,
             numberOfIneligibleAccounts: numberOfIneligibleAccounts,

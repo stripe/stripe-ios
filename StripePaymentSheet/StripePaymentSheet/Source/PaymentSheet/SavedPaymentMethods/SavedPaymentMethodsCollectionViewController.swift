@@ -8,7 +8,6 @@ import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
 protocol SavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
@@ -42,9 +41,9 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
         static func ==(lhs: Selection, rhs: PersistablePaymentMethodOption?) -> Bool {
             switch lhs {
             case .applePay:
-                return rhs?.type == .applePay
+                return rhs == .applePay
             case .saved(let paymentMethod):
-                return paymentMethod.stripeId == rhs?.stripePaymentMethodId
+                return paymentMethod.stripeId == rhs?.value
             case .add:
                 return false
             }
@@ -111,6 +110,7 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
     // MARK: - Internal Properties
     let configuration: Configuration
     let savedPaymentMethodsConfiguration: SavedPaymentMethodsSheet.Configuration
+    let customerAdapter: CustomerAdapter
 
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex else {
@@ -142,7 +142,7 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
         }
     }
     weak var delegate: SavedPaymentMethodsCollectionViewControllerDelegate?
-    weak var savedPaymentMethodsSheetDelegate: SavedPaymentMethodsSheetDelegate?
+    var spmsCompletion: SavedPaymentMethodsSheet.SPMSCompletion?
     var originalSelectedSavedPaymentMethod: PersistablePaymentMethodOption?
     var appearance = PaymentSheet.Appearance.default
 
@@ -174,17 +174,19 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
     required init(
         savedPaymentMethods: [STPPaymentMethod],
         savedPaymentMethodsConfiguration: SavedPaymentMethodsSheet.Configuration,
+        customerAdapter: CustomerAdapter,
         configuration: Configuration,
         appearance: PaymentSheet.Appearance,
-        savedPaymentMethodsSheetDelegate: SavedPaymentMethodsSheetDelegate? = nil,
+        spmsCompletion: SavedPaymentMethodsSheet.SPMSCompletion? = nil,
         delegate: SavedPaymentMethodsCollectionViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
         self.savedPaymentMethodsConfiguration = savedPaymentMethodsConfiguration
         self.configuration = configuration
+        self.customerAdapter = customerAdapter
         self.appearance = appearance
         self.delegate = delegate
-        self.savedPaymentMethodsSheetDelegate = savedPaymentMethodsSheetDelegate
+        self.spmsCompletion = spmsCompletion
         super.init(nibName: nil, bundle: nil)
         updateUI(selectedSavedPaymentOption: nil)
     }
@@ -213,13 +215,9 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
 
     // MARK: - Private methods
     private func retrieveSelectedPaymentMethodAndUpdateUI() {
-        if let retrieveSelectedPaymentMethodID = self.savedPaymentMethodsConfiguration.customerContext.retrieveSelectedPaymentMethodOption {
-            retrieveSelectedPaymentMethodID { paymentMethodOption, error in
-                if let error = error {
-                    self.savedPaymentMethodsSheetDelegate?.didFail(with: .retrieveSelectedPaymenMethodOption(error))
-                    self.updateUI(selectedSavedPaymentOption: nil)
-                    return
-                }
+        Task {
+            do {
+                let paymentMethodOption = try await self.customerAdapter.fetchSelectedPaymentMethodOption()
                 if let selectedSavedPaymentOption = paymentMethodOption {
                     self.updateUI(selectedSavedPaymentOption: selectedSavedPaymentOption)
                     if self.selectedIndexPath != nil {
@@ -228,9 +226,10 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
                 } else {
                     self.updateUI(selectedSavedPaymentOption: nil)
                 }
+            } catch {
+                self.updateUI(selectedSavedPaymentOption: nil)
+                return
             }
-        } else {
-            self.updateUI(selectedSavedPaymentOption: nil)
         }
     }
 

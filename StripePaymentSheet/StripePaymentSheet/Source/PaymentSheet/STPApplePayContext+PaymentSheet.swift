@@ -66,6 +66,10 @@ extension STPApplePayContext {
                     serverSideConfirmHandler(paymentMethod.id, shouldSavePaymentMethod, { result in
                         switch result {
                         case .success(let clientSecret):
+                            guard clientSecret != PaymentSheet.IntentConfiguration.FORCE_SUCCESS else {
+                                completion(STPApplePayContext.FORCE_SUCCESS, nil)
+                                return
+                            }
                             completion(clientSecret, nil)
                         case .failure(let error):
                             completion(nil, error)

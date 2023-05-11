@@ -72,6 +72,7 @@ final class InstitutionSearchFooterView: UIView {
         }
 
         self.showTopSeparator = true
+        accessibilityIdentifier = "institution_search_footer_view"
     }
 
     required init?(coder: NSCoder) {

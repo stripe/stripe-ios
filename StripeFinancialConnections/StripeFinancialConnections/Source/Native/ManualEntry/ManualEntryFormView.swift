@@ -10,10 +10,12 @@ import Foundation
 import SwiftUI
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 protocol ManualEntryFormViewDelegate: AnyObject {
     func manualEntryFormViewTextDidChange(_ view: ManualEntryFormView)
 }
 
+@available(iOSApplicationExtension, unavailable)
 final class ManualEntryFormView: UIView {
 
     weak var delegate: ManualEntryFormViewDelegate?
@@ -56,6 +58,7 @@ final class ManualEntryFormView: UIView {
             action: #selector(textFieldTextDidChange),
             for: .editingChanged
         )
+        routingNumberTextField.textField.accessibilityIdentifier = "manual_entry_routing_number_text_field"
         return routingNumberTextField
     }()
     private lazy var accountNumberTextField: ManualEntryTextField = {
@@ -74,6 +77,7 @@ final class ManualEntryFormView: UIView {
             for: .editingChanged
         )
         accountNumberTextField.delegate = self
+        accountNumberTextField.textField.accessibilityIdentifier = "manual_entry_account_number_text_field"
         return accountNumberTextField
     }()
     private lazy var accountNumberConfirmationTextField: ManualEntryTextField = {
@@ -90,6 +94,7 @@ final class ManualEntryFormView: UIView {
             for: .editingChanged
         )
         accountNumberConfirmationTextField.delegate = self
+        accountNumberConfirmationTextField.textField.accessibilityIdentifier = "manual_entry_account_number_confirmation_text_field"
         return accountNumberConfirmationTextField
     }()
 
@@ -177,6 +182,7 @@ final class ManualEntryFormView: UIView {
 
 // MARK: - ManualEntryTextFieldDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension ManualEntryFormView: ManualEntryTextFieldDelegate {
 
     func manualEntryTextField(

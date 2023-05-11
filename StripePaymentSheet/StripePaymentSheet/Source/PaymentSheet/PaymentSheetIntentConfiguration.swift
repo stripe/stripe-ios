@@ -14,6 +14,10 @@ import Foundation
     /// - Note: The PaymentIntent or SetupIntent you create on your server must have the same values or the payment/setup will fail.
     struct IntentConfiguration {
 
+        /// Pass this into `intentCreationCallback` to force PaymentSheet to show success and dismiss.
+        /// - Note: Only for advanced users, not required for most integrations.
+        @_spi(STP) public static let FORCE_SUCCESS = "FORCE_SUCCESS"
+
         /// Called when the customer confirms payment.
         /// Your implementation should create a PaymentIntent or SetupIntent on your server and call the `intentCreationCallback` with its client secret or an error if one occurred.
         /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
@@ -46,12 +50,15 @@ import Foundation
         /// - Parameters:
         ///   - mode: The mode of this intent, either payment or setup
         ///   - paymentMethodTypes: The payment method types for the intent
+        ///   - onBehalfOf The account (if any) for which the funds of the intent are intended
         ///   - confirmHandler: The handler to be called when the user taps the "Pay" button
         public init(mode: Mode,
                     paymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
                     confirmHandler: @escaping ConfirmHandler) {
             self.mode = mode
             self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
             self.confirmHandler = confirmHandler
         }
 
@@ -59,17 +66,21 @@ import Foundation
         /// - Parameters:
         ///   - mode: The mode of this intent, either payment or setup
         ///   - paymentMethodTypes: The payment method types for the intent
+        ///   - onBehalfOf The account (if any) for which the funds of the intent are intended
         ///   - confirmHandlerForServerSideConfirmation: The handler to be called when the user taps the "Pay" button
         public init(mode: Mode,
                     paymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
                     confirmHandlerForServerSideConfirmation: @escaping ConfirmHandlerForServerSideConfirmation) {
             self.mode = mode
             self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
             self.confirmHandlerForServerSideConfirmation = confirmHandlerForServerSideConfirmation
         }
 
         /// Information about the payment (PaymentIntent) or setup (SetupIntent).
         public var mode: Mode
+
         /// A list of payment method types to display to the customer. If nil, we dynamically determine the payment methods using your Stripe Dashboard settings.
         public var paymentMethodTypes: [String]?
 
@@ -83,6 +94,10 @@ import Foundation
         /// Your implementation should create and confirm a PaymentIntent or SetupIntent on the server and call the `intentCreationCallback` with its client secret or an error if one occurred.
         /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
         public var confirmHandlerForServerSideConfirmation: ConfirmHandlerForServerSideConfirmation?
+
+        /// The account (if any) for which the funds of the intent are intended.
+        /// - Seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-on_behalf_of
+        public var onBehalfOf: String?
 
         /// Controls when the funds will be captured. 
         /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method

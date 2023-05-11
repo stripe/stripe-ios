@@ -61,6 +61,14 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
 
+    func verifyAndTransition(
+        simulateDelay: Bool
+    )
+
+    func unverifyAndTransition(
+        simulateDelay: Bool
+    )
+
     /// Transition to CountryNotListedViewController without any API request
     func transitionToCountryNotListed(
         missingType: IndividualFormElement.MissingType
@@ -300,6 +308,34 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 collectedData: optionalCollectedData,
                 updateDataResult: result,
                 completion: completion
+            )
+        }
+    }
+
+    func verifyAndTransition(
+        simulateDelay: Bool
+    ) {
+        apiClient.verifyTestVerificationSession(
+            simulateDelay: simulateDelay
+        ).observe(on: .main) { [weak self] result in
+            self?.saveCheckSubmitAndTransition(
+                collectedData: nil,
+                updateDataResult: result,
+                completion: {}
+            )
+        }
+    }
+
+    func unverifyAndTransition(
+        simulateDelay: Bool
+    ) {
+        apiClient.unverifyTestVerificationSession(
+            simulateDelay: simulateDelay
+        ).observe(on: .main) { [weak self] result in
+            self?.saveCheckSubmitAndTransition(
+                collectedData: nil,
+                updateDataResult: result,
+                completion: {}
             )
         }
     }

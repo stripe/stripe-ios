@@ -13,7 +13,6 @@ import UIKit
 final class SuccessFooterView: UIView {
 
     private let didSelectDone: (SuccessFooterView) -> Void
-    private let didSelectLinkAnotherAccount: (() -> Void)?
 
     private lazy var doneButton: Button = {
         let doneButton = Button(configuration: .financialConnectionsPrimary)
@@ -23,37 +22,34 @@ final class SuccessFooterView: UIView {
         NSLayoutConstraint.activate([
             doneButton.heightAnchor.constraint(equalToConstant: 56)
         ])
+        doneButton.accessibilityIdentifier = "success_done_button"
         return doneButton
     }()
 
     init(
-        didSelectDone: @escaping (SuccessFooterView) -> Void,
-        didSelectLinkAnotherAccount: (() -> Void)?
+        showFailedToLinkNotice: Bool,
+        businessName: String?,
+        didSelectDone: @escaping (SuccessFooterView) -> Void
     ) {
         self.didSelectDone = didSelectDone
-        self.didSelectLinkAnotherAccount = didSelectLinkAnotherAccount
         super.init(frame: .zero)
 
         let footerStackView = UIStackView()
         footerStackView.axis = .vertical
         footerStackView.spacing = 12
 
-        if didSelectLinkAnotherAccount != nil {
-            let linkAnotherAccount = Button(configuration: .financialConnectionsSecondary)
-            linkAnotherAccount.title = String.Localized.link_another_account
-            linkAnotherAccount.addTarget(
-                self,
-                action: #selector(didSelectLinkAnotherAccountButton),
-                for: .touchUpInside
+        if showFailedToLinkNotice {
+            let saveToLinkFailedNoticeView = CreateSaveToLinkFailedNoticeView(
+                businessName: businessName
             )
-            linkAnotherAccount.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                linkAnotherAccount.heightAnchor.constraint(equalToConstant: 56)
-            ])
-            footerStackView.addArrangedSubview(linkAnotherAccount)
+            footerStackView.addArrangedSubview(saveToLinkFailedNoticeView)
         }
 
-        footerStackView.addArrangedSubview(doneButton)
+        let footerButtonStackView = UIStackView()
+        footerButtonStackView.axis = .vertical
+        footerButtonStackView.spacing = 12
+        footerButtonStackView.addArrangedSubview(doneButton)
+        footerStackView.addArrangedSubview(footerButtonStackView)
 
         addAndPinSubviewToSafeArea(footerStackView)
     }
@@ -66,11 +62,63 @@ final class SuccessFooterView: UIView {
         didSelectDone(self)
     }
 
-    @objc private func didSelectLinkAnotherAccountButton() {
-        didSelectLinkAnotherAccount?()
-    }
-
     func setIsLoading(_ isLoading: Bool) {
         doneButton.isLoading = isLoading
     }
+}
+
+private func CreateSaveToLinkFailedNoticeView(
+    businessName: String?
+) -> UIView {
+    let errorLabelFont = UIFont.stripeFont(forTextStyle: .captionEmphasized)
+    let warningIconWidthAndHeight: CGFloat = 12
+    let warningIconInsets = (errorLabelFont.lineHeight - warningIconWidthAndHeight) / 2
+    let warningIconImageView = UIImageView()
+    warningIconImageView.image = Image.warning_triangle.makeImage()
+        .withTintColor(.textCritical)
+        // Align the icon to the center of the first line.
+        //
+        // UIStackView does not do a great job of doing this
+        // automatically.
+        .withAlignmentRectInsets(
+            UIEdgeInsets(top: -warningIconInsets, left: 0, bottom: warningIconInsets, right: 0)
+        )
+    warningIconImageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        warningIconImageView.widthAnchor.constraint(equalToConstant: warningIconWidthAndHeight),
+        warningIconImageView.heightAnchor.constraint(equalToConstant: warningIconWidthAndHeight),
+    ])
+
+    let errorLabel = UILabel()
+    errorLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
+    errorLabel.textColor = .textPrimary
+    errorLabel.numberOfLines = 0
+    errorLabel.text = {
+        if let businessName = businessName {
+            return String(format: STPLocalizedString("Your account was connected to %@ but could not be saved to Link at this time.", "A warning message that explains the user that their bank account was successfully connected for payments, but it was not connected to Stripe's Link network. '%@' will be replaced by the business name, ex. Cola Cola Inc."), businessName)
+        } else {
+            return STPLocalizedString("Your account was connected but could not be saved to Link at this time.", "A warning message that explains the user that their bank account was successfully connected for payments, but it was not connected to Stripe's Link network.")
+        }
+    }()
+    errorLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+
+    let horizontalStackView = HitTestStackView(
+        arrangedSubviews: [
+            warningIconImageView,
+            errorLabel,
+        ]
+    )
+    horizontalStackView.axis = .horizontal
+    horizontalStackView.alignment = .top
+    horizontalStackView.spacing = 8
+    horizontalStackView.isLayoutMarginsRelativeArrangement = true
+    horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+        top: 10,
+        leading: 12,
+        bottom: 10,
+        trailing: 12
+    )
+    horizontalStackView.backgroundColor = .attention50
+    horizontalStackView.layer.cornerRadius = 8
+    return horizontalStackView
 }

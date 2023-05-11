@@ -120,7 +120,13 @@ private struct FeaturedInstitutionGridViewUIViewRepresentable: UIViewRepresentab
 
     func updateUIView(_ uiView: FeaturedInstitutionGridView, context: Context) {
         let institutions = (1...10).map { i in
-            FinancialConnectionsInstitution(id: "\(i)", name: "\(i)", url: nil)
+            FinancialConnectionsInstitution(
+                id: "\(i)",
+                name: "\(i)",
+                url: nil,
+                icon: nil,
+                logo: nil
+            )
         }
         uiView.loadInstitutions(institutions)
     }

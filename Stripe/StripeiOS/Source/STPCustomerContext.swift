@@ -410,7 +410,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
 
 /// Stores the key we use in NSUserDefaults to save a dictionary of Customer id to their last selected payment method ID
 private let kLastSelectedPaymentMethodDefaultsKey =
-    UserDefaults.StripePaymentsUIKeys.customerToLastSelectedPaymentMethod.rawValue
+    UserDefaults.StripeKeys.customerToLastSelectedPaymentMethod.rawValue
 private let CachedCustomerMaxAge: TimeInterval = 60
 
 /// :nodoc:
