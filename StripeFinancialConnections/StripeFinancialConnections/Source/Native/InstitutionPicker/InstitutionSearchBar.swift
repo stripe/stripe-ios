@@ -34,7 +34,7 @@ final class InstitutionSearchBar: UIView {
     private lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
         textField.textColor = .textPrimary
-        textField.font = .stripeFont(forTextStyle: .body)
+        textField.font = FinancialConnectionsFont.label(.large).uiFont
         // this removes the `searchTextField` background color.
         // for an unknown reason, setting the `backgroundColor` to
         // a white color is a no-op
@@ -47,7 +47,7 @@ final class InstitutionSearchBar: UIView {
             ),
             attributes: [
                 .foregroundColor: UIColor.textSecondary,
-                .font: UIFont.stripeFont(forTextStyle: .body),
+                .font: FinancialConnectionsFont.label(.large).uiFont,
             ]
         )
         textField.returnKeyType = .search

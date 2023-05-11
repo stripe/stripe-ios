@@ -346,7 +346,7 @@ private func CreateHeaderView(
     verticalStackView.spacing = 24
     verticalStackView.isLayoutMarginsRelativeArrangement = true
     verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 16,
+        top: 8,
         leading: 24,
         bottom: 0,
         trailing: 24

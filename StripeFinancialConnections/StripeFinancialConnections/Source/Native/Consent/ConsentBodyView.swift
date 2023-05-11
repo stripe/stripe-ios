@@ -74,7 +74,8 @@ private func CreateLabelView(
                 )
                 paddingStackView.isLayoutMarginsRelativeArrangement = true
                 paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-                    top: labelView.topPadding,
+                    // center the image in the middle of the first line height
+                    top: max(0, (labelView.topLineHeight - imageDiameter) / 2),
                     leading: 0,
                     bottom: 0,
                     trailing: 0
