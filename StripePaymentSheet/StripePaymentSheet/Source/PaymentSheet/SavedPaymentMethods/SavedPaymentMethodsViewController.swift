@@ -120,7 +120,7 @@ class SavedPaymentMethodsViewController: UIViewController {
         self.isApplePayEnabled = isApplePayEnabled
         self.spmsCompletion = spmsCompletion
         self.delegate = delegate
-        if savedPaymentMethods.isEmpty {
+        if savedPaymentMethods.isEmpty && !isApplePayEnabled {
             if customerAdapter.canCreateSetupIntents {
                 self.mode = .addingNewWithSetupIntent
             } else {
