@@ -74,7 +74,7 @@ class SavedPaymentMethodsViewController: UIViewController {
             customerAdapter: self.customerAdapter,
             configuration: .init(
                 showApplePay: showApplePay,
-                autoSelectDefaultBehavior: savedPaymentMethods.isEmpty ? .none : .onlyIfMatched
+                autoSelectDefaultBehavior: shouldShowPaymentMethodCarousel ? .onlyIfMatched : .none
             ),
             appearance: configuration.appearance,
             spmsCompletion: spmsCompletion,
@@ -167,6 +167,10 @@ class SavedPaymentMethodsViewController: UIViewController {
         ])
 
         updateUI(animated: false)
+    }
+    
+    private var shouldShowPaymentMethodCarousel: Bool {
+        return savedPaymentMethods.isEmpty || isApplePayEnabled
     }
 
     // MARK: Private Methods
@@ -285,7 +289,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                     self.navigationBar.additionalButton.removeTarget(
                         self, action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside)
-                    return savedPaymentMethods.isEmpty ? .close(showAdditionalButton: false) : .back
+                    return shouldShowPaymentMethodCarousel ? .back : .close(showAdditionalButton: false)
                 }
             }())
 
