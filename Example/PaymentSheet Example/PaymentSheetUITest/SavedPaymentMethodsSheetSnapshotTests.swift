@@ -10,15 +10,15 @@ import StripeCoreTestUtils
 import UIKit
 
 @_spi(STP)@testable import StripeCore
+@_spi(STP) @testable import StripePayments
 @_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaSavedPaymentMethodsSheet) @testable import StripePaymentSheet
 @_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaSavedPaymentMethodsSheet) @testable import StripePaymentsUI
-@_spi(STP) @testable import StripePayments
 @_spi(STP)@testable import StripeUICore
 
 // For backend example
 class StubCustomerAdapter: CustomerAdapter {
     var paymentMethods: [StripePayments.STPPaymentMethod] = []
-    
+
     func fetchPaymentMethods() async throws -> [StripePayments.STPPaymentMethod] {
         return paymentMethods
     }
@@ -116,18 +116,18 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         presentSPMS(darkMode: false)
         verify(spms.bottomSheetViewController.view!)
     }
-    
+
     func stubbedPaymentMethod() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
             "type": "card",
             "card": [
                 "last4": "4242",
-                "brand": "visa"
-            ]
+                "brand": "visa",
+            ],
         ])!
     }
-    
+
     func testSPMSOneSavedCardPM() {
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = [stubbedPaymentMethod()]
@@ -151,7 +151,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         presentSPMS(darkMode: false)
         verify(spms.bottomSheetViewController.view!)
     }
-    
+
     func testSPMSManySavedPMs() {
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = Array(repeating: stubbedPaymentMethod(), count: 20)
