@@ -120,14 +120,14 @@ class SavedPaymentMethodsViewController: UIViewController {
         self.isApplePayEnabled = isApplePayEnabled
         self.spmsCompletion = spmsCompletion
         self.delegate = delegate
-        if savedPaymentMethods.isEmpty && !isApplePayEnabled {
+        if !savedPaymentMethods.isEmpty || isApplePayEnabled {
+            self.mode = .selectingSaved
+        } else {
             if customerAdapter.canCreateSetupIntents {
                 self.mode = .addingNewWithSetupIntent
             } else {
                 self.mode = .addingNewPaymentMethodAttachToCustomer
             }
-        } else {
-            self.mode = .selectingSaved
         }
         super.init(nibName: nil, bundle: nil)
 
@@ -170,7 +170,7 @@ class SavedPaymentMethodsViewController: UIViewController {
     }
     
     private var shouldShowPaymentMethodCarousel: Bool {
-        return savedPaymentMethods.isEmpty || isApplePayEnabled
+        return !savedPaymentMethods.isEmpty || isApplePayEnabled
     }
 
     // MARK: Private Methods
