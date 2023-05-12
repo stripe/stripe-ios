@@ -168,7 +168,7 @@ class SavedPaymentMethodsViewController: UIViewController {
 
         updateUI(animated: false)
     }
-    
+
     private var shouldShowPaymentMethodCarousel: Bool {
         return !savedPaymentMethods.isEmpty || isApplePayEnabled
     }
