@@ -120,7 +120,7 @@ class SavedPaymentMethodsViewController: UIViewController {
         self.isApplePayEnabled = isApplePayEnabled
         self.spmsCompletion = spmsCompletion
         self.delegate = delegate
-        if !savedPaymentMethods.isEmpty || isApplePayEnabled {
+        if Self.shouldShowPaymentMethodCarousel(savedPaymentMethods: savedPaymentMethods, isApplePayEnabled: isApplePayEnabled) {
             self.mode = .selectingSaved
         } else {
             if customerAdapter.canCreateSetupIntents {
@@ -169,8 +169,12 @@ class SavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
     }
 
-    private var shouldShowPaymentMethodCarousel: Bool {
+    static func shouldShowPaymentMethodCarousel(savedPaymentMethods: [STPPaymentMethod], isApplePayEnabled: Bool) -> Bool {
         return !savedPaymentMethods.isEmpty || isApplePayEnabled
+    }
+    
+    private var shouldShowPaymentMethodCarousel: Bool {
+        return SavedPaymentMethodsViewController.shouldShowPaymentMethodCarousel(savedPaymentMethods: self.savedPaymentMethods, isApplePayEnabled: isApplePayEnabled)
     }
 
     // MARK: Private Methods
