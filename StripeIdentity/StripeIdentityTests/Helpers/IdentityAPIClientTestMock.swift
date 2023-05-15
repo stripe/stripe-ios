@@ -28,6 +28,9 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     let verificationPageData = MockAPIRequests<
         StripeAPI.VerificationPageDataUpdate, StripeAPI.VerificationPageData
     >()
+    let verifyUnverifyRequest = MockAPIRequests<
+        [String: Bool], StripeAPI.VerificationPageData
+    >()
     let verificationSessionSubmit = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
     let imageUpload = MockAPIRequests<ImageUploadRequestParams, STPAPIClient.FileAndUploadMetrics>()
 
@@ -70,6 +73,13 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
                 fileName: fileName
             )
         )
+    }
+    func verifyTestVerificationSession(simulateDelay: Bool) -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
+        return verifyUnverifyRequest.makeRequest(with: ["simulateDelay": simulateDelay])
+    }
+
+    func unverifyTestVerificationSession(simulateDelay: Bool) -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
+        return verifyUnverifyRequest.makeRequest(with: ["simulateDelay": simulateDelay])
     }
 
     // Ensures `count` number of files are uploaded

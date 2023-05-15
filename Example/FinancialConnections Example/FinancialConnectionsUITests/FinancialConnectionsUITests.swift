@@ -295,10 +295,53 @@ final class FinancialConnectionsUITests: XCTestCase {
         let playgroundCancelAlert = app.alerts["Cancelled"]
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 60.0))
     }
+
+    func testSearchInLiveModeNativeAuthFlow() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundPaymentFlowButton.tap()
+        app.fc_playgroundNativeButton.tap()
+
+        let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
+        if (enableTestModeSwitch.value as? String) == "1" {
+            enableTestModeSwitch.tap()
+        }
+
+        app.fc_playgroundShowAuthFlowButton.tap()
+        app.fc_nativeConsentAgreeButton.tap()
+
+        let searchBarTextField = app.textFields["search_bar_text_field"]
+        XCTAssertTrue(searchBarTextField.waitForExistence(timeout: 120.0))
+        searchBarTextField.tap()
+        searchBarTextField.typeText("Bank of America")
+
+        let bankOfAmericaSearchRow = app.tables.staticTexts["Bank of America"]
+        XCTAssertTrue(bankOfAmericaSearchRow.waitForExistence(timeout: 120.0))
+        bankOfAmericaSearchRow.tap()
+
+        XCTAssert(app.fc_nativePrepaneContinueButton.exists) // check that prepane was opened
+
+        let backButton = app.navigationBars["fc_navigation_bar"].buttons["Back"]
+        XCTAssertTrue(backButton.waitForExistence(timeout: 60.0))
+        backButton.tap()
+
+        searchBarTextField.tap()
+        searchBarTextField.typeText("testing123")
+
+        let institutionSearchFooterView = app.otherElements["institution_search_footer_view"]
+        XCTAssertTrue(institutionSearchFooterView.waitForExistence(timeout: 120.0))
+        institutionSearchFooterView.tap()
+
+        // check that manual entry screen is opened
+        let manualEntryContinueButton = app.buttons["manual_entry_continue_button"]
+        XCTAssertTrue(manualEntryContinueButton.waitForExistence(timeout: 60.0))
+    }
 }
 
 extension XCTestCase {
-    fileprivate func wait(timeout: TimeInterval) {
+    func wait(timeout: TimeInterval) {
         _ = XCTWaiter.wait(for: [XCTestExpectation(description: "")], timeout: timeout)
     }
 }

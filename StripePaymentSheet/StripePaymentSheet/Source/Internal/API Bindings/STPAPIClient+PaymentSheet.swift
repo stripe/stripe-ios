@@ -11,84 +11,6 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension STPAPIClient {
-    func listPaymentMethods(
-        forCustomer customerID: String,
-        using ephemeralKeySecret: String,
-        types: [STPPaymentMethodType] = [.card],
-        completion: @escaping STPPaymentMethodsCompletionBlock
-    ) {
-        let header = authorizationHeader(using: ephemeralKeySecret)
-        // Unfortunately, this API only supports fetching saved pms for one type at a time
-        var shared_allPaymentMethods = [STPPaymentMethod]()
-        var shared_lastError: Error?
-        let group = DispatchGroup()
-
-        for type in types {
-            group.enter()
-            let params = [
-                "customer": customerID,
-                "type": STPPaymentMethod.string(from: type),
-            ]
-            APIRequest<STPPaymentMethodListDeserializer>.getWith(
-                self,
-                endpoint: APIEndpointPaymentMethods,
-                additionalHeaders: header,
-                parameters: params as [String: Any]
-            ) { deserializer, _, error in
-                DispatchQueue.global(qos: .userInteractive).async(flags: .barrier) {
-                    // .barrier ensures we're the only thing writing to shared_ vars
-                    if let error = error {
-                        shared_lastError = error
-                    }
-                    if let paymentMethods = deserializer?.paymentMethods {
-                        shared_allPaymentMethods.append(contentsOf: paymentMethods)
-                    }
-                    group.leave()
-                }
-            }
-        }
-
-        group.notify(queue: DispatchQueue.main) {
-            completion(shared_allPaymentMethods, shared_lastError)
-        }
-    }
-
-    internal func detachPaymentMethod(
-        _ paymentMethodID: String,
-        fromCustomerUsing ephemeralKeySecret: String,
-        completion: @escaping STPErrorBlock
-    ) {
-        let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
-        APIRequest<STPPaymentMethod>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
-            parameters: [:]
-        ) { _, _, error in
-            completion(error)
-        }
-    }
-
-    /// Retrieve a customer
-    /// - seealso: https://stripe.com/docs/api#retrieve_customer
-    func retrieveCustomer(
-        _ customerID: String,
-        using ephemeralKey: String,
-        completion: @escaping STPCustomerCompletionBlock
-    ) {
-        let endpoint = "\(APIEndpointCustomers)/\(customerID)"
-        APIRequest<STPCustomer>.getWith(
-            self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKey),
-            parameters: [:]
-        ) { object, _, error in
-            completion(object, error)
-        }
-    }
-}
-
-extension STPAPIClient {
     typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
     typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
@@ -173,37 +95,28 @@ extension STPAPIClient {
         }
     }
 
-    /// Retrieves either the Payment or Setup intent for the intent configuration
-    /// - Parameters:
-    ///   - intentConfig: a `PaymentSheet.IntentConfiguration`
-    ///   - secret: The client secret of the intent to be retreved
-    ///   - completion: completion callback for when the request completes
-    func retrieveIntent(
-        for intentConfig: PaymentSheet.IntentConfiguration,
-        withClientSecret secret: String
-    ) async throws -> Intent {
-        switch intentConfig.mode {
-        case .payment:
-            return try await withCheckedThrowingContinuation { continuation in
-                retrievePaymentIntent(withClientSecret: secret) { paymentIntent, error in
-                    guard let paymentIntent = paymentIntent else {
-                        continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
-                        return
-                    }
-
-                    continuation.resume(returning: .paymentIntent(paymentIntent))
+    /// Async helper version of `retrievePaymentIntent`
+    func retrievePaymentIntent(clientSecret: String, expand: [String]) async throws -> STPPaymentIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            retrievePaymentIntent(withClientSecret: clientSecret, expand: expand) { paymentIntent, error in
+                guard let paymentIntent = paymentIntent else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                    return
                 }
+                continuation.resume(returning: paymentIntent)
             }
-        case .setup:
-            return try await withCheckedThrowingContinuation { continuation in
-                retrieveSetupIntent(withClientSecret: secret) { setupIntent, error in
-                    guard let setupIntent = setupIntent else {
-                        continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
-                        return
-                    }
+        }
+    }
 
-                    continuation.resume(returning: .setupIntent(setupIntent))
+    /// Async helper version of `retrieveSetupIntent`
+    func retrieveSetupIntent(clientSecret: String, expand: [String]) async throws -> STPSetupIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            retrieveSetupIntent(withClientSecret: clientSecret, expand: expand) { setupIntent, error in
+                guard let setupIntent = setupIntent else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                    return
                 }
+                continuation.resume(returning: setupIntent)
             }
         }
     }

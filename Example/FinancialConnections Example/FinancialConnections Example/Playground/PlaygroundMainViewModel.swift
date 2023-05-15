@@ -15,6 +15,7 @@ final class PlaygroundMainViewModel: ObservableObject {
     enum Flow: String, CaseIterable, Identifiable {
         case data
         case payments
+        case networking
 
         var id: String {
             return rawValue
@@ -23,6 +24,9 @@ final class PlaygroundMainViewModel: ObservableObject {
     @Published var flow: Flow = Flow(rawValue: PlaygroundUserDefaults.flow)! {
         didSet {
             PlaygroundUserDefaults.flow = flow.rawValue
+            if flow != .networking {
+                email = ""
+            }
         }
     }
 
@@ -65,6 +69,18 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
+    @Published var email: String = PlaygroundUserDefaults.email {
+        didSet {
+            PlaygroundUserDefaults.email = email
+        }
+    }
+
+    @Published var enableTransactionsPermission: Bool = PlaygroundUserDefaults.enableTransactionsPermission {
+        didSet {
+            PlaygroundUserDefaults.enableTransactionsPermission = enableTransactionsPermission
+        }
+    }
+
     @Published var customPublicKey: String = PlaygroundUserDefaults.customPublicKey {
         didSet {
             PlaygroundUserDefaults.customPublicKey = customPublicKey
@@ -98,6 +114,8 @@ final class PlaygroundMainViewModel: ObservableObject {
             enableAppToApp: enableAppToApp,
             enableTestMode: enableTestMode,
             flow: flow.rawValue,
+            email: email,
+            enableTransactionsPermission: enableTransactionsPermission,
             customPublicKey: customPublicKey,
             customSecretKey: customSecretKey
         ) { [weak self] setupPlaygroundResponse in
@@ -138,10 +156,16 @@ private func SetupPlayground(
     enableAppToApp: Bool,
     enableTestMode: Bool,
     flow: String,
+    email: String,
+    enableTransactionsPermission: Bool,
     customPublicKey: String,
     customSecretKey: String,
     completionHandler: @escaping ([String: String]?) -> Void
 ) {
+    if !enableTestMode && email == "test@test.com" {
+        assertionFailure("\(email) will not work with livemode, it will return rate limit exceeded")
+    }
+
     let baseURL = "https://financial-connections-playground-ios.glitch.me"
     let endpoint = "/setup_playground"
     let url = URL(string: baseURL + endpoint)!
@@ -153,6 +177,8 @@ private func SetupPlayground(
         requestBody["enable_test_mode"] = enableTestMode
         requestBody["enable_app_to_app"] = enableAppToApp
         requestBody["flow"] = flow
+        requestBody["email"] = email
+        requestBody["enable_transactions_permission"] = enableTransactionsPermission
         requestBody["custom_public_key"] = customPublicKey
         requestBody["custom_secret_key"] = customSecretKey
         return try! JSONSerialization.data(

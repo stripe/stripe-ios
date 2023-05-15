@@ -14,6 +14,10 @@ import Foundation
     /// - Note: The PaymentIntent or SetupIntent you create on your server must have the same values or the payment/setup will fail.
     struct IntentConfiguration {
 
+        /// Pass this into `intentCreationCallback` to force PaymentSheet to show success and dismiss.
+        /// - Note: Only for advanced users, not required for most integrations.
+        @_spi(STP) public static let FORCE_SUCCESS = "FORCE_SUCCESS"
+
         /// Called when the customer confirms payment.
         /// Your implementation should create a PaymentIntent or SetupIntent on your server and call the `intentCreationCallback` with its client secret or an error if one occurred.
         /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.

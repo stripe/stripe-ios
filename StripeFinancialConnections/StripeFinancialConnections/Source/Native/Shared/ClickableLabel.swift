@@ -32,6 +32,7 @@ final class ClickableLabel: HitTestView {
         boldFont: UIFont,
         linkFont: UIFont,
         textColor: UIColor,
+        linkColor: UIColor = .textBrand,
         alignCenter: Bool = false
     ) {
         self.font = font
@@ -49,7 +50,7 @@ final class ClickableLabel: HitTestView {
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0.0
         textView.linkTextAttributes = [
-            .foregroundColor: UIColor.textBrand
+            .foregroundColor: linkColor
         ]
         textView.delegate = self
         // remove clipping so when user selects an attributed

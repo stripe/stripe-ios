@@ -499,6 +499,12 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         exifMetadata: CameraExifMetadata?,
         expectedClassification documentSide: DocumentSide
     ) {
+        // If scanningState matches, but scannerOutputOptional is nil, it means the previous frame
+        // is a match, but the current frame is not match, reset the timer.
+        if case let .scanning(_, scanningState?) = imageScanningSession.state, scanningState.matchesDocument(type: documentType, side: documentSide) && scannerOutputOptional == nil {
+            imageScanningSession.startTimeoutTimer(expectedClassification: documentSide)
+        }
+
         // If this isn't the classification we're looking for, update the state
         // to display a different message to the user
         guard let scannerOutput = scannerOutputOptional,

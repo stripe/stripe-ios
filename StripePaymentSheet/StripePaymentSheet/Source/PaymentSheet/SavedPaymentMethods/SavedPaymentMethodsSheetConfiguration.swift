@@ -5,15 +5,13 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
 extension SavedPaymentMethodsSheet {
 
     public struct Configuration {
-        public typealias CreateSetupIntentHandlerCallback = ((@escaping (String?) -> Void) -> Void)
-
         private var styleRawValue: Int = 0  // SheetStyle.automatic.rawValue
         /// The color styling to use for PaymentSheet UI
         /// Default value is SheetStyle.automatic
@@ -36,52 +34,54 @@ extension SavedPaymentMethodsSheet {
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = STPAPIClient.shared
 
-        public var applePayEnabled: Bool
-
-        /// Configuration related to the Stripe Customer
-        public var customerContext: _stpspmsbeta_STPBackendAPIAdapter
+        /// Whether to show Apple Pay as an option
+        public var applePayEnabled: Bool = false
 
         /// Optional configuration for setting the header text of the Payment Method selection screen
         public var headerTextForSelectionScreen: String?
 
-        /// A block that provides a SetupIntent which, when confirmed, will attach a PaymentMethod to the current customer.
-        /// Upon calling this, return a SetupIntent with the current customer set as the `customer`.
-        /// If this is not set, the PaymentMethod will be attached directly to the customer instead.
-        public var createSetupIntentHandler: CreateSetupIntentHandlerCallback?
-
-        public init (customerContext: _stpspmsbeta_STPBackendAPIAdapter,
-                     applePayEnabled: Bool) {
-            self.customerContext = customerContext
-            self.applePayEnabled = applePayEnabled
+        public init () {
         }
     }
 }
 
 extension SavedPaymentMethodsSheet {
+    /// A selected payment method from a SavedPaymentMethodSheet.
     public enum PaymentOptionSelection {
-
+        /// Display data for a payment method option.
         public struct PaymentOptionDisplayData {
+            /// An image to display to the user.
             public let image: UIImage
+            /// A label to display to the user.
             public let label: String
         }
+        /// Apple Pay is the selected payment option.
         case applePay(paymentOptionDisplayData: PaymentOptionDisplayData)
+        /// A saved payment method was selected.
         case saved(paymentMethod: STPPaymentMethod, paymentOptionDisplayData: PaymentOptionDisplayData)
+        /// A new payment method was saved and selected.
         case new(paymentMethod: STPPaymentMethod, paymentOptionDisplayData: PaymentOptionDisplayData)
 
+        /// Create a PaymentOptionSelection for a saved payment method.
         public static func savedPaymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
             let data = PaymentOptionDisplayData(image: paymentMethod.makeIcon(), label: paymentMethod.paymentSheetLabel)
             return .saved(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
         }
+
+        /// Create a PaymentOptionSelection for a new payment method.
         public static func newPaymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
             let data = PaymentOptionDisplayData(image: paymentMethod.makeIcon(), label: paymentMethod.paymentSheetLabel)
             return .new(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
         }
+
+        /// Create a PaymentOptionSelection for Apple Pay.
         public static func applePay() -> PaymentOptionSelection {
             let displayData = SavedPaymentMethodsSheet.PaymentOptionSelection.PaymentOptionDisplayData(image: Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal),
                                                                                                        label: String.Localized.apple_pay)
             return .applePay(paymentOptionDisplayData: displayData)
         }
 
+        /// Returns a PaymentOptionDisplayData to display to the user.
         public func displayData() -> PaymentOptionDisplayData {
             switch self {
             case .applePay(let paymentOptionDisplayData):
@@ -96,11 +96,11 @@ extension SavedPaymentMethodsSheet {
         func persistablePaymentMethodOption() -> PersistablePaymentMethodOption {
             switch self {
             case .applePay:
-                return PersistablePaymentMethodOption.applePay()
+                return .applePay
             case .saved(let paymentMethod, _):
-                return PersistablePaymentMethodOption.stripePaymentMethod(paymentMethod.stripeId)
+                return .stripeId(paymentMethod.stripeId)
             case .new(let paymentMethod, _):
-                return PersistablePaymentMethodOption.stripePaymentMethod(paymentMethod.stripeId)
+                return .stripeId(paymentMethod.stripeId)
             }
         }
     }

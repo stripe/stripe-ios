@@ -10,10 +10,12 @@ import Foundation
 import SwiftUI
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 protocol ManualEntryFormViewDelegate: AnyObject {
     func manualEntryFormViewTextDidChange(_ view: ManualEntryFormView)
 }
 
+@available(iOSApplicationExtension, unavailable)
 final class ManualEntryFormView: UIView {
 
     weak var delegate: ManualEntryFormViewDelegate?
@@ -180,6 +182,7 @@ final class ManualEntryFormView: UIView {
 
 // MARK: - ManualEntryTextFieldDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension ManualEntryFormView: ManualEntryTextFieldDelegate {
 
     func manualEntryTextField(

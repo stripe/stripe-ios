@@ -6,7 +6,6 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -25,10 +24,11 @@ class SavedPaymentMethodsViewController: UIViewController {
     let savedPaymentMethods: [STPPaymentMethod]
     let isApplePayEnabled: Bool
     let configuration: SavedPaymentMethodsSheet.Configuration
+    let customerAdapter: CustomerAdapter
 
     // MARK: - Writable Properties
     weak var delegate: SavedPaymentMethodsViewControllerDelegate?
-    weak var savedPaymentMethodsSheetDelegate: SavedPaymentMethodsSheetDelegate?
+    var spmsCompletion: SavedPaymentMethodsSheet.SPMSCompletion?
     private(set) var isDismissable: Bool = true
     enum Mode {
         case selectingSaved
@@ -71,12 +71,13 @@ class SavedPaymentMethodsViewController: UIViewController {
         return SavedPaymentMethodsCollectionViewController(
             savedPaymentMethods: savedPaymentMethods,
             savedPaymentMethodsConfiguration: self.configuration,
+            customerAdapter: self.customerAdapter,
             configuration: .init(
                 showApplePay: showApplePay,
                 autoSelectDefaultBehavior: savedPaymentMethods.isEmpty ? .none : .onlyIfMatched
             ),
             appearance: configuration.appearance,
-            savedPaymentMethodsSheetDelegate: savedPaymentMethodsSheetDelegate,
+            spmsCompletion: spmsCompletion,
             delegate: self
         )
     }()
@@ -108,17 +109,19 @@ class SavedPaymentMethodsViewController: UIViewController {
     required init(
         savedPaymentMethods: [STPPaymentMethod],
         configuration: SavedPaymentMethodsSheet.Configuration,
+        customerAdapter: CustomerAdapter,
         isApplePayEnabled: Bool,
-        savedPaymentMethodsSheetDelegate: SavedPaymentMethodsSheetDelegate?,
+        spmsCompletion: SavedPaymentMethodsSheet.SPMSCompletion?,
         delegate: SavedPaymentMethodsViewControllerDelegate
     ) {
         self.savedPaymentMethods = savedPaymentMethods
         self.configuration = configuration
+        self.customerAdapter = customerAdapter
         self.isApplePayEnabled = isApplePayEnabled
-        self.savedPaymentMethodsSheetDelegate = savedPaymentMethodsSheetDelegate
+        self.spmsCompletion = spmsCompletion
         self.delegate = delegate
         if savedPaymentMethods.isEmpty {
-            if configuration.createSetupIntentHandler != nil {
+            if customerAdapter.canCreateSetupIntents {
                 self.mode = .addingNewWithSetupIntent
             } else {
                 self.mode = .addingNewPaymentMethodAttachToCustomer
@@ -336,20 +339,23 @@ class SavedPaymentMethodsViewController: UIViewController {
                 case .applePay:
                     let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.applePay()
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
-                        self.savedPaymentMethodsSheetDelegate?.didFail(with: .setSelectedPaymentMethodOption(error))
+                        // TODO: Communicate error to consumer
+                        print(error)
+
                     } onSuccess: {
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                            self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
+                            self.spmsCompletion?(.selected(paymentOptionSelection))
                         }
                     }
 
                 case .saved(let paymentMethod):
                     let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
-                        self.savedPaymentMethodsSheetDelegate?.didFail(with: .setSelectedPaymentMethodOption(error))
+//                        TODO: Communicate error to consumer
+                        print(error)
                     } onSuccess: {
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                            self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
+                            self.spmsCompletion?(.selected(paymentOptionSelection))
                         }
                     }
                 default:
@@ -361,18 +367,17 @@ class SavedPaymentMethodsViewController: UIViewController {
     }
 
     private func addPaymentOption(paymentOption: PaymentOption) {
-        guard case .new = paymentOption,
-        let createSetupIntentHandler = self.configuration.createSetupIntentHandler else {
+        guard case .new = paymentOption, customerAdapter.canCreateSetupIntents else {
             return
         }
         self.processingInFlight = true
         updateUI(animated: false)
 
-        createSetupIntentHandler({ result in
-            guard let clientSecret = result else {
+        Task {
+            guard let clientSecret = try? await customerAdapter.setupIntentClientSecretForCustomerAttach() else {
                 self.processingInFlight = false
                 self.updateUI()
-                self.savedPaymentMethodsSheetDelegate?.didFail(with: .setupIntentClientSecretInvalid)
+                // Communicate error to user, if any
                 return
             }
             self.fetchSetupIntent(clientSecret: clientSecret) { result in
@@ -380,13 +385,13 @@ class SavedPaymentMethodsViewController: UIViewController {
                 case .success(let stpSetupIntent):
                     let setupIntent = Intent.setupIntent(stpSetupIntent)
                     self.confirm(intent: setupIntent, paymentOption: paymentOption)
-                case .failure(let error):
+                case .failure:
                     self.processingInFlight = false
                     self.updateUI()
-                    self.savedPaymentMethodsSheetDelegate?.didFail(with: .setupIntentFetchError(error))
+                    // Communicate error to user, if any
                 }
             }
-        })
+        }
     }
 
     func confirm(intent: Intent?, paymentOption: PaymentOption) {
@@ -403,20 +408,21 @@ class SavedPaymentMethodsViewController: UIViewController {
                       let paymentMethod = intent.paymentMethod else {
                     self.processingInFlight = false
                     self.updateUI()
-                    self.savedPaymentMethodsSheetDelegate?.didFail(with: .unknown(debugDescription: "addPaymentOption completed without SI/PM"))
+                    // Communicate error to user?
+                    assertionFailure("addPaymentOption confirmation completed, but PaymentMethod is missing")
                     return
                 }
 
                 let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.newPaymentMethod(paymentMethod)
-                self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
+                self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { _ in
                     self.processingInFlight = false
-                    self.savedPaymentMethodsSheetDelegate?.didFail(with: .setSelectedPaymentMethodOption(error))
+//                    Communicate error to user?
                     self.updateUI()
                 } onSuccess: {
                     self.processingInFlight = false
                     self.actionButton.update(state: .disabled, animated: true) {
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                            self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
+                            self.spmsCompletion?(.selected(paymentOptionSelection))
                         }
                     }
                 }
@@ -433,31 +439,32 @@ class SavedPaymentMethodsViewController: UIViewController {
                     self.error = error
                     self.updateUI()
                     self.processingInFlight = false
-                    self.savedPaymentMethodsSheetDelegate?.didFail(with: .createPaymentMethod(error))
+                    // TODO: Communicate error to customer
                     return
                 }
                 guard let paymentMethod = paymentMethod else {
                     self.processingInFlight = false
-                    self.savedPaymentMethodsSheetDelegate?.didFail(with: .unknown(debugDescription: "No payment method available"))
+                    // TODO: Communicate error to customer
                     return
                 }
-                self.configuration.customerContext.attachPaymentMethod(toCustomer: paymentMethod) { error in
-                    if let error = error {
+                Task {
+                    do {
+                        try await self.customerAdapter.attachPaymentMethod(paymentMethod.stripeId)
+                    } catch {
                         self.error = error
                         self.updateUI()
                         self.processingInFlight = false
-                        self.savedPaymentMethodsSheetDelegate?.didFail(with: .attachPaymentMethod(error))
-                        return
+                        // TODO: Communicate error to customer
                     }
                     let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
-                    self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
+                    self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { _ in
                         self.processingInFlight = false
-                        self.savedPaymentMethodsSheetDelegate?.didFail(with: .setSelectedPaymentMethodOption(error))
+                        // TODO: Communicate error to customer
                     } onSuccess: {
                         self.processingInFlight = false
                         self.actionButton.update(state: .disabled, animated: true) {
                             self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                                self.savedPaymentMethodsSheetDelegate?.didFinish(with: paymentOptionSelection)
+                                self.spmsCompletion?(.selected(paymentOptionSelection))
                             }
                         }
                     }
@@ -508,17 +515,14 @@ class SavedPaymentMethodsViewController: UIViewController {
     private func setSelectablePaymentMethod(paymentOptionSelection: SavedPaymentMethodsSheet.PaymentOptionSelection,
                                             onError: @escaping (Error) -> Void,
                                             onSuccess: @escaping () -> Void) {
-        if let setSelectedPaymentMethodOption = self.configuration.customerContext.setSelectedPaymentMethodOption {
+        Task {
             let persistablePaymentOption = paymentOptionSelection.persistablePaymentMethodOption()
-            setSelectedPaymentMethodOption(persistablePaymentOption) { error in
-                if let error = error {
-                    onError(error)
-                } else {
-                    onSuccess()
-                }
+            do {
+                try await customerAdapter.setSelectedPaymentMethodOption(paymentOption: persistablePaymentOption)
+                onSuccess()
+            } catch {
+                onError(error)
             }
-        } else {
-            onSuccess()
         }
     }
 
@@ -526,11 +530,11 @@ class SavedPaymentMethodsViewController: UIViewController {
         if savedPaymentOptionsViewController.originalSelectedSavedPaymentMethod != nil &&
             savedPaymentOptionsViewController.selectedPaymentOption == nil {
             delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                self.savedPaymentMethodsSheetDelegate?.didFinish(with: nil)
+                self.spmsCompletion?(.selected(nil))
             }
         } else {
             delegate?.savedPaymentMethodsViewControllerDidCancel(self) {
-                self.savedPaymentMethodsSheetDelegate?.didCancel()
+                self.spmsCompletion?(.canceled)
             }
         }
     }
@@ -596,7 +600,7 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
             switch paymentMethodSelection {
             case .add:
                 error = nil
-                if self.configuration.createSetupIntentHandler != nil {
+                if customerAdapter.canCreateSetupIntents {
                     mode =  .addingNewWithSetupIntent
                 } else {
                     mode = .addingNewPaymentMethodAttachToCustomer
@@ -615,19 +619,23 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
             guard case .saved(let paymentMethod) = paymentMethodSelection else {
                 return
             }
-            configuration.customerContext.detachPaymentMethod?(fromCustomer: paymentMethod, completion: { error in
-                if let error = error {
-                    self.savedPaymentMethodsSheetDelegate?.didFail(with: .detachPaymentMethod(error))
+            Task {
+                do {
+                    try await customerAdapter.detachPaymentMethod(paymentMethodId: paymentMethod.stripeId)
+                } catch {
+                    // Communicate error to consumer
                     self.set(error: error)
                     return
                 }
-                self.configuration.customerContext.setSelectedPaymentMethodOption?(paymentOption: nil, completion: { error in
-                    if let error = error {
-                        self.savedPaymentMethodsSheetDelegate?.didFail(with: .setSelectedPaymentMethodOption(error))
-                        // We are unable to persist the selectedPaymentMethodOption -- if we attempt to re-call
-                        // a payment method that is no longer there, the UI should be able to handle not selecting it.
-                    }
-                })
-            })
+                do {
+                    try await self.customerAdapter.setSelectedPaymentMethodOption(paymentOption: nil)
+                } catch {
+                    // We are unable to persist the selectedPaymentMethodOption -- if we attempt to re-call
+                    // a payment method that is no longer there, the UI should be able to handle not selecting it.
+                    // Communicate error to consumer
+                    self.set(error: error)
+                    return
+                }
+            }
         }
 }

@@ -57,6 +57,7 @@ final class InstitutionSearchBar: UIView {
             action: #selector(textFieldTextDidChange),
             for: .editingChanged
         )
+        textField.accessibilityIdentifier = "search_bar_text_field"
         return textField
     }()
     private lazy var textFieldClearButton: UIButton = {

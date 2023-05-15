@@ -9,6 +9,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 protocol ManualEntryTextFieldDelegate: AnyObject {
     func manualEntryTextField(
         _ textField: ManualEntryTextField,
@@ -19,6 +20,7 @@ protocol ManualEntryTextFieldDelegate: AnyObject {
     func manualEntryTextFieldDidEndEditing(_ textField: ManualEntryTextField)
 }
 
+@available(iOSApplicationExtension, unavailable)
 final class ManualEntryTextField: UIView {
 
     private lazy var verticalStackView: UIStackView = {
@@ -151,6 +153,7 @@ final class ManualEntryTextField: UIView {
 
 // MARK: - UITextFieldDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension ManualEntryTextField: UITextFieldDelegate {
 
     func textField(
