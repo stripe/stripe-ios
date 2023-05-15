@@ -172,7 +172,7 @@ class SavedPaymentMethodsViewController: UIViewController {
     static func shouldShowPaymentMethodCarousel(savedPaymentMethods: [STPPaymentMethod], isApplePayEnabled: Bool) -> Bool {
         return !savedPaymentMethods.isEmpty || isApplePayEnabled
     }
-    
+
     private var shouldShowPaymentMethodCarousel: Bool {
         return SavedPaymentMethodsViewController.shouldShowPaymentMethodCarousel(savedPaymentMethods: self.savedPaymentMethods, isApplePayEnabled: isApplePayEnabled)
     }
