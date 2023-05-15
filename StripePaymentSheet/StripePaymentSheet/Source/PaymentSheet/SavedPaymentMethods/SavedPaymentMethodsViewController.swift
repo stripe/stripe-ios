@@ -223,7 +223,6 @@ class SavedPaymentMethodsViewController: UIViewController {
         // Error
         switch mode {
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
-            // TODO: Test that this works
             errorLabel.text = error?.localizedDescription
         case .selectingSaved:
             errorLabel.text = error?.nonGenericDescription
@@ -382,10 +381,13 @@ class SavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
 
         Task {
-            guard let clientSecret = try? await customerAdapter.setupIntentClientSecretForCustomerAttach() else {
+            var clientSecret: String
+            do {
+                clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
+            } catch {
                 self.processingInFlight = false
+                self.error = error
                 self.updateUI()
-                // Communicate error to user, if any
                 return
             }
             self.fetchSetupIntent(clientSecret: clientSecret) { result in
@@ -393,10 +395,10 @@ class SavedPaymentMethodsViewController: UIViewController {
                 case .success(let stpSetupIntent):
                     let setupIntent = Intent.setupIntent(stpSetupIntent)
                     self.confirm(intent: setupIntent, paymentOption: paymentOption)
-                case .failure:
+                case .failure(let error):
                     self.processingInFlight = false
+                    self.error = error
                     self.updateUI()
-                    // Communicate error to user, if any
                 }
             }
         }
@@ -415,16 +417,18 @@ class SavedPaymentMethodsViewController: UIViewController {
                 guard let intent = intent as? STPSetupIntent,
                       let paymentMethod = intent.paymentMethod else {
                     self.processingInFlight = false
+                    // Not ideal (but also very rare): If this fails, customers will need to know there is an error
+                    // so that they can back out and try again
+                    self.error = SavedPaymentMethodsSheetError.unknown(debugDescription: "Unexpected error occured")
                     self.updateUI()
-                    // Communicate error to user?
                     assertionFailure("addPaymentOption confirmation completed, but PaymentMethod is missing")
                     return
                 }
 
                 let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.newPaymentMethod(paymentMethod)
-                self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { _ in
+                self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
                     self.processingInFlight = false
-//                    Communicate error to user?
+                    self.error = error
                     self.updateUI()
                 } onSuccess: {
                     self.processingInFlight = false
@@ -445,14 +449,18 @@ class SavedPaymentMethodsViewController: UIViewController {
             configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
                 if let error = error {
                     self.error = error
-                    self.updateUI()
                     self.processingInFlight = false
-                    // TODO: Communicate error to customer
+                    self.actionButton.update(state: .enabled, animated: true) {
+                        self.updateUI()
+                    }
                     return
                 }
                 guard let paymentMethod = paymentMethod else {
+                    self.error = SavedPaymentMethodsSheetError.unknown(debugDescription: "Error on payment method creation")
                     self.processingInFlight = false
-                    // TODO: Communicate error to customer
+                    self.actionButton.update(state: .enabled, animated: true) {
+                        self.updateUI()
+                    }
                     return
                 }
                 Task {
@@ -460,14 +468,19 @@ class SavedPaymentMethodsViewController: UIViewController {
                         try await self.customerAdapter.attachPaymentMethod(paymentMethod.stripeId)
                     } catch {
                         self.error = error
-                        self.updateUI()
                         self.processingInFlight = false
-                        // TODO: Communicate error to customer
+                        self.actionButton.update(state: .enabled, animated: true) {
+                            self.updateUI()
+                        }
+                        return
                     }
                     let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
-                    self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { _ in
+                    self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
                         self.processingInFlight = false
-                        // TODO: Communicate error to customer
+                        self.error = error
+                        self.actionButton.update(state: .enabled, animated: true) {
+                            self.updateUI()
+                        }
                     } onSuccess: {
                         self.processingInFlight = false
                         self.actionButton.update(state: .disabled, animated: true) {
