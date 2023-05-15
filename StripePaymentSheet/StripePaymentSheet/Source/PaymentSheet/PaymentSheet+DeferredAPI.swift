@@ -35,7 +35,7 @@ extension PaymentSheet {
                     paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params)
                     confirmType = .new(params: params, paymentMethod: paymentMethod, shouldSave: shouldSave)
                 }
-                
+
                 // 2. Get Intent client secret from merchant
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
                                                                                  paymentMethodID: paymentMethod.stripeId,
@@ -46,7 +46,7 @@ extension PaymentSheet {
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetForceSuccess)
                     return
                 }
-                
+
                 // 3. Retrieve the PaymentIntent or SetupIntent
                 switch intentConfig.mode {
                 case .payment:
@@ -106,9 +106,9 @@ extension PaymentSheet {
             }
         }
     }
-    
+
     // MARK: - Helper methods
-    
+
     /// Convenience method that converts a STPPayymentHandlerActionStatus + error into a PaymentSheetResult
     static func makePaymentSheetResult(for status: STPPaymentHandlerActionStatus, error: Error?) -> PaymentSheetResult {
         switch status {
@@ -123,12 +123,12 @@ extension PaymentSheet {
             return .failed(error: PaymentSheetError.unknown(debugDescription: "Unrecognized STPPaymentHandlerActionStatus status"))
         }
     }
-    
+
     static func fetchIntentClientSecretFromMerchant(intentConfig: IntentConfiguration,
                                                     paymentMethodID: String,
                                                     shouldSavePaymentMethod: Bool) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
-            
+
             if let confirmHandlerForServerSideConfirmation = intentConfig.confirmHandlerForServerSideConfirmation {
                 DispatchQueue.main.async {
                     confirmHandlerForServerSideConfirmation(paymentMethodID, shouldSavePaymentMethod, { result in

@@ -70,7 +70,7 @@ extension STPPaymentMethodParams {
     static func _testValidCardValue() -> STPPaymentMethodParams {
         return _testCardValue()
     }
-    
+
     static func _testCardValue(number: String = "4242424242424242") -> STPPaymentMethodParams {
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = number
@@ -88,4 +88,3 @@ extension STPElementsSession {
         return elementsSession
     }
 }
-

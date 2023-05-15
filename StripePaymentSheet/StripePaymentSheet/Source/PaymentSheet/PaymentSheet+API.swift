@@ -557,12 +557,12 @@ extension PaymentSheet {
         }
         return params
     }
-    
+
     enum ConfirmPaymentMethodType {
         case saved(STPPaymentMethod)
         /// - paymentMethod: Pass this if you created a PaymentMethod already (e.g. for the deferred flow).
         case new(params: STPPaymentMethodParams, paymentMethod: STPPaymentMethod? = nil, shouldSave: Bool)
-        
+
         var shouldSave: Bool {
             switch self {
             case .saved:
@@ -572,7 +572,7 @@ extension PaymentSheet {
             }
         }
     }
-    
+
     static func makePaymentIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         paymentIntent: STPPaymentIntent,
@@ -598,7 +598,7 @@ extension PaymentSheet {
                 params.paymentMethodParams = paymentMethodParams
                 paymentMethodType = paymentMethodParams.type
             }
-            
+
             // Paypal requires mandate_data if setting up
             if params.paymentMethodType == .payPal
                 && paymentIntent.setupFutureUsage == .offSession
@@ -614,7 +614,7 @@ extension PaymentSheet {
         params.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
         return params
     }
-    
+
     static func makeSetupIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         setupIntent: STPSetupIntent,
