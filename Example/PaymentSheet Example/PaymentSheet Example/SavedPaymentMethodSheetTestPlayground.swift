@@ -163,7 +163,7 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
         configuration.headerTextForSelectionScreen = headerTextForSelectionScreenTextField.text
-        configuration.applePayEnabled = applePayEnabled()
+
         return configuration
     }
 
