@@ -7,7 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-import StripePayments
+@_spi(STP) import StripePayments
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
@@ -51,7 +51,7 @@ extension PaymentSheet {
                 // 3. Retrieve the PaymentIntent or SetupIntent
                 switch deferredIntentContext.intentConfig.mode {
                 case .payment:
-                    let paymentIntent = try await deferredIntentContext.configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+                    let paymentIntent = try await deferredIntentContext.configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 4a. Client-side confirmation
@@ -64,9 +64,8 @@ extension PaymentSheet {
                                 completion: deferredIntentContext.completion)
                     } else {
                        // 4b. Server-side confirmation
-                        // TODO: Make a new handleNextAction version that takes a STPPaymentIntent to avoid re-fetching
                         deferredIntentContext.paymentHandler.handleNextAction(
-                            forPayment: clientSecret,
+                            for: paymentIntent,
                             with: deferredIntentContext.authenticationContext,
                             returnURL: deferredIntentContext.configuration.returnURL
                         ) { status, _, error in
@@ -74,7 +73,7 @@ extension PaymentSheet {
                         }
                     }
                 case .setup:
-                    let setupIntent = try await deferredIntentContext.configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
+                    let setupIntent = try await deferredIntentContext.configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
                     if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
                         // 4a. Client-side confirmation
                         confirm(configuration: deferredIntentContext.configuration,
@@ -86,9 +85,8 @@ extension PaymentSheet {
                                 completion: deferredIntentContext.completion)
                     } else {
                         // 4b. Server-side confirmation
-                        // TODO: Make a new handleNextAction version that takes an STPSetupIntent to avoid re-fetching
                         deferredIntentContext.paymentHandler.handleNextAction(
-                            forSetupIntent: clientSecret,
+                            for: setupIntent,
                             with: deferredIntentContext.authenticationContext,
                             returnURL: deferredIntentContext.configuration.returnURL
                         ) { status, _, error in
