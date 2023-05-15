@@ -138,10 +138,21 @@ final class PlaygroundMainViewModel: ObservableObject {
                     case .failed(let error):
                         UIAlertController.showAlert(
                             title: "Failed",
-                            message: error.localizedDescription
+                            message: {
+                                if case .unknown(let debugDescription) = error as? FinancialConnectionsSheetError {
+                                    return debugDescription
+                                } else {
+                                    return error.localizedDescription
+                                }
+                            }()
                         )
                     }
                 }
+            } else {
+                UIAlertController.showAlert(
+                    title: "Playground App Setup Failed",
+                    message: "Try clearing 'Custom Keys' or delete & re-install the app."
+                )
             }
             self?.isLoading = false
         }
@@ -216,10 +227,26 @@ private func PresentFinancialConnectionsSheet(
     completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
 ) {
     guard let clientSecret = setupPlaygroundResponseJSON["client_secret"] else {
-        fatalError("Did not receive a valid client secret.")
+        completionHandler(
+            .failed(
+                error: FinancialConnectionsSheetError
+                    .unknown(
+                        debugDescription: "Server returned no client_secret. Try clearing 'Custom Keys' or delete & re-install the app."
+                    )
+            )
+        )
+        return
     }
     guard let publishableKey = setupPlaygroundResponseJSON["publishable_key"] else {
-        fatalError("Did not receive a valid publishable key.")
+        completionHandler(
+            .failed(
+                error: FinancialConnectionsSheetError
+                    .unknown(
+                        debugDescription: "Server returned no publishable_key. Try clearing 'Custom Keys' or delete & re-install the app."
+                    )
+            )
+        )
+        return
     }
 
     STPAPIClient.shared.publishableKey = publishableKey
