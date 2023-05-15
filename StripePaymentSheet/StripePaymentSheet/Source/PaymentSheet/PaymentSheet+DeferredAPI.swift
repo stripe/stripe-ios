@@ -39,7 +39,7 @@ extension PaymentSheet {
                                                                            paymentMethodParams: paymentMethodParams)
                 // 2. Get Intent client secret from merchant
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: deferredIntentContext.intentConfig,
-                                                                                 paymentMethodID: paymentMethod.stripeId,
+                                                                                 paymentMethod: paymentMethod,
                                                                                  shouldSavePaymentMethod: shouldSavePaymentMethod)
                 guard clientSecret != IntentConfiguration.FORCE_SUCCESS else {
                     // Force close PaymentSheet and early exit
@@ -120,19 +120,19 @@ extension PaymentSheet {
     }
 
     static func fetchIntentClientSecretFromMerchant(intentConfig: IntentConfiguration,
-                                                    paymentMethodID: String,
+                                                    paymentMethod: STPPaymentMethod,
                                                     shouldSavePaymentMethod: Bool) async throws -> String {
       try await withCheckedThrowingContinuation { continuation in
 
           if let confirmHandlerForServerSideConfirmation = intentConfig.confirmHandlerForServerSideConfirmation {
               DispatchQueue.main.async {
-                  confirmHandlerForServerSideConfirmation(paymentMethodID, shouldSavePaymentMethod, { result in
+                  confirmHandlerForServerSideConfirmation(paymentMethod.stripeId, shouldSavePaymentMethod, { result in
                       continuation.resume(with: result)
                   })
               }
           } else if let confirmHandler = intentConfig.confirmHandler {
               DispatchQueue.main.async {
-                  confirmHandler(paymentMethodID, { result in
+                  confirmHandler(paymentMethod, { result in
                       continuation.resume(with: result)
                   })
               }

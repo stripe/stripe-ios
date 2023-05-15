@@ -707,7 +707,7 @@ extension PaymentSheetTestPlayground: EndpointSelectorViewControllerDelegate {
 extension PaymentSheetTestPlayground {
 
     // Client-side confirmation handler
-    func confirmHandler(_ paymentMethodID: String,
+    func confirmHandler(_ paymentMethod: STPPaymentMethod,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
         DispatchQueue.global(qos: .background).async {
             intentCreationCallback(.success(self.clientSecret!))
