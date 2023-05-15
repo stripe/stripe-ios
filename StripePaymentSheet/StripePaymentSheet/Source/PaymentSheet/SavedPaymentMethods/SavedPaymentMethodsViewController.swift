@@ -74,7 +74,7 @@ class SavedPaymentMethodsViewController: UIViewController {
             customerAdapter: self.customerAdapter,
             configuration: .init(
                 showApplePay: showApplePay,
-                autoSelectDefaultBehavior: savedPaymentMethods.isEmpty ? .none : .onlyIfMatched
+                autoSelectDefaultBehavior: shouldShowPaymentMethodCarousel ? .onlyIfMatched : .none
             ),
             appearance: configuration.appearance,
             spmsCompletion: spmsCompletion,
@@ -120,14 +120,14 @@ class SavedPaymentMethodsViewController: UIViewController {
         self.isApplePayEnabled = isApplePayEnabled
         self.spmsCompletion = spmsCompletion
         self.delegate = delegate
-        if savedPaymentMethods.isEmpty {
+        if Self.shouldShowPaymentMethodCarousel(savedPaymentMethods: savedPaymentMethods, isApplePayEnabled: isApplePayEnabled) {
+            self.mode = .selectingSaved
+        } else {
             if customerAdapter.canCreateSetupIntents {
                 self.mode = .addingNewWithSetupIntent
             } else {
                 self.mode = .addingNewPaymentMethodAttachToCustomer
             }
-        } else {
-            self.mode = .selectingSaved
         }
         super.init(nibName: nil, bundle: nil)
 
@@ -167,6 +167,14 @@ class SavedPaymentMethodsViewController: UIViewController {
         ])
 
         updateUI(animated: false)
+    }
+
+    static func shouldShowPaymentMethodCarousel(savedPaymentMethods: [STPPaymentMethod], isApplePayEnabled: Bool) -> Bool {
+        return !savedPaymentMethods.isEmpty || isApplePayEnabled
+    }
+
+    private var shouldShowPaymentMethodCarousel: Bool {
+        return SavedPaymentMethodsViewController.shouldShowPaymentMethodCarousel(savedPaymentMethods: self.savedPaymentMethods, isApplePayEnabled: isApplePayEnabled)
     }
 
     // MARK: Private Methods
@@ -284,7 +292,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                     self.navigationBar.additionalButton.removeTarget(
                         self, action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside)
-                    return savedPaymentMethods.isEmpty ? .close(showAdditionalButton: false) : .back
+                    return shouldShowPaymentMethodCarousel ? .back : .close(showAdditionalButton: false)
                 }
             }())
 

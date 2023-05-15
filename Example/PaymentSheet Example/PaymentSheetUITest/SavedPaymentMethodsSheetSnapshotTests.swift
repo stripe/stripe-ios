@@ -10,14 +10,17 @@ import StripeCoreTestUtils
 import UIKit
 
 @_spi(STP)@testable import StripeCore
+@_spi(STP) @testable import StripePayments
 @_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaSavedPaymentMethodsSheet) @testable import StripePaymentSheet
 @_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaSavedPaymentMethodsSheet) @testable import StripePaymentsUI
 @_spi(STP)@testable import StripeUICore
 
 // For backend example
 class StubCustomerAdapter: CustomerAdapter {
+    var paymentMethods: [StripePayments.STPPaymentMethod] = []
+
     func fetchPaymentMethods() async throws -> [StripePayments.STPPaymentMethod] {
-        return []
+        return paymentMethods
     }
 
     func attachPaymentMethod(_ paymentMethodId: String) async throws {
@@ -78,50 +81,97 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         return APIStubbedTestCase.stubbedAPIClient()
     }
 
-    func testSPMS() {
-        prepareSPMS()
+    func testSPMSNoSavedPMs() {
+        prepareSPMS(applePayEnabled: false)
         presentSPMS(darkMode: false)
         verify(spms.bottomSheetViewController.view!)
     }
 
-    func testPaymentSheetDarkMode() {
-        prepareSPMS()
+    func testSPMSNoSavedPMsDarkMode() {
+        prepareSPMS(applePayEnabled: false)
         presentSPMS(darkMode: true)
         verify(spms.bottomSheetViewController.view!)
     }
 
-    func testSPMSAppearance() {
-        prepareSPMS(appearance: .snapshotTestTheme)
+    func testSPMSNoSavedPMsCustomAppearance() {
+        prepareSPMS(appearance: .snapshotTestTheme, applePayEnabled: false)
+        presentSPMS(darkMode: false)
+        verify(spms.bottomSheetViewController.view!)
+    }
+
+    func testSPMSOnlyApplePay() {
+        prepareSPMS(applePayEnabled: true)
+        presentSPMS(darkMode: false)
+        verify(spms.bottomSheetViewController.view!)
+    }
+
+    func testSPMSOnlyApplePayDarkMode() {
+        prepareSPMS(applePayEnabled: true)
+        presentSPMS(darkMode: true)
+        verify(spms.bottomSheetViewController.view!)
+    }
+
+    func testSPMSOnlyApplePayCustomAppearance() {
+        prepareSPMS(appearance: .snapshotTestTheme, applePayEnabled: true)
+        presentSPMS(darkMode: false)
+        verify(spms.bottomSheetViewController.view!)
+    }
+
+    func stubbedPaymentMethod() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123card",
+            "type": "card",
+            "card": [
+                "last4": "4242",
+                "brand": "visa",
+            ],
+        ])!
+    }
+
+    func testSPMSOneSavedCardPM() {
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [stubbedPaymentMethod()]
+        prepareSPMS(customerAdapter: customerAdapter, applePayEnabled: true)
+        presentSPMS(darkMode: false)
+        verify(spms.bottomSheetViewController.view!)
+    }
+
+    func testSPMSOneSavedCardPMDarkMode() {
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [stubbedPaymentMethod()]
+        prepareSPMS(customerAdapter: customerAdapter, applePayEnabled: true)
+        presentSPMS(darkMode: true)
+        verify(spms.bottomSheetViewController.view!)
+    }
+
+    func testSPMSOneSavedCardPMCustomApperance() {
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [stubbedPaymentMethod()]
+        prepareSPMS(appearance: .snapshotTestTheme, customerAdapter: customerAdapter, applePayEnabled: true)
+        presentSPMS(darkMode: false)
+        verify(spms.bottomSheetViewController.view!)
+    }
+
+    func testSPMSManySavedPMs() {
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = Array(repeating: stubbedPaymentMethod(), count: 20)
+        prepareSPMS(customerAdapter: customerAdapter, applePayEnabled: true)
         presentSPMS(darkMode: false)
         verify(spms.bottomSheetViewController.view!)
     }
 
     private func prepareSPMS(
-        customer: String = "new",
-        currency: String = "usd",
         appearance: PaymentSheet.Appearance = .default,
-        override_payment_methods_types: [String]? = nil,
-        automaticPaymentMethods: Bool = true,
-        useLink: Bool = false,
-        applePayEnabled: Bool = true,
-        intentConfig: PaymentSheet.IntentConfiguration? = nil
+        customerAdapter: CustomerAdapter = StubCustomerAdapter(),
+        applePayEnabled: Bool = true
     ) {
-        prepareMockSPMS(appearance: appearance,
-                                applePayEnabled: applePayEnabled,
-                                intentConfig: intentConfig)
-    }
-
-    private func prepareMockSPMS(appearance: PaymentSheet.Appearance,
-                                 applePayEnabled: Bool = true,
-                                 intentConfig: PaymentSheet.IntentConfiguration? = nil) {
         var config = self.configuration
-        let customer = StubCustomerAdapter()
         config.appearance = appearance
         config.apiClient = stubbedAPIClient()
         config.applePayEnabled = applePayEnabled
         StripeAPI.defaultPublishableKey = "pk_test_123456789"
 
-        self.spms = SavedPaymentMethodsSheet(configuration: config, customer: customer)
+        self.spms = SavedPaymentMethodsSheet(configuration: config, customer: customerAdapter)
     }
 
     private func presentSPMS(darkMode: Bool, preferredContentSizeCategory: UIContentSizeCategory = .large) {
