@@ -82,7 +82,7 @@ extension String.Localized {
             "Button to select a file to upload"
         )
     }
-    
+
     static var upload_your_photo_id: String {
         STPLocalizedString(
             "Upload your photo ID",
