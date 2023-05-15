@@ -96,9 +96,9 @@ extension STPAPIClient {
     }
 
     /// Async helper version of `retrievePaymentIntent`
-    func retrievePaymentIntent(clientSecret: String) async throws -> STPPaymentIntent {
+    func retrievePaymentIntent(clientSecret: String, expand: [String]) async throws -> STPPaymentIntent {
         return try await withCheckedThrowingContinuation { continuation in
-            retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
+            retrievePaymentIntent(withClientSecret: clientSecret, expand: expand) { paymentIntent, error in
                 guard let paymentIntent = paymentIntent else {
                     continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
                     return
@@ -109,9 +109,9 @@ extension STPAPIClient {
     }
 
     /// Async helper version of `retrieveSetupIntent`
-    func retrieveSetupIntent(clientSecret: String) async throws -> STPSetupIntent {
+    func retrieveSetupIntent(clientSecret: String, expand: [String]) async throws -> STPSetupIntent {
         return try await withCheckedThrowingContinuation { continuation in
-            retrieveSetupIntent(withClientSecret: clientSecret) { setupIntent, error in
+            retrieveSetupIntent(withClientSecret: clientSecret, expand: expand) { setupIntent, error in
                 guard let setupIntent = setupIntent else {
                     continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
                     return
