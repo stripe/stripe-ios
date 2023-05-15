@@ -225,7 +225,8 @@ extension SavedPaymentMethodSheetTestPlayground {
             StripeAPI.defaultPublishableKey = publishableKey
 
             Task {
-                let configuration = self.savedPaymentMethodSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
+                var configuration = self.savedPaymentMethodSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
+                configuration.applePayEnabled = self.applePayEnabled()
                 let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey)
                 self.savedPaymentMethodsSheet = SavedPaymentMethodsSheet(configuration: configuration, customer: customerAdapter)
 
