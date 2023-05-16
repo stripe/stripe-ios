@@ -164,7 +164,7 @@ import UIKit
     open func detachPaymentMethod(paymentMethodId: String) async throws {
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
-            apiClient.detachPaymentMethod(paymentMethodId, fromCustomerUsing: customerEphemeralKey.id) { error in
+            apiClient.detachPaymentMethod(paymentMethodId, fromCustomerUsing: customerEphemeralKey.ephemeralKeySecret) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                     return
