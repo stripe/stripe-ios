@@ -375,6 +375,7 @@ class SavedPaymentMethodsViewController: UIViewController {
 
     private func addPaymentOption(paymentOption: PaymentOption) {
         guard case .new = paymentOption, customerAdapter.canCreateSetupIntents else {
+            STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentFailure()
             return
         }
         self.processingInFlight = true
@@ -385,11 +386,15 @@ class SavedPaymentMethodsViewController: UIViewController {
             do {
                 clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
             } catch {
+                STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentFailure()
                 self.processingInFlight = false
                 self.error = error
                 self.updateUI()
                 return
             }
+
+            STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentSuccess()
+
             self.fetchSetupIntent(clientSecret: clientSecret) { result in
                 switch result {
                 case .success(let stpSetupIntent):
@@ -450,6 +455,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                 if let error = error {
                     self.error = error
                     self.processingInFlight = false
+                    STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaCreateAttachFailure()
                     self.actionButton.update(state: .enabled, animated: true) {
                         self.updateUI()
                     }
@@ -458,6 +464,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                 guard let paymentMethod = paymentMethod else {
                     self.error = SavedPaymentMethodsSheetError.unknown(debugDescription: "Error on payment method creation")
                     self.processingInFlight = false
+                    STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaCreateAttachFailure()
                     self.actionButton.update(state: .enabled, animated: true) {
                         self.updateUI()
                     }
@@ -469,6 +476,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                     } catch {
                         self.error = error
                         self.processingInFlight = false
+                        STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaCreateAttachFailure()
                         self.actionButton.update(state: .enabled, animated: true) {
                             self.updateUI()
                         }
@@ -477,12 +485,14 @@ class SavedPaymentMethodsViewController: UIViewController {
                     let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
                     self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
                         self.processingInFlight = false
+                        STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaCreateAttachFailure()
                         self.error = error
                         self.actionButton.update(state: .enabled, animated: true) {
                             self.updateUI()
                         }
                     } onSuccess: {
                         self.processingInFlight = false
+                        STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaCreateAttachSuccess()
                         self.actionButton.update(state: .disabled, animated: true) {
                             self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                                 self.spmsCompletion?(.selected(paymentOptionSelection))
@@ -628,8 +638,10 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
                 }
                 self.updateUI()
             case .saved:
+                STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenSelectedSavedPM()
                 updateUI(animated: true)
             case .applePay:
+                STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenSelectedSavedPM()
                 updateUI(animated: true)
             }
         }
@@ -646,6 +658,7 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
                 } catch {
                     // Communicate error to consumer
                     self.set(error: error)
+                    STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenRemovePMFailure()
                     return
                 }
                 do {
@@ -655,8 +668,10 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
                     // a payment method that is no longer there, the UI should be able to handle not selecting it.
                     // Communicate error to consumer
                     self.set(error: error)
+                    STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenRemovePMFailure()
                     return
                 }
+                STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenRemovePMSuccess()
             }
         }
 }
