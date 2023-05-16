@@ -611,7 +611,7 @@ class PaymentSheetAPITest: XCTestCase {
                     merchant_clientSecret = clientSecret
                     intentCreationCallback(.success(clientSecret))
                 } else {
-                    intentCreationCallback(.failure(error ?? NSError()))
+                    intentCreationCallback(.failure(error ?? ExpectedError()))
                 }
             }
             if isPaymentIntent {
@@ -631,7 +631,7 @@ class PaymentSheetAPITest: XCTestCase {
                     merchant_clientSecret = clientSecret
                     intentCreationCallback(.success(clientSecret))
                 } else {
-                    intentCreationCallback(.failure(error ?? NSError()))
+                    intentCreationCallback(.failure(error ?? ExpectedError()))
                 }
             }
             if isPaymentIntent {
