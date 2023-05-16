@@ -12,90 +12,97 @@ import Foundation
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
-    static func createPaymentMethodIfNeeded(apiClient: STPAPIClient,
-                                            paymentMethod: STPPaymentMethod?,
-                                            paymentMethodParams: STPPaymentMethodParams?) async throws -> STPPaymentMethod {
-        if let paymentMethod = paymentMethod {
-            return paymentMethod
-        }
-
-        guard let paymentMethodParams = paymentMethodParams else {
-            throw PaymentSheetError.unknown(debugDescription: "paymentMethodParams unexpectedly nil")
-        }
-        return try await apiClient.createPaymentMethod(with: paymentMethodParams)
-    }
-
-    static func handleDeferredIntentConfirmation(deferredIntentContext: DeferredIntentContext,
-                                                 paymentMethod: STPPaymentMethod?,
-                                                 paymentMethodParams: STPPaymentMethodParams?,
-                                                 shouldSavePaymentMethod: Bool) {
+    static func handleDeferredIntentConfirmation(
+        confirmType: ConfirmPaymentMethodType,
+        configuration: PaymentSheet.Configuration,
+        intentConfig: PaymentSheet.IntentConfiguration,
+        authenticationContext: STPAuthenticationContext,
+        paymentHandler: STPPaymentHandler,
+        completion: @escaping (PaymentSheetResult) -> Void
+    ) {
         // Hack: Add deferred to analytics product usage as a hack to get it into the payment_user_agent string in the request to create a PaymentMethod
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: IntentConfiguration.self)
-        Task {
+        Task { @MainActor in
             do {
+                var confirmType = confirmType
                 // 1. Create PM if necessary
-                let paymentMethod = try await createPaymentMethodIfNeeded(apiClient: deferredIntentContext.configuration.apiClient,
-                                                                           paymentMethod: paymentMethod,
-                                                                           paymentMethodParams: paymentMethodParams)
+                let paymentMethod: STPPaymentMethod
+                switch confirmType {
+                case let .saved(savedPaymentMethod):
+                    paymentMethod = savedPaymentMethod
+                case let .new(params, newPaymentMethod, shouldSave):
+                    assert(newPaymentMethod == nil)
+                    paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params)
+                    confirmType = .new(params: params, paymentMethod: paymentMethod, shouldSave: shouldSave)
+                }
+
                 // 2. Get Intent client secret from merchant
-                let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: deferredIntentContext.intentConfig,
+                let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
                                                                                  paymentMethodID: paymentMethod.stripeId,
-                                                                                 shouldSavePaymentMethod: shouldSavePaymentMethod)
+                                                                                 shouldSavePaymentMethod: confirmType.shouldSave)
                 guard clientSecret != IntentConfiguration.FORCE_SUCCESS else {
                     // Force close PaymentSheet and early exit
-                    deferredIntentContext.completion(.completed)
+                    completion(.completed)
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetForceSuccess)
                     return
                 }
 
                 // 3. Retrieve the PaymentIntent or SetupIntent
-                switch deferredIntentContext.intentConfig.mode {
+                switch intentConfig.mode {
                 case .payment:
-                    let paymentIntent = try await deferredIntentContext.configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
+                    let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 4a. Client-side confirmation
-                        confirm(configuration: deferredIntentContext.configuration,
-                                authenticationContext: deferredIntentContext.authenticationContext,
-                                intent: .paymentIntent(paymentIntent),
-                                paymentOption: deferredIntentContext.paymentOption,
-                                paymentHandler: deferredIntentContext.paymentHandler,
-                                paymentMethodID: paymentMethod.stripeId,
-                                completion: deferredIntentContext.completion)
-                    } else {
-                       // 4b. Server-side confirmation
-                        deferredIntentContext.paymentHandler.handleNextAction(
-                            for: paymentIntent,
-                            with: deferredIntentContext.authenticationContext,
-                            returnURL: deferredIntentContext.configuration.returnURL
+                        let paymentIntentParams = makePaymentIntentParams(
+                            confirmPaymentMethodType: confirmType,
+                            paymentIntent: paymentIntent,
+                            configuration: configuration
+                        )
+                        paymentHandler.confirmPayment(
+                            paymentIntentParams,
+                            with: authenticationContext
                         ) { status, _, error in
-                            deferredIntentContext.completion(paymentSheetResult(forPaymentHandlerActionStatus: status, error: error))
+                            completion(makePaymentSheetResult(for: status, error: error))
+                        }
+                    } else {
+                        // 4b. Server-side confirmation
+                        paymentHandler.handleNextAction(
+                            for: paymentIntent,
+                            with: authenticationContext,
+                            returnURL: configuration.returnURL
+                        ) { status, _, error in
+                            completion(makePaymentSheetResult(for: status, error: error))
                         }
                     }
                 case .setup:
-                    let setupIntent = try await deferredIntentContext.configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
+                    let setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
                     if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
                         // 4a. Client-side confirmation
-                        confirm(configuration: deferredIntentContext.configuration,
-                                authenticationContext: deferredIntentContext.authenticationContext,
-                                intent: .setupIntent(setupIntent),
-                                paymentOption: deferredIntentContext.paymentOption,
-                                paymentHandler: deferredIntentContext.paymentHandler,
-                                paymentMethodID: paymentMethod.stripeId,
-                                completion: deferredIntentContext.completion)
+                        let setupIntentParams = makeSetupIntentParams(
+                            confirmPaymentMethodType: confirmType,
+                            setupIntent: setupIntent,
+                            configuration: configuration
+                        )
+                        paymentHandler.confirmSetupIntent(
+                            setupIntentParams,
+                            with: authenticationContext
+                        ) { status, _, error in
+                            completion(makePaymentSheetResult(for: status, error: error))
+                        }
                     } else {
                         // 4b. Server-side confirmation
-                        deferredIntentContext.paymentHandler.handleNextAction(
+                        paymentHandler.handleNextAction(
                             for: setupIntent,
-                            with: deferredIntentContext.authenticationContext,
-                            returnURL: deferredIntentContext.configuration.returnURL
+                            with: authenticationContext,
+                            returnURL: configuration.returnURL
                         ) { status, _, error in
-                            deferredIntentContext.completion(paymentSheetResult(forPaymentHandlerActionStatus: status, error: error))
+                            completion(makePaymentSheetResult(for: status, error: error))
                         }
                     }
                 }
             } catch {
-                deferredIntentContext.completion(.failed(error: error))
+                completion(.failed(error: error))
             }
         }
     }
@@ -103,7 +110,7 @@ extension PaymentSheet {
     // MARK: - Helper methods
 
     /// Convenience method that converts a STPPayymentHandlerActionStatus + error into a PaymentSheetResult
-    static func paymentSheetResult(forPaymentHandlerActionStatus status: STPPaymentHandlerActionStatus, error: Error?) -> PaymentSheetResult {
+    static func makePaymentSheetResult(for status: STPPaymentHandlerActionStatus, error: Error?) -> PaymentSheetResult {
         switch status {
         case .succeeded:
             return .completed
@@ -120,49 +127,20 @@ extension PaymentSheet {
     static func fetchIntentClientSecretFromMerchant(intentConfig: IntentConfiguration,
                                                     paymentMethodID: String,
                                                     shouldSavePaymentMethod: Bool) async throws -> String {
-      try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { continuation in
 
-          if let confirmHandlerForServerSideConfirmation = intentConfig.confirmHandlerForServerSideConfirmation {
-              DispatchQueue.main.async {
-                  confirmHandlerForServerSideConfirmation(paymentMethodID, shouldSavePaymentMethod, { result in
-                      continuation.resume(with: result)
-                  })
-              }
-          } else if let confirmHandler = intentConfig.confirmHandler {
-              DispatchQueue.main.async {
-                  confirmHandler(paymentMethodID, { result in
-                      continuation.resume(with: result)
-                  })
-              }
-          }
-      }
-    }
-}
-
-/// Convenience class to avoid passing long argument lists when confirming deferred intents
-class DeferredIntentContext {
-    let configuration: PaymentSheet.Configuration
-    let intentConfig: PaymentSheet.IntentConfiguration
-    let paymentOption: PaymentOption
-    let authenticationContext: STPAuthenticationContext
-    let paymentHandler: STPPaymentHandler
-    let completion: PaymentSheetResultCompletionBlock
-
-    init(configuration: PaymentSheet.Configuration,
-         intentConfig: PaymentSheet.IntentConfiguration,
-         paymentOption: PaymentOption,
-         authenticationContext: STPAuthenticationContext,
-         paymentHandler: STPPaymentHandler,
-         completion: @escaping PaymentSheetResultCompletionBlock) {
-        self.configuration = configuration
-        self.intentConfig = intentConfig
-        self.paymentOption = paymentOption
-        self.authenticationContext = authenticationContext
-        self.paymentHandler = paymentHandler
-        // Always invoke completion handler on main thread
-        self.completion = { result in
-            DispatchQueue.main.async {
-                completion(result)
+            if let confirmHandlerForServerSideConfirmation = intentConfig.confirmHandlerForServerSideConfirmation {
+                DispatchQueue.main.async {
+                    confirmHandlerForServerSideConfirmation(paymentMethodID, shouldSavePaymentMethod, { result in
+                        continuation.resume(with: result)
+                    })
+                }
+            } else if let confirmHandler = intentConfig.confirmHandler {
+                DispatchQueue.main.async {
+                    confirmHandler(paymentMethodID, { result in
+                        continuation.resume(with: result)
+                    })
+                }
             }
         }
     }
