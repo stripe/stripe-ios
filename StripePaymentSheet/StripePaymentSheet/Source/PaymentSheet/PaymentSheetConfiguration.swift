@@ -83,6 +83,9 @@ extension PaymentSheet {
         /// Set this to `true` if you collect shipping addresses and set `Configuration.shippingDetails` or set `shipping` details directly on the PaymentIntent.
         /// - Note: PaymentSheet considers this property `true` and allows payment methods that require a shipping address if `shipping` details are present on the PaymentIntent when PaymentSheet loads.
         public var allowsPaymentMethodsRequiringShippingAddress: Bool = false
+        
+        /// If `true`, allows your customer to delete their saved payment methods. Defaults to `true`.
+        public var allowsDeletionOfPaymentOptions: Bool = true
 
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = STPAPIClient.shared
