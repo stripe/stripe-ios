@@ -68,6 +68,11 @@ class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
     }
 
     // MARK: - UIViewController
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodScreenPresented()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
