@@ -145,7 +145,6 @@ import Foundation
     case spms_add_payment_method_via_createAttach_success = "spms_add_payment_method_via_createAttach_success"
     case spms_add_payment_method_via_createAttach_failure = "spms_add_payment_method_via_createAttach_failure"
 
-
     // MARK: - Address Element
     case addressShow = "mc_address_show"
     case addressCompleted = "mc_address_completed"
