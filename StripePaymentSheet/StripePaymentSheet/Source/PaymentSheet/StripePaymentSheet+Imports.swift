@@ -7,4 +7,3 @@
 
 // Used to organize exported modules from StripePaymentSheet
 @_exported import StripePayments
-
