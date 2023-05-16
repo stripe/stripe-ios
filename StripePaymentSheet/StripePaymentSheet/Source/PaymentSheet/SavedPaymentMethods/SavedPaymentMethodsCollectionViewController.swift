@@ -86,11 +86,6 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
             return collectionView.isRemovingPaymentMethods
         }
         set {
-            if newValue {
-                STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenEditTapped()
-            } else {
-                STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenDoneTapped()
-            }
             collectionView.isRemovingPaymentMethods = newValue
             collectionView.reloadSections([0])
             if !collectionView.isRemovingPaymentMethods {

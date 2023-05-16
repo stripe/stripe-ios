@@ -19,14 +19,6 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .spms_select_payment_method_screen_selected_savedpm)
     }
 
-    // Edit/Done tapped
-    func logSPMSSelectPaymentMethodScreenEditTapped() {
-        self.logPaymentSheetEvent(event: .spms_select_payment_method_screen_edit_tapped)
-    }
-    func logSPMSSelectPaymentMethodScreenDoneTapped() {
-        self.logPaymentSheetEvent(event: .spms_select_payment_method_screen_done_tapped)
-    }
-
     // Remove pm success/failure
     func logSPMSSelectPaymentMethodScreenRemovePMSuccess() {
         self.logPaymentSheetEvent(event: .spms_select_payment_method_screen_removepm_success)
