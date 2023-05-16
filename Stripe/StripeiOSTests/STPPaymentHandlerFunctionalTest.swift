@@ -21,14 +21,8 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
 
     func test_card_payment_intent_server_side_confirmation() {
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.number = "4242424242424242"
-        cardParams.cvc = "123"
-        cardParams.expYear = (Calendar.current.dateComponents([.year], from: Date()).year! + 1) as NSNumber
-        cardParams.expMonth = 01
-
         let e = self.expectation(description: "")
-        apiClient.createPaymentMethod(with: .init(card: cardParams, billingDetails: nil, metadata: nil)) { paymentMethod, error in
+        apiClient.createPaymentMethod(with: ._testValidCardValue()) { paymentMethod, error in
             guard let paymentMethod = paymentMethod else {
                 XCTFail(String(describing: error))
                 return
@@ -114,14 +108,9 @@ final class STPPaymentHandlerFunctionalSwiftTest: XCTestCase, STPAuthenticationC
 
     func test_card_setup_intent_server_side_confirmation() {
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.number = "4242424242424242"
-        cardParams.cvc = "123"
-        cardParams.expYear = Calendar.current.dateComponents([.year], from: Date()).year! + 1 as NSNumber
-        cardParams.expMonth = 01
 
         let e = self.expectation(description: "")
-        apiClient.createPaymentMethod(with: .init(card: cardParams, billingDetails: nil, metadata: nil)) { paymentMethod, error in
+        apiClient.createPaymentMethod(with: ._testValidCardValue()) { paymentMethod, error in
             guard let paymentMethod = paymentMethod else {
                 XCTFail(String(describing: error))
                 return

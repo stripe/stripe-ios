@@ -128,6 +128,23 @@ import Foundation
     case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"
     case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
 
+    // MARK: - Saved Payment Methods Sheet
+    case spms_add_payment_method_screen_presented = "spms_add_payment_method_screen_presented"
+    case spms_select_payment_method_screen_presented = "spms_select_payment_method_screen_presented"
+    case spms_select_payment_method_screen_selected_savedpm = "spms_select_payment_method_screen_selected_savedpm"
+
+    case spms_select_payment_method_screen_edit_tapped = "spms_select_payment_method_screen_edit_tapped"
+    case spms_select_payment_method_screen_done_tapped = "spms_select_payment_method_screen_done_tapped"
+
+    case spms_select_payment_method_screen_removepm_success = "spms_select_payment_method_screen_removepm_success"
+    case spms_select_payment_method_screen_removepm_failure = "spms_select_payment_method_screen_removepm_failure"
+
+    case spms_add_payment_method_via_setupintent_success = "spms_add_payment_method_via_setup_intent_success"
+    case spms_add_payment_method_via_setupintent_failure = "spms_add_payment_method_via_setup_intent_failure"
+
+    case spms_add_payment_method_via_createAttach_success = "spms_add_payment_method_via_createAttach_success"
+    case spms_add_payment_method_via_createAttach_failure = "spms_add_payment_method_via_createAttach_failure"
+
     // MARK: - Address Element
     case addressShow = "mc_address_show"
     case addressCompleted = "mc_address_completed"

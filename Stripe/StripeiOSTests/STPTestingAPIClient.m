@@ -72,9 +72,11 @@ NS_ASSUME_NONNULL_BEGIN
                                                               completion(nil, error);
                                                           } else if (data == nil || httpResponse.statusCode != 200) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                                  NSString *errorStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
                                                                   NSDictionary *userInfo = @{
-                                                                                             STPError.errorMessageKey: [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding],
-                                                                                             };
+                                                                      STPError.errorMessageKey: errorStr,
+                                                                      NSLocalizedDescriptionKey: errorStr
+                                                                  };
                                                                   NSError *apiError = [NSError errorWithDomain:STPError.stripeDomain code:STPAPIError userInfo:userInfo];
                                                                   NSLog(@"%@", apiError);
                                                                   completion(nil, apiError);
@@ -137,27 +139,36 @@ NS_ASSUME_NONNULL_BEGIN
                                                       completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                                                           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
 
-                                                          if (error || data == nil || httpResponse.statusCode != 200) {
-                                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                                  completion(nil, error);
-                                                              });
-                                                          } else {
-                                                              NSError *jsonError = nil;
-                                                              id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-
-                                                              if (json &&
-                                                                  [json isKindOfClass:[NSDictionary class]] &&
-                                                                  [json[@"secret"] isKindOfClass:[NSString class]]) {
-                                                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                                                      completion(json[@"secret"], nil);
-                                                                  });
-                                                              } else {
-                                                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                                                      completion(nil, jsonError);
-                                                                  });
-                                                              }
-                                                          }
-                                                      }];
+        if (error) {
+            completion(nil, error);
+        } else if (data == nil || httpResponse.statusCode != 200) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSString *errorStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                NSDictionary *userInfo = @{
+                    STPError.errorMessageKey: errorStr,
+                    NSLocalizedDescriptionKey: errorStr
+                };
+                NSError *apiError = [NSError errorWithDomain:STPError.stripeDomain code:STPAPIError userInfo:userInfo];
+                NSLog(@"%@", apiError);
+                completion(nil, apiError);
+            });
+        } else {
+            NSError *jsonError = nil;
+            id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+            
+            if (json &&
+                [json isKindOfClass:[NSDictionary class]] &&
+                [json[@"secret"] isKindOfClass:[NSString class]]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(json[@"secret"], nil);
+                });
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(nil, jsonError);
+                });
+            }
+        }
+    }];
 
     [uploadTask resume];
 }

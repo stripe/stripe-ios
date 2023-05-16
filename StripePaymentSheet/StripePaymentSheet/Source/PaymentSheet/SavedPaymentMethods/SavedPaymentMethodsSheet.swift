@@ -42,7 +42,8 @@ internal enum SavedPaymentMethodsSheetResult {
         let loadingViewController = LoadingViewController(
             delegate: self,
             appearance: configuration.appearance,
-            isTestMode: isTestMode
+            isTestMode: isTestMode,
+            loadingViewHeight: 180
         )
 
         let vc = BottomSheetViewController(

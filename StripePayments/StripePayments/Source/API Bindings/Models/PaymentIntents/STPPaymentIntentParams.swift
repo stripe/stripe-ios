@@ -116,7 +116,7 @@ public class STPPaymentIntentParams: NSObject {
     @objc public var useStripeSDK: NSNumber?
 
     internal var _paymentMethodType: STPPaymentMethodType?
-    internal var paymentMethodType: STPPaymentMethodType? {
+    @_spi(STP) public var paymentMethodType: STPPaymentMethodType? {
         if let type = _paymentMethodType {
             return type
         }
