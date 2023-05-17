@@ -40,28 +40,47 @@ struct PaymentSheetDeferredValidator {
 // MARK: - Validation helpers
 
 private func == (lhs: STPPaymentIntentSetupFutureUsage, rhs: PaymentSheet.IntentConfiguration.SetupFutureUsage?) -> Bool {
-    switch (lhs, rhs) {
-    case (.none, nil), (.offSession, .offSession), (.onSession, .onSession):
-        return true
-    default:
+    // Explicitly switch over each case so that the compiler can complain when new cases are added
+    switch lhs {
+    case .none:
+        return rhs == nil
+    case .offSession:
+        return rhs == .offSession
+    case .onSession:
+        return rhs == .onSession
+    case .unknown:
+        return false
+    @unknown default:
         return false
     }
 }
 
 private func == (lhs: STPSetupIntentUsage, rhs: PaymentSheet.IntentConfiguration.SetupFutureUsage?) -> Bool {
-    switch (lhs, rhs) {
-    case (.none, nil), (.offSession, .offSession), (.onSession, .onSession):
-        return true
-    default:
+    // Explicitly switch over each case so that the compiler can complain when new cases are added
+    switch lhs {
+    case .none:
+        return rhs == nil
+    case .offSession:
+        return rhs == .offSession
+    case .onSession:
+        return rhs == .onSession
+    case .unknown:
+        return false
+    @unknown default:
         return false
     }
 }
 
 private func == (lhs: STPPaymentIntentCaptureMethod, rhs: PaymentSheet.IntentConfiguration.CaptureMethod) -> Bool {
-    switch (lhs, rhs) {
-    case (.automatic, .automatic), (.manual, .manual):
-        return true
-    default:
+    // Explicitly switch over each case so that the compiler can complain when new cases are added
+    switch lhs {
+    case .automatic:
+        return rhs == .automatic
+    case .manual:
+        return rhs == .manual
+    case .unknown:
+        return false
+    @unknown default:
         return false
     }
 }
