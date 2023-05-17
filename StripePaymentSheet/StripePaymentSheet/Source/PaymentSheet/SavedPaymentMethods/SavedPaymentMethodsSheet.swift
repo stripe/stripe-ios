@@ -39,13 +39,6 @@ internal enum SavedPaymentMethodsSheetResult {
     @available(macCatalystApplicationExtension, unavailable)
     lazy var bottomSheetViewController: BottomSheetViewController = {
         let isTestMode = configuration.apiClient.isTestmode
-        let loadingViewController = LoadingViewController(
-            delegate: self,
-            appearance: configuration.appearance,
-            isTestMode: isTestMode,
-            loadingViewHeight: 180
-        )
-
         let vc = BottomSheetViewController(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
@@ -59,7 +52,17 @@ internal enum SavedPaymentMethodsSheetResult {
         return vc
     }()
 
-    /// 
+    lazy var loadingViewController: LoadingViewController = {
+        let isTestMode = configuration.apiClient.isTestmode
+        return LoadingViewController(
+            delegate: self,
+            appearance: configuration.appearance,
+            isTestMode: isTestMode,
+            loadingViewHeight: 180
+        )
+    }()
+
+    ///
     /// Use a StripeCustomerAdapter, or build your own.
     public init(configuration: SavedPaymentMethodsSheet.Configuration,
                 customer: CustomerAdapter) {
@@ -95,6 +98,7 @@ internal enum SavedPaymentMethodsSheetResult {
                 // bottom sheet (i.e. Link) to be dismissed all at the same time.
                 presentingViewController.dismiss(animated: true)
             }
+            self.bottomSheetViewController.contentStack = [self.loadingViewController]
             self.completion = nil
         }
         self.completion = completion
