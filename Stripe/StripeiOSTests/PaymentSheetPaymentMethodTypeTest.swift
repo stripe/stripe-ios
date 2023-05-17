@@ -711,7 +711,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
 extension STPFixtures {
     static func makePaymentIntent(
-        amount: Int = 0,
+        amount: Int = 2345,
         currency: String = "USD",
         paymentMethodTypes: [STPPaymentMethodType]? = nil,
         setupFutureUsage: STPPaymentIntentSetupFutureUsage? = nil,
