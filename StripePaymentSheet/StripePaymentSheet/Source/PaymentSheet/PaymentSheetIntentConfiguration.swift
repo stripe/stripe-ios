@@ -39,7 +39,7 @@ import Foundation
         ///   - mode: The mode of this intent, either payment or setup
         ///   - paymentMethodTypes: The payment method types for the intent
         ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
-        ///   - confirmHandler: A handler called with payment details when the user taps the "Pay" or "Continue" button.
+        ///   - confirmHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
         public init(mode: Mode,
                     paymentMethodTypes: [String]? = nil,
                     onBehalfOf: String? = nil,

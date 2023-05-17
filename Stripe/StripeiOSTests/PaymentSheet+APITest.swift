@@ -187,6 +187,7 @@ class PaymentSheetAPITest: XCTestCase {
             // Setup config with explicit PM types
             .init(mode: .setup(currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: confirmHandler),
         ]
+        loadExpectation.expectedFulfillmentCount = intentConfigTestcases.count
         for (index, intentConfig) in intentConfigTestcases.enumerated() {
             PaymentSheet.load(mode: .deferredIntent(intentConfig), configuration: self.configuration) { result in
                 loadExpectation.fulfill()
@@ -221,6 +222,7 @@ class PaymentSheetAPITest: XCTestCase {
             // Bad OBO
             .init(mode: .setup(currency: "USD"), paymentMethodTypes: ["card"], onBehalfOf: "foo", confirmHandler: confirmHandler),
         ]
+        loadExpectation.expectedFulfillmentCount = intentConfigTestcases.count
         for (index, intentConfig) in intentConfigTestcases.enumerated() {
             PaymentSheet.load(mode: .deferredIntent(intentConfig), configuration: self.configuration) { result in
                 loadExpectation.fulfill()
