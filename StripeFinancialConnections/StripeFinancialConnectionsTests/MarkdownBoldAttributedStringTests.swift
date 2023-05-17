@@ -13,7 +13,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     func testEmptyString() {
         let attributedString = NSMutableAttributedString(string: "")
         attributedString.addBoldFontAttributesByMarkdownRules(
-            boldFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+            boldFont: FinancialConnectionsFont.label(.smallEmphasized).uiFont
         )
         XCTAssert(attributedString == NSMutableAttributedString(string: ""))
     }
@@ -21,7 +21,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     func testOneAsterisk() {
         let attributedString = NSMutableAttributedString(string: "*")
         attributedString.addBoldFontAttributesByMarkdownRules(
-            boldFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+            boldFont: FinancialConnectionsFont.label(.smallEmphasized).uiFont
         )
         XCTAssert(attributedString == NSMutableAttributedString(string: "*"))
     }
@@ -29,7 +29,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     func testTwoAsterisk() {
         let attributedString = NSMutableAttributedString(string: "**")
         attributedString.addBoldFontAttributesByMarkdownRules(
-            boldFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+            boldFont: FinancialConnectionsFont.label(.smallEmphasized).uiFont
         )
         XCTAssert(attributedString == NSMutableAttributedString(string: "**"))
     }
@@ -37,7 +37,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     func testThreeAsterisk() {
         let attributedString = NSMutableAttributedString(string: "***")
         attributedString.addBoldFontAttributesByMarkdownRules(
-            boldFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+            boldFont: FinancialConnectionsFont.label(.smallEmphasized).uiFont
         )
         XCTAssert(attributedString == NSMutableAttributedString(string: "***"))
     }
@@ -45,7 +45,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     func testFourAsterisk() {
         let attributedString = NSMutableAttributedString(string: "****")
         attributedString.addBoldFontAttributesByMarkdownRules(
-            boldFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+            boldFont: FinancialConnectionsFont.label(.smallEmphasized).uiFont
         )
         XCTAssert(attributedString == NSMutableAttributedString(string: "****"))
     }
@@ -53,7 +53,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     func testFiveAsterisk() {
         let attributedString = NSMutableAttributedString(string: "*****")
         attributedString.addBoldFontAttributesByMarkdownRules(
-            boldFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+            boldFont: FinancialConnectionsFont.label(.smallEmphasized).uiFont
         )
         XCTAssert(attributedString == NSMutableAttributedString(string: "*****"))
     }
@@ -61,13 +61,13 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     func testNoAsterisks() {
         let attributedString = NSMutableAttributedString(string: "bold string")
         attributedString.addBoldFontAttributesByMarkdownRules(
-            boldFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+            boldFont: FinancialConnectionsFont.label(.smallEmphasized).uiFont
         )
         XCTAssert(attributedString == NSMutableAttributedString(string: "bold string"))
     }
 
     func testOneBold() {
-        let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
+        let boldFont = FinancialConnectionsFont.label(.smallEmphasized).uiFont
         let attributedString = NSMutableAttributedString(string: "**One Bold**")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(
@@ -82,14 +82,14 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
 
     // this is a double-check that tests aren't just returning "true" all the time
     func testOneBoldNotEquals() {
-        let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
+        let boldFont = FinancialConnectionsFont.label(.smallEmphasized).uiFont
         let attributedString = NSMutableAttributedString(string: "**One Bold**")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(attributedString != NSMutableAttributedString(string: "One Bold"))
     }
 
     func testOneBoldComplex() {
-        let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
+        let boldFont = FinancialConnectionsFont.label(.smallEmphasized).uiFont
         let attributedString = NSMutableAttributedString(string: "**One - $1.00 Bold**")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(
@@ -103,7 +103,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     }
 
     func testOneBoldComplexVersionTwo() {
-        let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
+        let boldFont = FinancialConnectionsFont.label(.smallEmphasized).uiFont
         let attributedString = NSMutableAttributedString(string: "**One Bold** - $1.00")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(
@@ -117,7 +117,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     }
 
     func testOneBoldWithURL() {
-        let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
+        let boldFont = FinancialConnectionsFont.label(.smallEmphasized).uiFont
         let attributedString = NSMutableAttributedString(string: "[**One Bold**](https://www.stripe.com)")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(
@@ -133,7 +133,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     }
 
     func testOneBoldWithExistingAttributes() {
-        let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
+        let boldFont = FinancialConnectionsFont.label(.smallEmphasized).uiFont
         let url = URL(string: "https://www.stripe.com")!
 
         let attributedString = NSMutableAttributedString(string: "word **One Bold** word")
@@ -152,7 +152,7 @@ class MarkdownBoldAttributedStringTests: XCTestCase {
     }
 
     func testTwoBold() {
-        let boldFont = UIFont.stripeFont(forTextStyle: .captionTightEmphasized)
+        let boldFont = FinancialConnectionsFont.label(.smallEmphasized).uiFont
         let attributedString = NSMutableAttributedString(string: "word **One Bold** word **Two Bold** word")
         attributedString.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         XCTAssert(
