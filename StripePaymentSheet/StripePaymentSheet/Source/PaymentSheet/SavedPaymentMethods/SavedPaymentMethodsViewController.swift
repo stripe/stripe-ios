@@ -77,7 +77,6 @@ class SavedPaymentMethodsViewController: UIViewController {
                 autoSelectDefaultBehavior: shouldShowPaymentMethodCarousel ? .onlyIfMatched : .none
             ),
             appearance: configuration.appearance,
-            spmsCompletion: spmsCompletion,
             delegate: self
         )
     }()
@@ -259,7 +258,7 @@ class SavedPaymentMethodsViewController: UIViewController {
         )
 
         let updateButtonVisibility = {
-            self.actionButton.isHidden = !showActionButton
+            self.actionButton.setHiddenIfNecessary(!showActionButton)
         }
         if animated {
             animateHeightChange(updateButtonVisibility)
@@ -520,9 +519,14 @@ class SavedPaymentMethodsViewController: UIViewController {
     func configureEditSavedPaymentMethodsButton() {
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
             navigationBar.additionalButton.setTitle(UIButton.doneButtonTitle, for: .normal)
-            actionButton.update(state: .disabled)
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                self.actionButton.setHiddenIfNecessary(true)
+            }
         } else {
-            actionButton.update(state: .enabled)
+            let showActionButton = self.savedPaymentOptionsViewController.didSelectDifferentPaymentMethod()
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                self.actionButton.setHiddenIfNecessary(!showActionButton)
+            }
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
         navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
