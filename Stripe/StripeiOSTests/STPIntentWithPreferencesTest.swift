@@ -157,7 +157,8 @@ class STPIntentWithPreferencesTest: XCTestCase {
     func testElementsSessionPayload_Payment() throws {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 2000,
                                                                            currency: "USD",
-                                                                           setupFutureUsage: .onSession),
+                                                                           setupFutureUsage: .onSession,
+                                                                           captureMethod: .automaticAsync),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
                                                             confirmHandler: { _, _, _ in })
@@ -173,6 +174,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
         XCTAssertEqual(deferredIntent["amount"] as? Int, 2000)
         XCTAssertEqual(deferredIntent["currency"] as? String, "USD")
         XCTAssertEqual(deferredIntent["setup_future_usage"] as? String, "on_session")
+        XCTAssertEqual(deferredIntent["capture_method"] as? String, "automatic_async")
     }
 
     func testElementsSessionPayload_Setup() throws {
