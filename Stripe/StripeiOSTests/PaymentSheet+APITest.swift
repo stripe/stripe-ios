@@ -604,8 +604,8 @@ class PaymentSheetAPITest: XCTestCase {
         let expectation = expectation(description: "")
         var sut_paymentMethodID: String = "" // The PM that the sut gave us
         var merchant_clientSecret: String?
-        let client_confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { paymentMethodID, intentCreationCallback in
-            sut_paymentMethodID = paymentMethodID
+        let client_confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { paymentMethod, intentCreationCallback in
+            sut_paymentMethodID = paymentMethod.stripeId
             let createIntentCompletion: (String?, Error?) -> Void = { clientSecret, error in
                 if let clientSecret {
                     merchant_clientSecret = clientSecret
