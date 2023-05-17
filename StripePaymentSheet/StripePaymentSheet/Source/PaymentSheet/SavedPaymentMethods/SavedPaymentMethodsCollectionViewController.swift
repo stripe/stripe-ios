@@ -95,6 +95,13 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
                     animated: false,
                     scrollPosition: []
                 )
+            } else {
+                // Revert to the originally selected index
+                if originalSelectedViewModelIndex == nil {
+                    selectedViewModelIndex = nil
+                } else {
+                    selectedViewModelIndex = originalSelectedViewModelIndex
+                }
             }
         }
     }
@@ -142,8 +149,13 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
         }
     }
     weak var delegate: SavedPaymentMethodsCollectionViewControllerDelegate?
-    var spmsCompletion: SavedPaymentMethodsSheet.SPMSCompletion?
     var originalSelectedSavedPaymentMethod: PersistablePaymentMethodOption?
+    var originalSelectedViewModelIndex: Int? {
+        guard let originalSelectedSavedPaymentMethod = originalSelectedSavedPaymentMethod else {
+            return nil
+        }
+        return self.viewModels.firstIndex(where: { $0 == originalSelectedSavedPaymentMethod })
+    }
     var appearance = PaymentSheet.Appearance.default
 
     // MARK: - Private Properties
@@ -177,7 +189,6 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
         customerAdapter: CustomerAdapter,
         configuration: Configuration,
         appearance: PaymentSheet.Appearance,
-        spmsCompletion: SavedPaymentMethodsSheet.SPMSCompletion? = nil,
         delegate: SavedPaymentMethodsCollectionViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
@@ -186,7 +197,6 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
         self.customerAdapter = customerAdapter
         self.appearance = appearance
         self.delegate = delegate
-        self.spmsCompletion = spmsCompletion
         super.init(nibName: nil, bundle: nil)
         updateUI(selectedSavedPaymentOption: nil)
     }
@@ -297,9 +307,9 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
             }
         } else {
             if originalSelectedSavedPaymentMethod == nil {
-                return true
-            } else {
                 return false
+            } else {
+                return true
             }
         }
     }
