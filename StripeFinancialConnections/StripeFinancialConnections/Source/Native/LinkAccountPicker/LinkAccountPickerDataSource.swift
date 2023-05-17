@@ -34,6 +34,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     private let consumerSession: ConsumerSessionData
+    private var partnerToCoreAuths: [String:String]?
 
     private(set) var selectedAccount: FinancialConnectionsPartnerAccount? {
         didSet {
@@ -60,7 +61,10 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         return apiClient.fetchNetworkedAccounts(
             clientSecret: clientSecret,
             consumerSessionClientSecret: consumerSession.clientSecret
-        )
+        ).chained { [weak self] response in
+            self?.partnerToCoreAuths = response.partnerToCoreAuths
+            return Promise(value: response)
+        }
     }
 
     func updateSelectedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) {

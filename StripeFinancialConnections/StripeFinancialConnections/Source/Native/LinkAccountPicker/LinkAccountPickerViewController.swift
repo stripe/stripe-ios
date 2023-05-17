@@ -94,7 +94,24 @@ final class LinkAccountPickerViewController: UIViewController {
 
                 switch result {
                 case .success(let networkedAccountsResponse):
-                    self.displayAccounts(networkedAccountsResponse.data)
+                    self.display(
+                        accounts: networkedAccountsResponse.data.map {
+                            FinancialConnectionsPartnerAccount(
+                                id: $0.id,
+                                name: $0.name,
+                                displayableAccountNumbers: $0.displayableAccountNumbers,
+                                linkedAccountId: $0.linkedAccountId,
+                                balanceAmount: $0.balanceAmount,
+                                currency: $0.currency,
+                                supportedPaymentMethodTypes: $0.supportedPaymentMethodTypes,
+                                allowSelection: $0.allowSelection,
+                                allowSelectionMessage: $0.allowSelectionMessage,
+                                status: Bool.random() ? "inactive" : $0.status,
+                                institution: $0.institution
+                            )
+                        },
+                        repairAuthorizationEnabled: (networkedAccountsResponse.repairAuthorizationEnabled ?? false)
+                    )
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient
@@ -108,8 +125,11 @@ final class LinkAccountPickerViewController: UIViewController {
             }
     }
 
-    private func displayAccounts(_ accounts: [FinancialConnectionsPartnerAccount]) {
-        let bodyView = LinkAccountPickerBodyView(accounts: accounts)
+    private func display(accounts: [FinancialConnectionsPartnerAccount], repairAuthorizationEnabled: Bool) {
+        let bodyView = LinkAccountPickerBodyView(
+            accounts: accounts,
+            repairAuthorizationEnabled: repairAuthorizationEnabled
+        )
         bodyView.delegate = self
         self.bodyView = bodyView
 
@@ -139,15 +159,22 @@ final class LinkAccountPickerViewController: UIViewController {
     }
 
     private func didSelectConectAccount() {
-        // TODO(kgaidis): implement repair bank account
-
         guard let selectedAccount = dataSource.selectedAccount else {
             assertionFailure("user shouldn't be able to press the connect account button without an account")
             delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
             return
         }
 
-        if dataSource.manifest.stepUpAuthenticationRequired == true {
+        if selectedAccount.isBroken {
+            // TODO(kgaidis): handle partnerToCoreAuths and setPartnerToCoreAuths
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: "click.repair_accounts",
+                    pane: .linkAccountPicker
+                )
+            delegate?.linkAccountPickerViewController(self, didRequestNextPane: .bankAuthRepair)
+        } else if dataSource.manifest.stepUpAuthenticationRequired == true {
             delegate?.linkAccountPickerViewController(self, requestedStepUpVerificationWithSelectedAccount: selectedAccount)
         } else {
             let linkingAccountsLoadingView = LinkingAccountsLoadingView(
@@ -235,6 +262,6 @@ extension LinkAccountPickerViewController: LinkAccountPickerDataSourceDelegate {
         didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount?
     ) {
         bodyView?.selectAccount(selectedAccount)
-        footerView.enableButton(selectedAccount != nil)
+        footerView.userSelectedAccount(selectedAccount)
     }
 }

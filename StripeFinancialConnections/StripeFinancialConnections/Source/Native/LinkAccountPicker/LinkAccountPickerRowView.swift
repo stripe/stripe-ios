@@ -35,6 +35,7 @@ final class LinkAccountPickerRowView: UIView {
 
     init(
         isDisabled: Bool,
+        isBroken: Bool,
         didSelect: @escaping () -> Void
     ) {
         self.didSelect = didSelect
@@ -48,6 +49,17 @@ final class LinkAccountPickerRowView: UIView {
         )
         if isDisabled {
             horizontalStackView.alpha = 0.25
+        }
+        if isBroken {
+            let warningIconImageView = UIImageView()
+            warningIconImageView.image = Image.warning_triangle.makeImage()
+                .withTintColor(.textCritical)
+            warningIconImageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                warningIconImageView.widthAnchor.constraint(equalToConstant: 15),
+                warningIconImageView.heightAnchor.constraint(equalToConstant: 15),
+            ])
+            horizontalStackView.addArrangedSubview(warningIconImageView)
         }
         addAndPinSubviewToSafeArea(horizontalStackView)
 
@@ -118,10 +130,12 @@ private struct LinkAccountPickerRowViewUIViewRepresentable: UIViewRepresentable 
     let subtitle: String?
     let isSelected: Bool
     let isDisabled: Bool
+    let isBroken: Bool
 
     func makeUIView(context: Context) -> LinkAccountPickerRowView {
         let view = LinkAccountPickerRowView(
             isDisabled: isDisabled,
+            isBroken: isBroken,
             didSelect: {}
         )
         view.configure(
@@ -159,7 +173,8 @@ struct LinkAccountPickerRowView_Previews: PreviewProvider {
                             trailingTitle: "••••6789",
                             subtitle: "$2,000",
                             isSelected: true,
-                            isDisabled: false
+                            isDisabled: false,
+                            isBroken: false
                         ).frame(height: 60)
                         LinkAccountPickerRowViewUIViewRepresentable(
                             institutionImageUrl: nil,
@@ -167,7 +182,17 @@ struct LinkAccountPickerRowView_Previews: PreviewProvider {
                             trailingTitle: nil,
                             subtitle: nil,
                             isSelected: false,
-                            isDisabled: false
+                            isDisabled: false,
+                            isBroken: false
+                        ).frame(height: 60)
+                        LinkAccountPickerRowViewUIViewRepresentable(
+                            institutionImageUrl: nil,
+                            leadingTitle: "Joint Checking",
+                            trailingTitle: nil,
+                            subtitle: "Select to repair and connect",
+                            isSelected: false,
+                            isDisabled: false,
+                            isBroken: true
                         ).frame(height: 60)
                         LinkAccountPickerRowViewUIViewRepresentable(
                             institutionImageUrl: nil,
@@ -175,7 +200,8 @@ struct LinkAccountPickerRowView_Previews: PreviewProvider {
                             trailingTitle: nil,
                             subtitle: "Must be US checking account",
                             isSelected: false,
-                            isDisabled: true
+                            isDisabled: true,
+                            isBroken: true
                         ).frame(height: 60)
                     }
                 }.padding()
