@@ -1130,7 +1130,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
     }
 
-    func confirmHandler(_ paymentMethodID: String,
+    func confirmHandler(_ paymentMethod: STPPaymentMethod,
                         _ intentCreationCallback: (Result<String, Error>) -> Void) {
         // no-op
     }
