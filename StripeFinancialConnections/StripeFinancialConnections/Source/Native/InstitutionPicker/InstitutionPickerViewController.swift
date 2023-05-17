@@ -326,7 +326,7 @@ private func CreateMainView(
         ]
     )
     verticalStackView.axis = .vertical
-    verticalStackView.spacing = 16
+    verticalStackView.spacing = (searchBar == nil) ? 24 : 16
     return verticalStackView
 }
 
