@@ -255,9 +255,7 @@ class PaymentSheetAPITest: XCTestCase {
                 }
             }
         }
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000,
-                                                                           currency: "USD",
-                                                                           setupFutureUsage: .onSession),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD"),
                                                             paymentMethodTypes: types,
                                                             confirmHandler: confirmHandler)
         PaymentSheet.load(
@@ -322,9 +320,7 @@ class PaymentSheetAPITest: XCTestCase {
                 }
             }
         }
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000,
-                                                                           currency: "USD",
-                                                                           setupFutureUsage: .onSession),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD"),
                                                             paymentMethodTypes: types,
                                                             confirmHandler: serverSideConfirmHandler)
         PaymentSheet.load(
@@ -759,6 +755,60 @@ class PaymentSheetAPITest: XCTestCase {
                 XCTFail("Result did not match. Expected \(expectedResult) but got \(result)")
             }
         }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testDeferredConfirm_paymentintent_amount_doesnt_match_intent_config() {
+        // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we perform validation in the paymentintent confirm flow
+        let e = expectation(description: "confirm completes")
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1080, currency: "USD")) { _, _, intentCreationCallback in
+            STPTestingAPIClient.shared().createPaymentIntent(withParams: [
+                "amount": 1050,
+            ]) { pi, _ in
+                intentCreationCallback(.success(pi ?? ""))
+            }
+        }
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
+            paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
+            paymentHandler: paymentHandler
+        ) { result in
+                e.fulfill()
+                guard case let .failed(error) = result else {
+                    XCTFail()
+                    return
+                }
+                XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occured in PaymentSheet. Your PaymentIntent amount (1050) does not match the PaymentSheet.IntentConfiguration amount (1080).")
+            }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testDeferredConfirm_setupintent_usage_doesnt_match_intent_config() {
+        // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we perform validation in the setupintent confirm flow
+        let e = expectation(description: "confirm completes")
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD")) { _, _, intentCreationCallback in
+            STPTestingAPIClient.shared().createSetupIntent(withParams: [
+                "usage": "on_session",
+            ]) { pi, _ in
+                intentCreationCallback(.success(pi ?? ""))
+            }
+        }
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
+            paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
+            paymentHandler: paymentHandler
+        ) { result in
+                e.fulfill()
+                guard case let .failed(error) = result else {
+                    XCTFail()
+                    return
+                }
+                XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occured in PaymentSheet. Your SetupIntent usage (onSession) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (offSession).")
+            }
         waitForExpectations(timeout: 10)
     }
 
