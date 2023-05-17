@@ -140,6 +140,7 @@ import Foundation
     case spms_select_payment_method_screen_removepm_failure = "spms_select_payment_method_screen_removepm_failure"
 
     case spms_add_payment_method_via_setupintent_success = "spms_add_payment_method_via_setup_intent_success"
+    case spms_add_payment_method_via_setupintent_canceled = "spms_add_payment_method_via_setupintent_canceled"
     case spms_add_payment_method_via_setupintent_failure = "spms_add_payment_method_via_setup_intent_failure"
 
     case spms_add_payment_method_via_createAttach_success = "spms_add_payment_method_via_createAttach_success"

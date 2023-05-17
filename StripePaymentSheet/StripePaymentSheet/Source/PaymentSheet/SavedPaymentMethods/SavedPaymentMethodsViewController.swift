@@ -413,7 +413,7 @@ class SavedPaymentMethodsViewController: UIViewController {
             self.processingInFlight = false
             switch result {
             case .canceled:
-                STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentFailure()
+                STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentCanceled()
                 self.updateUI()
             case .failed(let error):
                 STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentFailure()
