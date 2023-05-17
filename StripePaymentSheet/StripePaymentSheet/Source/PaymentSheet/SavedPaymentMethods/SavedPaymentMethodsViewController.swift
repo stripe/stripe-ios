@@ -393,14 +393,13 @@ class SavedPaymentMethodsViewController: UIViewController {
                 return
             }
 
-            STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentSuccess()
-
             self.fetchSetupIntent(clientSecret: clientSecret) { result in
                 switch result {
                 case .success(let stpSetupIntent):
                     let setupIntent = Intent.setupIntent(stpSetupIntent)
                     self.confirm(intent: setupIntent, paymentOption: paymentOption)
                 case .failure(let error):
+                    STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentFailure()
                     self.processingInFlight = false
                     self.error = error
                     self.updateUI()
@@ -414,13 +413,16 @@ class SavedPaymentMethodsViewController: UIViewController {
             self.processingInFlight = false
             switch result {
             case .canceled:
+                STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentCanceled()
                 self.updateUI()
             case .failed(let error):
+                STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentFailure()
                 self.error = error
                 self.updateUI()
             case .completed(let intent):
                 guard let intent = intent as? STPSetupIntent,
                       let paymentMethod = intent.paymentMethod else {
+                    STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentFailure()
                     self.processingInFlight = false
                     // Not ideal (but also very rare): If this fails, customers will need to know there is an error
                     // so that they can back out and try again
@@ -432,10 +434,12 @@ class SavedPaymentMethodsViewController: UIViewController {
 
                 let paymentOptionSelection = SavedPaymentMethodsSheet.PaymentOptionSelection.newPaymentMethod(paymentMethod)
                 self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
+                    STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentFailure()
                     self.processingInFlight = false
                     self.error = error
                     self.updateUI()
                 } onSuccess: {
+                    STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodViaSetupIntentSuccess()
                     self.processingInFlight = false
                     self.actionButton.update(state: .disabled, animated: true) {
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
