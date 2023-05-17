@@ -26,7 +26,7 @@ struct PaymentSheetDeferredValidator {
             throw PaymentSheetError.unknown(debugDescription: "Your PaymentIntent captureMethod (\(paymentIntent.captureMethod)) does not match the PaymentSheet.IntentConfiguration amount (\(captureMethod)).")
         }
     }
-    
+
     static func validate(setupIntent: STPSetupIntent, intentConfiguration: PaymentSheet.IntentConfiguration) throws {
         guard case let .setup(_, setupFutureUsage) = intentConfiguration.mode else {
             throw PaymentSheetError.unknown(debugDescription: "You returned a SetupIntent client secret but used a PaymentSheet.IntentConfiguration in payment mode.")

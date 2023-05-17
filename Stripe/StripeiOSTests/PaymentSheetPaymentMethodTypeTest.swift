@@ -740,7 +740,7 @@ extension STPFixtures {
         }
         return STPPaymentIntent.decodedObject(fromAPIResponse: json)!
     }
-    
+
     static func makeSetupIntent(
         paymentMethodTypes: [STPPaymentMethodType] = [.card],
         usage: String = "off_session"

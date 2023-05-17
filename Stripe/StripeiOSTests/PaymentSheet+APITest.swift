@@ -757,14 +757,14 @@ class PaymentSheetAPITest: XCTestCase {
         }
         waitForExpectations(timeout: 10)
     }
-    
+
     func testDeferredConfirm_paymentintent_amount_doesnt_match_intent_config() {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we perform validation in the paymentintent confirm flow
         let e = expectation(description: "confirm completes")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1080, currency: "USD")) { _, _, intentCreationCallback in
             STPTestingAPIClient.shared().createPaymentIntent(withParams: [
                 "amount": 1050,
-            ]) { pi, error in
+            ]) { pi, _ in
                 intentCreationCallback(.success(pi ?? ""))
             }
         }
@@ -784,14 +784,14 @@ class PaymentSheetAPITest: XCTestCase {
             }
         waitForExpectations(timeout: 10)
     }
-    
+
     func testDeferredConfirm_setupintent_usage_doesnt_match_intent_config() {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we perform validation in the setupintent confirm flow
         let e = expectation(description: "confirm completes")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD")) { _, _, intentCreationCallback in
             STPTestingAPIClient.shared().createSetupIntent(withParams: [
                 "usage": "on_session",
-            ]) { pi, error in
+            ]) { pi, _ in
                 intentCreationCallback(.success(pi ?? ""))
             }
         }
@@ -811,7 +811,7 @@ class PaymentSheetAPITest: XCTestCase {
             }
         waitForExpectations(timeout: 10)
     }
-    
+
     // MARK: - update tests
 
     func testUpdate() {
