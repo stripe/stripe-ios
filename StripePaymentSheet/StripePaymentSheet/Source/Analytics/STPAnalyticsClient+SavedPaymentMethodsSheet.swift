@@ -31,6 +31,9 @@ extension STPAnalyticsClient {
     func logSPMSAddPaymentMethodViaSetupIntentSuccess() {
         self.logPaymentSheetEvent(event: .spms_add_payment_method_via_setupintent_success)
     }
+    func logSPMSAddPaymentMethodViaSetupIntentCanceled() {
+        self.logPaymentSheetEvent(event: .spms_add_payment_method_via_setupintent_canceled)
+    }
     func logSPMSAddPaymentMethodViaSetupIntentFailure() {
         self.logPaymentSheetEvent(event: .spms_add_payment_method_via_setupintent_failure)
     }
