@@ -103,10 +103,15 @@ import Foundation
         /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method
         public enum CaptureMethod: String {
             /// (Default) Stripe automatically captures funds when the customer authorizes the payment.
-            case automatic
+            case automatic = "automatic"
 
             /// Place a hold on the funds when the customer authorizes the payment, but don’t capture the funds until later. (Not all payment methods support this.)
-            case manual
+            case manual = "manual"
+
+            /// Asynchronously capture funds when the customer authorizes the payment.
+            /// - Note: Recommended over `CaptureMethod.automatic` due to improved latency, but may require additional integration changes.
+            /// - Seealso: https://stripe.com/docs/payments/payment-intents/asynchronous-capture-automatic-async
+            case automaticAsync = "automatic_async"
         }
 
         /// Indicates that you intend to make future payments with this PaymentIntent’s payment method.
