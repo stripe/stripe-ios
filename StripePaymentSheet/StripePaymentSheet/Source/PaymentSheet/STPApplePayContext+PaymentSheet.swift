@@ -52,8 +52,9 @@ extension STPApplePayContext {
             case .setupIntent(let setupIntent):
                 completion(setupIntent.clientSecret, nil)
             case .deferredIntent(_, let intentConfig):
-                if let confirmHandler = intentConfig.confirmHandler {
-                    confirmHandler(paymentMethod.id, { result in
+                if let confirmHandler = intentConfig.confirmHandler,
+                   let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) {
+                    confirmHandler(stpPaymentMethod, { result in
                         switch result {
                         case .success(let clientSecret):
                             completion(clientSecret, nil)

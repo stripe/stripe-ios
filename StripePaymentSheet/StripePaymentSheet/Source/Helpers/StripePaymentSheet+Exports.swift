@@ -9,3 +9,4 @@
 import Foundation
 
 @_exported import StripeCore
+@_exported import StripePayments

@@ -22,11 +22,10 @@ import Foundation
         /// Your implementation should create a PaymentIntent or SetupIntent on your server and call the `intentCreationCallback` with its client secret or an error if one occurred.
         /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
         /// - Parameters:
-        ///   - paymentMethodId: The id of the PaymentMethod representing the customer's payment details.
-        ///     If you need to inspect payment method details, you can fetch the PaymentMethod object using this id on your server. Otherwise, you can ignore this.
+        ///   - paymentMethod: The `STPPaymentMethod` representing the customer's payment details.
         ///   - intentCreationCallback: Call this with the `client_secret` of the PaymentIntent or SetupIntent created by your server or the error that occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
         public typealias ConfirmHandler = (
-            _ paymentMethodID: String,
+            _ paymentMethod: STPPaymentMethod,
             _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
 
