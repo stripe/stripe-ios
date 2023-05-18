@@ -15,8 +15,9 @@ import Foundation
     /// - Seealso: https://stripe.com/docs/payments/finalize-payments-on-the-server
     struct IntentConfiguration {
 
-        /// Pass this into `intentCreationCallback` to force PaymentSheet to show success, dismiss the sheet without confirming the intent, and return a PaymentSheetResult of `completed`.
-        /// - Note: ⚠️ Only for advanced users, not required for most integrations.
+        /// Pass this into `intentCreationCallback` to force PaymentSheet to show success, dismiss the sheet, and return a PaymentSheetResult of `completed`.
+        /// - Note: ⚠️ If provided, the SDK performs no action to complete the payment or setup - it doesn't confirm a PaymentIntent or SetupIntent or handle next actions.
+        ///   You should only use this if your integration can't create a PaymentIntent or SetupIntent. It is your responsibility to ensure that you only pass this value if the payment or set up is successful. 
         @_spi(PaymentSheetSkipConfirmation) public static let COMPLETE_WITHOUT_CONFIRMING_INTENT = "COMPLETE_WITHOUT_CONFIRMING_INTENT"
 
         /// Called when the customer confirms payment.
