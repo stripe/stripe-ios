@@ -40,7 +40,7 @@ extension PaymentSheet {
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
                                                                                  paymentMethod: paymentMethod,
                                                                                  shouldSavePaymentMethod: confirmType.shouldSave)
-                guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
+                guard clientSecret != IntentConfiguration.FORCE_SUCCESS else {
                     // Force close PaymentSheet and early exit
                     completion(.completed)
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetForceSuccess)
