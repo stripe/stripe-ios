@@ -11,7 +11,7 @@
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 import Contacts
 import PassKit
-@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) import StripePaymentSheet
+@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -705,7 +705,7 @@ extension PaymentSheetTestPlayground {
         switch integrationType {
         case .deferred_mp:
             // multiprocessor
-            intentCreationCallback(.success(PaymentSheet.IntentConfiguration.FORCE_SUCCESS))
+            intentCreationCallback(.success(PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT))
             return
         case .deferred_csc:
             if integrationType == .deferred_csc {
