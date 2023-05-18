@@ -306,7 +306,7 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
                 return true
             }
         } else {
-            if originalSelectedSavedPaymentMethod == nil {
+            if originalSelectedViewModelIndex == nil {
                 return false
             } else {
                 return true
@@ -399,7 +399,7 @@ extension SavedPaymentMethodsCollectionViewController: PaymentOptionCellDelegate
 
                 if let index = self.selectedViewModelIndex {
                     if indexPath.row == index {
-                        self.selectedViewModelIndex = min(1, self.viewModels.count - 1)
+                        self.selectedViewModelIndex = nil
                     } else if indexPath.row < index {
                         self.selectedViewModelIndex = index - 1
                     }
