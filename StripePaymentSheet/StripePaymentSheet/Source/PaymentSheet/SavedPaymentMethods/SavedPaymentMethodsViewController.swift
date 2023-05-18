@@ -198,7 +198,7 @@ class SavedPaymentMethodsViewController: UIViewController {
                 headerLabel.text = text
             } else {
                 headerLabel.text = STPLocalizedString(
-                    "Select your payment method",
+                    "Manage your payment method",
                     "Title shown above a carousel containing the customer's payment methods")
             }
 
