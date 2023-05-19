@@ -109,7 +109,7 @@ import Foundation
             /// Use this if your integration creates a SetupIntent
             case setup(
                 /// Three-letter ISO currency code. Optional - setting this ensures only valid payment methods are displayed.
-                currency: String?,
+                currency: String? = nil,
                 /// Indicates how the payment method is intended to be used in the future.
                 /// - Seealso: https://stripe.com/docs/api/setup_intents/create#create_setup_intent-usage
                 setupFutureUsage: SetupFutureUsage = .offSession

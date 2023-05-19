@@ -186,6 +186,8 @@ class PaymentSheetAPITest: XCTestCase {
             .init(mode: .setup(currency: "USD"), confirmHandler: confirmHandler),
             // Setup config with explicit PM types
             .init(mode: .setup(currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: confirmHandler),
+            // Setup config w/o currency
+            .init(mode: .setup(), confirmHandler: confirmHandler),
         ]
         loadExpectation.expectedFulfillmentCount = intentConfigTestcases.count
         for (index, intentConfig) in intentConfigTestcases.enumerated() {
