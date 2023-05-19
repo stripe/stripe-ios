@@ -640,7 +640,7 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
             case .add:
                 error = nil
                 if customerAdapter.canCreateSetupIntents {
-                    mode =  .addingNewWithSetupIntent
+                    mode = .addingNewWithSetupIntent
                 } else {
                     mode = .addingNewPaymentMethodAttachToCustomer
                 }
@@ -656,7 +656,8 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
 
     func didSelectRemove(
         viewController: SavedPaymentMethodsCollectionViewController,
-        paymentMethodSelection: SavedPaymentMethodsCollectionViewController.Selection) {
+        paymentMethodSelection: SavedPaymentMethodsCollectionViewController.Selection,
+        originalPaymentMethodSelection: PersistablePaymentMethodOption?) {
             guard case .saved(let paymentMethod) = paymentMethodSelection else {
                 return
             }
@@ -669,17 +670,23 @@ extension SavedPaymentMethodsViewController: SavedPaymentMethodsCollectionViewCo
                     STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenRemovePMFailure()
                     return
                 }
-                do {
-                    try await self.customerAdapter.setSelectedPaymentMethodOption(paymentOption: nil)
-                } catch {
-                    // We are unable to persist the selectedPaymentMethodOption -- if we attempt to re-call
-                    // a payment method that is no longer there, the UI should be able to handle not selecting it.
-                    // Communicate error to consumer
-                    self.set(error: error)
-                    STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenRemovePMFailure()
-                    return
+
+                if let originalPaymentMethodSelection = originalPaymentMethodSelection,
+                   paymentMethodSelection == originalPaymentMethodSelection {
+                    do {
+                        try await self.customerAdapter.setSelectedPaymentMethodOption(paymentOption: nil)
+                    } catch {
+                        // We are unable to persist the selectedPaymentMethodOption -- if we attempt to re-call
+                        // a payment method that is no longer there, the UI should be able to handle not selecting it.
+                        // Communicate error to consumer
+                        self.set(error: error)
+                        STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenRemovePMFailure()
+                        return
+                    }
+                    STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenRemovePMSuccess()
+                } else {
+                    STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenRemovePMSuccess()
                 }
-                STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenRemovePMSuccess()
             }
         }
 }

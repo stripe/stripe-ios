@@ -16,7 +16,8 @@ protocol SavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
         paymentMethodSelection: SavedPaymentMethodsCollectionViewController.Selection)
     func didSelectRemove(
         viewController: SavedPaymentMethodsCollectionViewController,
-        paymentMethodSelection: SavedPaymentMethodsCollectionViewController.Selection)
+        paymentMethodSelection: SavedPaymentMethodsCollectionViewController.Selection,
+        originalPaymentMethodSelection: PersistablePaymentMethodOption?)
 }
 /*
  This class is largely a copy of SavedPaymentOptionsViewController, however a couple of exceptions
@@ -407,7 +408,8 @@ extension SavedPaymentMethodsCollectionViewController: PaymentOptionCellDelegate
 
                 self.delegate?.didSelectRemove(
                     viewController: self,
-                    paymentMethodSelection: viewModel
+                    paymentMethodSelection: viewModel,
+                    originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod
                 )
             }
         }
