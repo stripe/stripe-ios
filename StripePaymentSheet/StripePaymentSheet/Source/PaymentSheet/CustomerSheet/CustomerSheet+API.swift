@@ -26,13 +26,13 @@ extension CustomerSheet {
                     completion(.canceled)
                 case .failed:
                     // Hold a strong reference to paymentHandler
-                    let unknownError = SavedPaymentMethodsSheetError.unknown(debugDescription: "STPPaymentHandler failed without an error: \(self.paymentHandler.description)")
+                    let unknownError = CustomerSheetError.unknown(debugDescription: "STPPaymentHandler failed without an error: \(self.paymentHandler.description)")
                     completion(.failed(error: error ?? unknownError))
                 case .succeeded:
                     completion(.completed(intent))
                 @unknown default:
                     // Hold a strong reference to paymentHandler
-                    let unknownError = SavedPaymentMethodsSheetError.unknown(debugDescription: "STPPaymentHandler failed without an error: \(self.paymentHandler.description)")
+                    let unknownError = CustomerSheetError.unknown(debugDescription: "STPPaymentHandler failed without an error: \(self.paymentHandler.description)")
                     completion(.failed(error: error ?? unknownError))
                 }
             }
@@ -47,7 +47,7 @@ extension CustomerSheet {
                 with: self.bottomSheetViewController,
                 completion: paymentHandlerCompletion)
         } else {
-            completion(.failed(error: SavedPaymentMethodsSheetError.unknown(debugDescription: "Invalid state in confirmIntent")))
+            completion(.failed(error: CustomerSheetError.unknown(debugDescription: "Invalid state in confirmIntent")))
         }
     }
 }

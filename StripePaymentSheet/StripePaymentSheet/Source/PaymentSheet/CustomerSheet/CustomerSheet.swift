@@ -23,8 +23,6 @@ internal enum CustomerSheetResult {
 @_spi(PrivateBetaCustomerSheet) public class CustomerSheet {
     let configuration: CustomerSheet.Configuration
 
-    private var savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController?
-
     internal typealias CustomerSheetCompletion = (SheetResult) -> Void
 
     /// The STPPaymentHandler instance
@@ -106,7 +104,7 @@ internal enum CustomerSheetResult {
 
         guard presentingViewController.presentedViewController == nil else {
             assertionFailure("presentingViewController is already presenting a view controller")
-            let error = SavedPaymentMethodsSheetError.unknown(
+            let error = CustomerSheetError.unknown(
                 debugDescription: "presentingViewController is already presenting a view controller"
             )
             csCompletion(.error(error))
@@ -117,7 +115,7 @@ internal enum CustomerSheetResult {
             case .success(let savedPaymentMethods):
                 self.present(from: presentingViewController, savedPaymentMethods: savedPaymentMethods)
             case .failure(let error):
-                csCompletion(.error(SavedPaymentMethodsSheetError.errorFetchingSavedPaymentMethods(error)))
+                csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
                 return
             }
         }
@@ -173,7 +171,7 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
         guard let intent = intent,
               case .setupIntent = intent else {
             assertionFailure("Setup intent not available")
-            completion(.failed(error: SavedPaymentMethodsSheetError.unknown(debugDescription: "No setup intent available")))
+            completion(.failed(error: CustomerSheetError.unknown(debugDescription: "No setup intent available")))
             return
         }
         self.confirmIntent(intent: intent, paymentOption: paymentOption) { result in

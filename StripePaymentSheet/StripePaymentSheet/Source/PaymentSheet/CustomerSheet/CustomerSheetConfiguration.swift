@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodsSheetConfiguration.swift
+//  CustomerSheetConfiguration.swift
 //  StripePaymentSheet
 //
 

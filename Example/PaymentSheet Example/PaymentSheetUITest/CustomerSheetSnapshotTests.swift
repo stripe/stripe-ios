@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodsSheetSnapshotTests.swift
+//  CustomerSheetSnapshotTests.swift
 //  StripePaymentSheet
 //
 

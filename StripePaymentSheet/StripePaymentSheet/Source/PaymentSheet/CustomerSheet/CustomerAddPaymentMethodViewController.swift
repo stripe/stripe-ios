@@ -13,7 +13,7 @@ protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: CustomerAddPaymentMethodViewController)
 }
 
-@objc(STP_Internal_SavedPaymentMethodsAddPaymentMethodViewController)
+@objc(STP_Internal_CustomerAddPaymentMethodViewController)
 class CustomerAddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?

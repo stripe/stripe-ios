@@ -60,7 +60,7 @@ class CustomerSheetTestPlayground: UIViewController {
         }
     }
 
-    var backend: SavedPaymentMethodsBackend!
+    var backend: CustomerSheetBackend!
 
     var ephemeralKey: String?
     var customerId: String?
@@ -210,7 +210,7 @@ extension CustomerSheetTestPlayground {
         paymentOptionSelection = nil
 
         let customerType = customerMode == .new ? "new" : "returning"
-        self.backend = SavedPaymentMethodsBackend(endpoint: currentEndpoint)
+        self.backend = CustomerSheetBackend(endpoint: currentEndpoint)
 
 //        TODO: Refactor this to make the ephemeral key and customerId fetching async
         self.backend.loadBackendCustomerEphemeralKey(customerType: customerType) { result in
@@ -310,7 +310,7 @@ extension CustomerSheetTestPlayground {
     }
 }
 
-class SavedPaymentMethodsBackend {
+class CustomerSheetBackend {
 
     let endpoint: String
     public init(endpoint: String) {

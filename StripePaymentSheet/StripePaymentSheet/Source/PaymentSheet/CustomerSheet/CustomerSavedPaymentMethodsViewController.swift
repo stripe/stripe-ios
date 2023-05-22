@@ -425,7 +425,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     self.processingInFlight = false
                     // Not ideal (but also very rare): If this fails, customers will need to know there is an error
                     // so that they can back out and try again
-                    self.error = SavedPaymentMethodsSheetError.unknown(debugDescription: "Unexpected error occured")
+                    self.error = CustomerSheetError.unknown(debugDescription: "Unexpected error occured")
                     self.updateUI()
                     assertionFailure("addPaymentOption confirmation completed, but PaymentMethod is missing")
                     return
@@ -465,7 +465,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     return
                 }
                 guard let paymentMethod = paymentMethod else {
-                    self.error = SavedPaymentMethodsSheetError.unknown(debugDescription: "Error on payment method creation")
+                    self.error = CustomerSheetError.unknown(debugDescription: "Error on payment method creation")
                     self.processingInFlight = false
                     STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
                     self.actionButton.update(state: .enabled, animated: true) {
