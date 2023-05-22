@@ -59,7 +59,7 @@ import Foundation
         configuration: CameraSession.Configuration,
         delegate: AVCaptureVideoDataOutputSampleBufferDelegate,
         completeOn queue: DispatchQueue,
-        csCompletion: @escaping (CameraSession.SetupResult) -> Void
+        completion: @escaping (CameraSession.SetupResult) -> Void
     ) {
         sessionQueue.async { [weak self] in
             let wrappedCompletion = { setupResult in
@@ -90,7 +90,7 @@ import Foundation
     public func toggleCamera(
         to position: CameraSession.CameraPosition,
         completeOn queue: DispatchQueue,
-        csCompletion: @escaping (CameraSession.SetupResult) -> Void
+        completion: @escaping (CameraSession.SetupResult) -> Void
     ) {
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
@@ -128,7 +128,7 @@ import Foundation
 
     public func startSession(
         completeOn queue: DispatchQueue,
-        csCompletion: @escaping () -> Void
+        completion: @escaping () -> Void
     ) {
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
@@ -159,7 +159,7 @@ import Foundation
 
     public func stopSession(
         completeOn queue: DispatchQueue,
-        csCompletion: @escaping () -> Void
+        completion: @escaping () -> Void
     ) {
         sessionQueue.async { [weak self] in
             guard let self = self else { return }

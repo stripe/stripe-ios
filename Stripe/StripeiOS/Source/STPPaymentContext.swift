@@ -614,7 +614,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                             STPPaymentContextDelegate.paymentContext(
                                 _:
                                 didUpdateShippingAddress:
-                                csCompletion:
+                                completion:
                             ))
                     )
                         ?? false
@@ -921,7 +921,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     ) {
         if delegate?.responds(
             to: #selector(
-                STPPaymentContextDelegate.paymentContext(_:didUpdateShippingAddress:csCompletion:))
+                STPPaymentContextDelegate.paymentContext(_:didUpdateShippingAddress:completion:))
         )
             ?? false
         {
@@ -949,7 +949,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         selectedShippingMethod = method
         delegate?.paymentContextDidChange(self)
         if apiAdapter.responds(
-            to: #selector(STPCustomerContext.updateCustomer(withShippingAddress:csCompletion:))
+            to: #selector(STPCustomerContext.updateCustomer(withShippingAddress:completion:))
         ) {
             if let shippingAddress = shippingAddress {
                 apiAdapter.updateCustomer?(withShippingAddress: shippingAddress, completion: nil)
@@ -1007,7 +1007,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             configuration.shippingType == .shipping
             && delegate?.responds(
                 to: #selector(
-                    STPPaymentContextDelegate.paymentContext(_:didUpdateShippingAddress:csCompletion:)
+                    STPPaymentContextDelegate.paymentContext(_:didUpdateShippingAddress:completion:)
                 )
             )
                 ?? false

@@ -460,7 +460,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         override func present(
             _ viewControllerToPresent: UIViewController,
             animated flag: Bool,
-            csCompletion: (() -> Void)? = nil
+            completion: (() -> Void)? = nil
         ) {
             test_presentedViewController = viewControllerToPresent
             super.present(viewControllerToPresent, animated: flag, csCompletion: csCompletion)
