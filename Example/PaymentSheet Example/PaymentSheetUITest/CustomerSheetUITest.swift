@@ -1,12 +1,12 @@
 //
-//  SavedPaymentMethodsSheetUITest.swift
+//  CustomerSheetUITest.swift
 //  PaymentSheetUITest
 //
 
 import Foundation
 import XCTest
 
-class SavedPaymentMethodsSheetUITest: XCTestCase {
+class CustomerSheetUITest: XCTestCase {
     var app: XCUIApplication!
 
     override func setUpWithError() throws {
@@ -22,7 +22,7 @@ class SavedPaymentMethodsSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetStandard_applePayOff_addCard() throws {
-        app.staticTexts["SavedPaymentMethodsSheet (test playground)"].tap()
+        app.staticTexts["CustomerSheet (test playground)"].tap()
         let loadButton = app.staticTexts["Load Ephemeral Key"]
         XCTAssertTrue(loadButton.waitForExistence(timeout: 60.0))
         app.segmentedControls["apple_pay_selector"].buttons["off"].tap()
@@ -38,7 +38,7 @@ class SavedPaymentMethodsSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetStandard_applePayOn_addCard() throws {
-        app.staticTexts["SavedPaymentMethodsSheet (test playground)"].tap()
+        app.staticTexts["CustomerSheet (test playground)"].tap()
         let loadButton = app.staticTexts["Load Ephemeral Key"]
         XCTAssertTrue(loadButton.waitForExistence(timeout: 60.0))
         app.segmentedControls["apple_pay_selector"].buttons["on"].tap()
@@ -57,7 +57,7 @@ class SavedPaymentMethodsSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetStandard_applePayOn_selectApplePay() throws {
-        app.staticTexts["SavedPaymentMethodsSheet (test playground)"].tap()
+        app.staticTexts["CustomerSheet (test playground)"].tap()
         let loadButton = app.staticTexts["Load Ephemeral Key"]
         XCTAssertTrue(loadButton.waitForExistence(timeout: 60.0))
         app.segmentedControls["apple_pay_selector"].buttons["on"].tap()
