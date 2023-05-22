@@ -46,7 +46,7 @@ extension CustomerSheet {
 }
 
 extension CustomerSheet {
-    /// A selected payment method from a SavedPaymentMethodSheet.
+    /// A selected payment method from a CustomerSheet.
     public enum PaymentOptionSelection {
         /// Display data for a payment method option.
         public struct PaymentOptionDisplayData {

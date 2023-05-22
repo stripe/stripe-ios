@@ -158,7 +158,7 @@ class CustomerSheetTestPlayground: UIViewController {
         }
     }
 
-    func savedPaymentMethodSheetConfiguration(customerId: String, ephemeralKey: String) -> CustomerSheet.Configuration {
+    func customerSheetConfiguration(customerId: String, ephemeralKey: String) -> CustomerSheet.Configuration {
         var configuration = CustomerSheet.Configuration()
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
@@ -225,7 +225,7 @@ extension CustomerSheetTestPlayground {
             StripeAPI.defaultPublishableKey = publishableKey
 
             Task {
-                var configuration = self.savedPaymentMethodSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
+                var configuration = self.customerSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
                 configuration.applePayEnabled = self.applePayEnabled()
                 let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey)
                 self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
