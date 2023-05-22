@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodsSheetConfiguration.swift
+//  CustomerSheetConfiguration.swift
 //  StripePaymentSheet
 //
 
@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-extension SavedPaymentMethodsSheet {
+extension CustomerSheet {
 
     public struct Configuration {
         private var styleRawValue: Int = 0  // SheetStyle.automatic.rawValue
@@ -45,8 +45,8 @@ extension SavedPaymentMethodsSheet {
     }
 }
 
-extension SavedPaymentMethodsSheet {
-    /// A selected payment method from a SavedPaymentMethodSheet.
+extension CustomerSheet {
+    /// A selected payment method from a CustomerSheet.
     public enum PaymentOptionSelection {
         /// Display data for a payment method option.
         public struct PaymentOptionDisplayData {
@@ -76,7 +76,7 @@ extension SavedPaymentMethodsSheet {
 
         /// Create a PaymentOptionSelection for Apple Pay.
         public static func applePay() -> PaymentOptionSelection {
-            let displayData = SavedPaymentMethodsSheet.PaymentOptionSelection.PaymentOptionDisplayData(image: Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal),
+            let displayData = CustomerSheet.PaymentOptionSelection.PaymentOptionDisplayData(image: Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal),
                                                                                                        label: String.Localized.apple_pay)
             return .applePay(paymentOptionDisplayData: displayData)
         }

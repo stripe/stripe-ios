@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodsAddPaymentMethodViewController.swift
+//  CustomerAddPaymentMethodViewController.swift
 //  StripePaymentSheet
 //
 
@@ -9,14 +9,14 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol SavedPaymentMethodsAddPaymentMethodViewControllerDelegate: AnyObject {
-    func didUpdate(_ viewController: SavedPaymentMethodsAddPaymentMethodViewController)
+protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
+    func didUpdate(_ viewController: CustomerAddPaymentMethodViewController)
 }
 
-@objc(STP_Internal_SavedPaymentMethodsAddPaymentMethodViewController)
-class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
+@objc(STP_Internal_CustomerAddPaymentMethodViewController)
+class CustomerAddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
-    weak var delegate: SavedPaymentMethodsAddPaymentMethodViewControllerDelegate?
+    weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.card]
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         return paymentMethodTypesView.selected
@@ -30,7 +30,7 @@ class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
         return nil
     }
     // MARK: - Writable Properties
-    private let configuration: SavedPaymentMethodsSheet.Configuration
+    private let configuration: CustomerSheet.Configuration
 
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
         return makeElement(for: selectedPaymentMethodType)
@@ -58,8 +58,8 @@ class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
     }
 
     required init(
-        configuration: SavedPaymentMethodsSheet.Configuration,
-        delegate: SavedPaymentMethodsAddPaymentMethodViewControllerDelegate
+        configuration: CustomerSheet.Configuration,
+        delegate: CustomerAddPaymentMethodViewControllerDelegate
     ) {
         self.configuration = configuration
         self.delegate = delegate
@@ -70,7 +70,7 @@ class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
     // MARK: - UIViewController
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        STPAnalyticsClient.sharedClient.logSPMSAddPaymentMethodScreenPresented()
+        STPAnalyticsClient.sharedClient.logCSAddPaymentMethodScreenPresented()
     }
 
     override func viewDidLoad() {
@@ -130,7 +130,7 @@ class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
     }
 
     private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
-        let formElement = SavedPaymentMethodsFormFactory(
+        let formElement = CustomerSavedPaymentMethodsFormFactory(
             configuration: configuration,
             paymentMethod: type
         ).make()! // TODO(wooj) Don't force unwrap
@@ -139,7 +139,7 @@ class SavedPaymentMethodsAddPaymentMethodViewController: UIViewController {
     }
 }
 
-extension SavedPaymentMethodsAddPaymentMethodViewController: ElementDelegate {
+extension CustomerAddPaymentMethodViewController: ElementDelegate {
     func continueToNextField(element: Element) {
         delegate?.didUpdate(self)
     }
@@ -150,7 +150,7 @@ extension SavedPaymentMethodsAddPaymentMethodViewController: ElementDelegate {
     }
 }
 
-extension SavedPaymentMethodsAddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
+extension CustomerAddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
         delegate?.didUpdate(self)
     }

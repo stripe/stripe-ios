@@ -1,10 +1,10 @@
 //
-//  SavedPaymentMethodsSheet.swift
+//  CustomerSheet.swift
 //  StripePaymentSheet
 //
 //
 //  ⚠️🏗 This is feature has not been released yet, and is under construction
-//  Note: Do not import Stripe using `@_spi(STP)` or @_spi(PrivateBetaSavedPaymentMethodsSheet) in production.
+//  Note: Do not import Stripe using `@_spi(STP)` or @_spi(PrivateBetaCustomerSheet) in production.
 //  Doing so exposes internal functionality which may cause unexpected behavior if used directly.
 //
 import Foundation
@@ -14,18 +14,16 @@ import Foundation
 import UIKit
 
 // For internal use
-internal enum SavedPaymentMethodsSheetResult {
+internal enum CustomerSheetResult {
     case completed(NSObject?)
     case canceled
     case failed(error: Error)
 }
 
-@_spi(PrivateBetaSavedPaymentMethodsSheet) public class SavedPaymentMethodsSheet {
-    let configuration: SavedPaymentMethodsSheet.Configuration
+@_spi(PrivateBetaCustomerSheet) public class CustomerSheet {
+    let configuration: CustomerSheet.Configuration
 
-    private var savedPaymentMethodsViewController: SavedPaymentMethodsViewController?
-
-    internal typealias SPMSCompletion = (SheetResult) -> Void
+    internal typealias CustomerSheetCompletion = (SheetResult) -> Void
 
     /// The STPPaymentHandler instance
     @available(iOSApplicationExtension, unavailable)
@@ -64,7 +62,7 @@ internal enum SavedPaymentMethodsSheetResult {
 
     ///
     /// Use a StripeCustomerAdapter, or build your own.
-    public init(configuration: SavedPaymentMethodsSheet.Configuration,
+    public init(configuration: CustomerSheet.Configuration,
                 customer: CustomerAdapter) {
         self.configuration = configuration
         self.customerAdapter = customer
@@ -72,7 +70,7 @@ internal enum SavedPaymentMethodsSheetResult {
 
     var customerAdapter: CustomerAdapter
 
-    /// The result of the SavedPaymentMethodsSheet
+    /// The result of the CustomerSheet
     @frozen public enum SheetResult {
         /// The customer cancelled the sheet. (e.g. by tapping outside it or tapping the "X")
         case canceled
@@ -82,14 +80,14 @@ internal enum SavedPaymentMethodsSheetResult {
         case error(Error)
     }
 
-    private var spmsCompletion: SPMSCompletion?
+    private var csCompletion: CustomerSheetCompletion?
 
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     public func present(from presentingViewController: UIViewController,
-                        completion spmsCompletion: @escaping (SheetResult) -> Void
+                        completion csCompletion: @escaping (SheetResult) -> Void
     ) {
-        // Retain self when being presented, it is not guarnteed that SavedPaymentMethodsSheet instance
+        // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
         let completion: () -> Void = {
             if let presentingViewController = self.bottomSheetViewController.presentingViewController {
@@ -102,14 +100,14 @@ internal enum SavedPaymentMethodsSheetResult {
             self.completion = nil
         }
         self.completion = completion
-        self.spmsCompletion = spmsCompletion
+        self.csCompletion = csCompletion
 
         guard presentingViewController.presentedViewController == nil else {
             assertionFailure("presentingViewController is already presenting a view controller")
-            let error = SavedPaymentMethodsSheetError.unknown(
+            let error = CustomerSheetError.unknown(
                 debugDescription: "presentingViewController is already presenting a view controller"
             )
-            spmsCompletion(.error(error))
+            csCompletion(.error(error))
             return
         }
         loadPaymentMethods { result in
@@ -117,7 +115,7 @@ internal enum SavedPaymentMethodsSheetResult {
             case .success(let savedPaymentMethods):
                 self.present(from: presentingViewController, savedPaymentMethods: savedPaymentMethods)
             case .failure(let error):
-                spmsCompletion(.error(SavedPaymentMethodsSheetError.errorFetchingSavedPaymentMethods(error)))
+                csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
                 return
             }
         }
@@ -137,11 +135,12 @@ internal enum SavedPaymentMethodsSheetResult {
         loadSpecsPromise.observe { _ in
             DispatchQueue.main.async {
                 let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
-                let savedPaymentSheetVC = SavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
-                                                                            configuration: self.configuration, customerAdapter: self.customerAdapter,
-                                                                            isApplePayEnabled: isApplePayEnabled,
-                                                                            spmsCompletion: self.spmsCompletion,
-                                                                            delegate: self)
+                let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
+                                                                                    configuration: self.configuration,
+                                                                                    customerAdapter: self.customerAdapter,
+                                                                                    isApplePayEnabled: isApplePayEnabled,
+                                                                                    csCompletion: self.csCompletion,
+                                                                                    delegate: self)
                 self.bottomSheetViewController.contentStack = [savedPaymentSheetVC]
             }
         }
@@ -151,7 +150,7 @@ internal enum SavedPaymentMethodsSheetResult {
     var userCompletion: ((SheetResult) -> Void)?
 }
 
-extension SavedPaymentMethodsSheet {
+extension CustomerSheet {
     func loadPaymentMethods(completion: @escaping (Result<[STPPaymentMethod], Error>) -> Void) {
         Task {
             do {
@@ -167,12 +166,12 @@ extension SavedPaymentMethodsSheet {
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension SavedPaymentMethodsSheet: SavedPaymentMethodsViewControllerDelegate {
-    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?, with paymentOption: PaymentOption, completion: @escaping (SavedPaymentMethodsSheetResult) -> Void) {
+extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
+    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?, with paymentOption: PaymentOption, completion: @escaping (CustomerSheetResult) -> Void) {
         guard let intent = intent,
               case .setupIntent = intent else {
             assertionFailure("Setup intent not available")
-            completion(.failed(error: SavedPaymentMethodsSheetError.unknown(debugDescription: "No setup intent available")))
+            completion(.failed(error: CustomerSheetError.unknown(debugDescription: "No setup intent available")))
             return
         }
         self.confirmIntent(intent: intent, paymentOption: paymentOption) { result in
@@ -180,14 +179,14 @@ extension SavedPaymentMethodsSheet: SavedPaymentMethodsViewControllerDelegate {
         }
     }
 
-    func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController, completion _completion: @escaping () -> Void) {
+    func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion _completion: @escaping () -> Void) {
         savedPaymentMethodsViewController.dismiss(animated: true) {
             _completion()
             self.completion?()
         }
     }
 
-    func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: SavedPaymentMethodsViewController, completion _completion: @escaping () -> Void) {
+    func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion _completion: @escaping () -> Void) {
         savedPaymentMethodsViewController.dismiss(animated: true) {
             _completion()
             self.completion?()
@@ -195,7 +194,7 @@ extension SavedPaymentMethodsSheet: SavedPaymentMethodsViewControllerDelegate {
     }
 }
 
-extension SavedPaymentMethodsSheet: LoadingViewControllerDelegate {
+extension CustomerSheet: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
         loadingViewController.dismiss(animated: true) {
             self.completion?()
@@ -203,10 +202,10 @@ extension SavedPaymentMethodsSheet: LoadingViewControllerDelegate {
     }
 }
 
-@_spi(PrivateBetaSavedPaymentMethodsSheet) extension StripeCustomerAdapter {
+@_spi(PrivateBetaCustomerSheet) extension StripeCustomerAdapter {
     /// Returns the selected Payment Option for this customer adapter.
-    /// You can use this to obtain the selected payment method without loading the SavedPaymentMethodsSheet.
-    public func retrievePaymentOptionSelection() async throws -> SavedPaymentMethodsSheet.PaymentOptionSelection?
+    /// You can use this to obtain the selected payment method without loading the CustomerSheet.
+    public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection?
      {
         let selectedPaymentOption = try await self.fetchSelectedPaymentMethodOption()
         switch selectedPaymentOption {
@@ -217,7 +216,7 @@ extension SavedPaymentMethodsSheet: LoadingViewControllerDelegate {
             guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                 return nil
             }
-            return SavedPaymentMethodsSheet.PaymentOptionSelection.savedPaymentMethod(matchingPaymentMethod)
+            return CustomerSheet.PaymentOptionSelection.savedPaymentMethod(matchingPaymentMethod)
         default:
             return nil
         }

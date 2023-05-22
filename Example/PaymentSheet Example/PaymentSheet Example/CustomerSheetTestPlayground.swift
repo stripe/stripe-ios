@@ -1,22 +1,22 @@
 //
-//  SavedPaymentMethodSheetTestPlayground.swift
+//  CustomerSheetTestPlayground.swift
 //  PaymentSheet Example
 //
 //  ⚠️🏗 This is a playground for internal Stripe engineers to help us test things, and isn't
 //  an example of what you should do in a real app!
-//  Note: Do not import Stripe using `@_spi(STP)` or @_spi(PrivateBetaSavedPaymentMethodsSheet) in production.
+//  Note: Do not import Stripe using `@_spi(STP)` or @_spi(PrivateBetaCustomerSheet) in production.
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 
 import Contacts
 import Foundation
 import PassKit
-@_spi(PrivateBetaSavedPaymentMethodsSheet) import StripePaymentSheet
+@_spi(PrivateBetaCustomerSheet) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
-class SavedPaymentMethodSheetTestPlayground: UIViewController {
-    static let defaultSavedPaymentMethodEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
-    static var paymentSheetPlaygroundSettings: SavedPaymentMethodSheetPlaygroundSettings?
+class CustomerSheetTestPlayground: UIViewController {
+    static let defaultEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
+    static var playgroundSettings: CustomerSheetPlaygroundSettings?
 
     @IBOutlet weak var customerModeSelector: UISegmentedControl!
 
@@ -29,8 +29,8 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
     @IBOutlet weak var selectPaymentMethodButton: UIButton!
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
 
-    var savedPaymentMethodsSheet: SavedPaymentMethodsSheet?
-    var paymentOptionSelection: SavedPaymentMethodsSheet.PaymentOptionSelection?
+    var customerSheet: CustomerSheet?
+    var paymentOptionSelection: CustomerSheet.PaymentOptionSelection?
 
     enum CustomerMode: String, CaseIterable {
         case new
@@ -60,11 +60,11 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
         }
     }
 
-    var backend: SavedPaymentMethodsBackend!
+    var backend: CustomerSheetBackend!
 
     var ephemeralKey: String?
     var customerId: String?
-    var savedPaymentMethodEndpoint: String = defaultSavedPaymentMethodEndpoint
+    var currentEndpoint: String = defaultEndpoint
     var appearance = PaymentSheet.Appearance.default
 
     func makeAlertController() -> UIAlertController {
@@ -84,8 +84,8 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
         selectPaymentMethodButton.addTarget(
             self, action: #selector(didTapSelectPaymentMethodButton), for: .touchUpInside)
 
-        if let paymentSheetPlaygroundSettings = SavedPaymentMethodSheetTestPlayground.paymentSheetPlaygroundSettings {
-            loadSettingsFrom(settings: paymentSheetPlaygroundSettings)
+        if let settings = CustomerSheetTestPlayground.playgroundSettings {
+            loadSettingsFrom(settings: settings)
         } else if let nsUserDefaultSettings = settingsFromDefaults() {
             loadSettingsFrom(settings: nsUserDefaultSettings)
             loadBackend()
@@ -93,7 +93,7 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
     }
     @objc
     func didTapSelectPaymentMethodButton() {
-        savedPaymentMethodsSheet?.present(from: self, completion: { result in
+        customerSheet?.present(from: self, completion: { result in
             switch result {
             case .canceled:
                 self.updateButtons()
@@ -140,7 +140,7 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
     }
 
     @IBAction func didTapResetConfig(_ sender: Any) {
-        loadSettingsFrom(settings: SavedPaymentMethodSheetPlaygroundSettings.defaultValues())
+        loadSettingsFrom(settings: CustomerSheetPlaygroundSettings.defaultValues())
     }
 
     @IBAction func appearanceButtonTapped(_ sender: Any) {
@@ -158,8 +158,8 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
         }
     }
 
-    func savedPaymentMethodSheetConfiguration(customerId: String, ephemeralKey: String) -> SavedPaymentMethodsSheet.Configuration {
-        var configuration = SavedPaymentMethodsSheet.Configuration()
+    func customerSheetConfiguration(customerId: String, ephemeralKey: String) -> CustomerSheet.Configuration {
+        var configuration = CustomerSheet.Configuration()
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
         configuration.headerTextForSelectionScreen = headerTextForSelectionScreenTextField.text
@@ -198,7 +198,7 @@ class SavedPaymentMethodSheetTestPlayground: UIViewController {
 
 // MARK: - Backend
 
-extension SavedPaymentMethodSheetTestPlayground {
+extension CustomerSheetTestPlayground {
     @objc
     func load() {
         serializeSettingsToNSUserDefaults()
@@ -206,11 +206,11 @@ extension SavedPaymentMethodSheetTestPlayground {
     }
     func loadBackend() {
         selectPaymentMethodButton.isEnabled = false
-        savedPaymentMethodsSheet = nil
+        customerSheet = nil
         paymentOptionSelection = nil
 
         let customerType = customerMode == .new ? "new" : "returning"
-        self.backend = SavedPaymentMethodsBackend(endpoint: savedPaymentMethodEndpoint)
+        self.backend = CustomerSheetBackend(endpoint: currentEndpoint)
 
 //        TODO: Refactor this to make the ephemeral key and customerId fetching async
         self.backend.loadBackendCustomerEphemeralKey(customerType: customerType) { result in
@@ -225,10 +225,10 @@ extension SavedPaymentMethodSheetTestPlayground {
             StripeAPI.defaultPublishableKey = publishableKey
 
             Task {
-                var configuration = self.savedPaymentMethodSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
+                var configuration = self.customerSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
                 configuration.applePayEnabled = self.applePayEnabled()
                 let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey)
-                self.savedPaymentMethodsSheet = SavedPaymentMethodsSheet(configuration: configuration, customer: customerAdapter)
+                self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
 
                 self.selectPaymentMethodButton.isEnabled = true
 
@@ -240,7 +240,7 @@ extension SavedPaymentMethodSheetTestPlayground {
     }
 }
 
-struct SavedPaymentMethodSheetPlaygroundSettings: Codable {
+struct CustomerSheetPlaygroundSettings: Codable {
     static let nsUserDefaultsKey = "savedPaymentMethodPlaygroundSettings"
 
     let customerModeSelectorValue: Int
@@ -249,21 +249,21 @@ struct SavedPaymentMethodSheetPlaygroundSettings: Codable {
     let selectingSavedCustomHeaderText: String?
     let savedPaymentMethodEndpoint: String?
 
-    static func defaultValues() -> SavedPaymentMethodSheetPlaygroundSettings {
-        return SavedPaymentMethodSheetPlaygroundSettings(
+    static func defaultValues() -> CustomerSheetPlaygroundSettings {
+        return CustomerSheetPlaygroundSettings(
             customerModeSelectorValue: 0,
             paymentMethodModeSelectorValue: 0,
             applePaySelectorSelectorValue: 0,
             selectingSavedCustomHeaderText: nil,
-            savedPaymentMethodEndpoint: SavedPaymentMethodSheetTestPlayground.defaultSavedPaymentMethodEndpoint
+            savedPaymentMethodEndpoint: CustomerSheetTestPlayground.defaultEndpoint
         )
     }
 }
 
 // MARK: - EndpointSelectorViewControllerDelegate
-extension SavedPaymentMethodSheetTestPlayground: EndpointSelectorViewControllerDelegate {
+extension CustomerSheetTestPlayground: EndpointSelectorViewControllerDelegate {
     func selected(endpoint: String) {
-        savedPaymentMethodEndpoint = endpoint
+        currentEndpoint = endpoint
         serializeSettingsToNSUserDefaults()
         loadBackend()
         self.navigationController?.dismiss(animated: true)
@@ -276,41 +276,41 @@ extension SavedPaymentMethodSheetTestPlayground: EndpointSelectorViewControllerD
 
 // MARK: - Helpers
 
-extension SavedPaymentMethodSheetTestPlayground {
+extension CustomerSheetTestPlayground {
     func serializeSettingsToNSUserDefaults() {
-        let settings = SavedPaymentMethodSheetPlaygroundSettings(
+        let settings = CustomerSheetPlaygroundSettings(
             customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
             paymentMethodModeSelectorValue: pmModeSelector.selectedSegmentIndex,
             applePaySelectorSelectorValue: applePaySelector.selectedSegmentIndex,
             selectingSavedCustomHeaderText: headerTextForSelectionScreenTextField.text,
-            savedPaymentMethodEndpoint: savedPaymentMethodEndpoint
+            savedPaymentMethodEndpoint: currentEndpoint
         )
         let data = try! JSONEncoder().encode(settings)
-        UserDefaults.standard.set(data, forKey: SavedPaymentMethodSheetPlaygroundSettings.nsUserDefaultsKey)
+        UserDefaults.standard.set(data, forKey: CustomerSheetPlaygroundSettings.nsUserDefaultsKey)
     }
 
-    func settingsFromDefaults() -> SavedPaymentMethodSheetPlaygroundSettings? {
-        if let data = UserDefaults.standard.value(forKey: SavedPaymentMethodSheetPlaygroundSettings.nsUserDefaultsKey) as? Data {
+    func settingsFromDefaults() -> CustomerSheetPlaygroundSettings? {
+        if let data = UserDefaults.standard.value(forKey: CustomerSheetPlaygroundSettings.nsUserDefaultsKey) as? Data {
             do {
-                return try JSONDecoder().decode(SavedPaymentMethodSheetPlaygroundSettings.self, from: data)
+                return try JSONDecoder().decode(CustomerSheetPlaygroundSettings.self, from: data)
             } catch {
                 print("Unable to deserialize saved settings")
-                UserDefaults.standard.removeObject(forKey: SavedPaymentMethodSheetPlaygroundSettings.nsUserDefaultsKey)
+                UserDefaults.standard.removeObject(forKey: CustomerSheetPlaygroundSettings.nsUserDefaultsKey)
             }
         }
         return nil
     }
 
-    func loadSettingsFrom(settings: SavedPaymentMethodSheetPlaygroundSettings) {
+    func loadSettingsFrom(settings: CustomerSheetPlaygroundSettings) {
         customerModeSelector.selectedSegmentIndex = settings.customerModeSelectorValue
         pmModeSelector.selectedSegmentIndex = settings.paymentMethodModeSelectorValue
         applePaySelector.selectedSegmentIndex = settings.applePaySelectorSelectorValue
         headerTextForSelectionScreenTextField.text = settings.selectingSavedCustomHeaderText
-        savedPaymentMethodEndpoint = settings.savedPaymentMethodEndpoint ?? SavedPaymentMethodSheetTestPlayground.defaultSavedPaymentMethodEndpoint
+        currentEndpoint = settings.savedPaymentMethodEndpoint ?? CustomerSheetTestPlayground.defaultEndpoint
     }
 }
 
-class SavedPaymentMethodsBackend {
+class CustomerSheetBackend {
 
     let endpoint: String
     public init(endpoint: String) {
