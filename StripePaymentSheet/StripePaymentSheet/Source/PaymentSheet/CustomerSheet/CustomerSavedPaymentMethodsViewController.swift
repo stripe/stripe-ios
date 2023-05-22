@@ -345,10 +345,11 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 case .applePay:
                     let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.applePay()
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
+                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: "apple_pay")
                         // TODO: Communicate error to consumer
                         print(error)
-
                     } onSuccess: {
+                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: "apple_pay")
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                             self.csCompletion?(.selected(paymentOptionSelection))
                         }
@@ -356,10 +357,13 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
                 case .saved(let paymentMethod):
                     let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
+                    let type = STPPaymentMethod.string(from: paymentMethod.type)
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
-//                        TODO: Communicate error to consumer
+                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: type)
+                        // TODO: Communicate error to consumer
                         print(error)
                     } onSuccess: {
+                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: type)
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                             self.csCompletion?(.selected(paymentOptionSelection))
                         }
@@ -646,10 +650,8 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
                 }
                 self.updateUI()
             case .saved:
-                STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenSelectedSavedPM()
                 updateUI(animated: true)
             case .applePay:
-                STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenSelectedSavedPM()
                 updateUI(animated: true)
             }
         }
