@@ -463,7 +463,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             completion: (() -> Void)? = nil
         ) {
             test_presentedViewController = viewControllerToPresent
-            super.present(viewControllerToPresent, animated: flag, csCompletion: csCompletion)
+            super.present(viewControllerToPresent, animated: flag, completion: completion)
         }
 
     #endif
