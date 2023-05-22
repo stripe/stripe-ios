@@ -1,5 +1,5 @@
 //
-//  STPAnalyticsClient+SavedPaymentMethodsSheet.swift
+//  STPAnalyticsClient+CustomerSheet.swift
 //  StripePaymentSheet
 //
 

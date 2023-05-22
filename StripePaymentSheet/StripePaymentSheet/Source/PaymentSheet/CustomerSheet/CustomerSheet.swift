@@ -70,7 +70,7 @@ internal enum CustomerSheetResult {
 
     var customerAdapter: CustomerAdapter
 
-    /// The result of the SavedPaymentMethodsSheet
+    /// The result of the CustomerSheet
     @frozen public enum SheetResult {
         /// The customer cancelled the sheet. (e.g. by tapping outside it or tapping the "X")
         case canceled
@@ -87,7 +87,7 @@ internal enum CustomerSheetResult {
     public func present(from presentingViewController: UIViewController,
                         completion csCompletion: @escaping (SheetResult) -> Void
     ) {
-        // Retain self when being presented, it is not guarnteed that SavedPaymentMethodsSheet instance
+        // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
         let completion: () -> Void = {
             if let presentingViewController = self.bottomSheetViewController.presentingViewController {
@@ -204,7 +204,7 @@ extension CustomerSheet: LoadingViewControllerDelegate {
 
 @_spi(PrivateBetaCustomerSheet) extension StripeCustomerAdapter {
     /// Returns the selected Payment Option for this customer adapter.
-    /// You can use this to obtain the selected payment method without loading the SavedPaymentMethodsSheet.
+    /// You can use this to obtain the selected payment method without loading the CustomerSheet.
     public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection?
      {
         let selectedPaymentOption = try await self.fetchSelectedPaymentMethodOption()
