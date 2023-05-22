@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodsSheet+API.swift
+//  CustomerSheet+API.swift
 //  StripePaymentSheet
 //
 
@@ -12,11 +12,11 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension SavedPaymentMethodsSheet {
+extension CustomerSheet {
     func confirmIntent(
         intent: Intent,
         paymentOption: PaymentOption,
-        completion: @escaping (SavedPaymentMethodsSheetResult) -> Void
+        completion: @escaping (CustomerSheetResult) -> Void
     ) {
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
             {

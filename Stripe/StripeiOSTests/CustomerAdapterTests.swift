@@ -8,8 +8,8 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 @_spi(STP) @testable import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) @testable import StripePayments
-@_spi(STP) @_spi(PrivateBetaSavedPaymentMethodsSheet) @testable import StripePaymentSheet
+@_spi(STP) @_spi(PrivateBetaCustomerSheet) @testable import StripePayments
+@_spi(STP) @_spi(PrivateBetaCustomerSheet) @testable import StripePaymentSheet
 import XCTest
 
 enum MockEphemeralKeyEndpoint {

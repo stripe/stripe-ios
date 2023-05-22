@@ -11,8 +11,8 @@ import UIKit
 
 @_spi(STP)@testable import StripeCore
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaSavedPaymentMethodsSheet) @testable import StripePaymentSheet
-@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaSavedPaymentMethodsSheet) @testable import StripePaymentsUI
+@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaCustomerSheet) @testable import StripePaymentSheet
+@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaCustomerSheet) @testable import StripePaymentsUI
 @_spi(STP)@testable import StripeUICore
 
 // For backend example
@@ -46,13 +46,13 @@ class StubCustomerAdapter: CustomerAdapter {
     var canCreateSetupIntents: Bool = true
 }
 
-class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
+class CustomerSheetSnapshotTests: FBSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
         string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
     )!
 
-    private var spms: SavedPaymentMethodsSheet!
+    private var cs: CustomerSheet!
 
     private var window: UIWindow {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
@@ -60,12 +60,12 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         return window
     }
 
-    private var configuration = SavedPaymentMethodsSheet.Configuration()
+    private var configuration = CustomerSheet.Configuration()
 
     override func setUp() {
         super.setUp()
 
-        configuration = SavedPaymentMethodsSheet.Configuration()
+        configuration = CustomerSheet.Configuration()
 
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
 //        self.recordMode = true
@@ -74,47 +74,47 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
     public override func tearDown() {
         super.tearDown()
         HTTPStubs.removeAllStubs()
-        configuration = SavedPaymentMethodsSheet.Configuration()
+        configuration = CustomerSheet.Configuration()
     }
 
     private func stubbedAPIClient() -> STPAPIClient {
         return APIStubbedTestCase.stubbedAPIClient()
     }
 
-    func testSPMSNoSavedPMs() {
-        prepareSPMS(applePayEnabled: false)
-        presentSPMS(darkMode: false)
-        verify(spms.bottomSheetViewController.view!)
+    func testNoSavedPMs() {
+        prepareCS(applePayEnabled: false)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
     }
 
-    func testSPMSNoSavedPMsDarkMode() {
-        prepareSPMS(applePayEnabled: false)
-        presentSPMS(darkMode: true)
-        verify(spms.bottomSheetViewController.view!)
+    func testNoSavedPMsDarkMode() {
+        prepareCS(applePayEnabled: false)
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
     }
 
-    func testSPMSNoSavedPMsCustomAppearance() {
-        prepareSPMS(appearance: .snapshotTestTheme, applePayEnabled: false)
-        presentSPMS(darkMode: false)
-        verify(spms.bottomSheetViewController.view!)
+    func testNoSavedPMsCustomAppearance() {
+        prepareCS(appearance: .snapshotTestTheme, applePayEnabled: false)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
     }
 
-    func testSPMSOnlyApplePay() {
-        prepareSPMS(applePayEnabled: true)
-        presentSPMS(darkMode: false)
-        verify(spms.bottomSheetViewController.view!)
+    func testOnlyApplePay() {
+        prepareCS(applePayEnabled: true)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
     }
 
-    func testSPMSOnlyApplePayDarkMode() {
-        prepareSPMS(applePayEnabled: true)
-        presentSPMS(darkMode: true)
-        verify(spms.bottomSheetViewController.view!)
+    func testOnlyApplePayDarkMode() {
+        prepareCS(applePayEnabled: true)
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
     }
 
-    func testSPMSOnlyApplePayCustomAppearance() {
-        prepareSPMS(appearance: .snapshotTestTheme, applePayEnabled: true)
-        presentSPMS(darkMode: false)
-        verify(spms.bottomSheetViewController.view!)
+    func testOnlyApplePayCustomAppearance() {
+        prepareCS(appearance: .snapshotTestTheme, applePayEnabled: true)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
     }
 
     func stubbedPaymentMethod() -> STPPaymentMethod {
@@ -128,39 +128,39 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         ])!
     }
 
-    func testSPMSOneSavedCardPM() {
+    func testOneSavedCardPM() {
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = [stubbedPaymentMethod()]
-        prepareSPMS(customerAdapter: customerAdapter, applePayEnabled: true)
-        presentSPMS(darkMode: false)
-        verify(spms.bottomSheetViewController.view!)
+        prepareCS(customerAdapter: customerAdapter, applePayEnabled: true)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
     }
 
-    func testSPMSOneSavedCardPMDarkMode() {
+    func testOneSavedCardPMDarkMode() {
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = [stubbedPaymentMethod()]
-        prepareSPMS(customerAdapter: customerAdapter, applePayEnabled: true)
-        presentSPMS(darkMode: true)
-        verify(spms.bottomSheetViewController.view!)
+        prepareCS(customerAdapter: customerAdapter, applePayEnabled: true)
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
     }
 
-    func testSPMSOneSavedCardPMCustomApperance() {
+    func testOneSavedCardPMCustomApperance() {
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = [stubbedPaymentMethod()]
-        prepareSPMS(appearance: .snapshotTestTheme, customerAdapter: customerAdapter, applePayEnabled: true)
-        presentSPMS(darkMode: false)
-        verify(spms.bottomSheetViewController.view!)
+        prepareCS(appearance: .snapshotTestTheme, customerAdapter: customerAdapter, applePayEnabled: true)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
     }
 
-    func testSPMSManySavedPMs() {
+    func testManySavedPMs() {
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = Array(repeating: stubbedPaymentMethod(), count: 20)
-        prepareSPMS(customerAdapter: customerAdapter, applePayEnabled: true)
-        presentSPMS(darkMode: false)
-        verify(spms.bottomSheetViewController.view!)
+        prepareCS(customerAdapter: customerAdapter, applePayEnabled: true)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
     }
 
-    private func prepareSPMS(
+    private func prepareCS(
         appearance: PaymentSheet.Appearance = .default,
         customerAdapter: CustomerAdapter = StubCustomerAdapter(),
         applePayEnabled: Bool = true
@@ -171,10 +171,10 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         config.applePayEnabled = applePayEnabled
         StripeAPI.defaultPublishableKey = "pk_test_123456789"
 
-        self.spms = SavedPaymentMethodsSheet(configuration: config, customer: customerAdapter)
+        self.cs = CustomerSheet(configuration: config, customer: customerAdapter)
     }
 
-    private func presentSPMS(darkMode: Bool, preferredContentSizeCategory: UIContentSizeCategory = .large) {
+    private func presentCS(darkMode: Bool, preferredContentSizeCategory: UIContentSizeCategory = .large) {
         let vc = UIViewController()
         let navController = UINavigationController(rootViewController: vc)
         let testWindow = self.window
@@ -183,7 +183,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         }
         testWindow.rootViewController = navController
 
-        spms.present(from: vc) { _ in }
+        cs.present(from: vc) { _ in }
 
         // Payment sheet usually takes anywhere between 50ms-200ms (but once in a while 2-3 seconds).
         // to present with the expected content. When the sheet is presented, it initially shows a loading screen,
@@ -199,7 +199,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
                 count += 1
                 DispatchQueue.main.sync {
                     guard
-                        (self.spms.bottomSheetViewController.contentStack.first as? LoadingViewController)
+                        (self.cs.bottomSheetViewController.contentStack.first as? LoadingViewController)
                             != nil
                     else {
                         isLoading = false
@@ -214,7 +214,7 @@ class SavedPaymentMethodsSheetSnapshotTests: FBSnapshotTestCase {
         }
         wait(for: [presentingExpectation], timeout: 10.0)
 
-        spms.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
+        cs.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
             preferredContentSizeCategory: preferredContentSizeCategory
         )
     }

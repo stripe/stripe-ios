@@ -79,7 +79,7 @@ class STPApplePayContextTest: XCTestCase {
                     PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
                         _:
                         didSelectShippingContact:
-                        completion:
+                        csCompletion:
                     ))
             )
         )

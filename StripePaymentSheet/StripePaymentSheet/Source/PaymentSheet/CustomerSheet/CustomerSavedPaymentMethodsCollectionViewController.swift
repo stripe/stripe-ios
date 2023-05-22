@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodsCollectionViewController.swift
+//  CustomerSavedPaymentMethodsCollectionViewController.swift
 //  StripePaymentSheet
 //
 
@@ -10,13 +10,13 @@ import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
-protocol SavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
+protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
     func didUpdateSelection(
-        viewController: SavedPaymentMethodsCollectionViewController,
-        paymentMethodSelection: SavedPaymentMethodsCollectionViewController.Selection)
+        viewController: CustomerSavedPaymentMethodsCollectionViewController,
+        paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection)
     func didSelectRemove(
-        viewController: SavedPaymentMethodsCollectionViewController,
-        paymentMethodSelection: SavedPaymentMethodsCollectionViewController.Selection,
+        viewController: CustomerSavedPaymentMethodsCollectionViewController,
+        paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         originalPaymentMethodSelection: PersistablePaymentMethodOption?)
 }
 /*
@@ -28,7 +28,7 @@ protocol SavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
 
 /// For internal SDK use only
 @objc(STP_Internal_SavedPaymentMethodsCollectionViewController)
-class SavedPaymentMethodsCollectionViewController: UIViewController {
+class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     // MARK: - Types
     // TODO (cleanup) Replace this with didSelectX delegate methods. Turn this into a private ViewModel class
     /**
@@ -117,7 +117,7 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
 
     // MARK: - Internal Properties
     let configuration: Configuration
-    let savedPaymentMethodsConfiguration: SavedPaymentMethodsSheet.Configuration
+    let savedPaymentMethodsConfiguration: CustomerSheet.Configuration
     let customerAdapter: CustomerAdapter
 
     var selectedPaymentOption: PaymentOption? {
@@ -149,7 +149,7 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
             return true
         }
     }
-    weak var delegate: SavedPaymentMethodsCollectionViewControllerDelegate?
+    weak var delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate?
     var originalSelectedSavedPaymentMethod: PersistablePaymentMethodOption?
     var originalSelectedViewModelIndex: Int? {
         guard let originalSelectedSavedPaymentMethod = originalSelectedSavedPaymentMethod else {
@@ -186,11 +186,11 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
     // MARK: - Inits
     required init(
         savedPaymentMethods: [STPPaymentMethod],
-        savedPaymentMethodsConfiguration: SavedPaymentMethodsSheet.Configuration,
+        savedPaymentMethodsConfiguration: CustomerSheet.Configuration,
         customerAdapter: CustomerAdapter,
         configuration: Configuration,
         appearance: PaymentSheet.Appearance,
-        delegate: SavedPaymentMethodsCollectionViewControllerDelegate? = nil
+        delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
         self.savedPaymentMethodsConfiguration = savedPaymentMethodsConfiguration
@@ -281,7 +281,7 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logSPMSSelectPaymentMethodScreenPresented()
+        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenPresented()
 
         guard let selectedIndexPath = collectionView.indexPathsForSelectedItems?.first else {
             return
@@ -318,7 +318,7 @@ class SavedPaymentMethodsCollectionViewController: UIViewController {
 
 // MARK: - UICollectionView
 /// :nodoc:
-extension SavedPaymentMethodsCollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate,
+extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate,
     UICollectionViewDelegateFlowLayout
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
@@ -373,7 +373,7 @@ extension SavedPaymentMethodsCollectionViewController: UICollectionViewDataSourc
 
 // MARK: - PaymentOptionCellDelegate
 /// :nodoc:
-extension SavedPaymentMethodsCollectionViewController: PaymentOptionCellDelegate {
+extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCellDelegate {
     func paymentOptionCellDidSelectRemove(
         _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     ) {

@@ -203,7 +203,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         }
 
         if !(apiAdapter?.responds(
-            to: #selector(STPCustomerContext.detachPaymentMethod(fromCustomer:completion:))
+            to: #selector(STPCustomerContext.detachPaymentMethod(fromCustomer:csCompletion:))
         )
             ?? false)
         {
