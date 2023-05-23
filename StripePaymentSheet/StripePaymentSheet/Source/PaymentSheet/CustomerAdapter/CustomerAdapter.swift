@@ -18,7 +18,7 @@ import UIKit
 /// If you would prefer retrieving and updating your Stripe customer object via
 /// your own backend instead of using `StripeCustomerAdapter`, you should make your
 /// application's API client conform to this interface.
-@_spi(PrivateBetaSavedPaymentMethodsSheet) public protocol CustomerAdapter {
+@_spi(PrivateBetaCustomerSheet) public protocol CustomerAdapter {
     /// Retrieves a list of Payment Methods attached to a customer.
     /// If you are implementing your own <CustomerAdapter>:
     /// Call the list method ( https://stripe.com/docs/api/payment_methods/list )
@@ -68,15 +68,15 @@ import UIKit
 }
 
 /// An ephemeral key for the Stripe Customer
-@_spi(PrivateBetaSavedPaymentMethodsSheet) public struct CustomerEphemeralKey {
+@_spi(PrivateBetaCustomerSheet) public struct CustomerEphemeralKey {
     /// The identifier of the Stripe Customer object.
     /// See https://stripe.com/docs/api/customers/object#customer_object-id
-    @_spi(PrivateBetaSavedPaymentMethodsSheet) public let id: String
+    @_spi(PrivateBetaCustomerSheet) public let id: String
     /// A short-lived token that allows the SDK to access a Customer's payment methods
-    @_spi(PrivateBetaSavedPaymentMethodsSheet) public let ephemeralKeySecret: String
+    @_spi(PrivateBetaCustomerSheet) public let ephemeralKeySecret: String
 
     /// Initializes a CustomerConfiguration
-    @_spi(PrivateBetaSavedPaymentMethodsSheet) public init(customerId: String, ephemeralKeySecret: String) {
+    @_spi(PrivateBetaCustomerSheet) public init(customerId: String, ephemeralKeySecret: String) {
         self.id = customerId
         self.ephemeralKeySecret = ephemeralKeySecret
     }
@@ -86,7 +86,7 @@ import UIKit
 /// payment methods using an ephemeral key, a short-lived API key scoped to a specific
 /// customer object. If your current user logs out of your app and a new user logs in,
 /// be sure to create a new instance of `StripeCustomerAdapter`.
-@_spi(PrivateBetaSavedPaymentMethodsSheet) open class StripeCustomerAdapter: CustomerAdapter {
+@_spi(PrivateBetaCustomerSheet) open class StripeCustomerAdapter: CustomerAdapter {
     let customerEphemeralKeyProvider: (() async throws -> CustomerEphemeralKey)
     let setupIntentClientSecretProvider: (() async throws -> String)?
     let apiClient: STPAPIClient

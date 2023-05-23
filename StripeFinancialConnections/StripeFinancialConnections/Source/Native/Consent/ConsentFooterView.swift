@@ -40,10 +40,10 @@ class ConsentFooterView: HitTestView {
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
 
-        let termsAndPrivacyPolicyLabel = ClickableLabel(
-            font: UIFont.stripeFont(forTextStyle: .detail),
-            boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
-            linkFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+        let termsAndPrivacyPolicyLabel = AttributedTextView(
+            font: .body(.small),
+            boldFont: .body(.smallEmphasized),
+            linkFont: .body(.smallEmphasized),
             textColor: .textSecondary,
             alignCenter: true
         )
@@ -59,13 +59,13 @@ class ConsentFooterView: HitTestView {
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 20
+        verticalStackView.spacing = 24
 
         if let belowCtaText = belowCtaText {
-            let manuallyVerifyLabel = ClickableLabel(
-                font: UIFont.stripeFont(forTextStyle: .detail),
-                boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
-                linkFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+            let manuallyVerifyLabel = AttributedTextView(
+                font: .body(.small),
+                boldFont: .body(.smallEmphasized),
+                linkFont: .body(.smallEmphasized),
                 textColor: .textSecondary,
                 alignCenter: true
             )

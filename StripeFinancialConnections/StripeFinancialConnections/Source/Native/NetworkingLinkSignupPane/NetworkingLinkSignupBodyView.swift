@@ -69,9 +69,10 @@ private func CreateBulletPointView(
     imageView.contentMode = .scaleAspectFit
     imageView.setImage(with: iconUrl)
     imageView.translatesAutoresizingMaskIntoConstraints = false
+    let imageDiameter: CGFloat = 16
     NSLayoutConstraint.activate([
-        imageView.widthAnchor.constraint(equalToConstant: 16),
-        imageView.heightAnchor.constraint(equalToConstant: 16),
+        imageView.widthAnchor.constraint(equalToConstant: imageDiameter),
+        imageView.heightAnchor.constraint(equalToConstant: imageDiameter),
     ])
 
     let labelView = BulletPointLabelView(
@@ -88,7 +89,8 @@ private func CreateBulletPointView(
                 let extraPaddingView = UIStackView(arrangedSubviews: [imageView])
                 extraPaddingView.isLayoutMarginsRelativeArrangement = true
                 extraPaddingView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-                    top: 3,
+                    // center the image in the middle of the first line height
+                    top: max(0, (labelView.topLineHeight - imageDiameter) / 2),
                     leading: 0,
                     bottom: 0,
                     trailing: 0

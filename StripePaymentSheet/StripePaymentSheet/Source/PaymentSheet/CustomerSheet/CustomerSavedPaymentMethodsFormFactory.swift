@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodsFormFactory.swift
+//  CustomerSavedPaymentMethodsFormFactory.swift
 //  StripePaymentSheet
 //
 
@@ -10,10 +10,10 @@
 import SwiftUI
 import UIKit
 
-class SavedPaymentMethodsFormFactory {
+class CustomerSavedPaymentMethodsFormFactory {
 
     let paymentMethod: PaymentSheet.PaymentMethodType
-    let configuration: SavedPaymentMethodsSheet.Configuration
+    let configuration: CustomerSheet.Configuration
     let addressSpecProvider: AddressSpecProvider
 
     var theme: ElementsUITheme {
@@ -21,7 +21,7 @@ class SavedPaymentMethodsFormFactory {
     }
 
     init(
-        configuration: SavedPaymentMethodsSheet.Configuration,
+        configuration: CustomerSheet.Configuration,
         addressSpecProvider: AddressSpecProvider = .shared,
         paymentMethod: PaymentSheet.PaymentMethodType
     ) {

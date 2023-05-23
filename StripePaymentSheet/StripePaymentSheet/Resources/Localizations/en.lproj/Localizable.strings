@@ -119,6 +119,9 @@ re-entering the security code (CVV/CVC). */
 /* Title of the logout action. */
 "Log out of Link" = "Log out of Link";
 
+/* Title shown above a carousel containing the customer's payment methods */
+"Manage your payment method" = "Manage your payment method";
+
 /* Label for name on card field */
 "Name on card" = "Name on card";
 

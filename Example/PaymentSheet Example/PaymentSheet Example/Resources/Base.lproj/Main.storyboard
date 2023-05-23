@@ -763,7 +763,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="or6-aq-0to">
                                         <rect key="frame" x="0.0" y="108" width="222" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="SavedPaymentMethodsSheet (test playground)"/>
+                                        <state key="normal" title="CustomerSheet (test playground)"/>
                                         <connections>
                                             <segue destination="Mow-eq-n5c" kind="show" id="HTy-a1-6rc"/>
                                         </connections>
@@ -2206,7 +2206,7 @@
         <!--PaymentSheet (test playground)-->
         <scene sceneID="Tzm-Yg-77p">
             <objects>
-                <viewController title="PaymentSheet (test playground)" id="Mow-eq-n5c" customClass="SavedPaymentMethodSheetTestPlayground" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="PaymentSheet (test playground)" id="Mow-eq-n5c" customClass="CustomerSheetTestPlayground" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GZU-yl-wb0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2353,7 +2353,7 @@
                                                     <constraint firstAttribute="height" constant="1" id="y59-Mh-0ZU"/>
                                                 </constraints>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PaymentSheet.FlowController" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nHT-Ub-Q2l">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CustomerSheet" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nHT-Ub-Q2l">
                                                 <rect key="frame" x="0.0" y="51" width="413" height="20.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                 <nil key="textColor"/>

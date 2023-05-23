@@ -5,13 +5,13 @@
 
 import Foundation
 
-@_spi(PrivateBetaSavedPaymentMethodsSheet) public enum PersistablePaymentMethodOptionError: Error {
+@_spi(PrivateBetaCustomerSheet) public enum PersistablePaymentMethodOptionError: Error {
     case unableToEncode(PersistablePaymentMethodOption)
     case unableToDecode(String?)
 }
 
 /// A representation of a Payment Method option, used for persisting the user's default payment method.
-@_spi(PrivateBetaSavedPaymentMethodsSheet) public enum PersistablePaymentMethodOption: Equatable {
+@_spi(PrivateBetaCustomerSheet) public enum PersistablePaymentMethodOption: Equatable {
     /// The user's default payment method is Apple Pay.
     /// This is not a specific Apple Pay card. Stripe will present an Apple Pay sheet to the user.
     case applePay
