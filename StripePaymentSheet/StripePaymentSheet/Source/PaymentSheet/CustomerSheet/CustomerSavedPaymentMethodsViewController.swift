@@ -11,7 +11,7 @@ import UIKit
 
 protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?,
-                                                        with paymentOption: PaymentOption,
+                                                        with paymentOption: PaymentSheet.PaymentOption,
                                                         completion: @escaping(CustomerSheetResult) -> Void)
     func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
     func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
@@ -411,7 +411,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
-    func confirm(intent: Intent?, paymentOption: PaymentOption) {
+    func confirm(intent: Intent?, paymentOption: PaymentSheet.PaymentOption) {
         self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(intent, with: paymentOption, completion: { result in
             self.processingInFlight = false
             switch result {
@@ -561,7 +561,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         Task {
             let persistablePaymentOption = paymentOptionSelection.persistablePaymentMethodOption()
             do {
-                try await customerAdapter.setSelectedPaymentMethodOption(paymentOption: persistablePaymentOption)
+                try await customerAdapter.setSelectedPaymentOption(paymentOption: persistablePaymentOption)
                 onSuccess()
             } catch {
                 onError(error)
@@ -661,7 +661,7 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
     func didSelectRemove(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
-        originalPaymentMethodSelection: PersistablePaymentMethodOption?) {
+        originalPaymentMethodSelection: CustomerSheet.PaymentOption?) {
             guard case .saved(let paymentMethod) = paymentMethodSelection else {
                 return
             }
@@ -678,7 +678,7 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
                 if let originalPaymentMethodSelection = originalPaymentMethodSelection,
                    paymentMethodSelection == originalPaymentMethodSelection {
                     do {
-                        try await self.customerAdapter.setSelectedPaymentMethodOption(paymentOption: nil)
+                        try await self.customerAdapter.setSelectedPaymentOption(paymentOption: nil)
                     } catch {
                         // We are unable to persist the selectedPaymentMethodOption -- if we attempt to re-call
                         // a payment method that is no longer there, the UI should be able to handle not selecting it.

@@ -167,7 +167,7 @@ extension CustomerSheet {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
-    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?, with paymentOption: PaymentOption, completion: @escaping (CustomerSheetResult) -> Void) {
+    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?, with paymentOption: PaymentSheet.PaymentOption, completion: @escaping (CustomerSheetResult) -> Void) {
         guard let intent = intent,
               case .setupIntent = intent else {
             assertionFailure("Setup intent not available")
@@ -207,7 +207,7 @@ extension CustomerSheet: LoadingViewControllerDelegate {
     /// You can use this to obtain the selected payment method without loading the CustomerSheet.
     public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection?
      {
-        let selectedPaymentOption = try await self.fetchSelectedPaymentMethodOption()
+        let selectedPaymentOption = try await self.fetchSelectedPaymentOption()
         switch selectedPaymentOption {
         case .applePay:
             return .applePay()

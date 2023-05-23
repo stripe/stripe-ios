@@ -17,7 +17,7 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
     func didSelectRemove(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
-        originalPaymentMethodSelection: PersistablePaymentMethodOption?)
+        originalPaymentMethodSelection: CustomerSheet.PaymentOption?)
 }
 /*
  This class is largely a copy of SavedPaymentOptionsViewController, however a couple of exceptions
@@ -39,7 +39,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         case saved(paymentMethod: STPPaymentMethod)
         case add
 
-        static func ==(lhs: Selection, rhs: PersistablePaymentMethodOption?) -> Bool {
+        static func ==(lhs: Selection, rhs: CustomerSheet.PaymentOption?) -> Bool {
             switch lhs {
             case .applePay:
                 return rhs == .applePay
@@ -150,7 +150,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         }
     }
     weak var delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate?
-    var originalSelectedSavedPaymentMethod: PersistablePaymentMethodOption?
+    var originalSelectedSavedPaymentMethod: CustomerSheet.PaymentOption?
     var originalSelectedViewModelIndex: Int? {
         guard let originalSelectedSavedPaymentMethod = originalSelectedSavedPaymentMethod else {
             return nil
@@ -228,7 +228,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     private func retrieveSelectedPaymentMethodAndUpdateUI() {
         Task {
             do {
-                let paymentMethodOption = try await self.customerAdapter.fetchSelectedPaymentMethodOption()
+                let paymentMethodOption = try await self.customerAdapter.fetchSelectedPaymentOption()
                 if let selectedSavedPaymentOption = paymentMethodOption {
                     self.updateUI(selectedSavedPaymentOption: selectedSavedPaymentOption)
                     if self.selectedIndexPath != nil {
@@ -244,7 +244,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         }
     }
 
-    private func updateUI(selectedSavedPaymentOption: PersistablePaymentMethodOption?) {
+    private func updateUI(selectedSavedPaymentOption: CustomerSheet.PaymentOption?) {
         // Move default to front
         var savedPaymentMethods = self.savedPaymentMethods
         if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
