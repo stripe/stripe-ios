@@ -1,8 +1,8 @@
 //
-//  ClickableLabel.swift
+//  AttributedTextView.swift
 //  StripeFinancialConnections
 //
-//  Created by Krisjanis Gaidis on 6/16/22.
+//  Created by Krisjanis Gaidis on 5/2/23.
 //
 
 import Foundation
@@ -11,30 +11,42 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class ClickableLabel: HitTestView {
+// Adds support for markdown links and markdown bold.
+//
+// `AttributedTextView` is also the `UITextView` version of `AttributedLabel`.
+final class AttributedTextView: HitTestView {
 
-    struct Link {
+    private struct LinkDescriptor {
         let range: NSRange
         let urlString: String
         let action: (URL) -> Void
     }
 
-    private let font: UIFont
-    private let boldFont: UIFont
-    private let linkFont: UIFont
+    private let font: FinancialConnectionsFont
+    private let boldFont: FinancialConnectionsFont
+    private let linkFont: FinancialConnectionsFont
     private let textColor: UIColor
     private let alignCenter: Bool
-    private let textView = IncreasedHitTestTextView()
+    private let textView: IncreasedHitTestTextView
     private var linkURLStringToAction: [String: (URL) -> Void] = [:]
 
     init(
-        font: UIFont,
-        boldFont: UIFont,
-        linkFont: UIFont,
+        font: FinancialConnectionsFont,
+        boldFont: FinancialConnectionsFont,
+        linkFont: FinancialConnectionsFont,
         textColor: UIColor,
         linkColor: UIColor = .textBrand,
         alignCenter: Bool = false
     ) {
+        let textContainer = NSTextContainer(size: .zero)
+        let layoutManager = VerticalCenterLayoutManager()
+        layoutManager.addTextContainer(textContainer)
+        let textStorage = NSTextStorage()
+        textStorage.addLayoutManager(layoutManager)
+        self.textView = IncreasedHitTestTextView(
+            frame: .zero,
+            textContainer: textContainer
+        )
         self.font = font
         self.boldFont = boldFont
         self.linkFont = linkFont
@@ -89,7 +101,7 @@ final class ClickableLabel: HitTestView {
         setText(
             textLinks.linklessString,
             links: textLinks.links.map {
-                ClickableLabel.Link(
+                AttributedTextView.LinkDescriptor(
                     range: $0.range,
                     urlString: $0.urlString,
                     action: action
@@ -100,17 +112,19 @@ final class ClickableLabel: HitTestView {
 
     private func setText(
         _ text: String,
-        links: [Link]
+        links: [LinkDescriptor]
     ) {
         let paragraphStyle = NSMutableParagraphStyle()
         if alignCenter {
             paragraphStyle.alignment = .center
         }
+        paragraphStyle.minimumLineHeight = font.lineHeight
+        paragraphStyle.maximumLineHeight = font.lineHeight
         let string = NSMutableAttributedString(
             string: text,
             attributes: [
                 .paragraphStyle: paragraphStyle,
-                .font: font,
+                .font: font.uiFont,
                 .foregroundColor: textColor,
             ]
         )
@@ -120,13 +134,13 @@ final class ClickableLabel: HitTestView {
             string.addAttribute(.link, value: link.urlString, range: link.range)
 
             // setting font in `linkTextAttributes` does not work
-            string.addAttribute(.font, value: linkFont, range: link.range)
+            string.addAttribute(.font, value: linkFont.uiFont, range: link.range)
 
             linkURLStringToAction[link.urlString] = link.action
         }
 
         // apply bold attributes
-        string.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
+        string.addBoldFontAttributesByMarkdownRules(boldFont: boldFont.uiFont)
 
         textView.attributedText = string
     }
@@ -134,7 +148,7 @@ final class ClickableLabel: HitTestView {
 
 // MARK: <UITextViewDelegate>
 
-extension ClickableLabel: UITextViewDelegate {
+extension AttributedTextView: UITextViewDelegate {
 
     func textView(
         _ textView: UITextView,
@@ -168,5 +182,35 @@ private class IncreasedHitTestTextView: UITextView {
         // not happen.
         let largerBounds = bounds.insetBy(dx: -20, dy: -20)
         return largerBounds.contains(point)
+    }
+}
+
+// UITextView with custom `lineHeight` via `NSParagraphStyle` was not properly
+// centering the text, so here we adjust it to be centered.
+private class VerticalCenterLayoutManager: NSLayoutManager {
+    override func drawGlyphs(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
+        let range = characterRange(forGlyphRange: glyphsToShow, actualGlyphRange: nil)
+        guard
+            let attributedString = textStorage?.attributedSubstring(from: range),
+            attributedString.length > 0, // `attributes(at:effectiveRange)` crashes if empty string
+            let font = attributedString.attributes(at: 0, effectiveRange: nil)[.font] as? UIFont,
+            let paragraphStyle = attributedString.attribute(.paragraphStyle, at: 0, effectiveRange: nil) as? NSParagraphStyle
+        else {
+            super.drawGlyphs(forGlyphRange: glyphsToShow, at: origin)
+            return
+        }
+        let uiFontLineHeight = font.lineHeight
+        let paragraphStyleLineHeight = paragraphStyle.minimumLineHeight
+        assert(paragraphStyle.minimumLineHeight == paragraphStyle.maximumLineHeight, "we are assuming that minimum and maximum are the same")
+        if paragraphStyleLineHeight > uiFontLineHeight {
+            let lineHeightDifference = (paragraphStyleLineHeight - uiFontLineHeight)
+            let newOrigin = CGPoint(
+                x: origin.x,
+                y: origin.y - lineHeightDifference / 2
+            )
+            super.drawGlyphs(forGlyphRange: glyphsToShow, at: newOrigin)
+        } else {
+            super.drawGlyphs(forGlyphRange: glyphsToShow, at: origin)
+        }
     }
 }

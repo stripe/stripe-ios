@@ -32,10 +32,11 @@ final class NetworkingLinkVerificationBodyView: UIView {
 }
 
 private func CreateEmailLabel(email: String) -> UIView {
-    let emailLabel = UILabel()
+    let emailLabel = AttributedLabel(
+        font: .label(.medium),
+        textColor: .textSecondary
+    )
     emailLabel.text = String(format: STPLocalizedString("Signing in as %@", "A footnote that explains the user that when they enter an one-time-password code (OTP), they will be signing in as the email in this footnote. '%@' is replaced with an email, for examle: 'Signing in as user@gmail.com'."), email)
-    emailLabel.font = .stripeFont(forTextStyle: .captionTight)
-    emailLabel.textColor = .textSecondary
     return emailLabel
 }
 

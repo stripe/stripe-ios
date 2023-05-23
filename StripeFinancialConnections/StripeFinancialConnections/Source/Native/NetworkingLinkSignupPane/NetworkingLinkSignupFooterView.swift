@@ -23,17 +23,17 @@ class NetworkingLinkSignupFooterView: HitTestView {
     private lazy var footerVerticalStackView: UIStackView = {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 16
+        verticalStackView.spacing = 24
         verticalStackView.addArrangedSubview(aboveCtaLabel)
         verticalStackView.addArrangedSubview(buttonVerticalStack)
         return verticalStackView
     }()
 
-    private lazy var aboveCtaLabel: ClickableLabel = {
-        let termsAndPrivacyPolicyLabel = ClickableLabel(
-            font: UIFont.stripeFont(forTextStyle: .detail),
-            boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
-            linkFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+    private lazy var aboveCtaLabel: AttributedTextView = {
+        let termsAndPrivacyPolicyLabel = AttributedTextView(
+            font: .body(.small),
+            boldFont: .body(.smallEmphasized),
+            linkFont: .body(.smallEmphasized),
             textColor: .textSecondary,
             alignCenter: true
         )
