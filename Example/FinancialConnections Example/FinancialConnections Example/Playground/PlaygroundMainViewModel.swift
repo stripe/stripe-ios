@@ -21,7 +21,7 @@ final class PlaygroundMainViewModel: ObservableObject {
             return rawValue
         }
     }
-    @Published var flow: Flow = Flow(rawValue: PlaygroundUserDefaults.flow)! {
+    @Published var flow: Flow = Flow(rawValue: PlaygroundUserDefaults.flow) ?? .data {
         didSet {
             PlaygroundUserDefaults.flow = flow.rawValue
             if flow != .networking {
@@ -57,12 +57,6 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
-    @Published var enableAppToApp: Bool = PlaygroundUserDefaults.enableAppToApp {
-        didSet {
-            PlaygroundUserDefaults.enableAppToApp = enableAppToApp
-        }
-    }
-
     @Published var enableTestMode: Bool = PlaygroundUserDefaults.enableTestMode {
         didSet {
             PlaygroundUserDefaults.enableTestMode = enableTestMode
@@ -81,6 +75,41 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
+    enum CustomScenario: String, CaseIterable, Identifiable {
+        case none = "none"
+        case customKeys = "custom_keys"
+        case appToApp = "app_to_app"
+        case partnerF = "partner_f"
+        case partnerM = "partner_m"
+        /// Used for random bug bashes and could changes any time
+        case bugBash = "bug_bash"
+
+        var id: String {
+            return rawValue
+        }
+
+        var displayName: String {
+            switch self {
+            case .none:
+                return "Default"
+            case .customKeys:
+                return "Custom Keys"
+            case .appToApp:
+                return "App to App (Chase)"
+            case .partnerF:
+                return "Partner F"
+            case .partnerM:
+                return "Partner M"
+            case .bugBash:
+                return "Bug Bash"
+            }
+        }
+    }
+    @Published var customScenario: CustomScenario = CustomScenario(rawValue: PlaygroundUserDefaults.customScenario) ?? .none {
+        didSet {
+            PlaygroundUserDefaults.customScenario = customScenario.rawValue
+        }
+    }
     @Published var customPublicKey: String = PlaygroundUserDefaults.customPublicKey {
         didSet {
             PlaygroundUserDefaults.customPublicKey = customPublicKey
@@ -111,11 +140,11 @@ final class PlaygroundMainViewModel: ObservableObject {
     private func setup() {
         isLoading = true
         SetupPlayground(
-            enableAppToApp: enableAppToApp,
             enableTestMode: enableTestMode,
             flow: flow.rawValue,
             email: email,
             enableTransactionsPermission: enableTransactionsPermission,
+            customScenario: customScenario.rawValue,
             customPublicKey: customPublicKey,
             customSecretKey: customSecretKey
         ) { [weak self] setupPlaygroundResponse in
@@ -164,11 +193,11 @@ final class PlaygroundMainViewModel: ObservableObject {
 }
 
 private func SetupPlayground(
-    enableAppToApp: Bool,
     enableTestMode: Bool,
     flow: String,
     email: String,
     enableTransactionsPermission: Bool,
+    customScenario: String,
     customPublicKey: String,
     customSecretKey: String,
     completionHandler: @escaping ([String: String]?) -> Void
@@ -186,10 +215,10 @@ private func SetupPlayground(
     urlRequest.httpBody = {
         var requestBody: [String: Any] = [:]
         requestBody["enable_test_mode"] = enableTestMode
-        requestBody["enable_app_to_app"] = enableAppToApp
         requestBody["flow"] = flow
         requestBody["email"] = email
         requestBody["enable_transactions_permission"] = enableTransactionsPermission
+        requestBody["custom_scenario"] = customScenario
         requestBody["custom_public_key"] = customPublicKey
         requestBody["custom_secret_key"] = customSecretKey
         return try! JSONSerialization.data(

@@ -47,6 +47,12 @@ final class PlaygroundUserDefaults {
     static var enableTransactionsPermission: Bool
 
     @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_SCENARIO",
+        defaultValue: PlaygroundMainViewModel.CustomScenario.none.rawValue
+    )
+    static var customScenario: String
+
+    @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_PUBLIC_KEY",
         defaultValue: ""
     )
