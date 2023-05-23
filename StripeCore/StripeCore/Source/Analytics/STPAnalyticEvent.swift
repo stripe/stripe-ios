@@ -131,7 +131,9 @@ import Foundation
     // MARK: - Customer Sheet
     case cs_add_payment_method_screen_presented = "cs_add_payment_method_screen_presented"
     case cs_select_payment_method_screen_presented = "cs_select_payment_method_screen_presented"
-    case cs_select_payment_method_screen_selected_savedpm = "cs_select_payment_method_screen_selected_savedpm"
+
+    case cs_select_payment_method_screen_confirmed_savedpm_success = "cs_select_payment_method_screen_confirmed_savedpm_success"
+    case cs_select_payment_method_screen_confirmed_savedpm_failure = "cs_select_payment_method_screen_confirmed_savedpm_failure"
 
     case cs_select_payment_method_screen_edit_tapped = "cs_select_payment_method_screen_edit_tapped"
     case cs_select_payment_method_screen_done_tapped = "cs_select_payment_method_screen_done_tapped"

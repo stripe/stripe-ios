@@ -14,9 +14,16 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .cs_select_payment_method_screen_presented)
     }
 
-    // PM selection
-    func logCSSelectPaymentMethodScreenSelectedSavedPM() {
-        self.logPaymentSheetEvent(event: .cs_select_payment_method_screen_selected_savedpm)
+    // PM selection & Confirmation
+    func logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: String?) {
+        let paymentMethodType = type ?? "unknown"
+        self.logPaymentSheetEvent(event: .cs_select_payment_method_screen_confirmed_savedpm_success,
+                                  params: ["payment_method_type": paymentMethodType])
+    }
+    func logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: String?) {
+        let paymentMethodType = type ?? "unknown"
+        self.logPaymentSheetEvent(event: .cs_select_payment_method_screen_confirmed_savedpm_failure,
+                                  params: ["payment_method_type": paymentMethodType])
     }
 
     // Remove pm success/failure
