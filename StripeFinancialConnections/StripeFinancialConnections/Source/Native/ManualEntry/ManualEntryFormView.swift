@@ -40,7 +40,7 @@ final class ManualEntryFormView: UIView {
             ]
         )
         textFieldVerticalStackView.axis = .vertical
-        textFieldVerticalStackView.spacing = 24
+        textFieldVerticalStackView.spacing = 16
         return textFieldVerticalStackView
     }()
     private var errorView: ManualEntryErrorView?

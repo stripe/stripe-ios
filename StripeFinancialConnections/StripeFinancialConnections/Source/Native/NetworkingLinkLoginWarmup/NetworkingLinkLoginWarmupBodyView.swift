@@ -70,7 +70,7 @@ private func CreateContinueButton(
     )
     horizontalStack.layer.borderColor = UIColor.borderNeutral.cgColor
     horizontalStack.layer.borderWidth = 1
-    horizontalStack.layer.cornerRadius = 8
+    horizontalStack.layer.cornerRadius = 4
 
     let tapGestureRecognizer = UITapGestureRecognizer(
         target: target,
@@ -82,18 +82,20 @@ private func CreateContinueButton(
 }
 
 private func CreateContinueButtonLabelView(email: String) -> UIView {
-    let continueLabel = UILabel()
+    let continueLabel = AttributedLabel(
+        font: .label(.small),
+        textColor: .textSecondary
+    )
     continueLabel.text = STPLocalizedString(
         "Continue as",
         "Leading text that comes before an e-mail. For example, it might say 'Continue as username@gmail.com'. This text will be combined together to form a button which, when pressed, will automatically log-in the user with their e-mail."
     )
-    continueLabel.font = .stripeFont(forTextStyle: .captionTightEmphasized)
-    continueLabel.textColor = .textSecondary
 
-    let emailLabel = UILabel()
+    let emailLabel = AttributedLabel(
+        font: .label(.largeEmphasized),
+        textColor: .textPrimary
+    )
     emailLabel.text = email
-    emailLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-    emailLabel.textColor = .textPrimary
 
     let verticalStackView = UIStackView(
         arrangedSubviews: [
@@ -129,10 +131,10 @@ private func CreateSkipButton(
         "Continue without signing in",
         "Text for a butoon. Pressing it will allow the user to continue through the Bank Authentication Flow."
     )
-    let skipLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .captionTight),
-        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+    let skipLabel = AttributedTextView(
+        font: .label(.medium),
+        boldFont: .label(.mediumEmphasized),
+        linkFont: .label(.mediumEmphasized),
         textColor: .textSecondary
     )
     skipLabel.setText(

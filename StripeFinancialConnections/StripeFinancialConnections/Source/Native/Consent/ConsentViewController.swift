@@ -26,11 +26,11 @@ class ConsentViewController: UIViewController {
     private let dataSource: ConsentDataSource
     weak var delegate: ConsentViewControllerDelegate?
 
-    private lazy var titleLabel: ClickableLabel = {
-        let titleLabel = ClickableLabel(
-            font: .stripeFont(forTextStyle: .subtitle),
-            boldFont: .stripeFont(forTextStyle: .subtitle),
-            linkFont: .stripeFont(forTextStyle: .subtitle),
+    private lazy var titleLabel: AttributedTextView = {
+        let titleLabel = AttributedTextView(
+            font: .heading(.large),
+            boldFont: .heading(.large),
+            linkFont: .heading(.large),
             textColor: .textPrimary,
             alignCenter: dataSource.merchantLogo != nil
         )
@@ -82,21 +82,21 @@ class ConsentViewController: UIViewController {
                         ]
                     )
                     stackView.axis = .vertical
-                    stackView.spacing = 20
+                    stackView.spacing = 24
                     stackView.alignment = .center
                     return stackView
                 } else {
                     return titleLabel
                 }
             }(),
-            headerTopMargin: (dataSource.merchantLogo == nil) ? 16 : 4,
+            headerTopMargin: 16,
             contentView: ConsentBodyView(
                 bulletItems: dataSource.consent.body.bullets,
                 didSelectURL: { [weak self] url in
                     self?.didSelectURLInTextFromBackend(url)
                 }
             ),
-            headerAndContentSpacing: 28.0,
+            headerAndContentSpacing: 24.0,
             footerView: footerView
         )
         paneLayoutView.addTo(view: view)
