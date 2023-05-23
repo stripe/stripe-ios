@@ -14,16 +14,18 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
     private lazy var institutionIconView: InstitutionIconView = {
         return InstitutionIconView(size: .medium)
     }()
-    private lazy var titleLabel: UILabel = {
-        let titleLabel = UILabel()
-        titleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        titleLabel.textColor = .textPrimary
+    private lazy var titleLabel: AttributedLabel = {
+        let titleLabel = AttributedLabel(
+            font: .label(.largeEmphasized),
+            textColor: .textPrimary
+        )
         return titleLabel
     }()
-    private lazy var subtitleLabel: UILabel = {
-        let subtitleLabel = UILabel()
-        subtitleLabel.font = .stripeFont(forTextStyle: .captionTight)
-        subtitleLabel.textColor = .textDisabled
+    private lazy var subtitleLabel: AttributedLabel = {
+        let subtitleLabel = AttributedLabel(
+            font: .label(.small),
+            textColor: .textSecondary
+        )
         return subtitleLabel
     }()
 
@@ -39,7 +41,7 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
             ]
         )
         labelStackView.axis = .vertical
-        labelStackView.spacing = 2
+        labelStackView.spacing = 0
 
         let cellStackView = UIStackView(
             arrangedSubviews: [
@@ -99,9 +101,10 @@ private func CreateSelectedBackgroundView() -> UIView {
 
 extension InstitutionSearchTableViewCell {
 
+    @available(iOSApplicationExtension, unavailable)
     func customize(with institution: FinancialConnectionsInstitution) {
         institutionIconView.setImageUrl(institution.icon?.default)
-        titleLabel.text = institution.name
-        subtitleLabel.text = AuthFlowHelpers.formatUrlString(institution.url)
+        titleLabel.setText(institution.name)
+        subtitleLabel.setText(AuthFlowHelpers.formatUrlString(institution.url) ?? "")
     }
 }

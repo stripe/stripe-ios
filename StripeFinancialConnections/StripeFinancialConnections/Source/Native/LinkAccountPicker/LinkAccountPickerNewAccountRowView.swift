@@ -50,9 +50,14 @@ private func CreateIconView() -> UIView {
         .withTintColor(.textBrand, renderingMode: .alwaysOriginal)
     let paddedView = UIStackView(arrangedSubviews: [iconImageView])
     paddedView.backgroundColor = .textBrand.withAlphaComponent(0.1)
-    paddedView.layer.cornerRadius = diameter / 2
+    paddedView.layer.cornerRadius = 6
     paddedView.isLayoutMarginsRelativeArrangement = true
-    paddedView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
+    paddedView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+        top: 6,
+        leading: 6,
+        bottom: 6,
+        trailing: 6
+    )
     NSLayoutConstraint.activate([
         paddedView.widthAnchor.constraint(equalToConstant: diameter),
         paddedView.heightAnchor.constraint(equalToConstant: diameter),
@@ -61,13 +66,14 @@ private func CreateIconView() -> UIView {
 }
 
 private func CreateTitleLabelView() -> UIView {
-    let titleLabel = UILabel()
+    let titleLabel = AttributedLabel(
+        font: .label(.largeEmphasized),
+        textColor: .textBrand
+    )
     titleLabel.text = STPLocalizedString(
         "New bank account",
         "A button that allows users to add an additional bank account for future payments."
     )
-    titleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-    titleLabel.textColor = .textBrand
     titleLabel.lineBreakMode = .byCharWrapping
     return titleLabel
 }
