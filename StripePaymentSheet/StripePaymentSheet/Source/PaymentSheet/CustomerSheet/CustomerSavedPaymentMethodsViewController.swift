@@ -346,8 +346,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.applePay()
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
                         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: "apple_pay")
-                        // TODO: Communicate error to consumer
-                        print(error)
+                        self.error = error
+                        self.updateUI(animated: true)
                     } onSuccess: {
                         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: "apple_pay")
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
@@ -360,8 +360,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     let type = STPPaymentMethod.string(from: paymentMethod.type)
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
                         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: type)
-                        // TODO: Communicate error to consumer
-                        print(error)
+                        self.error = error
+                        self.updateUI(animated: true)
                     } onSuccess: {
                         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: type)
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
@@ -584,6 +584,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     @objc
     func didSelectEditSavedPaymentMethodsButton() {
+        self.error = nil
+        updateUI(animated: true)
         savedPaymentOptionsViewController.isRemovingPaymentMethods.toggle()
         configureEditSavedPaymentMethodsButton()
     }
@@ -640,9 +642,9 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
     func didUpdateSelection(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection) {
+            error = nil
             switch paymentMethodSelection {
             case .add:
-                error = nil
                 if customerAdapter.canCreateSetupIntents {
                     mode = .addingNewWithSetupIntent
                 } else {
