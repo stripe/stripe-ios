@@ -93,7 +93,7 @@ extension CustomerSheet {
             }
         }
 
-        func persistablePaymentMethodOption() -> PersistablePaymentMethodOption {
+        func customerPaymentMethodOption() -> CustomerPaymentOption {
             switch self {
             case .applePay:
                 return .applePay

@@ -129,7 +129,7 @@ internal enum CustomerSheetResult {
     @available(macCatalystApplicationExtension, unavailable)
     func present(from presentingViewController: UIViewController,
                  savedPaymentMethods: [STPPaymentMethod],
-                 selectedPaymentMethodOption: PersistablePaymentMethodOption?) {
+                 selectedPaymentMethodOption: CustomerPaymentOption?) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
             loadSpecsPromise.resolve(with: ())
@@ -155,11 +155,11 @@ internal enum CustomerSheetResult {
 }
 
 extension CustomerSheet {
-    func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], PersistablePaymentMethodOption?), Error>) -> Void) {
+    func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?), Error>) -> Void) {
         Task {
             do {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
-                async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentMethodOption()
+                async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentOption()
                 let (paymentMethods, selectedPaymentMethod) = try await (paymentMethodsResult, selectedPaymentMethodResult)
                 completion(.success((paymentMethods, selectedPaymentMethod)))
             } catch {
@@ -212,7 +212,7 @@ extension CustomerSheet: LoadingViewControllerDelegate {
     /// You can use this to obtain the selected payment method without loading the CustomerSheet.
     public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection?
      {
-        let selectedPaymentOption = try await self.fetchSelectedPaymentMethodOption()
+        let selectedPaymentOption = try await self.fetchSelectedPaymentOption()
         switch selectedPaymentOption {
         case .applePay:
             return .applePay()
