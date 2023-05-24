@@ -161,51 +161,13 @@ enum TaskResult<T> {
 extension CustomerSheet {
     func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], PersistablePaymentMethodOption?), Error>) -> Void) {
         Task {
-            await withTaskGroup(of: TaskResult<Any?>.self) { group in
-                group.addTask {
-                    do {
-                        let paymentMethods = try await self.customerAdapter.fetchPaymentMethods()
-                        let filteredPaymentMethods = paymentMethods.filter { $0.type == .card }
-                        return .success(filteredPaymentMethods)
-                    } catch {
-                        return .failure(error)
-                    }
-                }
-                group.addTask {
-                    do {
-                        let selectedPaymentMethod = try await self.customerAdapter.fetchSelectedPaymentMethodOption()
-                        return .success(selectedPaymentMethod)
-                    } catch {
-                        return .failure(error)
-                    }
-                }
-
-                //Ensure all tasks complete otherwise call the completion w/ failure
-                var taskResults: [Any?] = []
-                for await result in group {
-                    switch(result) {
-                    case .success(let result):
-                        taskResults.append(result)
-                    case .failure(let error):
-                        group.cancelAll()
-                        completion(.failure(error))
-                        break
-                    }
-                }
-                if group.isCancelled {
-                    return
-                }
-
-                var filtered: [STPPaymentMethod] = []
-                var selected: PersistablePaymentMethodOption?
-                for result in taskResults {
-                    if let filteredPaymentMethods = result as? [STPPaymentMethod] {
-                        filtered = filteredPaymentMethods
-                    } else if let selectedPaymentMethod = result as? PersistablePaymentMethodOption {
-                        selected = selectedPaymentMethod
-                    }
-                }
-                completion(.success((filtered, selected)))
+            do {
+                async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
+                async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentMethodOption()
+                let (paymentMethods, selectedPaymentMethod) = try await (paymentMethodsResult, selectedPaymentMethodResult)
+                completion(.success((paymentMethods, selectedPaymentMethod)))
+            } catch {
+                completion(.failure(error))
             }
         }
     }
