@@ -35,7 +35,13 @@
                    completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
     [STPAPIClient sharedClient].publishableKey = STPTestingDefaultPublishableKey;
 }
-
+/*
+ TODO:
+ testAlipayOpensWebviewAfterNativeURLUnavailable was commented out because the clientSecret was confirmed too many times.
+ We need to update this test such that  we mock out the response of the STPAPIClient and returns a STPPaymentIntent that
+ is in a canceled state
+ */
+/*
 // N.B. Test mode alipay PaymentIntent's never have a native redirect so we can't test that here
 - (void)testAlipayOpensWebviewAfterNativeURLUnavailable {
     
@@ -69,7 +75,7 @@
     [self waitForExpectationsWithTimeout:4 handler:nil];
     [paymentHandler stopMocking]; // paymentHandler is a singleton, so we need to manually call `stopMocking`
 }
-
+*/
 - (void)test_oxxo_payment_intent_server_side_confirmation {
     // OXXO is interesting b/c the PI status after handling next actions is requires_action, not succeeded.
     id paymentHandler = OCMPartialMock(STPPaymentHandler.sharedHandler);
