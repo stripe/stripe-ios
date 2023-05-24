@@ -489,7 +489,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubNewCustomerResponse()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
-                                                            confirmHandler: confirmHandler(_:_:))
+                                                            confirmHandler: confirmHandler(_:_:_:))
 
         preparePaymentSheet(intentConfig: intentConfig)
         presentPaymentSheet(darkMode: false)
@@ -502,7 +502,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
-                                                            confirmHandler: confirmHandler(_:_:))
+                                                            confirmHandler: confirmHandler(_:_:_:))
 
         preparePaymentSheet(
             automaticPaymentMethods: false,
@@ -1130,7 +1130,8 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
     }
 
-    func confirmHandler(_ paymentMethodID: String,
+    func confirmHandler(_ paymentMethod: STPPaymentMethod,
+                        _ shouldSavePaymentMethod: Bool,
                         _ intentCreationCallback: (Result<String, Error>) -> Void) {
         // no-op
     }

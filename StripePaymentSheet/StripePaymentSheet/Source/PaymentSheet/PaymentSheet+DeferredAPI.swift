@@ -38,9 +38,9 @@ extension PaymentSheet {
 
                 // 2. Get Intent client secret from merchant
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
-                                                                                 paymentMethodID: paymentMethod.stripeId,
+                                                                                 paymentMethod: paymentMethod,
                                                                                  shouldSavePaymentMethod: confirmType.shouldSave)
-                guard clientSecret != IntentConfiguration.FORCE_SUCCESS else {
+                guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
                     completion(.completed)
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetForceSuccess)
@@ -51,6 +51,7 @@ extension PaymentSheet {
                 switch intentConfig.mode {
                 case .payment:
                     let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
+                    try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent, intentConfiguration: intentConfig)
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 4a. Client-side confirmation
@@ -77,6 +78,7 @@ extension PaymentSheet {
                     }
                 case .setup:
                     let setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
+                    try PaymentSheetDeferredValidator.validate(setupIntent: setupIntent, intentConfiguration: intentConfig)
                     if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
                         // 4a. Client-side confirmation
                         let setupIntentParams = makeSetupIntentParams(
@@ -124,22 +126,15 @@ extension PaymentSheet {
         }
     }
 
-    static func fetchIntentClientSecretFromMerchant(intentConfig: IntentConfiguration,
-                                                    paymentMethodID: String,
-                                                    shouldSavePaymentMethod: Bool) async throws -> String {
+    static func fetchIntentClientSecretFromMerchant(
+        intentConfig: IntentConfiguration,
+        paymentMethod: STPPaymentMethod,
+        shouldSavePaymentMethod: Bool
+    ) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
-
-            if let confirmHandlerForServerSideConfirmation = intentConfig.confirmHandlerForServerSideConfirmation {
-                DispatchQueue.main.async {
-                    confirmHandlerForServerSideConfirmation(paymentMethodID, shouldSavePaymentMethod, { result in
-                        continuation.resume(with: result)
-                    })
-                }
-            } else if let confirmHandler = intentConfig.confirmHandler {
-                DispatchQueue.main.async {
-                    confirmHandler(paymentMethodID, { result in
-                        continuation.resume(with: result)
-                    })
+            DispatchQueue.main.async {
+                intentConfig.confirmHandler(paymentMethod, shouldSavePaymentMethod) { result in
+                    continuation.resume(with: result)
                 }
             }
         }
