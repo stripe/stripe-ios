@@ -27,7 +27,7 @@ extension CustomerSheet {
         /// Describes the appearance of SavdPaymentMethodsSheet
         public var appearance = PaymentSheet.Appearance.default
 
-        /// A URL that redirects back to your app that PaymentSheet can use to auto-dismiss
+        /// A URL that redirects back to your app that CustomerSheet can use to auto-dismiss
         /// web views used for additional authentication, e.g. 3DS2
         public var returnURL: String?
 
