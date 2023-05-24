@@ -17,11 +17,11 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
     func didSelectRemove(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
-        originalPaymentMethodSelection: PersistablePaymentMethodOption?)
+        originalPaymentMethodSelection: CustomerPaymentOption?)
 }
 /*
  This class is largely a copy of SavedPaymentOptionsViewController, however a couple of exceptions
-  - Removes link supportPersistablePaymentMethodOption
+  - Removes link as an option
   - Does not save the selected payment method to the local device settings
   - Fetches customerId using the underlying backing STPCustomerContext
  */
@@ -39,7 +39,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         case saved(paymentMethod: STPPaymentMethod)
         case add
 
-        static func ==(lhs: Selection, rhs: PersistablePaymentMethodOption?) -> Bool {
+        static func ==(lhs: Selection, rhs: CustomerPaymentOption?) -> Bool {
             switch lhs {
             case .applePay:
                 return rhs == .applePay
@@ -147,7 +147,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         }
     }
     weak var delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate?
-    let originalSelectedSavedPaymentMethod: PersistablePaymentMethodOption?
+    let originalSelectedSavedPaymentMethod: CustomerPaymentOption?
     var originalSelectedViewModelIndex: Int? {
         guard let originalSelectedSavedPaymentMethod = originalSelectedSavedPaymentMethod else {
             return nil
@@ -183,7 +183,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     // MARK: - Inits
     required init(
         savedPaymentMethods: [STPPaymentMethod],
-        selectedPaymentMethodOption: PersistablePaymentMethodOption?,
+        selectedPaymentMethodOption: CustomerPaymentOption?,
         savedPaymentMethodsConfiguration: CustomerSheet.Configuration,
         customerAdapter: CustomerAdapter,
         configuration: Configuration,
@@ -224,7 +224,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     }
 
     // MARK: - Private methods
-    private func updateUI(selectedSavedPaymentOption: PersistablePaymentMethodOption?) {
+    private func updateUI(selectedSavedPaymentOption: CustomerPaymentOption?) {
         // Move default to front
         var savedPaymentMethods = self.savedPaymentMethods
         if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {

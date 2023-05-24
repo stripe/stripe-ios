@@ -1,17 +1,12 @@
 //
-//  PersistablePaymentMethodOption.swift
+//  CustomerPaymentOption.swift
 //  StripePaymentsUI
 //
 
 import Foundation
 
-@_spi(PrivateBetaCustomerSheet) public enum PersistablePaymentMethodOptionError: Error {
-    case unableToEncode(PersistablePaymentMethodOption)
-    case unableToDecode(String?)
-}
-
 /// A representation of a Payment Method option, used for persisting the user's default payment method.
-@_spi(PrivateBetaCustomerSheet) public enum PersistablePaymentMethodOption: Equatable {
+@_spi(PrivateBetaCustomerSheet) public enum CustomerPaymentOption: Equatable {
     /// The user's default payment method is Apple Pay.
     /// This is not a specific Apple Pay card. Stripe will present an Apple Pay sheet to the user.
     case applePay
@@ -47,7 +42,7 @@ import Foundation
     /// - Parameters:
     ///   - identifier: Payment method identifier.
     ///   - customerID: ID of the customer. Pass `nil` for anonymous users.
-    @_spi(STP) public static func setDefaultPaymentMethod(_ paymentMethodOption: PersistablePaymentMethodOption?, forCustomer customerID: String?) {
+    @_spi(STP) public static func setDefaultPaymentMethod(_ paymentMethodOption: CustomerPaymentOption?, forCustomer customerID: String?) {
         var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
 
         let key = customerID ?? ""
@@ -59,13 +54,13 @@ import Foundation
     /// Returns the identifier of the default payment method for a customer.
     /// - Parameter customerID: ID of the customer. Pass `nil` for anonymous users.
     /// - Returns: Default payment method.
-    @_spi(STP) public static func defaultPaymentMethod(for customerID: String?) -> PersistablePaymentMethodOption? {
+    @_spi(STP) public static func defaultPaymentMethod(for customerID: String?) -> CustomerPaymentOption? {
         let key = customerID ?? ""
 
         guard let value = UserDefaults.standard.customerToLastSelectedPaymentMethod?[key] else {
             return nil
         }
 
-        return PersistablePaymentMethodOption(value: value)
+        return CustomerPaymentOption(value: value)
     }
 }

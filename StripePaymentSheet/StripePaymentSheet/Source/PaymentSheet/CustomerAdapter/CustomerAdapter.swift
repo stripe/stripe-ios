@@ -49,13 +49,13 @@ import UIKit
     /// To unset the default payment method, pass `nil` as the `paymentOption`.
     /// If you are implementing your own <CustomerAdapter>:
     /// Save a representation of the passed `paymentOption` as the customer's default payment method.
-    func setSelectedPaymentMethodOption(paymentOption: PersistablePaymentMethodOption?) async throws
+    func setSelectedPaymentOption(paymentOption: CustomerPaymentOption?) async throws
 
     /// Retrieve the last selected payment method for the customer.
     /// If you are implementing your own <CustomerAdapter>:
-    /// Return a PersistablePaymentMethodOption for the customer's default selected payment method.
+    /// Return a CustomerPaymentOption for the customer's default selected payment method.
     /// If no default payment method is selected, return nil.
-    func fetchSelectedPaymentMethodOption() async throws -> PersistablePaymentMethodOption?
+    func fetchSelectedPaymentOption() async throws -> CustomerPaymentOption?
 
     /// Creates a SetupIntent configured to attach a new payment method to a customer, then returns the client secret for the created SetupIntent.
     func setupIntentClientSecretForCustomerAttach() async throws -> String
@@ -174,16 +174,16 @@ import UIKit
         })
     }
 
-    open func setSelectedPaymentMethodOption(paymentOption: PersistablePaymentMethodOption?) async throws {
+    open func setSelectedPaymentOption(paymentOption: CustomerPaymentOption?) async throws {
         let customerEphemeralKey = try await customerEphemeralKey
 
-        PersistablePaymentMethodOption.setDefaultPaymentMethod(paymentOption, forCustomer: customerEphemeralKey.id)
+        CustomerPaymentOption.setDefaultPaymentMethod(paymentOption, forCustomer: customerEphemeralKey.id)
     }
 
-    open func fetchSelectedPaymentMethodOption() async throws -> PersistablePaymentMethodOption? {
+    open func fetchSelectedPaymentOption() async throws -> CustomerPaymentOption? {
         let customerEphemeralKey = try await customerEphemeralKey
 
-        return PersistablePaymentMethodOption.defaultPaymentMethod(for: customerEphemeralKey.id)
+        return CustomerPaymentOption.defaultPaymentMethod(for: customerEphemeralKey.id)
     }
 
     open func setupIntentClientSecretForCustomerAttach() async throws -> String {

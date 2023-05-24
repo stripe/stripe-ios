@@ -36,7 +36,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         case saved(paymentMethod: STPPaymentMethod)
         case add
 
-        static func ==(lhs: Selection, rhs: PersistablePaymentMethodOption?) -> Bool {
+        static func ==(lhs: Selection, rhs: CustomerPaymentOption?) -> Bool {
             switch lhs {
             case .link:
                 return rhs == .link
@@ -200,7 +200,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Private methods
     private func updateUI() {
-        let defaultPaymentMethod = PersistablePaymentMethodOption.defaultPaymentMethod(for: configuration.customerID)
+        let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customerID)
 
         // Move default to front
         var savedPaymentMethods = self.savedPaymentMethods
@@ -256,7 +256,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             return
         }
 
-        PersistablePaymentMethodOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
         selectedViewModelIndex = viewModels.firstIndex(where: { $0 == .link })
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredHorizontally)
     }
@@ -317,11 +317,11 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             // Should have been handled in shouldSelectItemAt: before we got here!
             assertionFailure()
         case .applePay:
-            PersistablePaymentMethodOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
+            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
         case .link:
-            PersistablePaymentMethodOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
         case .saved(let paymentMethod):
-            PersistablePaymentMethodOption.setDefaultPaymentMethod(
+            CustomerPaymentOption.setDefaultPaymentMethod(
                 .stripeId(paymentMethod.stripeId),
                 forCustomer: configuration.customerID
             )
