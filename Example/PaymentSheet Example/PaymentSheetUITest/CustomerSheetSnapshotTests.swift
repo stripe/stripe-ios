@@ -31,11 +31,11 @@ class StubCustomerAdapter: CustomerAdapter {
 
     }
 
-    func setSelectedPaymentMethodOption(paymentOption: StripePaymentSheet.CustomerPaymentOption?) async throws {
+    func setSelectedPaymentOption(paymentOption: CustomerPaymentOption?) async throws {
 
     }
 
-    func fetchSelectedPaymentMethodOption() async throws -> StripePaymentSheet.CustomerPaymentOption? {
+    func fetchSelectedPaymentOption() async throws -> CustomerPaymentOption? {
         return nil
     }
 
