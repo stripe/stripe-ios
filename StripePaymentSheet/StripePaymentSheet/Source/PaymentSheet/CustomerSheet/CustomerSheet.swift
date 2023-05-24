@@ -154,10 +154,6 @@ internal enum CustomerSheetResult {
     var userCompletion: ((SheetResult) -> Void)?
 }
 
-enum TaskResult<T> {
-    case success(T)
-    case failure(Error)
-}
 extension CustomerSheet {
     func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], PersistablePaymentMethodOption?), Error>) -> Void) {
         Task {
