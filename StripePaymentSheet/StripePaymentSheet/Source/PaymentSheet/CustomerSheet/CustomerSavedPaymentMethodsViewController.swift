@@ -22,6 +22,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: - Read-only Properties
     let savedPaymentMethods: [STPPaymentMethod]
+    let selectedPaymentMethodOption: PersistablePaymentMethodOption?
     let isApplePayEnabled: Bool
     let configuration: CustomerSheet.Configuration
     let customerAdapter: CustomerAdapter
@@ -70,6 +71,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         let showApplePay = isApplePayEnabled
         return CustomerSavedPaymentMethodsCollectionViewController(
             savedPaymentMethods: savedPaymentMethods,
+            selectedPaymentMethodOption: selectedPaymentMethodOption,
             savedPaymentMethodsConfiguration: self.configuration,
             customerAdapter: self.customerAdapter,
             configuration: .init(
@@ -107,6 +109,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     required init(
         savedPaymentMethods: [STPPaymentMethod],
+        selectedPaymentMethodOption: PersistablePaymentMethodOption?,
         configuration: CustomerSheet.Configuration,
         customerAdapter: CustomerAdapter,
         isApplePayEnabled: Bool,
@@ -114,6 +117,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
     ) {
         self.savedPaymentMethods = savedPaymentMethods
+        self.selectedPaymentMethodOption = selectedPaymentMethodOption
         self.configuration = configuration
         self.customerAdapter = customerAdapter
         self.isApplePayEnabled = isApplePayEnabled

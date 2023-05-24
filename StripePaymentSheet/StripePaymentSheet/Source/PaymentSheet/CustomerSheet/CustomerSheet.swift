@@ -110,13 +110,15 @@ internal enum CustomerSheetResult {
             csCompletion(.error(error))
             return
         }
-        loadPaymentMethods { result in
+        loadPaymentMethodInfo { result in
             switch result {
-            case .success(let savedPaymentMethods):
-                self.present(from: presentingViewController, savedPaymentMethods: savedPaymentMethods)
+            case .success((let savedPaymentMethods, let selectedPaymentMethodOption)):
+                self.present(from: presentingViewController, savedPaymentMethods: savedPaymentMethods, selectedPaymentMethodOption: selectedPaymentMethodOption)
             case .failure(let error):
                 csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
-                return
+                DispatchQueue.main.async {
+                    self.bottomSheetViewController.dismiss(animated: true)
+                }
             }
         }
         presentingViewController.presentAsBottomSheet(bottomSheetViewController,
@@ -126,7 +128,8 @@ internal enum CustomerSheetResult {
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     func present(from presentingViewController: UIViewController,
-                 savedPaymentMethods: [STPPaymentMethod]) {
+                 savedPaymentMethods: [STPPaymentMethod],
+                 selectedPaymentMethodOption: PersistablePaymentMethodOption?) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
             loadSpecsPromise.resolve(with: ())
@@ -136,6 +139,7 @@ internal enum CustomerSheetResult {
             DispatchQueue.main.async {
                 let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
                 let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
+                                                                                    selectedPaymentMethodOption: selectedPaymentMethodOption,
                                                                                     configuration: self.configuration,
                                                                                     customerAdapter: self.customerAdapter,
                                                                                     isApplePayEnabled: isApplePayEnabled,
@@ -151,12 +155,13 @@ internal enum CustomerSheetResult {
 }
 
 extension CustomerSheet {
-    func loadPaymentMethods(completion: @escaping (Result<[STPPaymentMethod], Error>) -> Void) {
+    func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], PersistablePaymentMethodOption?), Error>) -> Void) {
         Task {
             do {
-                let paymentMethods = try await customerAdapter.fetchPaymentMethods()
-                let filteredPaymentMethods = paymentMethods.filter { $0.type == .card }
-                completion(.success(filteredPaymentMethods))
+                async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
+                async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentMethodOption()
+                let (paymentMethods, selectedPaymentMethod) = try await (paymentMethodsResult, selectedPaymentMethodResult)
+                completion(.success((paymentMethods, selectedPaymentMethod)))
             } catch {
                 completion(.failure(error))
             }
