@@ -1900,7 +1900,7 @@ extension PaymentSheetUITest {
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
         app.buttons["Link account"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
         // Confirm
