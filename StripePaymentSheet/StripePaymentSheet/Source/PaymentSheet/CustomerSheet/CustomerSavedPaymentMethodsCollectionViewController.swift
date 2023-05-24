@@ -134,11 +134,8 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             return .saved(paymentMethod: paymentMethod)
         }
     }
-    var savedPaymentMethods: [STPPaymentMethod] {
-        didSet {
-            retrieveSelectedPaymentMethodAndUpdateUI()
-        }
-    }
+    var savedPaymentMethods: [STPPaymentMethod]
+
     /// Whether or not there are any payment options we can show
     /// i.e. Are there any cells besides the Add cell?
     var hasPaymentOptions: Bool {
@@ -150,7 +147,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         }
     }
     weak var delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate?
-    var originalSelectedSavedPaymentMethod: PersistablePaymentMethodOption?
+    let originalSelectedSavedPaymentMethod: PersistablePaymentMethodOption?
     var originalSelectedViewModelIndex: Int? {
         guard let originalSelectedSavedPaymentMethod = originalSelectedSavedPaymentMethod else {
             return nil
@@ -186,6 +183,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     // MARK: - Inits
     required init(
         savedPaymentMethods: [STPPaymentMethod],
+        selectedPaymentMethodOption: PersistablePaymentMethodOption?,
         savedPaymentMethodsConfiguration: CustomerSheet.Configuration,
         customerAdapter: CustomerAdapter,
         configuration: Configuration,
@@ -193,6 +191,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
+        self.originalSelectedSavedPaymentMethod = selectedPaymentMethodOption
         self.savedPaymentMethodsConfiguration = savedPaymentMethodsConfiguration
         self.configuration = configuration
         self.customerAdapter = customerAdapter
@@ -221,29 +220,10 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-        retrieveSelectedPaymentMethodAndUpdateUI()
+        self.updateUI(selectedSavedPaymentOption: self.originalSelectedSavedPaymentMethod)
     }
 
     // MARK: - Private methods
-    private func retrieveSelectedPaymentMethodAndUpdateUI() {
-        Task {
-            do {
-                let paymentMethodOption = try await self.customerAdapter.fetchSelectedPaymentMethodOption()
-                if let selectedSavedPaymentOption = paymentMethodOption {
-                    self.updateUI(selectedSavedPaymentOption: selectedSavedPaymentOption)
-                    if self.selectedIndexPath != nil {
-                        self.originalSelectedSavedPaymentMethod = selectedSavedPaymentOption
-                    }
-                } else {
-                    self.updateUI(selectedSavedPaymentOption: nil)
-                }
-            } catch {
-                self.updateUI(selectedSavedPaymentOption: nil)
-                return
-            }
-        }
-    }
-
     private func updateUI(selectedSavedPaymentOption: PersistablePaymentMethodOption?) {
         // Move default to front
         var savedPaymentMethods = self.savedPaymentMethods
@@ -270,8 +250,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             ?? (self.configuration.autoSelectDefaultBehavior == .defaultFirst ? 1 : nil)
         }
 
-        // Ensure that self.seelctedViewModelIndex is set before calling DispatchQueue.main.async
-        // so that callers have access to the selected payment method
         DispatchQueue.main.async {
             self.collectionView.reloadData()
             self.collectionView.selectItem(at: self.selectedIndexPath, animated: false, scrollPosition: [])
