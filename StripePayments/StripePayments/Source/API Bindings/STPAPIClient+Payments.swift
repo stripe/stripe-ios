@@ -464,6 +464,7 @@ extension STPAPIClient {
     ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
     ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    @objc(confirmPaymentIntentWithParams:expand:completion:)
     public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
         expand: [String]?,

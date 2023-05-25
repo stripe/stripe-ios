@@ -12,7 +12,7 @@
 #import <SafariServices/SafariServices.h>
 
 #import "STPTestingAPIClient.h"
-
+#import "STPFixtures.h"
 
 @interface STPPaymentHandlerFunctionalTest : XCTestCase <STPAuthenticationContext>
 @property (nonatomic) id presentingViewController;
@@ -35,18 +35,27 @@
                    completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
     [STPAPIClient sharedClient].publishableKey = STPTestingDefaultPublishableKey;
 }
-/*
- TODO:
- testAlipayOpensWebviewAfterNativeURLUnavailable was commented out because the clientSecret was confirmed too many times.
- We need to update this test such that  we mock out the response of the STPAPIClient and returns a STPPaymentIntent that
- is in a canceled state
- */
-/*
+
 // N.B. Test mode alipay PaymentIntent's never have a native redirect so we can't test that here
 - (void)testAlipayOpensWebviewAfterNativeURLUnavailable {
-    
-    __block NSString *clientSecret = @"pi_1GiohpFY0qyl6XeWw09oKwWi_secret_Co4Etlq8YhmB6p07LQTP1Yklg";
+    __block NSString *clientSecret = @"pi_123_secret_456";
+
+    id apiClient = OCMPartialMock(STPAPIClient.sharedClient);
+    STPPaymentIntent *paymentIntent = [STPFixtures paymentIntent];
+    OCMStub([apiClient confirmPaymentIntentWithParams:[OCMArg any] expand:[OCMArg any] completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+        void (^handler)(STPPaymentIntent *paymentIntent, __unused NSError * _Nullable error);
+        [invocation getArgument:&handler atIndex:4];
+        handler(paymentIntent, nil);
+    });
+
+    OCMStub([apiClient retrievePaymentIntentWithClientSecret:[OCMArg any] expand:[OCMArg any] completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+        void (^handler)(STPPaymentIntent *paymentIntent, __unused NSError * _Nullable error);
+        [invocation getArgument:&handler atIndex:4];
+        handler(paymentIntent, nil);
+    });
+
     id paymentHandler = OCMPartialMock(STPPaymentHandler.sharedHandler);
+    OCMStub([paymentHandler apiClient]).andReturn(apiClient);
     
     // Simulate the safari VC finishing after presenting it
     OCMStub([self.presentingViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]).andDo(^(__unused NSInvocation *_) {
@@ -58,9 +67,9 @@
     confirmParams.paymentMethodOptions.alipayOptions = [STPConfirmAlipayOptions new];
     confirmParams.paymentMethodParams = [STPPaymentMethodParams paramsWithAlipay:[STPPaymentMethodAlipayParams new] billingDetails:nil metadata:nil];
     confirmParams.returnURL = @"foo://bar";
-    
+
     XCTestExpectation *e = [self expectationWithDescription:@""];
-    [paymentHandler confirmPayment:confirmParams withAuthenticationContext:self completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * __unused paymentIntent, __unused NSError * _Nullable error) {
+    [paymentHandler confirmPayment:confirmParams withAuthenticationContext:self completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * __unused pi, __unused NSError * _Nullable error) {
         // ...shouldn't attempt to open the native URL (ie the alipay app)
         OCMReject([self.applicationMock openURL:[OCMArg any]
                                    options:[OCMArg any]
@@ -75,7 +84,7 @@
     [self waitForExpectationsWithTimeout:4 handler:nil];
     [paymentHandler stopMocking]; // paymentHandler is a singleton, so we need to manually call `stopMocking`
 }
-*/
+
 - (void)test_oxxo_payment_intent_server_side_confirmation {
     // OXXO is interesting b/c the PI status after handling next actions is requires_action, not succeeded.
     id paymentHandler = OCMPartialMock(STPPaymentHandler.sharedHandler);
