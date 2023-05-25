@@ -78,9 +78,10 @@ final class PlaygroundMainViewModel: ObservableObject {
     enum CustomScenario: String, CaseIterable, Identifiable {
         case none = "none"
         case customKeys = "custom_keys"
-        case appToApp = "app_to_app"
+        case partnerD = "partner_d"
         case partnerF = "partner_f"
         case partnerM = "partner_m"
+        case appToApp = "app_to_app"
         /// Used for random bug bashes and could changes any time
         case bugBash = "bug_bash"
 
@@ -94,12 +95,14 @@ final class PlaygroundMainViewModel: ObservableObject {
                 return "Default"
             case .customKeys:
                 return "Custom Keys"
-            case .appToApp:
-                return "App to App (Chase)"
+            case .partnerD:
+                return "Partner D"
             case .partnerF:
                 return "Partner F"
             case .partnerM:
                 return "Partner M"
+            case .appToApp:
+                return "App to App (Chase)"
             case .bugBash:
                 return "Bug Bash"
             }
