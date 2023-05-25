@@ -179,8 +179,8 @@ extension FinancialConnectionsNavigationController {
                 stripeLogoImageView.frame = CGRect(
                     x: 0,
                     y: 0,
-                    width: stripeLogoImageView.bounds.width * (16 / stripeLogoImageView.bounds.height),
-                    height: 16
+                    width: stripeLogoImageView.bounds.width * (20 / max(1, stripeLogoImageView.bounds.height)),
+                    height: 20
                 )
                 // If `titleView` is directly set to the `UIImageView`
                 // we can't control the sizing...so we create a `containerView`
