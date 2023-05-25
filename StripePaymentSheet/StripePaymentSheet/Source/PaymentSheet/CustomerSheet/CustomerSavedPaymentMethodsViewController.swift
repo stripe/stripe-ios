@@ -246,7 +246,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 showActionButton = false
             }
         case .addingNewPaymentMethodAttachToCustomer, .addingNewWithSetupIntent:
-            self.actionButton.isHidden = false
+            self.actionButton.setHiddenIfNecessary(false)
+            actionButtonStatus = addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
         }
 
         if processingInFlight {
