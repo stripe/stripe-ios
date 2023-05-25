@@ -645,7 +645,8 @@ extension CustomerSavedPaymentMethodsViewController: CustomerAddPaymentMethodVie
 extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethodsCollectionViewControllerDelegate {
     func didUpdateSelection(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
-        paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection) {
+        paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
+        didSelectSameItem: Bool) {
             error = nil
             switch paymentMethodSelection {
             case .add:
@@ -655,10 +656,14 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
                     mode = .addingNewPaymentMethodAttachToCustomer
                 }
                 self.updateUI()
-            case .saved:
-                updateUI(animated: true)
-            case .applePay:
-                updateUI(animated: true)
+            case .saved, .applePay:
+                if let originallySelected = viewController.originalSelectedSavedPaymentMethod,
+                   didSelectSameItem,
+                   paymentMethodSelection == originallySelected {
+                    didTapOrSwipeToDismiss()
+                } else {
+                    self.updateUI()
+                }
             }
         }
 

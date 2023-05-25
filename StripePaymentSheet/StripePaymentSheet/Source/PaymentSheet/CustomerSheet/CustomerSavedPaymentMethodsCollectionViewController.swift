@@ -13,7 +13,8 @@ import UIKit
 protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
     func didUpdateSelection(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
-        paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection)
+        paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
+        didSelectSameItem: Bool)
     func didSelectRemove(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
@@ -335,17 +336,18 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
         }
         let viewModel = viewModels[indexPath.item]
         if case .add = viewModel {
-            delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+            delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel, didSelectSameItem: false)
             return false
         }
         return true
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let didSelectSameItem = indexPath.item == selectedViewModelIndex
         selectedViewModelIndex = indexPath.item
         let viewModel = viewModels[indexPath.item]
 
-        delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+        delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel, didSelectSameItem: didSelectSameItem)
     }
 }
 
