@@ -141,8 +141,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         let stackView = UIStackView(arrangedSubviews: [
             headerLabel,
             paymentContainerView,
-            actionButton,
             errorLabel,
+            actionButton,
         ])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
