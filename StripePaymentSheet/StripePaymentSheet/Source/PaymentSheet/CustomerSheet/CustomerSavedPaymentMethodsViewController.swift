@@ -202,14 +202,14 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 headerLabel.text = text
             } else {
                 headerLabel.text = STPLocalizedString(
-                    "Manage your payment method",
+                    "Manage your payment methods",
                     "Title shown above a carousel containing the customer's payment methods")
             }
 
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
             actionButton.isHidden = false
             headerLabel.text = STPLocalizedString(
-                "Add your payment information",
+                "Save your payment information",
                 "Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc."
             )
         }
@@ -311,8 +311,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             ))
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
             return .custom(title: STPLocalizedString(
-                "Add",
-                "A button used for adding a new payment method"
+                "Save",
+                "A button used for saving a new payment method"
             ))
         }
     }
