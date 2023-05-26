@@ -198,13 +198,9 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
         switch mode {
         case .selectingSaved:
-            if let text = configuration.headerTextForSelectionScreen, !text.isEmpty {
-                headerLabel.text = text
-            } else {
-                headerLabel.text = STPLocalizedString(
-                    "Manage your payment methods",
-                    "Title shown above a carousel containing the customer's payment methods")
-            }
+            headerLabel.text = STPLocalizedString(
+                "Manage your payment methods",
+                "Title shown above a carousel containing the customer's payment methods")
 
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
             actionButton.isHidden = false

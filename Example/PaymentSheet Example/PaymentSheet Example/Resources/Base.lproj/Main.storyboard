@@ -2267,13 +2267,13 @@
                                                 </subviews>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Client configuration" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DDf-KN-l73">
-                                                <rect key="frame" x="0.0" y="73.5" width="157" height="1218.5"/>
+                                                <rect key="frame" x="0.0" y="73.5" width="157" height="1256.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="0et-em-JjI">
-                                                <rect key="frame" x="0.0" y="1296" width="327.5" height="31"/>
+                                                <rect key="frame" x="0.0" y="1334" width="327.5" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="PM Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pDW-Ce-5Pk">
@@ -2296,7 +2296,7 @@
                                                 <viewLayoutGuide key="safeArea" id="nZZ-D6-JD5"/>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="CXe-Lw-Vp6">
-                                                <rect key="frame" x="0.0" y="1331" width="157" height="31"/>
+                                                <rect key="frame" x="0.0" y="1369" width="157" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Pay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oul-eX-v8F">
@@ -2315,25 +2315,6 @@
                                                             <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="apple_pay_selector"/>
                                                         </userDefinedRuntimeAttributes>
                                                     </segmentedControl>
-                                                </subviews>
-                                            </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ixX-ib-yGM">
-                                                <rect key="frame" x="0.0" y="1366" width="414" height="34"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="headerTextForSelectionScreen" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ca3-KZ-mtK">
-                                                        <rect key="frame" x="0.0" y="0.0" width="206" height="34"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0RN-q7-eBK">
-                                                        <rect key="frame" x="214" y="0.0" width="200" height="34"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="200" id="QGy-5P-tCq"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits"/>
-                                                    </textField>
                                                 </subviews>
                                             </stackView>
                                         </subviews>
@@ -2469,7 +2450,6 @@
                     <connections>
                         <outlet property="applePaySelector" destination="7q4-Hu-6Rf" id="VKB-A3-laF"/>
                         <outlet property="customerModeSelector" destination="pA8-Rk-fEf" id="XMp-OG-cLU"/>
-                        <outlet property="headerTextForSelectionScreenTextField" destination="0RN-q7-eBK" id="gXc-yX-yKI"/>
                         <outlet property="loadButton" destination="j1Z-HN-58K" id="e77-FJ-6b5"/>
                         <outlet property="pmModeSelector" destination="Kzy-xs-WvR" id="P6m-bA-Gef"/>
                         <outlet property="selectPaymentMethodButton" destination="OFo-x2-vud" id="3ud-pR-AXh"/>

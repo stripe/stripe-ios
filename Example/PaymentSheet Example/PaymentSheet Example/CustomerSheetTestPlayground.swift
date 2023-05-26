@@ -22,7 +22,6 @@ class CustomerSheetTestPlayground: UIViewController {
 
     @IBOutlet weak var pmModeSelector: UISegmentedControl!
     @IBOutlet weak var applePaySelector: UISegmentedControl!
-    @IBOutlet weak var headerTextForSelectionScreenTextField: UITextField!
 
     @IBOutlet weak var loadButton: UIButton!
 
@@ -166,7 +165,6 @@ class CustomerSheetTestPlayground: UIViewController {
         var configuration = CustomerSheet.Configuration()
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
-        configuration.headerTextForSelectionScreen = headerTextForSelectionScreenTextField.text
 
         return configuration
     }
@@ -250,7 +248,6 @@ struct CustomerSheetPlaygroundSettings: Codable {
     let customerModeSelectorValue: Int
     let paymentMethodModeSelectorValue: Int
     let applePaySelectorSelectorValue: Int
-    let selectingSavedCustomHeaderText: String?
     let savedPaymentMethodEndpoint: String?
 
     static func defaultValues() -> CustomerSheetPlaygroundSettings {
@@ -258,7 +255,6 @@ struct CustomerSheetPlaygroundSettings: Codable {
             customerModeSelectorValue: 0,
             paymentMethodModeSelectorValue: 0,
             applePaySelectorSelectorValue: 0,
-            selectingSavedCustomHeaderText: nil,
             savedPaymentMethodEndpoint: CustomerSheetTestPlayground.defaultEndpoint
         )
     }
@@ -286,7 +282,6 @@ extension CustomerSheetTestPlayground {
             customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
             paymentMethodModeSelectorValue: pmModeSelector.selectedSegmentIndex,
             applePaySelectorSelectorValue: applePaySelector.selectedSegmentIndex,
-            selectingSavedCustomHeaderText: headerTextForSelectionScreenTextField.text,
             savedPaymentMethodEndpoint: currentEndpoint
         )
         let data = try! JSONEncoder().encode(settings)
@@ -309,7 +304,6 @@ extension CustomerSheetTestPlayground {
         customerModeSelector.selectedSegmentIndex = settings.customerModeSelectorValue
         pmModeSelector.selectedSegmentIndex = settings.paymentMethodModeSelectorValue
         applePaySelector.selectedSegmentIndex = settings.applePaySelectorSelectorValue
-        headerTextForSelectionScreenTextField.text = settings.selectingSavedCustomHeaderText
         currentEndpoint = settings.savedPaymentMethodEndpoint ?? CustomerSheetTestPlayground.defaultEndpoint
     }
 }

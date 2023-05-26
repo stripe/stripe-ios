@@ -37,9 +37,6 @@ extension CustomerSheet {
         /// Whether to show Apple Pay as an option
         public var applePayEnabled: Bool = false
 
-        /// Optional configuration for setting the header text of the Payment Method selection screen
-        public var headerTextForSelectionScreen: String?
-
         public init () {
         }
     }
