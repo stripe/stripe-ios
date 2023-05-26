@@ -25,6 +25,9 @@ struct PaymentSheetDeferredValidator {
         guard paymentIntent.captureMethod == captureMethod else {
             throw PaymentSheetError.unknown(debugDescription: "Your PaymentIntent captureMethod (\(paymentIntent.captureMethod)) does not match the PaymentSheet.IntentConfiguration amount (\(captureMethod)).")
         }
+        if !intentConfiguration.isFlowController && paymentIntent.confirmationMethod == .manual {
+            throw PaymentSheetError.unknown(debugDescription: "Your PaymentIntent confirmationMethod (\(paymentIntent.confirmationMethod)) can only be used with PaymentSheet.FlowController.")
+        }
     }
 
     static func validate(setupIntent: STPSetupIntent, intentConfiguration: PaymentSheet.IntentConfiguration) throws {

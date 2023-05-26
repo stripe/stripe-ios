@@ -56,6 +56,15 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         }
     }
 
+    func testPaymentIntentNotFlowControllerManualConfirmationMethod() throws {
+        let pi = STPFixtures.makePaymentIntent(amount: 1000, currency: "USD", confirmationMethod: "manual")
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), confirmHandler: confirmHandler)
+        intentConfig.isFlowController = false
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi, intentConfiguration: intentConfig)) { error in
+            XCTAssertEqual("\(error)", "An error occured in PaymentSheet. Your PaymentIntent confirmationMethod (manual) can only be used with PaymentSheet.FlowController.")
+        }
+    }
+
     func testSetupIntentMismatchedUsage() throws {
         let si = STPFixtures.makeSetupIntent(usage: "on_session")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD", setupFutureUsage: .offSession), confirmHandler: confirmHandler)

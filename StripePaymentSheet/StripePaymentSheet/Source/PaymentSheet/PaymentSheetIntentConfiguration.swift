@@ -65,6 +65,10 @@ import Foundation
         /// - Seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-on_behalf_of
         public var onBehalfOf: String?
 
+        /// Indicates if this `IntentConfiguration` is being used with `PaymentSheet.FlowController`
+        /// - Note: Only for internal SDK use
+        internal var isFlowController: Bool = false
+
         /// Controls when the funds will be captured. 
         /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method
         public enum CaptureMethod: String {

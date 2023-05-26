@@ -172,7 +172,10 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(mode: .deferredIntent(intentConfiguration),
+            var intentConfigCopy = intentConfiguration
+            intentConfigCopy.isFlowController = true
+
+            create(mode: .deferredIntent(intentConfigCopy),
                    configuration: configuration,
                    completion: completion
             )
