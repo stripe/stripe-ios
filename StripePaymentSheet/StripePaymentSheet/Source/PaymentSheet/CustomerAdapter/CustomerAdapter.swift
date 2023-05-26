@@ -18,6 +18,9 @@ import UIKit
 /// If you would prefer retrieving and updating your Stripe customer object via
 /// your own backend instead of using `StripeCustomerAdapter`, you should make your
 /// application's API client conform to this interface.
+/// - Warning:
+/// When implementing your own CustomerAdapter, ensure your application complies with
+/// all applicable laws and regulations, including data privacy and consumer protection.
 @_spi(PrivateBetaCustomerSheet) public protocol CustomerAdapter {
     /// Retrieves a list of Payment Methods attached to a customer.
     /// If you are implementing your own <CustomerAdapter>:
