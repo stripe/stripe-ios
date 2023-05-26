@@ -84,6 +84,10 @@ class CustomerSheetTestPlayground: UIViewController {
         selectPaymentMethodButton.addTarget(
             self, action: #selector(didTapSelectPaymentMethodButton), for: .touchUpInside)
 
+        selectPaymentMethodImage.isUserInteractionEnabled = true
+        selectPaymentMethodImage.addGestureRecognizer(
+            UITapGestureRecognizer(target: self, action: #selector(didTapSelectPaymentMethodButton)))
+
         if let settings = CustomerSheetTestPlayground.playgroundSettings {
             loadSettingsFrom(settings: settings)
         } else if let nsUserDefaultSettings = settingsFromDefaults() {
