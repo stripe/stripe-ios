@@ -123,7 +123,7 @@ public class STPPaymentHandler: NSObject {
     }
 
     /// By default `sharedHandler` initializes with STPAPIClient.shared.
-    public var apiClient: STPAPIClient
+    @objc public var apiClient: STPAPIClient
 
     /// Customizable settings to use when performing 3DS2 authentication.
     /// Note: Configure this before calling any methods.
