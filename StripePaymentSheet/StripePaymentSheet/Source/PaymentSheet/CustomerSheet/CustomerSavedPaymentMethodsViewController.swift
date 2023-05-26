@@ -209,7 +209,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
             actionButton.isHidden = false
             headerLabel.text = STPLocalizedString(
-                "Save your payment information",
+                "Save a new payment method",
                 "Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc."
             )
         }

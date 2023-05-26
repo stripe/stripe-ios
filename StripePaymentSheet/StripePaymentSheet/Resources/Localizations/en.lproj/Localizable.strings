@@ -205,6 +205,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* A button used for saving a new payment method */
 "Save" = "Save";
 
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Save a new payment method" = "Save a new payment method";
+
 /* Title for address entry section */
 "Save address" = "Save address";
 
@@ -220,9 +223,6 @@ to be saved and used in future checkout sessions. */
 
 /* The label of a switch indicating whether to save the user's card for future payment */
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
-
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
-"Save your payment information" = "Save your payment information";
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
