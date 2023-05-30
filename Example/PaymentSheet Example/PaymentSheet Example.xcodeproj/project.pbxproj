@@ -179,6 +179,7 @@
 		7C2D3C4D44C73D619A42CF3A /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CA29C6F89C759381CE11175 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8083C7DBDB2654A8123613C5 /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		81BB8CD3461287DDB397717E /* PaymentSheet Example.xctestplan */ = {isa = PBXFileReference; path = "PaymentSheet Example.xctestplan"; sourceTree = "<group>"; };
 		82FA4AD9771D68717C0E3B0D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		830255F427E66F475B970A95 /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		8542B65BCF43F2EE1B606603 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -358,6 +359,7 @@
 				C4BE75A2EECEF0AC9EC24CD8 /* PaymentSheet Example */,
 				8370707CD3E47F69FD221747 /* PaymentSheetLocalizationScreenshotGenerator */,
 				C326AC7AEE88B92E72DDD6AF /* PaymentSheetUITest */,
+				81BB8CD3461287DDB397717E /* PaymentSheet Example.xctestplan */,
 			);
 			name = Project;
 			sourceTree = "<group>";

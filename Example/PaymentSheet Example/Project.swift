@@ -52,7 +52,10 @@ let project = Project(
             ],
             settings: .stripeTargetSettings(
                 baseXcconfigFilePath: "BuildConfigurations/PaymentSheet-Example"
-            )
+            ),
+            additionalFiles: [
+                "PaymentSheet Example.xctestplan"
+            ]
         ),
         Target(
             name: "PaymentSheetUITest",
@@ -96,18 +99,7 @@ let project = Project(
             buildAction: .buildAction(targets: [
                 "PaymentSheet Example",
             ]),
-            testAction: .targets(
-                [
-                    "PaymentSheetUITest",
-                    "PaymentSheetLocalizationScreenshotGenerator",
-                ],
-                arguments: Arguments(
-                    environment: [
-                        "FB_REFERENCE_IMAGE_DIR": "$(SRCROOT)/../../Tests/ReferenceImages",
-                    ]
-                ),
-                expandVariableFromTarget: "PaymentSheet Example"
-            ),
+            testAction: .testPlans(["PaymentSheet Example.xctestplan"]),
             runAction: .runAction(executable: "PaymentSheet Example")
         ),
     ]

@@ -148,6 +148,7 @@
 		8894137E9BCC7581122C266D /* IntegrationTester-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IntegrationTester-Release.xcconfig"; sourceTree = "<group>"; };
 		8D59BC76C0F4E0B96796F412 /* FPXView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPXView.swift; sourceTree = "<group>"; };
 		930A9EBA74E833322F991EED /* HelperViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperViews.swift; sourceTree = "<group>"; };
+		9A6DA4B0E69358D56D62752A /* IntegrationTester.xctestplan */ = {isa = PBXFileReference; path = IntegrationTester.xctestplan; sourceTree = "<group>"; };
 		9B6D71CE0D7D2D44BC809B50 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AA26E77255E4C91995BA7F43 /* PaymentMethodWithShippingInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodWithShippingInfoView.swift; sourceTree = "<group>"; };
 		B74C265E4ED315E3CD020D5C /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -337,6 +338,7 @@
 				81D603F43394B54AE2B5EA2C /* Common */,
 				EF53BF2D5DDCC96E934ECCBE /* IntegrationTester */,
 				289395EA52A7FA4D77013143 /* IntegrationTesterUITests */,
+				9A6DA4B0E69358D56D62752A /* IntegrationTester.xctestplan */,
 			);
 			name = Project;
 			sourceTree = "<group>";
