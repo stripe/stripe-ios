@@ -5,6 +5,9 @@
   * If you use `IntentConfiguration(..., confirmHandlerForServerSideConfirmation:)`, use `IntentConfiguration(..., confirmHandler:)` instead. Additionally, the confirm handler's first parameter is now an `STPPaymentMethod` object instead of a String id. Use `paymentMethod.stripeId` to get its id and send it to your server.
 * [Fixed] Fixed PKR currency formatting.
 
+### CustomerSheet
+* [Added] [CustomerSheet](https://stripe.com/docs/elements/customer-sheet?platform=ios) is now available (private beta)
+
 ## 23.8.0 2023-05-08
 ### Identity
 * [Added] Added test mode M1 for the SDK.
