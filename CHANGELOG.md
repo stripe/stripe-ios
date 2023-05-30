@@ -1,4 +1,4 @@
-## x.x.x yyyy-mm-dd
+## 23.9.0 2023-05-30
 ### PaymentSheet
 * [Changed] The private beta API for https://stripe.com/docs/payments/finalize-payments-on-the-server has changed:
   * If you use `IntentConfiguration(..., confirmHandler:)`, the confirm handler now has an additional `shouldSavePaymentMethod: Bool` parameter that you should ignore.
