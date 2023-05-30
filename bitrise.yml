@@ -366,8 +366,6 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
-    after_run:
-    - notify_ci
   legacy-tests-14:
     steps:
     - fastlane@3:
@@ -492,8 +490,6 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
-    after_run:
-    - notify_ci
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
