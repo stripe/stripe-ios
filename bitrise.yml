@@ -487,9 +487,15 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
+        - log_formatter: xcbeautify
+        - xcodebuild_options: -parallel-testing-worker-count 10
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.1.x-ventura
+        machine_type_id: g2-m1-max.10core
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
