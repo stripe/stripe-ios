@@ -41,6 +41,8 @@ stages:
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
+    - ui-tests: {}
+    - integration-all: {}
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
@@ -58,14 +60,12 @@ stages:
   stage-nightly-all:
     workflows:
     - basic-integration-tests: {}
-    - ui-tests: {}
     - check-docs: {}
     - legacy-tests-14: {}
     - carthage-install-test: {}
     - data-theorem-sast: {}
     - deploy-dry-run: {}
     - pod-lint-tests: {}
-    - integration-all: {}
 workflows:
   basic-integration-tests:
     steps:
