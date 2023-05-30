@@ -1,9 +1,12 @@
-## x.x.x yyyy-mm-dd
+## 23.9.0 2023-05-30
 ### PaymentSheet
 * [Changed] The private beta API for https://stripe.com/docs/payments/finalize-payments-on-the-server has changed:
   * If you use `IntentConfiguration(..., confirmHandler:)`, the confirm handler now has an additional `shouldSavePaymentMethod: Bool` parameter that you should ignore.
   * If you use `IntentConfiguration(..., confirmHandlerForServerSideConfirmation:)`, use `IntentConfiguration(..., confirmHandler:)` instead. Additionally, the confirm handler's first parameter is now an `STPPaymentMethod` object instead of a String id. Use `paymentMethod.stripeId` to get its id and send it to your server.
 * [Fixed] Fixed PKR currency formatting.
+
+### CustomerSheet
+* [Added] [CustomerSheet](https://stripe.com/docs/elements/customer-sheet?platform=ios) is now available (private beta)
 
 ## 23.8.0 2023-05-08
 ### Identity
