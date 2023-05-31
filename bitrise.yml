@@ -364,7 +364,6 @@ workflows:
         - maximum_test_repetitions: "5"
         - scheme: IntegrationTester
         - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -parallel-testing-worker-count 8 -maximum-concurrent-test-simulator-destinations 8 -maximum-parallel-testing-workers 8
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
@@ -419,9 +418,9 @@ workflows:
     - prep_all
   prep_all:
     steps:
-    # - xcode-start-simulator@0:
-    #     inputs:
-    #     - destination: $DEFAULT_TEST_DEVICE
+    - xcode-start-simulator@0:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
     - set-env-var@0:
         inputs:
         - destination_keys: CONFIGURATION_BUILD_DIR
@@ -494,7 +493,6 @@ workflows:
         - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
         - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -parallel-testing-worker-count 8 -maximum-concurrent-test-simulator-destinations 8 -maximum-parallel-testing-workers 8
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
