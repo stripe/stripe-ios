@@ -65,9 +65,6 @@ class CustomerSheetTests: APIStubbedTestCase {
     }
 
     func testLoadPaymentMethodInfo_CallToPaymentMethodsTimesOut() throws {
-        let customerId = "cus_123"
-        let ephemeralKey = "ek_456"
-        let setupIntentClientSecret = "si_789"
         let fastTimeoutIntervalForRequest: TimeInterval = 1
         let timeGreaterThanTimeoutIntervalForRequest: UInt32 = 3
 
@@ -76,9 +73,9 @@ class CustomerSheetTests: APIStubbedTestCase {
         let stubbedAPIClient = stubbedAPIClient(configuration: stubbedURLSessionConfig)
 
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
-            .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+            .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {
-            return setupIntentClientSecret
+            return "si_789"
         }, apiClient: stubbedAPIClient)
 
         stub { urlRequest in
