@@ -16,6 +16,31 @@ import XCTest
 
 class CustomerSheetTests: APIStubbedTestCase {
 
+
+    func testLoadPaymentMethodInfo_singleCard() throws {
+        let stubbedAPIClient = stubbedAPIClient()
+        stubReturningCustomerWithCardResponse()
+
+        let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+            .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
+        }, setupIntentClientSecretProvider: {
+            return "si_789"
+        }, apiClient: stubbedAPIClient)
+
+        let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
+        let customerSheet = CustomerSheet(configuration: CustomerSheet.Configuration(), customer: customerAdapter)
+        customerSheet.loadPaymentMethodInfo { result in
+            guard case .success((let paymentMethods, let selectedPaymentMethod)) = result else {
+                XCTFail()
+                return
+            }
+            XCTAssertEqual(paymentMethods.count, 1)
+            XCTAssert(selectedPaymentMethod == nil)
+            loadPaymentMethodInfo.fulfill()
+        }
+        wait(for: [loadPaymentMethodInfo], timeout: 5.0)
+    }
+
     func testLoadPaymentMethodInfo_CallToPaymentMethodsTimesOut() throws {
         let customerId = "cus_123"
         let ephemeralKey = "ek_456"
@@ -41,17 +66,46 @@ class CustomerSheetTests: APIStubbedTestCase {
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
         }
 
-        let loadPaymentMethodCalled = expectation(description: "load called")
+        let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completion block called")
         let customerSheet = CustomerSheet(configuration: CustomerSheet.Configuration(), customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
             guard case .failure(let error) = result,
-            let nserror = error as NSError?,
-                nserror.code == NSURLErrorTimedOut,
-            nserror.domain == NSURLErrorDomain else {
+                  let nserror = error as NSError?,
+                  nserror.code == NSURLErrorTimedOut,
+                  nserror.domain == NSURLErrorDomain else {
+                XCTFail()
                 return
             }
-            loadPaymentMethodCalled.fulfill()
+            loadPaymentMethodInfo.fulfill()
         }
-        wait(for: [loadPaymentMethodCalled], timeout: 5.0)
+        wait(for: [loadPaymentMethodInfo], timeout: 5.0)
     }
+
+    private func stubNewCustomerResponse() {
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+    }
+
+    private func stubReturningCustomerWithCardResponse() {
+        stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200)
+    }
+
+    private func stubPaymentMethods(
+        fileMock: FileMock
+    ) {
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+        } response: { _ in
+            let mockResponseData = try! fileMock.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
+}
+
+public class ClassForBundle {}
+@_spi(STP) public enum FileMock: String, MockData {
+    public typealias ResponseType = StripeFile
+    public var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    case saved_payment_methods_200 = "MockFiles/saved_payment_methods_200"
+    case saved_payment_methods_withCard_200 = "MockFiles/saved_payment_methods_withCard_200"
 }
