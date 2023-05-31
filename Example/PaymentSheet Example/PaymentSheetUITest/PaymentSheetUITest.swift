@@ -8,7 +8,7 @@
 
 import XCTest
 
-class PaymentSheetUITest: XCTestCase {
+class PaymentSheetUITestCase: XCTestCase {
     var app: XCUIApplication!
 
     override func setUpWithError() throws {
@@ -26,7 +26,9 @@ class PaymentSheetUITest: XCTestCase {
         ]
         app.launch()
     }
+}
 
+class PaymentSheetStandardUITestCase: PaymentSheetUITestCase {
     func testPaymentSheetStandard() throws {
         app.staticTexts["PaymentSheet"].tap()
         let buyButton = app.staticTexts["Buy"]
@@ -683,7 +685,7 @@ class PaymentSheetUITest: XCTestCase {
     }
 }
 
-extension PaymentSheetUITest {
+class PaymentSheetUIDeferredTest: PaymentSheetUITestCase {
 
     // MARK: Deferred tests (client-side)
 
@@ -1867,7 +1869,7 @@ extension PaymentSheetUITest {
 */
 
 // MARK: Helpers
-extension PaymentSheetUITest {
+extension PaymentSheetUITestCase {
     func _testUSBankAccount(mode: String, integrationType: String) {
         let settings = [
             "customer_mode": "new",
@@ -1919,7 +1921,7 @@ extension PaymentSheetUITest {
         app.buttons["OK"].tap()
     }
 
-    private func payWithApplePay() {
+    func payWithApplePay() {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 

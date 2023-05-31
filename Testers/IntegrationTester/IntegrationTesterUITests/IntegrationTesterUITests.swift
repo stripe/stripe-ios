@@ -52,7 +52,7 @@ class IntegrationTesterUICardEntryTests: IntegrationTesterUITests {
         }
     }
 }
-    
+
 class IntegrationTesterUICardTests: IntegrationTesterUITests {
     func testStandardCustomCard3DS1() throws {
         testAuthentication(cardNumber: "4000000000003063", confirmationBehavior: .threeDS1)
@@ -246,7 +246,7 @@ class IntegrationTesterUITests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-    
+
     func testNull() throws {
         // Null test to appease XCTestCase
     }
@@ -275,7 +275,7 @@ class IntegrationTesterUITests: XCTestCase {
         let postalField = app.textFields["ZIP"]
         postalField.typeText("12345")
     }
-    
+
     func testAuthentication(cardNumber: String, expectedResult: String = "Payment complete!", confirmationBehavior: ConfirmationBehavior = .none) {
         print("Testing \(cardNumber)")
         self.popToMainMenu()
