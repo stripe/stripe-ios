@@ -55,4 +55,3 @@ class CustomerSheetTests: APIStubbedTestCase {
         wait(for: [loadPaymentMethodCalled], timeout: 5.0)
     }
 }
-
