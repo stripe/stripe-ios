@@ -16,6 +16,29 @@ import XCTest
 
 class CustomerSheetTests: APIStubbedTestCase {
 
+    func testLoadPaymentMethodInfo_newCustomer() throws {
+        let stubbedAPIClient = stubbedAPIClient()
+        stubNewCustomerResponse()
+
+        let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+            .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
+        }, setupIntentClientSecretProvider: {
+            return "si_789"
+        }, apiClient: stubbedAPIClient)
+
+        let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
+        let customerSheet = CustomerSheet(configuration: CustomerSheet.Configuration(), customer: customerAdapter)
+        customerSheet.loadPaymentMethodInfo { result in
+            guard case .success((let paymentMethods, let selectedPaymentMethod)) = result else {
+                XCTFail()
+                return
+            }
+            XCTAssertEqual(paymentMethods.count, 0)
+            XCTAssert(selectedPaymentMethod == nil)
+            loadPaymentMethodInfo.fulfill()
+        }
+        wait(for: [loadPaymentMethodInfo], timeout: 5.0)
+    }
 
     func testLoadPaymentMethodInfo_singleCard() throws {
         let stubbedAPIClient = stubbedAPIClient()
