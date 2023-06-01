@@ -45,7 +45,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let navController = UINavigationController(rootViewController: hvc)
         self.window!.rootViewController = navController
     }
-    
+
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
@@ -64,7 +64,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             // Open URL contexts on app launch if available
             self.scene(scene, openURLContexts: connectionOptions.urlContexts)
         }
-        
+
         if let playgroundData = ProcessInfo.processInfo.environment["STP_PLAYGROUND_DATA"] {
             if #available(iOS 15.0, *) {
                 launchWithBase64Data(base64: playgroundData)

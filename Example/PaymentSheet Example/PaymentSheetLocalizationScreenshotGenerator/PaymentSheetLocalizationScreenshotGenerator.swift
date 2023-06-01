@@ -95,7 +95,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
         }
         waitForReload(app, settings: settings)
     }
-    
+
     func testAllStrings() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
