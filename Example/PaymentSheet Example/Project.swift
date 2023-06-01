@@ -54,7 +54,9 @@ let project = Project(
                 baseXcconfigFilePath: "BuildConfigurations/PaymentSheet-Example"
             ),
             additionalFiles: [
-                "PaymentSheet Example.xctestplan"
+                "PaymentSheet Example.xctestplan",
+                "PaymentSheet Example-Shard1.xctestplan",
+                "PaymentSheet Example-Shard2.xctestplan"
             ]
         ),
         Target(
@@ -99,7 +101,10 @@ let project = Project(
             buildAction: .buildAction(targets: [
                 "PaymentSheet Example",
             ]),
-            testAction: .testPlans(["PaymentSheet Example.xctestplan"]),
+            testAction: .testPlans([
+                "PaymentSheet Example.xctestplan",
+                "PaymentSheet Example-Shard1.xctestplan",
+                "PaymentSheet Example-Shard2.xctestplan",]),
             runAction: .runAction(executable: "PaymentSheet Example")
         ),
     ]

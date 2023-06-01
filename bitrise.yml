@@ -41,7 +41,8 @@ stages:
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
-    - ui-tests: {}
+    - ui-tests-1: {}
+    - ui-tests-2: {}
     - integration-all: {}
   stage-releases-run-all:
     workflows:
@@ -52,7 +53,8 @@ stages:
     - lint-tests: {}
     - size-report: {}
     - basic-integration-tests: {}
-    - ui-tests: {}
+    - ui-tests-1: {}
+    - ui-tests-2: {}
     - legacy-tests-14: {}
     - carthage-install-test: {}
     - pod-lint-tests: {}
@@ -484,7 +486,7 @@ workflows:
         inputs:
         - content: bundle exec fastlane size_report
         title: Generate size report
-  ui-tests:
+  ui-tests-1:
     steps:
     - xcode-test@4:
         inputs:
@@ -498,6 +500,26 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
+        - test_plan: '"PaymentSheet Example-Shard1"'
+        - log_formatter: xcbeautify
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 14,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1-max.10core
+  ui-tests-2:
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
+        - scheme: PaymentSheet Example
+        - test_plan: '"PaymentSheet Example-Shard2"'
         - log_formatter: xcbeautify
     - deploy-to-bitrise-io@2: {}
     before_run:
