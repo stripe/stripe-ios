@@ -222,8 +222,8 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
         app.buttons["UIButton.Close"].tap()
         waitToAppear(app.buttons["Present PaymentSheet"])
 
-        app.segmentedControls["mode_selector"].buttons["Setup"].tap() // setup intent
-        app.buttons["Reload PaymentSheet"].tap()
+        settings.mode = .setup
+        loadPlayground(app, settings)
 
         expectation(
             for: NSPredicate(format: "enabled == true"),
