@@ -24,13 +24,13 @@ class PaymentSheetUITestCase: XCTestCase {
             // This makes the Financial Connections SDK trigger the (testmode) production flow instead of a stub. See FinancialConnectionsSDKAvailability.isUnitTestOrUITest.
             "USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "true",
         ]
-        app.launch()
     }
 }
 
 // XCTest runs classes in parallel, not individual tests. Split the tests into separate classes to keep build times at a reasonable level.
 class PaymentSheetStandardUITests: PaymentSheetUITestCase {
     func testPaymentSheetStandard() throws {
+        app.launch()
         app.staticTexts["PaymentSheet"].tap()
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
@@ -79,6 +79,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
     }
 
     func testPaymentSheetCustom() throws {
+        app.launch()
+
         app.staticTexts["PaymentSheet.FlowController"].tap()
         let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
 
@@ -107,6 +109,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
     }
 
     func testPaymentSheetCustomDeferred_update() throws {
+        app.launch()
+
         app.staticTexts["PaymentSheet.FlowController (Deferred)"].tap()
 
         // Update product quantities and enable subscription
@@ -250,6 +254,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
     }
 
     func testPaymentSheetSwiftUI() throws {
+        app.launch()
+
         app.staticTexts["PaymentSheet (SwiftUI)"].tap()
         let buyButton = app.buttons["Buy button"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
@@ -263,6 +269,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
     }
 
     func testPaymentSheetSwiftUICustom() throws {
+        app.launch()
+
         app.staticTexts["PaymentSheet.FlowController (SwiftUI)"].tap()
         let paymentMethodButton = app.buttons["Payment method"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
@@ -562,7 +570,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
     func testUSBankAccountPaymentMethod() throws {
         app.launchEnvironment = app.launchEnvironment.merging(["USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "false"]) { (_, new) in new }
-        app.launch()
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .off

@@ -137,14 +137,18 @@ extension XCTestCase {
         }
     }
     func loadPlayground(_ app: XCUIApplication, _ settings: PaymentSheetTestPlaygroundSettings) {
-        var urlComponents = URLComponents(string: "stripe-paymentsheet-example://playground")!
-        urlComponents.query = settings.base64Data
-        if #available(iOS 16.4, *) {
-//            Doesn't work on 16.4. Seems like a bug, can't see any confirmation that this works online.
-//            app.open(urlComponents.url!)
-            XCUIDevice.shared.system.open(urlComponents.url!)
+        if #available(iOS 15.0, *) {
+            // Doesn't work on 16.4. Seems like a bug, can't see any confirmation that this works online.
+            //   var urlComponents = URLComponents(string: "stripe-paymentsheet-example://playground")!
+            //   urlComponents.query = settings.base64Data
+            //   app.open(urlComponents.url!)
+            // This should work, but we get an "Open in 'PaymentSheet Example'" consent dialog the first time we run it.
+            // And while the dialog is appearing, `open()` doesn't return, so we can't install an interruption handler or anything to handle it.
+            //   XCUIDevice.shared.system.open(urlComponents.url!)
+            app.launchEnvironment = app.launchEnvironment.merging(["STP_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
+            app.launch()
         } else {
-            XCTFail("This test is only supported on iOS 16.4 or later.")
+            XCTFail("This test is only supported on iOS 15.0 or later.")
         }
         waitForReload(app, settings: settings)
     }

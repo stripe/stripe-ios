@@ -15,7 +15,6 @@ class PaymentSheet_AddressTests: XCTestCase {
         continueAfterFailure = false
         app = XCUIApplication()
         app.launchEnvironment = ["UITesting": "true"]
-        app.launch()
     }
 
     func testManualAddressEntry() throws {

@@ -400,6 +400,10 @@ workflows:
         title: fastlane analyze
     before_run:
     - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core
   notify_ci:
     steps:
     - script@1:
