@@ -41,7 +41,7 @@ struct ExamplePaymentStatusView: View {
             switch result {
             case .completed:
                 Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-                Text("Your order is confirmed!")
+                Text("Success!")
             case .failed(let error):
                 Image(systemName: "xmark.octagon.fill").foregroundColor(.red)
                 Text("Payment failed: \((error as NSError).debugDescription)")

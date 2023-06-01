@@ -39,7 +39,6 @@ struct PaymentSheetTestPlayground: View {
                                     .font(.callout.smallCaps())
                             }.buttonStyle(.bordered)
                         }
-                        SettingView(setting: $playgroundController.settings.valence)
                         SettingView(setting: $playgroundController.settings.mode)
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
                         SettingView(setting: $playgroundController.settings.customerMode)
@@ -127,7 +126,9 @@ struct PaymentSheetButtons: View {
                                 reloadPlaygroundController()
                             } label: {
                                 Image(systemName: "arrow.clockwise.circle")
-                            }.frame(alignment: .topLeading)
+                            }
+                            .accessibility(identifier: "Reload")
+                            .frame(alignment: .topLeading)
                         }
                     }.padding(.horizontal)
                     if let ps = playgroundController.paymentSheet {
@@ -160,25 +161,28 @@ struct PaymentSheetButtons: View {
                                 reloadPlaygroundController()
                             } label: {
                                 Image(systemName: "arrow.clockwise.circle")
-                            }.frame(alignment: .topLeading)
+                            }
+                            .accessibility(identifier: "Reload")
+                            .frame(alignment: .topLeading)
                         }
                     }.padding(.horizontal)
                     HStack {
-                        Button {
-                            psFCOptionsIsPresented = true
-                        } label: {
-                            PaymentOptionView(paymentOptionDisplayData: playgroundController.paymentSheetFlowController?.paymentOption)
-                        }
-                        .disabled(playgroundController.paymentSheetFlowController == nil)
-                        .padding()
-                        Button {
-                            playgroundController.didTapShippingAddressButton()
-                        } label: {
-                            Text("\(playgroundController.addressDetails?.localizedDescription ?? "Address")")
-                        }
-                        .disabled(playgroundController.paymentSheetFlowController == nil)
-                        .padding()
                         if let psfc = playgroundController.paymentSheetFlowController {
+                            Button {
+                                psFCOptionsIsPresented = true
+                            } label: {
+                                PaymentOptionView(paymentOptionDisplayData: playgroundController.paymentSheetFlowController?.paymentOption)
+                            }
+                            .disabled(playgroundController.paymentSheetFlowController == nil)
+                            .padding()
+                            Button {
+                                playgroundController.didTapShippingAddressButton()
+                            } label: {
+                                Text("\(playgroundController.addressDetails?.localizedDescription ?? "Address")")
+                                    .accessibility(identifier: "Address")
+                            }
+                            .disabled(playgroundController.paymentSheetFlowController == nil)
+                            .padding()
                             Button {
                                 psFCIsConfirming = true
                             } label: {
@@ -188,7 +192,7 @@ struct PaymentSheetButtons: View {
                             .paymentOptionsSheet(isPresented: $psFCOptionsIsPresented, paymentSheetFlowController: psfc, onSheetDismissed: playgroundController.onOptionsCompletion)
                             .padding()
                         } else {
-                            Text("nil")
+                            Text("PaymentSheet is nil")
                             .foregroundColor(.gray)
                             .padding()
                         }

@@ -30,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             PaymentSheet.resetCustomer()
         }
         #endif
+
         return true
     }
 

@@ -31,11 +31,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     // In this case, we'll pass it to the playground for test configuration.
                     if url.host == "playground" {
                         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: url.query!)!
-                        let rvc = self.window!.rootViewController!
-                        // Dismiss existing VC, if any
-                        rvc.dismiss(animated: false)
                         let hvc = UIHostingController(rootView: PaymentSheetTestPlayground(settings: settings))
-                        self.window!.rootViewController!.present(hvc, animated: false)
+                        let navController = UINavigationController(rootViewController: hvc)
+                        self.window!.rootViewController = navController
                     }
                 }
             }
@@ -56,6 +54,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window?.overrideUserInterfaceStyle = .dark
         }
         #endif
+
+        DispatchQueue.main.async {
+            // Open URL contexts on app launch if available
+            self.scene(scene, openURLContexts: connectionOptions.urlContexts)
+        }
+
         guard (scene as? UIWindowScene) != nil else { return }
     }
 

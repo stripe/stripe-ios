@@ -112,28 +112,40 @@ extension XCTestCase {
         waitForExpectations(timeout: 60.0, handler: nil)
     }
 
-    func reload(_ app: XCUIApplication) {
-        app.buttons["Reload PaymentSheet"].tap()
-        waitForReload(app)
+    func reload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
+        app.buttons["Reload"].tap()
+        waitForReload(app, settings: settings)
     }
 
-    func waitForReload(_ app: XCUIApplication) {
-        let checkout = app.buttons["Checkout (Complete)"]
-        expectation(
-            for: NSPredicate(format: "enabled == true"),
-            evaluatedWith: checkout,
-            handler: nil
-        )
-        waitForExpectations(timeout: 10, handler: nil)
+    func waitForReload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
+        if settings.uiStyle == .paymentSheet {
+            let presentButton = app.buttons["Present PaymentSheet"]
+            expectation(
+                for: NSPredicate(format: "enabled == true"),
+                evaluatedWith: presentButton,
+                handler: nil
+            )
+            waitForExpectations(timeout: 10, handler: nil)
+        } else {
+            let confirm = app.buttons["Confirm"]
+            expectation(
+                for: NSPredicate(format: "enabled == true"),
+                evaluatedWith: confirm,
+                handler: nil
+            )
+            waitForExpectations(timeout: 10, handler: nil)
+        }
     }
     func loadPlayground(_ app: XCUIApplication, _ settings: PaymentSheetTestPlaygroundSettings) {
         var urlComponents = URLComponents(string: "stripe-paymentsheet-example://playground")!
         urlComponents.query = settings.base64Data
         if #available(iOS 16.4, *) {
-            app.open(urlComponents.url!)
+//            Doesn't work on 16.4. Seems like a bug, can't see any confirmation that this works online.
+//            app.open(urlComponents.url!)
+            XCUIDevice.shared.system.open(urlComponents.url!)
         } else {
             XCTFail("This test is only supported on iOS 16.4 or later.")
         }
-        waitForReload(app)
+        waitForReload(app, settings: settings)
     }
 }
