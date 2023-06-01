@@ -500,7 +500,7 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
-        - test_plan: '"PaymentSheet Example-Shard1"'
+        - test_plan: PaymentSheet Example-Shard1
         - log_formatter: xcbeautify
     - deploy-to-bitrise-io@2: {}
     before_run:
@@ -519,7 +519,7 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
-        - test_plan: '"PaymentSheet Example-Shard2"'
+        - test_plan: PaymentSheet Example-Shard2
         - log_formatter: xcbeautify
     - deploy-to-bitrise-io@2: {}
     before_run:
