@@ -590,6 +590,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.collectEmail = .automatic
         settings.collectPhone = .automatic
         settings.collectAddress = .automatic
+        settings.uiStyle = .flowController
             loadPlayground(
                 app,
                 settings
@@ -655,6 +656,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
     settings.collectEmail = .always
     settings.collectPhone = .always
     settings.collectAddress = .full
+        settings.uiStyle = .flowController
         loadPlayground(
             app,
             settings
@@ -710,6 +712,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
     settings.collectEmail = .never
     settings.collectPhone = .never
     settings.collectAddress = .never
+        settings.uiStyle = .flowController
         loadPlayground(
             app,
             settings

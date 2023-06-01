@@ -883,6 +883,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.apmsEnabled = .off
         settings.linkEnabled = .on
+        settings.uiStyle = .flowController
         loadPlayground(
             app,
             settings
