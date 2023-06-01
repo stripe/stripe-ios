@@ -17,7 +17,6 @@ class PaymentSheetBillingCollectionUITestCase: XCTestCase {
 
         app = XCUIApplication()
         app.launchEnvironment = ["UITesting": "true"]
-        app.launch()
     }
 
     var cardInfoField: XCUIElement { app.staticTexts["Card information"] }
@@ -33,10 +32,9 @@ class PaymentSheetBillingCollectionUITestCase: XCTestCase {
     var cityField: XCUIElement { app.textFields["City"] }
     var stateField: XCUIElement { app.textFields["State"] }
     var zipField: XCUIElement { app.textFields["ZIP"] }
-    var checkoutButton: XCUIElement { app.buttons["Checkout (Complete)"] }
+    var checkoutButton: XCUIElement { app.buttons["Present PaymentSheet"] }
     var payButton: XCUIElement { app.buttons["Pay $50.99"] }
-    var successText: XCUIElement { app.alerts.staticTexts["Success!"] }
-    var okButton: XCUIElement { app.alerts.scrollViews.otherElements.buttons["OK"] }
+    var successText: XCUIElement { app.staticTexts["Success!"] }
 }
 
 class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUITestCase {
@@ -67,7 +65,6 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         // Complete payment
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testCard_AllFields_WithDefaults() throws {
@@ -116,7 +113,6 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         // Complete payment
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testCard_OnlyCardInfo_WithDefaults() throws {
@@ -166,7 +162,6 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         // Complete payment
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 }
 class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITestCase {
@@ -411,7 +406,6 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testUPI_AllFields_NoDefaults() throws {
@@ -422,9 +416,9 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.currency = .inr
         settings.defaultBillingAddress = .off
         settings.attachDefaults = .off
-        settings.collectName = .automatic
-        settings.collectEmail = .automatic
-        settings.collectPhone = .automatic
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .always
         settings.collectAddress = .full
             loadPlayground(
                 app,
@@ -489,7 +483,6 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testUPI_AllFields_WithDefaults() throws {
@@ -500,9 +493,9 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.currency = .inr
         settings.defaultBillingAddress = .on
         settings.attachDefaults = .on
-        settings.collectName = .automatic
-        settings.collectEmail = .automatic
-        settings.collectPhone = .automatic
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .always
         settings.collectAddress = .full
             loadPlayground(
                 app,
@@ -535,7 +528,6 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testUPI_SomeFields_WithDefaults() throws {
@@ -546,8 +538,8 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.currency = .inr
         settings.defaultBillingAddress = .on
         settings.attachDefaults = .on
-        settings.collectName = .automatic
-        settings.collectEmail = .automatic
+        settings.collectName = .always
+        settings.collectEmail = .always
         settings.collectPhone = .never
         settings.collectAddress = .never
             loadPlayground(
@@ -581,7 +573,6 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testLpm_Afterpay_AutomaticFields_WithDefaultAddress() throws {
@@ -604,7 +595,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
                 settings
             )
 
-        let shippingButton = app.buttons["Shipping address"]
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
@@ -647,7 +638,6 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
         authorizeButton.waitForExistenceAndTap(timeout: 10.0)
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testLpm_Afterpay_AllFields_WithDefaults() throws {
@@ -670,7 +660,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
             settings
         )
 
-        let shippingButton = app.buttons["Shipping address"]
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
@@ -703,7 +693,6 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
         authorizeButton.waitForExistenceAndTap(timeout: 10.0)
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testLpm_Afterpay_MinimalFields_WithDefaults() throws {
@@ -726,7 +715,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
             settings
         )
 
-        let shippingButton = app.buttons["Shipping address"]
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
@@ -759,7 +748,6 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
         authorizeButton.waitForExistenceAndTap(timeout: 10.0)
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testLpm_Klarna_AutomaticFields() throws {
