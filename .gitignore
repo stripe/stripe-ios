@@ -53,3 +53,6 @@ Stripe.xcworkspace
 Stripe*/*.xcodeproj
 Example/**/*.xcodeproj
 Testers/**/*.xcodeproj
+
+# Stripe-internal `pay` commands
+.pay/*
