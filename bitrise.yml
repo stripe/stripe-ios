@@ -400,6 +400,8 @@ workflows:
         title: fastlane analyze
     before_run:
     - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 14,OS=16.4
     meta:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
