@@ -126,11 +126,9 @@ extension XCTestCase {
         )
         waitForExpectations(timeout: 10, handler: nil)
     }
-    func loadPlayground(_ app: XCUIApplication, settings: [String: String]) {
+    func loadPlayground(_ app: XCUIApplication, _ settings: PaymentSheetTestPlaygroundSettings) {
         var urlComponents = URLComponents(string: "stripe-paymentsheet-example://playground")!
-        urlComponents.queryItems = settings.map({ (key, value) in
-            URLQueryItem(name: key, value: value)
-        })
+        urlComponents.query = settings.base64Data
         if #available(iOS 16.4, *) {
             app.open(urlComponents.url!)
         } else {

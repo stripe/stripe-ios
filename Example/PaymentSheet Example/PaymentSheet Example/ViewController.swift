@@ -24,7 +24,7 @@ class ViewController: UIViewController {
     }
     @IBSegueAction func showSwiftUITestPlayground(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 14.0, *) {
-            return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground(settings: .defaultValues()))
+            return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues()))
         } else {
             fatalError("Not supported before iOS 14")
         }

@@ -30,10 +30,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 if #available(iOS 14.0, *) {
                     // In this case, we'll pass it to the playground for test configuration.
                     if url.host == "playground" {
+                        let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: url.query!)!
                         let rvc = self.window!.rootViewController!
                         // Dismiss existing VC, if any
                         rvc.dismiss(animated: false)
-                        let hvc = UIHostingController(rootView: PaymentSheetTestPlayground(settings: PaymentSheetTestPlaygroundSettings.defaultValues()))
+                        let hvc = UIHostingController(rootView: PaymentSheetTestPlayground(settings: settings))
                         self.window!.rootViewController!.present(hvc, animated: false)
                     }
                 }

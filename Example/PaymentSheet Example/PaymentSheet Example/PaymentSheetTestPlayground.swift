@@ -13,26 +13,17 @@ import Contacts
 import PassKit
 @_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 import SwiftUI
+import Combine
 import UIKit
 
 class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentSheet: PaymentSheet?
-    @Published var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+    @Published var settings: PaymentSheetTestPlaygroundSettings
     @Published var addressDetails: AddressViewController.AddressDetails?
     @Published var isLoading: Bool = false
-    
-    static let baseEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
-    static var endpointSelectorEndpoint: String {
-        return "\(baseEndpoint)/endpoints"
-    }
-    static var defaultCheckoutEndpoint: String {
-        return "\(baseEndpoint)/checkout"
-    }
-    static var confirmEndpoint: String {
-        return "\(baseEndpoint)/confirm_intent"
-    }
-    
+    @Published var lastPaymentResult: PaymentSheetResult?
+
     // Other
     var newCustomerID: String? // Stores the new customer returned from the backend for reuse
     
@@ -198,7 +189,7 @@ class PlaygroundController: ObservableObject {
     var customerID: String?
     var paymentMethodTypes: [String]?
     var amount: Int?
-    var checkoutEndpoint: String = defaultCheckoutEndpoint
+    var checkoutEndpoint: String = PaymentSheetTestPlaygroundSettings.defaultCheckoutEndpoint
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
     
@@ -212,7 +203,9 @@ class PlaygroundController: ObservableObject {
         return alertController
     }
     
-    init() {
+    private var subscribers: Set<AnyCancellable> = []
+    
+    init(settings: PaymentSheetTestPlaygroundSettings) {
         // Enable experimental payment methods.
         //        PaymentSheet.supportedPaymentMethods += [.link]
         PaymentSheet.enableACHV2InDeferredFlow = true // TODO(https://jira.corp.stripe.com/browse/BANKCON-6731) Remove this.
@@ -224,6 +217,11 @@ class PlaygroundController: ObservableObject {
             // This makes the Financial Connections SDK use the native UI instead of webview. Native is much easier to test.
             UserDefaults.standard.set(true, forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
         }
+        self.settings = settings
+        
+        $settings.sink { _ in
+            self.load()
+        }.store(in: &subscribers)
     }
     
     func buildPaymentSheet() {
@@ -255,7 +253,7 @@ class PlaygroundController: ObservableObject {
             // Hack, should do this in SwiftUI
             let rvc = UIApplication.shared.windows.first!.rootViewController!
             let endpointSelector = EndpointSelectorViewController(delegate: self,
-                                                                  endpointSelectorEndpoint: Self.endpointSelectorEndpoint,
+                                                                  endpointSelectorEndpoint: PaymentSheetTestPlaygroundSettings.endpointSelectorEndpoint,
                                                                   currentCheckoutEndpoint: checkoutEndpoint)
             let navController = UINavigationController(rootViewController: endpointSelector)
             rvc.present(navController, animated: true, completion: nil)
@@ -274,6 +272,7 @@ class PlaygroundController: ObservableObject {
                 let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
                     self.appearance = updatedAppearance
                     rvc.dismiss(animated: true, completion: nil)
+                    self.load()
                 }))
     
                 rvc.present(vc, animated: true, completion: nil)
@@ -283,6 +282,21 @@ class PlaygroundController: ObservableObject {
                 rvc.present(alert, animated: true, completion: nil)
             }
         }
+    
+    // Completion
+    
+    func onOptionsCompletion() {
+        // Tell our observer to refresh
+        objectWillChange.send()
+    }
+
+    func onPSFCCompletion(result: PaymentSheetResult) {
+        self.lastPaymentResult = result
+    }
+    
+    func onPSCompletion(result: PaymentSheetResult) {
+        self.lastPaymentResult = result
+    }
 }
 // MARK: - Backend
 
@@ -312,7 +326,10 @@ extension PlaygroundController {
     func loadBackend() {
         paymentSheetFlowController = nil
         addressViewController = nil
+        paymentSheet = nil
+        lastPaymentResult = nil
         isLoading = true
+        let settingsToLoad = self.settings
 
         let customer: String = {
             switch settings.customerMode {
@@ -336,6 +353,13 @@ extension PlaygroundController {
 //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
+            // If the completed load state doesn't represent the current state, reload again
+            if settingsToLoad != self.settings {
+                DispatchQueue.main.async {
+                    self.load()
+                }
+                return
+            }
             guard
                 error == nil,
                 let data = data,
@@ -343,15 +367,17 @@ extension PlaygroundController {
                 (response as? HTTPURLResponse)?.statusCode != 400
             else {
                 print(error as Any)
-                if let json = try? JSONDecoder().decode([String: String].self, from: data!),
-                   let errorMessage = json["error"] {
-                    DispatchQueue.main.async {
-                        // Hack, should do this in SwiftUI
-                        let rvc = UIApplication.shared.windows.first!.rootViewController!
-                        UIAlertController.showAlert(title: "Invalid request", message: errorMessage, viewController: rvc)
+                DispatchQueue.main.async {
+                    var errorMessage = "An error occurred communicating with the example backend."
+                    if let data = data,
+                       let json = try? JSONDecoder().decode([String: String].self, from: data),
+                       let jsonError = json["error"] {
+                        errorMessage = jsonError
                     }
+                    let error = NSError(domain: "com.stripe.paymentsheetplayground", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+                    self.lastPaymentResult = .failed(error: error)
+                    self.isLoading = false
                 }
-                self.isLoading = false
                 return
             }
 
@@ -361,48 +387,58 @@ extension PlaygroundController {
             self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
             self.amount = Int(json["amount"] ?? "")
             StripeAPI.defaultPublishableKey = json["publishableKey"]
-            let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
-                self.isLoading = false
-                switch result {
-                case .failure(let error):
-                    print(error as Any)
-                case .success(let manualFlow):
-                    self.paymentSheetFlowController = manualFlow
-                    self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
-                    self.addressDetails = nil
-                }
-            }
 
             DispatchQueue.main.async {
-                self.buildPaymentSheet()
-
                 if self.settings.customerMode == .new && self.newCustomerID == nil {
                     self.newCustomerID = self.customerID
                 }
 
-                switch self.settings.integrationType {
-                case .normal:
-                    switch self.settings.mode {
-                    case .payment, .paymentWithSetup:
+                if self.settings.uiStyle == .paymentSheet {
+                    self.buildPaymentSheet()
+                    self.isLoading = false
+                } else {
+                    let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
+                        self.isLoading = false
+                        switch result {
+                        case .failure(let error):
+                            print(error as Any)
+                        case .success(let manualFlow):
+                            self.paymentSheetFlowController = manualFlow
+                            self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
+                            self.addressDetails = nil
+                        }
+                        // If the completed load state doesn't represent the current state, reload again
+                        if settingsToLoad != self.settings {
+                            DispatchQueue.main.async {
+                                self.load()
+                            }
+                            return
+                        }
+                    }
+                    switch self.settings.integrationType {
+                    case .normal:
+                        switch self.settings.mode {
+                        case .payment, .paymentWithSetup:
+                            PaymentSheet.FlowController.create(
+                                paymentIntentClientSecret: self.clientSecret!,
+                                configuration: self.configuration,
+                                completion: completion
+                            )
+                        case .setup:
+                            PaymentSheet.FlowController.create(
+                                setupIntentClientSecret: self.clientSecret!,
+                                configuration: self.configuration,
+                                completion: completion
+                            )
+                        }
+
+                    case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
                         PaymentSheet.FlowController.create(
-                            paymentIntentClientSecret: self.clientSecret!,
-                            configuration: self.configuration,
-                            completion: completion
-                        )
-                    case .setup:
-                        PaymentSheet.FlowController.create(
-                            setupIntentClientSecret: self.clientSecret!,
+                            intentConfiguration: self.intentConfig,
                             configuration: self.configuration,
                             completion: completion
                         )
                     }
-
-                case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
-                    PaymentSheet.FlowController.create(
-                        intentConfiguration: self.intentConfig,
-                        configuration: self.configuration,
-                        completion: completion
-                    )
                 }
             }
         }
@@ -486,7 +522,7 @@ extension PlaygroundController {
             "return_url": configuration.returnURL ?? "",
         ] as [String: Any]
 
-        makeRequest(with: PlaygroundController.confirmEndpoint, body: body, completionHandler: { data, response, error in
+        makeRequest(with: PaymentSheetTestPlaygroundSettings.confirmEndpoint, body: body, completionHandler: { data, response, error in
             guard
                 error == nil,
                 let data = data,
@@ -534,7 +570,7 @@ extension PlaygroundController {
         UserDefaults.standard.set(data, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
     }
 
-    func settingsFromDefaults() -> PaymentSheetTestPlaygroundSettings? {
+    static func settingsFromDefaults() -> PaymentSheetTestPlaygroundSettings? {
         if let data = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey) as? Data {
             do {
                 return try JSONDecoder().decode(PaymentSheetTestPlaygroundSettings.self, from: data)
@@ -564,27 +600,5 @@ extension AddressViewController.AddressDetails {
         postalAddress.country = address.country
 
         return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
-    }
-}
-
-extension UIAlertController {
-    static func showAlert(
-        title: String? = nil,
-        message: String? = nil,
-        viewController: UIViewController
-    ) {
-        let alertController = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert
-        )
-        alertController.addAction(
-            UIAlertAction(
-                title: "Ok",
-                style: .default
-            )
-        )
-
-        viewController.present(alertController, animated: true)
     }
 }

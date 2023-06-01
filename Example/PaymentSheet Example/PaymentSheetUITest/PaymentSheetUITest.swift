@@ -166,16 +166,16 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
     }
     
     func testPaymentSheetCustomSaveAndRemoveCard() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePayEnabled = .off // disable Apple Pay
+        // This test case is testing a feature not available when Link is on,
+        // so we must manually turn off Link.
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "apple_pay": "off",  // disable Apple Pay
-                // This test case is testing a feature not available when Link is on,
-                // so we must manually turn off Link.
-                "automatic_payment_methods": "off",
-                "link": "off",
-            ]
+            settings
         )
         
         var paymentMethodButton = app.buttons["Select Payment Method"]
@@ -288,13 +288,13 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
     }
     
     func testIdealPaymentMethodHasTextFieldsAndDropdown() throws {
+        var settings = PaymentSheetTestPlaygroundSettings()
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.currency = .eur
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "apple_pay": "off",
-                "currency": "EUR",
-            ]
+            settings
         )
         
         app.buttons["Checkout (Complete)"].tap()
@@ -327,13 +327,13 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
 class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     func testEPSPaymentMethodHasTextFieldsAndDropdown() throws {
+        var settings = PaymentSheetTestPlaygroundSettings()
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.currency = .eur
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "apple_pay": "off",
-                "currency": "EUR",
-            ]
+            settings
         )
 
         app.buttons["Checkout (Complete)"].tap()
@@ -364,15 +364,15 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testGiroPaymentMethodOnlyHasNameField() throws {
+        var settings = PaymentSheetTestPlaygroundSettings()
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.currency = .eur
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "apple_pay": "off",
-                "currency": "EUR",
-            ]
+            settings
         )
-
+        
         app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay €50.99"]
 
@@ -396,13 +396,13 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testP24PaymentMethodHasTextFieldsAndDropdown() throws {
+        var settings = PaymentSheetTestPlaygroundSettings()
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.currency = .eur
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "apple_pay": "off",
-                "currency": "EUR",
-            ]
+            settings
         )
 
         app.buttons["Checkout (Complete)"].tap()
@@ -440,12 +440,12 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
     // Klarna has a text field and country drop down
     func testKlarnaPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings()
+        settings.customerMode = .new // new customer
+        settings.apmsEnabled = .off
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",  // new customer
-                "automatic_payment_methods": "off",
-            ]
+            settings
         )
 
         app.buttons["Checkout (Complete)"].tap()
@@ -476,15 +476,14 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testAffirmPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .off
+        settings.shippingInfo = .onWithDefaults
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",  // new customer
-                "automatic_payment_methods": "off",
-                "shipping": "on w/ defaults",  // collect shipping
-            ]
+            settings
         )
-
         app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay $50.99"]
 
@@ -503,14 +502,14 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testZipPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings()
+        settings.customerMode = .new // new customer
+        settings.apmsEnabled = .on
+        settings.currency = .aud
+        settings.merchantCountryCode = .AU
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",  // new customer
-                "automatic_payment_methods": "on",
-                "currency": "AUD",
-                "merchant_country_code": "AU",
-            ]
+            settings
         )
 
         app.buttons["Checkout (Complete)"].tap()
@@ -534,12 +533,12 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testCashAppPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",  // new customer
-                "automatic_payment_methods": "on",
-            ]
+            settings
         )
 
         app.buttons["Checkout (Complete)"].tap()
@@ -565,13 +564,13 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     func testUSBankAccountPaymentMethod() throws {
         app.launchEnvironment = app.launchEnvironment.merging(["USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "false"]) { (_, new) in new }
         app.launch()
+        var settings = PaymentSheetTestPlaygroundSettings()
+        settings.customerMode = .new
+        settings.apmsEnabled = .off
+        settings.allowsDelayedPMs = .true
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "automatic_payment_methods": "off",
-                "allows_delayed_pms": "true",
-            ]
+            settings
         )
         app.buttons["Checkout (Complete)"].tap()
 
@@ -660,13 +659,13 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testUPIPaymentMethod_invalidVPA() throws {
+        var settings = PaymentSheetTestPlaygroundSettings()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .IN
+        settings.currency = .inr
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "merchant_country_code": "IN",
-                "currency": "INR",
-            ]
+            settings
         )
 
         app.buttons["Checkout (Complete)"].tap()
@@ -693,11 +692,11 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
     // MARK: Deferred tests (client-side)
     
     func testDeferredPaymentIntent_ClientSideConfirmation() {
+        var settings = PaymentSheetTestPlaygroundSettings()
+        settings.integrationType = .deferred_csc
         loadPlayground(
             app,
-            settings: [
-                "init_mode": "Def CSC",
-            ]
+            settings
         )
         
         app.buttons["Checkout (Complete)"].tap()
