@@ -741,7 +741,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="PaymentSheet (test playground)"/>
                                         <connections>
-                                            <segue destination="BYZ-38-t0r" kind="show" identifier="openTestPlayground" id="ATC-21-Z0e"/>
+                                            <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showSwiftUITestPlayground:" id="ani-OQ-XpC"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="jAV-Cf-o6R" userLabel="PaymentSheet (SwiftUI)">
@@ -2483,7 +2483,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="udz-Wb-nMH"/>
+        <segue reference="ani-OQ-XpC"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="opaqueSeparatorColor">

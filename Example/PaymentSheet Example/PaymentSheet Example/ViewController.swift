@@ -22,5 +22,12 @@ class ViewController: UIViewController {
     @IBSegueAction func showSwiftUICustomExample(_ coder: NSCoder) -> UIViewController? {
         return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomPaymentFlow())
     }
+    @IBSegueAction func showSwiftUITestPlayground(_ coder: NSCoder) -> UIViewController? {
+        if #available(iOS 14.0, *) {
+            return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground(settings: .defaultValues()))
+        } else {
+            fatalError("Not supported before iOS 14")
+        }
+    }
 
 }

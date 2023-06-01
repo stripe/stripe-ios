@@ -243,33 +243,46 @@ class PlaygroundController: ObservableObject {
         
         self.paymentSheet = mc
     }
-    //
-    //    @IBAction func didTapEndpointConfiguration(_ sender: Any) {
-    //        let endpointSelector = EndpointSelectorViewController(delegate: self,
-    //                                                              endpointSelectorEndpoint: Self.endpointSelectorEndpoint,
-    //                                                              currentCheckoutEndpoint: checkoutEndpoint)
-    //        let navController = UINavigationController(rootViewController: endpointSelector)
-    //        self.navigationController?.present(navController, animated: true, completion: nil)
-    //    }
-    //
-    //    @IBAction func didTapResetConfig(_ sender: Any) {
-    //        loadSettingsFrom(settings: PaymentSheetPlaygroundSettings.defaultValues())
-    //    }
-    //
-    //    @IBAction func appearanceButtonTapped(_ sender: Any) {
-    //        if #available(iOS 14.0, *) {
-    //            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
-    //                self.appearance = updatedAppearance
-    //                self.dismiss(animated: true, completion: nil)
-    //            }))
-    //
-    //            self.navigationController?.present(vc, animated: true, completion: nil)
-    //        } else {
-    //            let alert = UIAlertController(title: "Unavailable", message: "Appearance playground is only available in iOS 14+.", preferredStyle: UIAlertController.Style.alert)
-    //            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-    //            self.present(alert, animated: true, completion: nil)
-    //        }
-    //    }
+
+        func didTapShippingAddressButton() {
+            // Hack, should do this in SwiftUI
+            let rvc = UIApplication.shared.windows.first!.rootViewController!
+            rvc.present(UINavigationController(rootViewController: addressViewController!), animated: true)
+        }
+    
+
+        func didTapEndpointConfiguration() {
+            // Hack, should do this in SwiftUI
+            let rvc = UIApplication.shared.windows.first!.rootViewController!
+            let endpointSelector = EndpointSelectorViewController(delegate: self,
+                                                                  endpointSelectorEndpoint: Self.endpointSelectorEndpoint,
+                                                                  currentCheckoutEndpoint: checkoutEndpoint)
+            let navController = UINavigationController(rootViewController: endpointSelector)
+            rvc.present(navController, animated: true, completion: nil)
+        }
+    
+        func didTapResetConfig() {
+            self.settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+            self.load()
+        }
+    
+        func appearanceButtonTapped() {
+            // Hack, should do this in SwiftUI
+            let rvc = UIApplication.shared.windows.first!.rootViewController!
+
+            if #available(iOS 14.0, *) {
+                let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
+                    self.appearance = updatedAppearance
+                    rvc.dismiss(animated: true, completion: nil)
+                }))
+    
+                rvc.present(vc, animated: true, completion: nil)
+            } else {
+                let alert = UIAlertController(title: "Unavailable", message: "Appearance playground is only available in iOS 14+.", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                rvc.present(alert, animated: true, completion: nil)
+            }
+        }
 }
 // MARK: - Backend
 

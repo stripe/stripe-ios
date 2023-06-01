@@ -33,17 +33,17 @@ struct PaymentSheetTestPlayground: View {
                                 .font(.headline)
                             Spacer()
                             Button {
-                                
+                                playgroundController.didTapResetConfig()
                             } label: {
                                 Text("Reset")
                             }
                             Button {
-                                
+                                playgroundController.didTapEndpointConfiguration()
                             } label: {
                                 Text("Endpoints")
                             }
                             Button {
-                                
+                                playgroundController.appearanceButtonTapped()
                             } label: {
                                 Text("Appearance")
                             }
@@ -128,9 +128,9 @@ struct PaymentSheetButtons: View {
                     .disabled(playgroundController.paymentSheetFlowController == nil)
                     .padding()
                     Button {
-                        // Open shipping address view controller
+                        playgroundController.didTapShippingAddressButton()
                     } label: {
-                        Text("\(playgroundController.addressDetails?.localizedDescription ?? "Add")")
+                        Text("\(playgroundController.addressDetails?.localizedDescription ?? "Address")")
                     }
                     .disabled(playgroundController.paymentSheetFlowController == nil)
                     .padding()
