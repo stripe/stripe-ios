@@ -27,7 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 // This was not a stripe url, do whatever url handling your app
                 // normally does, if any.
 
-                if #available(iOS 14.0, *) {
+                if #available(iOS 15.0, *) {
                     // In this case, we'll pass it to the playground for test configuration.
                     if url.host == "playground" {
                         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: url.query!)!

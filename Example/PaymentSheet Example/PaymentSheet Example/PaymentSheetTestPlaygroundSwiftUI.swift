@@ -9,21 +9,12 @@ import SwiftUI
 import StripePaymentSheet
 
 
-@available(iOS 14.0, *)
+@available(iOS 15.0, *)
 struct PaymentSheetTestPlayground: View {
     @StateObject var playgroundController: PlaygroundController
     
     init(settings: PaymentSheetTestPlaygroundSettings) {
         _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings))
-    }
-    
-    var customCTABinding: Binding<String> {
-        Binding<String> {
-            return playgroundController.settings.customCtaLabel ?? ""
-        } set: { newString in
-            playgroundController.settings.customCtaLabel = (newString != "") ? newString : nil
-        }
-
     }
     
     var body: some View {
@@ -36,21 +27,19 @@ struct PaymentSheetTestPlayground: View {
                                 .font(.headline)
                             Spacer()
                             Button {
-                                playgroundController.didTapResetConfig()
-                            } label: {
-                                Text("Reset")
-                            }
-                            Button {
                                 playgroundController.didTapEndpointConfiguration()
                             } label: {
                                 Text("Endpoints")
-                            }
+                                    .font(.callout.smallCaps())
+                            }.buttonStyle(.bordered)
                             Button {
-                                playgroundController.appearanceButtonTapped()
+                                playgroundController.didTapResetConfig()
                             } label: {
-                                Text("Appearance")
-                            }
+                                Text("Reset")
+                                    .font(.callout.smallCaps())
+                            }.buttonStyle(.bordered)
                         }
+                        SettingView(setting: $playgroundController.settings.valence)
                         SettingView(setting: $playgroundController.settings.mode)
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
                         SettingView(setting: $playgroundController.settings.customerMode)
@@ -60,8 +49,17 @@ struct PaymentSheetTestPlayground: View {
                     }
                     Divider()
                     Group {
-                        Text("Client")
-                            .font(.headline)
+                        HStack {
+                            Text("Client")
+                                .font(.headline)
+                            Spacer()
+                            Button {
+                                playgroundController.appearanceButtonTapped()
+                            } label: {
+                                Text("Appearance")
+                                    .font(.callout.smallCaps())
+                            }.buttonStyle(.bordered)
+                        }
                         SettingView(setting: $playgroundController.settings.uiStyle)
                         SettingView(setting: $playgroundController.settings.shippingInfo)
                         SettingView(setting: $playgroundController.settings.applePayEnabled)
@@ -73,8 +71,11 @@ struct PaymentSheetTestPlayground: View {
                     }
                     Divider()
                     Group {
-                        Text("Billing Details Collection (Alpha)")
-                            .font(.headline)
+                        HStack {
+                            Text("Billing Details Collection")
+                                .font(.headline)
+                            Spacer()
+                        }
                         SettingView(setting: $playgroundController.settings.attachDefaults)
                         SettingView(setting: $playgroundController.settings.collectName)
                         SettingView(setting: $playgroundController.settings.collectEmail)
@@ -88,6 +89,15 @@ struct PaymentSheetTestPlayground: View {
             PaymentSheetButtons()
                 .environmentObject(playgroundController)
         }
+    }
+    
+    var customCTABinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customCtaLabel ?? ""
+        } set: { newString in
+            playgroundController.settings.customCtaLabel = (newString != "") ? newString : nil
+        }
+
     }
 }
 
@@ -244,7 +254,7 @@ struct SettingPickerView<S: PickerEnum>: View {
     }
 }
 
-@available(iOS 14.0, *)
+@available(iOS 15.0, *)
 struct PaymentSheetTestPlayground_Previews: PreviewProvider {
     static var previews: some View {
         PaymentSheetTestPlayground(settings: .defaultValues())

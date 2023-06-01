@@ -180,7 +180,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case never
         case full
     }
+    enum Valence: String, PickerEnum {
+        static var enumName: String { "Valence" }
+        
+        case high
+        case low
+    }
 
+    
+    var valence: Valence
     var uiStyle: UIStyle
     var mode: Mode
     var integrationType: IntegrationType
@@ -206,7 +214,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
-            uiStyle: .paymentSheet,
+            valence: .high, uiStyle: .paymentSheet,
             mode: .payment,
             integrationType: .normal,
             customerMode: .guest,

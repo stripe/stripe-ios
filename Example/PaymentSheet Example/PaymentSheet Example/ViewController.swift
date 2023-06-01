@@ -23,10 +23,10 @@ class ViewController: UIViewController {
         return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomPaymentFlow())
     }
     @IBSegueAction func showSwiftUITestPlayground(_ coder: NSCoder) -> UIViewController? {
-        if #available(iOS 14.0, *) {
+        if #available(iOS 15.0, *) {
             return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues()))
         } else {
-            fatalError("Not supported before iOS 14")
+            fatalError("Not supported before iOS 15")
         }
     }
 
