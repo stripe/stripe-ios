@@ -8,6 +8,7 @@
 
 import StripePaymentSheet
 import UIKit
+import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -25,6 +26,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if !stripeHandled {
                 // This was not a stripe url, do whatever url handling your app
                 // normally does, if any.
+
+                if #available(iOS 14.0, *) {
+                    // In this case, we'll pass it to the playground for test configuration.
+                    if url.host == "playground" {
+                        let rvc = self.window!.rootViewController!
+                        // Dismiss existing VC, if any
+                        rvc.dismiss(animated: false)
+                        let hvc = UIHostingController(rootView: PaymentSheetTestPlayground(settings: PaymentSheetTestPlaygroundSettings.defaultValues()))
+                        self.window!.rootViewController!.present(hvc, animated: false)
+                    }
+                }
             }
 
         }

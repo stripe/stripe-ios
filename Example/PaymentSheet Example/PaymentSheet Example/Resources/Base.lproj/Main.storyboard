@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4a-Xk-VIc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4a-Xk-VIc">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,7 +12,7 @@
         <!--PaymentSheet (test playground)-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController title="PaymentSheet (test playground)" id="BYZ-38-t0r" customClass="PaymentSheetTestPlayground" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="paymentSheetPlayground" title="PaymentSheet (test playground)" id="BYZ-38-t0r" customClass="PaymentSheetTestPlayground" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -741,7 +741,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="PaymentSheet (test playground)"/>
                                         <connections>
-                                            <segue destination="BYZ-38-t0r" kind="show" id="ATC-21-Z0e"/>
+                                            <segue destination="BYZ-38-t0r" kind="show" identifier="openTestPlayground" id="ATC-21-Z0e"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="jAV-Cf-o6R" userLabel="PaymentSheet (SwiftUI)">
@@ -2206,7 +2206,7 @@
         <!--PaymentSheet (test playground)-->
         <scene sceneID="Tzm-Yg-77p">
             <objects>
-                <viewController title="PaymentSheet (test playground)" id="Mow-eq-n5c" customClass="CustomerSheetTestPlayground" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="customerSheetPlayground" title="PaymentSheet (test playground)" id="Mow-eq-n5c" customClass="CustomerSheetTestPlayground" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GZU-yl-wb0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

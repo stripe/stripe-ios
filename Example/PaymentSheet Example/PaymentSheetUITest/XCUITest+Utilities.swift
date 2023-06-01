@@ -114,7 +114,10 @@ extension XCTestCase {
 
     func reload(_ app: XCUIApplication) {
         app.buttons["Reload PaymentSheet"].tap()
+        waitForReload(app)
+    }
 
+    func waitForReload(_ app: XCUIApplication) {
         let checkout = app.buttons["Checkout (Complete)"]
         expectation(
             for: NSPredicate(format: "enabled == true"),
@@ -123,20 +126,16 @@ extension XCTestCase {
         )
         waitForExpectations(timeout: 10, handler: nil)
     }
-
     func loadPlayground(_ app: XCUIApplication, settings: [String: String]) {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-
-        // Wait for the screen to load
-        XCTAssert(app.navigationBars["Test Playground"].waitForExistence(timeout: 10))
-
-        // Reset existing configuration.
-        app.buttons["(Reset)"].tap()
-
-        for (setting, value) in settings {
-            app.segmentedControls["\(setting)_selector"].buttons[value].tap()
+        var urlComponents = URLComponents(string: "stripe-paymentsheet-example://playground")!
+        urlComponents.queryItems = settings.map({ (key, value) in
+            URLQueryItem(name: key, value: value)
+        })
+        if #available(iOS 16.4, *) {
+            app.open(urlComponents.url!)
+        } else {
+            XCTFail("This test is only supported on iOS 16.4 or later.")
         }
-
-        reload(app)
+        waitForReload(app)
     }
 }

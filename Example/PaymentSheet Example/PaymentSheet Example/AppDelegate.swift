@@ -28,11 +28,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             // Delete cookies before running UI tests
             PaymentSheet.resetCustomer()
-
-            PaymentSheetTestPlayground.paymentSheetPlaygroundSettings = PaymentSheetPlaygroundSettings.defaultValues()
         }
         #endif
 
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let url = URL(string: "stripe-paymentsheet-example://playground?link=off&automatic_payment_methods=off&customer_mode=new&currency=USD&collect_phone=auto&collect_email=auto&allows_delayed_pms=true&collect_address=auto&collect_name=auto&apple_pay=off&default_billing_address=on&attach_defaults=on&merchant_country_code=US")!
+            UIApplication.shared.open(url)
+        }
         return true
     }
 
