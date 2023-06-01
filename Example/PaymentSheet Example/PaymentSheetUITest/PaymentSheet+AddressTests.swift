@@ -251,6 +251,7 @@ NZ
         settings.apmsEnabled = .off
         settings.linkEnabled = .off
         settings.uiStyle = .flowController
+        settings.shippingInfo = .on
             loadPlayground(
                 app,
                 settings
