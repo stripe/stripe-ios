@@ -391,6 +391,8 @@ extension PlaygroundController {
                 if self.settings.customerMode == .new && self.newCustomerID == nil {
                     self.newCustomerID = self.customerID
                 }
+                self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
+                self.addressDetails = nil
 
                 if self.settings.uiStyle == .paymentSheet {
                     self.buildPaymentSheet()
@@ -403,8 +405,6 @@ extension PlaygroundController {
                             print(error as Any)
                         case .success(let manualFlow):
                             self.paymentSheetFlowController = manualFlow
-                            self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
-                            self.addressDetails = nil
                         }
                         // If the completed load state doesn't represent the current state, reload again
                         if settingsToLoad != self.settings {

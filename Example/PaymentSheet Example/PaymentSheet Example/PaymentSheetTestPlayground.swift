@@ -131,13 +131,22 @@ struct PaymentSheetButtons: View {
                         }
                     }.padding(.horizontal)
                     if let ps = playgroundController.paymentSheet {
-                        Button {
-                            psIsPresented = true
-                        } label: {
-                            Text("Present PaymentSheet")
+                        HStack {
+                            Button {
+                                psIsPresented = true
+                            } label: {
+                                Text("Present PaymentSheet")
+                            }
+                            .paymentSheet(isPresented: $psIsPresented, paymentSheet: ps, onCompletion: playgroundController.onPSCompletion)
+                            Spacer()
+                            Button {
+                                playgroundController.didTapShippingAddressButton()
+                            } label: {
+                                Text("\(playgroundController.addressDetails?.localizedDescription ?? "Address")")
+                                    .accessibility(identifier: "Address")
+                            }
                         }
                         .padding()
-                        .paymentSheet(isPresented: $psIsPresented, paymentSheet: ps, onCompletion: playgroundController.onPSCompletion)
                     } else {
                         Text("PaymentSheet is nil")
                         .foregroundColor(.gray)
