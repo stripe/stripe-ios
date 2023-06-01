@@ -224,12 +224,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         switchContentIfNecessary(to: contentViewController, containerView: paymentContainerView)
 
         // Error
-        switch mode {
-        case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
-            errorLabel.text = error?.localizedDescription
-        case .selectingSaved:
-            errorLabel.text = error?.nonGenericDescription
-        }
+        errorLabel.text = error?.nonGenericDescription
+
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
