@@ -22,7 +22,7 @@ class PaymentSheet_AddressTests: XCTestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.shippingInfo = .on
-        
+
         loadPlayground(
             app,
             settings
@@ -99,7 +99,7 @@ US
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.shippingInfo = .onWithDefaults
         settings.uiStyle = .flowController
-        
+
         loadPlayground(
             app,
             settings
@@ -245,7 +245,7 @@ NZ
     }
 
     func testPaymentSheetFlowControllerUpdatesShipping() {
-        
+
             var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
@@ -334,7 +334,7 @@ NZ
     }
 
     func testManualAddressEntry_phoneCountryDoesPersist() throws {
-        
+
             var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
             loadPlayground(

@@ -9,11 +9,11 @@
 //  an example of what you should do in a real app!
 //  Note: Do not import Stripe using `@_spi(STP)` in production.
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
+import Combine
 import Contacts
 import PassKit
 @_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 import SwiftUI
-import Combine
 import UIKit
 
 class PlaygroundController: ObservableObject {
@@ -26,7 +26,7 @@ class PlaygroundController: ObservableObject {
 
     // Other
     var newCustomerID: String? // Stores the new customer returned from the backend for reuse
-    
+
     var applePayConfiguration: PaymentSheet.ApplePayConfiguration? {
         let buttonType: PKPaymentButtonType = {
             switch settings.applePayButtonType {
@@ -48,7 +48,7 @@ class PlaygroundController: ObservableObject {
                     billing.startDate = Date()
                     billing.endDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
                     billing.intervalUnit = .month
-                    
+
                     request.recurringPaymentRequest = PKRecurringPaymentRequest(paymentDescription: "Recurring",
                                                                                 regularBilling: billing,
                                                                                 managementURL: URL(string: "https://my-backend.example.com/customer-portal")!)
@@ -93,7 +93,7 @@ class PlaygroundController: ObservableObject {
         }
         return nil
     }
-    
+
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
@@ -123,16 +123,16 @@ class PlaygroundController: ObservableObject {
             }
         }
         configuration.primaryButtonLabel = settings.customCtaLabel
-        
+
         configuration.billingDetailsCollectionConfiguration.name = .init(rawValue: settings.collectName.rawValue)!
         configuration.billingDetailsCollectionConfiguration.phone = .init(rawValue: settings.collectPhone.rawValue)!
         configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
-        
+
         return configuration
     }
-    
+
     var addressConfiguration: AddressViewController.Configuration {
         var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: configuration.appearance)
         if case .onWithDefaults = settings.shippingInfo {
@@ -152,7 +152,7 @@ class PlaygroundController: ObservableObject {
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
         return configuration
     }
-    
+
     var intentConfig: PaymentSheet.IntentConfiguration {
         var paymentMethodTypes: [String]?
         // if automatic payment methods is off use what is returned back from the intent
@@ -183,7 +183,7 @@ class PlaygroundController: ObservableObject {
             )
         }
     }
-    
+
     var clientSecret: String?
     var ephemeralKey: String?
     var customerID: String?
@@ -192,7 +192,7 @@ class PlaygroundController: ObservableObject {
     var checkoutEndpoint: String = PaymentSheetTestPlaygroundSettings.defaultCheckoutEndpoint
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
-    
+
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
             title: "Complete", message: "Completed", preferredStyle: .alert)
@@ -202,14 +202,14 @@ class PlaygroundController: ObservableObject {
         alertController.addAction(OKAction)
         return alertController
     }
-    
+
     private var subscribers: Set<AnyCancellable> = []
-    
+
     init(settings: PaymentSheetTestPlaygroundSettings) {
         // Enable experimental payment methods.
         //        PaymentSheet.supportedPaymentMethods += [.link]
         PaymentSheet.enableACHV2InDeferredFlow = true // TODO(https://jira.corp.stripe.com/browse/BANKCON-6731) Remove this.
-        
+
         // Hack to ensure we don't force the native flow unless we're in a UI test
         if ProcessInfo.processInfo.environment["UITesting"] == nil {
             UserDefaults.standard.removeObject(forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
@@ -218,15 +218,15 @@ class PlaygroundController: ObservableObject {
             UserDefaults.standard.set(true, forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
         }
         self.settings = settings
-        
+
         $settings.sink { _ in
             self.load()
         }.store(in: &subscribers)
     }
-    
+
     func buildPaymentSheet() {
         let mc: PaymentSheet
-        
+
         switch self.settings.integrationType {
         case .normal:
             switch self.settings.mode {
@@ -238,7 +238,7 @@ class PlaygroundController: ObservableObject {
         case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
         }
-        
+
         self.paymentSheet = mc
     }
 
@@ -247,7 +247,6 @@ class PlaygroundController: ObservableObject {
             let rvc = UIApplication.shared.windows.first!.rootViewController!
             rvc.present(UINavigationController(rootViewController: addressViewController!), animated: true)
         }
-    
 
         func didTapEndpointConfiguration() {
             // Hack, should do this in SwiftUI
@@ -258,12 +257,12 @@ class PlaygroundController: ObservableObject {
             let navController = UINavigationController(rootViewController: endpointSelector)
             rvc.present(navController, animated: true, completion: nil)
         }
-    
+
         func didTapResetConfig() {
             self.settings = PaymentSheetTestPlaygroundSettings.defaultValues()
             self.load()
         }
-    
+
         func appearanceButtonTapped() {
             // Hack, should do this in SwiftUI
             let rvc = UIApplication.shared.windows.first!.rootViewController!
@@ -274,7 +273,7 @@ class PlaygroundController: ObservableObject {
                     rvc.dismiss(animated: true, completion: nil)
                     self.load()
                 }))
-    
+
                 rvc.present(vc, animated: true, completion: nil)
             } else {
                 let alert = UIAlertController(title: "Unavailable", message: "Appearance playground is only available in iOS 14+.", preferredStyle: UIAlertController.Style.alert)
@@ -282,9 +281,9 @@ class PlaygroundController: ObservableObject {
                 rvc.present(alert, animated: true, completion: nil)
             }
         }
-    
+
     // Completion
-    
+
     func onOptionsCompletion() {
         // Tell our observer to refresh
         objectWillChange.send()
@@ -293,7 +292,7 @@ class PlaygroundController: ObservableObject {
     func onPSFCCompletion(result: PaymentSheetResult) {
         self.lastPaymentResult = result
     }
-    
+
     func onPSCompletion(result: PaymentSheetResult) {
         self.lastPaymentResult = result
     }

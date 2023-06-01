@@ -35,7 +35,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.tap()
-        
+
         try! fillCardData(app)
         app.buttons["Pay €9.73"].tap()
         let successText = app.alerts.staticTexts["Your order is confirmed!"]
@@ -43,128 +43,128 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
         okButton.tap()
     }
-    
+
     func testCardFormAmexCVV() throws {
         let app = XCUIApplication()
         app.launch()
-        
+
         app.staticTexts[
             "PaymentSheet"
         ].tap()
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.tap()
-        
+
         let numberField = app.textFields["Card number"]
         XCTAssertTrue(numberField.waitForExistence(timeout: 60.0))
         numberField.tap()
         numberField.typeText("378282246310005")
-        
+
         // Test that Amex card changes "CVC" -> "CVV" and allows 4 digits
         let cvvField = app.textFields["CVV"]
         XCTAssertTrue(cvvField.waitForExistence(timeout: 10.0))
-        
+
         let expField = app.textFields["expiration date"]
         XCTAssertTrue((expField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(expField.typeText("1228"))
-        
+
         XCTAssertTrue((cvvField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(cvvField.typeText("1234"))
-        
+
         app.toolbars.buttons["Done"].tap()  // Country picker toolbar's "Done" button
-        
+
         let postalField = app.textFields["ZIP"]
         XCTAssertTrue((postalField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(postalField.typeText("12345"))
     }
-    
+
     func testPaymentSheetCustom() throws {
         app.staticTexts["PaymentSheet.FlowController"].tap()
         let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
-        
+
         let paymentMethodButtonEnabledExpectation = expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: paymentMethodButton
         )
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
-        
+
         let addCardButton = app.buttons["+ Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
-        
+
         try! fillCardData(app)
         app.buttons["Continue"].tap()
-        
+
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 4.0))
         buyButton.tap()
-        
+
         let successText = app.alerts.staticTexts["Your order is confirmed!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
         okButton.tap()
     }
-    
+
     func testPaymentSheetCustomDeferred_update() throws {
         app.staticTexts["PaymentSheet.FlowController (Deferred)"].tap()
-        
+
         // Update product quantities and enable subscription
         let subscribeSwitch = app.switches["subscribe_switch"]
-        
+
         let subscribeSwitchEnabledExpectation = expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: subscribeSwitch
         )
         wait(for: [subscribeSwitchEnabledExpectation], timeout: 60, enforceOrder: true)
-        
+
         app.switches["subscribe_switch"].tap()
         app.steppers["hotdog_stepper"].tap()
         app.steppers["hotdog_stepper"].tap()
         app.steppers["salad_stepper"].tap()
-        
+
         let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
-        
+
         var paymentMethodButtonEnabledExpectation = expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: paymentMethodButton
         )
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
-        
+
         let addCardButton = app.buttons["+ Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
-        
+
         try! fillCardData(app)
-        
+
         app.buttons["Continue"].tap()
-        
+
         // Update quantity of an item to force an update
         let saladStepper = app.steppers["salad_stepper"]
         XCTAssertTrue(saladStepper.waitForExistence(timeout: 4.0))
         saladStepper.tap()
-        
+
         paymentMethodButtonEnabledExpectation = expectation(
             for: NSPredicate(format: "enabled == true"),
             evaluatedWith: paymentMethodButton
         )
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
-        
+
         // Continue should be enabled since card details were preserved when closing payment sheet
         XCTAssertTrue(app.buttons["Continue"].waitForExistenceAndTap(timeout: 4.0))
-        
+
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 4.0))
         buyButton.tap()
-        
+
         let successText = app.alerts.staticTexts["Your order is confirmed!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
         okButton.tap()
     }
-    
+
     func testPaymentSheetCustomSaveAndRemoveCard() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
@@ -178,12 +178,12 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
             app,
             settings
         )
-        
+
         var paymentMethodButton = app.buttons["Payment method"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
         try! fillCardData(app)
-        
+
         // toggle save this card on and off
         var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         let expectDefaultSelectionOn = Locale.current.regionCode == "US"
@@ -198,16 +198,16 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         } else {
             XCTAssertTrue(saveThisCardToggle.isSelected)
             saveThisCardToggle.tap()  // toggle back off
-            
+
         }
         XCTAssertFalse(saveThisCardToggle.isSelected)
-        
+
         // Complete payment
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
         var successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        
+
         // Reload w/ same customer
         reload(app, settings: settings)
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
@@ -219,73 +219,73 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
             saveThisCardToggle.tap()
         }
         XCTAssertTrue(saveThisCardToggle.isSelected)
-        
+
         // Complete payment
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
         successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        
+
         // Reload w/ same customer
         reload(app, settings: settings)
-        
+
         // return to payment method selector
         paymentMethodButton = app.staticTexts["••••4242"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
-        
+
         let editButton = app.staticTexts["Edit"]
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
-        
+
         let removeButton = app.buttons["Remove"]
         XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))
         removeButton.tap()
-        
+
         let confirmRemoval = app.alerts.buttons["Remove"]
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
-        
+
         XCTAssertTrue(app.cells.count == 1)
     }
-    
+
     func testPaymentSheetSwiftUI() throws {
         app.staticTexts["PaymentSheet (SwiftUI)"].tap()
         let buyButton = app.buttons["Buy button"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.forceTapElement()
-        
+
         try! fillCardData(app)
         app.buttons["Pay €9.73"].tap()
         let successText = app.staticTexts["Payment status view"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Success!"))
     }
-    
+
     func testPaymentSheetSwiftUICustom() throws {
         app.staticTexts["PaymentSheet.FlowController (SwiftUI)"].tap()
         let paymentMethodButton = app.buttons["Payment method"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.forceTapElement()
-        
+
         let addCardButton = app.buttons["+ Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
         try! fillCardData(app)
         app.buttons["Continue"].tap()
-        
+
         // XCTest is too eager to tap the buy button: Wait until the sheet dismisses first.
         waitToDisappear(app.textFields["Card number"])
-        
+
         let buyButton = app.buttons["Buy button"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 4.0))
         buyButton.forceTapElement()
-        
+
         let successText = app.staticTexts["Payment status view"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Success!"))
     }
-    
+
     func testIdealPaymentMethodHasTextFieldsAndDropdown() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -295,29 +295,29 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
             app,
             settings
         )
-        
+
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay €50.99"]
-        
+
         guard let iDEAL = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "iDEAL") else {
             XCTFail()
             return
         }
         iDEAL.tap()
-        
+
         XCTAssertFalse(payButton.isEnabled)
         let name = app.textFields["Full name"]
         name.tap()
         name.typeText("John Doe")
         name.typeText(XCUIKeyboardKey.return.rawValue)
-        
+
         let bank = app.textFields["iDEAL Bank"]
         bank.tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "ASN Bank")
         app.toolbars.buttons["Done"].tap()
-        
+
         payButton.tap()
-        
+
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
@@ -371,7 +371,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
             app,
             settings
         )
-        
+
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay €50.99"]
 
@@ -687,9 +687,9 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 }
 
 class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
-    
+
     // MARK: Deferred tests (client-side)
-    
+
     func testDeferredPaymentIntent_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
@@ -697,16 +697,16 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             app,
             settings
         )
-        
+
         app.buttons["Present PaymentSheet"].tap()
         try? fillCardData(app, container: nil)
-        
+
         app.buttons["Pay $50.99"].tap()
-        
+
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-    
+
     func testDeferredPaymentIntent_ClientSideConfirmation_LostCardDecline() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
@@ -714,16 +714,16 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             app,
             settings
         )
-        
+
         app.buttons["Present PaymentSheet"].tap()
         try? fillCardData(app, container: nil, cardNumber: "4000000000009987")
-        
+
         app.buttons["Pay $50.99"].tap()
-        
+
         let declineText = app.staticTexts["Your card was declined."]
         XCTAssertTrue(declineText.waitForExistence(timeout: 10.0))
     }
-    
+
     func testDeferredSetupIntent_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
@@ -732,16 +732,16 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             app,
             settings
         )
-        
+
         app.buttons["Present PaymentSheet"].tap()
         try? fillCardData(app, container: nil)
-        
+
         app.buttons["Set up"].tap()
-        
+
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-    
+
     func testDeferredPaymentIntent_FlowController_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
@@ -750,26 +750,26 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             app,
             settings
         )
-        
+
         let selectButton = app.buttons["Payment method"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
         selectButton.tap()
         let selectText = app.staticTexts["Select your payment method"]
         XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
-        
+
         let addCardButton = app.buttons["+ Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
-        
+
         try? fillCardData(app, container: nil)
-        
+
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
-        
+
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-    
+
     func testDeferredSetupIntent_FlowController_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
@@ -779,22 +779,22 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             app,
             settings
         )
-        
+
         let selectButton = app.buttons["Payment method"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
         selectButton.tap()
         let selectText = app.staticTexts["Select your payment method"]
         XCTAssertTrue(selectText.waitForExistence(timeout: 10.0))
-        
+
         let addCardButton = app.buttons["+ Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
-        
+
         try? fillCardData(app, container: nil)
-        
+
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
-        
+
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
@@ -860,15 +860,15 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             app,
             settings
         )
-        
+
         app.buttons["Present PaymentSheet"].tap()
         let applePayButton = app.buttons["apple_pay_button"]
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
         applePayButton.tap()
-        
+
         payWithApplePay()
     }
-    
+
     func testDeferredIntent_ApplePayCustomFlow_ClientSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_csc
@@ -880,17 +880,17 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             app,
             settings
         )
-        
+
         let paymentMethodButton = app.buttons["Payment method"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
         paymentMethodButton.tap()
-        
+
         let applePay = app.collectionViews.buttons["Apple Pay"]
         XCTAssertTrue(applePay.waitForExistence(timeout: 10.0))
         applePay.tap()
-        
+
         app.buttons["Confirm"].tap()
-        
+
         payWithApplePay()
     }
 }
@@ -899,19 +899,19 @@ class PaymentSheetDeferredUIBankAccountTests: PaymentSheetUITestCase {
     func testDeferredIntentPaymentIntent_USBankAccount_ClientSideConfirmation() {
         _testUSBankAccount(mode: .payment, integrationType: .deferred_csc)
     }
-    
+
     func testDeferredIntentPaymentIntent_USBankAccount_ServerSideConfirmation() {
         _testUSBankAccount(mode: .payment, integrationType: .deferred_ssc)
     }
-    
+
     func testDeferredIntentSetupIntent_USBankAccount_ClientSideConfirmation() {
         _testUSBankAccount(mode: .setup, integrationType: .deferred_csc)
     }
-    
+
     func testDeferredIntentSetupIntent_USBankAccount_ServerSideConfirmation() {
         _testUSBankAccount(mode: .setup, integrationType: .deferred_ssc)
     }
-    
+
     /* Disable Link test
      func testDeferredIntentLinkSignIn_ClientSideConfirmation() throws {
      loadPlayground(
@@ -1243,7 +1243,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     }
 */
     func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation() {
-        
+
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_ssc
         loadPlayground(
@@ -1260,7 +1260,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     }
 
     func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation_ManualConfirmation() {
-        
+
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_mc
         settings.apmsEnabled = .off
@@ -1278,7 +1278,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     }
 
     func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation_Multiprocessor() {
-        
+
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_mp
         settings.apmsEnabled = .off
@@ -1304,7 +1304,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // so we must manually turn off Link.
         settings.linkEnabled = .off
         settings.integrationType = .deferred_ssc
-        
+
         loadPlayground(
             app,
             settings
@@ -1893,7 +1893,7 @@ extension PaymentSheetUITestCase {
         settings.allowsDelayedPMs = .true
         settings.mode = mode
         settings.integrationType = integrationType
-        
+
         loadPlayground(
             app,
             settings

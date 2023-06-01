@@ -7,8 +7,8 @@
 //
 
 import StripePaymentSheet
-import UIKit
 import SwiftUI
+import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

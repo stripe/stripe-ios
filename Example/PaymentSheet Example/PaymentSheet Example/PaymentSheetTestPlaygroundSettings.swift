@@ -10,18 +10,18 @@ import Foundation
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum UIStyle: String, PickerEnum {
         static var enumName: String { "UI" }
-        
+
         case paymentSheet
         case flowController
     }
 
     enum Mode: String, PickerEnum {
         static var enumName: String { "Mode" }
-        
+
         case payment
         case paymentWithSetup = "payment_with_setup"
         case setup
-        
+
         var displayName: String {
             switch self {
             case .payment:
@@ -33,10 +33,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             }
         }
     }
-    
+
     enum IntegrationType: String, PickerEnum {
         static var enumName: String { "Type" }
-        
+
         // Normal: Normal client side confirmation non-deferred flow
         case normal
         /// Def CSC: Deferred client side confirmation
@@ -63,18 +63,18 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             }
         }
     }
-    
+
     enum CustomerMode: String, PickerEnum {
         static var enumName: String { "Customer" }
-        
+
         case guest
         case new
         case returning
     }
-    
+
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
-        
+
         case usd
         case eur
         case aud
@@ -84,24 +84,24 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     enum MerchantCountry: String, PickerEnum {
         static var enumName: String { "MerchantCountry" }
-        
+
         case US
         case GB
         case AU
         case FR
         case IN
     }
-    
+
     enum APMSEnabled: String, PickerEnum {
         static var enumName: String { "Automatic PMs" }
-        
+
         case on
         case off
     }
-    
+
     enum ShippingInfo: String, PickerEnum {
         static var enumName: String { "Shipping info" }
-        
+
         case on
         case onWithDefaults = "on w/ defaults"
         case off
@@ -109,78 +109,78 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     enum ApplePayEnabled: String, PickerEnum {
         static var enumName: String { "Apple Pay" }
-        
+
         case on
         case off
         case onWDetails = "on w/details"
     }
-    
+
     enum ApplePayButtonType: String, PickerEnum {
         static var enumName: String { "Pay button" }
-        
+
         case plain
         case buy
         case setup
         case checkout
     }
-    
+
     enum AllowsDelayedPMs: String, PickerEnum {
         static var enumName: String { "allowsDelayedPMs" }
-        
+
         case `true`
         case `false`
     }
 
     enum DefaultBillingAddress: String, PickerEnum {
         static var enumName: String { "Default billing address" }
-        
+
         case on
         case off
     }
-    
+
     enum LinkEnabled: String, PickerEnum {
         static var enumName: String { "Link" }
-        
+
         case on
         case off
     }
 
     enum BillingDetailsAttachDefaults: String, PickerEnum {
         static var enumName: String { "Attach defaults" }
-        
+
         case on
         case off
     }
-    
+
     enum BillingDetailsName: String, PickerEnum {
         static var enumName: String { "Name" }
-        
+
         case automatic
         case never
         case always
     }
     enum BillingDetailsEmail: String, PickerEnum {
         static var enumName: String { "Email" }
-        
+
         case automatic
         case never
         case always
     }
     enum BillingDetailsPhone: String, PickerEnum {
         static var enumName: String { "Phone" }
-        
+
         case automatic
         case never
         case always
     }
     enum BillingDetailsAddress: String, PickerEnum {
         static var enumName: String { "Address" }
-        
+
         case automatic
         case never
         case full
     }
-    
+
     var uiStyle: UIStyle
     var mode: Mode
     var integrationType: IntegrationType
@@ -197,7 +197,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkEnabled: LinkEnabled
     var customCtaLabel: String?
     var checkoutEndpoint: String?
-    
+
     var attachDefaults: BillingDetailsAttachDefaults
     var collectName: BillingDetailsName
     var collectEmail: BillingDetailsEmail
@@ -227,9 +227,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectPhone: .automatic,
             collectAddress: .automatic)
     }
-    
+
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"
-    
+
     static let baseEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
     static var endpointSelectorEndpoint: String {
         return "\(baseEndpoint)/endpoints"
@@ -240,12 +240,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static var confirmEndpoint: String {
         return "\(baseEndpoint)/confirm_intent"
     }
-    
+
     var base64Data: String {
         let jsonData = try! JSONEncoder().encode(self)
         return jsonData.base64EncodedString()
     }
-    
+
     static func fromBase64(base64: String) -> Self? {
         if let base64Data = base64.data(using: .utf8),
            let data = Data(base64Encoded: base64Data),
@@ -256,7 +256,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 }
 
-protocol PickerEnum : Codable, CaseIterable, Identifiable, Hashable where AllCases: RandomAccessCollection {
+protocol PickerEnum: Codable, CaseIterable, Identifiable, Hashable where AllCases: RandomAccessCollection {
     static var enumName: String { get }
     var displayName: String { get }
 }

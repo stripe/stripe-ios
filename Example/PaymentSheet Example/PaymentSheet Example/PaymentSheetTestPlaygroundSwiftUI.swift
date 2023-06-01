@@ -5,18 +5,17 @@
 //  Created by David Estes on 5/31/23.
 //
 
-import SwiftUI
 import StripePaymentSheet
-
+import SwiftUI
 
 @available(iOS 15.0, *)
 struct PaymentSheetTestPlayground: View {
     @StateObject var playgroundController: PlaygroundController
-    
+
     init(settings: PaymentSheetTestPlaygroundSettings) {
         _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings))
     }
-    
+
     var body: some View {
         VStack {
             ScrollView {
@@ -89,7 +88,7 @@ struct PaymentSheetTestPlayground: View {
                 .environmentObject(playgroundController)
         }
     }
-    
+
     var customCTABinding: Binding<String> {
         Binding<String> {
             return playgroundController.settings.customCtaLabel ?? ""
@@ -106,11 +105,11 @@ struct PaymentSheetButtons: View {
     @State var psIsPresented: Bool = false
     @State var psFCOptionsIsPresented: Bool = false
     @State var psFCIsConfirming: Bool = false
-    
+
     func reloadPlaygroundController() {
         playgroundController.load()
     }
-    
+
     var body: some View {
         VStack {
             if playgroundController.settings.uiStyle == .paymentSheet {
@@ -119,7 +118,7 @@ struct PaymentSheetButtons: View {
                         Text("PaymentSheet")
                             .font(.subheadline.smallCaps())
                         Spacer()
-                        if (playgroundController.isLoading) {
+                        if playgroundController.isLoading {
                             ProgressView()
                         } else {
                             Button {
@@ -154,7 +153,7 @@ struct PaymentSheetButtons: View {
                         Text("PaymentSheet.FlowController")
                             .font(.subheadline.smallCaps())
                         Spacer()
-                        if (playgroundController.isLoading) {
+                        if playgroundController.isLoading {
                             ProgressView()
                         } else {
                             Button {
@@ -229,7 +228,7 @@ struct PaymentOptionView: View {
 
 struct SettingView<S: PickerEnum>: View {
     var setting: Binding<S>
-    
+
     var body: some View {
         HStack {
             Text(S.enumName).font(.subheadline)
@@ -244,7 +243,7 @@ struct SettingView<S: PickerEnum>: View {
 
 struct SettingPickerView<S: PickerEnum>: View {
     var setting: Binding<S>
-    
+
     var body: some View {
         HStack {
             Text(S.enumName).font(.subheadline)
