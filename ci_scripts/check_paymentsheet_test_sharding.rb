@@ -1,8 +1,13 @@
-# swift_tests_extractor.rb  
-  
+#!/usr/bin/ruby
+# This script checks the PaymentSheet test plans, ensuring all tests are skipped once across Shard1 and Shard2.
+
 require 'find'  
 require 'json'  
   
+
+$SCRIPT_DIR = __dir__
+$ROOT_DIR = File.expand_path('..', $SCRIPT_DIR)
+
 def extract_test_classes(file_path)  
   test_classes = []  
   
@@ -34,7 +39,7 @@ def main
   swift_files = []  
   test_classes = []  
   
-  Find.find("./Example/PaymentSheet Example/PaymentSheetUITest") do |path|  
+  Find.find("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheetUITest") do |path|  
     swift_files << path if path.end_with?('.swift')  
   end  
   
@@ -43,12 +48,21 @@ def main
     test_classes.concat(classes)  
   end  
   
-  skipped_tests1 = read_skipped_tests("./Example/PaymentSheet Example/PaymentSheet Example-Shard1.xctestplan")  
-  skipped_tests2 = read_skipped_tests("./Example/PaymentSheet Example/PaymentSheet Example-Shard2.xctestplan")  
-  all_skipped_tests = skipped_tests1 + skipped_tests2  
+  skipped_tests1 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard1.xctestplan")  
+  skipped_tests2 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard2.xctestplan")  
+  
+  # Make sure there are no duplicates across skipped_tests1 and 2
+  skipped_in_both = skipped_tests1 & skipped_tests2
+  if !skipped_in_both.empty?
+    puts "#{skipped_in_both} skipped in both test plans. Remove one from the PaymentSheet Example-Shard1.xctestplan exclusion list."
+    exit 1
+  end
+
+  all_skipped_tests = skipped_tests1 + skipped_tests2 
   
   exitcode = 0
   test_classes.each do |test_class|  
+    puts "Checking #{test_class}"
     if !all_skipped_tests.include?(test_class)  
       puts "#{test_class} is duplicated across test plans. Please remove it from PaymentSheet Example-Shard1.xctestplan or PaymentSheet Example-Shard2.xctestplan."  
       exitcode = 1
