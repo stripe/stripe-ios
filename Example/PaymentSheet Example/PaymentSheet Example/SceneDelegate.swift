@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 if #available(iOS 15.0, *) {
                     // In this case, we'll pass it to the playground for test configuration.
                     if url.host == "playground" {
-                        launchWithBase64Data(base64: url.query!)
+                        launchWith(base64String: url.query!)
                     }
                 }
             }
@@ -39,8 +39,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     @available(iOS 15.0, *)
-    func launchWithBase64Data(base64: String) {
-        let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64)!
+    func launchWith(base64String: String) {
+        let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String)!
         let hvc = UIHostingController(rootView: PaymentSheetTestPlayground(settings: settings))
         let navController = UINavigationController(rootViewController: hvc)
         self.window!.rootViewController = navController
@@ -67,7 +67,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let playgroundData = ProcessInfo.processInfo.environment["STP_PLAYGROUND_DATA"] {
             if #available(iOS 15.0, *) {
-                launchWithBase64Data(base64: playgroundData)
+                launchWith(base64String: playgroundData)
             } else {
                 assertionFailure("Not supported on < iOS 15")
             }

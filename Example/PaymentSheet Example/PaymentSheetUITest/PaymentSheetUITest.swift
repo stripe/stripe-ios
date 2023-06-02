@@ -573,7 +573,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .off
-        settings.allowsDelayedPMs = .true
+        settings.allowsDelayedPMs = .on
         loadPlayground(
             app,
             settings
@@ -1048,7 +1048,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_ssc
         settings.currency = .eur
-        settings.allowsDelayedPMs = .true
+        settings.allowsDelayedPMs = .on
         loadPlayground(
             app,
             settings
@@ -1897,7 +1897,7 @@ extension PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .off
-        settings.allowsDelayedPMs = .true
+        settings.allowsDelayedPMs = .on
         settings.mode = mode
         settings.integrationType = integrationType
 

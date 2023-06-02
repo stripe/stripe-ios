@@ -26,7 +26,7 @@ class ViewController: UIViewController {
         if #available(iOS 15.0, *) {
             return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues()))
         } else {
-            fatalError("Not supported before iOS 15")
+            fatalError(">= iOS 15.0 required")
         }
     }
 

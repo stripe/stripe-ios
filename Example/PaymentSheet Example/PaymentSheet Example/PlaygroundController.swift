@@ -1,5 +1,5 @@
 //
-//  PaymentSheetTestPlayground.swift
+//  PlaygroundController.swift
 //  PaymentSheet Example
 //
 //  Created by Yuki Tokuhiro on 9/14/20.
@@ -41,7 +41,7 @@ class PlaygroundController: ObservableObject {
             }
         }()
 #if compiler(>=5.7)
-        if #available(iOS 16.0, *), settings.applePayEnabled == .onWDetails {
+        if #available(iOS 16.0, *), settings.applePayEnabled == .onWithDetails {
             let customHandlers = PaymentSheet.ApplePayConfiguration.Handlers(
                 paymentRequestHandler: { request in
                     let billing = PKRecurringPaymentSummaryItem(label: "My Subscription", amount: NSDecimalNumber(string: "59.99"))
@@ -113,7 +113,7 @@ class PlaygroundController: ObservableObject {
                 state: "California"
             )
         }
-        if settings.allowsDelayedPMs == .true {
+        if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
         }
         if settings.shippingInfo != .off {
@@ -203,6 +203,11 @@ class PlaygroundController: ObservableObject {
         return alertController
     }
 
+    var rootViewController: UIViewController {
+        // Hack, should do this in SwiftUI
+        return UIApplication.shared.windows.first!.rootViewController!
+    }
+
     private var subscribers: Set<AnyCancellable> = []
 
     init(settings: PaymentSheetTestPlaygroundSettings) {
@@ -242,45 +247,38 @@ class PlaygroundController: ObservableObject {
         self.paymentSheet = mc
     }
 
-        func didTapShippingAddressButton() {
-            // Hack, should do this in SwiftUI
-            let rvc = UIApplication.shared.windows.first!.rootViewController!
-            rvc.present(UINavigationController(rootViewController: addressViewController!), animated: true)
+    func didTapShippingAddressButton() {
+        // Hack, should do this in SwiftUI
+        rootViewController.present(UINavigationController(rootViewController: addressViewController!), animated: true)
+    }
+
+    func didTapEndpointConfiguration() {
+        let endpointSelector = EndpointSelectorViewController(delegate: self,
+                                                              endpointSelectorEndpoint: PaymentSheetTestPlaygroundSettings.endpointSelectorEndpoint,
+                                                              currentCheckoutEndpoint: checkoutEndpoint)
+        let navController = UINavigationController(rootViewController: endpointSelector)
+        rootViewController.present(navController, animated: true, completion: nil)
+    }
+
+    func didTapResetConfig() {
+        self.settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+    }
+
+    func appearanceButtonTapped() {
+        if #available(iOS 14.0, *) {
+            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
+                self.appearance = updatedAppearance
+                self.rootViewController.dismiss(animated: true, completion: nil)
+                self.load()
+            }))
+
+            rootViewController.present(vc, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Unavailable", message: "Appearance playground is only available in iOS 14+.", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            rootViewController.present(alert, animated: true, completion: nil)
         }
-
-        func didTapEndpointConfiguration() {
-            // Hack, should do this in SwiftUI
-            let rvc = UIApplication.shared.windows.first!.rootViewController!
-            let endpointSelector = EndpointSelectorViewController(delegate: self,
-                                                                  endpointSelectorEndpoint: PaymentSheetTestPlaygroundSettings.endpointSelectorEndpoint,
-                                                                  currentCheckoutEndpoint: checkoutEndpoint)
-            let navController = UINavigationController(rootViewController: endpointSelector)
-            rvc.present(navController, animated: true, completion: nil)
-        }
-
-        func didTapResetConfig() {
-            self.settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-            self.load()
-        }
-
-        func appearanceButtonTapped() {
-            // Hack, should do this in SwiftUI
-            let rvc = UIApplication.shared.windows.first!.rootViewController!
-
-            if #available(iOS 14.0, *) {
-                let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
-                    self.appearance = updatedAppearance
-                    rvc.dismiss(animated: true, completion: nil)
-                    self.load()
-                }))
-
-                rvc.present(vc, animated: true, completion: nil)
-            } else {
-                let alert = UIAlertController(title: "Unavailable", message: "Appearance playground is only available in iOS 14+.", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                rvc.present(alert, animated: true, completion: nil)
-            }
-        }
+    }
 
     // Completion
 
@@ -349,7 +347,7 @@ extension PlaygroundController {
             "automatic_payment_methods": settings.apmsEnabled == .on,
             "use_link": settings.linkEnabled == .on,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
-//            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
+            //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             // If the completed load state doesn't represent the current state, reload again
@@ -458,15 +456,10 @@ extension PlaygroundController: EndpointSelectorViewControllerDelegate {
         checkoutEndpoint = endpoint
         serializeSettingsToNSUserDefaults()
         loadBackend()
-        // Hack, should do this in SwiftUI
-        let rvc = UIApplication.shared.windows.first!.rootViewController!
-        rvc.dismiss(animated: true)
-
+        rootViewController.dismiss(animated: true)
     }
     func cancelTapped() {
-        // Hack, should do this in SwiftUI
-        let rvc = UIApplication.shared.windows.first!.rootViewController!
-        rvc.dismiss(animated: true)
+        rootViewController.dismiss(animated: true)
     }
 }
 

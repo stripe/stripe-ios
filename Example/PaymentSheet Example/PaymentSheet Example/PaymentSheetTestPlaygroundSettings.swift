@@ -112,7 +112,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case on
         case off
-        case onWDetails = "on w/details"
+        case onWithDetails = "on w/details"
     }
 
     enum ApplePayButtonType: String, PickerEnum {
@@ -127,8 +127,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum AllowsDelayedPMs: String, PickerEnum {
         static var enumName: String { "allowsDelayedPMs" }
 
-        case `true`
-        case `false`
+        case on
+        case off
     }
 
     enum DefaultBillingAddress: String, PickerEnum {
@@ -216,7 +216,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             shippingInfo: .off,
             applePayEnabled: .on,
             applePayButtonType: .buy,
-            allowsDelayedPMs: .false,
+            allowsDelayedPMs: .off,
             defaultBillingAddress: .off,
             linkEnabled: .off,
             customCtaLabel: nil,

@@ -174,7 +174,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.allowsDelayedPMs = .true
+        settings.allowsDelayedPMs = .on
         settings.linkEnabled = .off
         settings.attachDefaults = .off
         settings.collectName = .automatic
@@ -231,7 +231,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.allowsDelayedPMs = .true
+        settings.allowsDelayedPMs = .on
         settings.linkEnabled = .off
         settings.defaultBillingAddress = .on
         settings.attachDefaults = .on
@@ -279,7 +279,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.allowsDelayedPMs = .true
+        settings.allowsDelayedPMs = .on
         settings.linkEnabled = .off
         settings.defaultBillingAddress = .on
         settings.attachDefaults = .on
@@ -326,7 +326,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.allowsDelayedPMs = .true
+        settings.allowsDelayedPMs = .on
         settings.linkEnabled = .off
         settings.defaultBillingAddress = .on
         settings.attachDefaults = .on

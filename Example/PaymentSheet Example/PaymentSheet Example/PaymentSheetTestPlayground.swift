@@ -1,5 +1,5 @@
 //
-//  PaymentSheetTestPlaygroundSwiftUI.swift
+//  PaymentSheetTestPlayground.swift
 //  PaymentSheet Example
 //
 //  Created by David Estes on 5/31/23.
