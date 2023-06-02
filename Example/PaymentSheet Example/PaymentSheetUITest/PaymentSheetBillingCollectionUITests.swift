@@ -76,6 +76,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
         settings.linkEnabled = .off
+        settings.defaultBillingAddress = .on
         settings.attachDefaults = .on
         settings.collectName = .always
         settings.collectEmail = .always

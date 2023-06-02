@@ -1344,9 +1344,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // Complete payment
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
-        var successText = app.alerts.staticTexts["Success!"]
+        var successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
         // Reload w/ same customer
         reload(app, settings: settings)
@@ -1363,9 +1362,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // Complete payment
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
-        successText = app.alerts.staticTexts["Success!"]
+        successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
         // Reload w/ same customer
         reload(app, settings: settings)
