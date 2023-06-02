@@ -64,7 +64,7 @@ def main
   test_classes.each do |test_class|  
     puts "Checking #{test_class}"
     if !all_skipped_tests.include?(test_class)  
-      puts "#{test_class} is duplicated across test plans. Please remove it from PaymentSheet Example-Shard1.xctestplan or PaymentSheet Example-Shard2.xctestplan."  
+      puts "#{test_class} is duplicated across test plans. Please exclude it in PaymentSheet Example-Shard1.xctestplan or PaymentSheet Example-Shard2.xctestplan."  
       exitcode = 1
     end  
   end  

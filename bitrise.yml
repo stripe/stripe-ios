@@ -392,6 +392,10 @@ workflows:
         inputs:
         - content: ./ci_scripts/lint_modified_files.sh
         title: Run swiftlint
+    - script@1:
+        inputs:
+        - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
+        title: Check PaymentSheet test sharding
     - fastlane@3:
         inputs:
         - lane: build_extras
