@@ -314,10 +314,8 @@ extension NativeFlowController {
         }
 
         if showConfirmationAlert {
-            CloseConfirmationAlertHandler.present(
-                businessName: dataManager.manifest.businessName,
-                showNetworkingLanguageInConfirmationAlert: showNetworkingLanguageInConfirmationAlert,
-                didSelectOK: {
+            CloseConfirmationSheetViewController.present(
+                didSelectClose: {
                     completeFinancialConnectionsSession()
                 }
             )
