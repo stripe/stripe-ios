@@ -1312,6 +1312,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // so we must manually turn off Link.
         settings.linkEnabled = .off
         settings.integrationType = .deferred_ssc
+        settings.uiStyle = .flowController
 
         loadPlayground(
             app,
@@ -1967,7 +1968,8 @@ extension PaymentSheetUITestCase {
         payButton.forceTapElement()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+//      This actually takes upwards of 20 seconds sometimes, especially in the deferred flow :/
+        XCTAssertTrue(successText.waitForExistence(timeout: 30.0))
     }
 
     func addApplePayBillingIfNeeded(_ applePay: XCUIApplication) {

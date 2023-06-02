@@ -77,9 +77,9 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         settings.apmsEnabled = .off
         settings.linkEnabled = .off
         settings.attachDefaults = .on
-        settings.collectName = .automatic
-        settings.collectEmail = .automatic
-        settings.collectPhone = .automatic
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .always
         settings.collectAddress = .full
             loadPlayground(
                 app,
@@ -282,9 +282,9 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         settings.linkEnabled = .off
         settings.defaultBillingAddress = .on
         settings.attachDefaults = .on
-        settings.collectName = .automatic
-        settings.collectEmail = .automatic
-        settings.collectPhone = .automatic
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .always
         settings.collectAddress = .full
             loadPlayground(
                 app,

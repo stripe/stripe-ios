@@ -56,7 +56,7 @@ let project = Project(
             additionalFiles: [
                 "PaymentSheet Example.xctestplan",
                 "PaymentSheet Example-Shard1.xctestplan",
-                "PaymentSheet Example-Shard2.xctestplan"
+                "PaymentSheet Example-Shard2.xctestplan",
             ]
         ),
         Target(
@@ -104,7 +104,7 @@ let project = Project(
             testAction: .testPlans([
                 "PaymentSheet Example.xctestplan",
                 "PaymentSheet Example-Shard1.xctestplan",
-                "PaymentSheet Example-Shard2.xctestplan",]),
+                "PaymentSheet Example-Shard2.xctestplan", ]),
             runAction: .runAction(executable: "PaymentSheet Example")
         ),
     ]
