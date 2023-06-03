@@ -40,7 +40,7 @@ class PaymentSheetBillingCollectionUITestCase: XCTestCase {
 class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUITestCase {
     func testCard_AutomaticFields_NoDefaults() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.currency = .usd
         settings.merchantCountryCode = .US
@@ -52,10 +52,10 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         settings.collectEmail = .automatic
         settings.collectPhone = .automatic
         settings.collectAddress = .automatic
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
         checkoutButton.tap()
 
         let card = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "card"))
@@ -69,7 +69,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
 
     func testCard_AllFields_WithDefaults() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.currency = .usd
         settings.merchantCountryCode = .US
@@ -82,10 +82,10 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         settings.collectEmail = .always
         settings.collectPhone = .always
         settings.collectAddress = .full
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
         checkoutButton.tap()
 
         let card = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "card"))
@@ -118,7 +118,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
 
     func testCard_OnlyCardInfo_WithDefaults() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.currency = .usd
         settings.merchantCountryCode = .US
@@ -131,10 +131,10 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         settings.collectEmail = .never
         settings.collectPhone = .never
         settings.collectAddress = .never
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
         checkoutButton.tap()
 
         let card = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "card"))
@@ -168,7 +168,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
 class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITestCase {
     func testUSBankAccount_AutomaticFields_NoDefaults() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.currency = .usd
         settings.merchantCountryCode = .US
@@ -181,10 +181,10 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         settings.collectEmail = .automatic
         settings.collectPhone = .automatic
         settings.collectAddress = .automatic
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
         checkoutButton.tap()
 
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account"))
@@ -225,7 +225,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
 
     func testUSBankAccount_AutomaticFields_WithDefaults() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.currency = .usd
         settings.merchantCountryCode = .US
@@ -239,10 +239,10 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         settings.collectEmail = .automatic
         settings.collectPhone = .automatic
         settings.collectAddress = .automatic
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
         checkoutButton.tap()
 
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account"))
@@ -273,7 +273,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
 
     func testUSBankAccount_AllFields_WithDefaults() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.currency = .usd
         settings.merchantCountryCode = .US
@@ -287,10 +287,10 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         settings.collectEmail = .always
         settings.collectPhone = .always
         settings.collectAddress = .full
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
         checkoutButton.tap()
 
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account"))
@@ -320,7 +320,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
 
     func testUSBankAccount_NoFields_WithDefaults() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.currency = .usd
         settings.merchantCountryCode = .US
@@ -334,10 +334,10 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
         settings.collectEmail = .never
         settings.collectPhone = .never
         settings.collectAddress = .never
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
         checkoutButton.tap()
 
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account"))
@@ -368,7 +368,7 @@ class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITes
 class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITestCase {
     func testUPI_AutomaticFields() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.merchantCountryCode = .IN
         settings.currency = .inr
@@ -378,10 +378,10 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.collectEmail = .automatic
         settings.collectPhone = .automatic
         settings.collectAddress = .automatic
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
         checkoutButton.tap()
 
         let payButton = app.buttons["Pay ₹50.99"]
@@ -411,7 +411,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testUPI_AllFields_NoDefaults() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.merchantCountryCode = .IN
         settings.currency = .inr
@@ -421,10 +421,10 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.collectEmail = .always
         settings.collectPhone = .always
         settings.collectAddress = .full
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
         checkoutButton.tap()
 
         let payButton = app.buttons["Pay ₹50.99"]
@@ -488,7 +488,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testUPI_AllFields_WithDefaults() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.merchantCountryCode = .IN
         settings.currency = .inr
@@ -498,10 +498,10 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.collectEmail = .always
         settings.collectPhone = .always
         settings.collectAddress = .full
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
 
         checkoutButton.tap()
 
@@ -533,7 +533,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testUPI_SomeFields_WithDefaults() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.merchantCountryCode = .IN
         settings.currency = .inr
@@ -543,10 +543,10 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.collectEmail = .always
         settings.collectPhone = .never
         settings.collectAddress = .never
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
 
         checkoutButton.tap()
 
@@ -578,7 +578,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Afterpay_AutomaticFields_WithDefaultAddress() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.merchantCountryCode = .US
         settings.currency = .usd
@@ -586,15 +586,15 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
         settings.linkEnabled = .off
-        settings.attachDefaults =  .off
+        settings.attachDefaults = .off
         settings.collectName = .automatic
         settings.collectEmail = .automatic
         settings.collectPhone = .automatic
         settings.collectAddress = .automatic
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
 
         let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
@@ -643,19 +643,19 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Afterpay_AllFields_WithDefaults() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-    settings.customerMode = .guest
+        settings.customerMode = .guest
         settings.currency = .usd
-    settings.merchantCountryCode = .US
-    settings.applePayEnabled = .off
-    settings.shippingInfo = .onWithDefaults
-    settings.apmsEnabled = .off
-    settings.linkEnabled = .off
-    settings.defaultBillingAddress =  .on
-    settings.attachDefaults =  .on
-    settings.collectName = .always
-    settings.collectEmail = .always
-    settings.collectPhone = .always
-    settings.collectAddress = .full
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.shippingInfo = .onWithDefaults
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress =  .on
+        settings.attachDefaults =  .on
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .always
+        settings.collectAddress = .full
         loadPlayground(
             app,
             settings
@@ -698,19 +698,19 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Afterpay_MinimalFields_WithDefaults() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-    settings.customerMode = .guest
+        settings.customerMode = .guest
         settings.currency = .usd
-    settings.merchantCountryCode = .US
-    settings.applePayEnabled = .off
-    settings.shippingInfo = .onWithDefaults
-    settings.apmsEnabled = .off
-    settings.linkEnabled = .off
-    settings.defaultBillingAddress =  .on
-    settings.attachDefaults =  .on
-    settings.collectName = .never
-    settings.collectEmail = .never
-    settings.collectPhone = .never
-    settings.collectAddress = .never
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.shippingInfo = .onWithDefaults
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress =  .on
+        settings.attachDefaults =  .on
+        settings.collectName = .never
+        settings.collectEmail = .never
+        settings.collectPhone = .never
+        settings.collectAddress = .never
         loadPlayground(
             app,
             settings
@@ -753,17 +753,17 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Klarna_AutomaticFields() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-    settings.customerMode = .guest
+        settings.customerMode = .guest
         settings.currency = .usd
-    settings.merchantCountryCode = .US
-    settings.applePayEnabled = .off
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-    settings.linkEnabled = .off
-    settings.attachDefaults =  .off
-    settings.collectName = .automatic
-    settings.collectEmail = .automatic
-    settings.collectPhone = .automatic
-    settings.collectAddress = .automatic
+        settings.linkEnabled = .off
+        settings.attachDefaults = .off
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
         loadPlayground(
             app,
             settings
@@ -798,12 +798,12 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Klarna_AllFields_WithDefaults() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
-            settings.currency = .usd
+        settings.currency = .usd
         settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
-            settings.apmsEnabled = .off
+        settings.apmsEnabled = .off
         settings.linkEnabled = .off
         settings.defaultBillingAddress = .on
         settings.attachDefaults = .on
@@ -811,10 +811,10 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.collectEmail = .always
         settings.collectPhone = .always
         settings.collectAddress = .full
-            loadPlayground(
-                app,
-                settings
-            )
+        loadPlayground(
+            app,
+            settings
+        )
 
         checkoutButton.tap()
 
@@ -838,18 +838,18 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Klarna_MinimalFields_WithDefaults() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-    settings.customerMode = .guest
+        settings.customerMode = .guest
         settings.currency = .usd
-    settings.merchantCountryCode = .US
-    settings.applePayEnabled = .off
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-    settings.linkEnabled = .off
-    settings.defaultBillingAddress = .on
-    settings.attachDefaults = .on
-    settings.collectName = .never
-    settings.collectEmail = .never
-    settings.collectPhone = .never
-    settings.collectAddress = .never
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress = .on
+        settings.attachDefaults = .on
+        settings.collectName = .never
+        settings.collectEmail = .never
+        settings.collectPhone = .never
+        settings.collectAddress = .never
         loadPlayground(
             app,
             settings
