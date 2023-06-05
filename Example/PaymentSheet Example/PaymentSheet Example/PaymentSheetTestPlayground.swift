@@ -227,7 +227,7 @@ struct StaleView: View {
             .font(.subheadline.smallCaps().bold())
             .padding(.horizontal, 4.0)
             .padding(.bottom, 2.0)
-            .background(Color.gray)
+            .background(Color.red)
             .foregroundColor(.white)
             .cornerRadius(8.0)
     }
