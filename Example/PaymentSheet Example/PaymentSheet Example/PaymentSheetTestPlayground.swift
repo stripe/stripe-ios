@@ -65,6 +65,7 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.linkEnabled)
+                        SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("Custom CTA", text: customCTABinding)
                     }
                     Divider()
@@ -121,6 +122,9 @@ struct PaymentSheetButtons: View {
                         if playgroundController.isLoading {
                             ProgressView()
                         } else {
+                            if playgroundController.settings != playgroundController.currentlyRenderedSettings {
+                                StaleView()
+                            }
                             Button {
                                 reloadPlaygroundController()
                             } label: {
@@ -165,6 +169,10 @@ struct PaymentSheetButtons: View {
                         if playgroundController.isLoading {
                             ProgressView()
                         } else {
+                            
+                                if playgroundController.settings != playgroundController.currentlyRenderedSettings {
+                                    StaleView()
+                                }
                             Button {
                                 reloadPlaygroundController()
                             } label: {
@@ -211,6 +219,18 @@ struct PaymentSheetButtons: View {
                 }
             }
         }
+    }
+}
+
+struct StaleView: View {
+    var body: some View {
+        Text("Stale")
+            .font(.subheadline.smallCaps().bold())
+            .padding(.horizontal, 4.0)
+            .padding(.bottom, 2.0)
+            .background(Color.gray)
+            .foregroundColor(.white)
+            .cornerRadius(8.0)
     }
 }
 

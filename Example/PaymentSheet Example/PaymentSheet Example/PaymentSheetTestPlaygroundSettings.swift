@@ -180,6 +180,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case never
         case full
     }
+    enum Autoreload: String, PickerEnum {
+        static var enumName: String { "Autoreload" }
+
+        case on
+        case off
+    }
+
 
     var uiStyle: UIStyle
     var mode: Mode
@@ -197,6 +204,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkEnabled: LinkEnabled
     var customCtaLabel: String?
     var checkoutEndpoint: String?
+    var autoreload: Autoreload
 
     var attachDefaults: BillingDetailsAttachDefaults
     var collectName: BillingDetailsName
@@ -221,6 +229,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkEnabled: .off,
             customCtaLabel: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
+            autoreload: .on,
             attachDefaults: .off,
             collectName: .automatic,
             collectEmail: .automatic,
