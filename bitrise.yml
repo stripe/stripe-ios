@@ -71,6 +71,9 @@ stages:
 workflows:
   basic-integration-tests:
     steps:
+    - xcode-start-simulator@0:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -235,6 +238,9 @@ workflows:
     - deploy-to-bitrise-io@2: {}
   framework-tests:
     steps:
+    - xcode-start-simulator@0:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
     - fastlane@3:
         inputs:
         - lane: preflight
@@ -430,9 +436,6 @@ workflows:
     - prep_all
   prep_all:
     steps:
-    - xcode-start-simulator@0:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
     - set-env-var@0:
         inputs:
         - destination_keys: CONFIGURATION_BUILD_DIR
