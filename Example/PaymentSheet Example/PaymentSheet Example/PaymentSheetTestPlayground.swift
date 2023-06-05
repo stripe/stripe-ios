@@ -169,7 +169,7 @@ struct PaymentSheetButtons: View {
                         if playgroundController.isLoading {
                             ProgressView()
                         } else {
-                            
+
                                 if playgroundController.settings != playgroundController.currentlyRenderedSettings {
                                     StaleView()
                                 }

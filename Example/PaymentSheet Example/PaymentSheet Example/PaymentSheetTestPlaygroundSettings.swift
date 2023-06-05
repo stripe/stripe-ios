@@ -187,7 +187,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-
     var uiStyle: UIStyle
     var mode: Mode
     var integrationType: IntegrationType
