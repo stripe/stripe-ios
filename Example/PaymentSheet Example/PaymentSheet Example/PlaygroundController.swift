@@ -20,6 +20,7 @@ class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentSheet: PaymentSheet?
     @Published var settings: PaymentSheetTestPlaygroundSettings
+    @Published var currentlyRenderedSettings: PaymentSheetTestPlaygroundSettings
     @Published var addressDetails: AddressViewController.AddressDetails?
     @Published var isLoading: Bool = false
     @Published var lastPaymentResult: PaymentSheetResult?
@@ -223,9 +224,12 @@ class PlaygroundController: ObservableObject {
             UserDefaults.standard.set(true, forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
         }
         self.settings = settings
+        self.currentlyRenderedSettings = .defaultValues()
 
-        $settings.sink { _ in
-            self.load()
+        $settings.sink { newValue in
+            if newValue.autoreload == .on {
+                self.load()
+            }
         }.store(in: &subscribers)
     }
 
@@ -374,6 +378,7 @@ extension PlaygroundController {
                     let error = NSError(domain: "com.stripe.paymentsheetplayground", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
                     self.lastPaymentResult = .failed(error: error)
                     self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
                 }
                 return
             }
@@ -395,9 +400,11 @@ extension PlaygroundController {
                 if self.settings.uiStyle == .paymentSheet {
                     self.buildPaymentSheet()
                     self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
                 } else {
                     let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
                         self.isLoading = false
+                        self.currentlyRenderedSettings = self.settings
                         switch result {
                         case .failure(let error):
                             print(error as Any)
