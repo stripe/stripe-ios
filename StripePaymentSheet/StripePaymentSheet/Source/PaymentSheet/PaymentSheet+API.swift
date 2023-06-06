@@ -33,6 +33,7 @@ extension PaymentSheet {
         intent: Intent,
         paymentOption: PaymentOption,
         paymentHandler: STPPaymentHandler,
+        isFlowController: Bool = false,
         paymentMethodID: String? = nil,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
@@ -129,6 +130,7 @@ extension PaymentSheet {
                     intentConfig: intentConfig,
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
+                    isFlowController: isFlowController,
                     completion: completion
                 )
             }
@@ -170,6 +172,7 @@ extension PaymentSheet {
                     intentConfig: intentConfig,
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
+                    isFlowController: isFlowController,
                     completion: completion
                 )
             }
@@ -206,6 +209,7 @@ extension PaymentSheet {
                         intentConfig: intentConfig,
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
+                        isFlowController: isFlowController,
                         completion: completion
                     )
                 }

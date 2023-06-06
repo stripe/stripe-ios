@@ -163,7 +163,8 @@ import UIKit
                 authenticationContext: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default),
                 intent: intent,
                 paymentOption: paymentOption,
-                paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
+                paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+                isFlowController: false
             ) { result in
                 switch result {
                 case .completed:
