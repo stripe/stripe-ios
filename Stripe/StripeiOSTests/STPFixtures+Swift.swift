@@ -65,3 +65,26 @@ extension PaymentSheet.Configuration {
         return configuration
     }
 }
+
+extension STPPaymentMethodParams {
+    static func _testValidCardValue() -> STPPaymentMethodParams {
+        return _testCardValue()
+    }
+
+    static func _testCardValue(number: String = "4242424242424242") -> STPPaymentMethodParams {
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = number
+        cardParams.cvc = "123"
+        cardParams.expYear = (Calendar.current.dateComponents([.year], from: Date()).year! + 1) as NSNumber
+        cardParams.expMonth = 01
+        return STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
+    }
+}
+
+extension STPElementsSession {
+    static func _testCardValue() -> STPElementsSession {
+        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        return elementsSession
+    }
+}

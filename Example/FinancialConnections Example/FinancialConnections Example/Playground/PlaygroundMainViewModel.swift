@@ -21,7 +21,7 @@ final class PlaygroundMainViewModel: ObservableObject {
             return rawValue
         }
     }
-    @Published var flow: Flow = Flow(rawValue: PlaygroundUserDefaults.flow)! {
+    @Published var flow: Flow = Flow(rawValue: PlaygroundUserDefaults.flow) ?? .data {
         didSet {
             PlaygroundUserDefaults.flow = flow.rawValue
             if flow != .networking {
@@ -57,12 +57,6 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
-    @Published var enableAppToApp: Bool = PlaygroundUserDefaults.enableAppToApp {
-        didSet {
-            PlaygroundUserDefaults.enableAppToApp = enableAppToApp
-        }
-    }
-
     @Published var enableTestMode: Bool = PlaygroundUserDefaults.enableTestMode {
         didSet {
             PlaygroundUserDefaults.enableTestMode = enableTestMode
@@ -81,6 +75,44 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
+    enum CustomScenario: String, CaseIterable, Identifiable {
+        case none = "none"
+        case customKeys = "custom_keys"
+        case partnerD = "partner_d"
+        case partnerF = "partner_f"
+        case partnerM = "partner_m"
+        case appToApp = "app_to_app"
+        /// Used for random bug bashes and could changes any time
+        case bugBash = "bug_bash"
+
+        var id: String {
+            return rawValue
+        }
+
+        var displayName: String {
+            switch self {
+            case .none:
+                return "Default"
+            case .customKeys:
+                return "Custom Keys"
+            case .partnerD:
+                return "Partner D"
+            case .partnerF:
+                return "Partner F"
+            case .partnerM:
+                return "Partner M"
+            case .appToApp:
+                return "App to App (Chase)"
+            case .bugBash:
+                return "Bug Bash"
+            }
+        }
+    }
+    @Published var customScenario: CustomScenario = CustomScenario(rawValue: PlaygroundUserDefaults.customScenario) ?? .none {
+        didSet {
+            PlaygroundUserDefaults.customScenario = customScenario.rawValue
+        }
+    }
     @Published var customPublicKey: String = PlaygroundUserDefaults.customPublicKey {
         didSet {
             PlaygroundUserDefaults.customPublicKey = customPublicKey
@@ -111,11 +143,11 @@ final class PlaygroundMainViewModel: ObservableObject {
     private func setup() {
         isLoading = true
         SetupPlayground(
-            enableAppToApp: enableAppToApp,
             enableTestMode: enableTestMode,
             flow: flow.rawValue,
             email: email,
             enableTransactionsPermission: enableTransactionsPermission,
+            customScenario: customScenario.rawValue,
             customPublicKey: customPublicKey,
             customSecretKey: customSecretKey
         ) { [weak self] setupPlaygroundResponse in
@@ -138,10 +170,21 @@ final class PlaygroundMainViewModel: ObservableObject {
                     case .failed(let error):
                         UIAlertController.showAlert(
                             title: "Failed",
-                            message: error.localizedDescription
+                            message: {
+                                if case .unknown(let debugDescription) = error as? FinancialConnectionsSheetError {
+                                    return debugDescription
+                                } else {
+                                    return error.localizedDescription
+                                }
+                            }()
                         )
                     }
                 }
+            } else {
+                UIAlertController.showAlert(
+                    title: "Playground App Setup Failed",
+                    message: "Try clearing 'Custom Keys' or delete & re-install the app."
+                )
             }
             self?.isLoading = false
         }
@@ -153,11 +196,11 @@ final class PlaygroundMainViewModel: ObservableObject {
 }
 
 private func SetupPlayground(
-    enableAppToApp: Bool,
     enableTestMode: Bool,
     flow: String,
     email: String,
     enableTransactionsPermission: Bool,
+    customScenario: String,
     customPublicKey: String,
     customSecretKey: String,
     completionHandler: @escaping ([String: String]?) -> Void
@@ -175,10 +218,10 @@ private func SetupPlayground(
     urlRequest.httpBody = {
         var requestBody: [String: Any] = [:]
         requestBody["enable_test_mode"] = enableTestMode
-        requestBody["enable_app_to_app"] = enableAppToApp
         requestBody["flow"] = flow
         requestBody["email"] = email
         requestBody["enable_transactions_permission"] = enableTransactionsPermission
+        requestBody["custom_scenario"] = customScenario
         requestBody["custom_public_key"] = customPublicKey
         requestBody["custom_secret_key"] = customSecretKey
         return try! JSONSerialization.data(
@@ -216,10 +259,26 @@ private func PresentFinancialConnectionsSheet(
     completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
 ) {
     guard let clientSecret = setupPlaygroundResponseJSON["client_secret"] else {
-        fatalError("Did not receive a valid client secret.")
+        completionHandler(
+            .failed(
+                error: FinancialConnectionsSheetError
+                    .unknown(
+                        debugDescription: "Server returned no client_secret. Try clearing 'Custom Keys' or delete & re-install the app."
+                    )
+            )
+        )
+        return
     }
     guard let publishableKey = setupPlaygroundResponseJSON["publishable_key"] else {
-        fatalError("Did not receive a valid publishable key.")
+        completionHandler(
+            .failed(
+                error: FinancialConnectionsSheetError
+                    .unknown(
+                        debugDescription: "Server returned no publishable_key. Try clearing 'Custom Keys' or delete & re-install the app."
+                    )
+            )
+        )
+        return
     }
 
     STPAPIClient.shared.publishableKey = publishableKey

@@ -43,17 +43,21 @@ final class AccountPickerFooterView: UIView {
 
         let verticalStackView = HitTestStackView(
             arrangedSubviews: [
-                CreateDataAccessDisclosureView(
+                MerchantDataAccessView(
                     isStripeDirect: isStripeDirect,
                     businessName: businessName,
                     permissions: permissions,
+                    isNetworking: false,
+                    font: .body(.small),
+                    boldFont: .body(.smallEmphasized),
+                    alignCenter: true,
                     didSelectLearnMore: didSelectMerchantDataAccessLearnMore
                 ),
                 linkAccountsButton,
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 20
+        verticalStackView.spacing = 24
         addSubview(verticalStackView)
         addAndPinSubviewToSafeArea(verticalStackView)
 
@@ -99,34 +103,4 @@ final class AccountPickerFooterView: UIView {
             }
         }
     }
-}
-
-@available(iOSApplicationExtension, unavailable)
-private func CreateDataAccessDisclosureView(
-    isStripeDirect: Bool,
-    businessName: String?,
-    permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
-    didSelectLearnMore: @escaping () -> Void
-) -> UIView {
-    let stackView = HitTestStackView(
-        arrangedSubviews: [
-            MerchantDataAccessView(
-                isStripeDirect: isStripeDirect,
-                businessName: businessName,
-                permissions: permissions,
-                isNetworking: false,
-                didSelectLearnMore: didSelectLearnMore
-            ),
-        ]
-    )
-    stackView.isLayoutMarginsRelativeArrangement = true
-    stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 10,
-        leading: 12,
-        bottom: 10,
-        trailing: 12
-    )
-    stackView.backgroundColor = .backgroundContainer
-    stackView.layer.cornerRadius = 8
-    return stackView
 }

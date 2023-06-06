@@ -31,8 +31,6 @@ class IntentConfirmParams {
     var saveForFutureUseCheckboxState: SaveForFutureUseCheckboxState = .hidden
     /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
     var didDisplayMandate: Bool = false
-    /// - Note: PaymentIntent-only
-    var paymentMethodOptions: STPConfirmPaymentMethodOptions?
 
     var linkedBank: LinkedBank?
 
@@ -72,44 +70,6 @@ class IntentConfirmParams {
         self.paymentMethodParams = params
     }
 
-    func makeParams(
-        paymentIntentClientSecret: String,
-        configuration: PaymentSheet.Configuration,
-        paymentMethodID: String?
-    ) -> STPPaymentIntentParams {
-        let params: STPPaymentIntentParams
-        // If a payment method ID was provided use that, otherwise use the payment method params
-        if let paymentMethodID = paymentMethodID {
-            params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret, paymentMethodType: paymentMethodParams.type)
-            params.paymentMethodId = paymentMethodID
-        } else {
-            params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
-            params.paymentMethodParams = paymentMethodParams
-        }
-
-        let options = paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-        options.setSetupFutureUsageIfNecessary(
-            saveForFutureUseCheckboxState == .selected,
-            paymentMethodType: paymentMethodType,
-            customer: configuration.customer
-        )
-        params.paymentMethodOptions = options
-        return params
-    }
-
-    func makeParams(setupIntentClientSecret: String, paymentMethodID: String?) -> STPSetupIntentConfirmParams {
-        let params: STPSetupIntentConfirmParams
-        // If a payment method ID was provided use that, otherwise use the payment method params
-        if let paymentMethodID = paymentMethodID {
-            params = STPSetupIntentConfirmParams(clientSecret: setupIntentClientSecret, paymentMethodType: paymentMethodParams.type)
-            params.paymentMethodID = paymentMethodID
-        } else {
-            params = STPSetupIntentConfirmParams(clientSecret: setupIntentClientSecret)
-            params.paymentMethodParams = paymentMethodParams
-        }
-        return params
-    }
-
     func makeDashboardParams(
         paymentIntentClientSecret: String,
         paymentMethodID: String,
@@ -119,8 +79,6 @@ class IntentConfirmParams {
         params.paymentMethodId = paymentMethodID
 
         // Dashboard only supports a specific payment flow today
-        assert(paymentMethodOptions == nil)
-
         let options = STPConfirmPaymentMethodOptions()
         options.setSetupFutureUsageIfNecessary(
             saveForFutureUseCheckboxState == .selected,

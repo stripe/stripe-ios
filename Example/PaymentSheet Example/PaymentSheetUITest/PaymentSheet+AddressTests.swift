@@ -15,12 +15,19 @@ class PaymentSheet_AddressTests: XCTestCase {
         continueAfterFailure = false
         app = XCUIApplication()
         app.launchEnvironment = ["UITesting": "true"]
-        app.launch()
     }
 
     func testManualAddressEntry() throws {
-        loadPlayground(app, settings: ["shipping": "on"])
-        let shippingButton = app.buttons["Shipping address"]
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.shippingInfo = .on
+
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
@@ -63,7 +70,14 @@ class PaymentSheet_AddressTests: XCTestCase {
         saveAddressButton.tap()
 
         // The merchant app should get back the expected address
-        XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St, Apt 152, San Francisco CA 94102, US, +15555555555")
+        let expectedAddress = """
+Jane Doe
+510 Townsend St, Apt 152
+San Francisco CA 94102
+US
++15555555555
+"""
+        XCTAssertEqual(shippingButton.label, expectedAddress)
 
         // Opening the shipping address back up...
         shippingButton.tap()
@@ -77,13 +91,20 @@ class PaymentSheet_AddressTests: XCTestCase {
         // If we dismiss the sheet while its invalid...
         app.buttons["Close"].tap()
         // The merchant app should get back nil
-        XCTAssertEqual(shippingButton.label, "Add")
+        XCTAssertEqual(shippingButton.label, "Address")
     }
 
     func testAddressWithDefaults() throws {
-        loadPlayground(app, settings: ["shipping": "on w/ defaults"])
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.shippingInfo = .onWithDefaults
+        settings.uiStyle = .flowController
 
-        let shippingButton = app.buttons["Shipping address"]
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
@@ -94,12 +115,24 @@ class PaymentSheet_AddressTests: XCTestCase {
         saveAddressButton.tap()
 
         // The merchant app should get back the expected address
-        XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St., San Francisco CA 94102, US, +15555555555")
+        let expectedAddress = """
+Jane Doe
+510 Townsend St.
+San Francisco CA 94102
+US
++15555555555
+"""
+        XCTAssertEqual(shippingButton.label, expectedAddress)
     }
 
     func testAddressAutoComplete_UnitedStates() throws {
-        loadPlayground(app, settings: [:])
-        let shippingButton = app.buttons["Shipping address"]
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        loadPlayground(
+            app,
+            settings
+        )
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
@@ -136,13 +169,26 @@ class PaymentSheet_AddressTests: XCTestCase {
         saveAddressButton.tap()
 
         // The merchant app should get back the expected address
-        XCTAssertEqual(shippingButton.label, "Jane Doe, 4 Pennsylvania Plaza, New York NY 10001, US, +15555555555")
+        let expectedAddress = """
+Jane Doe
+4 Pennsylvania Plaza
+New York NY 10001
+US
++15555555555
+"""
+        XCTAssertEqual(shippingButton.label, expectedAddress)
     }
 
     /// This test ensures we don't show auto complete for an unsupported country
     func testAddressAutoComplete_NewZeland() throws {
-        loadPlayground(app, settings: [:])
-        let shippingButton = app.buttons["Shipping address"]
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
@@ -187,21 +233,31 @@ class PaymentSheet_AddressTests: XCTestCase {
 
         // The merchant app should get back the expected address
         _ = shippingButton.waitForExistence(timeout: 5.0)
-        XCTAssertEqual(shippingButton.label, "Jane Doe, 1 South Bay Parade, Apt 152, Kaikōura 7300, NZ, +645555555555")
+        let expectedAddress = """
+Jane Doe
+1 South Bay Parade, Apt 152
+Kaikōura 7300
+NZ
++645555555555
+"""
+        XCTAssertEqual(shippingButton.label, expectedAddress)
     }
 
     func testPaymentSheetFlowControllerUpdatesShipping() {
-        loadPlayground(app, settings: [
-            "apple_pay": "off",
-            "automatic_payment_methods": "off",
-            "link": "off",
-        ])
 
-        // The present_saved_pms element is not available until scrolling.
-        app.scrollViews.firstMatch.swipeUp()
+            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.uiStyle = .flowController
+        settings.shippingInfo = .on
+            loadPlayground(
+                app,
+                settings
+            )
 
         // Using PaymentSheet.FlowController w/o a shipping address...
-        app.buttons["present_saved_pms"].waitForExistenceAndTap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
 
         // ...should not show the "Billing address is same as shipping" checkbox
         XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
@@ -210,7 +266,7 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.buttons["Close"].tap()
 
         // Entering a shipping address...
-        let shippingButton = app.buttons["Shipping address"]
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
         app.textFields["Full name"].tap()
@@ -229,7 +285,7 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.buttons["Close"].tap()
 
         // ...and then using PaymentSheet.FlowController...
-        app.buttons["present_saved_pms"].waitForExistenceAndTap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
 
         // ...should show the "Billing address is same as shipping" checkbox selected and set the address values to shipping
         XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
@@ -238,14 +294,14 @@ class PaymentSheet_AddressTests: XCTestCase {
 
         // Updating the shipping address country...
         app.buttons["Close"].tap()
-        app.buttons["Shipping address"].tap()
+        app.buttons["Address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇨🇦 Canada")
         app.toolbars.buttons["Done"].tap()
         app.buttons["Close"].tap()
 
         // ...should update PaymentSheet.FlowController
-        app.buttons["present_saved_pms"].waitForExistenceAndTap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
         XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
 
         // If you change the billing address, however...
@@ -259,14 +315,14 @@ class PaymentSheet_AddressTests: XCTestCase {
 
         // ...and changing the shipping address...
         app.buttons["Close"].tap()
-        app.buttons["Shipping address"].tap()
+        app.buttons["Address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
         app.toolbars.buttons["Done"].tap()
         app.buttons["Close"].tap()
 
         // ...should not affect your billing address...
-        app.buttons["present_saved_pms"].waitForExistenceAndTap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
         XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
         XCTAssertEqual(app.textFields["Postal code"].value as? String, updatedBillingAddressPostalCode)
 
@@ -277,8 +333,15 @@ class PaymentSheet_AddressTests: XCTestCase {
     }
 
     func testManualAddressEntry_phoneCountryDoesPersist() throws {
-        loadPlayground(app, settings: [:])
-        let shippingButton = app.buttons["Shipping address"]
+
+            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+            loadPlayground(
+                app,
+                settings
+            )
+
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 

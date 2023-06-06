@@ -24,8 +24,8 @@ open class APIStubbedTestCase: XCTestCase {
         HTTPStubs.removeAllStubs()
     }
 
-    public func stubbedAPIClient() -> STPAPIClient {
-        return APIStubbedTestCase.stubbedAPIClient()
+    public func stubbedAPIClient(configuration: URLSessionConfiguration? = nil) -> STPAPIClient {
+        return APIStubbedTestCase.stubbedAPIClient(configuration: configuration)
     }
 
     static public func stubAllOutgoingRequests() {
@@ -38,10 +38,10 @@ open class APIStubbedTestCase: XCTestCase {
         }
     }
 
-    static public func stubbedAPIClient() -> STPAPIClient {
+    static public func stubbedAPIClient(configuration: URLSessionConfiguration? = nil) -> STPAPIClient {
         let apiClient = STPAPIClient()
-        let urlSessionConfig = stubbedURLSessionConfig()
-        apiClient.urlSession = URLSession(configuration: urlSessionConfig)
+        let config = configuration ?? APIStubbedTestCase.stubbedURLSessionConfig()
+        apiClient.urlSession = URLSession(configuration: config)
         return apiClient
     }
 

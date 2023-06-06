@@ -34,10 +34,11 @@ final class ManualEntryTextField: UIView {
         verticalStackView.spacing = 6
         return verticalStackView
     }()
-    private lazy var titleLabel: UILabel = {
-        let titleLabel = UILabel()
-        titleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        titleLabel.textColor = .textPrimary
+    private lazy var titleLabel: AttributedLabel = {
+        let titleLabel = AttributedLabel(
+            font: .label(.largeEmphasized),
+            textColor: .textPrimary
+        )
         titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         return titleLabel
     }()
@@ -59,7 +60,7 @@ final class ManualEntryTextField: UIView {
     }()
     private(set) lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
-        textField.font = .stripeFont(forTextStyle: .body)
+        textField.font = FinancialConnectionsFont.label(.large).uiFont
         textField.textColor = .textPrimary
         textField.keyboardType = .numberPad
         textField.delegate = self
@@ -94,7 +95,7 @@ final class ManualEntryTextField: UIView {
         textField.attributedPlaceholder = NSAttributedString(
             string: placeholder,
             attributes: [
-                .font: UIFont.stripeFont(forTextStyle: .body),
+                .font: FinancialConnectionsFont.label(.large).uiFont,
                 .foregroundColor: UIColor.textDisabled,
             ]
         )
@@ -117,9 +118,10 @@ final class ManualEntryTextField: UIView {
         } else if let errorText = errorText {
             footerTextLabel = ManualEntryErrorView(text: errorText)
         } else if let footerText = footerText {
-            let footerLabel = UILabel()
-            footerLabel.font = .stripeFont(forTextStyle: .body)
-            footerLabel.textColor = .textPrimary
+            let footerLabel = AttributedLabel(
+                font: .label(.large),
+                textColor: .textPrimary
+            )
             footerLabel.text = footerText
             footerTextLabel = footerLabel
         } else {  // no text

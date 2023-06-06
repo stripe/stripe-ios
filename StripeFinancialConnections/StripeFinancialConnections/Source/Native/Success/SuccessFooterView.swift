@@ -36,7 +36,7 @@ final class SuccessFooterView: UIView {
 
         let footerStackView = UIStackView()
         footerStackView.axis = .vertical
-        footerStackView.spacing = 12
+        footerStackView.spacing = 24
 
         if showFailedToLinkNotice {
             let saveToLinkFailedNoticeView = CreateSaveToLinkFailedNoticeView(
@@ -44,13 +44,7 @@ final class SuccessFooterView: UIView {
             )
             footerStackView.addArrangedSubview(saveToLinkFailedNoticeView)
         }
-
-        let footerButtonStackView = UIStackView()
-        footerButtonStackView.axis = .vertical
-        footerButtonStackView.spacing = 12
-        footerButtonStackView.addArrangedSubview(doneButton)
-        footerStackView.addArrangedSubview(footerButtonStackView)
-
+        footerStackView.addArrangedSubview(doneButton)
         addAndPinSubviewToSafeArea(footerStackView)
     }
 
@@ -70,9 +64,9 @@ final class SuccessFooterView: UIView {
 private func CreateSaveToLinkFailedNoticeView(
     businessName: String?
 ) -> UIView {
-    let errorLabelFont = UIFont.stripeFont(forTextStyle: .captionEmphasized)
+    let errorLabelFont = FinancialConnectionsFont.label(.smallEmphasized)
     let warningIconWidthAndHeight: CGFloat = 12
-    let warningIconInsets = (errorLabelFont.lineHeight - warningIconWidthAndHeight) / 2
+    let warningIconInsets = errorLabelFont.topPadding
     let warningIconImageView = UIImageView()
     warningIconImageView.image = Image.warning_triangle.makeImage()
         .withTintColor(.textCritical)
@@ -89,9 +83,10 @@ private func CreateSaveToLinkFailedNoticeView(
         warningIconImageView.heightAnchor.constraint(equalToConstant: warningIconWidthAndHeight),
     ])
 
-    let errorLabel = UILabel()
-    errorLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
-    errorLabel.textColor = .textPrimary
+    let errorLabel = AttributedLabel(
+        font: .label(.smallEmphasized),
+        textColor: .textPrimary
+    )
     errorLabel.numberOfLines = 0
     errorLabel.text = {
         if let businessName = businessName {

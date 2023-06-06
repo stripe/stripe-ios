@@ -489,7 +489,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubNewCustomerResponse()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
-                                                            confirmHandler: confirmHandler(_:_:))
+                                                            confirmHandler: confirmHandler(_:_:_:))
 
         preparePaymentSheet(intentConfig: intentConfig)
         presentPaymentSheet(darkMode: false)
@@ -502,7 +502,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
-                                                            confirmHandler: confirmHandler(_:_:))
+                                                            confirmHandler: confirmHandler(_:_:_:))
 
         preparePaymentSheet(
             automaticPaymentMethods: false,
@@ -1049,10 +1049,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             testWindow.overrideUserInterfaceStyle = .dark
         }
         testWindow.rootViewController = navController
-
-        paymentSheet.present(from: vc) { result in
-            if case let .failed(error) = result {
-                XCTFail("Presentation failed: \(error)")
+        // Wait a turn of the runloop for the RVC to attach to the window, then present PaymentSheet
+        DispatchQueue.main.async {
+            self.paymentSheet.present(from: vc) { result in
+                if case let .failed(error) = result {
+                    XCTFail("Presentation failed: \(error)")
+                }
             }
         }
 
@@ -1130,7 +1132,8 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
     }
 
-    func confirmHandler(_ paymentMethodID: String,
+    func confirmHandler(_ paymentMethod: STPPaymentMethod,
+                        _ shouldSavePaymentMethod: Bool,
                         _ intentCreationCallback: (Result<String, Error>) -> Void) {
         // no-op
     }

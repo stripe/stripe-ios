@@ -1,9 +1,6 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 
-/* A button used for adding a new payment method */
-"Add" = "Add";
-
 /* Title shown above a card entry form */
 "Add a card" = "Add a card";
 
@@ -119,6 +116,9 @@ re-entering the security code (CVV/CVC). */
 /* Title of the logout action. */
 "Log out of Link" = "Log out of Link";
 
+/* Title shown above a carousel containing the customer's payment methods */
+"Manage your payment methods" = "Manage your payment methods";
+
 /* Label for name on card field */
 "Name on card" = "Name on card";
 
@@ -201,6 +201,12 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 
 /* Label for a button that re-sends the a login code when tapped */
 "Resend code" = "Resend code";
+
+/* A button used for saving a new payment method */
+"Save" = "Save";
+
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Save a new payment method" = "Save a new payment method";
 
 /* Title for address entry section */
 "Save address" = "Save address";

@@ -101,7 +101,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                                            currency: "USD",
                                                                            setupFutureUsage: .onSession),
                                                             paymentMethodTypes: ["card", "cashapp"],
-                                                            confirmHandler: { _, _ in })
+                                                            confirmHandler: { _, _, _ in })
 
         client.retrieveElementsSession(withIntentConfig: intentConfig) { result in
             switch result {
@@ -130,7 +130,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
                                                                            setupFutureUsage: .offSession),
                                                             paymentMethodTypes: ["card", "cashapp"],
-                                                            confirmHandler: { _, _ in })
+                                                            confirmHandler: { _, _, _ in })
 
         client.retrieveElementsSession(withIntentConfig: intentConfig) { result in
             switch result {
@@ -157,10 +157,11 @@ class STPIntentWithPreferencesTest: XCTestCase {
     func testElementsSessionPayload_Payment() throws {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 2000,
                                                                            currency: "USD",
-                                                                           setupFutureUsage: .onSession),
+                                                                           setupFutureUsage: .onSession,
+                                                                           captureMethod: .automaticAsync),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
-                                                            confirmHandler: { _, _ in })
+                                                            confirmHandler: { _, _, _ in })
 
         let payload = intentConfig.elementsSessionPayload(publishableKey: "pk_test")
         XCTAssertEqual(payload["key"] as? String, "pk_test")
@@ -173,6 +174,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
         XCTAssertEqual(deferredIntent["amount"] as? Int, 2000)
         XCTAssertEqual(deferredIntent["currency"] as? String, "USD")
         XCTAssertEqual(deferredIntent["setup_future_usage"] as? String, "on_session")
+        XCTAssertEqual(deferredIntent["capture_method"] as? String, "automatic_async")
     }
 
     func testElementsSessionPayload_Setup() throws {
@@ -180,7 +182,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                                            setupFutureUsage: .offSession),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
-                                                            confirmHandler: { _, _ in })
+                                                            confirmHandler: { _, _, _ in })
 
         let payload = intentConfig.elementsSessionPayload(publishableKey: "pk_test")
         XCTAssertEqual(payload["key"] as? String, "pk_test")

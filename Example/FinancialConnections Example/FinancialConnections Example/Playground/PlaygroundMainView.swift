@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 14.0, *)
 struct PlaygroundMainView: View {
 
     @StateObject var viewModel = PlaygroundMainViewModel()
@@ -18,23 +19,7 @@ struct PlaygroundMainView: View {
                 Form {
                     Section {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("What do you want to use Financial Connections for?")
-                                .font(.headline)
-                            Picker("Flow?", selection: $viewModel.flow) {
-                                ForEach(PlaygroundMainViewModel.Flow.allCases) {
-                                    Text($0.rawValue.capitalized)
-                                        .tag($0)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                            Text("'Payments' has manual entry enabled.")
-                                .font(.caption)
-                                .italic()
-                        }
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("How do you want it to look like?")
-                                .font(.headline)
+                            Text("Select Mobile SDK Type")
                             Picker("Enable Native?", selection: $viewModel.nativeSelection) {
                                 ForEach(PlaygroundMainViewModel.NativeSelection.allCases) {
                                     Text($0.rawValue.capitalized)
@@ -46,38 +31,51 @@ struct PlaygroundMainView: View {
                                 .font(.caption)
                                 .italic()
                         }
+                    }
 
-                        if !viewModel.enableAppToApp
-                            && (viewModel.customPublicKey.isEmpty || viewModel.customSecretKey.isEmpty)
-                        {
-                            if #available(iOS 14.0, *) {
+                    Section {
+                        Picker("Scenario", selection: $viewModel.customScenario) {
+                            ForEach(PlaygroundMainViewModel.CustomScenario.allCases, id: \.self) {
+                                Text($0.displayName)
+                            }
+                        }
+                        .pickerStyle(.menu)
+
+                        if viewModel.customScenario == .none {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Select Flow")
+                                Picker("Flow?", selection: $viewModel.flow) {
+                                    ForEach(PlaygroundMainViewModel.Flow.allCases) {
+                                        Text($0.rawValue.capitalized)
+                                            .tag($0)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                                Text("'Payments' has manual entry enabled.")
+                                    .font(.caption)
+                                    .italic()
+                            }
+
+                            if viewModel.customPublicKey.isEmpty || viewModel.customSecretKey.isEmpty
+                            {
                                 Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
-                                    // test mode color
+                                // test mode color
                                     .toggleStyle(
                                         SwitchToggleStyle(
                                             tint: Color(red: 231 / 255.0, green: 151 / 255.0, blue: 104 / 255.0)
                                         )
                                     )
-                            } else {
-                                Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
                             }
-                        }
 
-                        if viewModel.customPublicKey.isEmpty || viewModel.customSecretKey.isEmpty {
-                            Toggle("Enable App To App (livemode only)", isOn: $viewModel.enableAppToApp)
-                        }
-
-                        Button(action: viewModel.didSelectClearCaches) {
-                            Text("Clear Caches")
-                        }
-                    }
-
-                    if viewModel.flow == .networking {
-                        Section(header: Text("NETWORKING")) {
-                            TextField("Email (existing Link consumer)", text: $viewModel.email)
-                                .keyboardType(.emailAddress)
-                                .autocapitalization(.none)
-                                .accessibility(identifier: "playground-email")
+                            if viewModel.flow == .networking {
+                                TextField("Email (existing Link consumer)", text: $viewModel.email)
+                                    .keyboardType(.emailAddress)
+                                    .autocapitalization(.none)
+                                    .accessibility(identifier: "playground-email")
+                            }
+                        } else if viewModel.customScenario == .customKeys {
+                            TextField("Public Key (pk_)", text: $viewModel.customPublicKey)
+                            TextField("Secret Key (sk_)", text: $viewModel.customSecretKey)
                         }
                     }
 
@@ -86,14 +84,15 @@ struct PlaygroundMainView: View {
                             .accessibility(identifier: "playground-transactions-permission")
                     }
 
-                    Section(header: Text("CUSTOM KEYS")) {
-                        TextField("Public Key (pk_)", text: $viewModel.customPublicKey)
-                        TextField("Secret Key (sk_)", text: $viewModel.customSecretKey)
+                    Section {
+                        Button(action: viewModel.didSelectClearCaches) {
+                            Text("Clear Cache (requests, images etc.)")
+                        }
                     }
 
                     // extra space so keyboard doesn't cover the "CUSTOM KEYS" section
                     // (SwiftUI, depending on iOS version, doesn't handle keyboard)
-                    Spacer(minLength: 300)
+                    Spacer(minLength: 100)
                 }
                 VStack {
                     Button(action: viewModel.didSelectShow) {
@@ -113,10 +112,8 @@ struct PlaygroundMainView: View {
                 ZStack {
                     Color(UIColor.systemGray)
                         .opacity(0.5)
-                    if #available(iOS 14.0, *) {
-                        ProgressView()
-                            .scaleEffect(2.0)
-                    }
+                    ProgressView()
+                        .scaleEffect(2.0)
                 }
             } else {
                 EmptyView()
@@ -125,6 +122,7 @@ struct PlaygroundMainView: View {
     }
 }
 
+@available(iOS 14.0, *)
 struct PlaygroundMainView_Previews: PreviewProvider {
     static var previews: some View {
         PlaygroundMainView()
