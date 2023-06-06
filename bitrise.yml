@@ -503,6 +503,7 @@ workflows:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
+        - collect_simulator_diagnostics: always
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard1
         - log_formatter: xcbeautify
@@ -514,7 +515,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
   ui-tests-2:
     steps:
     - xcode-test@4:
@@ -522,6 +523,7 @@ workflows:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
+        - collect_simulator_diagnostics: always
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard2
         - log_formatter: xcbeautify
@@ -533,7 +535,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1-max.10core
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
