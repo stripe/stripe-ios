@@ -234,7 +234,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewWillAppear(animated)
         guard let selectedIndexPath = collectionView.indexPathsForSelectedItems?.first else {
             return
         }
