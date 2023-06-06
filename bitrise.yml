@@ -506,8 +506,10 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard1
         - log_formatter: xcbeautify
+    # To work around a sim boot issue for big parallel jobs, retry the test if the first attempt fails.
     - xcode-test@4:
         run_if: .IsBuildFailed
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -531,12 +533,13 @@ workflows:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
-        - collect_simulator_diagnostics: always
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard2
         - log_formatter: xcbeautify
+    # To work around a sim boot issue for big parallel jobs, retry the test if the first attempt fails.
     - xcode-test@4:
         run_if: .IsBuildFailed
+        is_always_run: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
