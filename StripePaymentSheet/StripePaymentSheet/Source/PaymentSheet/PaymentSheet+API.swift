@@ -514,9 +514,7 @@ extension PaymentSheet {
             }
         }
 
-        if linkAccountService.hasSessionCookie {
-            consumerSessionLookupBlock(nil)
-        } else if let email = linkAccountService.getLastSignUpEmail() {
+        if let email = linkAccountService.getLastSignUpEmail() {
             consumerSessionLookupBlock(email)
         } else if let email = configuration.defaultBillingDetails.email {
             consumerSessionLookupBlock(email)
@@ -562,10 +560,11 @@ extension PaymentSheet {
         case saved(STPPaymentMethod)
         /// - paymentMethod: Pass this if you created a PaymentMethod already (e.g. for the deferred flow).
         case new(params: STPPaymentMethodParams, paymentMethod: STPPaymentMethod? = nil, shouldSave: Bool)
+        case id(stripeID: String, type: STPPaymentMethodType)
 
         var shouldSave: Bool {
             switch self {
-            case .saved:
+            case .saved, .id:
                 return false
             case .new(_, _, let shouldSave):
                 return shouldSave
@@ -579,16 +578,14 @@ extension PaymentSheet {
         configuration: PaymentSheet.Configuration
     ) -> STPPaymentIntentParams {
         let params: STPPaymentIntentParams
-        let shouldSave: Bool
         let paymentMethodType: STPPaymentMethodType
+        let shouldSave = confirmPaymentMethodType.shouldSave
         switch confirmPaymentMethodType {
         case .saved(let paymentMethod):
-            shouldSave = false
             paymentMethodType = paymentMethod.type
             params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
             params.paymentMethodId = paymentMethod.stripeId
-        case let .new(paymentMethodParams, paymentMethod, _shouldSave):
-            shouldSave = _shouldSave
+        case let .new(paymentMethodParams, paymentMethod, _):
             if let paymentMethod = paymentMethod {
                 paymentMethodType = paymentMethod.type
                 params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
@@ -605,6 +602,10 @@ extension PaymentSheet {
             {
                 params.mandateData = .makeWithInferredValues()
             }
+        case let .id(stripeID, type):
+            paymentMethodType = type
+            params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: type)
+            params.paymentMethodId = stripeID
         }
 
         let options = STPConfirmPaymentMethodOptions()
@@ -643,6 +644,12 @@ extension PaymentSheet {
             if params.paymentMethodType == .payPal {
                 params.mandateData = .makeWithInferredValues()
             }
+        case let .id(stripeID, type):
+            params = STPSetupIntentConfirmParams(
+                clientSecret: setupIntent.clientSecret,
+                paymentMethodType: type
+            )
+            params.paymentMethodID = stripeID
         }
         params.returnURL = configuration.returnURL
         return params

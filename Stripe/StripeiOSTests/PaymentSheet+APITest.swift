@@ -60,13 +60,6 @@ class PaymentSheetAPITest: XCTestCase {
         return newCardPaymentOption
     }()
 
-    override class func setUp() {
-        super.setUp()
-        // `PaymentSheet.load()` uses the `LinkAccountService` to lookup the Link user account.
-        // Override the default cookie store since Keychain is not available in this test case.
-        LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()
-    }
-
     // MARK: - load and confirm tests
 
     func testPaymentSheetLoadAndConfirmWithPaymentIntent() {

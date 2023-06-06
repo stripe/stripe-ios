@@ -37,22 +37,9 @@ protocol LinkAccountServiceProtocol {
 final class LinkAccountService: LinkAccountServiceProtocol {
 
     let apiClient: STPAPIClient
-    let cookieStore: LinkCookieStore
 
-    /// The default cookie store used by new instances of the service.
-    static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
-
-    init(
-        apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = defaultCookieStore
-    ) {
+    init(apiClient: STPAPIClient = .shared) {
         self.apiClient = apiClient
-        self.cookieStore = cookieStore
-    }
-
-    /// Returns true if we have a session cookie stored on device
-    var hasSessionCookie: Bool {
-        return cookieStore.formattedSessionCookies() != nil
     }
 
     func lookupAccount(
@@ -61,9 +48,8 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     ) {
         ConsumerSession.lookupSession(
             for: email,
-            with: apiClient,
-            cookieStore: cookieStore
-        ) { [apiClient, cookieStore] result in
+            with: apiClient
+        ) { [apiClient] result in
             switch result {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
@@ -73,8 +59,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             email: session.consumerSession.emailAddress,
                             session: session.consumerSession,
                             publishableKey: session.publishableKey,
-                            apiClient: apiClient,
-                            cookieStore: cookieStore
+                            apiClient: apiClient
                         )
                     ))
                 case .notFound:
@@ -84,8 +69,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                                 email: email,
                                 session: nil,
                                 publishableKey: nil,
-                                apiClient: self.apiClient,
-                                cookieStore: self.cookieStore
+                                apiClient: self.apiClient
                             )
                         ))
                     } else {
@@ -102,15 +86,15 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     }
 
     func hasEmailLoggedOut(email: String) -> Bool {
-        guard let hashedEmail = email.lowercased().sha256 else {
+        /*guard let hashedEmail = email.lowercased().sha256 else {
             return false
-        }
+        }*/
 
-        return cookieStore.read(key: .lastLogoutEmail) == hashedEmail
+        return false//cookieStore.read(key: .lastLogoutEmail) == hashedEmail
     }
 
     func getLastSignUpEmail() -> String? {
-        return cookieStore.read(key: .lastSignupEmail)
+        return nil//cookieStore.read(key: .lastSignupEmail)
     }
 
 }

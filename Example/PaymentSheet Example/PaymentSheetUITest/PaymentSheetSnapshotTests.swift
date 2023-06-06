@@ -46,8 +46,6 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         )
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "mockReturnUrl"
-
-        LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
 //                self.recordMode = true
 //                self.runAgainstLiveService = true
         if !self.runAgainstLiveService {

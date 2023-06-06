@@ -63,6 +63,7 @@ extension PaymentSheetViewController {
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton()
             button.cornerRadius = appearance.cornerRadius
+            button.email = nil
             button.addTarget(self, action: #selector(handleTapPayWithLink), for: .touchUpInside)
             return button
         }()

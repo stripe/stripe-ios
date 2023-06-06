@@ -99,47 +99,12 @@ let project = Project(
                 "StripeiOSTests.xctestplan"
             ]
         ),
-        Target(
-            name: "StripeiOSTestHostApp",
-            platform: .iOS,
-            product: .app,
-            bundleId: "com.stripe.StripeiOSTestHostApp",
-            infoPlist: "StripeiOSTestHostApp/Info.plist",
-            sources: "StripeiOSTestHostApp/*.swift",
-            resources: "StripeiOSTestHostApp/Resources/**",
-            settings: .stripeTargetSettings(
-                baseXcconfigFilePath: "//BuildConfigurations/StripeiOS Tests"
-            )
-        ),
-        Target(
-            name: "StripeiOSAppHostedTests",
-            platform: .iOS,
-            product: .unitTests,
-            bundleId: "com.stripe.StripeiOSAppHostedTests",
-            infoPlist: "StripeiOSAppHostedTests/Info.plist",
-            sources: "StripeiOSAppHostedTests/*.swift",
-            dependencies: [
-                .xctest,
-                .target(name: "StripeiOS"),
-                .target(name: "StripeiOSTestHostApp"),
-                .project(target: "StripePaymentSheet", path: "//StripePaymentSheet"),
-            ],
-            settings: .stripeTargetSettings(
-                baseXcconfigFilePath: "//BuildConfigurations/StripeiOS Tests"
-            )
-        ),
     ],
     schemes: [
         Scheme(
             name: "StripeiOS",
             buildAction: .buildAction(targets: ["StripeiOS"]),
             testAction: .testPlans(["StripeiOSTests.xctestplan"])
-        ),
-        Scheme(
-            name: "StripeiOSTestHostApp",
-            buildAction: .buildAction(targets: ["StripeiOS"]),
-            testAction: .targets(["StripeiOSAppHostedTests"]),
-            runAction: .runAction(executable: "StripeiOSTestHostApp")
         ),
     ]
 )

@@ -28,6 +28,7 @@ class LinkAccountServiceTests: XCTestCase {
 extension LinkAccountServiceTests {
 
     func makeSUT() -> LinkAccountService {
+        /*
         let cookieStore = LinkInMemoryCookieStore()
 
         cookieStore.write(
@@ -36,7 +37,8 @@ extension LinkAccountServiceTests {
             value: "tMmiiTI7IaAcPpQPFQ65uMVCWH8av9jw4cwf/F5HVRQ="
         )
 
-        return LinkAccountService(cookieStore: cookieStore)
+          */
+        return LinkAccountService()
     }
 
 }

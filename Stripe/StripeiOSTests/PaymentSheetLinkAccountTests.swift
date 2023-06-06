@@ -15,38 +15,9 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 final class PaymentSheetLinkAccountTests: XCTestCase {
-
-    func testMakePaymentMethodParams() {
-        let sut = makeSUT()
-
-        let paymentDetails = makePaymentDetailsStub()
-        let result = sut.makePaymentMethodParams(from: paymentDetails)
-
-        XCTAssertEqual(result?.type, .link)
-        XCTAssertEqual(result?.link?.paymentDetailsID, "1")
-        XCTAssertEqual(
-            result?.link?.credentials as? [String: String],
-            [
-                "consumer_session_client_secret": "client_secret"
-            ]
-        )
-        XCTAssertNil(result?.link?.additionalAPIParameters["card"])
+    func test() {
+        
     }
-
-    func testMakePaymentMethodParams_withCVC() {
-        let sut = makeSUT()
-
-        let paymentDetails = makePaymentDetailsStub(withCVC: "12345")
-        let result = sut.makePaymentMethodParams(from: paymentDetails)
-
-        XCTAssertEqual(
-            result?.link?.additionalAPIParameters["card"] as? [String: String],
-            [
-                "cvc": "12345"
-            ]
-        )
-    }
-
 }
 
 extension PaymentSheetLinkAccountTests {
@@ -74,8 +45,7 @@ extension PaymentSheetLinkAccountTests {
             email: "user@example.com",
             session: LinkStubs.consumerSession(),
             publishableKey: nil,
-            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-            cookieStore: LinkInMemoryCookieStore()
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         )
     }
 

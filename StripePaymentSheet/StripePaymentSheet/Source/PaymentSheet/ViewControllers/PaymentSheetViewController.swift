@@ -26,9 +26,6 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerDidCancel(
         _ paymentSheetViewController: PaymentSheetViewController
     )
-    func paymentSheetViewControllerDidSelectPayWithLink(
-        _ paymentSheetViewController: PaymentSheetViewController
-    )
 }
 
 /// For internal SDK use only

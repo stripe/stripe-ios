@@ -34,6 +34,9 @@ extension PaymentSheet {
                     assert(newPaymentMethod == nil)
                     paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params)
                     confirmType = .new(params: params, paymentMethod: paymentMethod, shouldSave: shouldSave)
+                case .id:
+                    assertionFailure("Paying with an ID is not currently supported by deferred intents…?")
+                    return
                 }
 
                 // 2. Get Intent client secret from merchant

@@ -26,8 +26,8 @@ final class PayWithLinkButton: UIControl {
         static let emailContainerInsets: NSDirectionalEdgeInsets = .insets(amount: 6)
     }
 
-    /// Link account of the current user.
-    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountContext.shared.account {
+    /// Email of the current user.
+    var email: String? {
         didSet {
             updateUI()
         }
@@ -97,28 +97,16 @@ final class PayWithLinkButton: UIControl {
         return container
     }()
 
-    private var hasValidLinkAccount: Bool {
-        return linkAccount?.isRegistered ?? false
-    }
-
     init() {
         super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true
         setupUI()
         applyStyle()
         updateUI()
-
-        // Listen for account changes
-        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        // Stop listening for account changes
-        LinkAccountContext.shared.removeObserver(self)
     }
 
     override func layoutSubviews() {
@@ -129,14 +117,6 @@ final class PayWithLinkButton: UIControl {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         bounds.contains(point) ? self : nil
     }
-
-    @objc
-    func onAccountChange(_ notification: Notification) {
-        DispatchQueue.main.async { [weak self] in
-            self?.linkAccount = notification.object as? PaymentSheetLinkAccount
-        }
-    }
-
 }
 
 // MARK: - UI
@@ -174,9 +154,9 @@ private extension PayWithLinkButton {
     }
 
     func updateUI() {
-        emailLabel.text = linkAccount?.email
-        logoView.isHidden = hasValidLinkAccount
-        stackView.isHidden = !hasValidLinkAccount
+        emailLabel.text = email
+        logoView.isHidden = (email != nil)
+        stackView.isHidden = (email == nil)
         updateAccessibilityContent()
     }
 
@@ -273,11 +253,7 @@ private extension PayWithLinkButton {
             STPPaymentMethodType.link.displayName
         )
 
-        if hasValidLinkAccount {
-            accessibilityValue = linkAccount?.email
-        } else {
-            accessibilityValue = nil
-        }
+        accessibilityValue = email
     }
 
 }

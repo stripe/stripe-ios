@@ -238,38 +238,17 @@ extension PaymentSheet {
                 presentPaymentOptionsCompletion = completion
             }
 
-            let showPaymentOptions: () -> Void = { [weak self] in
-                guard let self = self else { return }
-
-                // Set the PaymentSheetViewController as the content of our bottom sheet
-                let bottomSheetVC = Self.makeBottomSheetViewController(
-                    self.viewController,
-                    configuration: self.configuration,
-                    didCancelNative3DS2: { [weak self] in
-                        self?.paymentHandler.cancel3DS2ChallengeFlow()
-                    }
-                )
-
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
-                self.isPresented = true
-            }
-
-            if let linkAccount = LinkAccountContext.shared.account,
-               linkAccount.sessionState == .requiresVerification,
-               !linkAccount.hasStartedSMSVerification {
-                let verificationController = LinkVerificationController(linkAccount: linkAccount)
-                verificationController.present(from: presentingViewController) { [weak self] result in
-                    switch result {
-                    case .completed:
-                        self?.viewController.selectLink()
-                        completion?()
-                    case .canceled, .failed:
-                        showPaymentOptions()
-                    }
+            // Set the PaymentSheetViewController as the content of our bottom sheet
+            let bottomSheetVC = Self.makeBottomSheetViewController(
+                viewController,
+                configuration: configuration,
+                didCancelNative3DS2: { [weak self] in
+                    self?.paymentHandler.cancel3DS2ChallengeFlow()
                 }
-            } else {
-                showPaymentOptions()
-            }
+            )
+
+            presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+            isPresented = true
         }
 
         /// Completes the payment or setup.

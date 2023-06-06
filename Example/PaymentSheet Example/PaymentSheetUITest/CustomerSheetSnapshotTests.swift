@@ -66,9 +66,6 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         super.setUp()
 
         configuration = CustomerSheet.Configuration()
-
-        LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
-//        self.recordMode = true
     }
 
     public override func tearDown() {
