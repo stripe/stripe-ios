@@ -442,6 +442,19 @@ class PaymentSheetViewController: UIViewController {
         }
     }
 
+    private func payWithLink() {
+        let linkController = PayWithLinkController(intent: intent, configuration: configuration)
+        Task {
+            do {
+                let payment = try await linkController.present(from: self)
+                pay(with: .link(option: .withPaymentMethodID(paymentMethodID: payment.paymentMethodID)))
+            } catch {
+                // TODO: handle errors
+                print(error)
+            }
+        }
+    }
+
     private func pay(with paymentOption: PaymentOption) {
         view.endEditing(true)
         isPaymentInFlight = true
@@ -511,7 +524,7 @@ extension PaymentSheetViewController: WalletHeaderViewDelegate {
 
     func walletHeaderViewPayWithLinkTapped(_ header: WalletHeaderView) {
         set(error: nil)
-        delegate?.paymentSheetViewControllerDidSelectPayWithLink(self)
+        payWithLink()
     }
 
 }

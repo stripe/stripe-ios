@@ -30,7 +30,7 @@ extension STPAPIClient {
         let endpoint: String = "consumers/sessions/lookup"
         let parameters: [String: Any] = [
             "request_surface": "ios_payment_element",
-            "email_address": email.lowercased()
+            "email_address": email.lowercased(),
         ]
 
         post(

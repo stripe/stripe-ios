@@ -16,7 +16,7 @@ import XCTest
 
 final class PaymentSheetLinkAccountTests: XCTestCase {
     func test() {
-        
+
     }
 }
 

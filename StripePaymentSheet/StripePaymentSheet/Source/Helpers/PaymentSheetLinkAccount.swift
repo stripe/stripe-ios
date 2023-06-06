@@ -169,9 +169,9 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     func markEmailAsLoggedOut() {
         /*guard let hashedEmail = email.lowercased().sha256 else {
             return
-        }*/
+        }
 
-        //cookieStore.write(key: .lastLogoutEmail, value: hashedEmail)
+        cookieStore.write(key: .lastLogoutEmail, value: hashedEmail)*/
     }
 
 }

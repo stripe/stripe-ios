@@ -88,13 +88,14 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     func hasEmailLoggedOut(email: String) -> Bool {
         /*guard let hashedEmail = email.lowercased().sha256 else {
             return false
-        }*/
-
-        return false//cookieStore.read(key: .lastLogoutEmail) == hashedEmail
+        }
+        cookieStore.read(key: .lastLogoutEmail) == hashedEmail*/
+        return false
     }
 
     func getLastSignUpEmail() -> String? {
-        return nil//cookieStore.read(key: .lastSignupEmail)
+        // cookieStore.read(key: .lastSignupEmail)
+        return nil
     }
 
 }

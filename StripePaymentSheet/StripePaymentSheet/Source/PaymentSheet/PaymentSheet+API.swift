@@ -175,22 +175,17 @@ extension PaymentSheet {
             }
         // MARK: - Link
         case .link(let confirmOption):
-            let confirmWithPaymentMethodParams: (STPPaymentMethodParams) -> Void = { paymentMethodParams in
+            let confirmWithType: (ConfirmPaymentMethodType) -> Void = { confirmType in
                 switch intent {
                 case .paymentIntent(let paymentIntent):
-                    let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
-                    paymentIntentParams.paymentMethodParams = paymentMethodParams
-                    paymentIntentParams.returnURL = configuration.returnURL
-                    paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+                    let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: confirmType, paymentIntent: paymentIntent, configuration: configuration)
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
                         completion: paymentHandlerCompletion
                     )
                 case .setupIntent(let setupIntent):
-                    let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
-                    setupIntentParams.paymentMethodParams = paymentMethodParams
-                    setupIntentParams.returnURL = configuration.returnURL
+                    let setupIntentParams = makeSetupIntentParams(confirmPaymentMethodType: confirmType, setupIntent: setupIntent, configuration: configuration)
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
@@ -198,10 +193,7 @@ extension PaymentSheet {
                     )
                 case .deferredIntent(_, let intentConfig):
                     handleDeferredIntentConfirmation(
-                        confirmType: .new(
-                            params: paymentMethodParams,
-                            shouldSave: false
-                        ),
+                        confirmType: confirmType,
                         configuration: configuration,
                         intentConfig: intentConfig,
                         authenticationContext: authenticationContext,
@@ -209,6 +201,9 @@ extension PaymentSheet {
                         completion: completion
                     )
                 }
+            }
+            let confirmWithPaymentMethodParams: (STPPaymentMethodParams) -> Void = { paymentMethodParams in
+                confirmWithType(.new(params: paymentMethodParams, shouldSave: false))
             }
 
             let confirmWithPaymentDetails:
@@ -252,9 +247,6 @@ extension PaymentSheet {
                 }
 
             switch confirmOption {
-            case .wallet:
-                let linkController = PayWithLinkController(intent: intent, configuration: configuration)
-                linkController.present(completion: completion)
             case .signUp(let linkAccount, let phoneNumber, let legalName, let paymentMethodParams):
                 linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: .checkbox) { result in
                     switch result {
@@ -279,10 +271,8 @@ extension PaymentSheet {
                         }
                     }
                 }
-            case .withPaymentDetails(let linkAccount, let paymentDetails):
-                confirmWithPaymentDetails(linkAccount, paymentDetails)
-            case .withPaymentMethodParams(let linkAccount, let paymentMethodParams):
-                createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
+            case .withPaymentMethodID(let paymentMethodID):
+                confirmWithType(.id(stripeID: paymentMethodID, type: .link)) // TODO: gotta handle passthrough
             }
         }
     }
