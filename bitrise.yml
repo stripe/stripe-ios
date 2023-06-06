@@ -499,6 +499,7 @@ workflows:
         - maximum_test_repetitions: "5"
         - scheme: LocalizationTester
     - xcode-test@4:
+        is_skippable: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -531,6 +532,7 @@ workflows:
   ui-tests-2:
     steps:
     - xcode-test@4:
+        is_skippable: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
