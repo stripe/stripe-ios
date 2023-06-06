@@ -499,7 +499,6 @@ workflows:
         - maximum_test_repetitions: "5"
         - scheme: LocalizationTester
     - xcode-test@4:
-        is_skippable: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -507,19 +506,7 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard1
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 4 -maximum-parallel-testing-workers 4
-    # To work around a sim boot issue for big parallel jobs, retry the test if the first attempt fails.
-    - xcode-test@4:
-        run_if: .IsBuildFailed
-        is_always_run: true
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "5"
-        - scheme: PaymentSheet Example
-        - test_plan: PaymentSheet Example-Shard1
-        - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 4 -maximum-parallel-testing-workers 4  
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 3 -maximum-parallel-testing-workers 3
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
@@ -532,7 +519,6 @@ workflows:
   ui-tests-2:
     steps:
     - xcode-test@4:
-        is_skippable: true
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -540,19 +526,7 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard2
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 4 -maximum-parallel-testing-workers 4
-    # To work around a sim boot issue for big parallel jobs, retry the test if the first attempt fails.
-    - xcode-test@4:
-        run_if: .IsBuildFailed
-        is_always_run: true
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "5"
-        - scheme: PaymentSheet Example
-        - test_plan: PaymentSheet Example-Shard2
-        - log_formatter: xcbeautify        
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 4 -maximum-parallel-testing-workers 4        
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 3 -maximum-parallel-testing-workers 3      
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
