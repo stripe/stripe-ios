@@ -147,4 +147,5 @@ extension String.Localized {
             "Error text displayed to the user when the device's camera is not available"
         )
     }
+
 }

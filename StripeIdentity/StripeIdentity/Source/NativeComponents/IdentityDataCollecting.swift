@@ -25,7 +25,7 @@ extension IdentityDataCollecting {
 
 extension IdentityDataCollecting where Self: IdentityFlowViewController {
     func clearCollectedFields() {
-        collectedFields.forEach { self.sheetController?.collectedData.clearData(field: $0) }
+        collectedFields.forEach { self.sheetController?.clearCollectedData(field: $0) }
     }
 
     func reset() {

@@ -90,10 +90,10 @@ private func CreateContentView(
     prepaneBodyModel.entries?.forEach { entry in
         switch entry.content {
         case .text(let text):
-            let label = ClickableLabel(
-                font: .stripeFont(forTextStyle: .body),
-                boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
-                linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            let label = AttributedTextView(
+                font: .label(.large),
+                boldFont: .label(.largeEmphasized),
+                linkFont: .label(.largeEmphasized),
                 textColor: .textPrimary
             )
             label.setText(text, action: didSelectURL)
@@ -134,6 +134,7 @@ private func CreateFooterView(
     NSLayoutConstraint.activate([
         continueButton.heightAnchor.constraint(equalToConstant: 56)
     ])
+    continueButton.accessibilityIdentifier = "prepane_continue_button"
 
     let footerStackView = UIStackView()
     footerStackView.axis = .vertical
@@ -189,10 +190,10 @@ private func CreatePartnerDisclosureView(
 
     horizontalStackView.addArrangedSubview(
         {
-            let partnerDisclosureLabel = ClickableLabel(
-                font: .stripeFont(forTextStyle: .captionTight),
-                boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-                linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+            let partnerDisclosureLabel = AttributedTextView(
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
+                linkFont: .label(.smallEmphasized),
                 textColor: .textSecondary
             )
             partnerDisclosureLabel.setText(

@@ -89,6 +89,11 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
 /// - seealso: ApplePayExampleViewController for an example
 @objc(STPApplePayContext)
 public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
+
+    /// A special string that can be passed in place of a intent client secret to force showing success
+    /// - Note: Only intended to be used with advanced workflows, such as multiprocessor support.
+    @_spi(STP) public static let FORCE_SUCCESS = "FORCE_SUCCESS"
+
     /// Initializes this class.
     /// @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks
     /// @note If using Swift, using ApplePayContextDelegate is recommended over STPApplePayContextDelegate.
@@ -200,6 +205,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @_spi(STP) public var shippingDetails: StripeAPI.ShippingDetails?
     private weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
     @objc var authorizationController: PKPaymentAuthorizationController?
+    @_spi(STP) public var returnUrl: String?
     // Internal state
     private var paymentState: PaymentState = .notStarted
     private var error: Error?
@@ -491,6 +497,11 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                     return
                 }
 
+                guard clientSecret != STPApplePayContext.FORCE_SUCCESS else {
+                    handleFinalState(.success, nil)
+                    return
+                }
+
                 if StripeAPI.SetupIntentConfirmParams.isClientSecretValid(clientSecret) {
                     // 3a. Retrieve the SetupIntent and see if we need to confirm it client-side
                     StripeAPI.SetupIntent.get(apiClient: self.apiClient, clientSecret: clientSecret)
@@ -516,6 +527,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                             )
                             confirmParams.paymentMethod = paymentMethod.id
                             confirmParams.useStripeSdk = true
+                            confirmParams.returnUrl = self.returnUrl
 
                             StripeAPI.SetupIntent.confirm(
                                 apiClient: self.apiClient,
@@ -675,7 +687,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
     }
 
-    static func makeUnknownError(message: String) -> NSError {
+    @_spi(STP) public static func makeUnknownError(message: String) -> NSError {
         let userInfo = [
             NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage(),
             STPError.errorMessageKey: message,

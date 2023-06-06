@@ -101,7 +101,7 @@
     "time_estimate": "Takes less than 1 minute.",
     "title": "Tora's catfood partners with Stripe for secure Identity verification"
   },
-  "livemode": false,
+  "livemode": true,
   "requirements": {
     "missing": [
       "address",

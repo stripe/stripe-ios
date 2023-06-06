@@ -21,6 +21,7 @@ final class SuccessBodyView: HitTestView {
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod?,
         isEndUserFacing: Bool,
+        isNetworking: Bool,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         didSelectDisconnectYourAccounts: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping () -> Void
@@ -41,6 +42,7 @@ final class SuccessBodyView: HitTestView {
                         isStripeDirect: isStripeDirect,
                         businessName: businessName,
                         permissions: permissions,
+                        isNetworking: isNetworking,
                         didSelectLearnMore: didSelectMerchantDataAccessLearnMore
                     )
                 )
@@ -93,6 +95,7 @@ private func CreateDataAccessDisclosureView(
     isStripeDirect: Bool,
     businessName: String?,
     permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+    isNetworking: Bool,
     didSelectLearnMore: @escaping () -> Void
 ) -> UIView {
     let separatorView = UIView()
@@ -109,6 +112,10 @@ private func CreateDataAccessDisclosureView(
                 isStripeDirect: isStripeDirect,
                 businessName: businessName,
                 permissions: permissions,
+                isNetworking: isNetworking,
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
+                alignCenter: false,
                 didSelectLearnMore: didSelectLearnMore
             ),
         ]
@@ -147,10 +154,10 @@ private func CreateDisconnectAccountLabel(
         isEndUserFacing: isEndUserFacing
     )
 
-    let disconnectAccountLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .captionTight),
-        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+    let disconnectAccountLabel = AttributedTextView(
+        font: .body(.small),
+        boldFont: .body(.smallEmphasized),
+        linkFont: .body(.smallEmphasized),
         textColor: .textSecondary
     )
     disconnectAccountLabel.setText(

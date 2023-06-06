@@ -28,6 +28,7 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var navigationController: UINavigationController { get }
 
     func transitionToNextScreen(
+        skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
@@ -91,12 +92,14 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     /// - Note: This may replace the navigation stack or push an additional view
     ///   controller onto the stack, depending on whether on where the user is in the flow.
     func transitionToNextScreen(
+        skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
         completion: @escaping () -> Void
     ) {
         nextViewController(
+            skipTestMode: skipTestMode,
             staticContentResult: staticContentResult,
             updateDataResult: updateDataResult,
             sheetController: sheetController
@@ -232,16 +235,23 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     ) {
         // If the only view in the stack is a loading screen, they should not be
         // able to hit the back button to get back into a loading state.
-        let isInitialLoadingState =
+        let isTransitioningFromLoading =
             navigationController.viewControllers.count == 1
             && navigationController.viewControllers.first is LoadingViewController
+
+        // If the only view in the stack is a debug screen, they just clicked
+        // "Preview" and should not be able to hit the back button to get back
+        // into a debug state.
+        let isTransitioningFromDebug =
+            navigationController.viewControllers.count == 1
+            && navigationController.viewControllers.first is DebugViewController
 
         // If the user is seeing the success screen, it means their session has
         // been submitted and they can't go back to edit their input.
         let isSuccessState = nextViewController is SuccessViewController
 
         // Don't display a back button, so replace the navigation stack
-        if isInitialLoadingState || isSuccessState {
+        if isTransitioningFromLoading || isTransitioningFromDebug || isSuccessState {
             navigationController.setViewControllers([nextViewController], animated: shouldAnimate)
         } else {
             navigationController.pushViewController(nextViewController, animated: shouldAnimate)
@@ -263,6 +273,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     /// Instantiates and returns the next view controller to display in the flow.
     /// - Note: This method should not be called directly from outside of this class except for tests
     func nextViewController(
+        skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
@@ -304,6 +315,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             )
         }
 
+        if !skipTestMode && !staticContent.livemode {
+            return completion(
+                makeDebugViewModeController(sheetController: sheetController)
+            )
+        }
+
         // If updateDataResponse is not nil, then this transition is triggered by a
         // VerificationPageDataUpdate request, get missing requirements from the response.
         // Otherwise, this is the transition to initial page, nothing is collected yet,
@@ -319,30 +336,24 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     sheetController: sheetController
                 )
             )
-        } else if !missingRequirements.isDisjoint(with: [.name, .dob]) {
-            // if missing .name or .dob, then verification type is not document.
-            // Transition to IndividualWelcomeViewController.
-            return completion(
-                makeIndividualWelcomeViewController(
-                    staticContent: staticContent,
-                    sheetController: sheetController
-                )
-            )
-        } else if missingRequirements.contains(.biometricConsent) {
+        }
+
+        switch missingRequirements.nextDestination(collectedData: sheetController.collectedData) {
+        case .consentDestination:
             return completion(
                 makeBiometricConsentViewController(
                     staticContent: staticContent,
                     sheetController: sheetController
                 )
             )
-        } else if missingRequirements.contains(.idDocumentType) {
+        case .docSelectionDestination:
             return completion(
                 makeDocumentTypeSelectViewController(
                     sheetController: sheetController,
                     staticContent: staticContent
                 )
             )
-        } else if !missingRequirements.isDisjoint(with: [.idDocumentFront, .idDocumentBack]) {
+        case .documentCaptureDestination:
             return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) {
                 [weak self] result in
                 guard let self = self else { return }
@@ -354,7 +365,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     )
                 )
             }
-        } else if missingRequirements.contains(.face) {
+        case .selfieCaptureDestination:
             return sheetController.mlModelLoader.faceModelsFuture.observe(on: .main) {
                 [weak self] result in
                 guard let self = self else { return }
@@ -366,7 +377,16 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     )
                 )
             }
-        } else if !missingRequirements.isDisjoint(with: [.address, .idNumber]) {
+        case .individualWelcomeDestination:
+            // if missing .name or .dob, then verification type is not document.
+            // Transition to IndividualWelcomeViewController.
+            return completion(
+                makeIndividualWelcomeViewController(
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                )
+            )
+        case .individualDestination:
             // if missing .address or .idNumber but not missing .name or .dob, then verification type is document.
             // IndividualViewController is the screen after document collection.
             return completion(
@@ -375,19 +395,25 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     sheetController: sheetController
                 )
             )
-        }
-
-        // The client cannot create a screen for the missing requirement
-        return completion(
-            ErrorViewController(
-                sheetController: sheetController,
-                error: .error(
-                    VerificationSheetFlowControllerError.noScreenForRequirements(
-                        missingRequirements
+        case .confirmationDestination:
+            return completion(
+                SuccessViewController(
+                    successContent: staticContent.success,
+                    sheetController: sheetController
+                )
+            )
+        case .errorDestination:
+            return completion(
+                ErrorViewController(
+                    sheetController: sheetController,
+                    error: .error(
+                        VerificationSheetFlowControllerError.noScreenForRequirements(
+                            missingRequirements
+                        )
                     )
                 )
             )
-        )
+        }
     }
 
     func makeIndividualWelcomeViewController(
@@ -574,6 +600,13 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         return safariVC
     }
 
+    func makeDebugViewModeController(
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        return DebugViewController(
+            sheetController: sheetController)
+    }
+
     private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
         #if targetEnvironment(simulator)
         return MockSimulatorCameraSession(
@@ -653,5 +686,33 @@ extension VerificationSheetFlowController: VerificationFlowWebViewControllerDele
 extension VerificationSheetFlowController: SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         delegate?.verificationSheetFlowControllerDidDismissWebView(self)
+    }
+}
+
+extension Set<StripeAPI.VerificationPageFieldType> {
+    func nextDestination(collectedData: StripeAPI.VerificationPageCollectedData) -> IdentityTopLevelDestination {
+        if self.contains(.biometricConsent) {
+            return .consentDestination
+        } else if self.contains(.idDocumentType) {
+            return .docSelectionDestination
+        } else if !self.isDisjoint(with: [.idDocumentFront, .idDocumentBack]) {
+            if let unwrappedDocumentType = collectedData.idDocumentType {
+                // if idDocumentType is collected, continue capture this type
+                return .documentCaptureDestination(documentType: unwrappedDocumentType)
+            } else {
+                // if idDocumentType is not collected, this is a session started half way, reacapture document type
+                return .docSelectionDestination
+            }
+        } else if self.contains(.face) {
+            return .selfieCaptureDestination
+        } else if !self.isDisjoint(with: [.name, .dob]) {
+            return .individualWelcomeDestination
+        } else if !self.isDisjoint(with: [.idNumber, .address]) {
+            return .individualDestination
+        } else if self.isEmpty {
+            return .confirmationDestination
+        } else {
+            return .errorDestination
+        }
     }
 }

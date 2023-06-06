@@ -99,6 +99,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // API error on data save
         let staticAPIErrExp = expectation(description: "Static API error")
         flowController.nextViewController(
+            skipTestMode: false,
             staticContentResult: .failure(mockError),
             updateDataResult: nil,
             sheetController: mockSheetController,
@@ -112,6 +113,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // API error on data save
         let updateAPIErrExp = expectation(description: "Update API error")
         flowController.nextViewController(
+            skipTestMode: false,
             staticContentResult: .success(try VerificationPageMock.response200.make()),
             updateDataResult: .failure(mockError),
             sheetController: mockSheetController,
@@ -125,6 +127,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // requiredDataErrors
         let reqDataErrExp = expectation(description: "requiredDataErrors")
         flowController.nextViewController(
+            skipTestMode: false,
             staticContentResult: .success(try VerificationPageMock.response200.make()),
             updateDataResult: .success(try VerificationPageDataMock.response200.make()),
             sheetController: mockSheetController,
@@ -140,40 +143,31 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         wait(for: [staticAPIErrExp, updateAPIErrExp, reqDataErrExp], timeout: 1)
     }
 
-    func testNoMoreMissingFieldsError() throws {
+    func testNoMoreMissingFieldsReturnSuccessViewController() throws {
         let exp = expectation(description: "No more missing fields")
         flowController.nextViewController(
+            skipTestMode: false,
             staticContentResult: .success(try VerificationPageMock.response200.make()),
             updateDataResult: .success(try VerificationPageDataMock.noErrors.make()),
             sheetController: mockSheetController,
             completion: { nextVC in
-                XCTAssertIs(nextVC, ErrorViewController.self)
-                XCTAssertEqual(
-                    (nextVC as? ErrorViewController)?.model,
-                    .error(VerificationSheetFlowControllerError.noScreenForRequirements([]))
-                )
+                XCTAssertIs(nextVC, SuccessViewController.self)
                 exp.fulfill()
             }
         )
         wait(for: [exp], timeout: 1)
     }
 
-    // Requires document photo but user has not selected type
-    func testDocumentPhotoNoTypeError() throws {
+    // Requires document photo without type - should return DocumentTypeSelectViewController
+    func testMissingDocFrontNoType() throws {
         // Mock that document ML models successfully loaded
         mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
 
-        let exp = expectation(description: "testDocumentPhotoNoTypeError")
+        let exp = expectation(description: "testMissingDocFrontNoType")
         try nextViewController(
             missingRequirements: [.idDocumentFront],
             completion: { nextVC in
-                XCTAssertIs(nextVC, ErrorViewController.self)
-                XCTAssertEqual(
-                    (nextVC as? ErrorViewController)?.model,
-                    .error(
-                        VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType])
-                    )
-                )
+                XCTAssertIs(nextVC, DocumentTypeSelectViewController.self)
                 exp.fulfill()
             }
         )
@@ -231,6 +225,19 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             missingRequirements: [.idDocumentFront],
             completion: { nextVC in
                 XCTAssertIs(nextVC, DocumentFileUploadViewController.self)
+                exp.fulfill()
+            }
+        )
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testTestMode() throws {
+        let exp = expectation(description: "testTestMode")
+        try nextViewController(
+            missingRequirements: [.face],
+            staticContentResult: .success(try VerificationPageMock.response200TestMode.make()),
+            completion: { nextVC in
+                XCTAssertIs(nextVC, DebugViewController.self)
                 exp.fulfill()
             }
         )
@@ -498,6 +505,7 @@ extension VerificationSheetFlowControllerTest {
             : try VerificationPageDataMock.noErrorsWithMissings(with: missingRequirements)
 
         flowController.nextViewController(
+            skipTestMode: false,
             staticContentResult: staticContentResult,
             updateDataResult: .success(dataResponse),
             sheetController: mockSheetController,

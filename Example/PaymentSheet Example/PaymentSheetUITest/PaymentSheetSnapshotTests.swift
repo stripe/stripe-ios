@@ -489,7 +489,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubNewCustomerResponse()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
-                                                            confirmHandler: confirmHandler(_:_:))
+                                                            confirmHandler: confirmHandler(_:_:_:))
 
         preparePaymentSheet(intentConfig: intentConfig)
         presentPaymentSheet(darkMode: false)
@@ -502,7 +502,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
-                                                            confirmHandler: confirmHandler(_:_:))
+                                                            confirmHandler: confirmHandler(_:_:_:))
 
         preparePaymentSheet(
             automaticPaymentMethods: false,
@@ -1049,8 +1049,14 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             testWindow.overrideUserInterfaceStyle = .dark
         }
         testWindow.rootViewController = navController
-
-        paymentSheet.present(from: vc, completion: { _ in })
+        // Wait a turn of the runloop for the RVC to attach to the window, then present PaymentSheet
+        DispatchQueue.main.async {
+            self.paymentSheet.present(from: vc) { result in
+                if case let .failed(error) = result {
+                    XCTFail("Presentation failed: \(error)")
+                }
+            }
+        }
 
         // Payment sheet usually takes anywhere between 50ms-200ms (but once in a while 2-3 seconds).
         // to present with the expected content. When the sheet is presented, it initially shows a loading screen,
@@ -1126,14 +1132,15 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
     }
 
-    func confirmHandler(_ paymentMethodID: String,
+    func confirmHandler(_ paymentMethod: STPPaymentMethod,
+                        _ shouldSavePaymentMethod: Bool,
                         _ intentCreationCallback: (Result<String, Error>) -> Void) {
         // no-op
     }
 
 }
 
-private extension PaymentSheet.Appearance {
+fileprivate extension PaymentSheet.Appearance {
     static var snapshotTestTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
 

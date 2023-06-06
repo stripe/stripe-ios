@@ -12,5 +12,14 @@ let project = Project.stripeFramework(
         .project(target: "StripePayments", path: "//StripePayments"),
         .project(target: "StripePaymentsUI", path: "//StripePaymentsUI"),
     ],
-    unitTestOptions: .testOptions()
+    unitTestOptions: .testOptions(
+        resources: .init(resources: [
+            .folderReference(path: "StripePaymentSheetTests/Resources/MockFiles")
+        ]),
+        dependencies: [
+            .project(target: "StripeCoreTestUtils", path: "//StripeCore"),
+        ],
+        includesSnapshots: true,
+        usesStubs: true
+    )
 )

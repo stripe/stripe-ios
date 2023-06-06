@@ -11,7 +11,7 @@ import iOSSnapshotTestCase
 @_spi(STP) import StripeUICore
 import UIKit
 
-@testable import StripeIdentity
+@testable @_spi(STP) import StripeIdentity
 
 class HeaderIconViewSnapshotTest: FBSnapshotTestCase {
     let iconView = HeaderIconView()

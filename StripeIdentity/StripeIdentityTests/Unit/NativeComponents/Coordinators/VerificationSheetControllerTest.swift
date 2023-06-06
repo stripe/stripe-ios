@@ -80,6 +80,33 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertTrue(mockMLModelLoader.didStartLoadingFaceModels)
     }
 
+    func testLoadSubmittedValidResponse() throws {
+        let mockResponse = try VerificationPageMock.response200Submitted.make()
+
+        // Load
+        controller.load().observe { _ in
+            self.exp.fulfill()
+        }
+
+        // Verify 1 request made with secret
+        XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.count, 1)
+
+        // Verify result is nil until API responds to request
+        XCTAssertNil(controller.verificationPageResponse)
+
+        // Respond to request with success
+        mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
+
+        // Verify completion block is called
+        wait(for: [exp], timeout: 1)
+
+        // Verify response updated on controller
+        XCTAssertEqual(try? controller.verificationPageResponse?.get(), mockResponse)
+        XCTAssertTrue(mockMLModelLoader.didStartLoadingDocumentModels)
+        XCTAssertTrue(mockMLModelLoader.didStartLoadingFaceModels)
+        XCTAssertTrue(controller.isVerificationPageSubmitted)
+    }
+
     func testLoadErrorResponse() throws {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
@@ -102,7 +129,7 @@ final class VerificationSheetControllerTest: XCTestCase {
 
     func testLoadAndUpdateUI() throws {
         let mockResponse = try VerificationPageMock.response200.make()
-        controller.loadAndUpdateUI()
+        controller.loadAndUpdateUI(skipTestMode: true)
 
         // Respond to request with success
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
@@ -142,10 +169,10 @@ final class VerificationSheetControllerTest: XCTestCase {
                     idDocumentBack: true,
                     idDocumentFront: true,
                     idDocumentType: true,
-                    idNumber: true,
-                    dob: true,
-                    name: true,
-                    address: true
+                    idNumber: false,
+                    dob: false,
+                    name: false,
+                    address: false
                 ),
                 collectedData: mockData
             )
@@ -541,6 +568,63 @@ final class VerificationSheetControllerTest: XCTestCase {
         guard case .failure = mockFlowController.transitionedWithUpdateDataResult else {
             return XCTFail("Expected failure")
         }
+    }
+
+    func testVerifyAndTransitionWithoutDelay() throws {
+        // Mock initial VerificationPage request successful
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        controller.verifyAndTransition(simulateDelay: false)
+
+        XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
+
+        XCTAssertEqual(
+            mockAPIClient.verifyUnverifyRequest.requestHistory.first,
+            ["simulateDelay": false]
+        )
+    }
+
+    func testVerifyAndTransitionWithDelay() throws {
+        // Mock initial VerificationPage request successful
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        controller.verifyAndTransition(simulateDelay: true)
+
+        XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
+
+        XCTAssertEqual(
+            mockAPIClient.verifyUnverifyRequest.requestHistory.first,
+            ["simulateDelay": true]
+        )
+    }
+
+    func testUnverifyAndTransitionWithoutDelay() throws {
+        // Mock initial VerificationPage request successful
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        controller.unverifyAndTransition(simulateDelay: false)
+
+        XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
+
+        XCTAssertEqual(
+            mockAPIClient.verifyUnverifyRequest.requestHistory.first,
+            ["simulateDelay": false]
+        )
+    }
+
+    func testUnverifyAndTransitionWithDelay() throws {
+        // Mock initial VerificationPage request successful
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        // Verify
+        controller.unverifyAndTransition(simulateDelay: true)
+
+        XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
+
+        XCTAssertEqual(
+            mockAPIClient.verifyUnverifyRequest.requestHistory.first,
+            ["simulateDelay": true]
+        )
     }
 
     func testDismissResultNotSubmitted() throws {

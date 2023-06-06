@@ -25,7 +25,7 @@ final class PaneWithCustomHeaderLayoutView {
 
     init(
         headerView: UIView,
-        headerTopMargin: CGFloat = 16,
+        headerTopMargin: CGFloat = 8.0,
         contentView: UIView,
         headerAndContentSpacing: CGFloat = 24.0,
         footerView: UIView?

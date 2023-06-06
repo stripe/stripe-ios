@@ -239,12 +239,10 @@ extension STPAnalyticsClient {
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = activeLinkSession
         additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
-        var mpeConfig = configuration?.analyticPayload
-        mpeConfig?["isServerSideConfirmation"] = intentConfig?.confirmHandlerForServerSideConfirmation != nil
-        additionalParams["mpe_config"] = mpeConfig
+        additionalParams["mpe_config"] = configuration?.analyticPayload
         additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
         additionalParams["currency"] = currency
-        additionalParams["isDecoupled"] = intentConfig != nil
+        additionalParams["is_decoupled"] = intentConfig != nil
 
         for (param, param_value) in params {
             additionalParams[param] = param_value

@@ -170,7 +170,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                     ),
                     supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
                 ),
-                .missingRequirements([.unavailable, .userSupportsDelayedPaymentMethods])
+                .missingRequirements([.unsupportedForSetup, .userSupportsDelayedPaymentMethods])
             )
 
             // ...and can't be set up
@@ -181,7 +181,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                     intent: .setupIntent(STPFixtures.setupIntent()),
                     supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
                 ),
-                .missingRequirements([.unavailable, .userSupportsDelayedPaymentMethods])
+                .missingRequirements([.unsupportedForSetup, .userSupportsDelayedPaymentMethods])
             )
         }
     }
@@ -617,16 +617,23 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
 
-        for intent in [Intent.setupIntent(setupIntent), Intent.paymentIntent(paymentIntent)] {
-            XCTAssertEqual(
-                PaymentSheet.PaymentMethodType.supportsAdding(
-                    paymentMethod: paymentMethod,
-                    configuration: configuration,
-                    intent: intent
-                ),
-                .missingRequirements([.unavailable])
-            )
-        }
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: paymentMethod,
+                configuration: configuration,
+                intent: Intent.setupIntent(setupIntent)
+            ),
+            .missingRequirements([.unsupportedForSetup])
+        )
+
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: paymentMethod,
+                configuration: configuration,
+                intent: Intent.paymentIntent(paymentIntent)
+            ),
+            .missingRequirements([.unsupported])
+        )
     }
 
     func testSupport() {
@@ -704,15 +711,21 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
 extension STPFixtures {
     static func makePaymentIntent(
+        amount: Int = 2345,
+        currency: String = "USD",
         paymentMethodTypes: [STPPaymentMethodType]? = nil,
         setupFutureUsage: STPPaymentIntentSetupFutureUsage? = nil,
         paymentMethodOptions: STPPaymentMethodOptions? = nil,
+        captureMethod: String = "automatic",
         shippingProvided: Bool = false
     ) -> STPPaymentIntent {
         var json = STPTestUtils.jsonNamed(STPTestJSONPaymentIntent)!
         if let setupFutureUsage = setupFutureUsage {
             json["setup_future_usage"] = setupFutureUsage.stringValue
         }
+        json["amount"] = amount
+        json["currency"] = currency
+        json["capture_method"] = captureMethod
         if let paymentMethodTypes = paymentMethodTypes {
             json["payment_method_types"] = paymentMethodTypes.map {
                 STPPaymentMethod.string(from: $0)
@@ -725,7 +738,18 @@ extension STPFixtures {
         if let paymentMethodOptions = paymentMethodOptions {
             json["payment_method_options"] = paymentMethodOptions.dictionaryValue
         }
-        let pi = STPPaymentIntent.decodedObject(fromAPIResponse: json)
-        return pi!
+        return STPPaymentIntent.decodedObject(fromAPIResponse: json)!
+    }
+
+    static func makeSetupIntent(
+        paymentMethodTypes: [STPPaymentMethodType] = [.card],
+        usage: String = "off_session"
+    ) -> STPSetupIntent {
+        var json = STPTestUtils.jsonNamed(STPTestJSONSetupIntent)!
+        json["usage"] = usage
+        json["payment_method_types"] = paymentMethodTypes.map {
+            STPPaymentMethod.string(from: $0)
+        }
+        return STPSetupIntent.decodedObject(fromAPIResponse: json)!
     }
 }

@@ -128,6 +128,26 @@ import Foundation
     case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"
     case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
 
+    // MARK: - Customer Sheet
+    case cs_add_payment_method_screen_presented = "cs_add_payment_method_screen_presented"
+    case cs_select_payment_method_screen_presented = "cs_select_payment_method_screen_presented"
+
+    case cs_select_payment_method_screen_confirmed_savedpm_success = "cs_select_payment_method_screen_confirmed_savedpm_success"
+    case cs_select_payment_method_screen_confirmed_savedpm_failure = "cs_select_payment_method_screen_confirmed_savedpm_failure"
+
+    case cs_select_payment_method_screen_edit_tapped = "cs_select_payment_method_screen_edit_tapped"
+    case cs_select_payment_method_screen_done_tapped = "cs_select_payment_method_screen_done_tapped"
+
+    case cs_select_payment_method_screen_removepm_success = "cs_select_payment_method_screen_removepm_success"
+    case cs_select_payment_method_screen_removepm_failure = "cs_select_payment_method_screen_removepm_failure"
+
+    case cs_add_payment_method_via_setupintent_success = "cs_add_payment_method_via_setup_intent_success"
+    case cs_add_payment_method_via_setupintent_canceled = "cs_add_payment_method_via_setupintent_canceled"
+    case cs_add_payment_method_via_setupintent_failure = "cs_add_payment_method_via_setup_intent_failure"
+
+    case cs_add_payment_method_via_createAttach_success = "cs_add_payment_method_via_createAttach_success"
+    case cs_add_payment_method_via_createAttach_failure = "cs_add_payment_method_via_createAttach_failure"
+
     // MARK: - Address Element
     case addressShow = "mc_address_show"
     case addressCompleted = "mc_address_completed"
@@ -136,4 +156,7 @@ import Foundation
     case paymentMethodMessagingViewLoadSucceeded = "pmmv_load_succeeded"
     case paymentMethodMessagingViewLoadFailed = "pmmv_load_failed"
     case paymentMethodMessagingViewTapped = "pmmv_tapped"
+
+    // MARK: - PaymentSheet Force Success
+    case paymentSheetForceSuccess = "mc_force_success"
 }

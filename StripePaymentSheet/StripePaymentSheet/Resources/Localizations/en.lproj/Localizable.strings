@@ -79,6 +79,9 @@
 /* Text of a notification shown to the user when a login code is successfully sent via SMS. */
 "Code sent" = "Code sent";
 
+/* A button used to confirm selecting a saved payment method */
+"Confirm" = "Confirm";
+
 /* Title for the contact information section */
 "Contact information" = "Contact information";
 
@@ -112,6 +115,9 @@ re-entering the security code (CVV/CVC). */
 
 /* Title of the logout action. */
 "Log out of Link" = "Log out of Link";
+
+/* Title shown above a carousel containing the customer's payment methods */
+"Manage your payment methods" = "Manage your payment methods";
 
 /* Label for name on card field */
 "Name on card" = "Name on card";
@@ -195,6 +201,12 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 
 /* Label for a button that re-sends the a login code when tapped */
 "Resend code" = "Resend code";
+
+/* A button used for saving a new payment method */
+"Save" = "Save";
+
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Save a new payment method" = "Save a new payment method";
 
 /* Title for address entry section */
 "Save address" = "Save address";

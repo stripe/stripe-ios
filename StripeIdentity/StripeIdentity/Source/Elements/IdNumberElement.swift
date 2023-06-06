@@ -32,18 +32,21 @@ class IdNumberElement: ContainerElement {
         country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country,
             countryCodes: countryCodes,
+            theme: IdentityUI.identityElementsUITheme,
             locale: locale,
             disableDropdownWithSingleCountry: true
         )
 
         let defaultCountrySpec = countryToIDNumberTypes[countryCodes[country.selectedIndex]]
         id = TextFieldElement(
-            configuration: IDNumberTextFieldConfiguration(spec: defaultCountrySpec)
+            configuration: IDNumberTextFieldConfiguration(spec: defaultCountrySpec),
+            theme: IdentityUI.identityElementsUITheme
         )
 
         let section = SectionElement(
             title: String.Localized.id_number_title,
-            elements: [country, id]
+            elements: [country, id],
+            theme: IdentityUI.identityElementsUITheme
         )
 
         view = section.view

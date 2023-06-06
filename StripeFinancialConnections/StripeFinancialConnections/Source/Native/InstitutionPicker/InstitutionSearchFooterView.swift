@@ -72,6 +72,7 @@ final class InstitutionSearchFooterView: UIView {
         }
 
         self.showTopSeparator = true
+        accessibilityIdentifier = "institution_search_footer_view"
     }
 
     required init?(coder: NSCoder) {
@@ -158,18 +159,18 @@ private func CreateRowLabelView(
     title: String,
     subtitle: String
 ) -> UIView {
-    let titleLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .bodyEmphasized),
-        boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
-        linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
+    let titleLabel = AttributedTextView(
+        font: .label(.largeEmphasized),
+        boldFont: .label(.largeEmphasized),
+        linkFont: .label(.largeEmphasized),
         textColor: .textPrimary
     )
     titleLabel.setText(title)
 
-    let subtitleLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .captionTight),
-        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+    let subtitleLabel = AttributedTextView(
+        font: .label(.small),
+        boldFont: .label(.smallEmphasized),
+        linkFont: .label(.smallEmphasized),
         textColor: .textSecondary
     )
     subtitleLabel.setText(subtitle)

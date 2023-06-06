@@ -52,25 +52,23 @@ extension STPApplePayContext {
             case .setupIntent(let setupIntent):
                 completion(setupIntent.clientSecret, nil)
             case .deferredIntent(_, let intentConfig):
-                if let confirmHandler = intentConfig.confirmHandler {
-                    confirmHandler(paymentMethod.id, { result in
-                        switch result {
-                        case .success(let clientSecret):
-                            completion(clientSecret, nil)
-                        case .failure(let error):
-                            completion(nil, error)
+                guard let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) else {
+                    assertionFailure("Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod!")
+                    completion(nil, STPApplePayContext.makeUnknownError(message: "Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod."))
+                    return
+                }
+                let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
+                intentConfig.confirmHandler(stpPaymentMethod, shouldSavePaymentMethod) { result in
+                    switch result {
+                    case .success(let clientSecret):
+                        guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
+                            completion(STPApplePayContext.FORCE_SUCCESS, nil)
+                            return
                         }
-                    })
-                } else if let serverSideConfirmHandler = intentConfig.confirmHandlerForServerSideConfirmation {
-                    let shouldSavePaymentMethod = false // The customer isn't requesting to save the payment method
-                    serverSideConfirmHandler(paymentMethod.id, shouldSavePaymentMethod, { result in
-                        switch result {
-                        case .success(let clientSecret):
-                            completion(clientSecret, nil)
-                        case .failure(let error):
-                            completion(nil, error)
-                        }
-                    })
+                        completion(clientSecret, nil)
+                    case .failure(let error):
+                        completion(nil, error)
+                    }
                 }
             }
         }
@@ -130,6 +128,7 @@ extension STPApplePayContext {
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
             applePayContext.shippingDetails = makeShippingDetails(from: configuration)
             applePayContext.apiClient = configuration.apiClient
+            applePayContext.returnUrl = configuration.returnURL
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes

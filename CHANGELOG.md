@@ -1,6 +1,41 @@
-## X.X.X
+## 23.9.0 2023-05-30
+### PaymentSheet
+* [Changed] The private beta API for https://stripe.com/docs/payments/finalize-payments-on-the-server has changed:
+  * If you use `IntentConfiguration(..., confirmHandler:)`, the confirm handler now has an additional `shouldSavePaymentMethod: Bool` parameter that you should ignore.
+  * If you use `IntentConfiguration(..., confirmHandlerForServerSideConfirmation:)`, use `IntentConfiguration(..., confirmHandler:)` instead. Additionally, the confirm handler's first parameter is now an `STPPaymentMethod` object instead of a String id. Use `paymentMethod.stripeId` to get its id and send it to your server.
+* [Fixed] Fixed PKR currency formatting.
+
+### CustomerSheet
+* [Added] [CustomerSheet](https://stripe.com/docs/elements/customer-sheet?platform=ios) is now available (private beta)
+
+## 23.8.0 2023-05-08
+### Identity
+* [Added] Added test mode M1 for the SDK.
+
+## 23.7.1 2023-05-02
+### Payments
+* [Fixed] STPPaymentHandler.handleNextAction allows payment methods that are delayed or require further customer action like like SEPA Debit or OXXO.
+
+## 23.7.0 2023-04-24
+### PaymentSheet
+* [Fixed] Fixed disabled text color, using a lower opacity version of the original color instead of the previous `.tertiaryLabel`.
+
+### Identity
+* [Added] Added test mode for the SDK.
+
+## 23.6.2 2023-04-20
+
+### Payments
+* [Fixed] Fixed UnionPay cards appearing as invalid in some cases.
+
+### PaymentSheet
+* [Fixed] Fixed a bug that prevents users from using SEPA Debit w/ PaymentIntents or SetupIntents and Paypal in PaymentIntent+setup_future_usage or SetupIntent.
+
+## 23.6.1 2023-04-17
 ### All
 * Xcode 13 is [no longer supported by Apple](https://developer.apple.com/news/upcoming-requirements/). Please upgrade to Xcode 14.1 or later.
+### PaymentSheet
+* [Fixed] Visual bug of the delete icon when deleting saved payment methods reported in [#2461](https://github.com/stripe/stripe-ios/issues/2461).
 
 ## 23.6.0 2023-03-27
 ### PaymentSheet

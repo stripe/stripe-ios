@@ -64,4 +64,19 @@ struct IdentityUI {
     static let documentCameraPreviewAspectRatio: CGFloat = 1.25  // 5:4
     static let scanningViewLabelMinHeightNumberOfLines: Int = 3
     static let scanningViewLabelBottomPadding: CGFloat = 24
+
+    static let identityElementsUITheme: ElementsUITheme = {
+        var identityElementsUITheme = ElementsUITheme.default
+
+        var fonts = ElementsUITheme.Font()
+        fonts.subheadline = preferredFont(forTextStyle: .body).withSize(14)
+        fonts.subheadlineBold = preferredFont(forTextStyle: .body, weight: .bold).withSize(14)
+        fonts.sectionHeader = preferredFont(forTextStyle: .body, weight: .semibold).withSize(13)
+        fonts.caption = preferredFont(forTextStyle: .caption1, weight: .regular).withSize(12)
+        fonts.footnote = preferredFont(forTextStyle: .footnote, weight: .regular)
+        fonts.footnoteEmphasis = preferredFont(forTextStyle: .footnote, weight: .medium)
+
+        identityElementsUITheme.fonts = fonts
+        return identityElementsUITheme
+    }()
 }

@@ -33,7 +33,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
 
     var delegate: VerificationSheetControllerDelegate? { get set }
 
-    func loadAndUpdateUI()
+    func loadAndUpdateUI(skipTestMode: Bool)
 
     func saveAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
@@ -61,6 +61,14 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
 
+    func verifyAndTransition(
+        simulateDelay: Bool
+    )
+
+    func unverifyAndTransition(
+        simulateDelay: Bool
+    )
+
     /// Transition to CountryNotListedViewController without any API request
     func transitionToCountryNotListed(
         missingType: IndividualFormElement.MissingType
@@ -68,6 +76,12 @@ protocol VerificationSheetControllerProtocol: AnyObject {
 
     /// Transition to IndividualViewController without any API request
     func transitionToIndividual()
+
+    /// Clear a certain type from collected data
+    func clearCollectedData(field: StripeAPI.VerificationPageFieldType)
+
+    /// Override return result for testMode
+    func overrideTestModeReturnValue(result: IdentityVerificationSheet.VerificationFlowResult)
 }
 
 final class VerificationSheetController: VerificationSheetControllerProtocol {
@@ -106,6 +120,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
     }
 
+    var testModeReturnValue: IdentityVerificationSheet.VerificationFlowResult?
+
     // MARK: - Init
 
     init(
@@ -125,9 +141,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     // MARK: - Load
 
     /// Makes API calls to load the verification sheet. When the API response is complete, transitions to the first screen in the flow.
-    func loadAndUpdateUI() {
+    func loadAndUpdateUI(skipTestMode: Bool) {
         load().observe(on: .main) { result in
             self.flowController.transitionToNextScreen(
+                skipTestMode: skipTestMode,
                 staticContentResult: result,
                 updateDataResult: nil,
                 sheetController: self,
@@ -140,9 +157,11 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         let returnedPromise = Promise<StripeAPI.VerificationPage>()
         // Only update `verificationPageResponse` on main
         apiClient.getIdentityVerificationPage().observe(on: .main) { [weak self] result in
-            self?.verificationPageResponse = result
+            guard let self = self else { return }
+            self.verificationPageResponse = result
             if case .success(let verificationPage) = result {
-                self?.startLoadingMLModels(from: verificationPage)
+                self.startLoadingMLModels(from: verificationPage)
+                self.isVerificationPageSubmitted = verificationPage.submitted
                 // if result success and requires address, load address spec before continue
                 if verificationPage.requirements.missing.contains(.address) {
                     AddressSpecProvider.shared.loadAddressSpecs {
@@ -245,17 +264,12 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 )
             )
         }.observe(on: .main) { result in
-            switch result {
-            case .success(let resultData):
-                guard resultData.requirements.errors.isEmpty else {
+            self.handleVerificationPageDataResult(collectedData: optionalCollectedData, updateDataResult: result) { successData in
+                guard successData.requirements.errors.isEmpty else {
                     self.transitionWithVerificaionPageDataResult(result)
                     return
                 }
-
-                if let optionalCollectedData = optionalCollectedData {
-                    self.collectedData.merge(optionalCollectedData)
-                }
-                guard !resultData.requirements.missing.contains(.idDocumentBack) else {
+                guard !successData.requirements.missing.contains(.idDocumentBack) else {
                     onCompletion(true)
                     return
                 }
@@ -264,8 +278,6 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 self.checkSubmitAndTransition(updateDataResult: result) {
                     onCompletion(false)
                 }
-            case .failure:
-                self.transitionWithVerificaionPageDataResult(result)
             }
         }
     }
@@ -296,6 +308,34 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 collectedData: optionalCollectedData,
                 updateDataResult: result,
                 completion: completion
+            )
+        }
+    }
+
+    func verifyAndTransition(
+        simulateDelay: Bool
+    ) {
+        apiClient.verifyTestVerificationSession(
+            simulateDelay: simulateDelay
+        ).observe(on: .main) { [weak self] result in
+            self?.saveCheckSubmitAndTransition(
+                collectedData: nil,
+                updateDataResult: result,
+                completion: {}
+            )
+        }
+    }
+
+    func unverifyAndTransition(
+        simulateDelay: Bool
+    ) {
+        apiClient.unverifyTestVerificationSession(
+            simulateDelay: simulateDelay
+        ).observe(on: .main) { [weak self] result in
+            self?.saveCheckSubmitAndTransition(
+                collectedData: nil,
+                updateDataResult: result,
+                completion: {}
             )
         }
     }
@@ -341,6 +381,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
 
         flowController.transitionToNextScreen(
+            skipTestMode: true,
             staticContentResult: verificationPageResponse,
             updateDataResult: result,
             sheetController: self,
@@ -383,6 +424,39 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
     }
 
+    // MARK: - Update internal states
+
+    func clearCollectedData(field: StripeAPI.VerificationPageFieldType) {
+        self.collectedData.clearData(field: field)
+    }
+
+    func overrideTestModeReturnValue(result: IdentityVerificationSheet.VerificationFlowResult) {
+        self.testModeReturnValue = result
+    }
+
+    /// Check the result of VerificationPageData and update status. Callback successPageData if successful.
+    private func handleVerificationPageDataResult(
+        collectedData: StripeAPI.VerificationPageCollectedData? = nil,
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>,
+        completion: @escaping () -> Void = {},
+        successPageData: @escaping (StripeAPI.VerificationPageData) -> Void
+    ) {
+        guard case .success(let resultData) = updateDataResult
+        else {
+            self.transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
+            return
+        }
+
+        // update collectedData if there are no errors.
+        if resultData.requirements.errors.isEmpty {
+            if let collectedData = collectedData {
+                self.collectedData.merge(collectedData)
+            }
+        }
+
+        successPageData(resultData)
+    }
+
     /// 1. If the save was successful, caches the collectedData
     /// 2. If all fields have been collected, submits the verification page
     /// 3. Transitions to the next screen
@@ -391,21 +465,13 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>,
         completion: @escaping () -> Void
     ) {
-        guard case .success(let resultData) = updateDataResult
-        else {
-            transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
-            return
-        }
+        handleVerificationPageDataResult(collectedData: collectedData, updateDataResult: updateDataResult, completion: completion) { _ in
+            self.checkSubmitAndTransition(
+                updateDataResult: updateDataResult,
+                completion: completion
+            )
 
-        // Only merge when updateDatResult is successful and has no errors
-        if let collectedData = collectedData, resultData.requirements.errors.isEmpty {
-            self.collectedData.merge(collectedData)
         }
-
-        checkSubmitAndTransition(
-            updateDataResult: updateDataResult,
-            completion: completion
-        )
     }
 
     /// Calculate the clearData parameter from the collectedData to be generated by the following
@@ -413,11 +479,20 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     private func calculateClearData(
         dataToBeCollected: StripeAPI.VerificationPageCollectedData
     ) -> StripeAPI.VerificationPageClearData {
-        return .init(
-            clearFields: Set(StripeAPI.VerificationPageFieldType.allCases).subtracting(
+
+        let initialMissings: Set<StripeAPI.VerificationPageFieldType>
+        do {
+            initialMissings = try verificationPageResponse?.get().requirements.missing ?? Set()
+        } catch {
+            assertionFailure("verificationPageResponse is nil, using StripeAPI.VerificationPageFieldType.allCases as initialMissings")
+            initialMissings = Set(StripeAPI.VerificationPageFieldType.allCases)
+        }
+        let ret = StripeAPI.VerificationPageClearData.init(
+            clearFields: initialMissings.subtracting(
                 collectedData.collectedTypes
             ).subtracting(dataToBeCollected.collectedTypes)
         )
+        return ret
     }
 
 }
@@ -430,7 +505,7 @@ extension VerificationSheetController: VerificationSheetFlowControllerDelegate {
     ) {
         delegate?.verificationSheetController(
             self,
-            didFinish: self.isVerificationPageSubmitted ? .flowCompleted : .flowCanceled
+            didFinish: self.testModeReturnValue ?? (self.isVerificationPageSubmitted ? .flowCompleted : .flowCanceled)
         )
     }
 

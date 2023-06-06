@@ -324,7 +324,7 @@ extension PaymentSheet {
 
                 if case .completed = result, case .link = paymentOption {
                     // Remember Link as default payment method for users who just created an account.
-                    DefaultPaymentMethodStore.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
+                    CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
                 }
 
                 completion(result)

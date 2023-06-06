@@ -32,7 +32,8 @@ class AddPaymentMethodViewController: UIViewController {
     lazy var paymentMethodTypes: [PaymentSheet.PaymentMethodType] = {
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: intent,
-            configuration: configuration
+            configuration: configuration,
+            logAvailability: true
         )
         assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         return paymentMethodTypes
@@ -298,6 +299,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
         }
         updateUI()
+        sendEventToSubviews(.viewDidAppear, from: view)
     }
 
     func didTapCallToActionButton(behavior: OverrideableBuyButtonBehavior, from viewController: UIViewController) {
@@ -367,8 +369,26 @@ class AddPaymentMethodViewController: UIViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent): Support ACHv2")
+        case let .deferredIntent(elementsSession, intentConfig):
+            let amount: Int?
+            let currency: String?
+            switch intentConfig.mode {
+            case let .payment(amount: _amount, currency: _currency, _, _):
+                amount = _amount
+                currency = _currency
+            case let .setup(currency: _currency, _):
+                amount = nil
+                currency = _currency
+            }
+            client.collectBankAccountForDeferredIntent(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                amount: amount,
+                currency: currency,
+                onBehalfOf: intentConfig.onBehalfOf,
+                from: viewController,
+                financialConnectionsCompletion: financialConnectionsCompletion
+            )
         }
     }
 }

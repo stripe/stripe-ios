@@ -247,7 +247,8 @@ public class PaymentSheet {
         let loadingViewController = LoadingViewController(
             delegate: self,
             appearance: configuration.appearance,
-            isTestMode: isTestMode
+            isTestMode: isTestMode,
+            loadingViewHeight: 244
         )
 
         let vc = BottomSheetViewController(
