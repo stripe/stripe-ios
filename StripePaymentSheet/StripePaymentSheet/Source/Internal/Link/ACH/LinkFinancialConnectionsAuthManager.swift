@@ -42,10 +42,10 @@ final class LinkFinancialConnectionsAuthManager: NSObject {
         }
     }
 
-    let linkAccount: PaymentSheetLinkAccount
+    let linkAccount: PaymentSheetLinkAccount?
     let window: UIWindow?
 
-    init(linkAccount: PaymentSheetLinkAccount, window: UIWindow?) {
+    init(linkAccount: PaymentSheetLinkAccount?, window: UIWindow?) {
         self.linkAccount = linkAccount
         self.window = window
     }
@@ -59,12 +59,24 @@ final class LinkFinancialConnectionsAuthManager: NSObject {
         return try await authenticate(withManifest: manifest)
     }
 
+    /// Initiate a Financial Connections session for Link Instant Debits.
+    /// - Parameter clientSecret: The client secret of the consumer's Link account session.
+    /// - Returns: The ID for the newly linked account.
+    /// - Throws: Either `Error.canceled`, meaning the user canceled the flow, or an error describing what went wrong.
+    func start(hostedURL: URL) async throws -> String {
+        return try await authenticate(with: hostedURL)
+    }
+
 }
 
 extension LinkFinancialConnectionsAuthManager {
 
     private func generateHostedURL(withClientSecret clientSecret: String) async throws -> Manifest {
+        guard let linkAccount = linkAccount else {
+            throw Error.noLinkedAccountID
+        }
         return try await withCheckedThrowingContinuation { continuation in
+
             linkAccount.apiClient.post(
                 resource: "link_account_sessions/generate_hosted_url",
                 parameters: [
@@ -109,6 +121,55 @@ extension LinkFinancialConnectionsAuthManager {
                     } else {
                         return continuation.resume(throwing: Error.unexpectedURL)
                     }
+                }
+            )
+
+            authSession.presentationContextProvider = self
+            authSession.prefersEphemeralWebBrowserSession = true
+
+            if #available(iOS 13.4, *) {
+                guard authSession.canStart else {
+                    return continuation.resume(throwing: Error.failedToStart)
+                }
+            }
+
+            authSession.start()
+        }
+    }
+
+    private func authenticate(with hostedURL: URL) async throws -> String {
+        try await withCheckedThrowingContinuation { continuation in
+            let authSession = ASWebAuthenticationSession(
+                url: hostedURL,
+                callbackURLScheme: "stripe-auth",
+                completionHandler: { url, error in
+                    if let error = error {
+                        if let authenticationSessionError = error as? ASWebAuthenticationSessionError,
+                            authenticationSessionError.code == .canceledLogin
+                        {
+                            return continuation.resume(throwing: Error.canceled)
+                        }
+                        return continuation.resume(throwing: error)
+                    }
+
+//                    guard let url = url else {
+//                        return continuation.resume(throwing: Error.noURL)
+//                    }
+
+                    return continuation.resume(returning: "zzzz")
+
+//
+//                    if url.matchesSchemeHostAndPath(of: manifest.successURL) {
+//                        if let linkedAccountID = Self.extractLinkedAccountID(from: url) {
+//                            return continuation.resume(returning: linkedAccountID)
+//                        } else {
+//                            return continuation.resume(throwing: Error.noLinkedAccountID)
+//                        }
+//                    } else if url.matchesSchemeHostAndPath(of: manifest.cancelURL) {
+//                        return continuation.resume(throwing: Error.canceled)
+//                    } else {
+//                        return continuation.resume(throwing: Error.unexpectedURL)
+//                    }
                 }
             )
 

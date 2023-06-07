@@ -98,9 +98,9 @@ final class PayWithLinkViewController: UINavigationController {
     }
 
     private lazy var connectionsAuthManager: LinkFinancialConnectionsAuthManager? = {
-        guard let linkAccount = linkAccount else {
-            return nil
-        }
+//        guard let linkAccount = linkAccount else {
+//            return nil
+//        }
         return LinkFinancialConnectionsAuthManager(linkAccount: linkAccount, window: view.window)
     }()
 
@@ -179,27 +179,37 @@ final class PayWithLinkViewController: UINavigationController {
     }
 
     private func updateUI() {
-        guard let linkAccount = linkAccount else {
-            if !(rootViewController is SignUpViewController) {
-                setRootViewController(
-                    SignUpViewController(linkAccount: nil, context: context)
-                )
-            }
-            return
-        }
+        self.startInstantDebitsOnly { result in
+            switch result {
 
-        switch linkAccount.sessionState {
-        case .requiresSignUp:
-            if !(rootViewController is SignUpViewController) {
-                setRootViewController(
-                    SignUpViewController(linkAccount: linkAccount, context: context)
-                )
+            case .success(_):
+                print("yaay")
+            case .failure(_):
+                print("error")
+
             }
-        case .requiresVerification:
-            setRootViewController(VerifyAccountViewController(linkAccount: linkAccount, context: context))
-        case .verified:
-            loadAndPresentWallet()
         }
+//        guard let linkAccount = linkAccount else {
+//            if !(rootViewController is SignUpViewController) {
+//                setRootViewController(
+//                    SignUpViewController(linkAccount: nil, context: context)
+//                )
+//            }
+//            return
+//        }
+//
+//        switch linkAccount.sessionState {
+//        case .requiresSignUp:
+//            if !(rootViewController is SignUpViewController) {
+//                setRootViewController(
+//                    SignUpViewController(linkAccount: linkAccount, context: context)
+//                )
+//            }
+//        case .requiresVerification:
+//            setRootViewController(VerifyAccountViewController(linkAccount: linkAccount, context: context))
+//        case .verified:
+//            loadAndPresentWallet()
+//        }
     }
 
 }
@@ -345,6 +355,30 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         return paymentDetails
     }
 
+    @MainActor
+    func startInstantDebitsOnly() async throws -> String {
+        guard let connectionsAuthManager = connectionsAuthManager else {
+            throw LinkAccountError.noLinkAccount
+        }
+
+        guard case let .setupIntent(setupIntent) = context.intent, let url = setupIntent.nextAction?.redirectToURL?.url else {
+            throw LinkAccountError.noLinkAccount
+        }
+
+        let linkedAccountID = try await connectionsAuthManager.start(hostedURL: url)
+
+//        let paymentDetails = try await withCheckedThrowingContinuation { continuation in
+//            linkAccount.createPaymentDetails(linkedAccountId: linkedAccountID) { result in
+//                continuation.resume(with: result)
+//            }
+//        }
+
+        // Store last added payment details so we can automatically select it on wallet
+//        context.lastAddedPaymentDetails = paymentDetails
+//        accountUpdated(linkAccount)
+        return linkedAccountID
+    }
+
     func startInstantDebits(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void) {
         Task {
             do {
@@ -356,6 +390,16 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         }
     }
 
+    func startInstantDebitsOnly(completion: @escaping (Result<String, Error>) -> Void) {
+        Task {
+            do {
+                let paymentDetails = try await startInstantDebitsOnly()
+                await MainActor.run { completion(.success(paymentDetails)) }
+            } catch {
+                await MainActor.run { completion(.failure(error)) }
+            }
+        }
+    }
     func cancel() {
         payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self)
     }

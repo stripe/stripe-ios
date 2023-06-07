@@ -26,6 +26,7 @@ extension PaymentSheet {
         .AUBECSDebit,
         .UPI,
         .cashApp,
+        .link
     ]
     /// Whether to enable ACHv2 in the deferred flow.  To be deleted when https://jira.corp.stripe.com/browse/BANKCON-6731 is completed.
     @_spi(STP) public static var enableACHV2InDeferredFlow: Bool = false

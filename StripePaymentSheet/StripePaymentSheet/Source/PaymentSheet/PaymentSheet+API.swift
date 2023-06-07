@@ -317,7 +317,7 @@ extension PaymentSheet {
                         // Warn the merchant if we see unactivated payment method types in the Intent
                         warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: intent.unactivatedPaymentMethodTypes)
                         // Ensure that there's at least 1 payment method type available for the intent and configuration.
-                        let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
+                        let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration) + [.link]
                         guard !paymentMethodTypes.isEmpty else {
                             completion(.failure(PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)))
                             return

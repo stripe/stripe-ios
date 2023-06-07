@@ -42,19 +42,20 @@ class FlowRouter {
     // MARK: - Public
 
     var shouldUseNative: Bool {
-        if let isNativeEnabled = UserDefaults.standard.value(
-            forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE"
-        ) as? Bool {
-            return isNativeEnabled
-        }
-
-        // if this version is killswitched by server, fallback to webview.
-        if killswitchActive { return false }
-
-        // If native experiment is missing, fallback to webview.
-        guard let experimentVariant = experimentVariant else { return false }
-
-        return experimentVariant == Constants.nativeExperimentTreatment
+        return true
+//        if let isNativeEnabled = UserDefaults.standard.value(
+//            forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE"
+//        ) as? Bool {
+//            return isNativeEnabled
+//        }
+//
+//        // if this version is killswitched by server, fallback to webview.
+//        if killswitchActive { return false }
+//
+//        // If native experiment is missing, fallback to webview.
+//        guard let experimentVariant = experimentVariant else { return false }
+//
+//        return experimentVariant == Constants.nativeExperimentTreatment
     }
 
     func logExposureIfNeeded() {

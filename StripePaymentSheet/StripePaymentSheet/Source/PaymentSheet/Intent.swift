@@ -38,7 +38,7 @@ enum Intent {
     var recommendedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
         case .paymentIntent(let pi):
-            return pi.orderedPaymentMethodTypes
+            return pi.orderedPaymentMethodTypes + [.link]
         case .setupIntent(let si):
             return si.orderedPaymentMethodTypes
         case .deferredIntent(let elementsSession, _):

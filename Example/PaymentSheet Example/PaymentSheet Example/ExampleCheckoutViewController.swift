@@ -13,7 +13,7 @@ import UIKit
 class ExampleCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
     var paymentSheet: PaymentSheet?
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
+    let backendCheckoutUrl = URL(string: "https://abundant-elderly-universe.glitch.me/checkout")!  // An example backend endpoint
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +52,7 @@ class ExampleCheckoutViewController: UIViewController {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
                 configuration.allowsDelayedPaymentMethods = true
+                configuration.allowsPaymentMethodsRequiringShippingAddress = true
                 self.paymentSheet = PaymentSheet(
                     paymentIntentClientSecret: paymentIntentClientSecret,
                     configuration: configuration)

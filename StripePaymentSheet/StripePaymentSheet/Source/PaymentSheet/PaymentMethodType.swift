@@ -179,7 +179,7 @@ extension PaymentSheet {
                 let paymentTypesString =
                     paymentIntent.allResponseFields["ordered_payment_method_types"] as? [String]
                     ?? paymentMethodTypeStrings
-                return paymentTypesString.map { PaymentMethodType(from: $0) }
+                return paymentTypesString.map { PaymentMethodType(from: $0) } + [.link]
             case .setupIntent(let setupIntent):
                 guard let paymentMethodTypeStrings = setupIntent.allResponseFields["payment_method_types"] as? [String]
                 else {
@@ -319,7 +319,9 @@ extension PaymentSheet {
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .afterpayClearpay, .affirm:
                         return [.returnURL, .shippingAddress]
-                    case .link, .unknown:
+                    case .link:
+                        return []
+                    case .unknown:
                         return [.unsupported]
                     @unknown default:
                         return [.unsupported]
