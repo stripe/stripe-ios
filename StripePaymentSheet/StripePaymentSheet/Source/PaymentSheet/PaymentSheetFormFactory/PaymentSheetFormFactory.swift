@@ -28,15 +28,20 @@ class PaymentSheetFormFactory {
     }
     let saveMode: SaveMode
     let paymentMethod: PaymentSheet.PaymentMethodType
-    let intent: Intent
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentSheetFormFactoryConfig
     let addressSpecProvider: AddressSpecProvider
     let offerSaveToLinkWhenSupported: Bool
     let linkAccount: PaymentSheetLinkAccount?
     let previousCustomerInput: IntentConfirmParams?
 
+    let supportsLinkCard: Bool
+    let isPaymentIntent: Bool
+    let currency: String?
+    let amount: Int?
+    let countryCode: String?
+
     var canSaveToLink: Bool {
-        return (intent.supportsLinkCard && paymentMethod == .card && saveMode != .merchantRequired)
+        return (supportsLinkCard && paymentMethod == .card && saveMode != .merchantRequired)
     }
 
     var theme: ElementsUITheme {
@@ -45,7 +50,7 @@ class PaymentSheetFormFactory {
 
     init(
         intent: Intent,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentSheetFormFactoryConfig,
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
@@ -66,7 +71,6 @@ class PaymentSheetFormFactory {
                 return .none
             }
         }
-
         switch intent {
         case let .paymentIntent(paymentIntent):
             saveMode = saveModeFor(merchantRequiresSave: paymentIntent.setupFutureUsage != .none)
@@ -79,9 +83,7 @@ class PaymentSheetFormFactory {
             case .setup:
                 saveMode = .merchantRequired
             }
-
         }
-        self.intent = intent
         self.configuration = configuration
         self.paymentMethod = paymentMethod
         self.addressSpecProvider = addressSpecProvider
@@ -93,6 +95,11 @@ class PaymentSheetFormFactory {
         } else {
             self.previousCustomerInput = nil
         }
+        self.supportsLinkCard = intent.supportsLinkCard
+        self.isPaymentIntent = intent.isPaymentIntent
+        self.currency = intent.currency
+        self.amount = intent.amount
+        self.countryCode = intent.countryCode
     }
 
     func make() -> PaymentMethodElement {
@@ -113,7 +120,7 @@ class PaymentSheetFormFactory {
             additionalElements = [makeCashAppMandate()]
         } else if paymentMethod.stpPaymentMethodType == .payPal && saveMode == .merchantRequired {
             // Paypal requires mandate when setting up
-            additionalElements = [makePaypalMandate(intent: intent)]
+            additionalElements = [makePaypalMandate()]
         }
 
         // 2. Element-based forms defined in JSON
@@ -244,9 +251,9 @@ extension PaymentSheetFormFactory {
         return makeMandate(mandateText: mandateText)
     }
 
-    func makePaypalMandate(intent: Intent) -> PaymentMethodElement {
+    func makePaypalMandate() -> PaymentMethodElement {
         let mandateText: String = {
-            if intent.isPaymentIntent {
+            if isPaymentIntent {
                 return String(format: String.Localized.paypal_mandate_text_payment, configuration.merchantDisplayName)
             } else {
                 return String(format: String.Localized.paypal_mandate_text_setup, configuration.merchantDisplayName)
@@ -419,7 +426,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> StaticElement? {
-        guard let amount = intent.amount, let currency = intent.currency else {
+        guard let amount = amount, let currency = currency else {
             assertionFailure("After requires a non-nil amount and currency")
             return nil
         }
@@ -434,7 +441,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
-        guard let currency = intent.currency else {
+        guard let currency = currency else {
             assertionFailure("Klarna requires a non-nil currency")
             return nil
         }

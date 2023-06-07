@@ -21,7 +21,7 @@ final class USBankAccountPaymentMethodElement: Element {
     }
     var mandateString: NSMutableAttributedString?
 
-    private let configuration: PaymentSheet.Configuration
+    private let configuration: PaymentSheetFormFactoryConfig
     private let merchantName: String
     private let formElement: FormElement
     private let bankInfoSectionElement: SectionElement
@@ -79,7 +79,7 @@ final class USBankAccountPaymentMethodElement: Element {
     }
 
     init(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentSheetFormFactoryConfig,
         titleElement: StaticElement,
         nameElement: PaymentMethodElement?,
         emailElement: PaymentMethodElement?,

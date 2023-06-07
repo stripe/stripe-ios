@@ -81,13 +81,13 @@ extension PaymentSheetFormFactory {
             theme: theme)
         let cardFormElementWrapper = makeDefaultsApplierWrapper(for: cardFormElement)
 
-        if isLinkEnabled {
+        if case .paymentSheet(let configuration) = configuration, isLinkEnabled {
             return LinkEnabledPaymentMethodElement(
                 type: .card,
                 paymentMethodElement: cardFormElementWrapper,
                 configuration: configuration,
                 linkAccount: linkAccount,
-                country: intent.countryCode
+                country: countryCode
             )
         } else {
             return cardFormElementWrapper
