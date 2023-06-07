@@ -27,7 +27,7 @@ struct PaymentSheetDeferredValidator {
         guard paymentIntent.captureMethod == captureMethod else {
             throw PaymentSheetError.unknown(debugDescription: "Your PaymentIntent captureMethod (\(paymentIntent.captureMethod)) does not match the PaymentSheet.IntentConfiguration amount (\(captureMethod)).")
         }
-        
+
         /*
          Manual confirmation is only available using FlowController because merchants own the final step of confirmation.
          Showing a successful payment in the complete flow may be misleading when merchants still need to do a final confirmation which could fail e.g., bad network
