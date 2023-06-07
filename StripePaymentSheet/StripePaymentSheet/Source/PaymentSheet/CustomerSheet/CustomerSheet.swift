@@ -14,7 +14,7 @@ import Foundation
 import UIKit
 
 // For internal use
-internal enum CustomerSheetResult {
+internal enum InternalCustomerSheetResult {
     case completed(NSObject?)
     case canceled
     case failed(error: Error)
@@ -23,7 +23,7 @@ internal enum CustomerSheetResult {
 @_spi(PrivateBetaCustomerSheet) public class CustomerSheet {
     let configuration: CustomerSheet.Configuration
 
-    internal typealias CustomerSheetCompletion = (SheetResult) -> Void
+    internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
 
     /// The STPPaymentHandler instance
     @available(iOSApplicationExtension, unavailable)
@@ -71,7 +71,7 @@ internal enum CustomerSheetResult {
     var customerAdapter: CustomerAdapter
 
     /// The result of the CustomerSheet
-    @frozen public enum SheetResult {
+    @frozen public enum CustomerSheetResult {
         /// The customer cancelled the sheet. (e.g. by tapping outside it or tapping the "X")
         case canceled
         /// The customer selected a payment method.
@@ -85,7 +85,7 @@ internal enum CustomerSheetResult {
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     public func present(from presentingViewController: UIViewController,
-                        completion csCompletion: @escaping (SheetResult) -> Void
+                        completion csCompletion: @escaping (CustomerSheetResult) -> Void
     ) {
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
@@ -151,7 +151,7 @@ internal enum CustomerSheetResult {
     }
     // MARK: - Internal Properties
     var completion: (() -> Void)?
-    var userCompletion: ((SheetResult) -> Void)?
+    var userCompletion: ((CustomerSheetResult) -> Void)?
 }
 
 extension CustomerSheet {
@@ -172,7 +172,7 @@ extension CustomerSheet {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
-    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?, with paymentOption: PaymentOption, completion: @escaping (CustomerSheetResult) -> Void) {
+    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?, with paymentOption: PaymentOption, completion: @escaping (InternalCustomerSheetResult) -> Void) {
         guard let intent = intent,
               case .setupIntent = intent else {
             assertionFailure("Setup intent not available")
