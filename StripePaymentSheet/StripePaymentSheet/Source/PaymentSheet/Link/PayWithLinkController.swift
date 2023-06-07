@@ -80,6 +80,7 @@ extension PayWithLinkController: PayWithLinkViewControllerDelegate {
             intent: intent,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
+            isFlowController: false,
             completion: completion
         )
     }

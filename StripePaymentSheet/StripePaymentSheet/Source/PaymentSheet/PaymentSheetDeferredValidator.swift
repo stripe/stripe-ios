@@ -9,7 +9,9 @@ import Foundation
 import StripePayments
 
 struct PaymentSheetDeferredValidator {
-    static func validate(paymentIntent: STPPaymentIntent, intentConfiguration: PaymentSheet.IntentConfiguration) throws {
+    static func validate(paymentIntent: STPPaymentIntent,
+                         intentConfiguration: PaymentSheet.IntentConfiguration,
+                         isFlowController: Bool) throws {
         guard case let .payment(amount, currency, setupFutureUsage, captureMethod) = intentConfiguration.mode else {
             throw PaymentSheetError.unknown(debugDescription: "You returned a PaymentIntent client secret but used a PaymentSheet.IntentConfiguration in setup mode.")
         }
@@ -25,9 +27,18 @@ struct PaymentSheetDeferredValidator {
         guard paymentIntent.captureMethod == captureMethod else {
             throw PaymentSheetError.unknown(debugDescription: "Your PaymentIntent captureMethod (\(paymentIntent.captureMethod)) does not match the PaymentSheet.IntentConfiguration amount (\(captureMethod)).")
         }
+
+        /*
+         Manual confirmation is only available using FlowController because merchants own the final step of confirmation.
+         Showing a successful payment in the complete flow may be misleading when merchants still need to do a final confirmation which could fail e.g., bad network
+         */
+        if !isFlowController && paymentIntent.confirmationMethod == .manual {
+            throw PaymentSheetError.unknown(debugDescription: "Your PaymentIntent confirmationMethod (\(paymentIntent.confirmationMethod)) can only be used with PaymentSheet.FlowController.")
+        }
     }
 
-    static func validate(setupIntent: STPSetupIntent, intentConfiguration: PaymentSheet.IntentConfiguration) throws {
+    static func validate(setupIntent: STPSetupIntent,
+                         intentConfiguration: PaymentSheet.IntentConfiguration) throws {
         guard case let .setup(_, setupFutureUsage) = intentConfiguration.mode else {
             throw PaymentSheetError.unknown(debugDescription: "You returned a SetupIntent client secret but used a PaymentSheet.IntentConfiguration in payment mode.")
         }

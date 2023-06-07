@@ -284,7 +284,8 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 authenticationContext: self.bottomSheetViewController,
                 intent: paymentSheetViewController.intent,
                 paymentOption: paymentOption,
-                paymentHandler: self.paymentHandler)
+                paymentHandler: self.paymentHandler,
+                isFlowController: false)
             { result in
                 if case let .failed(error) = result {
                     self.mostRecentError = error
@@ -370,7 +371,8 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
             authenticationContext: self.bottomSheetViewController,
             intent: intent,
             paymentOption: paymentOption,
-            paymentHandler: self.paymentHandler)
+            paymentHandler: self.paymentHandler,
+            isFlowController: false)
         { result in
             if case let .failed(error) = result {
                 self.mostRecentError = error

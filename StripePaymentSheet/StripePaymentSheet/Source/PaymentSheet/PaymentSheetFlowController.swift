@@ -310,7 +310,8 @@ extension PaymentSheet {
                 authenticationContext: authenticationContext,
                 intent: intent,
                 paymentOption: paymentOption,
-                paymentHandler: paymentHandler
+                paymentHandler: paymentHandler,
+                isFlowController: true
             ) { [intent, configuration] result in
                 STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
                     isCustom: true,
