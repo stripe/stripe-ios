@@ -48,7 +48,7 @@ class PaymentSheetFormFactory {
         return configuration.appearance.asElementsTheme
     }
 
-    init(
+    convenience init(
         intent: Intent,
         configuration: PaymentSheetFormFactoryConfig,
         paymentMethod: PaymentSheet.PaymentMethodType,
@@ -71,6 +71,7 @@ class PaymentSheetFormFactory {
                 return .none
             }
         }
+        var saveMode: SaveMode
         switch intent {
         case let .paymentIntent(paymentIntent):
             saveMode = saveModeFor(merchantRequiresSave: paymentIntent.setupFutureUsage != .none)
@@ -84,6 +85,55 @@ class PaymentSheetFormFactory {
                 saveMode = .merchantRequired
             }
         }
+        self.init(configuration: configuration,
+                  paymentMethod: paymentMethod,
+                  previousCustomerInput: previousCustomerInput,
+                  addressSpecProvider: addressSpecProvider,
+                  offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
+                  linkAccount: linkAccount,
+                  supportsLinkCard: intent.supportsLinkCard,
+                  isPaymentIntent: intent.isPaymentIntent,
+                  currency: intent.currency,
+                  amount: intent.amount,
+                  countryCode: intent.countryCode,
+                  saveMode: saveMode)
+    }
+    convenience init(
+        configuration: PaymentSheetFormFactoryConfig,
+        paymentMethod: PaymentSheet.PaymentMethodType,
+        addressSpecProvider: AddressSpecProvider = .shared
+    ) {
+        self.init(configuration: configuration,
+                  paymentMethod: paymentMethod,
+                  previousCustomerInput: nil,
+                  addressSpecProvider: addressSpecProvider,
+                  offerSaveToLinkWhenSupported: false,
+                  linkAccount: nil,
+                  supportsLinkCard: false,
+                  isPaymentIntent: false,
+                  currency: nil,
+                  amount: nil,
+                  countryCode: nil,
+                  saveMode: .merchantRequired)
+
+
+    }
+
+    required init(
+        configuration: PaymentSheetFormFactoryConfig,
+        paymentMethod: PaymentSheet.PaymentMethodType,
+        previousCustomerInput: IntentConfirmParams? = nil,
+        addressSpecProvider: AddressSpecProvider = .shared,
+        offerSaveToLinkWhenSupported: Bool = false,
+        linkAccount: PaymentSheetLinkAccount? = nil,
+
+        supportsLinkCard: Bool,
+        isPaymentIntent: Bool,
+        currency: String?,
+        amount: Int?,
+        countryCode: String?,
+        saveMode: SaveMode
+    ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
         self.addressSpecProvider = addressSpecProvider
@@ -95,11 +145,12 @@ class PaymentSheetFormFactory {
         } else {
             self.previousCustomerInput = nil
         }
-        self.supportsLinkCard = intent.supportsLinkCard
-        self.isPaymentIntent = intent.isPaymentIntent
-        self.currency = intent.currency
-        self.amount = intent.amount
-        self.countryCode = intent.countryCode
+        self.supportsLinkCard = supportsLinkCard
+        self.isPaymentIntent = isPaymentIntent
+        self.currency = currency
+        self.amount = amount
+        self.countryCode = countryCode
+        self.saveMode = saveMode
     }
 
     func make() -> PaymentMethodElement {
