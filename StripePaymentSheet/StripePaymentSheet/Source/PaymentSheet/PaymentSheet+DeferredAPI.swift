@@ -18,6 +18,7 @@ extension PaymentSheet {
         intentConfig: PaymentSheet.IntentConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
+        isFlowController: Bool,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
         // Hack: Add deferred to analytics product usage as a hack to get it into the payment_user_agent string in the request to create a PaymentMethod
@@ -51,7 +52,9 @@ extension PaymentSheet {
                 switch intentConfig.mode {
                 case .payment:
                     let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
-                    try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent, intentConfiguration: intentConfig)
+                    try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent,
+                                                               intentConfiguration: intentConfig,
+                                                               isFlowController: isFlowController)
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 4a. Client-side confirmation

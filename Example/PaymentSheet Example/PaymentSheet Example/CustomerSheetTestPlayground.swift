@@ -28,6 +28,7 @@ class CustomerSheetTestPlayground: UIViewController {
 
     @IBOutlet weak var selectPaymentMethodButton: UIButton!
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
+    @IBOutlet weak var customerIdTextField: UITextField!
 
     var customerSheet: CustomerSheet?
     var paymentOptionSelection: CustomerSheet.PaymentOptionSelection?
@@ -35,6 +36,7 @@ class CustomerSheetTestPlayground: UIViewController {
     enum CustomerMode: String, CaseIterable {
         case new
         case returning
+        case customerId
     }
 
     enum PaymentMethodMode {
@@ -46,8 +48,23 @@ class CustomerSheetTestPlayground: UIViewController {
         switch customerModeSelector.selectedSegmentIndex {
         case 0:
             return .new
-        default:
+        case 1:
             return .returning
+        case 2:
+            return .customerId
+        default:
+            assertionFailure("customerModeSelector has more indexs than enum CustomerMode cases")
+            return .new
+        }
+    }
+    var customerTypeString: String {
+        switch customerMode {
+        case .new:
+            return "new"
+        case .returning:
+            return "returning"
+        case .customerId:
+            return customerIdTextField.text ?? ""
         }
     }
 
@@ -94,7 +111,16 @@ class CustomerSheetTestPlayground: UIViewController {
             loadSettingsFrom(settings: nsUserDefaultSettings)
             loadBackend()
         }
+        customerModeSelector.addTarget(self, action: #selector(didTapCustomerModeSelector), for: .valueChanged)
     }
+
+    @objc
+    func didTapCustomerModeSelector(_ customerModeSelector: UISegmentedControl) {
+        if customerModeSelector.selectedSegmentIndex == 0  || customerModeSelector.selectedSegmentIndex == 1 {
+            customerIdTextField.text = ""
+        }
+    }
+
     @objc
     func didTapSelectPaymentMethodButton() {
         customerSheet?.present(from: self, completion: { result in
@@ -213,7 +239,7 @@ extension CustomerSheetTestPlayground {
         customerSheet = nil
         paymentOptionSelection = nil
 
-        let customerType = customerMode == .new ? "new" : "returning"
+        var customerType = customerTypeString
         self.backend = CustomerSheetBackend(endpoint: currentEndpoint)
 
 //        TODO: Refactor this to make the ephemeral key and customerId fetching async
@@ -227,8 +253,13 @@ extension CustomerSheetTestPlayground {
             self.ephemeralKey = ephemeralKey
             self.customerId = customerId
             StripeAPI.defaultPublishableKey = publishableKey
-
             Task {
+                self.customerIdTextField.text = customerId
+                if self.customerMode == .new {
+                    self.customerModeSelector.selectedSegmentIndex = 2
+                }
+                self.serializeSettingsToNSUserDefaults()
+
                 var configuration = self.customerSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
                 configuration.applePayEnabled = self.applePayEnabled()
                 let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey)
@@ -248,6 +279,7 @@ struct CustomerSheetPlaygroundSettings: Codable {
     static let nsUserDefaultsKey = "savedPaymentMethodPlaygroundSettings"
 
     let customerModeSelectorValue: Int
+    let customerIdTextFieldValue: String?
     let paymentMethodModeSelectorValue: Int
     let applePaySelectorSelectorValue: Int
     let selectingSavedCustomHeaderText: String?
@@ -256,6 +288,7 @@ struct CustomerSheetPlaygroundSettings: Codable {
     static func defaultValues() -> CustomerSheetPlaygroundSettings {
         return CustomerSheetPlaygroundSettings(
             customerModeSelectorValue: 0,
+            customerIdTextFieldValue: nil,
             paymentMethodModeSelectorValue: 0,
             applePaySelectorSelectorValue: 0,
             selectingSavedCustomHeaderText: nil,
@@ -284,6 +317,7 @@ extension CustomerSheetTestPlayground {
     func serializeSettingsToNSUserDefaults() {
         let settings = CustomerSheetPlaygroundSettings(
             customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
+            customerIdTextFieldValue: customerIdTextField.text,
             paymentMethodModeSelectorValue: pmModeSelector.selectedSegmentIndex,
             applePaySelectorSelectorValue: applePaySelector.selectedSegmentIndex,
             selectingSavedCustomHeaderText: headerTextForSelectionScreenTextField.text,
@@ -307,6 +341,7 @@ extension CustomerSheetTestPlayground {
 
     func loadSettingsFrom(settings: CustomerSheetPlaygroundSettings) {
         customerModeSelector.selectedSegmentIndex = settings.customerModeSelectorValue
+        customerIdTextField.text = settings.customerIdTextFieldValue
         pmModeSelector.selectedSegmentIndex = settings.paymentMethodModeSelectorValue
         applePaySelector.selectedSegmentIndex = settings.applePaySelectorSelectorValue
         headerTextForSelectionScreenTextField.text = settings.selectingSavedCustomHeaderText

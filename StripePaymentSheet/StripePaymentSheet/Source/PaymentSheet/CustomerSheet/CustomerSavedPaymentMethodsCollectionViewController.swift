@@ -362,7 +362,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
               case .saved(let paymentMethod) = viewModels[indexPath.row]
         else {
-            assertionFailure()
+            assertionFailure("Please file an issue with reproduction steps at https://github.com/stripe/stripe-ios")
             return
         }
         let viewModel = viewModels[indexPath.row]
