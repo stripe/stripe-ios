@@ -98,26 +98,6 @@ class PaymentSheetFormFactory {
                   countryCode: intent.countryCode,
                   saveMode: saveMode)
     }
-    convenience init(
-        configuration: PaymentSheetFormFactoryConfig,
-        paymentMethod: PaymentSheet.PaymentMethodType,
-        addressSpecProvider: AddressSpecProvider = .shared
-    ) {
-        self.init(configuration: configuration,
-                  paymentMethod: paymentMethod,
-                  previousCustomerInput: nil,
-                  addressSpecProvider: addressSpecProvider,
-                  offerSaveToLinkWhenSupported: false,
-                  linkAccount: nil,
-                  supportsLinkCard: false,
-                  isPaymentIntent: false,
-                  currency: nil,
-                  amount: nil,
-                  countryCode: nil,
-                  saveMode: .merchantRequired)
-
-
-    }
 
     required init(
         configuration: PaymentSheetFormFactoryConfig,
@@ -126,7 +106,6 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
-
         supportsLinkCard: Bool,
         isPaymentIntent: Bool,
         currency: String?,
