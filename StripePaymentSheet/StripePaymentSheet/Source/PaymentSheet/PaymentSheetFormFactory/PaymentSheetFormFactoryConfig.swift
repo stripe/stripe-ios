@@ -12,7 +12,7 @@ enum PaymentSheetFormFactoryConfig {
     case customerSheet(CustomerSheet.Configuration)
 
     var customer: PaymentSheet.CustomerConfiguration? {
-        switch(self) {
+        switch self {
         case .paymentSheet(let config):
             return config.customer
         case .customerSheet:
@@ -20,7 +20,7 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
     var merchantDisplayName: String {
-        switch(self) {
+        switch self {
         case .paymentSheet(let config):
             return config.merchantDisplayName
         case .customerSheet:
@@ -28,7 +28,7 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
     var linkPaymentMethodsOnly: Bool {
-        switch(self) {
+        switch self {
         case .paymentSheet(let config):
             return config.linkPaymentMethodsOnly
         case .customerSheet:
@@ -36,7 +36,7 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
     var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
-        switch(self) {
+        switch self {
         case .paymentSheet(let config):
             return config.billingDetailsCollectionConfiguration
         case .customerSheet(let config):
@@ -44,7 +44,7 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
     var appearance: PaymentSheet.Appearance {
-        switch(self) {
+        switch self {
         case .paymentSheet(let config):
             return config.appearance
         case .customerSheet(let config):
@@ -52,7 +52,7 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
     var defaultBillingDetails: PaymentSheet.BillingDetails {
-        switch(self) {
+        switch self {
         case .paymentSheet(let config):
             return config.defaultBillingDetails
         case .customerSheet(let config):
@@ -60,7 +60,7 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
     var shippingDetails: () -> AddressViewController.AddressDetails? {
-        switch(self) {
+        switch self {
         case .paymentSheet(let config):
             return config.shippingDetails
         case .customerSheet:
@@ -68,7 +68,7 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
     var savePaymentMethodOptInBehavior: PaymentSheet.SavePaymentMethodOptInBehavior {
-        switch(self) {
+        switch self {
         case .paymentSheet(let config):
             return config.savePaymentMethodOptInBehavior
         case .customerSheet:
