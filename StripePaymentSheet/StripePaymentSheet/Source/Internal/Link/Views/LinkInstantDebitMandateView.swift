@@ -67,7 +67,7 @@ final class LinkInstantDebitMandateView: UIView {
 
     private func formattedLegalText() -> NSAttributedString {
         let string = STPLocalizedString(
-            "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>.",
+            "AAAA By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>.",
             "Mandate text displayed when paying via Link instant debit."
         )
 

@@ -42,11 +42,11 @@ final class LinkFinancialConnectionsAuthManager: NSObject {
         }
     }
 
-    let linkAccount: PaymentSheetLinkAccount
+    let apiClient: STPAPIClient
     let window: UIWindow?
 
-    init(linkAccount: PaymentSheetLinkAccount, window: UIWindow?) {
-        self.linkAccount = linkAccount
+    init(apiClient: STPAPIClient, window: UIWindow?) {
+        self.apiClient = apiClient
         self.window = window
     }
 
@@ -65,14 +65,14 @@ extension LinkFinancialConnectionsAuthManager {
 
     private func generateHostedURL(withClientSecret clientSecret: String) async throws -> Manifest {
         return try await withCheckedThrowingContinuation { continuation in
-            linkAccount.apiClient.post(
+            apiClient.post(
                 resource: "link_account_sessions/generate_hosted_url",
                 parameters: [
                     "client_secret": clientSecret,
                     "fullscreen": true,
                     "hide_close_button": true,
                 ],
-                ephemeralKeySecret: linkAccount.publishableKey
+                ephemeralKeySecret: apiClient.publishableKey
             ).observe { result in
                 continuation.resume(with: result)
             }

@@ -101,7 +101,7 @@ final class PayWithLinkViewController: UINavigationController {
         guard let linkAccount = linkAccount else {
             return nil
         }
-        return LinkFinancialConnectionsAuthManager(linkAccount: linkAccount, window: view.window)
+        return LinkFinancialConnectionsAuthManager(apiClient: linkAccount.apiClient, window: view.window)
     }()
 
     weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
@@ -162,10 +162,6 @@ final class PayWithLinkViewController: UINavigationController {
         // the gesture when the navigation bar is hidden. Use a custom delegate
         // to restore the functionality.
         interactivePopGestureRecognizer?.delegate = self
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
     }
 
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
@@ -362,7 +358,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
-        connectionsAuthManager = LinkFinancialConnectionsAuthManager(linkAccount: linkAccount, window: view.window)
+        connectionsAuthManager = LinkFinancialConnectionsAuthManager(apiClient: linkAccount.apiClient, window: view.window)
         updateSupportedPaymentMethods()
         updateUI()
     }
