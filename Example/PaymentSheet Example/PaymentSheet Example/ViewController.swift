@@ -29,5 +29,13 @@ class ViewController: UIViewController {
             fatalError(">= iOS 15.0 required")
         }
     }
+    @IBSegueAction func showSwiftUICustomerSheetTestPlayground(_ coder: NSCoder) -> UIViewController? {
+        if #available(iOS 15.0, *) {
+            return UIHostingController(coder: coder, rootView: CustomerSheetTestPlayground(settings: CustomerSheetTestPlaygroundController.settingsFromDefaults() ?? .defaultValues()))
+        } else {
+            fatalError(">= iOS 15.0 required")
+        }
+
+    }
 
 }

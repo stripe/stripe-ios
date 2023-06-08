@@ -81,7 +81,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="CustomerSheet (test playground)"/>
                                         <connections>
-                                            <segue destination="Mow-eq-n5c" kind="show" id="HTy-a1-6rc"/>
+                                            <segue destination="AjW-Xm-4P3" kind="show" identifier="" destinationCreationSelector="showSwiftUICustomerSheetTestPlayground:" id="hYA-FT-Tj0"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1822,7 +1822,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ani-OQ-XpC"/>
+        <segue reference="hYA-FT-Tj0"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="opaqueSeparatorColor">
