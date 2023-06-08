@@ -39,8 +39,8 @@ extension Intent {
 
     var linkFundingSources: Set<LinkSettings.FundingSource>? {
         switch self {
-        case .paymentIntent(let paymentIntent):
-            return paymentIntent.linkSettings?.fundingSources
+        case .paymentIntent( _):
+            return [.bankAccount] //paymentIntent.linkSettings?.fundingSources
         case .setupIntent(let setupIntent):
             return setupIntent.linkSettings?.fundingSources
         case .deferredIntent(let elementsSession, _):

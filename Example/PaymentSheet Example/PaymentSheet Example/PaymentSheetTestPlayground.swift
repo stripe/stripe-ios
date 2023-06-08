@@ -11,12 +11,13 @@
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 import Contacts
 import PassKit
-@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) import StripePaymentSheet
+@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(LinkOnly) import StripePaymentSheet
+
 import SwiftUI
 import UIKit
 
 class PaymentSheetTestPlayground: UIViewController {
-    static let baseEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
+    static let baseEndpoint = "https://abundant-elderly-universe.glitch.me"
     static var endpointSelectorEndpoint: String {
         return "\(baseEndpoint)/endpoints"
     }
@@ -336,6 +337,7 @@ class PaymentSheetTestPlayground: UIViewController {
     var paymentSheetFlowController: PaymentSheet.FlowController?
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
+    var linkBankPaymentController: LinkBankPaymentController?
 
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
@@ -440,6 +442,13 @@ class PaymentSheetTestPlayground: UIViewController {
         }
     }
 
+    @IBAction func didTapLinkBankPaymentController(_ sender: Any) {
+        print("LINK")
+        linkBankPaymentController?.present(from: self) { result in
+
+        }
+    }
+
     @objc
     func didTapSelectPaymentMethodButton() {
         paymentSheetFlowController?.presentPaymentOptions(from: self) {
@@ -536,6 +545,7 @@ extension PaymentSheetTestPlayground {
         shippingAddressButton.isEnabled = false
         paymentSheetFlowController = nil
         addressViewController = nil
+        linkBankPaymentController = nil
 
         let customer: String = {
             switch customerMode {
@@ -591,6 +601,7 @@ extension PaymentSheetTestPlayground {
                     self.selectPaymentMethodButton.isEnabled = true
                     self.shippingAddressButton.isEnabled = true
                     self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
+                    self.linkBankPaymentController = LinkBankPaymentController(paymentIntentClientSecret: self.clientSecret!, returnURL: nil, billingDetails: nil)
                     self.addressDetails = nil
                     self.updateButtons()
                 }

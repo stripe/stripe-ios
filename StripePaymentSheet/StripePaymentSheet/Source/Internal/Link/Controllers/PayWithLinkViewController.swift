@@ -164,10 +164,6 @@ final class PayWithLinkViewController: UINavigationController {
         interactivePopGestureRecognizer?.delegate = self
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
-
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         if let viewController = viewController as? BaseViewController {
             viewController.coordinator = self
