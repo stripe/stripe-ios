@@ -16,6 +16,11 @@ import UIKit
 // `AttributedTextView` is also the `UITextView` version of `AttributedLabel`.
 final class AttributedTextView: HitTestView {
 
+    enum LinkStyle {
+        case bold
+        case underline
+    }
+    
     private struct LinkDescriptor {
         let range: NSRange
         let urlString: String
@@ -33,11 +38,20 @@ final class AttributedTextView: HitTestView {
     init(
         font: FinancialConnectionsFont,
         boldFont: FinancialConnectionsFont,
-        linkFont: FinancialConnectionsFont,
+        linkFont: FinancialConnectionsFont? = nil, // TODO(kgaidis): remove this
         textColor: UIColor,
         linkColor: UIColor = .textBrand,
+        linkStyle: LinkStyle = .bold,
         alignCenter: Bool = false
     ) {
+        let linkFont = linkFont ?? {
+            switch linkStyle {
+            case .bold:
+                return boldFont
+            case .underline:
+                return font
+            }
+        }()
         let textContainer = NSTextContainer(size: .zero)
         let layoutManager = VerticalCenterLayoutManager()
         layoutManager.addTextContainer(textContainer)
@@ -61,9 +75,18 @@ final class AttributedTextView: HitTestView {
         // Get rid of the extra padding added by default to UITextViews
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0.0
-        textView.linkTextAttributes = [
-            .foregroundColor: linkColor
-        ]
+        textView.linkTextAttributes = {
+            switch linkStyle {
+            case .bold:
+                return [
+                    .foregroundColor: linkColor,
+                ]
+            case .underline:
+                return [
+                    .underlineStyle: NSUnderlineStyle.single.rawValue
+                ]
+            }
+        }()
         textView.delegate = self
         // remove clipping so when user selects an attributed
         // link, the selection area does not get clipped

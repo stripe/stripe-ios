@@ -33,6 +33,7 @@ extension Button.Configuration {
         // pressed
         primaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.23)  // this tries to simulate `brand600`
         primaryButtonConfiguration.colorTransforms.highlightedForeground = nil
+        primaryButtonConfiguration.cornerRadius = 12
         return primaryButtonConfiguration
     }
 
@@ -48,6 +49,7 @@ extension Button.Configuration {
         // pressed
         secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04)  // this tries to simulate `neutral100`
         secondaryButtonConfiguration.colorTransforms.highlightedForeground = nil
+        secondaryButtonConfiguration.cornerRadius = 12
         return secondaryButtonConfiguration
     }
 }

@@ -12,7 +12,7 @@ extension UIColor {
     // The background color we use across across many screens.
     // Added for future support around dark mode.
     static var customBackgroundColor: UIColor {
-        return .white
+        return neutral0
     }
 
     static var textPrimary: UIColor {
@@ -55,6 +55,10 @@ extension UIColor {
         return UIColor(red: 254 / 255.0, green: 249 / 255.0, blue: 218 / 255.0, alpha: 1)  // #fef9da
     }
 
+    private static var neutral0: UIColor {
+        return .white
+    }
+    
     private static var neutral50: UIColor {
         return UIColor(red: 246 / 255.0, green: 248 / 255.0, blue: 250 / 255.0, alpha: 1)  // #f6f8fa
     }

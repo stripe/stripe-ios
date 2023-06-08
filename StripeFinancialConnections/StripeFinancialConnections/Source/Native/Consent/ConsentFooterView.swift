@@ -17,13 +17,9 @@ class ConsentFooterView: HitTestView {
     private let didSelectAgree: () -> Void
 
     private lazy var agreeButton: StripeUICore.Button = {
-        let agreeButton = Button(configuration: .financialConnectionsPrimary)
+        let agreeButton = FinancialConnectionsButton(configuration: .primary)
         agreeButton.title = agreeButtonText
         agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
-        agreeButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            agreeButton.heightAnchor.constraint(equalToConstant: 56)
-        ])
         agreeButton.accessibilityIdentifier = "consent_agree_button"
         return agreeButton
     }()
@@ -41,10 +37,10 @@ class ConsentFooterView: HitTestView {
         backgroundColor = .customBackgroundColor
 
         let termsAndPrivacyPolicyLabel = AttributedTextView(
-            font: .body(.small),
-            boldFont: .body(.smallEmphasized),
-            linkFont: .body(.smallEmphasized),
+            font: .label(.medium),
+            boldFont: .label(.mediumEmphasized),
             textColor: .textSecondary,
+            linkStyle: .underline,
             alignCenter: true
         )
         termsAndPrivacyPolicyLabel.setText(
@@ -59,14 +55,14 @@ class ConsentFooterView: HitTestView {
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 24
+        verticalStackView.spacing = 16
 
         if let belowCtaText = belowCtaText {
             let manuallyVerifyLabel = AttributedTextView(
-                font: .body(.small),
-                boldFont: .body(.smallEmphasized),
-                linkFont: .body(.smallEmphasized),
+                font: .label(.medium),
+                boldFont: .label(.mediumEmphasized),
                 textColor: .textSecondary,
+                linkStyle: .bold,
                 alignCenter: true
             )
             manuallyVerifyLabel.setText(
