@@ -119,7 +119,7 @@ struct CustomerSheetButtons: View {
                     }
                 }.padding(.horizontal)
                 HStack {
-                    if let _ = playgroundController.customerSheet {
+                    if playgroundController.customerSheet != nil {
                         HStack{
                             Text("Payment method").font(.subheadline)
                             Spacer()
@@ -162,5 +162,3 @@ struct CustomerSheetPaymentOptionView: View {
             .cornerRadius(6)
     }
 }
-
-

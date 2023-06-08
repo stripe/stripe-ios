@@ -92,7 +92,6 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         })
     }
 
-
     func customerSheetConfiguration(customerId: String, ephemeralKey: String) -> CustomerSheet.Configuration {
         var configuration = CustomerSheet.Configuration()
         configuration.appearance = appearance
@@ -184,7 +183,7 @@ extension CustomerSheetTestPlaygroundController {
                 let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey)
                 self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
 
-                //Retreive selected
+                // Retrieve selected PM
                 let selection = try await customerAdapter.retrievePaymentOptionSelection()
 
                 DispatchQueue.main.async {
@@ -274,4 +273,3 @@ class CustomerSheetBackend {
         return secret
     }
 }
-
