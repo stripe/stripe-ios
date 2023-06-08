@@ -1,3 +1,7 @@
+## X.Y.Z 2023-xx-yy
+### PaymentSheet
+* [Fixed] Fixed validating the IntentConfiguration matches the PaymentIntent/SetupIntent when it was already confirmed on the server. Note: server-side confirmation is in private beta.
+
 ## 23.9.0 2023-05-30
 ### PaymentSheet
 * [Changed] The private beta API for https://stripe.com/docs/payments/finalize-payments-on-the-server has changed:
