@@ -786,7 +786,7 @@ class PaymentSheetAPITest: XCTestCase {
         }
         waitForExpectations(timeout: 10)
     }
-    
+
     func testDeferredConfirm_paymentintent_server_side_confirm_doesnt_validate() {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we **don't** perform validation in the paymentintent server-side confirm flow
         let e = expectation(description: "confirm completes")
@@ -794,7 +794,7 @@ class PaymentSheetAPITest: XCTestCase {
             STPTestingAPIClient.shared().createPaymentIntent(withParams: [
                 "amount": 1050,
                 "confirm": true,
-                "payment_method": paymentMethod.stripeId
+                "payment_method": paymentMethod.stripeId,
             ]) { pi, _ in
                 intentCreationCallback(.success(pi ?? ""))
             }
@@ -815,7 +815,7 @@ class PaymentSheetAPITest: XCTestCase {
         }
         waitForExpectations(timeout: 10)
     }
-    
+
     func testDeferredConfirm_setupintent_usage_doesnt_match_intent_config() {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we perform validation in the setupintent confirm flow
         let e = expectation(description: "confirm completes")
@@ -842,7 +842,7 @@ class PaymentSheetAPITest: XCTestCase {
         }
         waitForExpectations(timeout: 10)
     }
-    
+
     func testDeferredConfirm_setupintent_server_side_confirm_doesnt_validate() {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we **don't** perform validation in the SetupIntent server-side confirm flow
         let e = expectation(description: "confirm completes")
