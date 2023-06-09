@@ -760,12 +760,13 @@ class PaymentSheetAPITest: XCTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    func testDeferredConfirm_paymentintent_amount_doesnt_match_intent_config() {
+    func testDeferredConfirm_paymentintent_client_side_confirm_validates() {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we perform validation in the paymentintent confirm flow
         let e = expectation(description: "confirm completes")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1080, currency: "USD")) { _, _, intentCreationCallback in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD")) { _, _, intentCreationCallback in
             STPTestingAPIClient.shared().createPaymentIntent(withParams: [
                 "amount": 1050,
+                "currency": "GBP", // Different currency than IntentConfiguration
             ]) { pi, _ in
                 intentCreationCallback(.success(pi ?? ""))
             }
@@ -782,7 +783,7 @@ class PaymentSheetAPITest: XCTestCase {
                 XCTFail()
                 return
             }
-            XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occured in PaymentSheet. Your PaymentIntent amount (1050) does not match the PaymentSheet.IntentConfiguration amount (1080).")
+            XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occured in PaymentSheet. Your PaymentIntent currency (GBP) does not match the PaymentSheet.IntentConfiguration currency (USD).")
         }
         waitForExpectations(timeout: 10)
     }
