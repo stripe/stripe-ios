@@ -526,14 +526,15 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
             isVerificationInProgress = true
             updateUI()
 
-            let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
-            verificationController.present(from: self, completion: { [weak self] _ in
-                // Verification result is ignored here on purpose. If verification is canceled or fails,
-                // we will simply don't block the payment. This will be revised after we redesign the inline
-                // signup UI to include verification status.
-                self?.isVerificationInProgress = false
-                self?.updateUI()
-            })
+/// TODO: Re-add link
+//            let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
+//            verificationController.present(from: self, completion: { [weak self] _ in
+//                // Verification result is ignored here on purpose. If verification is canceled or fails,
+//                // we will simply don't block the payment. This will be revised after we redesign the inline
+//                // signup UI to include verification status.
+//                self?.isVerificationInProgress = false
+//                self?.updateUI()
+//            })
         } else {
             updateUI()
         }

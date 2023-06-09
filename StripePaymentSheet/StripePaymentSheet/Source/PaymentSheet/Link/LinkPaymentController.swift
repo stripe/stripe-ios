@@ -76,39 +76,8 @@ import UIKit
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
-        let linkController: PayWithLinkViewController = try await withCheckedThrowingContinuation { [self] continuation in
-            PaymentSheet.load(mode: mode, configuration: configuration) { result in
-                switch result {
-                case .success(let intent, _, let isLinkEnabled):
-                    guard isLinkEnabled else {
-                        continuation.resume(throwing: LinkPaymentController.Error.unavailable)
-                        return
-                    }
-                    self.intent = intent
-                    let linkController = PayWithLinkViewController(
-                        intent: intent,
-                        configuration: self.configuration,
-                        shouldOfferApplePay: false,
-                        shouldFinishOnClose: true,
-                        callToAction: .customWithLock(title: String.Localized.continue)
-                    )
-                    continuation.resume(returning: linkController)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
-
-        linkController.payWithLinkDelegate = self
-        linkController.modalPresentationStyle = UIDevice.current.userInterfaceIdiom == .pad
-            ? .formSheet
-            : .overFullScreen
-
-        defer { linkController.dismiss(animated: true) }
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            payWithLinkContinuation = continuation
-            presentingViewController.present(linkController, animated: true)
-        }
+        assertionFailure("This is not implemented.")
+        throw NSError(domain: "com.stripe.PaymentSheet.NotImplemented", code: 0)
     }
 
     /// Completes the Link payment or setup.
@@ -194,30 +163,5 @@ import UIKit
         case canceled
         /// Link is unavailable at this time.
         case unavailable
-    }
-}
-
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
-extension LinkPaymentController: PayWithLinkViewControllerDelegate {
-    func payWithLinkViewControllerDidConfirm(_ payWithLinkViewController: PayWithLinkViewController, intent: Intent, with paymentOption: PaymentOption, completion: @escaping (PaymentSheetResult) -> Void) {
-        self.intent = intent
-        self.paymentOption = paymentOption
-        completion(.completed)
-    }
-
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
-        payWithLinkContinuation?.resume(throwing: Error.canceled)
-    }
-
-    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
-        switch result {
-        case .canceled:
-            payWithLinkContinuation?.resume(throwing: Error.canceled)
-        case .failed(let error):
-            payWithLinkContinuation?.resume(throwing: error)
-        case .completed:
-            payWithLinkContinuation?.resume()
-        }
     }
 }

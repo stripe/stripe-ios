@@ -182,21 +182,21 @@ public class PaymentSheet {
                     }
                 }
 
-                if let linkAccount = LinkAccountContext.shared.account,
-                   linkAccount.sessionState == .requiresVerification,
-                   !linkAccount.hasStartedSMSVerification {
-                    let verificationController = LinkVerificationController(linkAccount: linkAccount)
-                    verificationController.present(from: self.bottomSheetViewController) { result in
-                        switch result {
-                        case .completed:
-                            presentPaymentSheetVC(true)
-                        case .canceled, .failed:
-                            presentPaymentSheetVC(false)
-                        }
-                    }
-                } else {
+//                if let linkAccount = LinkAccountContext.shared.account,
+//                   linkAccount.sessionState == .requiresVerification,
+//                   !linkAccount.hasStartedSMSVerification {
+//                    let verificationController = LinkVerificationController(linkAccount: linkAccount)
+//                    verificationController.present(from: self.bottomSheetViewController) { result in
+//                        switch result {
+//                        case .completed:
+//                            presentPaymentSheetVC(true)
+//                        case .canceled, .failed:
+//                            presentPaymentSheetVC(false)
+//                        }
+//                    }
+//                } else {
                     presentPaymentSheetVC(false)
-                }
+//                }
             case .failure(let error):
                 completion(.failed(error: error))
             }
@@ -460,16 +460,16 @@ private extension PaymentSheet {
             return
         }
 
-        let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
-        verificationController.present(from: bottomSheetViewController) { [weak self] result in
-            self?.bottomSheetViewController.dismiss(animated: true, completion: nil)
-            switch result {
-            case .completed:
-                completion?(true)
-            case .canceled, .failed:
-                completion?(false)
-            }
-        }
+//        let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
+//        verificationController.present(from: bottomSheetViewController) { [weak self] result in
+//            self?.bottomSheetViewController.dismiss(animated: true, completion: nil)
+//            switch result {
+//            case .completed:
+//                completion?(true)
+//            case .canceled, .failed:
+//                completion?(false)
+//            }
+//        }
     }
 
 }

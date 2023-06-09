@@ -52,14 +52,17 @@ final class PayWithLinkController {
         // itself while presented.
         self.selfRetainer = self
         self.completion = completion
-
-        let payWithLinkViewController = PayWithLinkViewController(intent: intent, configuration: configuration)
-        payWithLinkViewController.payWithLinkDelegate = self
-        payWithLinkViewController.modalPresentationStyle = UIDevice.current.userInterfaceIdiom == .pad
-            ? .formSheet
-            : .overFullScreen
-
-        presentingController.present(payWithLinkViewController, animated: true)
+//      Todo: Not implemented
+        assertionFailure("This is not implemented.")
+        let error = NSError(domain: "com.stripe.PaymentSheet.NotImplemented", code: 0)
+        completion(.failed(error: error))
+//        let payWithLinkViewController = PayWithLinkViewController(intent: intent, configuration: configuration)
+//        payWithLinkViewController.payWithLinkDelegate = self
+//        payWithLinkViewController.modalPresentationStyle = UIDevice.current.userInterfaceIdiom == .pad
+//            ? .formSheet
+//            : .overFullScreen
+//
+//        presentingController.present(payWithLinkViewController, animated: true)
     }
 
 }
