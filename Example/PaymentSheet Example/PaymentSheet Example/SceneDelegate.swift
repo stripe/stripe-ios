@@ -40,8 +40,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     @available(iOS 15.0, *)
     func launchWith(base64String: String) {
-        let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String)!
+        let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: PaymentSheetTestPlaygroundSettings.self)!
         let hvc = UIHostingController(rootView: PaymentSheetTestPlayground(settings: settings))
+        let navController = UINavigationController(rootViewController: hvc)
+        self.window!.rootViewController = navController
+    }
+    @available(iOS 15.0, *)
+    func launchCustomerSheetWith(base64String: String) {
+        let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: CustomerSheetTestPlaygroundSettings.self)!
+        let hvc = UIHostingController(rootView: CustomerSheetTestPlayground(settings: settings))
         let navController = UINavigationController(rootViewController: hvc)
         self.window!.rootViewController = navController
     }
@@ -71,6 +78,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             } else {
                 assertionFailure("Not supported on < iOS 15")
             }
+        } else if let playgroundData = ProcessInfo.processInfo.environment["STP_CUSTOMERSHEET_PLAYGROUND_DATA"] {
+            if #available(iOS 15.0, *) {
+                launchCustomerSheetWith(base64String: playgroundData)
+            } else {
+                assertionFailure("Not supported on < iOS 15")
+            }
+
         }
 
         guard (scene as? UIWindowScene) != nil else { return }

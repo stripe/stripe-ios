@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
+public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     enum CustomerMode: String, PickerEnum {
         static var enumName: String { "CustomerMode" }
 
@@ -45,6 +45,11 @@ struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    applePay: .on,
                                                    headerTextForSelectionScreen: nil,
                                                    autoreload: .on)
+    }
+
+    var base64Data: String {
+        let jsonData = try! JSONEncoder().encode(self)
+        return jsonData.base64EncodedString()
     }
 
     static let nsUserDefaultsKey = "CustomerSheetPlaygroundSettings"
