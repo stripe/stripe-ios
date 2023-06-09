@@ -4,12 +4,8 @@
 //
 
 import Combine
-import Contacts
-import Foundation
-import PassKit
 @_spi(PrivateBetaCustomerSheet) import StripePaymentSheet
 import SwiftUI
-import UIKit
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
     static let defaultEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
@@ -17,14 +13,14 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     @Published var settings: CustomerSheetTestPlaygroundSettings
     @Published var currentlyRenderedSettings: CustomerSheetTestPlaygroundSettings
     @Published var isLoading: Bool = false
-    @Published var lastPaymentResult: CustomerSheet.CustomerSheetResult?
     @Published var paymentOptionSelection: CustomerSheet.PaymentOptionSelection?
 
     private var subscribers: Set<AnyCancellable> = []
     init(settings: CustomerSheetTestPlaygroundSettings) {
         self.settings = settings
         self.currentlyRenderedSettings = .defaultValues()
-        $settings.sink { newValue in
+        $settings
+            .sink { newValue in
             if !self.isLoading && newValue.autoreload == .on {
                 self.load()
             }
@@ -69,6 +65,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             rootViewController.present(alert, animated: true, completion: nil)
         }
     }
+
     func presentCustomerSheet() {
         customerSheet?.present(from: rootViewController, completion: { result in
             switch result {
@@ -147,8 +144,8 @@ extension CustomerSheetTestPlaygroundController {
         serializeSettingsToNSUserDefaults()
         loadBackend()
     }
-    func loadBackend() {
 
+    func loadBackend() {
         customerSheet = nil
         paymentOptionSelection = nil
         isLoading = true
@@ -157,7 +154,7 @@ extension CustomerSheetTestPlaygroundController {
 
         self.backend = CustomerSheetBackend(endpoint: currentEndpoint)
 
-//        TODO: Refactor this to make the ephemeral key and customerId fetching async
+        // TODO: Refactor this to make the ephemeral key and customerId fetching async
         self.backend.loadBackendCustomerEphemeralKey(customerType: customerType) { result in
             if settingsToLoad != self.settings {
                 DispatchQueue.main.async {
@@ -184,15 +181,25 @@ extension CustomerSheetTestPlaygroundController {
                 self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
 
                 // Retrieve selected PM
-                let selection = try await customerAdapter.retrievePaymentOptionSelection()
-
-                DispatchQueue.main.async {
-                    self.paymentOptionSelection = selection
-                    self.settings.customerId = customerId
-                    self.settings.customerMode = .id
-                    self.currentlyRenderedSettings = self.settings
-                    self.serializeSettingsToNSUserDefaults()
-                    self.isLoading = false
+                do {
+                    let selection = try await customerAdapter.retrievePaymentOptionSelection()
+                    DispatchQueue.main.async {
+                        self.paymentOptionSelection = selection
+                        self.settings.customerId = customerId
+                        self.settings.customerMode = .id
+                        self.currentlyRenderedSettings = self.settings
+                        self.serializeSettingsToNSUserDefaults()
+                        self.isLoading = false
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        self.settings.customerId = customerId
+                        self.settings.customerMode = .id
+                        self.currentlyRenderedSettings = self.settings
+                        self.serializeSettingsToNSUserDefaults()
+                        self.isLoading = false
+                    }
+                    throw error
                 }
             }
         }

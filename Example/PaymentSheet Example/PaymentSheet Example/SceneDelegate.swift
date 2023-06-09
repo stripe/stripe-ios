@@ -84,7 +84,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             } else {
                 assertionFailure("Not supported on < iOS 15")
             }
-
         }
 
         guard (scene as? UIWindowScene) != nil else { return }

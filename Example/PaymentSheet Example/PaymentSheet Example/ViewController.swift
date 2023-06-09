@@ -35,7 +35,5 @@ class ViewController: UIViewController {
         } else {
             fatalError(">= iOS 15.0 required")
         }
-
     }
-
 }
