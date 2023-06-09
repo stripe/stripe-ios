@@ -58,7 +58,7 @@ class PaymentSheetFormFactory {
         linkAccount: PaymentSheetLinkAccount? = nil
     ) {
         func saveModeFor(merchantRequiresSave: Bool) -> SaveMode {
-            let hasCustomer = configuration.customer != nil
+            let hasCustomer = configuration.hasCustomer
             let supportsSaveForFutureUseCheckbox = paymentMethod.supportsSaveForFutureUseCheckbox()
             switch (merchantRequiresSave, hasCustomer, supportsSaveForFutureUseCheckbox) {
             case (true, _, _):

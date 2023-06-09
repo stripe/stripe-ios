@@ -11,12 +11,12 @@ enum PaymentSheetFormFactoryConfig {
     case paymentSheet(PaymentSheet.Configuration)
     case customerSheet(CustomerSheet.Configuration)
 
-    var customer: PaymentSheet.CustomerConfiguration? {
+    var hasCustomer: Bool {
         switch self {
         case .paymentSheet(let config):
-            return config.customer
+            return config.customer != nil
         case .customerSheet:
-            return nil // TODO: Pass in adapter.
+            return true
         }
     }
     var merchantDisplayName: String {
@@ -24,7 +24,6 @@ enum PaymentSheetFormFactoryConfig {
         case .paymentSheet(let config):
             return config.merchantDisplayName
         case .customerSheet:
-            assertionFailure("Using merchantDisplayName w/ Customer Sheet. Please file a bug at https://github.com/stripe/stripe-ios")
             return ""
         }
     }
