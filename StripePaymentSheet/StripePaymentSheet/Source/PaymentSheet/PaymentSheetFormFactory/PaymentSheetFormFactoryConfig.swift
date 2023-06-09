@@ -24,6 +24,7 @@ enum PaymentSheetFormFactoryConfig {
         case .paymentSheet(let config):
             return config.merchantDisplayName
         case .customerSheet:
+            assertionFailure("Using merchantDisplayName w/ Customer Sheet. Please file a bug at https://github.com/stripe/stripe-ios")
             return ""
         }
     }
@@ -39,8 +40,8 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.billingDetailsCollectionConfiguration
-        case .customerSheet(let config):
-            return config.billingDetailsCollectionConfiguration
+        case .customerSheet:
+            return PaymentSheet.BillingDetailsCollectionConfiguration()
         }
     }
     var appearance: PaymentSheet.Appearance {
@@ -55,8 +56,8 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.defaultBillingDetails
-        case .customerSheet(let config):
-            return config.defaultBillingDetails
+        case .customerSheet:
+            return PaymentSheet.BillingDetails()
         }
     }
     var shippingDetails: () -> AddressViewController.AddressDetails? {
