@@ -40,8 +40,8 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.billingDetailsCollectionConfiguration
-        case .customerSheet:
-            return PaymentSheet.BillingDetailsCollectionConfiguration()
+        case .customerSheet(let config):
+            return config.billingDetailsCollectionConfiguration
         }
     }
     var appearance: PaymentSheet.Appearance {
@@ -56,8 +56,8 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.defaultBillingDetails
-        case .customerSheet:
-            return PaymentSheet.BillingDetails()
+        case .customerSheet(let config):
+            return config.defaultBillingDetails
         }
     }
     var shippingDetails: () -> AddressViewController.AddressDetails? {

@@ -40,6 +40,17 @@ extension CustomerSheet {
         /// Optional configuration for setting the header text of the Payment Method selection screen
         public var headerTextForSelectionScreen: String?
 
+        /// CustomerSheet  pre-populates fields with the values provided.
+        /// If `billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod` is `true`, these values will
+        /// be attached to the payment method even if they are not collected by the PaymentSheet UI.
+        public var defaultBillingDetails: PaymentSheet.BillingDetails = PaymentSheet.BillingDetails()
+
+        /// Describes how billing details should be collected.
+        /// All values default to `automatic`.
+        /// If `never` is used for a required field for the Payment Method used during checkout,
+        /// you **must** provide an appropriate value as part of `defaultBillingDetails`.
+        public var billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration()
+
         public init () {
         }
     }
