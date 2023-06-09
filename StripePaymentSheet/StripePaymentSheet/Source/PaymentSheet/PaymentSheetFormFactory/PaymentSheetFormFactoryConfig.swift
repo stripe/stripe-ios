@@ -24,6 +24,7 @@ enum PaymentSheetFormFactoryConfig {
         case .paymentSheet(let config):
             return config.merchantDisplayName
         case .customerSheet:
+            assertionFailure("TODO: Add merchantDisplayName to CustomerSheetConfig")
             return ""
         }
     }
