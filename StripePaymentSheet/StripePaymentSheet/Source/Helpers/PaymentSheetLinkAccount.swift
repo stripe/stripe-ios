@@ -554,7 +554,6 @@ private extension LinkSettings.FundingSource {
     }
 }
 
-
 // MARK: UpdatePaymentDetailsParams
 
 struct UpdatePaymentDetailsParams {
