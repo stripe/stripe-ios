@@ -23,9 +23,8 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.merchantDisplayName
-        case .customerSheet:
-            assertionFailure("TODO: Add merchantDisplayName to CustomerSheetConfig")
-            return ""
+        case .customerSheet(let config):
+            return config.merchantDisplayName
         }
     }
     var linkPaymentMethodsOnly: Bool {
