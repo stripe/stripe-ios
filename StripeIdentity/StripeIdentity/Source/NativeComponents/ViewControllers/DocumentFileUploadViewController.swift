@@ -166,10 +166,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 headerViewModel: .init(
                     backgroundColor: .systemBackground,
                     headerType: .plain,
-                    titleText: STPLocalizedString(
-                        "File upload",
-                        "Title of identity document file upload screen"
-                    )
+                    titleText: .Localized.upload_your_photo_id
                 ),
                 contentViewModel: .init(
                     view: instructionListView,
