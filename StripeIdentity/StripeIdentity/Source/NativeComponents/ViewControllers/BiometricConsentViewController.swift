@@ -82,26 +82,39 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             )
         )
 
-        return .init(
-            headerViewModel: .init(
-                backgroundColor: .systemBackground,
-                headerType: .banner(
-                    iconViewModel: .init(
-                        iconType: .brand,
-                        iconImage: brandLogo,
-                        iconImageContentMode: .scaleToFill
-                    )
+        if let consentTitle = consentContent.title {
+            return .init(
+                headerViewModel: .init(
+                    backgroundColor: .systemBackground,
+                    headerType: .banner(
+                        iconViewModel: .init(
+                            iconType: .brand,
+                            iconImage: brandLogo,
+                            iconImageContentMode: .scaleToFill
+                        )
+                    ),
+                    titleText: consentTitle
                 ),
-                titleText: consentContent.title
-            ),
-            contentViewModel: .init(
-                view: htmlView,
-                inset: .init(top: 16, leading: 16, bottom: 8, trailing: 16)
-            ),
-            buttons: buttons,
-            scrollViewDelegate: self,
-            flowViewDelegate: self
-        )
+                contentViewModel: .init(
+                    view: htmlView,
+                    inset: .init(top: 16, leading: 16, bottom: 8, trailing: 16)
+                ),
+                buttons: buttons,
+                scrollViewDelegate: self,
+                flowViewDelegate: self
+            )
+        } else {
+            return .init(
+                headerViewModel: nil,
+                contentViewModel: .init(
+                    view: htmlView,
+                    inset: .init(top: 16, leading: 16, bottom: 8, trailing: 16)
+                ),
+                buttons: buttons,
+                scrollViewDelegate: self,
+                flowViewDelegate: self
+            )
+        }
     }
 
     init(
@@ -117,20 +130,27 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         // display consent copy
         try htmlView.configure(
             with: .init(
-                iconText: [
-                    .init(
-                        image: Image.iconClock.makeImage().withTintColor(IdentityUI.iconColor),
-                        text: consentContent.timeEstimate,
-                        isTextHTML: false
-                    ),
-                ],
-                nonIconText: [
-                    .init(
-                        text: consentContent.privacyPolicy,
-                        isTextHTML: true
-                    ),
-                ],
-                bodyHtmlString: consentContent.body,
+                iconText: {
+                    if let timeEstimate = self.consentContent.timeEstimate {
+                        return [
+                            .init(
+                                image: Image.iconClock.makeImage().withTintColor(IdentityUI.iconColor),
+                                text: timeEstimate,
+                                isTextHTML: false
+                            ),
+                        ]
+                    } else {
+                        return []
+                    }
+                }(),
+                nonIconText: {
+                    if let privacyPolicy = self.consentContent.privacyPolicy {
+                        return [.init(text: privacyPolicy, isTextHTML: true)]
+                    } else {
+                        return []
+                    }
+                }(),
+                bodyHtmlString: self.consentContent.body,
                 didOpenURL: { [weak self] url in
                     self?.openInSafariViewController(url: url)
                 }

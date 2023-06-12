@@ -14,9 +14,9 @@ extension StripeAPI {
         let acceptButtonText: String
         let body: String
         let declineButtonText: String
-        let privacyPolicy: String
-        let timeEstimate: String
-        let title: String
+        let privacyPolicy: String?
+        let timeEstimate: String?
+        let title: String?
         let scrollToContinueButtonText: String
     }
 
