@@ -46,16 +46,6 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         }
     }
 
-    func testPaymentIntentMismatchedAmount() throws {
-        let pi = STPFixtures.makePaymentIntent(amount: 1000, currency: "USD")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
-                                                                        intentConfiguration: intentConfig,
-                                                                        isFlowController: false)) { error in
-            XCTAssertEqual("\(error)", "An error occured in PaymentSheet. Your PaymentIntent amount (1000) does not match the PaymentSheet.IntentConfiguration amount (100).")
-        }
-    }
-
     func testPaymentIntentMismatchedCaptureMethod() throws {
         let pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", captureMethod: "manual")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic), confirmHandler: confirmHandler)
