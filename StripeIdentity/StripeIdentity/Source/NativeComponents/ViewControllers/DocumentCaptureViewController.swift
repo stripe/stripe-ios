@@ -149,7 +149,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             if !apiConfig.requireLiveCapture {
                 models.append(
                     .init(
-                        text: .Localized.file_upload_button,
+                        text: .Localized.upload_a_photo,
                         isPrimary: false,
                         didTap: { [weak self] in
                             self?.transitionToFileUpload()
@@ -170,7 +170,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case .cameraError:
             return [
                 .init(
-                    text: .Localized.file_upload_button,
+                    text: .Localized.upload_a_photo,
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
                     }
@@ -179,7 +179,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case .timeout(let documentSide):
             return [
                 .init(
-                    text: .Localized.file_upload_button,
+                    text: .Localized.upload_a_photo,
                     isPrimary: false,
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
