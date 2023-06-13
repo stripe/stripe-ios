@@ -1,5 +1,5 @@
 //
-//  PayWithLinkViewController-WalletViewModelTests.swift
+//  PayWithLinkWebController-WalletViewModelTests.swift
 //  StripeiOS Tests
 //
 //  Created by Ramon Torres on 3/31/22.
@@ -15,7 +15,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
+class PayWithLinkWebController_WalletViewModelTests: XCTestCase {
 
     func test_shouldRecollectCardCVC() throws {
         let sut = try makeSUT()
@@ -103,9 +103,9 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
     }
 }
 
-extension PayWithLinkViewController_WalletViewModelTests {
+extension PayWithLinkWebController_WalletViewModelTests {
 
-    func makeSUT() throws -> PayWithLinkViewController.WalletViewModel {
+    func makeSUT() throws -> PayWithLinkWebController.WalletViewModel {
         // Link settings don't live in the PaymentIntent object itself, but in the /elements/sessions API response
         // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
         let paymentIntentJson = try XCTUnwrap(STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
@@ -123,7 +123,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
             STPPaymentIntent.decodedObject(fromAPIResponse: response)
         )
 
-        return PayWithLinkViewController.WalletViewModel(
+        return PayWithLinkWebController.WalletViewModel(
             // TODO(ramont): Fully mock `PaymentSheetLinkAccount and remove this.
             linkAccount: .init(
                 email: "user@example.com",

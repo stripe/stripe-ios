@@ -1,5 +1,5 @@
 //
-//  PayWithLinkViewController.swift
+//  PayWithLinkWebController.swift
 //  StripePaymentSheet
 //
 //  Created by Cameron Sabol on 9/3/21.
@@ -11,20 +11,23 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+import AuthenticationServices
 
-protocol PayWithLinkViewControllerDelegate: AnyObject {
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+protocol PayWithLinkWebControllerDelegate: AnyObject {
 
-    func payWithLinkViewControllerDidConfirm(
-        _ payWithLinkViewController: PayWithLinkViewController,
+    func payWithLinkWebControllerDidConfirm(
+        _ payWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
         with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult) -> Void
     )
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController)
+    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController)
 
-    func payWithLinkViewControllerDidFinish(
-        _ payWithLinkViewController: PayWithLinkViewController,
+    func payWithLinkWebControllerDidFinish(
+        _ payWithLinkWebController: PayWithLinkWebController,
         result: PaymentSheetResult
     )
 
@@ -37,19 +40,48 @@ protocol PayWithLinkCoordinating: AnyObject {
         completion: @escaping (PaymentSheetResult) -> Void
     )
     func confirmWithApplePay()
-    func startInstantDebits(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void)
     func cancel()
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
     func finish(withResult result: PaymentSheetResult)
     func logout(cancel: Bool)
 }
 
-/// A view controller for paying with Link.
+/// A view controller for paying with Link using ASWebAuthenticationSession.
 ///
 /// Instantiate and present this controller when the user chooses to pay with Link.
 /// For internal SDK use only
-@objc(STP_Internal_PayWithLinkViewController)
-final class PayWithLinkViewController: UINavigationController {
+
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+@objc(STP_Internal_PayWithLinkWebController)
+final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationContextProviding, STPAuthenticationContext {
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        return bestWindowForPresentation
+    }
+    func authenticationPresentingViewController() -> UIViewController {
+        if let presentationVC = presentationVC {
+            return presentationVC
+        }
+        let window = bestWindowForPresentation
+        var presentingViewController: UIViewController = window.rootViewController!
+
+        // Find the most-presented UIViewController
+        while let presented = presentingViewController.presentedViewController {
+            presentingViewController = presented
+        }
+
+        return presentingViewController
+    }
+    var bestWindowForPresentation: UIWindow {
+        if let window = presentationVC?.view.window {
+            return window
+        }
+        if let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
+            return window
+        }
+        return UIApplication.shared.windows.first!
+    }
+    var presentationVC: UIViewController?
 
     enum LinkAccountError: Error {
         case noLinkAccount
@@ -97,7 +129,7 @@ final class PayWithLinkViewController: UINavigationController {
         set { accountContext.account = newValue }
     }
 
-    weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
+    weak var payWithLinkDelegate: PayWithLinkWebControllerDelegate?
 
     convenience init(
         intent: Intent,
@@ -119,177 +151,61 @@ final class PayWithLinkViewController: UINavigationController {
 
     private init(context: Context) {
         self.context = context
-        super.init(nibName: nil, bundle: nil)
-
-        // Show loader
-//        setRootViewController(LoaderViewController(context: context), animated: false)
+        super.init()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
-        view.tintColor = .linkBrand
-
-        // Hide the default navigation bar.
-        setNavigationBarHidden(true, animated: false)
-
-        // Apply the preferred user interface style.
-        context.configuration.style.configure(self)
-
-//        updateSupportedPaymentMethods()
-        updateUI()
-
-        // The internal delegate of the interactive pop gesture disables
-        // the gesture when the navigation bar is hidden. Use a custom delegate
-        // to restore the functionality.
-        interactivePopGestureRecognizer?.delegate = self
+    
+    var aswas: ASWebAuthenticationSession?
+    /// Defaults to the app's key window
+    func present(over viewController: UIViewController? = nil) {
+//      TODO: Log attempt to show web session
+        let aswas = ASWebAuthenticationSession(url: LinkURLGenerator.url(), callbackURLScheme: "stripesdk") { url, error in
+            if let error = error {
+//                  TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
+                print(error.localizedDescription)
+                return
+            }
+            guard let url = url else {
+//              TODO: Log unknown session error, this should never happen
+                return
+            }
+//          TODO: Log that authentication session succeeded, digest URL
+            print(url)
+        }
+        self.presentationVC = viewController
+        aswas.presentationContextProvider = self
+        self.aswas = aswas
+        aswas.start()
     }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
-
-    override func pushViewController(_ viewController: UIViewController, animated: Bool) {
-//        if let viewController = viewController as? BaseViewController {
-//            viewController.coordinator = self
-//            viewController.customNavigationBar.linkAccount = linkAccount
-//            viewController.customNavigationBar.showBackButton = !viewControllers.isEmpty
-//        }
-
-        super.pushViewController(viewController, animated: animated)
-    }
-
-    private func updateUI() {
-//        guard let linkAccount = linkAccount else {
-//            if !(rootViewController is SignUpViewController) {
-//                setRootViewController(
-//                    SignUpViewController(linkAccount: nil, context: context)
-//                )
-//            }
-//            return
-//        }
-
-//        switch linkAccount.sessionState {
-//        case .requiresSignUp:
-//            if !(rootViewController is SignUpViewController) {
-//                setRootViewController(
-//                    SignUpViewController(linkAccount: linkAccount, context: context)
-//                )
-//            }
-//        case .requiresVerification:
-//            setRootViewController(VerifyAccountViewController(linkAccount: linkAccount, context: context))
-//        case .verified:
-//            loadAndPresentWallet()
-//        }
-    }
-
-}
-
-extension PayWithLinkViewController: UIGestureRecognizerDelegate {
-
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return viewControllers.count > 1
-    }
-
-}
-
-// MARK: - Utils
-
-private extension PayWithLinkViewController {
-//
-//    func loadAndPresentWallet() {
-//        let shouldAnimate = !(rootViewController is WalletViewController)
-//        setRootViewController(LoaderViewController(context: context), animated: shouldAnimate)
-//
-//        guard let linkAccount = linkAccount else {
-//            assertionFailure(LinkAccountError.noLinkAccount.localizedDescription)
-//            return
-//        }
-//
-//        linkAccount.listPaymentDetails { result in
-//            switch result {
-//            case .success(let paymentDetails):
-//                if paymentDetails.isEmpty {
-//                    let addPaymentMethodVC = NewPaymentViewController(
-//                        linkAccount: linkAccount,
-//                        context: self.context,
-//                        isAddingFirstPaymentMethod: true
-//                    )
-//
-//                    self.setRootViewController(addPaymentMethodVC)
-//                } else {
-//                    let walletViewController = WalletViewController(
-//                        linkAccount: linkAccount,
-//                        context: self.context,
-//                        paymentMethods: paymentDetails
-//                    )
-//
-//                    self.setRootViewController(walletViewController)
-//                }
-//            case .failure(let error):
-//                self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
-//                    self, result: PaymentSheetResult.failed(error: error)
-//                )
-//            }
-//        }
-//    }
-//
-//    func updateSupportedPaymentMethods() {
-//        PaymentSheet.supportedLinkPaymentMethods =
-//            linkAccount?.supportedPaymentMethodTypes(for: context.intent) ?? []
-//    }
-
-}
-
-// MARK: - Navigation
-
-private extension PayWithLinkViewController {
-
-    var rootViewController: UIViewController? {
-        return viewControllers.first
-    }
-
-    func setRootViewController(_ viewController: UIViewController, animated: Bool = true) {
-//        if let viewController = viewController as? BaseViewController {
-//            viewController.coordinator = self
-//            viewController.customNavigationBar.linkAccount = linkAccount
-//            viewController.customNavigationBar.showBackButton = false
-//        }
-
-        setViewControllers([viewController], animated: animated)
-    }
-
 }
 
 // MARK: - Coordinating
 
-extension PayWithLinkViewController: PayWithLinkCoordinating {
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+extension PayWithLinkWebController: PayWithLinkCoordinating {
 
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
         paymentDetails: ConsumerPaymentDetails,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
-        view.isUserInteractionEnabled = false
-
-        payWithLinkDelegate?.payWithLinkViewControllerDidConfirm(
+        payWithLinkDelegate?.payWithLinkWebControllerDidConfirm(
             self,
             intent: context.intent,
             with: PaymentOption.link(
                 option: .withPaymentDetails(account: linkAccount, paymentDetails: paymentDetails)
             )
-        ) { [weak self] result in
-            self?.view.isUserInteractionEnabled = true
+        ) { result in
             completion(result)
         }
     }
 
     func confirmWithApplePay() {
-        payWithLinkDelegate?.payWithLinkViewControllerDidConfirm(
+        payWithLinkDelegate?.payWithLinkWebControllerDidConfirm(
             self,
             intent: context.intent,
             with: .applePay
@@ -304,78 +220,26 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         }
     }
 
-    @MainActor
-    func startInstantDebits() async throws -> ConsumerPaymentDetails {
-//        guard let linkAccount = linkAccount else {
-//            throw LinkAccountError.noLinkAccount
-//        }
-
-        throw NSError(domain: "com.stripe.PaymentSheetNotImplemented", code: 0)
-//        let linkAccountSession = try await withCheckedThrowingContinuation { continuation in
-//            linkAccount.createLinkAccountSession { result in
-//                continuation.resume(with: result)
-//            }
-//        }
-////
-////        let linkedAccountID = try await connectionsAuthManager.start(clientSecret: linkAccountSession.clientSecret)
-//
-//        let paymentDetails = try await withCheckedThrowingContinuation { continuation in
-//            linkAccount.createPaymentDetails(linkedAccountId: linkedAccountID) { result in
-//                continuation.resume(with: result)
-//            }
-//        }
-//
-//        // Store last added payment details so we can automatically select it on wallet
-//        context.lastAddedPaymentDetails = paymentDetails
-//        accountUpdated(linkAccount)
-//        return paymentDetails
-    }
-
-    func startInstantDebits(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void) {
-        Task {
-            do {
-                let paymentDetails = try await startInstantDebits()
-                await MainActor.run { completion(.success(paymentDetails)) }
-            } catch {
-                await MainActor.run { completion(.failure(error)) }
-            }
-        }
-    }
-
     func cancel() {
-        payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self)
+        aswas?.cancel()
+        payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
     }
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
-//        connectionsAuthManager = LinkFinancialConnectionsAuthManager(linkAccount: linkAccount, window: view.window)
-//        updateSupportedPaymentMethods()
-        updateUI()
     }
 
     func finish(withResult result: PaymentSheetResult) {
-        view.isUserInteractionEnabled = false
-        payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: result)
+        payWithLinkDelegate?.payWithLinkWebControllerDidFinish(self, result: result)
     }
 
     func logout(cancel: Bool) {
         linkAccount?.logout()
         linkAccount = nil
-//        connectionsAuthManager = nil
 
         if cancel {
             self.cancel()
-        } else {
-            updateUI()
         }
-    }
-
-}
-
-extension PayWithLinkViewController: STPAuthenticationContext {
-
-    func authenticationPresentingViewController() -> UIViewController {
-        return self
     }
 
 }
