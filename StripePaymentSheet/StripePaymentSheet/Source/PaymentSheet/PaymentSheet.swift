@@ -294,14 +294,8 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 }
             }
         } else {
-            verifyLinkSessionIfNeeded(with: paymentOption, intent: paymentSheetViewController.intent) { shouldConfirm in
-                if shouldConfirm {
-                    confirm { result in
-                        completion(result)
-                    }
-                } else {
-                    completion(.canceled)
-                }
+            confirm { result in
+                completion(result)
             }
         }
     }
@@ -421,33 +415,6 @@ private extension PaymentSheet {
 
         payWithLinkVC.payWithLinkDelegate = self
         payWithLinkVC.present(over: presentingController)
-    }
-
-    func verifyLinkSessionIfNeeded(
-        with paymentOption: PaymentOption,
-        intent: Intent,
-        completion: ((Bool) -> Void)? = nil
-    ) {
-        guard
-            case .link(let linkOption) = paymentOption,
-            let linkAccount = linkOption.account,
-            linkAccount.sessionState == .requiresVerification
-        else {
-            // No verification required
-            completion?(true)
-            return
-        }
-
-//        let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
-//        verificationController.present(from: bottomSheetViewController) { [weak self] result in
-//            self?.bottomSheetViewController.dismiss(animated: true, completion: nil)
-//            switch result {
-//            case .completed:
-//                completion?(true)
-//            case .canceled, .failed:
-//                completion?(false)
-//            }
-//        }
     }
 
 }
