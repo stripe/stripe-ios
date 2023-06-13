@@ -69,6 +69,10 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         simulateDelay: Bool
     )
 
+    func generatePhoneOtp(using successCallback: @escaping (StripeAPI.VerificationPageData) -> Void)
+
+    func cannotVerifyPhoneOtp()
+
     /// Transition to CountryNotListedViewController without any API request
     func transitionToCountryNotListed(
         missingType: IndividualFormElement.MissingType
@@ -318,11 +322,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         apiClient.verifyTestVerificationSession(
             simulateDelay: simulateDelay
         ).observe(on: .main) { [weak self] result in
-            self?.saveCheckSubmitAndTransition(
-                collectedData: nil,
-                updateDataResult: result,
-                completion: {}
-            )
+            self?.transitionWithVerificaionPageDataResult(result)
         }
     }
 
@@ -332,12 +332,28 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         apiClient.unverifyTestVerificationSession(
             simulateDelay: simulateDelay
         ).observe(on: .main) { [weak self] result in
-            self?.saveCheckSubmitAndTransition(
-                collectedData: nil,
-                updateDataResult: result,
-                completion: {}
-            )
+            self?.transitionWithVerificaionPageDataResult(result)
         }
+    }
+
+    func generatePhoneOtp(using successCallback: @escaping (StripeAPI.VerificationPageData) -> Void) {
+        apiClient.generatePhoneOtp().observe(on: .main) { [weak self] result in
+            self?.handleVerificationPageDataResult(updateDataResult: result, successPageData: successCallback)
+        }
+    }
+
+    func cannotVerifyPhoneOtp() {
+        apiClient.cannotPhoneVerifyOtp().observe(on: .main) { [weak self] result in
+            self?.transitionWithVerificaionPageDataResult(result)
+        }
+    }
+
+    fileprivate func transitionWithUpdatedDataResult(result: Result<StripeAPI.VerificationPageData, Error>) {
+        saveCheckSubmitAndTransition(
+            collectedData: nil,
+            updateDataResult: result,
+            completion: {}
+        )
     }
 
     // MARK: - Transition without save

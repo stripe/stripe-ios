@@ -627,6 +627,32 @@ final class VerificationSheetControllerTest: XCTestCase {
         )
     }
 
+    func testGeneratePhoneOtp() throws {
+        // Mock initial VerificationPage request successful
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        // Verify
+        controller.generatePhoneOtp { _ in
+            self.exp.fulfill()
+        }
+
+        XCTAssertEqual(mockAPIClient.verificationPageGeneratePhoneOtp.requestHistory.count, 1)
+
+        // Respond with generatePhoneOtp, trigger callback
+        mockAPIClient.verificationPageGeneratePhoneOtp.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testCannotVerifyPhoneOtp() throws {
+        // Mock initial VerificationPage request successful
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        // Verify
+        controller.cannotVerifyPhoneOtp()
+
+        XCTAssertEqual(mockAPIClient.verificationPageCannotVerifyPhoneOtp.requestHistory.count, 1)
+    }
+
     func testDismissResultNotSubmitted() throws {
         controller.verificationSheetFlowControllerDidDismissNativeView(mockFlowController)
         XCTAssertEqual(mockDelegate.result, .flowCanceled)

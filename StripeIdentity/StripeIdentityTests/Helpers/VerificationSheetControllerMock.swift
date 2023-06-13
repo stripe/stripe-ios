@@ -59,6 +59,9 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     var completeOption: CompleteOptionView.CompleteOption?
 
+    var generatePhonOtpSuccessCallback: ((StripeCore.StripeAPI.VerificationPageData) -> Void)?
+    var cannotVerifyPhoneOtpCalled: Bool = false
+
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
         flowController: VerificationSheetFlowControllerProtocol =
@@ -145,6 +148,14 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     func unverifyAndTransition(simulateDelay: Bool) {
         completeOption = simulateDelay ? .failureAsync : .failure
+    }
+
+    func generatePhoneOtp(using successCallback: @escaping (StripeCore.StripeAPI.VerificationPageData) -> Void) {
+        generatePhonOtpSuccessCallback = successCallback
+    }
+
+    func cannotVerifyPhoneOtp() {
+        self.cannotVerifyPhoneOtpCalled = true
     }
 
     func transitionToCountryNotListed(missingType: StripeIdentity.IndividualFormElement.MissingType) {
