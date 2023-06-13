@@ -107,7 +107,8 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                             parameters: [
                                 "duration": Date().timeIntervalSince(pollingStartDate).milliseconds,
                                 "authSessionId": self.dataSource.authSessionId ?? "unknown",
-                            ]
+                            ],
+                            pane: .attachLinkedPaymentAccount
                         )
 
                     self.delegate?.attachLinkedPaymentAccountViewController(

@@ -64,7 +64,7 @@ final class SuccessViewController: UIViewController {
                         .analyticsClient
                         .log(
                             eventName: "click.disconnect_link",
-                            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
+                            pane: .success
                         )
                 },
                 didSelectMerchantDataAccessLearnMore: { [weak self] in
@@ -86,7 +86,7 @@ final class SuccessViewController: UIViewController {
                         .analyticsClient
                         .log(
                             eventName: "click.done",
-                            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
+                            pane: .success
                         )
                     self.delegate?.successViewControllerDidSelectDone(self)
                 }
