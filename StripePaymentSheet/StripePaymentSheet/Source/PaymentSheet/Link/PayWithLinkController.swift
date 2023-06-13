@@ -75,10 +75,11 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
             intent: intent,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
-            isFlowController: false) { result in
-                self.completion?(result)
-                self.selfRetainer = nil
-            }
+            isFlowController: false
+        ) { result, _ in
+            self.completion?(result)
+            self.selfRetainer = nil
+        }
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {

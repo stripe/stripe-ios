@@ -17,7 +17,7 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewController,
         with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult) -> Void
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
     func paymentSheetViewControllerDidFinish(
         _ paymentSheetViewController: PaymentSheetViewController,
@@ -445,8 +445,7 @@ class PaymentSheetViewController: UIViewController {
 
         // Confirm the payment with the payment option
         let startTime = NSDate.timeIntervalSinceReferenceDate
-        self.delegate?.paymentSheetViewControllerShouldConfirm(self, with: paymentOption) {
-            result in
+        self.delegate?.paymentSheetViewControllerShouldConfirm(self, with: paymentOption) { result, deferredIntentConfirmationType in
             let elapsedTime = NSDate.timeIntervalSinceReferenceDate - startTime
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
@@ -459,7 +458,8 @@ class PaymentSheetViewController: UIViewController {
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                     linkSessionType: self.intent.linkPopupWebviewOption,
                     currency: self.intent.currency,
-                    intentConfig: self.intent.intentConfig
+                    intentConfig: self.intent.intentConfig,
+                    deferredIntentConfirmationType: deferredIntentConfirmationType
                 )
 
                 self.isPaymentInFlight = false
