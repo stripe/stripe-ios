@@ -21,6 +21,7 @@ extension StripeAPI {
         private(set) var dob: VerificationPageDataDob?
         private(set) var name: VerificationPageDataName?
         private(set) var address: RequiredInternationalAddress?
+        private(set) var phone: VerificationPageDataPhone?
 
         init(
             biometricConsent: Bool? = nil,
@@ -31,7 +32,8 @@ extension StripeAPI {
             idNumber: VerificationPageDataIdNumber? = nil,
             dob: VerificationPageDataDob? = nil,
             name: VerificationPageDataName? = nil,
-            address: RequiredInternationalAddress? = nil
+            address: RequiredInternationalAddress? = nil,
+            phone: VerificationPageDataPhone? = nil
         ) {
             self.biometricConsent = biometricConsent
             self.face = face
@@ -42,6 +44,7 @@ extension StripeAPI {
             self.dob = dob
             self.name = name
             self.address = address
+            self.phone = phone
         }
     }
 }
@@ -91,6 +94,12 @@ extension StripeAPI.VerificationPageCollectedData {
             self.name = nil
         case .address:
             self.address = nil
+        case .phoneNumber:
+            self.phone = nil
+        case .phoneOtp:
+            // no-op
+            break
+
         }
     }
 

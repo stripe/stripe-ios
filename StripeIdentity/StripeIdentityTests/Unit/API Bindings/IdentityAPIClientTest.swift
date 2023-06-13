@@ -247,7 +247,7 @@ private func verifyHeaders(
     )
     XCTAssertEqual(
         urlRequest.allHTTPHeaderFields?["Stripe-Version"],
-        "2020-08-27; identity_client_api=v3",
+        "2020-08-27; identity_client_api=v4",
         file: file,
         line: line
     )
