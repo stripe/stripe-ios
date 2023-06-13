@@ -1013,7 +1013,7 @@
     addressParams.state = @"CA";
     addressParams.country = @"US";
     addressParams.postalCode = @"94106";
-    paymentIntentParams.shipping = [[STPPaymentIntentShippingDetailsParams alloc] initWithAddress:addressParams name:@"Jane"];
+    paymentIntentParams.shipping = [[STPPaymentIntentShippingDetailsParams alloc] initWithAddress:addressParams name:@"Jane Doe"];
 
     STPConfirmPaymentMethodOptions *options = [STPConfirmPaymentMethodOptions new];
     paymentIntentParams.paymentMethodOptions = options;

@@ -16,7 +16,7 @@ extension CustomerSheet {
     func confirmIntent(
         intent: Intent,
         paymentOption: PaymentOption,
-        completion: @escaping (CustomerSheetResult) -> Void
+        completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
             {

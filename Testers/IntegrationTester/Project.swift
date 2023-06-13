@@ -75,14 +75,17 @@ let project = Project(
             ],
             settings: .stripeTargetSettings(
                 baseXcconfigFilePath: "BuildConfigurations/IntegrationTesterUITests"
-            )
+            ),
+            additionalFiles: [
+                "IntegrationTester.xctestplan"
+            ]
         ),
     ],
     schemes: [
         Scheme(
             name: "IntegrationTester",
             buildAction: .buildAction(targets: ["IntegrationTester"]),
-            testAction: .targets(["IntegrationTesterUITests"])
+            testAction: .testPlans(["IntegrationTester.xctestplan"])
         ),
     ]
 )

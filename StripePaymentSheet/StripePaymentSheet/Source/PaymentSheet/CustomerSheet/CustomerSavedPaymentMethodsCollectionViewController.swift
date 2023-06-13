@@ -134,7 +134,11 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             return .saved(paymentMethod: paymentMethod)
         }
     }
-    var savedPaymentMethods: [STPPaymentMethod]
+    var savedPaymentMethods: [STPPaymentMethod] {
+        didSet {
+            updateUI(selectedSavedPaymentOption: originalSelectedSavedPaymentMethod)
+        }
+    }
 
     /// Whether or not there are any payment options we can show
     /// i.e. Are there any cells besides the Add cell?
@@ -358,7 +362,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
               case .saved(let paymentMethod) = viewModels[indexPath.row]
         else {
-            assertionFailure()
+            assertionFailure("Please file an issue with reproduction steps at https://github.com/stripe/stripe-ios")
             return
         }
         let viewModel = viewModels[indexPath.row]

@@ -717,6 +717,7 @@ extension STPFixtures {
         setupFutureUsage: STPPaymentIntentSetupFutureUsage? = nil,
         paymentMethodOptions: STPPaymentMethodOptions? = nil,
         captureMethod: String = "automatic",
+        confirmationMethod: String = "automatic",
         shippingProvided: Bool = false
     ) -> STPPaymentIntent {
         var json = STPTestUtils.jsonNamed(STPTestJSONPaymentIntent)!
@@ -726,6 +727,7 @@ extension STPFixtures {
         json["amount"] = amount
         json["currency"] = currency
         json["capture_method"] = captureMethod
+        json["confirmation_method"] = confirmationMethod
         if let paymentMethodTypes = paymentMethodTypes {
             json["payment_method_types"] = paymentMethodTypes.map {
                 STPPaymentMethod.string(from: $0)

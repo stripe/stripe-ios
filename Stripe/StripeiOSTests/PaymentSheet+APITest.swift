@@ -760,12 +760,13 @@ class PaymentSheetAPITest: XCTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    func testDeferredConfirm_paymentintent_amount_doesnt_match_intent_config() {
+    func testDeferredConfirm_paymentintent_client_side_confirm_validates() {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we perform validation in the paymentintent confirm flow
         let e = expectation(description: "confirm completes")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1080, currency: "USD")) { _, _, intentCreationCallback in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD")) { _, _, intentCreationCallback in
             STPTestingAPIClient.shared().createPaymentIntent(withParams: [
                 "amount": 1050,
+                "currency": "GBP", // Different currency than IntentConfiguration
             ]) { pi, _ in
                 intentCreationCallback(.success(pi ?? ""))
             }
@@ -777,13 +778,42 @@ class PaymentSheetAPITest: XCTestCase {
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
             paymentHandler: paymentHandler
         ) { result in
-                e.fulfill()
-                guard case let .failed(error) = result else {
-                    XCTFail()
-                    return
-                }
-                XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occured in PaymentSheet. Your PaymentIntent amount (1050) does not match the PaymentSheet.IntentConfiguration amount (1080).")
+            e.fulfill()
+            guard case let .failed(error) = result else {
+                XCTFail()
+                return
             }
+            XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occured in PaymentSheet. Your PaymentIntent currency (GBP) does not match the PaymentSheet.IntentConfiguration currency (USD).")
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testDeferredConfirm_paymentintent_server_side_confirm_doesnt_validate() {
+        // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we **don't** perform validation in the paymentintent server-side confirm flow
+        let e = expectation(description: "confirm completes")
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1080, currency: "USD")) { paymentMethod, _, intentCreationCallback in
+            STPTestingAPIClient.shared().createPaymentIntent(withParams: [
+                "amount": 1050,
+                "confirm": true,
+                "payment_method": paymentMethod.stripeId,
+            ]) { pi, _ in
+                intentCreationCallback(.success(pi ?? ""))
+            }
+        }
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
+            paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
+            paymentHandler: paymentHandler
+        ) { result in
+            e.fulfill()
+            // The result is completed, even though the IntentConfiguration and PaymentIntent amounts are not the same
+            guard case .completed = result else {
+                XCTFail()
+                return
+            }
+        }
         waitForExpectations(timeout: 10)
     }
 
@@ -793,8 +823,8 @@ class PaymentSheetAPITest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD")) { _, _, intentCreationCallback in
             STPTestingAPIClient.shared().createSetupIntent(withParams: [
                 "usage": "on_session",
-            ]) { pi, _ in
-                intentCreationCallback(.success(pi ?? ""))
+            ]) { si, _ in
+                intentCreationCallback(.success(si ?? ""))
             }
         }
         PaymentSheet.confirm(
@@ -804,13 +834,42 @@ class PaymentSheetAPITest: XCTestCase {
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
             paymentHandler: paymentHandler
         ) { result in
-                e.fulfill()
-                guard case let .failed(error) = result else {
-                    XCTFail()
-                    return
-                }
-                XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occured in PaymentSheet. Your SetupIntent usage (onSession) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (offSession).")
+            e.fulfill()
+            guard case let .failed(error) = result else {
+                XCTFail()
+                return
             }
+            XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occured in PaymentSheet. Your SetupIntent usage (onSession) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (offSession).")
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testDeferredConfirm_setupintent_server_side_confirm_doesnt_validate() {
+        // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we **don't** perform validation in the SetupIntent server-side confirm flow
+        let e = expectation(description: "confirm completes")
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD")) { paymentMethod, _, intentCreationCallback in
+            STPTestingAPIClient.shared().createSetupIntent(withParams: [
+                "usage": "on_session",
+                "payment_method": paymentMethod.stripeId,
+                "confirm": true,
+            ]) { si, _ in
+                intentCreationCallback(.success(si ?? ""))
+            }
+        }
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
+            paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
+            paymentHandler: paymentHandler
+        ) { result in
+            e.fulfill()
+            // The result is completed, even though the IntentConfiguration and SetupIntent setup_future_usage values are not the same
+            guard case .completed = result else {
+                XCTFail()
+                return
+            }
+        }
         waitForExpectations(timeout: 10)
     }
 

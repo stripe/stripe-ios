@@ -43,12 +43,6 @@
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Date of birth does not look valid";
 
-/* Title of identity document file upload screen */
-"File upload" = "File upload";
-
-/* Button that opens file upload screen */
-"File Upload" = "File Upload";
-
 /* Instructional text for scanning back of a driver's license */
 "Flip your driver's license over to the other side" = "Flip your driver's license over to the other side";
 
@@ -196,8 +190,12 @@
 /* Back button label for the identity document file upload screen */
 "Upload" = "Upload";
 
-/* Button to upload a photo */
+/* Button that opens file upload screen
+   Button to upload a photo */
 "Upload a Photo" = "Upload a Photo";
+
+/* Title of document upload screen */
+"Upload your photo ID" = "Upload your photo ID";
 
 /* Accessibility label while photo of back of driver's license is uploading */
 "Uploading back driver's license photo" = "Uploading back driver's license photo";

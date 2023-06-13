@@ -344,38 +344,50 @@ final class PartnerAuthViewController: UIViewController {
     ) {
         if authSession.isOauthNonOptional {
             // on "manual cancels" (for OAuth) we log retry event:
-            self.dataSource.recordAuthSessionEvent(
+            dataSource.recordAuthSessionEvent(
                 eventName: "retry",
                 authSessionId: authSession.id
             )
         } else {
             // on "manual cancels" (for Legacy) we log cancel event:
-            self.dataSource.recordAuthSessionEvent(
+            dataSource.recordAuthSessionEvent(
                 eventName: "cancel",
                 authSessionId: authSession.id
             )
         }
 
         if let error = error {
-            self.dataSource
-                .analyticsClient
-                .logUnexpectedError(
-                    error,
-                    errorName: "ASWebAuthenticationSessionError",
-                    pane: .partnerAuth
-                )
+            if
+                (error as NSError).domain == ASWebAuthenticationSessionErrorDomain,
+                (error as NSError).code == ASWebAuthenticationSessionError.canceledLogin.rawValue
+            {
+                dataSource
+                    .analyticsClient
+                    .log(
+                        eventName: "secure_webview_cancel",
+                        pane: .partnerAuth
+                    )
+            } else {
+                dataSource
+                    .analyticsClient
+                    .logUnexpectedError(
+                        error,
+                        errorName: "ASWebAuthenticationSessionError",
+                        pane: .partnerAuth
+                    )
+            }
         }
 
         // cancel current auth session because something went wrong
-        self.dataSource.cancelPendingAuthSessionIfNeeded()
+        dataSource.cancelPendingAuthSessionIfNeeded()
 
         if authSession.isOauthNonOptional {
             // for OAuth institutions, we remain on the pre-pane,
             // but create a brand new auth session
-            self.createAuthSession()
+            createAuthSession()
         } else {
             // for legacy (non-OAuth) institutions, we navigate back to InstitutionPickerViewController
-            self.navigateBack()
+            navigateBack()
         }
     }
 

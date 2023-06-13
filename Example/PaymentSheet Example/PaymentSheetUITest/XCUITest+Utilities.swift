@@ -112,31 +112,62 @@ extension XCTestCase {
         waitForExpectations(timeout: 60.0, handler: nil)
     }
 
-    func reload(_ app: XCUIApplication) {
-        app.buttons["Reload PaymentSheet"].tap()
+    func reload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
+        app.buttons["Reload"].tap()
+        waitForReload(app, settings: settings)
+    }
 
-        let checkout = app.buttons["Checkout (Complete)"]
+    func waitForReload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
+        if settings.uiStyle == .paymentSheet {
+            let presentButton = app.buttons["Present PaymentSheet"]
+            expectation(
+                for: NSPredicate(format: "enabled == true"),
+                evaluatedWith: presentButton,
+                handler: nil
+            )
+            waitForExpectations(timeout: 10, handler: nil)
+        } else {
+            let confirm = app.buttons["Confirm"]
+            expectation(
+                for: NSPredicate(format: "enabled == true"),
+                evaluatedWith: confirm,
+                handler: nil
+            )
+            waitForExpectations(timeout: 10, handler: nil)
+        }
+    }
+    func loadPlayground(_ app: XCUIApplication, _ settings: PaymentSheetTestPlaygroundSettings) {
+        if #available(iOS 15.0, *) {
+            // Doesn't work on 16.4. Seems like a bug, can't see any confirmation that this works online.
+            //   var urlComponents = URLComponents(string: "stripe-paymentsheet-example://playground")!
+            //   urlComponents.query = settings.base64Data
+            //   app.open(urlComponents.url!)
+            // This should work, but we get an "Open in 'PaymentSheet Example'" consent dialog the first time we run it.
+            // And while the dialog is appearing, `open()` doesn't return, so we can't install an interruption handler or anything to handle it.
+            //   XCUIDevice.shared.system.open(urlComponents.url!)
+            app.launchEnvironment = app.launchEnvironment.merging(["STP_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
+            app.launch()
+        } else {
+            XCTFail("This test is only supported on iOS 15.0 or later.")
+        }
+        waitForReload(app, settings: settings)
+    }
+    func waitForReload(_ app: XCUIApplication, settings: CustomerSheetTestPlaygroundSettings) {
+        let customerId = app.textFields["CustomerId"]
         expectation(
-            for: NSPredicate(format: "enabled == true"),
-            evaluatedWith: checkout,
+            for: NSPredicate(format: "self BEGINSWITH 'cus_'"),
+            evaluatedWith: customerId.value,
             handler: nil
         )
         waitForExpectations(timeout: 10, handler: nil)
     }
-
-    func loadPlayground(_ app: XCUIApplication, settings: [String: String]) {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-
-        // Wait for the screen to load
-        XCTAssert(app.navigationBars["Test Playground"].waitForExistence(timeout: 10))
-
-        // Reset existing configuration.
-        app.buttons["(Reset)"].tap()
-
-        for (setting, value) in settings {
-            app.segmentedControls["\(setting)_selector"].buttons[value].tap()
+    func loadPlayground(_ app: XCUIApplication, _ settings: CustomerSheetTestPlaygroundSettings) {
+        if #available(iOS 15.0, *) {
+            app.launchEnvironment = app.launchEnvironment.merging(["STP_CUSTOMERSHEET_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
+            app.launch()
+        } else {
+            XCTFail("This test is only supported on iOS 15.0 or later.")
         }
-
-        reload(app)
+        waitForReload(app, settings: settings)
     }
 }

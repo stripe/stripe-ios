@@ -41,6 +41,9 @@ stages:
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
+    - ui-tests-1: {}
+    - ui-tests-2: {}
+    - integration-all: {}
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
@@ -50,7 +53,8 @@ stages:
     - lint-tests: {}
     - size-report: {}
     - basic-integration-tests: {}
-    - ui-tests: {}
+    - ui-tests-1: {}
+    - ui-tests-2: {}
     - legacy-tests-14: {}
     - carthage-install-test: {}
     - pod-lint-tests: {}
@@ -58,14 +62,12 @@ stages:
   stage-nightly-all:
     workflows:
     - basic-integration-tests: {}
-    - ui-tests: {}
     - check-docs: {}
     - legacy-tests-14: {}
     - carthage-install-test: {}
     - data-theorem-sast: {}
     - deploy-dry-run: {}
     - pod-lint-tests: {}
-    - integration-all: {}
 workflows:
   basic-integration-tests:
     steps:
@@ -363,11 +365,14 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: IntegrationTester
+        - log_formatter: xcbeautify
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
-    after_run:
-    - notify_ci
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.1.x-ventura
+        machine_type_id: g2-m1-max.10core
   legacy-tests-14:
     steps:
     - fastlane@3:
@@ -387,6 +392,10 @@ workflows:
         inputs:
         - content: ./ci_scripts/lint_modified_files.sh
         title: Run swiftlint
+    - script@1:
+        inputs:
+        - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
+        title: Check PaymentSheet test sharding
     - fastlane@3:
         inputs:
         - lane: build_extras
@@ -397,6 +406,12 @@ workflows:
         title: fastlane analyze
     before_run:
     - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 14,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core
   notify_ci:
     steps:
     - script@1:
@@ -475,7 +490,7 @@ workflows:
         inputs:
         - content: bundle exec fastlane size_report
         title: Generate size report
-  ui-tests:
+  ui-tests-1:
     steps:
     - xcode-test@4:
         inputs:
@@ -489,11 +504,38 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard1
+        - log_formatter: xcbeautify
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 3 -maximum-parallel-testing-workers 3
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
-    after_run:
-    - notify_ci
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 14,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1-max.10core
+  ui-tests-2:
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
+        - scheme: PaymentSheet Example
+        - test_plan: PaymentSheet Example-Shard2
+        - log_formatter: xcbeautify
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 3 -maximum-parallel-testing-workers 3      
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 14,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1-max.10core
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
