@@ -97,6 +97,18 @@ struct IdentityElementsFactory {
             theme: IdentityUI.identityElementsUITheme
         )
     }
+
+    // MARK: Phone
+
+    func makePhoneSection(countries: [String]) -> SectionElement {
+        return SectionElement(
+            title: String.Localized.phoneNumber,
+            elements: [
+                PhoneNumberElement(allowedCountryCodes: countries),
+            ],
+            theme: IdentityUI.identityElementsUITheme
+        )
+    }
 }
 
 extension IDNumberTextFieldConfiguration {

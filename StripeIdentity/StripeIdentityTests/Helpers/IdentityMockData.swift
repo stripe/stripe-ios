@@ -30,6 +30,7 @@ enum VerificationPageMock: String, MockData {
     case typeDocumentRequireIdNumberAndAddress = "VerificationPage_type_doc_require_idNumber_and_address"
     case typeIdNumber = "VerificationPage_type_idNumber"
     case typeAddress = "VerificationPage_type_address"
+    case typePhone = "VerificationPage_type_phone"
 }
 
 enum VerificationPageDataMock: String, MockData {
