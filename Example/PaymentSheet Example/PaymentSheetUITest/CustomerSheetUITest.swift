@@ -22,14 +22,15 @@ class CustomerSheetUITest: XCTestCase {
     }
 
     func testCustomerSheetStandard_applePayOff_addCard() throws {
-        app.staticTexts["CustomerSheet (test playground)"].tap()
-        let loadButton = app.staticTexts["Load Ephemeral Key"]
-        XCTAssertTrue(loadButton.waitForExistence(timeout: 60.0))
-        app.segmentedControls["customer_mode_selector"].buttons["new"].tap()
-        app.segmentedControls["apple_pay_selector"].buttons["off"].tap()
-        loadButton.tap()
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .off
+        loadPlayground(
+            app,
+            settings
+        )
 
-        let selectButton = app.staticTexts["Select"]
+        let selectButton = app.staticTexts["None"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
         try! fillCardData(app, postalEnabled: false)
@@ -39,14 +40,15 @@ class CustomerSheetUITest: XCTestCase {
     }
 
     func testCustomerSheetStandard_applePayOn_addCard() throws {
-        app.staticTexts["CustomerSheet (test playground)"].tap()
-        let loadButton = app.staticTexts["Load Ephemeral Key"]
-        XCTAssertTrue(loadButton.waitForExistence(timeout: 60.0))
-        app.segmentedControls["customer_mode_selector"].buttons["new"].tap()
-        app.segmentedControls["apple_pay_selector"].buttons["on"].tap()
-        loadButton.tap()
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .on
+        loadPlayground(
+            app,
+            settings
+        )
 
-        let selectButton = app.staticTexts["Select"]
+        let selectButton = app.staticTexts["None"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
@@ -59,14 +61,15 @@ class CustomerSheetUITest: XCTestCase {
     }
 
     func testCustomerSheetStandard_applePayOn_selectApplePay() throws {
-        app.staticTexts["CustomerSheet (test playground)"].tap()
-        let loadButton = app.staticTexts["Load Ephemeral Key"]
-        XCTAssertTrue(loadButton.waitForExistence(timeout: 60.0))
-        app.segmentedControls["customer_mode_selector"].buttons["new"].tap()
-        app.segmentedControls["apple_pay_selector"].buttons["on"].tap()
-        loadButton.tap()
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .on
+        loadPlayground(
+            app,
+            settings
+        )
 
-        let selectButton = app.staticTexts["Select"]
+        let selectButton = app.staticTexts["None"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
@@ -81,14 +84,15 @@ class CustomerSheetUITest: XCTestCase {
     }
 
     func testAddTwoPaymentMethods_RemoveTwoPaymentMethods() throws {
-        app.staticTexts["CustomerSheet (test playground)"].tap()
-        let loadButton = app.staticTexts["Load Ephemeral Key"]
-        XCTAssertTrue(loadButton.waitForExistence(timeout: 60.0))
-        app.segmentedControls["customer_mode_selector"].buttons["new"].tap()
-        app.segmentedControls["apple_pay_selector"].buttons["on"].tap()
-        loadButton.tap()
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .on
+        loadPlayground(
+            app,
+            settings
+        )
 
-        presentCSAndAddCardFrom(buttonLabel: "Select")
+        presentCSAndAddCardFrom(buttonLabel: "None")
         presentCSAndAddCardFrom(buttonLabel: "••••4242")
 
         let selectButton = app.staticTexts["••••4242"]
@@ -112,7 +116,7 @@ class CustomerSheetUITest: XCTestCase {
 
         dismissAlertView(alertBody: "Success: payment method unset", alertTitle: "Complete", buttonToTap: "OK")
 
-        let selectButtonFinal = app.staticTexts["Select"]
+        let selectButtonFinal = app.staticTexts["None"]
         XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: 60.0))
 
     }

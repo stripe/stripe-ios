@@ -152,4 +152,22 @@ extension XCTestCase {
         }
         waitForReload(app, settings: settings)
     }
+    func waitForReload(_ app: XCUIApplication, settings: CustomerSheetTestPlaygroundSettings) {
+        let customerId = app.textFields["CustomerId"]
+        expectation(
+            for: NSPredicate(format: "self BEGINSWITH 'cus_'"),
+            evaluatedWith: customerId.value,
+            handler: nil
+        )
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+    func loadPlayground(_ app: XCUIApplication, _ settings: CustomerSheetTestPlaygroundSettings) {
+        if #available(iOS 15.0, *) {
+            app.launchEnvironment = app.launchEnvironment.merging(["STP_CUSTOMERSHEET_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
+            app.launch()
+        } else {
+            XCTFail("This test is only supported on iOS 15.0 or later.")
+        }
+        waitForReload(app, settings: settings)
+    }
 }

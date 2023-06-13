@@ -254,10 +254,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         return jsonData.base64EncodedString()
     }
 
-    static func fromBase64(base64: String) -> Self? {
+    static func fromBase64<T: Decodable>(base64: String, className: T.Type) -> T? {
         if let base64Data = base64.data(using: .utf8),
            let data = Data(base64Encoded: base64Data),
-           let decodedObject = try? JSONDecoder().decode(Self.self, from: data) {
+           let decodedObject = try? JSONDecoder().decode(className.self, from: data) {
             return decodedObject
         }
         return nil
