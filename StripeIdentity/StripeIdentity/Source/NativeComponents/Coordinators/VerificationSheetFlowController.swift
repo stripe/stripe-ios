@@ -707,7 +707,7 @@ extension Set<StripeAPI.VerificationPageFieldType> {
             return .selfieCaptureDestination
         } else if !self.isDisjoint(with: [.name, .dob]) {
             return .individualWelcomeDestination
-        } else if !self.isDisjoint(with: [.idNumber, .address]) {
+        } else if !self.isDisjoint(with: [.idNumber, .address, .phoneNumber]) {
             return .individualDestination
         } else if self.isEmpty {
             return .confirmationDestination
