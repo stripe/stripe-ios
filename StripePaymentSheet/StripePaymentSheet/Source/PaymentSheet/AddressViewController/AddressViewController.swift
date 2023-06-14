@@ -246,7 +246,7 @@ extension AddressViewController {
     }
 
     @objc func didTapCloseButton() {
-        delegate?.addressViewControllerDidFinish(self, with: addressDetails)
+        delegate?.addressViewControllerDidFinish(self, with: nil)
     }
 }
 
