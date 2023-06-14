@@ -84,7 +84,7 @@ final class AccountPickerViewController: UIViewController {
                     .analyticsClient
                     .log(
                         eventName: "click.link_accounts",
-                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.accountPicker.rawValue]
+                        pane: .accountPicker
                     )
 
                 self.didSelectLinkAccounts()
@@ -142,7 +142,8 @@ final class AccountPickerViewController: UIViewController {
                                 parameters: [
                                     "duration": Date().timeIntervalSince(pollingStartDate).milliseconds,
                                     "authSessionId": self.dataSource.authSession.id,
-                                ]
+                                ],
+                                pane: .accountPicker
                             )
                     }
                     self.dataSource

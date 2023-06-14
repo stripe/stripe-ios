@@ -207,11 +207,11 @@ extension InstitutionPickerViewController {
                             .log(
                                 eventName: "search.succeeded",
                                 parameters: [
-                                    "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
                                     "query": searchQuery,
                                     "duration": Date().timeIntervalSince(lastInstitutionSearchFetchDate).milliseconds,
                                     "result_count": institutionList.data.count,
-                                ]
+                                ],
+                                pane: .institutionPicker
                             )
                     case .failure(let error):
                         self.institutionSearchTableView.loadInstitutions([])
@@ -269,9 +269,9 @@ extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
         dataSource.analyticsClient.log(
             eventName: "search.featured_institution_selected",
             parameters: [
-                "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
                 "institution_id": institution.id,
-            ]
+            ],
+            pane: .institutionPicker
         )
         didSelectInstitution(institution)
     }
@@ -289,9 +289,9 @@ extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
         dataSource.analyticsClient.log(
             eventName: "search.search_result_selected",
             parameters: [
-                "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
                 "institution_id": institution.id,
-            ]
+            ],
+            pane: .institutionPicker
         )
         didSelectInstitution(institution)
     }

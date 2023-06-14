@@ -45,7 +45,7 @@ final class AuthFlowHelpers {
             analyticsClient
                 .log(
                     eventName: eventName,
-                    parameters: ["pane": pane.rawValue]
+                    pane: pane
                 )
         }
 
