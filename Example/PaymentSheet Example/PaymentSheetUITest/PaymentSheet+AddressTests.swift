@@ -282,7 +282,7 @@ NZ
         app.typeText("California")
         app.textFields["ZIP"].tap()
         app.typeText("94102")
-        app.buttons["Close"].tap()
+        app.buttons["Save address"].tap()
 
         // ...and then using PaymentSheet.FlowController...
         app.buttons["Payment method"].waitForExistenceAndTap()
@@ -298,7 +298,7 @@ NZ
         app.textFields["Country or region"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇨🇦 Canada")
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Close"].tap()
+        app.buttons["Save address"].tap()
 
         // ...should update PaymentSheet.FlowController
         app.buttons["Payment method"].waitForExistenceAndTap()
@@ -319,7 +319,7 @@ NZ
         app.textFields["Country or region"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Close"].tap()
+        app.buttons["Save address"].tap()
 
         // ...should not affect your billing address...
         app.buttons["Payment method"].waitForExistenceAndTap()
