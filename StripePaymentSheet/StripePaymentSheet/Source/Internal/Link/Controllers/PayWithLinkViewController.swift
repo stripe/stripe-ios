@@ -162,23 +162,36 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     /// Defaults to the app's key window
     func present(over viewController: UIViewController? = nil) {
 //      TODO: Log attempt to show web session
-        let aswas = ASWebAuthenticationSession(url: LinkURLGenerator.url(), callbackURLScheme: "stripesdk") { url, error in
-            if let error = error {
-//                  TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
-                print(error.localizedDescription)
-                return
+        let params = LinkURLParams(linkMode: .pm,
+                                   publishableKey: self.context.configuration.apiClient.publishableKey ?? STPAPIClient.shared.publishableKey!,
+                                   merchantInfo: LinkURLParams.MerchantInfo(businessName: "Test", country: "US"),
+                                   customerInfo: LinkURLParams.CustomerInfo(country: self.context.intent.countryCode, email: "TODO"),
+                                   paymentInfo: LinkURLParams.PaymentInfo(currency: self.context.intent.currency, amount: self.context.intent.amount),
+                                   returnUrl: URL(string: "stripesdk://")!,
+                                   experiments: [], flags: [], loggerMetadata: [],
+                                   locale: Locale.current.toLanguageTag())
+        do {
+            let url = try LinkURLGenerator.url(params: params)
+            let aswas = ASWebAuthenticationSession(url: url, callbackURLScheme: "stripesdk") { url, error in
+                if let error = error {
+    //                  TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
+                    print(error.localizedDescription)
+                    return
+                }
+                guard let url = url else {
+    //              TODO: Log unknown session error, this should never happen
+                    return
+                }
+    //          TODO: Log that authentication session succeeded, digest URL
+                print(url)
             }
-            guard let url = url else {
-//              TODO: Log unknown session error, this should never happen
-                return
-            }
-//          TODO: Log that authentication session succeeded, digest URL
-            print(url)
+            self.presentationVC = viewController
+            aswas.presentationContextProvider = self
+            self.aswas = aswas
+            aswas.start()
+        } catch {
+            // Handle errors (including LinkURLParams errors)
         }
-        self.presentationVC = viewController
-        aswas.presentationContextProvider = self
-        self.aswas = aswas
-        aswas.start()
     }
 }
 

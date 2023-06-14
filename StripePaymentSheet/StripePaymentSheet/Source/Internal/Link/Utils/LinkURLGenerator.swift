@@ -7,33 +7,53 @@ import Foundation
 
 struct LinkURLParams: Encodable {
     struct MerchantInfo: Encodable {
-        let businessName: String
-        let country: String
+        var businessName: String?
+        var country: String?
     }
     struct CustomerInfo: Encodable {
-        let country: String
-        let email: String
+        var country: String?
+        var email: String?
     }
     struct PaymentInfo: Encodable {
-        let currency: String
-        let amount: Int
+        var currency: String?
+        var amount: Int?
     }
-    let path = "mobile_pay"
-    let integrationType = "mobile"
-    let publishableKey: String
-    let merchantInfo: MerchantInfo
-    let customerInfo: CustomerInfo
-    let paymentInfo: PaymentInfo
-    let returnUrl: URL
-    let experiments: [String]
-    let flags: [String]
-    let loggerMetadata: [String]
-    let locale = Locale.current.toLanguageTag()
+    enum LinkMode: String, Encodable {
+        case pm
+        case pass_through
+    }
+    var path = "mobile_pay"
+    var integrationType = "mobile"
+    var linkMode: LinkMode
+    var publishableKey: String
+    var merchantInfo: MerchantInfo
+    var customerInfo: CustomerInfo
+    var paymentInfo: PaymentInfo
+    var returnUrl: URL
+    var experiments: [String]
+    var flags: [String]
+    var loggerMetadata: [String]
+    var locale: String
 }
 
 class LinkURLGenerator {
-    static func url() -> URL {
-//      TODO: Create URLs based on params
-        return URL(string: "https://checkout.link.com/#")!
+    static func url(params: LinkURLParams) throws -> URL {
+        var components = URLComponents(string: "https://checkout.link.com/")!
+        components.fragment = try params.toURLEncodedBase64()
+        guard let url = components.url else {
+            throw LinkURLGeneratorError.urlCreationFailed
+        }
+        return url
     }
+}
+
+extension LinkURLParams {
+    func toURLEncodedBase64() throws -> String {
+        let encodedData = try JSONEncoder().encode(self)
+        return encodedData.base64EncodedString()
+    }
+}
+
+enum LinkURLGeneratorError: Error {
+    case urlCreationFailed
 }
