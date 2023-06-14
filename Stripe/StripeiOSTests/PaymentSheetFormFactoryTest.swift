@@ -40,7 +40,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.email = "email@stripe.com"
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("sepa_debit")
         )
         let name = factory.makeName()
@@ -67,7 +67,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("eps")
         )
 
@@ -89,7 +89,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.name = "someName"
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method")
         )
         let name = factory.makeName(apiPath: "custom_location[name]")
@@ -109,7 +109,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Using the params as previous customer input...
         let name_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method"),
             previousCustomerInput: updatedParams
         ).makeName(apiPath: "custom_location[name]")
@@ -123,7 +123,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.name = "someName"
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method")
         )
         let name = factory.makeName()
@@ -141,7 +141,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Using the params as previous customer input...
         let name_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method"),
             previousCustomerInput: updatedParams
         ).makeName()
@@ -155,7 +155,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.name = "someName"
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method")
         )
         let nameSpec = FormSpec.NameFieldSpec(
@@ -189,7 +189,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.name = "someName"
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method")
         )
         let nameSpec = FormSpec.NameFieldSpec(apiPath: nil, translationId: nil)
@@ -218,7 +218,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.email = "email@stripe.com"
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method")
         )
         let email = factory.makeEmail(apiPath: "custom_location[email]")
@@ -238,7 +238,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Using the params as previous customer input...
         let email_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method"),
             previousCustomerInput: updatedParams
         ).makeName(apiPath: "custom_location[email]")
@@ -252,7 +252,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.email = "email@stripe.com"
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method")
         )
         let email = factory.makeEmail()
@@ -270,7 +270,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Using the params as previous customer input...
         let email_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method"),
             previousCustomerInput: updatedParams
         ).makeEmail()
@@ -284,7 +284,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.email = "email@stripe.com"
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method")
         )
         let emailSpec = FormSpec.BaseFieldSpec(apiPath: ["v1": "custom_location[email]"])
@@ -315,7 +315,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.phone = "+15555555555"
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method")
         )
         let phoneElement = factory.makePhone()
@@ -331,7 +331,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Using the params as previous customer input...
         let phone_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method"),
             previousCustomerInput: updatedParams
         ).makePhone()
@@ -345,7 +345,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.email = "email@stripe.com"
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mock_payment_method")
         )
 
@@ -374,7 +374,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("sepa_debit")
         )
         let selectorSpec = FormSpec.SelectorSpec(
@@ -408,7 +408,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Given a dropdown...
         let dropdown = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("sepa_debit")
         ).makeDropdown(for: selectorSpec)
         // ...with a selection *different* from the default of 0
@@ -417,7 +417,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let previousCustomerInput = dropdown.updateParams(params: IntentConfirmParams(type: .dynamic("sepa_debit")))
         let dropdown_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("sepa_debit"),
             previousCustomerInput: previousCustomerInput
         ).makeDropdown(for: selectorSpec)
@@ -431,7 +431,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("klarna")
         )
         let spec = FormSpec(
@@ -460,7 +460,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("klarna")
         )
         let spec = FormSpec(
@@ -490,7 +490,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit")
         )
         let bsb = factory.makeBSB(apiPath: nil)
@@ -508,7 +508,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Using the params as previous customer input...
         let bsb_with_previous_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit"),
             previousCustomerInput: updatedParams
         ).makeBSB()
@@ -522,7 +522,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit")
         )
         let bsb = factory.makeBSB(apiPath: "custom_path[bsb_number]")
@@ -542,7 +542,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Using the params as previous customer input...
         let bsb_with_previous_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit"),
             previousCustomerInput: updatedParams
         ).makeBSB(apiPath: "custom_path[bsb_number]")
@@ -560,7 +560,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit")
         )
         let spec = FormSpec(
@@ -590,7 +590,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Using the params as previous customer input...
         let bsb_with_previous_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit"),
             previousCustomerInput: updatedParams
         ).makeBSB()
@@ -604,7 +604,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit")
         )
         let spec = FormSpec(
@@ -638,7 +638,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit")
         )
         let spec = FormSpec(
@@ -670,7 +670,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Using the params as previous customer input...
         let form_with_previous_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit"),
             previousCustomerInput: updatedParams
         ).makeFormElementFromSpec(spec: spec)
@@ -684,7 +684,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit")
         )
         let spec = FormSpec(
@@ -719,7 +719,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Using the params as previous customer input...
         let form_with_previous_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit"),
             previousCustomerInput: updatedParams
         ).makeFormElementFromSpec(spec: spec)
@@ -738,7 +738,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit")
         )
         let accountNum = factory.makeAUBECSAccountNumber(apiPath: nil)
@@ -761,7 +761,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit")
         )
         let accountNum = factory.makeAUBECSAccountNumber(apiPath: "custom_path[account_number]")
@@ -785,7 +785,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("sofort")
         )
         let spec = FormSpec(
@@ -810,7 +810,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("sofort")
         )
         let spec = FormSpec(
@@ -843,7 +843,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("sofort")
         )
         let country = factory.makeCountry(countryCodes: ["AT", "BE"], apiPath: nil)
@@ -860,7 +860,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Using the params as previous customer input...
         let country_with_previous_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("sofort"),
             previousCustomerInput: updatedParams
         ).makeCountry(countryCodes: ["AT", "BE"], apiPath: nil)
@@ -875,7 +875,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         func makeCountry(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElement {
             let factory = PaymentSheetFormFactory(
                 intent: .paymentIntent(STPFixtures.paymentIntent()),
-                configuration: configuration,
+                configuration: .paymentSheet(configuration),
                 paymentMethod: .dynamic("sofort"),
                 previousCustomerInput: previousCustomerInput
             )
@@ -913,7 +913,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         func makeForm(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<FormElement> {
             let factory = PaymentSheetFormFactory(
                 intent: .paymentIntent(STPFixtures.paymentIntent()),
-                configuration: configuration,
+                configuration: .paymentSheet(configuration),
                 paymentMethod: .dynamic("sepa_debit"),
                 previousCustomerInput: previousCustomerInput
             )
@@ -953,7 +953,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         func makeForm(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<FormElement> {
             let factory = PaymentSheetFormFactory(
                 intent: .paymentIntent(STPFixtures.paymentIntent()),
-                configuration: configuration,
+                configuration: .paymentSheet(configuration),
                 paymentMethod: .dynamic("sepa_debit"),
                 previousCustomerInput: previousCustomerInput
             )
@@ -1001,7 +1001,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("sepa_debit")
         )
         let iban = factory.makeIban(apiPath: nil)
@@ -1020,7 +1020,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("sepa_debit")
         )
         let iban = factory.makeIban(apiPath: "sepa_debit[iban]")
@@ -1043,7 +1043,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("luxe_bucks")
         )
         let spec = FormSpec(
@@ -1087,7 +1087,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("au_becs_debit"),
             addressSpecProvider: addressSpecProvider
         )
@@ -1128,7 +1128,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mockPM"),
             addressSpecProvider: addressSpecProvider
         )
@@ -1158,7 +1158,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("mockPM"),
             addressSpecProvider: addressSpecProvider
         )
@@ -1207,7 +1207,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }) {
             let factory = PaymentSheetFormFactory(
                 intent: intent,
-                configuration: configuration,
+                configuration: .paymentSheet(configuration),
                 paymentMethod: PaymentSheet.PaymentMethodType(
                     from: STPPaymentMethod.string(from: type)!
                 ),
@@ -1237,7 +1237,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card])
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .card
         )
         XCTAssertEqual(factory.saveMode, .userSelectable)
@@ -1249,7 +1249,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card, .EPS])
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .card
         )
         XCTAssertEqual(factory.saveMode, .userSelectable)
@@ -1282,7 +1282,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         ]
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .card,
             addressSpecProvider: specProvider
         )
@@ -1328,7 +1328,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         ]
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .card,
             addressSpecProvider: specProvider
         )
@@ -1370,7 +1370,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         ]
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .card,
             addressSpecProvider: specProvider
         )
@@ -1418,7 +1418,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         ]
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .card,
             addressSpecProvider: specProvider
         )
@@ -1474,7 +1474,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("afterpay_clearpay"),
             addressSpecProvider: specProvider
         )
@@ -1529,7 +1529,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .dynamic("afterpay_clearpay"),
             addressSpecProvider: specProvider
         )
@@ -1613,7 +1613,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // ...the card form...
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["card"])),
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: .card,
             previousCustomerInput: previousCustomerInput
         )
@@ -1655,7 +1655,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
             return PaymentSheetFormFactory(
                 intent: isSettingUp ? .setupIntent(STPFixtures.setupIntent()) : .paymentIntent(STPFixtures.paymentIntent()),
-                configuration: configuration,
+                configuration: .paymentSheet(configuration),
                 paymentMethod: .card,
                 previousCustomerInput: previousCustomerInput
             ).make()
@@ -1723,7 +1723,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // ...the Afterpay form should be valid
         let afterpayFactory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["afterpay_clearpay"])),
-            configuration: ._testValue_MostPermissive(),
+            configuration: .paymentSheet(PaymentSheet.Configuration._testValue_MostPermissive()),
             paymentMethod: .dynamic("afterpay_clearpay"),
             previousCustomerInput: previousAfterpayCustomerInput
         )
@@ -1741,7 +1741,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // ...the Afterpay form should be blank and invalid, even though the previous input had full billing details
         let afterpayFormWithPreviousCardInput = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["afterpay_clearpay"])),
-            configuration: ._testValue_MostPermissive(),
+            configuration: .paymentSheet(PaymentSheet.Configuration._testValue_MostPermissive()),
             paymentMethod: .dynamic("afterpay_clearpay"),
             previousCustomerInput: previousCardCustomerInput
         ).make()
@@ -1762,7 +1762,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         func makeKlarnaCountry(apiPath: String?, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<DropdownFieldElement> {
             let factory = PaymentSheetFormFactory(
                 intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["klarna"], currency: "eur")),
-                configuration: ._testValue_MostPermissive(),
+                configuration: .paymentSheet(PaymentSheet.Configuration._testValue_MostPermissive()),
                 paymentMethod: .dynamic("klarna"),
                 previousCustomerInput: previousCustomerInput
             )
@@ -1796,7 +1796,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         func makePaypalForm(isSettingUp: Bool, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElement {
             return PaymentSheetFormFactory(
                 intent: .paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["paypal"], setupFutureUsage: isSettingUp ? .offSession : .none)),
-                configuration: ._testValue_MostPermissive(),
+                configuration: .paymentSheet(PaymentSheet.Configuration._testValue_MostPermissive()),
                 paymentMethod: .dynamic("paypal"),
                 previousCustomerInput: previousCustomerInput
             ).make()
