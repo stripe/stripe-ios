@@ -1042,7 +1042,7 @@ extension STPAPIClient {
             completion(object, error)
         }
     }
-    
+
     /// Retrieve a customer
     /// - seealso: https://stripe.com/docs/api#retrieve_customer
     @_spi(STP) public func retrieveCustomer(

@@ -48,7 +48,7 @@ class LinkURLGeneratorTests: XCTestCase {
             XCTAssertTrue(error as? EncodingError != nil)
         }
     }
-    
+
     func testURLParamsFromConfig() async {
         let config = PaymentSheet.Configuration()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _, _ in
@@ -78,8 +78,8 @@ extension STPElementsSession {
     // and we're not using any details from it.
     static var emptyElementsSession: STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
-                                                                        "country_code": "US"] as [String : Any],
-                                          "session_id": "123"
+                                                                        "country_code": "US", ] as [String: Any],
+                                          "session_id": "123",
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }

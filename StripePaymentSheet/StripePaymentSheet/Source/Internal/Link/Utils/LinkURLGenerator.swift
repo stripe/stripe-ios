@@ -4,8 +4,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 struct LinkURLParams: Encodable {
     struct MerchantInfo: Encodable {
@@ -47,10 +47,10 @@ class LinkURLGenerator {
         guard let merchantCountryCode = intent.countryCode else {
             throw LinkURLGeneratorError.noCountryCode
         }
-        
+
         // US isn't the best default, but we only expect regionCode to be nil in the nil region on a simulator, and we don't want to crash.
         let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.regionCode ?? "US"
-        
+
         // Get email from the billing details, or the Customer object if the billing details is empty
         var customerEmail = configuration.defaultBillingDetails.email
         if customerEmail == nil,
@@ -60,14 +60,14 @@ class LinkURLGenerator {
         {
             customerEmail = customer.email
         }
-        
+
         let paymentInfo: LinkURLParams.PaymentInfo? = {
             if let currency = intent.currency, let amount = intent.amount {
                 return LinkURLParams.PaymentInfo(currency: currency, amount: amount)
             }
             return nil
         }()
-        
+
         return LinkURLParams(linkMode: .pm,
                              publishableKey: publishableKey,
                              paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
@@ -77,7 +77,7 @@ class LinkURLGenerator {
                              experiments: [:], flags: [:], loggerMetadata: [:],
                              locale: Locale.current.toLanguageTag())
     }
-    
+
     static func url(params: LinkURLParams) throws -> URL {
         var components = URLComponents(string: "https://checkout.link.com/")!
         components.fragment = try params.toURLEncodedBase64()
@@ -86,7 +86,7 @@ class LinkURLGenerator {
         }
         return url
     }
-    
+
     static func url(configuration: PaymentSheet.Configuration, intent: Intent) async throws -> URL {
         let params = try await Self.linkParams(configuration: configuration, intent: intent)
         return try url(params: params)

@@ -157,9 +157,9 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     var aswas: ASWebAuthenticationSession?
-    
+
     /// Defaults to the app's key window
     func present(over viewController: UIViewController? = nil) {
         Task {
