@@ -190,7 +190,6 @@ import UIKit
         self.addressSpecProvider = addressSpecProvider
         self.theme = theme
         self.didTapAutocompleteButton = presentAutoComplete
-        autoCompleteLine?.didTap = presentAutoComplete
 
         let initialCountry = countryCodes[country.selectedIndex]
 
@@ -314,6 +313,7 @@ import UIKit
 
         if collectionMode == .autoCompletable {
             autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme)
+            autoCompleteLine?.didTap = didTapAutocompleteButton
         } else {
             autoCompleteLine = nil
         }
