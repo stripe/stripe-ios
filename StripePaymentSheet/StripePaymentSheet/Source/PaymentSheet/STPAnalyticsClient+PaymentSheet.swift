@@ -44,7 +44,7 @@ extension STPAnalyticsClient {
         case .completed:
             success = true
         }
-        
+
         print(success)
         print(deferredIntentConfirmationType?.rawValue ?? "—")
 
@@ -91,7 +91,7 @@ extension STPAnalyticsClient {
                              paymentMethod: paymentMethod),
                              intentConfig: intentConfig)
     }
-    
+
     enum DeferredIntentConfirmationType: String {
         case server = "server"
         case client = "client"

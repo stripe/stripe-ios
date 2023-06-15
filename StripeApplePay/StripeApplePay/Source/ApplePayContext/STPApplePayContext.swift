@@ -207,7 +207,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     private weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
     @objc var authorizationController: PKPaymentAuthorizationController?
     @_spi(STP) public var returnUrl: String?
-    
+
     @_spi(STP) @frozen public enum ConfirmType {
         case client
         case server
