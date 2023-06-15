@@ -60,17 +60,17 @@ class LinkURLGenerator {
         {
             customerEmail = customer.email
         }
-        
+
         let merchantInfo = LinkURLParams.MerchantInfo(businessName: configuration.merchantDisplayName, country: merchantCountryCode)
         let customerInfo = LinkURLParams.CustomerInfo(country: customerCountryCode, email: customerEmail)
-        
+
         let paymentInfo: LinkURLParams.PaymentInfo? = {
             if let currency = intent.currency, let amount = intent.amount {
                 return LinkURLParams.PaymentInfo(currency: currency, amount: amount)
             }
             return nil
         }()
-        
+
         return LinkURLParams(paymentObject: .link_payment_method,
                              publishableKey: publishableKey,
                              paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
