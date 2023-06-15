@@ -35,7 +35,7 @@ extension PaymentSheet {
             account: PaymentSheetLinkAccount,
             paymentMethodParams: STPPaymentMethodParams
         )
-        
+
         /// Confirm with Payment Method.
         case withPaymentMethod(
             account: PaymentSheetLinkAccount,

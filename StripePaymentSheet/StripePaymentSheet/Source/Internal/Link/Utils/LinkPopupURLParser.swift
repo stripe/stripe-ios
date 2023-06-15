@@ -34,7 +34,7 @@ extension STPPaymentMethod {
             // TODO: Throw a different error
             throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: "PaymentMethod wasn't valid base64"))
         }
-        guard let pmDict = try JSONSerialization.jsonObject(with: data) as? [AnyHashable : Any],
+        guard let pmDict = try JSONSerialization.jsonObject(with: data) as? [AnyHashable: Any],
               let pm = self.decodedObject(fromAPIResponse: pmDict ) else {
             throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: "PaymentMethod wasn't valid base64"))
         }
