@@ -158,27 +158,22 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         fatalError("init(coder:) has not been implemented")
     }
 
-    var aswas: ASWebAuthenticationSession?
+    var webAuthSession: ASWebAuthenticationSession?
     /// Defaults to the app's key window
-    func present(over viewController: UIViewController? = nil) {
+    func present(over viewController: UIViewController) {
 //      TODO: Log attempt to show web session
-        let aswas = ASWebAuthenticationSession(url: LinkURLGenerator.url(), callbackURLScheme: "stripesdk") { url, error in
-            if let error = error {
-//                  TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
-                print(error.localizedDescription)
-                return
-            }
+        let webAuthSession = ASWebAuthenticationSession(url: LinkURLGenerator.url(), callbackURLScheme: "stripesdk") { url, error in
             guard let url = url else {
-//              TODO: Log unknown session error, this should never happen
+                //                  TODO: Get analytics logs here from error: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
                 return
             }
 //          TODO: Log that authentication session succeeded, digest URL
             print(url)
         }
         self.presentationVC = viewController
-        aswas.presentationContextProvider = self
-        self.aswas = aswas
-        aswas.start()
+        webAuthSession.presentationContextProvider = self
+        self.webAuthSession = webAuthSession
+        webAuthSession.start()
     }
 }
 
@@ -221,7 +216,7 @@ extension PayWithLinkWebController: PayWithLinkCoordinating {
     }
 
     func cancel() {
-        aswas?.cancel()
+        webAuthSession?.cancel()
         payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
     }
 
