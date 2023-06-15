@@ -1,3 +1,8 @@
+## x.x.x x-x-x
+### AddressElement
+* [Fixed] A bug that was causing `addressViewControllerDidFinish` to return a non-nil `AddressDetails` when the user cancels out of the AddressElement when default values are provided.
+* [Fixed] A bug that prevented the auto complete view from being presented when the AddressElement was created with default values.
+
 ## 23.9.1 2023-06-12
 ### PaymentSheet
 * [Fixed] Fixed validating the IntentConfiguration matches the PaymentIntent/SetupIntent when it was already confirmed on the server. Note: server-side confirmation is in private beta.

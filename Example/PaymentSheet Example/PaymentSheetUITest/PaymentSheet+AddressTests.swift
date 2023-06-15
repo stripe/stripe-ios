@@ -108,7 +108,12 @@ US
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
+        // Autocomplete should be presentable
+        XCTAssertTrue(app.buttons["autocomplete_affordance"].waitForExistenceAndTap(timeout: 4.0))
+        XCTAssertTrue(app.buttons["Enter address manually"].waitForExistenceAndTap(timeout: 4.0))
+
         // The Save address button should be enabled
+        XCTAssertTrue(app.buttons["Save address"].waitForExistence(timeout: 4.0))
         let saveAddressButton = app.buttons["Save address"]
         XCTAssertTrue(saveAddressButton.isEnabled)
 
@@ -282,7 +287,7 @@ NZ
         app.typeText("California")
         app.textFields["ZIP"].tap()
         app.typeText("94102")
-        app.buttons["Close"].tap()
+        app.buttons["Save address"].tap()
 
         // ...and then using PaymentSheet.FlowController...
         app.buttons["Payment method"].waitForExistenceAndTap()
@@ -298,7 +303,7 @@ NZ
         app.textFields["Country or region"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇨🇦 Canada")
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Close"].tap()
+        app.buttons["Save address"].tap()
 
         // ...should update PaymentSheet.FlowController
         app.buttons["Payment method"].waitForExistenceAndTap()
@@ -319,7 +324,7 @@ NZ
         app.textFields["Country or region"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Close"].tap()
+        app.buttons["Save address"].tap()
 
         // ...should not affect your billing address...
         app.buttons["Payment method"].waitForExistenceAndTap()
