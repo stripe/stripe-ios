@@ -150,7 +150,7 @@ import UIKit
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsUITheme
     private(set) var defaults: AddressDetails
-    public var didTapAutocompleteButton: () -> Void = { }
+    let didTapAutocompleteButton: () -> Void
     public var didUpdate: DidUpdateAddress?
 
     // MARK: - Implementation
@@ -312,8 +312,7 @@ import UIKit
         }
 
         if collectionMode == .autoCompletable {
-            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme)
-            autoCompleteLine?.didTap = didTapAutocompleteButton
+            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: didTapAutocompleteButton)
         } else {
             autoCompleteLine = nil
         }
