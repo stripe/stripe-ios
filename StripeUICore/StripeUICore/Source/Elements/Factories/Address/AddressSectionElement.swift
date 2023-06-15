@@ -150,7 +150,7 @@ import UIKit
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsUITheme
     private(set) var defaults: AddressDetails
-    public var didTapAutocompleteButton: () -> Void = { }
+    let didTapAutocompleteButton: () -> Void
     public var didUpdate: DidUpdateAddress?
 
     // MARK: - Implementation
@@ -172,7 +172,8 @@ import UIKit
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all(),
         additionalFields: AdditionalFields = .init(),
-        theme: ElementsUITheme = .default
+        theme: ElementsUITheme = .default,
+        presentAutoComplete: @escaping () -> Void = { }
     ) {
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
@@ -188,6 +189,8 @@ import UIKit
         self.defaults = defaults
         self.addressSpecProvider = addressSpecProvider
         self.theme = theme
+        self.didTapAutocompleteButton = presentAutoComplete
+
         let initialCountry = countryCodes[country.selectedIndex]
 
         // Initialize additional fields
@@ -309,7 +312,7 @@ import UIKit
         }
 
         if collectionMode == .autoCompletable {
-            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme)
+            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: didTapAutocompleteButton)
         } else {
             autoCompleteLine = nil
         }

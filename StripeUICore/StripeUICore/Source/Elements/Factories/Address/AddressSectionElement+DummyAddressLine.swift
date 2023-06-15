@@ -35,7 +35,7 @@ extension AddressSectionElement {
         public var validationState: ElementValidationState {
             return .invalid(error: TextFieldElement.Error.empty, shouldDisplay: false)
         }
-        public var didTap: () -> Void = {}
+        let didTap: () -> Void
         public let theme: ElementsUITheme
         private lazy var autocompleteLineTapRecognizer: UITapGestureRecognizer = {
             let tap = UITapGestureRecognizer(target: self, action: #selector(_didTap))
@@ -60,8 +60,9 @@ extension AddressSectionElement {
             return true
         }
 
-        public init(theme: ElementsUITheme) {
+        public init(theme: ElementsUITheme, didTap: @escaping () -> Void = {}) {
             self.theme = theme
+            self.didTap = didTap
             super.init()
         }
     }
