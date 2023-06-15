@@ -28,12 +28,14 @@ final class FinancialConnectionsAnalyticsClient {
     public func log(
         eventName: String,
         parameters: [String: Any] = [:],
-        pane: FinancialConnectionsSessionManifest.NextPane? = nil
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) {
         let eventName = "linked_accounts.\(eventName)"
 
         var parameters = parameters
-        parameters["pane"] = pane?.rawValue
+        // !!! BE CAREFUL MODIFYING "PANE" ANALYTICS CODE
+        // ITS CRITICAL FOR PANE CONVERSION !!!
+        parameters["pane"] = pane.rawValue
         parameters = parameters.merging(
             additionalParameters,
             uniquingKeysWith: { eventParameter, _ in
@@ -51,6 +53,7 @@ final class FinancialConnectionsAnalyticsClient {
             "Do not pass NextPane enum. Use the raw value."
         )
 
+        assert((parameters["pane"] as? String) != nil, "We expect pane to be set as a String for all analytics events.")
         analyticsClient.log(eventName: eventName, parameters: parameters)
     }
 
@@ -72,13 +75,13 @@ final class FinancialConnectionsAnalyticsClient {
 extension FinancialConnectionsAnalyticsClient {
 
     func logPaneLoaded(pane: FinancialConnectionsSessionManifest.NextPane) {
-        log(eventName: "pane.loaded", parameters: ["pane": pane.rawValue])
+        log(eventName: "pane.loaded", pane: pane)
     }
 
     func logExpectedError(
         _ error: Error,
         errorName: String,
-        pane: FinancialConnectionsSessionManifest.NextPane?
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) {
         log(
             error: error,
@@ -91,7 +94,7 @@ extension FinancialConnectionsAnalyticsClient {
     func logUnexpectedError(
         _ error: Error,
         errorName: String,
-        pane: FinancialConnectionsSessionManifest.NextPane?
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) {
         log(
             error: error,
@@ -105,10 +108,9 @@ extension FinancialConnectionsAnalyticsClient {
         error: Error,
         errorName: String,
         eventName: String,
-        pane: FinancialConnectionsSessionManifest.NextPane?
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) {
         var parameters: [String: Any] = [:]
-        parameters["pane"] = pane?.rawValue
         parameters["error"] = errorName
         if let stripeError = error as? StripeError,
             case .apiError(let apiError) = stripeError
@@ -130,13 +132,13 @@ extension FinancialConnectionsAnalyticsClient {
             }() as String
             parameters["code"] = (error as NSError).code
         }
-        log(eventName: eventName, parameters: parameters)
+        log(eventName: eventName, parameters: parameters, pane: pane)
     }
 
     func logMerchantDataAccessLearnMore(pane: FinancialConnectionsSessionManifest.NextPane) {
         log(
             eventName: "click.data_access.learn_more",
-            parameters: ["pane": pane.rawValue]
+            pane: pane
         )
     }
 

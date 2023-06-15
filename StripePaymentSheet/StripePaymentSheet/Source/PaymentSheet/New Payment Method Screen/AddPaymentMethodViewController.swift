@@ -280,7 +280,7 @@ class AddPaymentMethodViewController: UIViewController {
 
         let formElement = PaymentSheetFormFactory(
             intent: intent,
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: type,
             previousCustomerInput: previousCustomerInput,
             offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,

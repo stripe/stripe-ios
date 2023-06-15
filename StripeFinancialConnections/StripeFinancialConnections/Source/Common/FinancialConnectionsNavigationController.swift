@@ -56,9 +56,9 @@ class FinancialConnectionsNavigationController: UINavigationController {
                 // simplify analytics logging (same event, different parameters)
                 eventName: "click.nav_bar.back",
                 parameters: [
-                    "pane": FinancialConnectionsAnalyticsClient.paneFromViewController(fromViewController).rawValue,
                     "source": source,
-                ]
+                ],
+                pane: FinancialConnectionsAnalyticsClient.paneFromViewController(fromViewController)
             )
     }
 }
