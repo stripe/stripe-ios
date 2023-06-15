@@ -162,11 +162,11 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
 
     /// Defaults to the app's key window
     func present(over viewController: UIViewController? = nil) {
-        Task {
+        Task { @MainActor in
             // TODO: Log attempt to show web session
             do {
                 let url = try await LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
-                let aswas = ASWebAuthenticationSession(url: url, callbackURLScheme: "stripesdk") { url, error in
+                let aswas = ASWebAuthenticationSession(url: url, callbackURLScheme: "link-popup") { [self] url, error in
                     if let error = error {
                         // TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
                         print(error.localizedDescription)
@@ -176,8 +176,20 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                         // TODO: Log unknown session error, this should never happen
                         return
                     }
-                    // TODO: Log that authentication session succeeded, digest URL
-                    print(url)
+                    do {
+                        // TODO: Log that authentication session succeeded
+                        let result = try LinkPopupURLParser.result(with: url)
+                        let paymentOption = PaymentOption.link(option: .withPaymentMethod(account: PaymentSheetLinkAccount(email: "test", session: nil, publishableKey: nil), paymentMethod: result.pm))
+                        switch result.link_status {
+                        case .complete:
+                            self.payWithLinkDelegate?.payWithLinkWebControllerDidConfirm(self, intent: context.intent, with: paymentOption, completion: { result in
+                                // TODO: Handle post-confirm actions
+                            })
+                        }
+                        print(result)
+                    } catch {
+                        print(error)
+                    }
                 }
                 self.presentationVC = viewController
                 aswas.presentationContextProvider = self

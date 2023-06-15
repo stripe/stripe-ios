@@ -15,7 +15,7 @@ import StripeCoreTestUtils
 import XCTest
 
 class LinkURLGeneratorTests: XCTestCase {
-    let testParams = LinkURLParams(linkMode: .pm,
+    let testParams = LinkURLParams(paymentObject: .link_payment_method,
                                    publishableKey: "pk_test_123",
                                    paymentUserAgent: "test",
                                    merchantInfo: LinkURLParams.MerchantInfo(businessName: "Test test", country: "US"),
@@ -58,7 +58,7 @@ class LinkURLGeneratorTests: XCTestCase {
         let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
         let params = try! await LinkURLGenerator.linkParams(configuration: config, intent: intent)
 
-        let expectedParams = LinkURLParams(linkMode: .pm,
+        let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
                                            publishableKey: config.apiClient.publishableKey!,
                                            paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
                                            merchantInfo: LinkURLParams.MerchantInfo(businessName: "xctest", country: "US"),

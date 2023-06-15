@@ -20,13 +20,13 @@ struct LinkURLParams: Encodable {
         var currency: String
         var amount: Int
     }
-    enum LinkMode: String, Encodable {
-        case pm
-        case pass_through
+    enum PaymentObjectMode: String, Encodable {
+        case link_payment_method
+        case card_payment_method
     }
     var path = "mobile_pay"
     var integrationType = "mobile"
-    var linkMode: LinkMode
+    var paymentObject: PaymentObjectMode
     var publishableKey: String
     var stripeAccount: String?
     var paymentUserAgent: String
@@ -68,7 +68,7 @@ class LinkURLGenerator {
             return nil
         }()
 
-        return LinkURLParams(linkMode: .pm,
+        return LinkURLParams(paymentObject: .link_payment_method,
                              publishableKey: publishableKey,
                              paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
                              merchantInfo: LinkURLParams.MerchantInfo(businessName: configuration.merchantDisplayName, country: merchantCountryCode),

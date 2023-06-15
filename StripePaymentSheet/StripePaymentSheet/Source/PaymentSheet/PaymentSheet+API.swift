@@ -287,6 +287,8 @@ extension PaymentSheet {
                 confirmWithPaymentDetails(linkAccount, paymentDetails)
             case .withPaymentMethodParams(let linkAccount, let paymentMethodParams):
                 createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
+            case .withPaymentMethod(_, _):
+                assertionFailure("TODO: Confirm using Link PM")
             }
         }
     }
