@@ -648,7 +648,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         // Verify
-        controller.cannotVerifyPhoneOtp()
+        controller.sendCannotVerifyPhoneOtpAndTransition()
 
         XCTAssertEqual(mockAPIClient.verificationPageCannotVerifyPhoneOtp.requestHistory.count, 1)
     }

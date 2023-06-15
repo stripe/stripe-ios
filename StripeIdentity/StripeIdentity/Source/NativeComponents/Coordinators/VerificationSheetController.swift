@@ -69,9 +69,11 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         simulateDelay: Bool
     )
 
+    /// Request a new phoneOtp, transition to error view controller if request failed, callback on successCallback otherwise.
     func generatePhoneOtp(using successCallback: @escaping (StripeAPI.VerificationPageData) -> Void)
 
-    func cannotVerifyPhoneOtp()
+    /// Send the cannotVerifyPhoneOtp request and transition accordingly.
+    func sendCannotVerifyPhoneOtpAndTransition()
 
     /// Transition to CountryNotListedViewController without any API request
     func transitionToCountryNotListed(
@@ -342,7 +344,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
     }
 
-    func cannotVerifyPhoneOtp() {
+    func sendCannotVerifyPhoneOtpAndTransition() {
         apiClient.cannotPhoneVerifyOtp().observe(on: .main) { [weak self] result in
             self?.transitionWithVerificaionPageDataResult(result)
         }
