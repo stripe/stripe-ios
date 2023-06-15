@@ -51,7 +51,7 @@ class LinkURLGenerator {
         // US isn't the best default, but we only expect regionCode to be nil in the nil region on a simulator, and we don't want to crash.
         let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.regionCode ?? "US"
 
-        // Get email from the billing details, or the Customer object if the billing details is empty
+        // Get email from the billing details, or the Customer object if the billing details are empty
         var customerEmail = configuration.defaultBillingDetails.email
         if customerEmail == nil,
            let customerID = configuration.customer?.id,

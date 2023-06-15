@@ -31,7 +31,7 @@ class LinkPopupURLParserTests: XCTestCase {
             _ = try LinkPopupURLParser.result(with: testURL)
             XCTFail("Should not succeed")
         } catch {
-            XCTAssert(error is Swift.DecodingError)
+            XCTAssertEqual(error as! LinkPopupURLParserError, LinkPopupURLParserError.invalidURLParams)
         }
     }
 }

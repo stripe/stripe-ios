@@ -158,7 +158,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         fatalError("init(coder:) has not been implemented")
     }
 
-    var aswas: ASWebAuthenticationSession?
+    var webAuthSession: ASWebAuthenticationSession?
 
     /// Defaults to the app's key window
     func present(over viewController: UIViewController? = nil) {
@@ -166,14 +166,9 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             // TODO: Log attempt to show web session
             do {
                 let url = try await LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
-                let aswas = ASWebAuthenticationSession(url: url, callbackURLScheme: "link-popup") { [self] url, error in
-                    if let error = error {
-                        // TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
-                        print(error.localizedDescription)
-                        return
-                    }
+                let webAuthSession = ASWebAuthenticationSession(url: url, callbackURLScheme: "link-popup") { [self] url, error in
                     guard let url = url else {
-                        // TODO: Log unknown session error, this should never happen
+                        // TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
                         return
                     }
                     do {
@@ -182,19 +177,20 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                         let paymentOption = PaymentOption.link(option: .withPaymentMethod(account: PaymentSheetLinkAccount(email: "test", session: nil, publishableKey: nil), paymentMethod: result.pm))
                         switch result.link_status {
                         case .complete:
-                            self.payWithLinkDelegate?.payWithLinkWebControllerDidConfirm(self, intent: context.intent, with: paymentOption, completion: { result in
+                            self.payWithLinkDelegate?.payWithLinkWebControllerDidConfirm(self, intent: context.intent, with: paymentOption, completion: { _ in
                                 // TODO: Handle post-confirm actions
                             })
                         }
                         print(result)
                     } catch {
+                        // TODO: Send analytics error here
                         print(error)
                     }
                 }
                 self.presentationVC = viewController
-                aswas.presentationContextProvider = self
-                self.aswas = aswas
-                aswas.start()
+                webAuthSession.presentationContextProvider = self
+                self.webAuthSession = webAuthSession
+                webAuthSession.start()
             } catch {
                 // Handle errors (including LinkURLParams errors)
             }
@@ -241,7 +237,7 @@ extension PayWithLinkWebController: PayWithLinkCoordinating {
     }
 
     func cancel() {
-        aswas?.cancel()
+        webAuthSession?.cancel()
         payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
     }
 
