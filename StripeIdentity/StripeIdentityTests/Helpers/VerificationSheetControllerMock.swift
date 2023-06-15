@@ -154,7 +154,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         generatePhonOtpSuccessCallback = successCallback
     }
 
-    func cannotVerifyPhoneOtp() {
+    func sendCannotVerifyPhoneOtpAndTransition() {
         self.cannotVerifyPhoneOtpCalled = true
     }
 
