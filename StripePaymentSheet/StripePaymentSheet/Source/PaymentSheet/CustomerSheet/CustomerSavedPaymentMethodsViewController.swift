@@ -545,19 +545,33 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func handleDismissSheet() {
-        /*
-        if savedPaymentOptionsViewController.originalSelectedSavedPaymentMethod != nil &&
-            savedPaymentOptionsViewController.selectedPaymentOption == nil {
-            delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                self.csCompletion?(.selected(nil))
+        if let originalSelectedPaymentMethod = savedPaymentOptionsViewController.originalSelectedSavedPaymentMethod {
+            switch originalSelectedPaymentMethod {
+            case .applePay:
+                let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.applePay()
+                self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                    self.csCompletion?(.selected(paymentOptionSelection))
+                }
+            case .stripeId(let paymentMethodId):
+                if let paymentMethod = self.savedPaymentMethods.first(where: { $0.stripeId == paymentMethodId }) {
+                    let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
+                    self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                        self.csCompletion?(.selected(paymentOptionSelection))
+                    }
+                } else {
+                    self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                        self.csCompletion?(.selected(nil))
+                    }
+                }
+            default:
+                assertionFailure("Selected payment method was something other than a saved payment method or apple pay")
             }
+
         } else {
-            delegate?.savedPaymentMethodsViewControllerDidCancel(self) {
+            self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                 self.csCompletion?(.selected(nil))
             }
         }
-        */
-        //TODO
     }
 
     @objc
