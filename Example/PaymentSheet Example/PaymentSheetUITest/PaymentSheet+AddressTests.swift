@@ -108,7 +108,12 @@ US
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
+        // Autocomplete should be presenteable
+        XCTAssertTrue(app.buttons["autocomplete_affordance"].waitForExistenceAndTap(timeout: 4.0))
+        XCTAssertTrue(app.buttons["Enter address manually"].waitForExistenceAndTap(timeout: 4.0))
+
         // The Save address button should be enabled
+        XCTAssertTrue(app.buttons["Save address"].waitForExistence(timeout: 4.0))
         let saveAddressButton = app.buttons["Save address"]
         XCTAssertTrue(saveAddressButton.isEnabled)
 
