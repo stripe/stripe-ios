@@ -553,7 +553,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     self.csCompletion?(.selected(paymentOptionSelection))
                 }
             case .stripeId(let paymentMethodId):
-                if let paymentMethod = self.savedPaymentMethods.first(where: { $0.stripeId == paymentMethodId }) {
+                if let paymentMethod = self.savedPaymentOptionsViewController.savedPaymentMethods.first(where: { $0.stripeId == paymentMethodId }) {
                     let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
                     self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                         self.csCompletion?(.selected(paymentOptionSelection))
