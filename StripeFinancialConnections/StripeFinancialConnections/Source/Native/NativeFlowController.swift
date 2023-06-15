@@ -1066,8 +1066,14 @@ private func CreatePaneViewController(
             .analyticsClient
             .log(
                 eventName: "pane.launched",
+                parameters: {
+                    var parameters: [String: Any] = [:]
+                    parameters["referrer_pane"] = dataManager.lastPaneLaunched?.rawValue
+                    return parameters
+                }(),
                 pane: pane
             )
+        dataManager.lastPaneLaunched = pane
     } else {
         dataManager
             .analyticsClient
