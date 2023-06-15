@@ -94,6 +94,25 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
         configuration.headerTextForSelectionScreen = settings.headerTextForSelectionScreen
+
+        if settings.defaultBillingAddress == .on {
+            configuration.defaultBillingDetails.name = "Jane Doe"
+            configuration.defaultBillingDetails.email = "foo@bar.com"
+            configuration.defaultBillingDetails.phone = "+13105551234"
+            configuration.defaultBillingDetails.address = .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            )
+        }
+
+        configuration.billingDetailsCollectionConfiguration.name = .init(rawValue: settings.collectName.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.phone = .init(rawValue: settings.collectPhone.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         return configuration
     }
 
