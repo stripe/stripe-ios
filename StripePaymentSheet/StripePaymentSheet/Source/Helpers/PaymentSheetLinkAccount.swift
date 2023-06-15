@@ -553,3 +553,20 @@ private extension LinkSettings.FundingSource {
         }
     }
 }
+
+// MARK: UpdatePaymentDetailsParams
+
+struct UpdatePaymentDetailsParams {
+    enum DetailsType {
+        case card(expiryDate: CardExpiryDate, billingDetails: STPPaymentMethodBillingDetails? = nil)
+        // updating bank not supported
+    }
+
+    let isDefault: Bool?
+    let details: DetailsType?
+
+    init(isDefault: Bool? = nil, details: DetailsType? = nil) {
+        self.isDefault = isDefault
+        self.details = details
+    }
+}

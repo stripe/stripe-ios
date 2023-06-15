@@ -53,30 +53,26 @@ final class PayWithLinkController {
         self.selfRetainer = self
         self.completion = completion
 
-        let payWithLinkViewController = PayWithLinkViewController(intent: intent, configuration: configuration)
-        payWithLinkViewController.payWithLinkDelegate = self
-        payWithLinkViewController.modalPresentationStyle = UIDevice.current.userInterfaceIdiom == .pad
-            ? .formSheet
-            : .overFullScreen
-
-        presentingController.present(payWithLinkViewController, animated: true)
+        let payWithLinkWebController = PayWithLinkWebController(intent: intent, configuration: configuration)
+        payWithLinkWebController.payWithLinkDelegate = self
+        payWithLinkWebController.present(over: presentingController)
     }
 
 }
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension PayWithLinkController: PayWithLinkViewControllerDelegate {
+extension PayWithLinkController: PayWithLinkWebControllerDelegate {
 
-    func payWithLinkViewControllerDidConfirm(
-        _ payWithLinkViewController: PayWithLinkViewController,
+    func payWithLinkWebControllerDidConfirm(
+        _ payWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
         with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
         PaymentSheet.confirm(
             configuration: configuration,
-            authenticationContext: payWithLinkViewController,
+            authenticationContext: payWithLinkWebController,
             intent: intent,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
@@ -85,14 +81,12 @@ extension PayWithLinkController: PayWithLinkViewControllerDelegate {
         )
     }
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
-        payWithLinkViewController.dismiss(animated: true)
+    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
         completion?(.canceled)
         selfRetainer = nil
     }
 
-    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
-        payWithLinkViewController.dismiss(animated: true)
+    func payWithLinkWebControllerDidFinish(_ payWithLinkWebController: PayWithLinkWebController, result: PaymentSheetResult) {
         completion?(result)
         selfRetainer = nil
     }

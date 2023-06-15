@@ -181,22 +181,7 @@ public class PaymentSheet {
                         updateBottomSheet()
                     }
                 }
-
-                if let linkAccount = LinkAccountContext.shared.account,
-                   linkAccount.sessionState == .requiresVerification,
-                   !linkAccount.hasStartedSMSVerification {
-                    let verificationController = LinkVerificationController(linkAccount: linkAccount)
-                    verificationController.present(from: self.bottomSheetViewController) { result in
-                        switch result {
-                        case .completed:
-                            presentPaymentSheetVC(true)
-                        case .canceled, .failed:
-                            presentPaymentSheetVC(false)
-                        }
-                    }
-                } else {
-                    presentPaymentSheetVC(false)
-                }
+                presentPaymentSheetVC(false)
             case .failure(let error):
                 completion(.failed(error: error))
             }
@@ -309,14 +294,8 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 }
             }
         } else {
-            verifyLinkSessionIfNeeded(with: paymentOption, intent: paymentSheetViewController.intent) { shouldConfirm in
-                if shouldConfirm {
-                    confirm { result in
-                        completion(result)
-                    }
-                } else {
-                    completion(.canceled)
-                }
+            confirm { result in
+                completion(result)
             }
         }
     }
@@ -358,10 +337,10 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension PaymentSheet: PayWithLinkViewControllerDelegate {
+extension PaymentSheet: PayWithLinkWebControllerDelegate {
 
-    func payWithLinkViewControllerDidConfirm(
-        _ payWithLinkViewController: PayWithLinkViewController,
+    func payWithLinkWebControllerDidConfirm(
+        _ PayWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
         with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult) -> Void
@@ -392,12 +371,12 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
         }
     }
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
-        payWithLinkViewController.dismiss(animated: true)
+    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
+        payWithLinkWebController.cancel()
     }
 
-    func payWithLinkViewControllerDidFinish(
-        _ payWithLinkViewController: PayWithLinkViewController,
+    func payWithLinkWebControllerDidFinish(
+        _ PayWithLinkWebController: PayWithLinkWebController,
         result: PaymentSheetResult
     ) {
         completion?(result)
@@ -427,7 +406,7 @@ private extension PaymentSheet {
         shouldFinishOnClose: Bool = false,
         completion: (() -> Void)? = nil
     ) {
-        let payWithLinkVC = PayWithLinkViewController(
+        let payWithLinkVC = PayWithLinkWebController(
             intent: intent,
             configuration: configuration,
             shouldOfferApplePay: shouldOfferApplePay,
@@ -435,41 +414,7 @@ private extension PaymentSheet {
         )
 
         payWithLinkVC.payWithLinkDelegate = self
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            payWithLinkVC.modalPresentationStyle = .formSheet
-        } else {
-            payWithLinkVC.modalPresentationStyle = .overFullScreen
-        }
-
-        presentingController.present(payWithLinkVC, animated: true, completion: completion)
-    }
-
-    func verifyLinkSessionIfNeeded(
-        with paymentOption: PaymentOption,
-        intent: Intent,
-        completion: ((Bool) -> Void)? = nil
-    ) {
-        guard
-            case .link(let linkOption) = paymentOption,
-            let linkAccount = linkOption.account,
-            linkAccount.sessionState == .requiresVerification
-        else {
-            // No verification required
-            completion?(true)
-            return
-        }
-
-        let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
-        verificationController.present(from: bottomSheetViewController) { [weak self] result in
-            self?.bottomSheetViewController.dismiss(animated: true, completion: nil)
-            switch result {
-            case .completed:
-                completion?(true)
-            case .canceled, .failed:
-                completion?(false)
-            }
-        }
+        payWithLinkVC.present(over: presentingController)
     }
 
 }
