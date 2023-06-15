@@ -72,8 +72,6 @@ internal enum InternalCustomerSheetResult {
 
     /// The result of the CustomerSheet
     @frozen public enum CustomerSheetResult {
-        /// The customer cancelled the sheet. (e.g. by tapping outside it or tapping the "X")
-        case canceled
         /// The customer selected a payment method.
         case selected(PaymentOptionSelection?)
         /// An error occurred when presenting the sheet

@@ -76,7 +76,7 @@ extension CustomerSheet {
         /// A saved payment method was selected.
         case saved(paymentMethod: STPPaymentMethod, paymentOptionDisplayData: PaymentOptionDisplayData)
         /// A new payment method was saved and selected.
-        case new(paymentMethod: STPPaymentMethod, paymentOptionDisplayData: PaymentOptionDisplayData)
+//        case new(paymentMethod: STPPaymentMethod, paymentOptionDisplayData: PaymentOptionDisplayData)
 
         /// Create a PaymentOptionSelection for a saved payment method.
         public static func savedPaymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
@@ -85,10 +85,10 @@ extension CustomerSheet {
         }
 
         /// Create a PaymentOptionSelection for a new payment method.
-        public static func newPaymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
-            let data = PaymentOptionDisplayData(image: paymentMethod.makeIcon(), label: paymentMethod.paymentSheetLabel)
-            return .new(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
-        }
+//        public static func newPaymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
+//            let data = PaymentOptionDisplayData(image: paymentMethod.makeIcon(), label: paymentMethod.paymentSheetLabel)
+//            return .new(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
+//        }
 
         /// Create a PaymentOptionSelection for Apple Pay.
         public static func applePay() -> PaymentOptionSelection {
@@ -104,8 +104,8 @@ extension CustomerSheet {
                 return paymentOptionDisplayData
             case .saved(_, let paymentOptionDisplayData):
                 return paymentOptionDisplayData
-            case .new(_, let paymentOptionDisplayData):
-                return paymentOptionDisplayData
+//            case .new(_, let paymentOptionDisplayData):
+//                return paymentOptionDisplayData
             }
         }
 
@@ -115,8 +115,8 @@ extension CustomerSheet {
                 return .applePay
             case .saved(let paymentMethod, _):
                 return .stripeId(paymentMethod.stripeId)
-            case .new(let paymentMethod, _):
-                return .stripeId(paymentMethod.stripeId)
+//            case .new(let paymentMethod, _):
+//                return .stripeId(paymentMethod.stripeId)
             }
         }
     }
