@@ -33,7 +33,7 @@ class CustomerSheetUITest: XCTestCase {
         let selectButton = app.staticTexts["None"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
-        try! fillCardData(app, postalEnabled: false)
+        try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
         let paymentMethodButton = app.staticTexts["Success: ••••4242"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
@@ -54,7 +54,7 @@ class CustomerSheetUITest: XCTestCase {
 
         app.staticTexts["+ Add"].tap()
 
-        try! fillCardData(app, postalEnabled: false)
+        try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
         let paymentMethodButton = app.staticTexts["Success: ••••4242"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
@@ -128,7 +128,7 @@ class CustomerSheetUITest: XCTestCase {
 
         app.staticTexts["+ Add"].tap()
 
-        try! fillCardData(app, postalEnabled: false)
+        try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
         dismissAlertView(alertBody: "Success: ••••4242", alertTitle: "Complete", buttonToTap: "OK")
     }
