@@ -219,7 +219,7 @@ extension CustomerSheet: LoadingViewControllerDelegate {
             guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                 return nil
             }
-            return CustomerSheet.PaymentOptionSelection.savedPaymentMethod(matchingPaymentMethod)
+            return CustomerSheet.PaymentOptionSelection.paymentMethod(matchingPaymentMethod)
         default:
             return nil
         }

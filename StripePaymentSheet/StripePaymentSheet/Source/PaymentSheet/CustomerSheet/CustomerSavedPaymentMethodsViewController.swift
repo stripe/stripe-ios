@@ -356,7 +356,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     }
 
                 case .saved(let paymentMethod):
-                    let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
+                    let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
                     let type = STPPaymentMethod.string(from: paymentMethod.type)
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
                         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: type)
@@ -554,7 +554,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 }
             case .stripeId(let paymentMethodId):
                 if let paymentMethod = self.savedPaymentOptionsViewController.savedPaymentMethods.first(where: { $0.stripeId == paymentMethodId }) {
-                    let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
+                    let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
                     self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                         self.csCompletion?(.selected(paymentOptionSelection))
                     }
