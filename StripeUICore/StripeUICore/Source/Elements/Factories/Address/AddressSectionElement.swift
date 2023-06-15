@@ -172,7 +172,8 @@ import UIKit
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all(),
         additionalFields: AdditionalFields = .init(),
-        theme: ElementsUITheme = .default
+        theme: ElementsUITheme = .default,
+        presentAutoComplete: @escaping () -> Void = { }
     ) {
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
@@ -188,6 +189,9 @@ import UIKit
         self.defaults = defaults
         self.addressSpecProvider = addressSpecProvider
         self.theme = theme
+        self.didTapAutocompleteButton = presentAutoComplete
+        autoCompleteLine?.didTap = presentAutoComplete
+
         let initialCountry = countryCodes[country.selectedIndex]
 
         // Initialize additional fields
