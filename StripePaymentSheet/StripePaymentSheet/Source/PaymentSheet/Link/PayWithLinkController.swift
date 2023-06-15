@@ -15,11 +15,11 @@ import UIKit
 @available(macCatalystApplicationExtension, unavailable)
 final class PayWithLinkController {
 
-    typealias CompletionBlock = PaymentSheetResultCompletionBlock
+    typealias CompletionBlock = ((PaymentSheetResult) -> Void)
 
     private let paymentHandler: STPPaymentHandler
 
-    private var completion: PaymentSheetResultCompletionBlock?
+    private var completion: CompletionBlock?
 
     private var selfRetainer: PayWithLinkController?
 
@@ -46,7 +46,7 @@ final class PayWithLinkController {
 
     func present(
         from presentingController: UIViewController,
-        completion: @escaping PaymentSheetResultCompletionBlock
+        completion: @escaping CompletionBlock
     ) {
         // Similarly to `PKPaymentAuthorizationController`, `LinkController` should retain
         // itself while presented.

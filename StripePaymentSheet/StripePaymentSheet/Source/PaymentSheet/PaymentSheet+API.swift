@@ -308,6 +308,7 @@ extension PaymentSheet {
                 let linkController = PayWithLinkController(intent: intent, configuration: configuration)
                 linkController.present(
                     completion: { result in
+                        // TODO(Link): Set intent confirmation type
                         completion(result, nil)
                     }
                 )
