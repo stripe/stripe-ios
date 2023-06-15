@@ -162,7 +162,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     /// Defaults to the app's key window
     func present(over viewController: UIViewController) {
 //      TODO: Log attempt to show web session
-        let webAuthSession = ASWebAuthenticationSession(url: LinkURLGenerator.url(), callbackURLScheme: "stripesdk") { url, error in
+        let webAuthSession = ASWebAuthenticationSession(url: LinkURLGenerator.url(), callbackURLScheme: "stripesdk") { url, _ in
             guard let url = url else {
                 //                  TODO: Get analytics logs here from error: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
                 return
