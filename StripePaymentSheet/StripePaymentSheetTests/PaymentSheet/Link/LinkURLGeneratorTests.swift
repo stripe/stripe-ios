@@ -34,7 +34,7 @@ class LinkURLGeneratorTests: XCTestCase {
     func testURLCreationRegularUnicode() {
         var params = testParams
         params.customerInfo.email = "유니코드"
-        let _ = try! LinkURLGenerator.url(params: params)
+        _ = try! LinkURLGenerator.url(params: params)
         // Just make sure it doesn't fail
     }
 

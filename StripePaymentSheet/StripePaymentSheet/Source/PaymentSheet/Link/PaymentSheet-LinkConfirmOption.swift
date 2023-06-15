@@ -35,13 +35,6 @@ extension PaymentSheet {
             account: PaymentSheetLinkAccount,
             paymentMethodParams: STPPaymentMethodParams
         )
-
-        /// Confirm with Payment Method.
-        case withPaymentMethod(
-            account: PaymentSheetLinkAccount,
-            paymentMethod: STPPaymentMethod
-        )
-
     }
 
 }
@@ -60,8 +53,6 @@ extension PaymentSheet.LinkConfirmOption {
             return account
         case .withPaymentMethodParams(let account, _):
             return account
-        case .withPaymentMethod(account: let account, _):
-            return account
         }
     }
 
@@ -73,8 +64,6 @@ extension PaymentSheet.LinkConfirmOption {
             return paymentMethodParams.paymentSheetLabel
         case .withPaymentMethodParams(_, let paymentMethodParams):
             return paymentMethodParams.paymentSheetLabel
-        case .withPaymentMethod(_, paymentMethod: let paymentMethod):
-            return paymentMethod.paymentSheetLabel
         }
     }
 

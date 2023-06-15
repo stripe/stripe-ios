@@ -166,7 +166,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             // TODO: Log attempt to show web session
             do {
                 let url = try await LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
-                let webAuthSession = ASWebAuthenticationSession(url: url, callbackURLScheme: "link-popup") { [self] url, error in
+                let webAuthSession = ASWebAuthenticationSession(url: url, callbackURLScheme: "link-popup") { url, error in
                     guard let url = url else {
                         // TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
                         return
@@ -174,13 +174,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                     do {
                         // TODO: Log that authentication session succeeded
                         let result = try LinkPopupURLParser.result(with: url)
-                        let paymentOption = PaymentOption.link(option: .withPaymentMethod(account: PaymentSheetLinkAccount(email: "test", session: nil, publishableKey: nil), paymentMethod: result.pm))
-                        switch result.link_status {
-                        case .complete:
-                            self.payWithLinkDelegate?.payWithLinkWebControllerDidConfirm(self, intent: context.intent, with: paymentOption, completion: { _ in
-                                // TODO: Handle post-confirm actions
-                            })
-                        }
+                        // TODO: Do something with the result
                         print(result)
                     } catch {
                         // TODO: Send analytics error here
