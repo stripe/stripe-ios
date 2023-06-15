@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### Payments
+* [Fixed] Fixed a bug which was causing Cash App Pay SetupIntents to incorrectly state they were canclled when they succeeded.
+
 ## 23.9.1 2023-06-12
 ### PaymentSheet
 * [Fixed] Fixed validating the IntentConfiguration matches the PaymentIntent/SetupIntent when it was already confirmed on the server. Note: server-side confirmation is in private beta.
