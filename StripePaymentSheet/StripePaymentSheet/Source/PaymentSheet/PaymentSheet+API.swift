@@ -40,8 +40,8 @@ extension PaymentSheet {
                 let applePayContext = STPApplePayContext.create(
                     intent: intent,
                     configuration: configuration,
-                    completion: { result in
-                        completion(result, nil)
+                    completion: { result, deferredIntentConfirmationType in
+                        completion(result, deferredIntentConfirmationType)
                     }
                 )
             else {

@@ -12,97 +12,109 @@ import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult) -> Void)
+typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
+
+/// A shim class; ApplePayContext expects a protocol/delegate, but PaymentSheet uses closures.
+private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate {
+    let completion: PaymentSheetResultCompletionBlock
+    /// Retain this class until Apple Pay completes
+    var selfRetainer: ApplePayContextClosureDelegate?
+    let authorizationResultHandler:
+    ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+    let intent: Intent
+    
+    init(
+        intent: Intent,
+        authorizationResultHandler: (
+            (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
+        )?,
+        completion: @escaping PaymentSheetResultCompletionBlock
+    ) {
+        self.completion = completion
+        self.authorizationResultHandler = authorizationResultHandler
+        self.intent = intent
+        super.init()
+        self.selfRetainer = self
+    }
+    
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
+        paymentInformation: PKPayment,
+        completion: @escaping STPIntentClientSecretCompletionBlock
+    ) {
+        switch intent {
+        case .paymentIntent(let paymentIntent):
+            completion(paymentIntent.clientSecret, nil)
+        case .setupIntent(let setupIntent):
+            completion(setupIntent.clientSecret, nil)
+        case .deferredIntent(_, let intentConfig):
+            guard let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) else {
+                assertionFailure("Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod!")
+                completion(nil, STPApplePayContext.makeUnknownError(message: "Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod."))
+                return
+            }
+            let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
+            intentConfig.confirmHandler(stpPaymentMethod, shouldSavePaymentMethod) { result in
+                switch result {
+                case .success(let clientSecret):
+                    guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
+                        completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+                        return
+                    }
+                    completion(clientSecret, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                }
+            }
+        }
+    }
+    
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didCompleteWith status: STPApplePayContext.PaymentStatus,
+        error: Error?
+    ) {
+        let confirmType: STPAnalyticsClient.DeferredIntentConfirmationType? = {
+            guard let confirmType = context.confirmType else { return nil }
+            switch confirmType {
+            case .server:
+                return .server
+            case .client:
+                return .client
+            case .none:
+                return STPAnalyticsClient.DeferredIntentConfirmationType.none
+            }
+        }()
+        switch status {
+        case .success:
+            completion(.completed, confirmType)
+        case .error:
+            completion(.failed(error: error!), confirmType)
+        case .userCancellation:
+            completion(.canceled, confirmType)
+        }
+        selfRetainer = nil
+    }
+    
+    func applePayContext(
+        _ context: STPApplePayContext,
+        willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult,
+        handler: @escaping (PKPaymentAuthorizationResult) -> Void
+    ) {
+        if let authorizationResultHandler = authorizationResultHandler {
+            authorizationResultHandler(authorizationResult) { result in
+                handler(result)
+            }
+        } else {
+            handler(authorizationResult)
+        }
+    }
+}
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension STPApplePayContext {
-    /// A shim class; ApplePayContext expects a protocol/delegate, but PaymentSheet uses closures.
-    private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate {
-        let completion: PaymentSheetResultCompletionBlock
-        /// Retain this class until Apple Pay completes
-        var selfRetainer: ApplePayContextClosureDelegate?
-        let authorizationResultHandler:
-            ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
-        let intent: Intent
-
-        init(
-            intent: Intent,
-            authorizationResultHandler: (
-                (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
-            )?,
-            completion: @escaping PaymentSheetResultCompletionBlock
-        ) {
-            self.completion = completion
-            self.authorizationResultHandler = authorizationResultHandler
-            self.intent = intent
-            super.init()
-            self.selfRetainer = self
-        }
-
-        func applePayContext(
-            _ context: STPApplePayContext,
-            didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
-            paymentInformation: PKPayment,
-            completion: @escaping STPIntentClientSecretCompletionBlock
-        ) {
-            switch intent {
-            case .paymentIntent(let paymentIntent):
-                completion(paymentIntent.clientSecret, nil)
-            case .setupIntent(let setupIntent):
-                completion(setupIntent.clientSecret, nil)
-            case .deferredIntent(_, let intentConfig):
-                guard let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) else {
-                    assertionFailure("Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod!")
-                    completion(nil, STPApplePayContext.makeUnknownError(message: "Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod."))
-                    return
-                }
-                let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
-                intentConfig.confirmHandler(stpPaymentMethod, shouldSavePaymentMethod) { result in
-                    switch result {
-                    case .success(let clientSecret):
-                        guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
-                            completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
-                            return
-                        }
-                        completion(clientSecret, nil)
-                    case .failure(let error):
-                        completion(nil, error)
-                    }
-                }
-            }
-        }
-
-        func applePayContext(
-            _ context: STPApplePayContext,
-            didCompleteWith status: STPApplePayContext.PaymentStatus,
-            error: Error?
-        ) {
-            switch status {
-            case .success:
-                completion(.completed)
-            case .error:
-                completion(.failed(error: error!))
-            case .userCancellation:
-                completion(.canceled)
-            }
-            selfRetainer = nil
-        }
-
-        func applePayContext(
-            _ context: STPApplePayContext,
-            willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult,
-            handler: @escaping (PKPaymentAuthorizationResult) -> Void
-        ) {
-            if let authorizationResultHandler = authorizationResultHandler {
-                authorizationResultHandler(authorizationResult) { result in
-                    handler(result)
-                }
-            } else {
-                handler(authorizationResult)
-            }
-        }
-    }
 
     static func create(
         intent: Intent,
@@ -112,11 +124,11 @@ extension STPApplePayContext {
         guard let applePay = configuration.applePay else {
             return nil
         }
-
+        
         var paymentRequest = createPaymentRequest(intent: intent,
                                                   configuration: configuration,
                                                   applePay: applePay)
-
+        
         if let paymentRequestHandler = configuration.applePay?.customHandlers?.paymentRequestHandler {
             paymentRequest = paymentRequestHandler(paymentRequest)
         }
@@ -137,11 +149,11 @@ extension STPApplePayContext {
             return nil
         }
     }
-
+    
     private static func createPaymentRequest(
-                intent: Intent,
-                configuration: PaymentSheet.Configuration,
-                applePay: PaymentSheet.ApplePayConfiguration
+        intent: Intent,
+        configuration: PaymentSheet.Configuration,
+        applePay: PaymentSheet.ApplePayConfiguration
     ) -> PKPaymentRequest {
         func paymentRequest(with currency: String, amount: Int) -> PKPaymentRequest {
             var paymentRequest: PKPaymentRequest
@@ -165,7 +177,7 @@ extension STPApplePayContext {
             }
             return paymentRequest
         }
-
+        
         func setupPaymentRequest() -> PKPaymentRequest {
             var paymentRequest: PKPaymentRequest
             paymentRequest = StripeAPI.paymentRequest(
@@ -182,10 +194,10 @@ extension STPApplePayContext {
                     PKPaymentSummaryItem(label: "\(configuration.merchantDisplayName)", amount: .one, type: .pending),
                 ]
             }
-
+            
             return paymentRequest
         }
-
+        
         switch intent {
         case .paymentIntent(let paymentIntent):
             return paymentRequest(with: paymentIntent.currency, amount: paymentIntent.amount)
