@@ -165,15 +165,15 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         Task { @MainActor in
             // TODO: Log attempt to show web session
             do {
-                let url = try await LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
-                let webAuthSession = ASWebAuthenticationSession(url: url, callbackURLScheme: "link-popup") { url, error in
-                    guard let url = url else {
+                let linkPopupUrl = try await LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
+                let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
+                    guard let returnURL = returnURL else {
                         // TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
                         return
                     }
                     do {
                         // TODO: Log that authentication session succeeded
-                        let result = try LinkPopupURLParser.result(with: url)
+                        let result = try LinkPopupURLParser.result(with: returnURL)
                         // TODO: Do something with the result
                         print(result)
                     } catch {

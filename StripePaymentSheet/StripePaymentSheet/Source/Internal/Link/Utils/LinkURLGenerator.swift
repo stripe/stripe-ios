@@ -45,11 +45,11 @@ class LinkURLGenerator {
             throw LinkURLGeneratorError.noPublishableKey
         }
         guard let merchantCountryCode = intent.countryCode else {
-            throw LinkURLGeneratorError.noCountryCode
+            throw LinkURLGeneratorError.noMerchantCountryCode
         }
 
-        // US isn't the best default, but we only expect regionCode to be nil in the nil region on a simulator, and we don't want to crash.
-        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.regionCode ?? "US"
+        // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
+        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.regionCode ?? "XX"
 
         // Get email from the billing details, or the Customer object if the billing details are empty
         var customerEmail = configuration.defaultBillingDetails.email
@@ -106,5 +106,5 @@ extension LinkURLParams {
 enum LinkURLGeneratorError: Error {
     case urlCreationFailed
     case noPublishableKey
-    case noCountryCode
+    case noMerchantCountryCode
 }
