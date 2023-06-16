@@ -66,9 +66,9 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     }
 
     /// :nodoc:
-    @objc public override var hash: Int {
-        return tokenId.hash
-    }
+//    public override var hash: Int {
+//        return tokenId.hash
+//    }
 
     func isEqual(to object: STPToken?) -> Bool {
         if self == object {

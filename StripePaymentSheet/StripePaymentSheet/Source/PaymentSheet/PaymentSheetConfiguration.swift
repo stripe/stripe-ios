@@ -13,6 +13,8 @@ import PassKit
 import UIKit
 
 // MARK: - Configuration
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
 
     /// Style options for colors in PaymentSheet

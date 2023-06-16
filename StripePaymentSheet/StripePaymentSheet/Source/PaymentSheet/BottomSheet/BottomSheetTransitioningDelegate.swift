@@ -15,6 +15,8 @@ import UIKit
 /// viewController.modalPresentationStyle = .custom
 /// viewController.transitioningDelegate = BottomSheetTransitioningDelegate.default
 /// ```
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STPBottomSheetTransitioningDelegate)
 class BottomSheetTransitioningDelegate: NSObject {
 

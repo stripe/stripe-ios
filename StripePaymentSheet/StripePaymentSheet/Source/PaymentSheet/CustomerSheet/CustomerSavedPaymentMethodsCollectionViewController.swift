@@ -10,6 +10,8 @@ import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
     func didUpdateSelection(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
@@ -27,6 +29,8 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
  */
 
 /// For internal SDK use only
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_SavedPaymentMethodsCollectionViewController)
 class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     // MARK: - Types
@@ -300,6 +304,8 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
 
 // MARK: - UICollectionView
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable) 
 extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate,
     UICollectionViewDelegateFlowLayout
 {
@@ -355,6 +361,8 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
 
 // MARK: - PaymentOptionCellDelegate
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCellDelegate {
     func paymentOptionCellDidSelectRemove(
         _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell

@@ -187,10 +187,10 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         return isEqual(to: other as? STPCard)
     }
 
-    /// :nodoc:
-    @objc public override var hash: Int {
-        return stripeID.hash
-    }
+//    /// :nodoc:
+//    public override var hash: Int {
+//        return stripeID.hash
+//    }
 
     func isEqual(to other: STPCard?) -> Bool {
         if self === other {

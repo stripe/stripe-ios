@@ -9,6 +9,8 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 final class LinkInlineSignupElement: Element {
 
     private let signupView: LinkInlineSignupView
@@ -51,6 +53,8 @@ final class LinkInlineSignupElement: Element {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkInlineSignupElement: LinkInlineSignupViewDelegate {
 
     func inlineSignupViewDidUpdate(_ view: LinkInlineSignupView) {

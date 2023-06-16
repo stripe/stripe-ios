@@ -8,6 +8,8 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 enum LinkUI {
 
     /// Semantic text styles for the Link user interface.
@@ -57,6 +59,8 @@ enum LinkUI {
 
 // MARK: Development flags
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkUI {
 
     /// Whether or not the UI can show features that are under development.
@@ -70,6 +74,8 @@ extension LinkUI {
 
 // MARK: - Typography
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkUI {
 
     /// Returns the font to use for the specified text style.
@@ -147,6 +153,8 @@ extension LinkUI {
 
 // MARK: - Appearance
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkUI {
 
     static let appearance: PaymentSheet.Appearance = {

@@ -12,6 +12,8 @@ import Foundation
 import UIKit
 
 /// A delegate for `AddressViewController`
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 public protocol AddressViewControllerDelegate: AnyObject {
     /// Called when the customer finishes entering their address or cancels. Your implemententation should dismiss the view controller.
     /// - Parameter address: A valid address or nil if the customer cancels the flow.
@@ -21,6 +23,8 @@ public protocol AddressViewControllerDelegate: AnyObject {
 /// A view controller that collects a name and an address, with full localization and autocomplete.
 /// - Note: It uses `navigationItem` and can push a view controller, so it must be shown inside a `UINavigationController`.
 /// - Seealso: https://stripe.com/docs/elements/address-element?platform=ios
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STPAddressViewController)
 public class AddressViewController: UIViewController {
     // MARK: - Public properties
@@ -197,6 +201,8 @@ public class AddressViewController: UIViewController {
 }
 
 // MARK: - Keyboard handling
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension AddressViewController {
     private func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -227,6 +233,8 @@ extension AddressViewController {
 }
 
 // MARK: - Internal methods
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension AddressViewController {
 
     func didContinue() {
@@ -251,6 +259,8 @@ extension AddressViewController {
 }
 
 // MARK: - Private methods
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension AddressViewController {
     /// Expands the address section element and begin editing if the current country selection does not support auto copmlete
     private func expandAddressSectionIfNeeded() {
@@ -349,7 +359,9 @@ extension AddressViewController {
 }
 
 // MARK: - ElementDelegate
- @_spi(STP) extension AddressViewController: ElementDelegate {
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+@_spi(STP) extension AddressViewController: ElementDelegate {
      @_spi(STP) public func didUpdate(element: Element) {
          guard let addressSection = addressSection else { assertionFailure(); return }
          self.latestError = nil // clear error on new input
@@ -365,6 +377,8 @@ extension AddressViewController {
 
 // MARK: AutoCompleteViewControllerDelegate
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension AddressViewController: AutoCompleteViewControllerDelegate {
     func didSelectManualEntry(_ line1: String) {
         guard let addressSection = addressSection else { assertionFailure(); return }
@@ -405,6 +419,8 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
 }
 
 // MARK: - UIGestureRecognizerDelegate
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension AddressViewController: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         return !(touch.view is UIControl) // Without this, the UIControl (e.g. button) doesn't get the touch
@@ -412,6 +428,8 @@ extension AddressViewController: UIGestureRecognizerDelegate {
 }
 
 // MARK: - PaymentSheet <-> AddressSectionElement Helpers
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension AddressSectionElement.AddressDetails {
     init(from addressDetails: AddressViewController.Configuration.DefaultAddressDetails) {
         self.init(
@@ -429,6 +447,8 @@ extension AddressSectionElement.AddressDetails {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension AddressSectionElement.AdditionalFields {
     init(from additionalFields: AddressViewController.Configuration.AdditionalFields) {
         func config(from fieldConfiguration: AddressViewController.Configuration.AdditionalFields.FieldConfiguration) -> FieldConfiguration {
@@ -449,6 +469,8 @@ extension AddressSectionElement.AdditionalFields {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @_spi(STP) extension AddressViewController: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier = "PaymentSheet.AddressController"
 }

@@ -9,6 +9,8 @@
 import UIKit
 
 /// Standalone verification controller.
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 final class LinkVerificationController {
 
     typealias CompletionBlock = (LinkVerificationViewController.VerificationResult) -> Void
@@ -34,6 +36,8 @@ final class LinkVerificationController {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkVerificationController: LinkVerificationViewControllerDelegate {
 
     func verificationController(

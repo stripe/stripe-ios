@@ -32,6 +32,8 @@ import UIKit
 }
 
 /// A drop-in class that presents a sheet for a customer to complete their payment
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 public class PaymentSheet {
     enum InitializationMode {
         case paymentIntentClientSecret(String)
@@ -235,13 +237,9 @@ public class PaymentSheet {
     var completion: ((PaymentSheetResult) -> Void)?
 
     /// The STPPaymentHandler instance
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
     lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
 
     /// The parent view controller to present
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
     lazy var bottomSheetViewController: BottomSheetViewController = {
         let isTestMode = configuration.apiClient.isTestmode
         let loadingViewController = LoadingViewController(

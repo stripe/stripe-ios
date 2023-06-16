@@ -9,6 +9,8 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 final class LinkEnabledPaymentMethodElement: Element {
     struct Constants {
         static let spacing: CGFloat = 12
@@ -89,6 +91,8 @@ final class LinkEnabledPaymentMethodElement: Element {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkEnabledPaymentMethodElement: PaymentMethodElement {
 
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
@@ -97,6 +101,8 @@ extension LinkEnabledPaymentMethodElement: PaymentMethodElement {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkEnabledPaymentMethodElement: ElementDelegate {
 
     func didUpdate(element: Element) {

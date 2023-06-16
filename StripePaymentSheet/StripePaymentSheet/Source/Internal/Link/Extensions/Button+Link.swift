@@ -9,6 +9,8 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension Button.Configuration {
 
     static func linkPrimary() -> Self {

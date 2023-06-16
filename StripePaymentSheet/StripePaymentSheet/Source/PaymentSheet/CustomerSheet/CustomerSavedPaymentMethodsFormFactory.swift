@@ -10,6 +10,8 @@
 import SwiftUI
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 class CustomerSavedPaymentMethodsFormFactory {
 
     let paymentMethod: PaymentSheet.PaymentMethodType

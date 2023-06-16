@@ -10,10 +10,14 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol PayWithLinkWalletViewModelDelegate: AnyObject {
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.WalletViewModel)
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PayWithLinkViewController {
 
     final class WalletViewModel {
@@ -268,6 +272,8 @@ extension PayWithLinkViewController {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 private extension PayWithLinkViewController.WalletViewModel {
 
     static func determineInitiallySelectedPaymentMethod(

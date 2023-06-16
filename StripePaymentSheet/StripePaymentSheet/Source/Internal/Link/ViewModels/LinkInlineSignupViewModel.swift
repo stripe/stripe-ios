@@ -11,10 +11,14 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol LinkInlineSignupViewModelDelegate: AnyObject {
     func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel)
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 final class LinkInlineSignupViewModel {
     enum Action: Equatable {
         case pay(account: PaymentSheetLinkAccount)
@@ -196,6 +200,8 @@ final class LinkInlineSignupViewModel {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 private extension LinkInlineSignupViewModel {
 
     func notifyUpdate() {

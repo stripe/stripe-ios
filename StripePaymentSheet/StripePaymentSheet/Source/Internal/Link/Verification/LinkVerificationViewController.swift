@@ -11,6 +11,8 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol LinkVerificationViewControllerDelegate: AnyObject {
     func verificationController(
         _ controller: LinkVerificationViewController,
@@ -19,6 +21,8 @@ protocol LinkVerificationViewControllerDelegate: AnyObject {
 }
 
 /// For internal SDK use only
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_LinkVerificationViewController)
 final class LinkVerificationViewController: UIViewController {
     enum VerificationResult {
@@ -150,6 +154,8 @@ final class LinkVerificationViewController: UIViewController {
 }
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkVerificationViewController: LinkVerificationViewDelegate {
 
     func verificationViewDidCancel(_ view: LinkVerificationView) {
@@ -219,6 +225,8 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkVerificationViewController {
 
     private func finish(withResult result: VerificationResult) {
@@ -231,6 +239,8 @@ extension LinkVerificationViewController {
 
 // MARK: - Transitioning Delegate
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkVerificationViewController {
 
     final class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {

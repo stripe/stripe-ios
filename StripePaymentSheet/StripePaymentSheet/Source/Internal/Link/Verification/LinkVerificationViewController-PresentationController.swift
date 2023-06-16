@@ -9,6 +9,8 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkVerificationViewController {
 
     /// For internal SDK use only
@@ -182,6 +184,8 @@ extension LinkVerificationViewController {
 
 // MARK: - Keyboard handling
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkVerificationViewController.PresentationController {
 
     @objc func keyboardFrameChanged(_ notification: Notification) {

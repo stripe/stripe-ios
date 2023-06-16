@@ -22,6 +22,8 @@ private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
 
 // MARK: - SavedPaymentMethodCollectionView
 /// For internal SDK use only
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_SavedPaymentMethodCollectionView)
 class SavedPaymentMethodCollectionView: UICollectionView {
     init(appearance: PaymentSheet.Appearance) {
@@ -59,6 +61,8 @@ protocol PaymentOptionCellDelegate: AnyObject {
         _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension SavedPaymentMethodCollectionView {
 
     /// A rounded, shadowed cell with an icon (e.g. Apple Pay, VISA, ➕) and some text at the bottom.

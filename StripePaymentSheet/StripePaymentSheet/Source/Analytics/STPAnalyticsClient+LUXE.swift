@@ -7,6 +7,8 @@
 
 @_spi(STP) import StripeCore
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension STPAnalyticsClient {
     func logLUXESerializeFailure() {
         self.logPaymentSheetEvent(event: .luxeSerializeFailure)

@@ -18,6 +18,8 @@ class ConnectionsElement: Element {
 
 // MARK: - PaymentMethodElement
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension ConnectionsElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         // no-op

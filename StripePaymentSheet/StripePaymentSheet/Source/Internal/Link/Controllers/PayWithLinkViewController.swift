@@ -12,6 +12,8 @@ import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol PayWithLinkViewControllerDelegate: AnyObject {
 
     func payWithLinkViewControllerDidConfirm(
@@ -30,6 +32,8 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol PayWithLinkCoordinating: AnyObject {
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
@@ -48,6 +52,8 @@ protocol PayWithLinkCoordinating: AnyObject {
 ///
 /// Instantiate and present this controller when the user chooses to pay with Link.
 /// For internal SDK use only
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_PayWithLinkViewController)
 final class PayWithLinkViewController: UINavigationController {
 
@@ -204,6 +210,8 @@ final class PayWithLinkViewController: UINavigationController {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PayWithLinkViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -214,6 +222,8 @@ extension PayWithLinkViewController: UIGestureRecognizerDelegate {
 
 // MARK: - Utils
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 private extension PayWithLinkViewController {
 
     func loadAndPresentWallet() {
@@ -262,6 +272,8 @@ private extension PayWithLinkViewController {
 
 // MARK: - Navigation
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 private extension PayWithLinkViewController {
 
     var rootViewController: UIViewController? {
@@ -282,6 +294,8 @@ private extension PayWithLinkViewController {
 
 // MARK: - Coordinating
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PayWithLinkViewController: PayWithLinkCoordinating {
 
     func confirm(
@@ -386,6 +400,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PayWithLinkViewController: STPAuthenticationContext {
 
     func authenticationPresentingViewController() -> UIViewController {

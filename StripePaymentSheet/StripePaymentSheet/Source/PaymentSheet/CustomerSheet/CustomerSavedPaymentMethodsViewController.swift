@@ -9,6 +9,8 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?,
                                                         with paymentOption: PaymentOption,
@@ -17,6 +19,8 @@ protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_CustomerSavedPaymentMethodsViewController)
 class CustomerSavedPaymentMethodsViewController: UIViewController {
 
@@ -592,6 +596,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension CustomerSavedPaymentMethodsViewController: BottomSheetContentViewController {
     var allowsDragToDismiss: Bool {
         return isDismissable
@@ -610,6 +616,8 @@ extension CustomerSavedPaymentMethodsViewController: BottomSheetContentViewContr
 
 // MARK: - SheetNavigationBarDelegate
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension CustomerSavedPaymentMethodsViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
         handleDismissSheet()
@@ -632,6 +640,8 @@ extension CustomerSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
         }
     }
 }
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension CustomerSavedPaymentMethodsViewController: CustomerAddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: CustomerAddPaymentMethodViewController) {
         error = nil
@@ -639,6 +649,8 @@ extension CustomerSavedPaymentMethodsViewController: CustomerAddPaymentMethodVie
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethodsCollectionViewControllerDelegate {
     func didUpdateSelection(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,

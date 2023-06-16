@@ -217,9 +217,9 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     }
 
     /// :nodoc:
-    @objc public override var hash: Int {
-        return stripeID.hash
-    }
+//    public override var hash: Int {
+//        return stripeID.hash
+//    }
 
     func isEqual(to source: STPSource?) -> Bool {
         if self === source {

@@ -10,6 +10,8 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol LinkInstantDebitMandateViewDelegate: AnyObject {
     /// Called when the user taps on a link.
     ///
@@ -22,6 +24,8 @@ protocol LinkInstantDebitMandateViewDelegate: AnyObject {
 // TODO(ramont): extract common code with `LinkLegalTermsView`.
 
 /// For internal SDK use only
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_LinkInstantDebitMandateViewDelegate)
 final class LinkInstantDebitMandateView: UIView {
     struct Constants {
@@ -101,6 +105,8 @@ final class LinkInstantDebitMandateView: UIView {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkInstantDebitMandateView: UITextViewDelegate {
 
     func textView(

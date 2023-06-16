@@ -10,11 +10,15 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol LinkInlineSignupViewDelegate: AnyObject {
     func inlineSignupViewDidUpdate(_ view: LinkInlineSignupView)
 }
 
 /// For internal SDK use only
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_LinkInlineSignupView)
 final class LinkInlineSignupView: UIView {
 
@@ -166,6 +170,8 @@ final class LinkInlineSignupView: UIView {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkInlineSignupView: ElementDelegate {
 
     func didUpdate(element: Element) {
@@ -201,6 +207,8 @@ extension LinkInlineSignupView: ElementDelegate {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkInlineSignupView: LinkInlineSignupViewModelDelegate {
 
     func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel) {
@@ -210,6 +218,8 @@ extension LinkInlineSignupView: LinkInlineSignupViewModelDelegate {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
 
     func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {

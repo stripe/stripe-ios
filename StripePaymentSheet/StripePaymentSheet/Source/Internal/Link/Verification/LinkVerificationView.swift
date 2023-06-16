@@ -12,6 +12,8 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol LinkVerificationViewDelegate: AnyObject {
     func verificationViewDidCancel(_ view: LinkVerificationView)
     func verificationViewResendCode(_ view: LinkVerificationView)
@@ -20,6 +22,8 @@ protocol LinkVerificationViewDelegate: AnyObject {
 }
 
 /// For internal SDK use only
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_LinkVerificationView)
 final class LinkVerificationView: UIView {
     struct Constants {
@@ -154,6 +158,8 @@ final class LinkVerificationView: UIView {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 private extension LinkVerificationView {
 
     var arrangedSubViews: [UIView] {
@@ -218,6 +224,8 @@ private extension LinkVerificationView {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkVerificationView.Mode {
 
     var requiresModalPresentation: Bool {

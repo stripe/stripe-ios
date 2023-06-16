@@ -87,9 +87,9 @@ class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
         return false
     }
 
-    override var hash: Int {
-        return activationData.hashValue
-    }
+//    override var hash: Int {
+//        return activationData.hashValue
+//    }
 
     func isEqual(to details: STPPushProvisioningDetails) -> Bool {
         return details.activationData == self.activationData

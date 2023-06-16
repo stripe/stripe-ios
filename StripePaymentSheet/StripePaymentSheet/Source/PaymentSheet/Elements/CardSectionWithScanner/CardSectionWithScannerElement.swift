@@ -16,6 +16,8 @@ import UIKit
 /// A Element that contains a SectionElement for card details, whose view depends on the availability of card scanning:
 /// If card scanning is available, it uses a custom view that adds card scanning. Otherwise, it uses the default SectionElement view.
 /// It coordinates between the PAN and CVC fields.
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 final class CardSection: ContainerElement {
     var elements: [Element] {
         return [cardSection]
@@ -133,6 +135,8 @@ final class CardSection: ContainerElement {
 
 // MARK: - Helpers
 /// A DRY helper to ensure `STPPaymentMethodCardParams` is present on `intentConfirmParams.paymentMethodParams`.
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 private func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMethodCardParams {
     guard let cardParams = intentParams.paymentMethodParams.card else {
         let cardParams = STPPaymentMethodCardParams()

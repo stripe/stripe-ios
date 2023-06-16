@@ -26,6 +26,8 @@ fileprivate extension ConsumerPaymentDetails {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 final class LinkCardEditElement: Element {
     struct Params {
         let expiryDate: CardExpiryDate
@@ -187,6 +189,8 @@ final class LinkCardEditElement: Element {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkCardEditElement: ElementDelegate {
 
     func didUpdate(element: Element) {
@@ -199,6 +203,8 @@ extension LinkCardEditElement: ElementDelegate {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 private extension LinkCardEditElement {
 
     struct PANConfiguration: TextFieldElementConfiguration {

@@ -20,21 +20,19 @@ internal enum InternalCustomerSheetResult {
     case failed(error: Error)
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @_spi(PrivateBetaCustomerSheet) public class CustomerSheet {
     let configuration: CustomerSheet.Configuration
 
     internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
 
     /// The STPPaymentHandler instance
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
     lazy var paymentHandler: STPPaymentHandler = {
         STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler())
     }()
 
     /// The parent view controller to present
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
     lazy var bottomSheetViewController: BottomSheetViewController = {
         let isTestMode = configuration.apiClient.isTestmode
         let vc = BottomSheetViewController(
@@ -154,6 +152,8 @@ internal enum InternalCustomerSheetResult {
     var userCompletion: ((CustomerSheetResult) -> Void)?
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension CustomerSheet {
     func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?), Error>) -> Void) {
         Task {
@@ -199,6 +199,8 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension CustomerSheet: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
         loadingViewController.dismiss(animated: true) {
@@ -207,6 +209,8 @@ extension CustomerSheet: LoadingViewControllerDelegate {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @_spi(PrivateBetaCustomerSheet) extension StripeCustomerAdapter {
     /// Returns the selected Payment Option for this customer adapter.
     /// You can use this to obtain the selected payment method without loading the CustomerSheet.

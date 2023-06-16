@@ -63,6 +63,8 @@ struct AddressAnalyticData {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.Address {
     init(from address: AddressViewController.AddressDetails.Address) {
         line1 = address.line1

@@ -10,6 +10,8 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkInlineSignupView {
 
     final class CheckboxElement: Element {

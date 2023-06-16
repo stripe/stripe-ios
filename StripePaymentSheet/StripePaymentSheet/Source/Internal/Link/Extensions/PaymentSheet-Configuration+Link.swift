@@ -8,6 +8,8 @@
 
 @_spi(STP) import StripeCore
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.Configuration {
 
     var isApplePayEnabled: Bool {

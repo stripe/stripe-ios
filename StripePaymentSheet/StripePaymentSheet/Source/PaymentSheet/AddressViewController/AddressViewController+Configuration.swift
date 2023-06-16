@@ -11,6 +11,8 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 public extension AddressViewController {
     /// The customer data collected by `AddressViewController`
     struct AddressDetails {

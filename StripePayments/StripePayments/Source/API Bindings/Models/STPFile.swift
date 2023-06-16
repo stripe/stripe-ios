@@ -103,9 +103,9 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
     }
 
     /// :nodoc:
-    @objc public override var hash: Int {
-        return fileId?.hash ?? 0
-    }
+//    public override var hash: Int {
+//        return fileId?.hash ?? 0
+//    }
 
     // MARK: - STPAPIResponseDecodable
     @objc

@@ -9,6 +9,8 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension CustomerSheet {
 
     public struct Configuration {
@@ -45,6 +47,8 @@ extension CustomerSheet {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension CustomerSheet {
     /// A selected payment method from a CustomerSheet.
     public enum PaymentOptionSelection {

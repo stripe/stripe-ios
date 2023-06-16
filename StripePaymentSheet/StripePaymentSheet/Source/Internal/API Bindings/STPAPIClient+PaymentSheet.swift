@@ -10,6 +10,8 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension STPAPIClient {
     typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
     typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
@@ -122,6 +124,8 @@ extension STPAPIClient {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.IntentConfiguration {
     func elementsSessionPayload(publishableKey: String?) -> [String: Any] {
         var parameters: [String: Any] = [:]

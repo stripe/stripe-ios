@@ -8,6 +8,8 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension ConfirmButton {
 
     static func makeLinkButton(

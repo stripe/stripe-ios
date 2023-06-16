@@ -9,10 +9,14 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: CustomerAddPaymentMethodViewController)
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_CustomerAddPaymentMethodViewController)
 class CustomerAddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
@@ -139,6 +143,8 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension CustomerAddPaymentMethodViewController: ElementDelegate {
     func continueToNextField(element: Element) {
         delegate?.didUpdate(self)
@@ -150,6 +156,8 @@ extension CustomerAddPaymentMethodViewController: ElementDelegate {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension CustomerAddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
         delegate?.didUpdate(self)

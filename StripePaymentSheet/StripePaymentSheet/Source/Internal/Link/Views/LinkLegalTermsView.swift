@@ -10,6 +10,8 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol LinkLegalTermsViewDelegate: AnyObject {
     /// Called when the user taps on a legal link.
     ///
@@ -24,6 +26,8 @@ protocol LinkLegalTermsViewDelegate: AnyObject {
 }
 
 /// For internal SDK use only
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_LinkLegalTermsView)
 final class LinkLegalTermsView: UIView {
     struct Constants {
@@ -118,6 +122,8 @@ final class LinkLegalTermsView: UIView {
 
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension LinkLegalTermsView: UITextViewDelegate {
 
     func textView(
