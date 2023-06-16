@@ -26,6 +26,7 @@ protocol NativeFlowDataManager: AnyObject {
     var accountNumberLast4: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
     var saveToLinkWithStripeSucceeded: Bool? { get set }
+    var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
 
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
@@ -84,6 +85,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var accountNumberLast4: String?
     var consumerSession: ConsumerSessionData?
     var saveToLinkWithStripeSucceeded: Bool?
+    var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane?
 
     init(
         manifest: FinancialConnectionsSessionManifest,
