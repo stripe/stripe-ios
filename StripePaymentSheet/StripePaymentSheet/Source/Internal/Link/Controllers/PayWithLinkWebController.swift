@@ -159,21 +159,36 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     }
 
     var webAuthSession: ASWebAuthenticationSession?
+
     /// Defaults to the app's key window
-    func present(over viewController: UIViewController) {
-//      TODO: Log attempt to show web session
-        let webAuthSession = ASWebAuthenticationSession(url: LinkURLGenerator.url(), callbackURLScheme: "stripesdk") { url, _ in
-            guard let url = url else {
-                //                  TODO: Get analytics logs here from error: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
-                return
+    func present(over viewController: UIViewController? = nil) {
+        Task { @MainActor in
+            // TODO: Log attempt to show web session
+            do {
+                let linkPopupUrl = try await LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
+                let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
+                    guard let returnURL = returnURL else {
+                        // TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
+                        return
+                    }
+                    do {
+                        // TODO: Log that authentication session succeeded
+                        let result = try LinkPopupURLParser.result(with: returnURL)
+                        // TODO: Do something with the result
+                        print(result)
+                    } catch {
+                        // TODO: Send analytics error here
+                        print(error)
+                    }
+                }
+                self.presentationVC = viewController
+                webAuthSession.presentationContextProvider = self
+                self.webAuthSession = webAuthSession
+                webAuthSession.start()
+            } catch {
+                // Handle errors (including LinkURLParams errors)
             }
-//          TODO: Log that authentication session succeeded, digest URL
-            print(url)
         }
-        self.presentationVC = viewController
-        webAuthSession.presentationContextProvider = self
-        self.webAuthSession = webAuthSession
-        webAuthSession.start()
     }
 }
 

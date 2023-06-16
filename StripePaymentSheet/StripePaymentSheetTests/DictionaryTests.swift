@@ -23,7 +23,7 @@ class DictionaryTests: XCTestCase {
                                                             [
                                                                 "hosted_voucher_url": "https://payments.stripe.com/pm/v/test",
                                                                 "expires_at": 123456,
-                                                            ],
+                                                            ] as [String: Any],
                                                           ],
                                           "other_key": "value2", ]
 
