@@ -62,7 +62,7 @@ extension STPApplePayContext {
                     switch result {
                     case .success(let clientSecret):
                         guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
-                            completion(STPApplePayContext.FORCE_SUCCESS, nil)
+                            completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
                             return
                         }
                         completion(clientSecret, nil)
