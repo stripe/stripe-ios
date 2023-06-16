@@ -76,7 +76,12 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         error: Error?
     ) {
         let confirmType: STPAnalyticsClient.DeferredIntentConfirmationType? = {
-            guard let confirmType = context.confirmType else { return nil }
+            guard
+                let confirmType = context.confirmType,
+                case .deferredIntent = intent
+            else {
+                return nil
+            }
             switch confirmType {
             case .server:
                 return .server
