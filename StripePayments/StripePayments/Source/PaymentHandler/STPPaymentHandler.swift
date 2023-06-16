@@ -1517,10 +1517,11 @@ public class STPPaymentHandler: NSObject {
                                 currentAction.complete(with: .succeeded, error: nil)
                             } else {
                                 // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
+                                // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
+                                let shouldRetryForCard = retrievedSetupIntent?.paymentMethod?.type == .card && retrievedSetupIntent?.nextAction?.type == .useStripeSDK
+                                let shouldRetryForCashApp = retrievedSetupIntent?.paymentMethod?.type == .cashApp
                                 if retryCount > 0
-                                    && retrievedSetupIntent?.paymentMethod?.type == .card
-                                    && retrievedSetupIntent?.nextAction?.type == .useStripeSDK
-                                {
+                                    && (shouldRetryForCard || shouldRetryForCashApp) {
                                     self._retryWithExponentialDelay(retryCount: retryCount) {
                                         self._retrieveAndCheckIntentForCurrentAction(
                                             retryCount: retryCount - 1

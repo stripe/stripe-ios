@@ -1,4 +1,7 @@
 ## x.x.x x-x-x
+### Payments
+* [Fixed] Fixed a bug causing Cash App Pay SetupIntents to incorrectly state they were canclled when they succeeded.
+
 ### AddressElement
 * [Fixed] A bug that was causing `addressViewControllerDidFinish` to return a non-nil `AddressDetails` when the user cancels out of the AddressElement when default values are provided.
 * [Fixed] A bug that prevented the auto complete view from being presented when the AddressElement was created with default values.
