@@ -168,7 +168,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 mobileParameters["app_return_url"] = returnURL
                 return mobileParameters
             }(),
-            "locale": Locale.current.identifier,
+            "locale": Locale.current.toLanguageTag(),
         ]
         return self.post(
             resource: "financial_connections/sessions/synchronize",
@@ -476,7 +476,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             .lowercased()
         body["phone_number"] = phoneNumber
         body["country"] = country
-        body["locale"] = (phoneNumber != nil) ? Locale.current.identifier : nil
+        body["locale"] = (phoneNumber != nil) ? Locale.current.toLanguageTag() : nil
         body["consumer_session_client_secret"] = consumerSessionClientSecret
         return post(resource: APIEndpointSaveAccountsToLink, parameters: body)
     }
@@ -566,7 +566,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
-            "locale": Locale.current.identifier,
+            "locale": Locale.current.toLanguageTag(),
         ]
         parameters["custom_email_type"] = customEmailType
         parameters["connections_merchant_name"] = connectionsMerchantName

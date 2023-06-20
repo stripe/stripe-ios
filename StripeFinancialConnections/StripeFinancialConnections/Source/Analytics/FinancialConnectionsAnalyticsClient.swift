@@ -22,7 +22,7 @@ final class FinancialConnectionsAnalyticsClient {
     ) {
         self.analyticsClient = analyticsClient
         additionalParameters["is_webview"] = false
-        additionalParameters["navigator_language"] = Locale.current.identifier
+        additionalParameters["navigator_language"] = Locale.current.toLanguageTag()
     }
 
     public func log(
