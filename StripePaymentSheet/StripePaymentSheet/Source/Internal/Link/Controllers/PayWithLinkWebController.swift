@@ -30,8 +30,7 @@ protocol PayWithLinkWebControllerDelegate: AnyObject {
 protocol PayWithLinkCoordinating: AnyObject {
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
-        paymentDetails: ConsumerPaymentDetails,
-        completion: @escaping (PaymentSheetResult) -> Void
+        paymentDetails: ConsumerPaymentDetails
     )
     func cancel()
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
@@ -161,6 +160,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
                     guard let returnURL = returnURL else {
                         // TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
+                        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
                         return
                     }
                     do {
@@ -168,10 +168,10 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                         let result = try LinkPopupURLParser.result(with: returnURL)
                         let paymentOption = PaymentOption.link(option: PaymentSheet.LinkConfirmOption.withPaymentMethod(paymentMethod: result.pm))
                         self.payWithLinkDelegate?.payWithLinkWebControllerDidComplete(self, intent: self.context.intent, with: paymentOption)
-                        print(result)
                     } catch {
                         // TODO: Send analytics error here
                         print(error)
+                        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
                     }
                 }
                 self.presentationVC = viewController
@@ -180,6 +180,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 webAuthSession.start()
             } catch {
                 // Handle errors (including LinkURLParams errors)
+                self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
             }
         }
     }
@@ -193,8 +194,7 @@ extension PayWithLinkWebController: PayWithLinkCoordinating {
 
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
-        paymentDetails: ConsumerPaymentDetails,
-        completion: @escaping (PaymentSheetResult) -> Void
+        paymentDetails: ConsumerPaymentDetails
     ) {
         payWithLinkDelegate?.payWithLinkWebControllerDidComplete(
             self,

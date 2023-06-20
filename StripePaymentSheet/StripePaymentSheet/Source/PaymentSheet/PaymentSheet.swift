@@ -350,7 +350,6 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
-        payWithLinkWebController.cancel()
     }
 
     private func findPaymentSheetViewController() -> PaymentSheetViewController? {
