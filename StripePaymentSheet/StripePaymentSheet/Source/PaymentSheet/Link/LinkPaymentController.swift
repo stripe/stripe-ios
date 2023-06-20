@@ -200,15 +200,6 @@ extension LinkPaymentController: PayWithLinkWebControllerDelegate {
     func payWithLinkWebControllerDidComplete(_ payWithLinkWebController: PayWithLinkWebController, intent: Intent, with paymentOption: PaymentOption) {
         self.intent = intent
         self.paymentOption = paymentOption
-//        TODO: Do PaymentSheet thing, then do this as the completion with the result:
-//        switch result {
-//        case .canceled:
-//            payWithLinkContinuation?.resume(throwing: Error.canceled)
-//        case .failed(let error):
-//            payWithLinkContinuation?.resume(throwing: error)
-//        case .completed:
-//            payWithLinkContinuation?.resume()
-//        }
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
