@@ -197,24 +197,21 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension LinkPaymentController: PayWithLinkWebControllerDelegate {
-    func payWithLinkWebControllerDidConfirm(_ payWithLinkWebController: PayWithLinkWebController, intent: Intent, with paymentOption: PaymentOption, completion: @escaping (PaymentSheetResult) -> Void) {
+    func payWithLinkWebControllerDidComplete(_ payWithLinkWebController: PayWithLinkWebController, intent: Intent, with paymentOption: PaymentOption) {
         self.intent = intent
         self.paymentOption = paymentOption
-        completion(.completed)
+//        TODO: Do PaymentSheet thing, then do this as the completion with the result:
+//        switch result {
+//        case .canceled:
+//            payWithLinkContinuation?.resume(throwing: Error.canceled)
+//        case .failed(let error):
+//            payWithLinkContinuation?.resume(throwing: error)
+//        case .completed:
+//            payWithLinkContinuation?.resume()
+//        }
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
         payWithLinkContinuation?.resume(throwing: Error.canceled)
-    }
-
-    func payWithLinkWebControllerDidFinish(_ payWithLinkWebController: PayWithLinkWebController, result: PaymentSheetResult) {
-        switch result {
-        case .canceled:
-            payWithLinkContinuation?.resume(throwing: Error.canceled)
-        case .failed(let error):
-            payWithLinkContinuation?.resume(throwing: error)
-        case .completed:
-            payWithLinkContinuation?.resume()
-        }
     }
 }

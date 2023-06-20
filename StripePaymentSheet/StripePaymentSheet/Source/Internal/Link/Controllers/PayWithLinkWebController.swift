@@ -17,19 +17,13 @@ import AuthenticationServices
 @available(macCatalystApplicationExtension, unavailable)
 protocol PayWithLinkWebControllerDelegate: AnyObject {
 
-    func payWithLinkWebControllerDidConfirm(
+    func payWithLinkWebControllerDidComplete(
         _ payWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
-        with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult) -> Void
+        with paymentOption: PaymentOption
     )
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController)
-
-    func payWithLinkWebControllerDidFinish(
-        _ payWithLinkWebController: PayWithLinkWebController,
-        result: PaymentSheetResult
-    )
 
 }
 
@@ -39,10 +33,8 @@ protocol PayWithLinkCoordinating: AnyObject {
         paymentDetails: ConsumerPaymentDetails,
         completion: @escaping (PaymentSheetResult) -> Void
     )
-    func confirmWithApplePay()
     func cancel()
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
-    func finish(withResult result: PaymentSheetResult)
     func logout(cancel: Bool)
 }
 
@@ -174,7 +166,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                     do {
                         // TODO: Log that authentication session succeeded
                         let result = try LinkPopupURLParser.result(with: returnURL)
-                        // TODO: Do something with the result
+                        let paymentOption = PaymentOption.link(option: PaymentSheet.LinkConfirmOption.withPaymentMethod(paymentMethod: result.pm))
+                        self.payWithLinkDelegate?.payWithLinkWebControllerDidComplete(self, intent: self.context.intent, with: paymentOption)
                         print(result)
                     } catch {
                         // TODO: Send analytics error here
@@ -203,31 +196,13 @@ extension PayWithLinkWebController: PayWithLinkCoordinating {
         paymentDetails: ConsumerPaymentDetails,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
-        payWithLinkDelegate?.payWithLinkWebControllerDidConfirm(
+        payWithLinkDelegate?.payWithLinkWebControllerDidComplete(
             self,
             intent: context.intent,
             with: PaymentOption.link(
                 option: .withPaymentDetails(account: linkAccount, paymentDetails: paymentDetails)
             )
-        ) { result in
-            completion(result)
-        }
-    }
-
-    func confirmWithApplePay() {
-        payWithLinkDelegate?.payWithLinkWebControllerDidConfirm(
-            self,
-            intent: context.intent,
-            with: .applePay
-        ) { [weak self] result in
-            switch result {
-            case .canceled:
-                // no-op -- we don't dismiss/finish for canceled Apple Pay interactions
-                break
-            case .completed, .failed:
-                self?.finish(withResult: result)
-            }
-        }
+        )
     }
 
     func cancel() {
@@ -237,10 +212,6 @@ extension PayWithLinkWebController: PayWithLinkCoordinating {
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
-    }
-
-    func finish(withResult result: PaymentSheetResult) {
-        payWithLinkDelegate?.payWithLinkWebControllerDidFinish(self, result: result)
     }
 
     func logout(cancel: Bool) {

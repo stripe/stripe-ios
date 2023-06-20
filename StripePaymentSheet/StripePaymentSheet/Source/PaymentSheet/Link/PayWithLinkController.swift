@@ -64,11 +64,10 @@ final class PayWithLinkController {
 @available(macCatalystApplicationExtension, unavailable)
 extension PayWithLinkController: PayWithLinkWebControllerDelegate {
 
-    func payWithLinkWebControllerDidConfirm(
+    func payWithLinkWebControllerDidComplete(
         _ payWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
-        with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult) -> Void
+        with paymentOption: PaymentOption
     ) {
         PaymentSheet.confirm(
             configuration: configuration,
@@ -76,18 +75,14 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
             intent: intent,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
-            isFlowController: false,
-            completion: completion
-        )
+            isFlowController: false) { result in
+                self.completion?(result)
+                self.selfRetainer = nil
+            }
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
         completion?(.canceled)
-        selfRetainer = nil
-    }
-
-    func payWithLinkWebControllerDidFinish(_ payWithLinkWebController: PayWithLinkWebController, result: PaymentSheetResult) {
-        completion?(result)
         selfRetainer = nil
     }
 
