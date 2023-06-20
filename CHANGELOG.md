@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.9.2 2023-06-20
 ### Payments
 * [Fixed] Fixed a bug causing Cash App Pay SetupIntents to incorrectly state they were canclled when they succeeded.
 
