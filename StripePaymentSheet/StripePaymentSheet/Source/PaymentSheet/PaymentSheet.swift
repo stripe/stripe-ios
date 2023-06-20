@@ -339,47 +339,17 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet: PayWithLinkWebControllerDelegate {
 
-    func payWithLinkWebControllerDidConfirm(
+    func payWithLinkWebControllerDidComplete(
         _ PayWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
-        with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult) -> Void
+        with paymentOption: PaymentOption
     ) {
-        PaymentSheet.confirm(
-            configuration: self.configuration,
-            authenticationContext: self.bottomSheetViewController,
-            intent: intent,
-            paymentOption: paymentOption,
-            paymentHandler: self.paymentHandler,
-            isFlowController: false)
-        { result in
-            if case let .failed(error) = result {
-                self.mostRecentError = error
-            }
-
-            STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
-                isCustom: false,
-                paymentMethod: paymentOption.analyticsValue,
-                result: result,
-                linkEnabled: intent.supportsLink,
-                activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                currency: intent.currency,
-                intentConfig: intent.intentConfig
-            )
-
-            completion(result)
-        }
+        let psvc = self.findPaymentSheetViewController()
+        psvc?.pay(with: paymentOption)
+//      TODO: Analytic for Link payment succeeded
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
-        payWithLinkWebController.cancel()
-    }
-
-    func payWithLinkWebControllerDidFinish(
-        _ PayWithLinkWebController: PayWithLinkWebController,
-        result: PaymentSheetResult
-    ) {
-        completion?(result)
     }
 
     private func findPaymentSheetViewController() -> PaymentSheetViewController? {

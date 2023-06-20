@@ -17,32 +17,23 @@ import AuthenticationServices
 @available(macCatalystApplicationExtension, unavailable)
 protocol PayWithLinkWebControllerDelegate: AnyObject {
 
-    func payWithLinkWebControllerDidConfirm(
+    func payWithLinkWebControllerDidComplete(
         _ payWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
-        with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult) -> Void
+        with paymentOption: PaymentOption
     )
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController)
-
-    func payWithLinkWebControllerDidFinish(
-        _ payWithLinkWebController: PayWithLinkWebController,
-        result: PaymentSheetResult
-    )
 
 }
 
 protocol PayWithLinkCoordinating: AnyObject {
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
-        paymentDetails: ConsumerPaymentDetails,
-        completion: @escaping (PaymentSheetResult) -> Void
+        paymentDetails: ConsumerPaymentDetails
     )
-    func confirmWithApplePay()
     func cancel()
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
-    func finish(withResult result: PaymentSheetResult)
     func logout(cancel: Bool)
 }
 
@@ -169,16 +160,18 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
                     guard let returnURL = returnURL else {
                         // TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
+                        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
                         return
                     }
                     do {
                         // TODO: Log that authentication session succeeded
                         let result = try LinkPopupURLParser.result(with: returnURL)
-                        // TODO: Do something with the result
-                        print(result)
+                        let paymentOption = PaymentOption.link(option: PaymentSheet.LinkConfirmOption.withPaymentMethod(paymentMethod: result.pm))
+                        self.payWithLinkDelegate?.payWithLinkWebControllerDidComplete(self, intent: self.context.intent, with: paymentOption)
                     } catch {
                         // TODO: Send analytics error here
                         print(error)
+                        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
                     }
                 }
                 self.presentationVC = viewController
@@ -187,6 +180,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 webAuthSession.start()
             } catch {
                 // Handle errors (including LinkURLParams errors)
+                self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
             }
         }
     }
@@ -200,34 +194,15 @@ extension PayWithLinkWebController: PayWithLinkCoordinating {
 
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
-        paymentDetails: ConsumerPaymentDetails,
-        completion: @escaping (PaymentSheetResult) -> Void
+        paymentDetails: ConsumerPaymentDetails
     ) {
-        payWithLinkDelegate?.payWithLinkWebControllerDidConfirm(
+        payWithLinkDelegate?.payWithLinkWebControllerDidComplete(
             self,
             intent: context.intent,
             with: PaymentOption.link(
                 option: .withPaymentDetails(account: linkAccount, paymentDetails: paymentDetails)
             )
-        ) { result in
-            completion(result)
-        }
-    }
-
-    func confirmWithApplePay() {
-        payWithLinkDelegate?.payWithLinkWebControllerDidConfirm(
-            self,
-            intent: context.intent,
-            with: .applePay
-        ) { [weak self] result in
-            switch result {
-            case .canceled:
-                // no-op -- we don't dismiss/finish for canceled Apple Pay interactions
-                break
-            case .completed, .failed:
-                self?.finish(withResult: result)
-            }
-        }
+        )
     }
 
     func cancel() {
@@ -237,10 +212,6 @@ extension PayWithLinkWebController: PayWithLinkCoordinating {
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
-    }
-
-    func finish(withResult result: PaymentSheetResult) {
-        payWithLinkDelegate?.payWithLinkWebControllerDidFinish(self, result: result)
     }
 
     func logout(cancel: Bool) {

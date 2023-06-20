@@ -214,6 +214,48 @@ extension PaymentSheet {
                     )
                 }
             }
+            let confirmWithPaymentMethod: (STPPaymentMethod) -> Void = { paymentMethod in
+                let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
+                let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
+                // Tell Stripe to infer mandate info from client
+                onlineParams.inferFromClient = true
+                mandateCustomerAcceptanceParams.onlineParams = onlineParams
+                mandateCustomerAcceptanceParams.type = .online
+                let mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
+                switch intent {
+                case .paymentIntent(let paymentIntent):
+                    let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                    paymentIntentParams.paymentMethodId = paymentMethod.stripeId
+                    paymentIntentParams.returnURL = configuration.returnURL
+                    paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+                    paymentIntentParams.mandateData = mandateData
+                    paymentHandler.confirmPayment(
+                        paymentIntentParams,
+                        with: authenticationContext,
+                        completion: paymentHandlerCompletion
+                    )
+                case .setupIntent(let setupIntent):
+                    let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
+                    setupIntentParams.paymentMethodID = paymentMethod.stripeId
+                    setupIntentParams.returnURL = configuration.returnURL
+                    setupIntentParams.mandateData = mandateData
+                    paymentHandler.confirmSetupIntent(
+                        setupIntentParams,
+                        with: authenticationContext,
+                        completion: paymentHandlerCompletion
+                    )
+                case .deferredIntent(_, let intentConfig):
+                    handleDeferredIntentConfirmation(
+                        confirmType: .saved(paymentMethod),
+                        configuration: configuration,
+                        intentConfig: intentConfig,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: paymentHandler,
+                        isFlowController: isFlowController,
+                        completion: completion
+                    )
+                }
+            }
 
             let confirmWithPaymentDetails:
                 (
@@ -287,6 +329,8 @@ extension PaymentSheet {
                 confirmWithPaymentDetails(linkAccount, paymentDetails)
             case .withPaymentMethodParams(let linkAccount, let paymentMethodParams):
                 createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
+            case .withPaymentMethod(let paymentMethod):
+                confirmWithPaymentMethod(paymentMethod)
             }
         }
     }
