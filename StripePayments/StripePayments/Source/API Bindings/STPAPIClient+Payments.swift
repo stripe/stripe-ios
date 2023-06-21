@@ -1042,6 +1042,23 @@ extension STPAPIClient {
             completion(object, error)
         }
     }
+
+    /// Retrieve a customer
+    /// - seealso: https://stripe.com/docs/api#retrieve_customer
+    @_spi(STP) public func retrieveCustomer(
+        _ customerID: String,
+        using ephemeralKey: String
+    ) async throws -> STPCustomer {
+        try await withCheckedThrowingContinuation({ continuation in
+            self.retrieveCustomer(customerID, using: ephemeralKey) { customer, error in
+                guard let customer = customer else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericConnectionError())
+                    return
+                }
+                continuation.resume(returning: customer)
+            }
+        })
+    }
 }
 
 private let APIEndpointToken = "tokens"

@@ -22,7 +22,7 @@ final class FinancialConnectionsAnalyticsClient {
     ) {
         self.analyticsClient = analyticsClient
         additionalParameters["is_webview"] = false
-        additionalParameters["navigator_language"] = Locale.current.identifier
+        additionalParameters["navigator_language"] = Locale.current.toLanguageTag()
     }
 
     public func log(
@@ -35,6 +35,7 @@ final class FinancialConnectionsAnalyticsClient {
         var parameters = parameters
         // !!! BE CAREFUL MODIFYING "PANE" ANALYTICS CODE
         // ITS CRITICAL FOR PANE CONVERSION !!!
+        assert(parameters["pane"] == nil, "Unexpected logic: will override 'pane' parameter.")
         parameters["pane"] = pane.rawValue
         parameters = parameters.merging(
             additionalParameters,

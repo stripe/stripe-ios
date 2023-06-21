@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import AuthenticationServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
@@ -15,8 +16,7 @@ import UIKit
 /// This feature is currently invite-only. To accept payments, [use the Mobile Payment Element.](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-@_spi(LinkOnly) public class LinkPaymentController {
-
+@_spi(LinkOnly) public class LinkPaymentController: NSObject {
     private let mode: PaymentSheet.InitializationMode
     private let configuration: PaymentSheet.Configuration
 
@@ -76,7 +76,7 @@ import UIKit
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
-        let linkController: PayWithLinkViewController = try await withCheckedThrowingContinuation { [self] continuation in
+        let linkController: PayWithLinkWebController = try await withCheckedThrowingContinuation { [self] continuation in
             PaymentSheet.load(mode: mode, configuration: configuration) { result in
                 switch result {
                 case .success(let intent, _, let isLinkEnabled):
@@ -85,7 +85,7 @@ import UIKit
                         return
                     }
                     self.intent = intent
-                    let linkController = PayWithLinkViewController(
+                    let linkController = PayWithLinkWebController(
                         intent: intent,
                         configuration: self.configuration,
                         shouldOfferApplePay: false,
@@ -98,18 +98,15 @@ import UIKit
                 }
             }
         }
-
         linkController.payWithLinkDelegate = self
-        linkController.modalPresentationStyle = UIDevice.current.userInterfaceIdiom == .pad
-            ? .formSheet
-            : .overFullScreen
-
-        defer { linkController.dismiss(animated: true) }
+        defer { linkController.cancel() }
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             payWithLinkContinuation = continuation
-            presentingViewController.present(linkController, animated: true)
+            linkController.present(over: presentingViewController)
         }
     }
+
+    weak var presentingViewController: UIViewController?
 
     /// Completes the Link payment or setup.
     /// - Note: Once `completion` is called with a `.completed` result, this `LinkPaymentController` instance should no longer be used, as payment/setup intents should not be reused. Other results indicate cancellation or failure, and do not invalidate the instance.
@@ -199,25 +196,13 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension LinkPaymentController: PayWithLinkViewControllerDelegate {
-    func payWithLinkViewControllerDidConfirm(_ payWithLinkViewController: PayWithLinkViewController, intent: Intent, with paymentOption: PaymentOption, completion: @escaping (PaymentSheetResult) -> Void) {
+extension LinkPaymentController: PayWithLinkWebControllerDelegate {
+    func payWithLinkWebControllerDidComplete(_ payWithLinkWebController: PayWithLinkWebController, intent: Intent, with paymentOption: PaymentOption) {
         self.intent = intent
         self.paymentOption = paymentOption
-        completion(.completed)
     }
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
+    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
         payWithLinkContinuation?.resume(throwing: Error.canceled)
-    }
-
-    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
-        switch result {
-        case .canceled:
-            payWithLinkContinuation?.resume(throwing: Error.canceled)
-        case .failed(let error):
-            payWithLinkContinuation?.resume(throwing: error)
-        case .completed:
-            payWithLinkContinuation?.resume()
-        }
     }
 }

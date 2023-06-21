@@ -445,7 +445,7 @@ class PaymentSheetViewController: UIViewController {
         }
     }
 
-    private func pay(with paymentOption: PaymentOption) {
+    func pay(with paymentOption: PaymentOption) {
         view.endEditing(true)
         isPaymentInFlight = true
         // Clear any errors
