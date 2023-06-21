@@ -69,6 +69,7 @@ final class IdentityAnalyticsClient {
         case selfieCapture = "selfie"
         case success = "confirmation"
         case individual = "individual"
+        case phoneOtp = "phone_otp"
         case individual_welcome = "individual_welcome"
         case error = "error"
         case countryNotListed = "country_not_listed"
