@@ -6,31 +6,31 @@
 ////  Copyright © 2020 Stripe, Inc. All rights reserved.
 ////
 //
-//import AVFoundation
-//import Foundation
-//@_spi(STP) import StripeCore
-//@_spi(STP) import StripePayments
-//@_spi(STP) import StripePaymentsUI
-//import UIKit
-//import Vision
+// import AVFoundation
+// import Foundation
+// @_spi(STP) import StripeCore
+// @_spi(STP) import StripePayments
+// @_spi(STP) import StripePaymentsUI
+// import UIKit
+// import Vision
 //
-//enum STPCardScannerError: Int {
+// enum STPCardScannerError: Int {
 //    /// Camera not available.
 //    case cameraNotAvailable
-//}
+// }
 //
-//@available(iOS 13, macCatalyst 14, *)
-//@objc protocol STPCardScannerDelegate: NSObjectProtocol {
+// @available(iOS 13, macCatalyst 14, *)
+// @objc protocol STPCardScannerDelegate: NSObjectProtocol {
 //    @objc(cardScanner:didFinishWithCardParams:error:) func cardScanner(
 //        _ scanner: STPCardScanner,
 //        didFinishWith cardParams:
 //        STPPaymentMethodCardParams?,
 //        error: Error?)
-//}
+// }
 //
-//@available(iOS 13, macCatalyst 14, *)
-//@objc(STPCardScanner)
-//class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, STPCardScanningProtocol {
+// @available(iOS 13, macCatalyst 14, *)
+// @objc(STPCardScanner)
+// class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, STPCardScanningProtocol {
 //    // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
 //    static let cardScanningAvailableCameraHasUsageDescription = {
 //        return
@@ -470,18 +470,18 @@
 //    }
 //
 //    // MARK: Orientation
-//}
+// }
 //
 //// The number of successful scans required for both card number and expiration date before returning a result.
-//private let kSTPCardScanningMinimumValidScans = 2
+// private let kSTPCardScanningMinimumValidScans = 2
 //// If no expiration date is found, we'll return a result after this many successful scans.
-//private let kSTPCardScanningMaxValidScans = 3
+// private let kSTPCardScanningMaxValidScans = 3
 //// Once one successful scan is found, we'll stop scanning after this many seconds.
-//private let kSTPCardScanningTimeout: TimeInterval = 1.0
-//let STPCardScannerErrorDomain = "STPCardScannerErrorDomain"
+// private let kSTPCardScanningTimeout: TimeInterval = 1.0
+// let STPCardScannerErrorDomain = "STPCardScannerErrorDomain"
 //
-//@available(iOS 13, macCatalyst 14, *)
+// @available(iOS 13, macCatalyst 14, *)
 ///// :nodoc:
-//extension STPCardScanner: STPAnalyticsProtocol {
+// extension STPCardScanner: STPAnalyticsProtocol {
 //    static var stp_analyticsIdentifier = "STPCardScanner"
-//}
+// }

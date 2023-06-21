@@ -115,7 +115,6 @@ import UIKit
 @_spi(STP) public extension PhoneNumber {
     struct Metadata: RegionCodeProvider {
         public var regionCodeProvider: String = "US"
-        
 
         private static var metadataByCountryCodeCache: [String: Metadata] = [:]
 

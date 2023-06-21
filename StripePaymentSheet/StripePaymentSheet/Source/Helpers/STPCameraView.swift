@@ -6,11 +6,11 @@
 ////  Copyright © 2020 Stripe, Inc. All rights reserved.
 ////
 //
-//import AVFoundation
-//import UIKit
+// import AVFoundation
+// import UIKit
 //
-//@available(macCatalyst 14.0, *)
-//class STPCameraView: UIView {
+// @available(macCatalyst 14.0, *)
+// class STPCameraView: UIView {
 //    private var flashLayer: CALayer?
 //
 //    var captureSession: AVCaptureSession? {
@@ -65,4 +65,4 @@
 //    required init?(coder aDecoder: NSCoder) {
 //        super.init(coder: aDecoder)
 //    }
-//}
+// }

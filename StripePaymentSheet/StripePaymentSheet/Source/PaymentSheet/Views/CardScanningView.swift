@@ -6,33 +6,33 @@
 ////  Copyright © 2020 Stripe, Inc. All rights reserved.
 ////
 //
-//import Foundation
-//@_spi(STP) import StripeCore
-//@_spi(STP) import StripePayments
-//@_spi(STP) import StripePaymentsUI
-//@_spi(STP) import StripeUICore
-//import UIKit
+// import Foundation
+// @_spi(STP) import StripeCore
+// @_spi(STP) import StripePayments
+// @_spi(STP) import StripePaymentsUI
+// @_spi(STP) import StripeUICore
+// import UIKit
 //
-//private class CardScanningEasilyTappableButton: UIButton {
+// private class CardScanningEasilyTappableButton: UIButton {
 //    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
 //        let newArea = bounds.insetBy(
 //            dx: -(PaymentSheetUI.minimumTapSize.width - bounds.width) / 2,
 //            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2)
 //        return newArea.contains(point)
 //    }
-//}
+// }
 //
 ///// For internal SDK use only
-//@available(iOS 13, macCatalyst 14, *)
-//@objc protocol STP_Internal_CardScanningViewDelegate: NSObjectProtocol {
+// @available(iOS 13, macCatalyst 14, *)
+// @objc protocol STP_Internal_CardScanningViewDelegate: NSObjectProtocol {
 //    func cardScanningView(
 //        _ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?)
-//}
+// }
 //
 ///// For internal SDK use only
-//@available(iOS 13, macCatalyst 14, *)
-//@objc(STP_Internal_CardScanningView)
-//class CardScanningView: UIView, STPCardScannerDelegate {
+// @available(iOS 13, macCatalyst 14, *)
+// @objc(STP_Internal_CardScanningView)
+// class CardScanningView: UIView, STPCardScannerDelegate {
 //    private(set) weak var cameraView: STPCameraView?
 //
 //    weak var delegate: STP_Internal_CardScanningViewDelegate?
@@ -48,7 +48,7 @@
 //            errorLabel.isHidden = !isDisplayingError
 //        }
 //    }
-///*
+/// *
 //    func cardScanner(
 //        _ scanner: STPCardScanner,
 //        didFinishWith cardParams: STPPaymentMethodCardParams?,
@@ -255,4 +255,4 @@
 //        }
 //        super.willMove(toWindow: newWindow)
 //    }
-//}
+// }

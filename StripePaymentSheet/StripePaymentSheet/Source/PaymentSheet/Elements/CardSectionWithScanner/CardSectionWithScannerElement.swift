@@ -140,8 +140,8 @@ private func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMeth
 
 // MARK: - CardSectionWithScannerViewDelegate
 
-//@available(iOS 13, macCatalyst 14, *)
-//extension CardSection: CardSectionWithScannerViewDelegate {
+// @available(iOS 13, macCatalyst 14, *)
+// extension CardSection: CardSectionWithScannerViewDelegate {
 //    func didScanCard(cardParams: STPPaymentMethodCardParams) {
 //        let expiryString: String = {
 //            guard let expMonth = cardParams.expMonth, let expYear = cardParams.expYear else {
@@ -159,4 +159,4 @@ private func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMeth
 //            lastCompletedElement.delegate?.continueToNextField(element: lastCompletedElement)
 //        }
 //    }
-//}
+// }

@@ -118,7 +118,7 @@ public class AddressViewController: UIViewController {
 
     private lazy var activityIndicator: UIActivityIndicatorView = {
             return UIActivityIndicatorView(style: .medium)
-    
+
     }()
 
     private var hasLoadedSpecs = false
