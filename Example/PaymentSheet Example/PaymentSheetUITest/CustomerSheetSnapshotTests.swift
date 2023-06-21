@@ -95,7 +95,6 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
     }
 
     func testOnlyApplePay() {
-
         prepareCS(configuration: configuration(applePayEnabled: true))
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
@@ -113,6 +112,124 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
 
+    /// first digit - name
+    /// first digit - phone
+    /// first digit - email
+    /// first digit - address
+    /// 0 == .automatic
+    /// 1 == .never
+    /// 2 == (always || full)
+    func testBillingDetailsCollection_0000() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .automatic)
+
+        prepareCS(configuration: configuration(billingDetailsCollectionConfiguration: bdcc))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testBillingDetailsCollection_1000() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .never,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .automatic)
+
+        prepareCS(configuration: configuration(billingDetailsCollectionConfiguration: bdcc))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testBillingDetailsCollection_2000() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .always,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .automatic)
+
+        prepareCS(configuration: configuration(billingDetailsCollectionConfiguration: bdcc))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testBillingDetailsCollection_0100() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .never,
+                                                         email: .automatic,
+                                                         address: .automatic)
+
+        prepareCS(configuration: configuration(billingDetailsCollectionConfiguration: bdcc))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testBillingDetailsCollection_0200() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .never,
+                                                         email: .automatic,
+                                                         address: .automatic)
+
+        prepareCS(configuration: configuration(billingDetailsCollectionConfiguration: bdcc))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testBillingDetailsCollection_0010() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .always,
+                                                         address: .automatic)
+
+        prepareCS(configuration: configuration(billingDetailsCollectionConfiguration: bdcc))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testBillingDetailsCollection_0020() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .never,
+                                                         address: .automatic)
+
+        prepareCS(configuration: configuration(billingDetailsCollectionConfiguration: bdcc))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testBillingDetailsCollection_0001() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .never)
+
+        prepareCS(configuration: configuration(billingDetailsCollectionConfiguration: bdcc))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testBillingDetailsCollection_0002() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .full)
+
+        prepareCS(configuration: configuration(billingDetailsCollectionConfiguration: bdcc))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testBillingDetailsCollection_2222() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .always,
+                                                         phone: .always,
+                                                         email: .always,
+                                                         address: .full)
+
+        prepareCS(configuration: configuration(billingDetailsCollectionConfiguration: bdcc))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testBillingDetailsCollection_2222_withDefaults() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .always,
+                                                         phone: .always,
+                                                         email: .always,
+                                                         address: .full)
+
+        prepareCS(configuration: configuration(defaultBillingDetails: billingDetails(),
+                                               billingDetailsCollectionConfiguration: bdcc))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
     func stubbedPaymentMethod() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
@@ -156,12 +273,42 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
 
+    private func billingDetails() -> PaymentSheet.BillingDetails {
+        return .init(
+            address: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            ),
+            email: "foo@bar.com",
+            name: "Jane Doe",
+            phone: "+13105551234")
+    }
+    private func billingDetailsCollectionConfiguration(
+        name: PaymentSheet.BillingDetailsCollectionConfiguration.CollectionMode = .automatic,
+        phone: PaymentSheet.BillingDetailsCollectionConfiguration.CollectionMode = .automatic,
+        email: PaymentSheet.BillingDetailsCollectionConfiguration.CollectionMode = .automatic,
+        address: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode = .automatic,
+        attachDefaultsToPaymentMethod: Bool = false) -> PaymentSheet.BillingDetailsCollectionConfiguration {
+        return .init(name: name,
+                     phone: phone,
+                     email: email,
+                     address: address,
+                     attachDefaultsToPaymentMethod: attachDefaultsToPaymentMethod)
+    }
     private func configuration(applePayEnabled: Bool = false,
+                               defaultBillingDetails: PaymentSheet.BillingDetails = .init(),
+                               billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration = .init(),
                                appearance: PaymentSheet.Appearance = .default) -> CustomerSheet.Configuration {
         var config = CustomerSheet.Configuration()
         config.applePayEnabled = applePayEnabled
         config.appearance = appearance
         config.apiClient = stubbedAPIClient()
+        config.defaultBillingDetails = defaultBillingDetails
+        config.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
+
         return config
     }
     private func prepareCS(
