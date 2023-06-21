@@ -466,8 +466,8 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
 
         // Prepare feedback generators
-        self.feedbackGenerator = UINotificationFeedbackGenerator()
-        self.feedbackGenerator?.prepare()
+//        self.feedbackGenerator = UINotificationFeedbackGenerator()
+//        self.feedbackGenerator?.prepare()
 
         // Increment analytics counter
         sheetController?.analyticsClient.countDidStartDocumentScan(for: documentSide)

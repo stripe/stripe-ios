@@ -124,7 +124,7 @@ class CircularButton: UIControl {
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+        // super.traitCollectionDidChange(previousTraitCollection)
         updateShadow()
         if style == .remove {
             if traitCollection.userInterfaceStyle == .dark {

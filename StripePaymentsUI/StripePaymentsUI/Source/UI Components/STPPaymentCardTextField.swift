@@ -366,7 +366,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             if viewModel.postalCodeCountryCode == cCode {
                 return
             }
-            let countryCode = (cCode ?? Locale.autoupdatingCurrent.regionCode)
+            let countryCode = (cCode ?? Locale.autoupdatingCurrent.region!.identifier)
             viewModel.postalCodeCountryCode = countryCode
             updatePostalFieldPlaceholder()
 
@@ -429,7 +429,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 billingDetails = billingDetails ?? STPPaymentMethodBillingDetails()
                 let address = STPPaymentMethodAddress()
                 address.postalCode = postalCode
-                address.country = countryCode ?? Locale.autoupdatingCurrent.regionCode
+                address.country = countryCode ?? Locale.autoupdatingCurrent.region!.identifier
                 billingDetails!.address = address  // billingDetails will always be non-nil
             }
             return STPPaymentMethodParams(
@@ -840,7 +840,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         resetSubviewEditingTransitionState()
 
         viewModel.postalCodeRequested = true
-        countryCode = Locale.autoupdatingCurrent.regionCode
+        countryCode = Locale.autoupdatingCurrent.region!.identifier
 
         sizingField.formDelegate = nil
 
@@ -871,7 +871,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }()
 
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+        // super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection?.preferredContentSizeCategory
             != traitCollection.preferredContentSizeCategory
         {

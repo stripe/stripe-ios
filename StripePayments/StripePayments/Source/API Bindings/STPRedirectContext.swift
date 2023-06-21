@@ -76,7 +76,7 @@ public typealias STPRedirectContextPaymentIntentCompletionBlock = (String, Error
 /// See https://stripe.com/docs/sources/best-practices
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
+public class STPRedirectContext: NSObject,
     UIViewControllerTransitioningDelegate, STPSafariViewControllerDismissalDelegate
 {
 
@@ -267,7 +267,7 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
             lastKnownSafariVCURL = redirectURL
             let safariVC = SFSafariViewController(url: lastKnownSafariVCURL!)
             safariVC.transitioningDelegate = self
-            safariVC.delegate = self
+//            safariVC.delegate = self
             safariVC.modalPresentationStyle = .custom
             self.safariVC = safariVC
             presentingViewController.present(

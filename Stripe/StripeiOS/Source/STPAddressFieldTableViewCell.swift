@@ -82,7 +82,7 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
         toolbar.items = [flexibleItem, nextItem]
         inputAccessoryToolbar = toolbar
 
-        var countryCode = NSLocale.autoupdatingCurrent.regionCode
+        var countryCode = NSLocale.autoupdatingCurrent.region!.identifier
         var otherCountryCodes = Array(
             self.delegate?.availableCountries ?? Set(NSLocale.isoCountryCodes)
         )

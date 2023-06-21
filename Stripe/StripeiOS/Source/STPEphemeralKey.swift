@@ -80,10 +80,10 @@ class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
         key.allResponseFields = response
         return key
     }
-
-    override var hash: Int {
-        return stripeID.hash
-    }
+//
+//    override var hash: Int {
+//        return stripeID.hash
+//    }
 
     override func isEqual(_ object: Any?) -> Bool {
         if self === (object as? STPEphemeralKey) {

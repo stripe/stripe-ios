@@ -140,8 +140,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     )
     @objc(presentApplePayWithCompletion:)
     public func presentApplePay(completion: STPVoidBlock? = nil) {
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
-        self.presentApplePay(from: window, completion: completion)
+//        let window = UIWindowScene.shared.windows.windows.first { $0.isKeyWindow }
+//        self.presentApplePay(from: window, completion: completion)
     }
 
     /// Presents the Apple Pay sheet from the specified window, starting the payment process.

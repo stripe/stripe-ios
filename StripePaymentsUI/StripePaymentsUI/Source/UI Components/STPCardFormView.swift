@@ -73,7 +73,7 @@ public class STPCardFormView: STPFormView {
     }
 
     private func updateCountryCodeValues() {
-        postalCodeField.countryCode = countryCode
+        postalCodeField.countryCode = countryCode!
         set(
             textField: postalCodeField,
             isHidden: !STPPostalCodeValidator.postalCodeIsRequired(
@@ -708,7 +708,7 @@ extension STPCardFormView {
             case .required:
                 stateField = STPGenericInputTextField(
                     placeholder: StripeSharedStrings.localizedStateString(
-                        for: Locale.autoupdatingCurrent.regionCode
+                        for: Locale.autoupdatingCurrent.region!.identifier
                     ),
                     textContentType: .addressState
                 )

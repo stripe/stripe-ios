@@ -12,7 +12,7 @@ import UIKit
 
 class STPPostalCodeInputTextFieldFormatter: STPInputTextFieldFormatter {
 
-    var countryCode: String? = Locale.autoupdatingCurrent.regionCode
+    var countryCode: String? = Locale.autoupdatingCurrent.region!.identifier
 
     override func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool {
         guard super.isAllowedInput(input, to: string, at: range),

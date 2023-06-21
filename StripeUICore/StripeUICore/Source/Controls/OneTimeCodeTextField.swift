@@ -54,7 +54,7 @@ import UIKit
         return DigitView(theme: theme)
     }
 
-    private let feedbackGenerator = UINotificationFeedbackGenerator()
+//    private let feedbackGenerator = UINotificationFeedbackGenerator()
 
     // MARK: - UIKeyInput properties
 
@@ -214,27 +214,27 @@ private extension OneTimeCodeTextField {
     }
 
     func toggleMenu() {
-        if UIMenuController.shared.isMenuVisible {
-            hideMenu()
-        } else {
-            showMenu()
-        }
+//        if UIMenuController.shared.isMenuVisible {
+//            hideMenu()
+//        } else {
+//            showMenu()
+//        }
     }
 
     func showMenu() {
-        let menuRect: CGRect = {
-            guard let activeDigitView = digitViews.first(where: { $0.isActive }) else {
-                return bounds
-            }
-
-            return activeDigitView.convert(activeDigitView.bounds, to: self)
-        }()
-
-        UIMenuController.shared.showMenu(from: self, rect: menuRect)
+//        let menuRect: CGRect = {
+//            guard let activeDigitView = digitViews.first(where: { $0.isActive }) else {
+//                return bounds
+//            }
+//
+//            return activeDigitView.convert(activeDigitView.bounds, to: self)
+//        }()
+//
+//        UIMenuController.shared.showMenu(from: self, rect: menuRect)
     }
 
     func hideMenu() {
-        UIMenuController.shared.hideMenu()
+//        UIMenuController.shared.hideMenu()
     }
 
     @objc func applicationWillEnterForeground(_ notification: Notification) {
@@ -299,7 +299,7 @@ public extension OneTimeCodeTextField {
             digitView.borderLayer.add(borderColorAnimation, forKey: "borderColor")
         }
 
-        feedbackGenerator.notificationOccurred(.error)
+//        feedbackGenerator.notificationOccurred(.error)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             self?.digitViews.forEach { digitView in
@@ -763,7 +763,7 @@ private extension OneTimeCodeTextField {
         }
 
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            super.traitCollectionDidChange(previousTraitCollection)
+//            // super.traitCollectionDidChange(previousTraitCollection)
             updateColors()
         }
     }

@@ -452,7 +452,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         for cell in addressViewModel.addressCells {
             cell.theme = theme
         }
-        setNeedsStatusBarAppearanceUpdate()
+//        setNeedsStatusBarAppearanceUpdate()
     }
 
     /// :nodoc:

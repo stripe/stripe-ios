@@ -101,7 +101,7 @@ import UIKit
         }
 
         // This second filter uses the device's locale to pick a winner out of N candidates.
-        if let winner = candidates.first(where: { $0.regionCode == locale.regionCode }) {
+        if let winner = candidates.first(where: { $0.regionCode == locale.region!.identifier }) {
             return makePhoneNumber(winner)
         }
 
@@ -114,6 +114,8 @@ import UIKit
 
 @_spi(STP) public extension PhoneNumber {
     struct Metadata: RegionCodeProvider {
+        public var regionCodeProvider: String = "US"
+        
 
         private static var metadataByCountryCodeCache: [String: Metadata] = [:]
 

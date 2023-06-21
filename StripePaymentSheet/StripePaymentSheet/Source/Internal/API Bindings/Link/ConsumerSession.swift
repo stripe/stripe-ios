@@ -79,7 +79,7 @@ extension ConsumerSession {
     class func lookupSession(
         for email: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        cookieStore: LinkCookieStore = LinkInMemoryCookieStore(),
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         apiClient.lookupConsumerSession(for: email, cookieStore: cookieStore, completion: completion)
@@ -93,7 +93,7 @@ extension ConsumerSession {
         countryCode: String?,
         consentAction: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        cookieStore: LinkCookieStore = LinkInMemoryCookieStore(),
         completion: @escaping (Result<SessionWithPublishableKey, Error>) -> Void
     ) {
         apiClient.createConsumer(
@@ -150,7 +150,7 @@ extension ConsumerSession {
         type: VerificationSession.SessionType = .sms,
         locale: Locale = .autoupdatingCurrent,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        cookieStore: LinkCookieStore = LinkInMemoryCookieStore(),
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -166,7 +166,7 @@ extension ConsumerSession {
     func confirmSMSVerification(
         with code: String,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        cookieStore: LinkCookieStore = LinkInMemoryCookieStore(),
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -229,7 +229,7 @@ extension ConsumerSession {
 
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        cookieStore: LinkCookieStore = LinkInMemoryCookieStore(),
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {

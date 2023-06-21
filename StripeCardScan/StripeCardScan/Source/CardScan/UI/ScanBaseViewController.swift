@@ -269,7 +269,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         ScanBaseViewController.isPadAndFormsheet =
             UIDevice.current.userInterfaceIdiom == .pad && self.modalPresentationStyle == .formSheet
 
-        setNeedsStatusBarAppearanceUpdate()
+//        setNeedsStatusBarAppearanceUpdate()
         regionOfInterestLabel.layer.masksToBounds = true
         regionOfInterestLabel.layer.cornerRadius = self.regionOfInterestCornerRadius
         regionOfInterestLabel.layer.borderColor = UIColor.white.cgColor

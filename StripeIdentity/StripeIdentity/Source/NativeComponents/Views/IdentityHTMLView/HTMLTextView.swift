@@ -87,7 +87,7 @@ final class HTMLTextView: UIView {
     // MARK: UIView
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+        // super.traitCollectionDidChange(previousTraitCollection)
         guard let viewModel = viewModel,
             case .html(let makeStyle) = viewModel.style
         else {

@@ -1651,13 +1651,13 @@ public class STPPaymentHandler: NSObject {
                 if let fallbackURL = fallbackURL {
                     let safariViewController = SFSafariViewController(url: fallbackURL)
                     safariViewController.modalPresentationStyle = .overFullScreen
-                    safariViewController.dismissButtonStyle = .close
+//                    safariViewController.dismissButtonStyle = .close
                     if context.responds(
                         to: #selector(STPAuthenticationContext.configureSafariViewController(_:))
                     ) {
                         context.configureSafariViewController?(safariViewController)
                     }
-                    safariViewController.delegate = self
+//                    safariViewController.delegate = self
                     self.safariViewController = safariViewController
                     presentingViewController.present(safariViewController, animated: true)
                 } else {
@@ -2037,7 +2037,7 @@ public class STPPaymentHandler: NSObject {
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension STPPaymentHandler: SFSafariViewControllerDelegate {
+extension STPPaymentHandler {
     // MARK: - SFSafariViewControllerDelegate
     /// :nodoc:
     @objc

@@ -29,8 +29,8 @@ extension DocumentScanner.Configuration {
 
 extension StripeAPI.VerificationPageStaticContentDocumentCapturePage {
     func symbology(for locale: Locale) -> VNBarcodeSymbology? {
-        guard let regionCode = locale.regionCode,
-            let symbologyString = iosIdCardBackCountryBarcodeSymbologies[regionCode]
+        guard let region!.identifier = locale.region!.identifier,
+            let symbologyString = iosIdCardBackCountryBarcodeSymbologies[region!.identifier]
         else {
             return nil
         }

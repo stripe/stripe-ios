@@ -141,7 +141,7 @@ import UIKit
     }
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+//        // super.traitCollectionDidChange(previousTraitCollection)
         updateColor()
     }
 
@@ -162,10 +162,10 @@ import UIKit
     public override func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)
 
-        if let window = newWindow {
-            contentLayer.shouldRasterize = true
-            contentLayer.rasterizationScale = window.screen.scale
-        }
+//        if let window = newWindow {
+//            contentLayer.shouldRasterize = true
+////            contentLayer.rasterizationScale = window.screen.scale
+//        }
 
         if isAnimating {
             startAnimating()

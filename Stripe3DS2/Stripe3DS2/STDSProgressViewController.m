@@ -39,9 +39,9 @@
     self.view = [[STDSProcessingView alloc] initWithCustomization:self.uiCustomization directoryServerLogo:dsImage];
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    return self.uiCustomization.preferredStatusBarStyle;
-}
+//- (UIStatusBarStyle)preferredStatusBarStyle {
+//    return self.uiCustomization.preferredStatusBarStyle;
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

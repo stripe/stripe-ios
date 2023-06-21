@@ -192,22 +192,22 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     @objc
     private func keyboardDidShow(notification: Notification) {
-        // Hack to get orientation without using `UIApplication`
-        let landscape = UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height
-        // Handle iPad landscape edge case where `scrollRectToVisible` isn't sufficient
-        if UIDevice.current.userInterfaceIdiom == .pad && landscape {
-            guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-            scrollView.contentInset.bottom = view.convert(keyboardFrame.cgRectValue, from: nil).size.height
-            return
-        }
-
-        if let firstResponder = view.firstResponder() {
-            let firstResponderFrame = scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
-                dx: -Constants.keyboardAvoidanceEdgePadding,
-                dy: -Constants.keyboardAvoidanceEdgePadding
-            )
-            scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
-        }
+//        // Hack to get orientation without using `UIApplication`
+//        let landscape = UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height
+//        // Handle iPad landscape edge case where `scrollRectToVisible` isn't sufficient
+//        if UIDevice.current.userInterfaceIdiom == .pad && landscape {
+//            guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+//            scrollView.contentInset.bottom = view.convert(keyboardFrame.cgRectValue, from: nil).size.height
+//            return
+//        }
+//
+//        if let firstResponder = view.firstResponder() {
+//            let firstResponderFrame = scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
+//                dx: -Constants.keyboardAvoidanceEdgePadding,
+//                dy: -Constants.keyboardAvoidanceEdgePadding
+//            )
+//            scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
+//        }
     }
 
     @objc

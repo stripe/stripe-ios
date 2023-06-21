@@ -45,7 +45,7 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc public override var hash: Int {
-        return NSStringFromClass(STPApplePayPaymentOption.self).hash
-    }
+//    @objc public override var hash: Int {
+//        return NSStringFromClass(STPApplePayPaymentOption.self).hash
+//    }
 }

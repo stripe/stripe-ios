@@ -155,24 +155,25 @@ extension UIColor {
         forBackgroundColor backgroundColor: UIColor,
         traitCollection: UITraitCollection = .current
     ) -> UIColor {
-        let resolvedLightModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
-            traitCollection,
-            UITraitCollection(userInterfaceStyle: .light),
-        ]))
-
-        let resolvedDarkModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
-            traitCollection,
-            UITraitCollection(userInterfaceStyle: .dark),
-        ]))
-
-        let resolvedBackgroundColor = backgroundColor.resolvedColor(with: traitCollection)
-
-        let contrastToLightMode = resolvedBackgroundColor.contrastRatio(to: resolvedLightModeColor)
-        let contrastToDarkMode = resolvedBackgroundColor.contrastRatio(to: resolvedDarkModeColor)
-
-        return contrastToLightMode > contrastToDarkMode
-            ? resolvedLightModeColor
-            : resolvedDarkModeColor
+        return UIColor.red
+//        let resolvedLightModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
+//            traitCollection,
+//            UITraitCollection(userInterfaceStyle: .light),
+//        ]))
+//
+//        let resolvedDarkModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
+//            traitCollection,
+//            UITraitCollection(userInterfaceStyle: .dark),
+//        ]))
+//
+//        let resolvedBackgroundColor = backgroundColor.resolvedColor(with: traitCollection)
+//
+//        let contrastToLightMode = resolvedBackgroundColor.contrastRatio(to: resolvedLightModeColor)
+//        let contrastToDarkMode = resolvedBackgroundColor.contrastRatio(to: resolvedDarkModeColor)
+//
+//        return contrastToLightMode > contrastToDarkMode
+//            ? resolvedLightModeColor
+//            : resolvedDarkModeColor
     }
 
 }

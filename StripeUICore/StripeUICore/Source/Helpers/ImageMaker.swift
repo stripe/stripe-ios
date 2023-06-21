@@ -21,8 +21,7 @@ import UIKit
       templateIfAvailable: Bool
     ) -> UIImage? {
 
-      var image = UIImage(
-        named: imageName, in: BundleLocator.resourcesBundle, compatibleWith: nil)
+      var image = UIImage(named: imageName, in: BundleLocator.resourcesBundle, compatibleWith: nil)
 
       if image == nil {
         image = UIImage(named: imageName)

@@ -296,7 +296,7 @@ import UIKit
     }
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+//        // super.traitCollectionDidChange(previousTraitCollection)
         invalidateIntrinsicContentSize()
         updateColors()
     }

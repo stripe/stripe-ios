@@ -190,7 +190,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // toggle save this card on and off
         var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
+        let expectDefaultSelectionOn = Locale.current.region!.identifier == "US"
         if expectDefaultSelectionOn {
             XCTAssertTrue(saveThisCardToggle.isSelected)
         } else {
@@ -611,7 +611,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let payButton = app.buttons["Pay $50.99"]
         XCTAssertTrue(payButton.waitForExistence(timeout: 5))
 
-        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
+        let expectDefaultSelectionOn = Locale.current.region!.identifier == "US"
         let selectedMandate =
         "By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."
         let unselectedMandate = "By continuing, you agree to authorize payments pursuant to these terms."
@@ -1325,7 +1325,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         // toggle save this card on and off
         var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
+        let expectDefaultSelectionOn = Locale.current.region!.identifier == "US"
         if expectDefaultSelectionOn {
             XCTAssertTrue(saveThisCardToggle.isSelected)
         } else {

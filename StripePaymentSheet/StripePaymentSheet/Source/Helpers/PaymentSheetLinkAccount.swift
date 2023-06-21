@@ -72,7 +72,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         session: ConsumerSession?,
         publishableKey: String?,
         apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared
+        cookieStore: LinkCookieStore = LinkInMemoryCookieStore()
     ) {
         self.email = email
         self.currentSession = session

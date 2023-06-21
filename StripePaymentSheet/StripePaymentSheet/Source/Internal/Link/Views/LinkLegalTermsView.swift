@@ -119,23 +119,23 @@ final class LinkLegalTermsView: UIView {
 }
 
 extension LinkLegalTermsView: UITextViewDelegate {
-
-    func textView(
-        _ textView: UITextView,
-        shouldInteractWith URL: URL,
-        in characterRange: NSRange,
-        interaction: UITextItemInteraction
-    ) -> Bool {
-        guard interaction == .invokeDefaultAction else {
-            // Disable preview and actions
-            return false
-        }
-
-        let handled = delegate?.legalTermsView(self, didTapOnLinkWithURL: URL) ?? false
-        assert(handled, "Link not handled by delegate")
-
-        // If not handled by the delegate, let the system handle the link.
-        return !handled
-    }
+//
+//    func textView(
+//        _ textView: UITextView,
+//        shouldInteractWith URL: URL,
+//        in characterRange: NSRange,
+//        interaction: UITextItemInteraction
+//    ) -> Bool {
+//        guard interaction == .invokeDefaultAction else {
+//            // Disable preview and actions
+//            return false
+//        }
+//
+//        let handled = delegate?.legalTermsView(self, didTapOnLinkWithURL: URL) ?? false
+//        assert(handled, "Link not handled by delegate")
+//
+//        // If not handled by the delegate, let the system handle the link.
+//        return !handled
+//    }
 
 }

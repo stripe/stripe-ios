@@ -116,9 +116,9 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
     }
 
     /// :nodoc:
-    @objc public override var hash: Int {
-        return stripeID.hash
-    }
+//    @objc public override var hash: Int {
+//        return stripeID.hash
+//    }
 
     func isEqual(to bankAccount: STPBankAccount?) -> Bool {
         guard let bankAccount = bankAccount else {

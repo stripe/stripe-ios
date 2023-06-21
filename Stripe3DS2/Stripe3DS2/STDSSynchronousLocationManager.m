@@ -37,9 +37,7 @@ typedef void (^LocationUpdateCompletionBlock)(CLLocation * _Nullable);
 }
 
 + (BOOL)hasPermissions {
-    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
-    return [CLLocationManager locationServicesEnabled] &&
-    (authorizationStatus == kCLAuthorizationStatusAuthorizedAlways || authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse);
+    return false;
 }
 
 - (instancetype)init {

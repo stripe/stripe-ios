@@ -126,7 +126,7 @@ public class STPCoreViewController: UIViewController {
 
         view.backgroundColor = theme.primaryBackgroundColor
 
-        setNeedsStatusBarAppearanceUpdate()
+//        setNeedsStatusBarAppearanceUpdate()
     }
 
     /// :nodoc:

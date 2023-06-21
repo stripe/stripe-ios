@@ -74,7 +74,7 @@ import Foundation
             prefix = scanner.scanUpToString("*") as NSString?
         } else {
             #if !TARGET_OS_MACCATALYST
-                scanner.scanUpTo("*", into: &prefix)
+//                scanner.scanUpTo("*", into: &prefix)
             #endif
         }
         var number = (string as NSString).replacingOccurrences(
@@ -92,7 +92,7 @@ import Foundation
     class func countryCodeOrCurrentLocaleCountry(from nillableCode: String?) -> String {
         var countryCode = nillableCode
         if countryCode == nil {
-            countryCode = NSLocale.autoupdatingCurrent.regionCode
+            countryCode = NSLocale.autoupdatingCurrent.region?.identifier
         }
         return countryCode ?? ""
     }

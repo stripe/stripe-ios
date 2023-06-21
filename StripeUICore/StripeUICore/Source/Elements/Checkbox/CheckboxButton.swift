@@ -153,7 +153,7 @@ import UIKit
     }
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+//        // super.traitCollectionDidChange(previousTraitCollection)
         updateLabels()
     }
 
@@ -240,9 +240,9 @@ import UIKit
 
 // MARK: - UITextViewDelegate
 extension CheckboxButton: UITextViewDelegate {
-    public func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange) -> Bool {
-        return delegate?.checkboxButton(self, shouldOpen: url) ?? true
-    }
+//    public func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange) -> Bool {
+//        return delegate?.checkboxButton(self, shouldOpen: url) ?? true
+//    }
 }
 
 // MARK: - CheckBox

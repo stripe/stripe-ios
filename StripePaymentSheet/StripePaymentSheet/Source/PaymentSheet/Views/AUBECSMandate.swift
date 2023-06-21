@@ -50,7 +50,7 @@ final class AUBECSLegalTermsView: UIView {
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+        // super.traitCollectionDidChange(previousTraitCollection)
         textView.font = .preferredFont(forTextStyle: .caption1)
     }
 

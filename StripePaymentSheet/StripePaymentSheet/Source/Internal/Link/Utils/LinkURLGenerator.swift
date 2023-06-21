@@ -48,8 +48,8 @@ class LinkURLGenerator {
             throw LinkURLGeneratorError.noMerchantCountryCode
         }
 
-        // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
-        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.regionCode ?? "XX"
+        // We only expect region!.identifier to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
+        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? "US"
 
         // Get email from the billing details, or the Customer object if the billing details are empty
         var customerEmail = configuration.defaultBillingDetails.email

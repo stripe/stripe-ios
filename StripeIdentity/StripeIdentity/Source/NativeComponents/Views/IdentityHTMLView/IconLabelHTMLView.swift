@@ -73,7 +73,7 @@ final class IconLabelHTMLView: UIView {
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+        // super.traitCollectionDidChange(previousTraitCollection)
 
         // NOTE: `traitCollectionDidChange` is called off the main thread when the app backgrounds
         DispatchQueue.main.async { [weak self] in

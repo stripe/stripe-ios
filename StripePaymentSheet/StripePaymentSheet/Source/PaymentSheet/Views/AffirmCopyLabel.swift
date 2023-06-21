@@ -31,7 +31,7 @@ class AffirmCopyLabel: UIView {
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+        // super.traitCollectionDidChange(previousTraitCollection)
         logo.image = PaymentSheetImageLibrary.affirmLogo()
     }
 

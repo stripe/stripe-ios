@@ -106,7 +106,7 @@ import WebKit
 
     // Overriden so we can respond to changing dark mode by updating the image color
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+        // super.traitCollectionDidChange(previousTraitCollection)
         Task {
             var attributedString = label.attributedText
             if previousTraitCollection?.isDarkMode != traitCollection.isDarkMode {

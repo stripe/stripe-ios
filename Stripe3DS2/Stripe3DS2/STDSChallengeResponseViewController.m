@@ -99,9 +99,9 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     [self.view addGestureRecognizer:self.tapOutsideKeyboardGestureRecognizer];
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    return self.uiCustomization.preferredStatusBarStyle;
-}
+//- (UIStatusBarStyle)preferredStatusBarStyle {
+//    return self.uiCustomization.preferredStatusBarStyle;
+//}
     
 #pragma mark - Public APIs
 
@@ -459,12 +459,12 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     stackView.spacing = 5;
     stackView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    CGSize size = [UIScreen mainScreen].bounds.size;
-    if (size.width > size.height) {
-        // hack to detect landscape
-        stackView.axis = UILayoutConstraintAxisHorizontal;
-        stackView.alignment = UIStackViewAlignmentCenter;
-    }
+//    CGSize size = [UIScreen mainScreen].bounds.size;
+//    if (size.width > size.height) {
+//        // hack to detect landscape
+//        stackView.axis = UILayoutConstraintAxisHorizontal;
+//        stackView.alignment = UIStackViewAlignmentCenter;
+//    }
     return stackView;
 }
 
