@@ -62,6 +62,9 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     var generatePhonOtpSuccessCallback: ((StripeCore.StripeAPI.VerificationPageData) -> Void)?
     var cannotVerifyPhoneOtpCalled: Bool = false
 
+    var saveOtpAndMaybeTransitionCompletion: (() -> Void)?
+    var saveOtpAndMaybeTransitionInvalidOtp: (() -> Void)?
+
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
         flowController: VerificationSheetFlowControllerProtocol =
@@ -142,6 +145,12 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         }
     }
 
+    func saveOtpAndMaybeTransition(from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName, otp otpValue: String, completion: @escaping () -> Void, invalidOtp: @escaping () -> Void) {
+        saveOtpAndMaybeTransitionCompletion = completion
+        saveOtpAndMaybeTransitionInvalidOtp = invalidOtp
+
+    }
+
     func verifyAndTransition(simulateDelay: Bool) {
         completeOption = simulateDelay ? .successAsync : .success
     }
@@ -154,7 +163,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         generatePhonOtpSuccessCallback = successCallback
     }
 
-    func sendCannotVerifyPhoneOtpAndTransition() {
+    func sendCannotVerifyPhoneOtpAndTransition(completion: @escaping () -> Void) {
         self.cannotVerifyPhoneOtpCalled = true
     }
 
