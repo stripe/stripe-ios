@@ -61,6 +61,15 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
 
+    /// Submit OTP with VerificationPageData API and transition if OTP is valid or request failed.
+    /// Call invalidOtp callback when the request is successful but OTP is invalid.
+    func saveOtpAndMaybeTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        otp otpValue: String,
+        completion: @escaping () -> Void,
+        invalidOtp: @escaping () -> Void
+    )
+
     func verifyAndTransition(
         simulateDelay: Bool
     )
@@ -73,7 +82,9 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     func generatePhoneOtp(using successCallback: @escaping (StripeAPI.VerificationPageData) -> Void)
 
     /// Send the cannotVerifyPhoneOtp request and transition accordingly.
-    func sendCannotVerifyPhoneOtpAndTransition()
+    func sendCannotVerifyPhoneOtpAndTransition(
+        completion: @escaping () -> Void
+    )
 
     /// Transition to CountryNotListedViewController without any API request
     func transitionToCountryNotListed(
@@ -344,9 +355,11 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
     }
 
-    func sendCannotVerifyPhoneOtpAndTransition() {
+    func sendCannotVerifyPhoneOtpAndTransition(
+        completion: @escaping() -> Void
+    ) {
         apiClient.cannotPhoneVerifyOtp().observe(on: .main) { [weak self] result in
-            self?.transitionWithVerificaionPageDataResult(result)
+            self?.transitionWithVerificaionPageDataResult(result, completion: completion)
         }
     }
 
@@ -439,6 +452,28 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 updateDataResult: result,
                 completion: completion
             )
+        }
+    }
+
+    func saveOtpAndMaybeTransition(from fromScreen: IdentityAnalyticsClient.ScreenName, otp otpValue: String, completion: @escaping () -> Void = {}, invalidOtp: @escaping () -> Void) {
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen)
+        let phoneOtpData = StripeAPI.VerificationPageCollectedData(phoneOtp: otpValue)
+        apiClient.updateIdentityVerificationPageData(
+            updating: .init(
+                clearData: calculateClearData(dataToBeCollected: phoneOtpData),
+                collectedData: phoneOtpData
+            )
+        ).observe(on: .main) { [weak self] updateDataResult in
+            self?.handleVerificationPageDataResult(collectedData: phoneOtpData, updateDataResult: updateDataResult, completion: completion) { successPageData in
+                if successPageData.requirements.missing.contains(.phoneOtp) {
+                    invalidOtp()
+                } else {
+                    self?.checkSubmitAndTransition(
+                        updateDataResult: updateDataResult,
+                        completion: completion
+                    )
+                }
+            }
         }
     }
 

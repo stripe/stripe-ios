@@ -395,6 +395,13 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     sheetController: sheetController
                 )
             )
+        case .phoneOtpDestination:
+            return completion(
+                makePhoneOtpViewController(
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                )
+            )
         case .confirmationDestination:
             return completion(
                 SuccessViewController(
@@ -445,6 +452,21 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             missing: staticContent.requirements.missing,
             sheetController: sheetController
         )
+    }
+
+    func makePhoneOtpViewController(
+        staticContent: StripeAPI.VerificationPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        return PhoneOtpViewController(
+            phoneOtpContent: StripeAPI.VerificationPageStaticContentPhoneOtpPage(),
+            sheetController: sheetController
+        )
+
+//        return PhoneOtpViewController(
+//            phoneOtpContent: staticContent.phoneOtp,
+//            sheetController: sheetController
+//        )
     }
 
     func makeBiometricConsentViewController(
@@ -709,6 +731,8 @@ extension Set<StripeAPI.VerificationPageFieldType> {
             return .individualWelcomeDestination
         } else if !self.isDisjoint(with: [.idNumber, .address, .phoneNumber]) {
             return .individualDestination
+        } else if self.contains(.phoneOtp) {
+            return .phoneOtpDestination
         } else if self.isEmpty {
             return .confirmationDestination
         } else {
