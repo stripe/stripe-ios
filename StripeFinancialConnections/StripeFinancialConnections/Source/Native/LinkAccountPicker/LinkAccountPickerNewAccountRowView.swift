@@ -13,16 +13,31 @@ final class LinkAccountPickerNewAccountRowView: UIView {
 
     private let didSelect: () -> Void
 
-    init(didSelect: @escaping () -> Void) {
+    init(
+        title: String?,
+        imageUrl: String?,
+        didSelect: @escaping () -> Void
+    ) {
         self.didSelect = didSelect
         super.init(frame: .zero)
 
-        let horizontalStackView = CreateHorizontalStackView(
-            arrangedSubviews: [
-                CreateIconView(),
-                CreateTitleLabelView(),
-            ]
-        )
+        let horizontalStackView = CreateHorizontalStackView()
+        if let imageUrl = imageUrl {
+            horizontalStackView.addArrangedSubview(
+                CreateIconView(imageUrl: imageUrl)
+            )
+        }
+        if let title = title {
+            horizontalStackView.addArrangedSubview(
+                CreateTitleLabelView(
+                    title: title
+//                    ?? STPLocalizedString(
+//                        "New bank account",
+//                        "A button that allows users to add an additional bank account for future payments."
+//                    )
+                )
+            )
+        }
         addAndPinSubviewToSafeArea(horizontalStackView)
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
@@ -42,12 +57,11 @@ final class LinkAccountPickerNewAccountRowView: UIView {
     }
 }
 
-private func CreateIconView() -> UIView {
+private func CreateIconView(imageUrl: String?) -> UIView {
     let diameter: CGFloat = 24
     let iconImageView = UIImageView()
     iconImageView.contentMode = .scaleAspectFit
-    iconImageView.image = Image.add.makeImage()
-        .withTintColor(.textBrand, renderingMode: .alwaysOriginal)
+    iconImageView.setImage(with: imageUrl)
     let paddedView = UIStackView(arrangedSubviews: [iconImageView])
     paddedView.backgroundColor = .textBrand.withAlphaComponent(0.1)
     paddedView.layer.cornerRadius = 6
@@ -65,21 +79,18 @@ private func CreateIconView() -> UIView {
     return paddedView
 }
 
-private func CreateTitleLabelView() -> UIView {
+private func CreateTitleLabelView(title: String) -> UIView {
     let titleLabel = AttributedLabel(
         font: .label(.largeEmphasized),
         textColor: .textBrand
     )
-    titleLabel.text = STPLocalizedString(
-        "New bank account",
-        "A button that allows users to add an additional bank account for future payments."
-    )
+    titleLabel.text = title
     titleLabel.lineBreakMode = .byCharWrapping
     return titleLabel
 }
 
-private func CreateHorizontalStackView(arrangedSubviews: [UIView]) -> UIStackView {
-    let horizontalStackView = UIStackView(arrangedSubviews: arrangedSubviews)
+private func CreateHorizontalStackView() -> UIStackView {
+    let horizontalStackView = UIStackView()
     horizontalStackView.axis = .horizontal
     horizontalStackView.spacing = 12
     horizontalStackView.alignment = .center
@@ -98,8 +109,16 @@ private func CreateHorizontalStackView(arrangedSubviews: [UIView]) -> UIStackVie
 import SwiftUI
 
 private struct LinkAccountPickerNewAccountRowViewUIViewRepresentable: UIViewRepresentable {
+
+    let title: String?
+    let imageUrl: String?
+
     func makeUIView(context: Context) -> LinkAccountPickerNewAccountRowView {
-        return LinkAccountPickerNewAccountRowView(didSelect: {})
+        return LinkAccountPickerNewAccountRowView(
+            title: title,
+            imageUrl: imageUrl,
+            didSelect: {}
+        )
     }
 
     func updateUIView(_ uiView: LinkAccountPickerNewAccountRowView, context: Context) {}
@@ -110,7 +129,22 @@ struct LinkAccountPickerNewAccountRowView_Previews: PreviewProvider {
         if #available(iOS 14.0, *) {
             ScrollView {
                 VStack(spacing: 10) {
-                    LinkAccountPickerNewAccountRowViewUIViewRepresentable()
+                    LinkAccountPickerNewAccountRowViewUIViewRepresentable(
+                        title: "New bank account",
+                        imageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png"
+                    )
+                        .frame(height: 48)
+
+                    LinkAccountPickerNewAccountRowViewUIViewRepresentable(
+                        title: "New bank account",
+                        imageUrl: nil
+                    )
+                        .frame(height: 48)
+
+                    LinkAccountPickerNewAccountRowViewUIViewRepresentable(
+                        title: nil,
+                        imageUrl: nil
+                    )
                         .frame(height: 48)
                 }
                 .padding()

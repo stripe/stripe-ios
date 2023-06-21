@@ -11,7 +11,7 @@ import Foundation
 protocol LinkAccountPickerDataSourceDelegate: AnyObject {
     func linkAccountPickerDataSource(
         _ dataSource: LinkAccountPickerDataSource,
-        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount?
+        didSelectAccount selectedAccountTuple: FinancialConnectionsAccountTuple?
     )
 }
 
@@ -19,12 +19,12 @@ protocol LinkAccountPickerDataSource: AnyObject {
 
     var delegate: LinkAccountPickerDataSourceDelegate? { get set }
     var manifest: FinancialConnectionsSessionManifest { get }
-    var selectedAccount: FinancialConnectionsPartnerAccount? { get }
+    var selectedAccountTuple: FinancialConnectionsAccountTuple? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
     func selectNetworkedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) -> Future<FinancialConnectionsInstitutionList>
-    func updateSelectedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount)
+    func updateSelectedAccount(_ selectedAccountTuple: FinancialConnectionsAccountTuple)
 }
 
 final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSource {
@@ -35,9 +35,9 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
     private let clientSecret: String
     private let consumerSession: ConsumerSessionData
 
-    private(set) var selectedAccount: FinancialConnectionsPartnerAccount? {
+    private(set) var selectedAccountTuple: FinancialConnectionsAccountTuple? {
         didSet {
-            delegate?.linkAccountPickerDataSource(self, didSelectAccount: selectedAccount)
+            delegate?.linkAccountPickerDataSource(self, didSelectAccount: selectedAccountTuple)
         }
     }
     weak var delegate: LinkAccountPickerDataSourceDelegate?
@@ -63,8 +63,8 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         )
     }
 
-    func updateSelectedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) {
-        self.selectedAccount = selectedAccount
+    func updateSelectedAccount(_ selectedAccountTuple: FinancialConnectionsAccountTuple) {
+        self.selectedAccountTuple = selectedAccountTuple
     }
 
     func selectNetworkedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) -> Future<FinancialConnectionsInstitutionList> {

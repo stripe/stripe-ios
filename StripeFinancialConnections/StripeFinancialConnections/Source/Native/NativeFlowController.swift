@@ -700,6 +700,14 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
     ) {
         showTerminalError(error)
     }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        requestedPartnerAuthWithInstitution institution: FinancialConnectionsInstitution
+    ) {
+        dataManager.institution = institution
+        pushPane(.partnerAuth, animated: true)
+    }
 }
 
 // MARK: - NetworkingSaveToLinkVerificationDelegate
@@ -779,7 +787,7 @@ private func CreatePaneViewController(
         }
     case .attachLinkedPaymentAccount:
         if let institution = dataManager.institution,
-            let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId
+           let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId
         {
             let dataSource = AttachLinkedPaymentAccountDataSourceImplementation(
                 apiClient: dataManager.apiClient,
@@ -801,6 +809,9 @@ private func CreatePaneViewController(
             assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil
         }
+    case .bankAuthRepair:
+        assertionFailure("Not supported")
+        viewController = nil
     case .consent:
         let consentDataSource = ConsentDataSourceImplementation(
             manifest: dataManager.manifest,
@@ -859,7 +870,7 @@ private func CreatePaneViewController(
         viewController = manualEntryViewController
     case .manualEntrySuccess:
         if let paymentAccountResource = dataManager.paymentAccountResource,
-            let accountNumberLast4 = dataManager.accountNumberLast4
+           let accountNumberLast4 = dataManager.accountNumberLast4
         {
             let manualEntrySuccessViewController = ManualEntrySuccessViewController(
                 microdepositVerificationMethod: paymentAccountResource.microdepositVerificationMethod,
@@ -1004,7 +1015,7 @@ private func CreatePaneViewController(
         networkingLinkWarmupViewController.delegate = nativeFlowController
         viewController = networkingLinkWarmupViewController
 
-    // client-side only panes below
+        // client-side only panes below
     case .resetFlow:
         let resetFlowDataSource = ResetFlowDataSourceImplementation(
             apiClient: dataManager.apiClient,

@@ -10,10 +10,10 @@ import Foundation
 struct FinancialConnectionsNetworkedAccountsResponse: Decodable {
     let data: [FinancialConnectionsPartnerAccount]
     let display: Display?
-    
+
     struct Display: Decodable {
         let text: Text?
-        
+
         struct Text: Decodable {
             let returningNetworkingUserAccountPicker: FinancialConnectionsNetworkingAccountPicker?
         }
@@ -25,13 +25,13 @@ struct FinancialConnectionsNetworkingAccountPicker: Decodable {
     let defaultCta: String
     let addNewAccount: AddNewAccount
     let accounts: [FinancialConnectionsNetworkingAccountPicker.Account]
-    
+
     struct AddNewAccount: Decodable {
         let body: String?
         let icon: FinancialConnectionsImage
         let nextPane: FinancialConnectionsSessionManifest.NextPane?
     }
-    
+
     struct Account: Decodable {
         let id: String
         let allowSelection: Bool
@@ -39,6 +39,7 @@ struct FinancialConnectionsNetworkingAccountPicker: Decodable {
         let caption: String?
         // ex. "Repair and connect account"
         let selectionCta: String?
+        // trailing icon on the account row
         let icon: FinancialConnectionsImage?
         let selectionCtaIcon: FinancialConnectionsImage?
         let nextPaneOnSelection: FinancialConnectionsSessionManifest.NextPane?

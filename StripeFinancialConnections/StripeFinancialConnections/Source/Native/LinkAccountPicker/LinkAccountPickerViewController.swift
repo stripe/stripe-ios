@@ -29,6 +29,11 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
+        requestedPartnerAuthWithInstitution institution: FinancialConnectionsInstitution
+    )
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
         didReceiveTerminalError error: Error
     )
 }
@@ -41,26 +46,7 @@ final class LinkAccountPickerViewController: UIViewController {
         return dataSource.manifest.businessName
     }
     private weak var bodyView: LinkAccountPickerBodyView?
-    private lazy var footerView: LinkAccountPickerFooterView = {
-        return LinkAccountPickerFooterView(
-            isStripeDirect: false,
-            businessName: businessName,
-            permissions: dataSource.manifest.permissions,
-            singleAccount: dataSource.manifest.singleAccount,
-            didSelectConnectAccount: { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                self.didSelectConectAccount()
-            },
-            didSelectMerchantDataAccessLearnMore: { [weak self] in
-                guard let self = self else { return }
-                self.dataSource
-                    .analyticsClient
-                    .logMerchantDataAccessLearnMore(pane: .linkAccountPicker)
-            }
-        )
-    }()
+    private weak var footerView: LinkAccountPickerFooterView?
 
     init(dataSource: LinkAccountPickerDataSource) {
         self.dataSource = dataSource
@@ -89,10 +75,22 @@ final class LinkAccountPickerViewController: UIViewController {
             .observe { [weak self] result in
                 guard let self = self else { return }
                 retreivingAccountsLoadingView.removeFromSuperview()
-
                 switch result {
                 case .success(let networkedAccountsResponse):
-                    self.displayAccounts(networkedAccountsResponse.data)
+                    if let returningNetworkingUserAccountPicker = networkedAccountsResponse.display?.text?.returningNetworkingUserAccountPicker {
+                        self.display(
+                            partnerAccounts: networkedAccountsResponse.data,
+                            networkingAccountPicker: returningNetworkingUserAccountPicker
+                        )
+                    } else {
+                        self.delegate?.linkAccountPickerViewController(
+                            self,
+                            didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
+                                debugDescription: "Tried fetching networked accounts but received no display parameter."
+                            )
+                        )
+                    }
+
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient
@@ -106,28 +104,44 @@ final class LinkAccountPickerViewController: UIViewController {
             }
     }
 
-    private func displayAccounts(_ accounts: [FinancialConnectionsPartnerAccount]) {
-        let bodyView = LinkAccountPickerBodyView(accounts: accounts)
+    private func display(
+        partnerAccounts: [FinancialConnectionsPartnerAccount],
+        networkingAccountPicker: FinancialConnectionsNetworkingAccountPicker
+    ) {
+        let accountTuples: [FinancialConnectionsAccountTuple] = ZipAccounts(
+            partnerAccounts: partnerAccounts,
+            accountPickerAccounts: networkingAccountPicker.accounts
+        )
+        let bodyView = LinkAccountPickerBodyView(
+            accountTuples: accountTuples,
+            addNewAccount: networkingAccountPicker.addNewAccount
+        )
         bodyView.delegate = self
         self.bodyView = bodyView
 
-        let paneLayoutView = PaneWithHeaderLayoutView(
-            title: {
-                if let businessName = self.businessName {
-                    return String(
-                        format: STPLocalizedString(
-                            "Select an account to connect to %@",
-                            "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
-                        ),
-                        businessName
-                    )
-                } else {
-                    return STPLocalizedString(
-                        "Select an account to connect with this business",
-                        "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
-                    )
+        let footerView = LinkAccountPickerFooterView(
+            defaultCta: networkingAccountPicker.defaultCta,
+            isStripeDirect: false,
+            businessName: businessName,
+            permissions: dataSource.manifest.permissions,
+            singleAccount: dataSource.manifest.singleAccount,
+            didSelectConnectAccount: { [weak self] in
+                guard let self = self else {
+                    return
                 }
-            }(),
+                self.didSelectConectAccount()
+            },
+            didSelectMerchantDataAccessLearnMore: { [weak self] in
+                guard let self = self else { return }
+                self.dataSource
+                    .analyticsClient
+                    .logMerchantDataAccessLearnMore(pane: .linkAccountPicker)
+            }
+        )
+        self.footerView = footerView
+
+        let paneLayoutView = PaneWithHeaderLayoutView(
+            title: networkingAccountPicker.title,
             contentView: bodyView,
             footerView: footerView
         )
@@ -137,17 +151,46 @@ final class LinkAccountPickerViewController: UIViewController {
     }
 
     private func didSelectConectAccount() {
-        // TODO(kgaidis): implement repair bank account
-
-        guard let selectedAccount = dataSource.selectedAccount else {
+        guard let selectedAccountTuple = dataSource.selectedAccountTuple else {
             assertionFailure("user shouldn't be able to press the connect account button without an account")
+            dataSource
+                .analyticsClient
+                .logUnexpectedError(
+                    FinancialConnectionsSheetError
+                        .unknown(
+                            debugDescription: "Selected to connect an account, but no account is selected."
+                        ),
+                    errorName: "ConnectUnselectedAccountError",
+                    pane: .linkAccountPicker
+                )
             delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
             return
         }
 
-        if dataSource.manifest.stepUpAuthenticationRequired == true {
-            delegate?.linkAccountPickerViewController(self, requestedStepUpVerificationWithSelectedAccount: selectedAccount)
-        } else {
+        let nextPane = selectedAccountTuple
+            .accountPickerAccount
+            .nextPaneOnSelection
+
+        if nextPane == .networkingLinkStepUpVerification {
+            delegate?.linkAccountPickerViewController(
+                self,
+                requestedStepUpVerificationWithSelectedAccount: selectedAccountTuple.partnerAccount
+            )
+        } else if nextPane == .partnerAuth {
+            if let institution = selectedAccountTuple.partnerAccount.institution {
+                delegate?.linkAccountPickerViewController(
+                    self,
+                    requestedPartnerAuthWithInstitution: institution
+                )
+            } else {
+                delegate?.linkAccountPickerViewController(
+                    self,
+                    didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
+                        debugDescription: "LinkAccountPicker wanted to go to partner_auth but there is no institution."
+                    )
+                )
+            }
+        } else if nextPane == .success {
             let linkingAccountsLoadingView = LinkingAccountsLoadingView(
                 numberOfSelectedAccounts: 1,
                 businessName: businessName
@@ -155,7 +198,7 @@ final class LinkAccountPickerViewController: UIViewController {
             view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
 
             dataSource
-                .selectNetworkedAccount(selectedAccount)
+                .selectNetworkedAccount(selectedAccountTuple.partnerAccount)
                 .observe { [weak self] result in
                     guard let self = self else { return }
                     switch result {
@@ -167,7 +210,7 @@ final class LinkAccountPickerViewController: UIViewController {
                                 pane: .linkAccountPicker
                             )
                         if let institution = institutionList.data.first {
-                            self.delegate?.linkAccountPickerViewController(self, didSelectAccount: selectedAccount, institution: institution)
+                            self.delegate?.linkAccountPickerViewController(self, didSelectAccount: selectedAccountTuple.partnerAccount, institution: institution)
                         } else {
                             // this should never happen, but in case it does we want to force a
                             // a terminal error so user can start again with a fresh state
@@ -197,6 +240,23 @@ final class LinkAccountPickerViewController: UIViewController {
                         self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
                     }
                 }
+        } else if let nextPane = nextPane {
+            if nextPane == .bankAuthRepair {
+                dataSource
+                    .analyticsClient
+                    .log(
+                        eventName: "click.repair_accounts",
+                        pane: .linkAccountPicker
+                    )
+            }
+            delegate?.linkAccountPickerViewController(self, didRequestNextPane: nextPane)
+        } else {
+            delegate?.linkAccountPickerViewController(
+                self,
+                didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
+                    debugDescription: "LinkAccountPicker pressed account but no nextPane returned."
+                )
+            )
         }
     }
 }
@@ -206,29 +266,32 @@ final class LinkAccountPickerViewController: UIViewController {
 extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
     func linkAccountPickerBodyView(
         _ view: LinkAccountPickerBodyView,
-        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
+        didSelectAccount selectedAccountTuple: FinancialConnectionsAccountTuple
     ) {
         dataSource
             .analyticsClient
             .log(
                 eventName: "click.account_picker.account_selected",
                 parameters: [
-                    "account": selectedAccount.id,
+                    "account": selectedAccountTuple.partnerAccount.id,
                     "is_single_account": true,
                 ],
                 pane: .linkAccountPicker
             )
-        dataSource.updateSelectedAccount(selectedAccount)
+        dataSource.updateSelectedAccount(selectedAccountTuple)
     }
 
-    func linkAccountPickerBodyViewSelectedNewBankAccount(_ view: LinkAccountPickerBodyView) {
+    func linkAccountPickerBodyView(
+        _ view: LinkAccountPickerBodyView,
+        selectedNewBankAccountAndRequestedNextPane nextPane: FinancialConnectionsSessionManifest.NextPane?
+    ) {
         dataSource
             .analyticsClient
             .log(
                 eventName: "click.new_account",
                 pane: .linkAccountPicker
             )
-        delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
+        delegate?.linkAccountPickerViewController(self, didRequestNextPane: nextPane ?? .institutionPicker)
     }
 }
 
@@ -238,9 +301,30 @@ extension LinkAccountPickerViewController: LinkAccountPickerDataSourceDelegate {
 
     func linkAccountPickerDataSource(
         _ dataSource: LinkAccountPickerDataSource,
-        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount?
+        didSelectAccount selectedAccountTuple: FinancialConnectionsAccountTuple?
     ) {
-        bodyView?.selectAccount(selectedAccount)
-        footerView.enableButton(selectedAccount != nil)
+        bodyView?.selectAccount(selectedAccountTuple)
+        footerView?.didSelectedAccount(selectedAccountTuple)
     }
+}
+
+/// Combines two different `account` types into one type
+typealias FinancialConnectionsAccountTuple = (
+    accountPickerAccount: FinancialConnectionsNetworkingAccountPicker.Account,
+    partnerAccount: FinancialConnectionsPartnerAccount
+)
+private func ZipAccounts(
+    partnerAccounts: [FinancialConnectionsPartnerAccount],
+    accountPickerAccounts: [FinancialConnectionsNetworkingAccountPicker.Account]
+) -> [FinancialConnectionsAccountTuple] {
+    var accountTuples: [FinancialConnectionsAccountTuple] = []
+    let idToPartnerAccount = Dictionary(uniqueKeysWithValues: partnerAccounts.map({ ($0.id, $0) }))
+    // use `accountPickerAccounts` to determine the order as its
+    // used for defining how we display the account
+    for accountPickerAccount in accountPickerAccounts {
+        if let partnerAccount = idToPartnerAccount[accountPickerAccount.id] {
+            accountTuples.append((accountPickerAccount, partnerAccount))
+        }
+    }
+    return accountTuples
 }
