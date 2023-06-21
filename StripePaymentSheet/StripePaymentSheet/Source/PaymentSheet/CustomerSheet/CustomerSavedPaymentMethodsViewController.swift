@@ -234,6 +234,11 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         var actionButtonStatus: ConfirmButton.Status = .enabled
         var showActionButton: Bool = true
 
+        var callToAction = callToAction()
+//        if let customCtaLabel = configuration.primaryButtonLabel {
+//            callToAction = .customWithLock(title: customCtaLabel)
+//        }
+
         switch mode {
         case .selectingSaved:
             if savedPaymentOptionsViewController.selectedPaymentOption != nil {
@@ -243,7 +248,12 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             }
         case .addingNewPaymentMethodAttachToCustomer, .addingNewWithSetupIntent:
             self.actionButton.setHiddenIfNecessary(false)
-            actionButtonStatus = addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
+            if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
+                callToAction = overrideCallToAction
+                actionButtonStatus = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
+            } else {
+                actionButtonStatus = addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
+            }
         }
 
         if processingInFlight {
@@ -253,7 +263,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.actionButton.update(
             state: actionButtonStatus,
             style: .stripe,
-            callToAction: callToAction(),
+            callToAction: callToAction,
             animated: animated,
             completion: nil
         )

@@ -17,7 +17,7 @@ protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
 class CustomerAddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?
-    let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.card]
+    let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.card, .USBankAccount]
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         return paymentMethodTypesView.selected
     }
@@ -31,6 +31,44 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
     // MARK: - Writable Properties
     private let configuration: CustomerSheet.Configuration
+    private lazy var usBankAccountFormElement: USBankAccountPaymentMethodElement? = {
+        // We are keeping usBankAccountInfo in memory to preserve state
+        // if the user switches payment method types
+        let paymentMethodElement = makeElement(for: selectedPaymentMethodType)
+        if let usBankAccountPaymentMethodElement = paymentMethodElement as? USBankAccountPaymentMethodElement {
+            usBankAccountPaymentMethodElement.presentingViewControllerDelegate = self
+        } else {
+            assertionFailure("Wrong type for usBankAccountFormElement")
+        }
+        return paymentMethodElement as? USBankAccountPaymentMethodElement
+    }()
+
+    var overrideBuyButtonBehavior: OverrideableBuyButtonBehavior? {
+        if selectedPaymentMethodType == .USBankAccount {
+            if let paymentOption = paymentOption,
+               case .new = paymentOption {
+                return nil // already have PaymentOption
+            } else {
+                return .LinkUSBankAccount
+            }
+        }
+        return nil
+    }
+
+    var overrideCallToAction: ConfirmButton.CallToActionType? {
+        return overrideBuyButtonBehavior != nil
+            ? ConfirmButton.CallToActionType.customWithLock(title: String.Localized.continue)
+            : nil
+    }
+    var overrideCallToActionShouldEnable: Bool {
+        guard let overrideBuyButtonBehavior = overrideBuyButtonBehavior else {
+            return false
+        }
+        switch overrideBuyButtonBehavior {
+        case .LinkUSBankAccount:
+            return usBankAccountFormElement?.canLinkAccount ?? false
+        }
+    }
 
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
         return makeElement(for: selectedPaymentMethodType)
@@ -128,7 +166,16 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             }
         }
     }
-
+    private func updateFormElement() {
+        if selectedPaymentMethodType == .USBankAccount,
+           let usBankAccountFormElement = usBankAccountFormElement {
+            paymentMethodFormElement = usBankAccountFormElement
+        } else {
+            paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
+        }
+        updateUI()
+        sendEventToSubviews(.viewDidAppear, from: view)
+    }
     private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
         let formElement = PaymentSheetFormFactory(
             configuration: .customerSheet(configuration),
@@ -162,6 +209,13 @@ extension CustomerAddPaymentMethodViewController: ElementDelegate {
 
 extension CustomerAddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
+        updateFormElement()
         delegate?.didUpdate(self)
+    }
+}
+
+extension CustomerAddPaymentMethodViewController: PresentingViewControllerDelegate {
+    func presentViewController(viewController: UIViewController, completion: (() -> Void)?) {
+        self.present(viewController, animated: true, completion: completion)
     }
 }
