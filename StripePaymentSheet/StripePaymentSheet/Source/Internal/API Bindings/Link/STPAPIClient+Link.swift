@@ -398,6 +398,22 @@ extension STPAPIClient {
             completion: completion
         )
     }
+
+    func generateInstantDebitsOnlyHostedFlowURLForPaymentIntent(
+        paymentIntentClientSecret: String,
+        returnURL: String
+    ) -> Future<String?> {
+        let endpoint: String = "consumers/payment_intents/generate_instant_debits_only_hosted_url"
+
+        let parameters: [String: Any] = [
+            "client_secret": paymentIntentClientSecret,
+            "return_url": returnURL,
+        ]
+
+        return self.post(resource: endpoint, parameters: parameters).chained { (result: InstantDebitsOnlyHostedFlowURLResponse) in
+            return Promise(value: result.url)
+        }
+    }
 }
 
 // TODO(ramont): Remove this after switching to modern bindings.
@@ -464,6 +480,10 @@ private extension STPAPIClient {
     struct SessionResponse: Decodable {
         let authSessionClientSecret: String?
         let consumerSession: ConsumerSession
+    }
+
+    struct InstantDebitsOnlyHostedFlowURLResponse: Decodable {
+        let url: String?
     }
 }
 

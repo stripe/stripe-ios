@@ -120,7 +120,7 @@ public class PaymentSheet {
             self.completion = nil
         }
         self.completion = completion
-
+        
         // Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
             assertionFailure("presentingViewController is already presenting a view controller")
