@@ -27,6 +27,11 @@ extension CustomerSheet {
         /// Describes the appearance of SavdPaymentMethodsSheet
         public var appearance = PaymentSheet.Appearance.default
 
+        /// Your customer-facing business name.
+        /// This is used to display a "Pay \(merchantDisplayName)" line item in the Apple Pay sheet
+        /// The default value is the name of your app, using CFBundleDisplayName or CFBundleName
+        public var merchantDisplayName: String = Bundle.displayName ?? ""
+
         /// A URL that redirects back to your app that CustomerSheet can use to auto-dismiss
         /// web views used for additional authentication, e.g. 3DS2
         public var returnURL: String?
@@ -39,6 +44,17 @@ extension CustomerSheet {
 
         /// Optional configuration for setting the header text of the Payment Method selection screen
         public var headerTextForSelectionScreen: String?
+
+        /// CustomerSheet pre-populates fields with the values provided.
+        /// If `billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod` is `true`, these values will
+        /// be attached to the payment method even if they are not collected by the CustomerSheet UI.
+        public var defaultBillingDetails: PaymentSheet.BillingDetails = PaymentSheet.BillingDetails()
+
+        /// Describes how billing details should be collected.
+        /// All values default to `automatic`.
+        /// If `never` is used for a required field for the Payment Method used during checkout,
+        /// you **must** provide an appropriate value as part of `defaultBillingDetails`.
+        public var billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration()
 
         public init () {
         }

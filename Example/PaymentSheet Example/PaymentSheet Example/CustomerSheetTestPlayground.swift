@@ -50,11 +50,24 @@ struct CustomerSheetTestPlayground: View {
                                 Text("Appearance").font(.callout.smallCaps())
                             }.buttonStyle(.bordered)
                         }
-                        SettingView(setting: $playgroundController.settings.autoreload)
                         SettingView(setting: $playgroundController.settings.paymentMethodMode)
                         SettingView(setting: $playgroundController.settings.applePay)
+                        SettingView(setting: $playgroundController.settings.defaultBillingAddress)
+                        SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
-
+                    }
+                    Divider()
+                    Group {
+                        HStack {
+                            Text("Billing Details Collection")
+                                .font(.headline)
+                            Spacer()
+                        }
+                        SettingView(setting: $playgroundController.settings.attachDefaults)
+                        SettingView(setting: $playgroundController.settings.collectName)
+                        SettingView(setting: $playgroundController.settings.collectEmail)
+                        SettingView(setting: $playgroundController.settings.collectPhone)
+                        SettingView(setting: $playgroundController.settings.collectAddress)
                     }
                     Spacer()
                     Divider()

@@ -127,7 +127,6 @@ extension PaymentSheet {
         public var customer: CustomerConfiguration?
 
         /// Your customer-facing business name.
-        /// This is used to display a "Pay \(merchantDisplayName)" line item in the Apple Pay sheet
         /// The default value is the name of your app, using CFBundleDisplayName or CFBundleName
         public var merchantDisplayName: String = Bundle.displayName ?? ""
 

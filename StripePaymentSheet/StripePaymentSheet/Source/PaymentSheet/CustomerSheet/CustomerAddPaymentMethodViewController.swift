@@ -130,10 +130,20 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
 
     private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
-        let formElement = CustomerSavedPaymentMethodsFormFactory(
-            configuration: configuration,
-            paymentMethod: type
-        ).make()! // TODO(wooj) Don't force unwrap
+        let formElement = PaymentSheetFormFactory(
+            configuration: .customerSheet(configuration),
+            paymentMethod: type,
+            previousCustomerInput: nil,
+            addressSpecProvider: .shared,
+            offerSaveToLinkWhenSupported: false,
+            linkAccount: nil,
+            supportsLinkCard: false,
+            isPaymentIntent: false,
+            currency: nil,
+            amount: nil,
+            countryCode: nil,
+            saveMode: .merchantRequired)
+            .make()
         formElement.delegate = self
         return formElement
     }
