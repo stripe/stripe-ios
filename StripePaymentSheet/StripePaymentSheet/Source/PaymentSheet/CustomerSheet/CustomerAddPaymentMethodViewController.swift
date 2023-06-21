@@ -11,6 +11,7 @@ import UIKit
 
 protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: CustomerAddPaymentMethodViewController)
+    func updateErrorLabel(for: Error?)
 }
 
 @objc(STP_Internal_CustomerAddPaymentMethodViewController)
@@ -43,7 +44,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         return paymentMethodElement as? USBankAccountPaymentMethodElement
     }()
 
-    var overrideBuyButtonBehavior: OverrideableBuyButtonBehavior? {
+    var overrideActionButtonBehavior: OverrideableBuyButtonBehavior? {
         if selectedPaymentMethodType == .USBankAccount {
             if let paymentOption = paymentOption,
                case .new = paymentOption {
@@ -56,12 +57,12 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
 
     var overrideCallToAction: ConfirmButton.CallToActionType? {
-        return overrideBuyButtonBehavior != nil
+        return overrideActionButtonBehavior != nil
             ? ConfirmButton.CallToActionType.customWithLock(title: String.Localized.continue)
             : nil
     }
     var overrideCallToActionShouldEnable: Bool {
-        guard let overrideBuyButtonBehavior = overrideBuyButtonBehavior else {
+        guard let overrideBuyButtonBehavior = overrideActionButtonBehavior else {
             return false
         }
         switch overrideBuyButtonBehavior {
@@ -196,6 +197,68 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
 }
 
+extension CustomerAddPaymentMethodViewController {
+    func didTapCallToActionButton(behavior: OverrideableBuyButtonBehavior,
+                                  clientSecret: String,
+                                  from viewController: UIViewController) {
+        switch behavior {
+        case .LinkUSBankAccount:
+            handleCollectBankAccount(from: viewController, clientSecret: clientSecret)
+        }
+    }
+    func handleCollectBankAccount(from viewController: UIViewController, clientSecret: String) {
+        guard
+            let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement,
+            let name = usBankAccountPaymentMethodElement.name,
+            let email = usBankAccountPaymentMethodElement.email
+        else {
+            assertionFailure()
+            return
+        }
+
+        let params = STPCollectBankAccountParams.collectUSBankAccountParams(
+            with: name,
+            email: email
+        )
+        let client = STPBankAccountCollector()
+        let errorText = STPLocalizedString(
+            "Something went wrong when linking your account.\nPlease try again later.",
+            "Error message when an error case happens when linking your account"
+        )
+        let genericError = PaymentSheetError.unknown(debugDescription: errorText)
+
+        let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = {
+            result,
+            _,
+            error in
+            if error != nil {
+                self.delegate?.updateErrorLabel(for: genericError)
+                return
+            }
+            guard let financialConnectionsResult = result else {
+                self.delegate?.updateErrorLabel(for: genericError)
+                return
+            }
+
+            switch financialConnectionsResult {
+            case .cancelled:
+                break
+            case .completed(let linkedBank):
+                usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+            case .failed:
+                self.delegate?.updateErrorLabel(for: genericError)
+            }
+        }
+        //Oof need to plumb this through!
+        client.collectBankAccountForSetup(
+            clientSecret: clientSecret,
+            returnURL: configuration.returnURL,
+            params: params,
+            from: viewController,
+            financialConnectionsCompletion: financialConnectionsCompletion
+        )
+    }
+}
 extension CustomerAddPaymentMethodViewController: ElementDelegate {
     func continueToNextField(element: Element) {
         delegate?.didUpdate(self)

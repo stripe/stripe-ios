@@ -340,10 +340,22 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
         switch mode {
         case .addingNewWithSetupIntent:
-            guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
-                return
+            if let behavior = addPaymentMethodViewController.overrideActionButtonBehavior {
+                Task {
+                    if let clientSecret = await getClientSecret() {
+                        addPaymentMethodViewController.didTapCallToActionButton(behavior: behavior,
+                                                                                clientSecret: clientSecret,
+                                                                                from: self)
+                    } else {
+                        print("failed")
+                    }
+                }
+            } else {
+                guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
+                    return
+                }
+                addPaymentOption(paymentOption: newPaymentOption)
             }
-            addPaymentOption(paymentOption: newPaymentOption)
         case .addingNewPaymentMethodAttachToCustomer:
             guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
                 return
@@ -384,6 +396,23 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
             }
         }
+    }
+    private func getClientSecret() async -> String? {
+        self.processingInFlight = true
+        updateUI(animated: false)
+        var clientSecret: String
+        do {
+            clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
+        } catch {
+            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
+            self.processingInFlight = false
+            self.error = error
+            self.updateUI()
+            return nil
+        }
+        self.processingInFlight = false
+        self.updateUI()
+        return clientSecret
     }
 
     private func addPaymentOption(paymentOption: PaymentOption) {
@@ -637,6 +666,10 @@ extension CustomerSavedPaymentMethodsViewController: CustomerAddPaymentMethodVie
     func didUpdate(_ viewController: CustomerAddPaymentMethodViewController) {
         error = nil
         updateUI()
+    }
+    func updateErrorLabel(for error: Error?) {
+        //test me please
+        set(error: error)
     }
 }
 
