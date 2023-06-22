@@ -377,11 +377,14 @@ extension PaymentSheet {
                         )
 
                         loadSpecsPromise.observe { _ in
-                            if case .paymentIntent(let paymentIntent) = intent {
-                                if let payment_method_specs = paymentIntent.allResponseFields["payment_method_specs"] {
-                                    // Over-write the form specs that were already loaded from disk
-                                    _ = FormSpecProvider.shared.loadFrom(payment_method_specs)
-                                }
+                            // Overwrite the form specs that were already loaded from disk
+                            switch intent {
+                            case .paymentIntent(let paymentIntent):
+                                _ = FormSpecProvider.shared.loadFrom(paymentIntent.allResponseFields["payment_method_specs"] ?? [:])
+                            case .setupIntent:
+                                break // Not supported
+                            case .deferredIntent(elementsSession: let elementsSession, intentConfig: _):
+                                _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
                             }
                             linkAccountPromise.observe { linkAccountResult in
                                 switch linkAccountResult {
