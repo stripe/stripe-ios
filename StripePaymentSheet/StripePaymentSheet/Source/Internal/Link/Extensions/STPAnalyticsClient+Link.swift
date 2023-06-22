@@ -85,7 +85,7 @@ extension STPAnalyticsClient {
     
     func logLinkPopupLogout(sessionType: LinkSettings.PopupWebviewOption) {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
-        self.logPaymentSheetEvent(event: .linkPopupLogout, duration: duration)
+        self.logLinkPopupEvent(event: .linkPopupLogout, duration: duration, sessionType: sessionType)
     }
     
     func logLinkPopupEvent(
@@ -99,6 +99,7 @@ extension STPAnalyticsClient {
             }
             logPaymentSheetEvent(event: event,
                                  duration: duration,
+                                 linkSessionType: sessionType,
                                  params: params)
         }
     
