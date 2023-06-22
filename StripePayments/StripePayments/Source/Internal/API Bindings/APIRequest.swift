@@ -14,6 +14,40 @@ let HTTPMethodGET = "GET"
 let HTTPMethodDELETE = "DELETE"
 let JSONKeyObject = "object"
 
+extension URLRequest {
+
+    /**
+     Returns a cURL command representation of this URL request.
+     */
+    public var curlString: String {
+        guard let url = url else { return "" }
+        var baseCommand = #"curl "\#(url.absoluteString)""#
+
+        if httpMethod == "HEAD" {
+            baseCommand += " --head"
+        }
+
+        var command = [baseCommand]
+
+        if let method = httpMethod, method != "GET" && method != "HEAD" {
+            command.append("-X \(method)")
+        }
+
+        if let headers = allHTTPHeaderFields {
+            for (key, value) in headers where key != "Cookie" {
+                command.append("-H '\(key): \(value)'")
+            }
+        }
+
+        if let data = httpBody, let body = String(data: data, encoding: .utf8) {
+            command.append("-d '\(body)'")
+        }
+
+        return command.joined(separator: " \\\n\t")
+    }
+
+}
+
 /// The shape of this class is only for backwards compatibility with the rest of the codebase.
 ///
 /// Ideally, we should do something like:
@@ -38,7 +72,7 @@ let JSONKeyObject = "object"
         var request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
         request.httpMethod = HTTPMethodPOST
         request.stp_setFormPayload(parameters)
-
+        print(request.curlString)
         // Perform request
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,

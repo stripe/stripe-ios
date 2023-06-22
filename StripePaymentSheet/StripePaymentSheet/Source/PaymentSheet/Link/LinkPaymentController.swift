@@ -20,9 +20,8 @@ import UIKit
     private let mode: PaymentSheet.InitializationMode
     private let configuration: PaymentSheet.Configuration
 
-    private var intent: Intent?
     private var payWithLinkContinuation: CheckedContinuation<Void, Swift.Error>?
-    private var paymentOption: PaymentOption?
+    private var paymentMethodId: String?
 
     /// Initializes a new `LinkPaymentController` instance.
     /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
@@ -84,7 +83,7 @@ import UIKit
                         continuation.resume(throwing: LinkPaymentController.Error.unavailable)
                         return
                     }
-                    self.intent = intent
+//                    self.intent = intent
                     let linkController = PayWithLinkWebController(
                         intent: intent,
                         configuration: self.configuration,
@@ -131,46 +130,53 @@ import UIKit
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func confirm(from presentingViewController: UIViewController) async throws {
-        if (intent == nil || paymentOption == nil) && LinkAccountService().hasSessionCookie {
-            // If the customer has a Link cookie, `present` may not need to have been called - try to load here
-            paymentOption = try await withCheckedThrowingContinuation { [self] continuation in
-                PaymentSheet.load(mode: mode, configuration: configuration) { result in
-                    switch result {
-                    case .success(let intent, _, let isLinkEnabled):
-                        guard isLinkEnabled else {
-                            continuation.resume(throwing: Error.unavailable)
-                            return
-                        }
-                        self.intent = intent
-                        // TODO(bmelts): can we reliably determine the customer's previously used funding source (if any)?
-                        continuation.resume(returning: .link(option: .wallet))
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
-        }
-        guard let intent = intent, let paymentOption = paymentOption else {
+        guard let paymentMethodId = paymentMethodId else {
             assertionFailure("`confirm` should not be called without the customer authorizing Link. Make sure to call `present` first if your customer hasn't previously selected Link as a payment method.")
             throw PaymentSheetError.unknown(debugDescription: "confirm called without authorizing Link")
         }
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            PaymentSheet.confirm(
-                configuration: configuration,
-                authenticationContext: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default),
-                intent: intent,
-                paymentOption: paymentOption,
-                paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-                isFlowController: false
-            ) { result in
-                switch result {
-                case .completed:
-                    continuation.resume()
-                case .canceled:
-                    continuation.resume(throwing: Error.canceled)
-                case .failed(let error):
-                    continuation.resume(throwing: error)
+            switch mode {
+            case .paymentIntentClientSecret(let clientSecret):
+                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret, paymentMethodType: .link)
+                paymentIntentParams.paymentMethodId = paymentMethodId
+                paymentIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
+                STPPaymentHandler.shared().confirmPayment(
+                    paymentIntentParams, with: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default)
+                ) { (status, _, error) in
+                    switch status {
+                    case .canceled:
+                        print("canceled")
+                        continuation.resume(throwing: Error.canceled)
+                    case .failed:
+                        print("failed")
+                        continuation.resume(throwing: error ?? Error.canceled)
+                    case .succeeded:
+                        print("succeeded")
+                        continuation.resume()
+                    @unknown default:
+                        fatalError()
+                    }
                 }
+            case .setupIntentClientSecret(let clientSecret):
+                let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: clientSecret, paymentMethodType: .link)
+                setupIntentParams.paymentMethodID = paymentMethodId
+                setupIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
+                STPPaymentHandler.shared().confirmSetupIntent(
+                    setupIntentParams, with: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default)
+                ) { (status, _, error) in
+                    switch status {
+                    case .canceled:
+                        print("canceled")
+                    case .failed:
+                        print("failed")
+                    case .succeeded:
+                        print("succeeded")
+                    @unknown default:
+                        fatalError()
+                    }
+                }
+            case .deferredIntent(_):
+                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment confirmation is not implemented for deferred intent yet."))
             }
         }
     }
@@ -191,6 +197,7 @@ import UIKit
         case canceled
         /// Link is unavailable at this time.
         case unavailable
+
     }
 }
 
@@ -198,8 +205,8 @@ import UIKit
 @available(macCatalystApplicationExtension, unavailable)
 extension LinkPaymentController: PayWithLinkWebControllerDelegate {
     func payWithLinkWebControllerDidComplete(_ payWithLinkWebController: PayWithLinkWebController, intent: Intent, with paymentOption: PaymentOption) {
-        self.intent = intent
-        self.paymentOption = paymentOption
+//        self.intent = intent
+//        self.paymentOption = paymentOption
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
