@@ -304,6 +304,7 @@ extension PaymentSheet {
                     result: result,
                     linkEnabled: intent.supportsLink,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
+                    linkSessionType: intent.linkPopupWebviewOption,
                     currency: intent.currency,
                     intentConfig: intent.intentConfig
                 )

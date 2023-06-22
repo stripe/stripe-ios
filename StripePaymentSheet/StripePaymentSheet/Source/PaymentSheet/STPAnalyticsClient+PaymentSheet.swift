@@ -29,6 +29,7 @@ extension STPAnalyticsClient {
         result: PaymentSheetResult,
         linkEnabled: Bool,
         activeLinkSession: Bool,
+        linkSessionType: LinkSettings.PopupWebviewOption?,
         currency: String?,
         intentConfig: PaymentSheet.IntentConfiguration? = nil
     ) {
@@ -225,6 +226,7 @@ extension STPAnalyticsClient {
         duration: TimeInterval? = nil,
         linkEnabled: Bool? = nil,
         activeLinkSession: Bool? = nil,
+        linkSessionType: LinkSettings.PopupWebviewOption? = nil,
         configuration: PaymentSheet.Configuration? = nil,
         currency: String? = nil,
         intentConfig: PaymentSheet.IntentConfiguration? = nil,
@@ -239,6 +241,7 @@ extension STPAnalyticsClient {
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = activeLinkSession
         additionalParams["link_"] = activeLinkSession
+        additionalParams["link_session_type"] = linkSessionType
         additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
         additionalParams["mpe_config"] = configuration?.analyticPayload
         additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
@@ -260,7 +263,7 @@ extension STPAnalyticsClient {
         duration: TimeInterval? = nil,
         sessionType: LinkSettings.PopupWebviewOption,
         error: Error? = nil) {
-            var params : [String: Any] = ["session_type": sessionType]
+            var params : [String: Any] = [:]
             if let error = error {
                 params["error"] = error.nonGenericDescription
             }

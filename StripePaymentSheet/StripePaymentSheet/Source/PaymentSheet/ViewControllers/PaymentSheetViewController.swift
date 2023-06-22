@@ -466,6 +466,7 @@ class PaymentSheetViewController: UIViewController {
                     result: result,
                     linkEnabled: self.intent.supportsLink,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
+                    linkSessionType: self.intent.linkPopupWebviewOption,
                     currency: self.intent.currency,
                     intentConfig: self.intent.intentConfig
                 )
