@@ -118,13 +118,12 @@ import Foundation
     case link2FACancel = "link.2fa.cancel"
     case link2FAFailure = "link.2fa.failure"
 
-    // MARK: - Link Webview Checkout
+    // MARK: - Link Popup
     case linkPopupShow = "link.popup.show"
     case linkPopupSuccess = "link.popup.success"
     case linkPopupCancel = "link.popup.cancel"
     case linkPopupError = "link.popup.error"
     case linkPopupLogout = "link.popup.logout"
-
     
     // MARK: - Link Misc
     case linkAccountLookupFailure = "link.account_lookup.failure"
