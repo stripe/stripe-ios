@@ -9,6 +9,7 @@ import StripePayments
 struct LinkResult {
     enum LinkStatus: String {
         case complete
+        case logout
     }
     let link_status: LinkStatus
     let pm: STPPaymentMethod

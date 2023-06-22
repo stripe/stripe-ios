@@ -346,7 +346,6 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
     ) {
         let psvc = self.findPaymentSheetViewController()
         psvc?.pay(with: paymentOption)
-//      TODO: Analytic for Link payment succeeded
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
