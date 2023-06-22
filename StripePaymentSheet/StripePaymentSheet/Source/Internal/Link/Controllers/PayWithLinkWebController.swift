@@ -157,16 +157,16 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             do {
                 // Generate Link URL, fetching the customer if needed
                 let linkPopupUrl = try await LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
-                
+
                 let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
                     self.handleWebAuthenticationSessionCompletion(returnURL: returnURL, error: error)
                 }
-                
+
                 // Check if we're in the ephemeral session experiment
                 if self.context.intent.linkPopupWebviewOption == .ephemeral {
                     webAuthSession.prefersEphemeralWebBrowserSession = true
                 }
-                
+
                 // Set up presentation
                 self.presentationVC = viewController
                 webAuthSession.presentationContextProvider = self
@@ -178,17 +178,17 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             }
         }
     }
-    
+
     private func canceledWithoutError() {
         STPAnalyticsClient.sharedClient.logLinkPopupCancel(sessionType: self.context.intent.linkPopupWebviewOption)
         self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
     }
-    
+
     private func canceledWithError(error: Error?) {
         STPAnalyticsClient.sharedClient.logLinkPopupError(error: error, sessionType: self.context.intent.linkPopupWebviewOption)
         self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
     }
-    
+
     private func handleWebAuthenticationSessionCompletion(returnURL: URL?, error: Error?) {
         guard let returnURL = returnURL else {
             if let error = error as? NSError,

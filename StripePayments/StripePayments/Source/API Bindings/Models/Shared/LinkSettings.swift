@@ -15,7 +15,7 @@ import Foundation
         case card = "CARD"
         case bankAccount = "BANK_ACCOUNT"
     }
-    
+
     @_spi(STP) @frozen public enum PopupWebviewOption: String {
         case shared
         case ephemeral
@@ -50,7 +50,7 @@ import Foundation
         let validFundingSources = Set(fundingSourcesStrings.compactMap(FundingSource.init))
 
         let webviewOption = PopupWebviewOption(rawValue: response["link_popup_webview_option"] as? String ?? "")
-        
+
         return LinkSettings(
             fundingSources: validFundingSources,
             popupWebviewOption: webviewOption,

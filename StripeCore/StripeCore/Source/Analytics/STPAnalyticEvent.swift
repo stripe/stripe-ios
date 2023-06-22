@@ -124,7 +124,7 @@ import Foundation
     case linkPopupCancel = "link.popup.cancel"
     case linkPopupError = "link.popup.error"
     case linkPopupLogout = "link.popup.logout"
-    
+
     // MARK: - Link Misc
     case linkAccountLookupFailure = "link.account_lookup.failure"
 

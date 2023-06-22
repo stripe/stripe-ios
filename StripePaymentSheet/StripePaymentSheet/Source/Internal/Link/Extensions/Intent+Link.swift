@@ -47,7 +47,7 @@ extension Intent {
             return elementsSession.linkSettings?.fundingSources
         }
     }
-    
+
     var linkPopupWebviewOption: LinkSettings.PopupWebviewOption {
         return {
             switch self {

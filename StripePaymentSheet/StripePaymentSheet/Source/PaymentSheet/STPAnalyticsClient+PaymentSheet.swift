@@ -259,7 +259,7 @@ extension STPAnalyticsClient {
 
         log(analytic: analytic)
     }
-    
+
     var isSimulatorOrTest: Bool {
         #if targetEnvironment(simulator)
             return true
