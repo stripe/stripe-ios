@@ -12,9 +12,25 @@ import UIKit
 
 class ExampleCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
+    @IBOutlet weak var addBankAccount: UIButton!
     var paymentSheet: PaymentSheet?
     var linkBankPaymentController: LinkPaymentController?
 
+    @IBAction func didTapBankAccount(_ sender: Any) {
+        linkBankPaymentController?.present(from: self, completion: { result in
+            switch result {
+
+            case .success():
+                print("yay")
+                DispatchQueue.main.async {
+                    self.buyButton.isEnabled = true
+                }
+            case .failure(let error):
+                print("error \(error.localizedDescription)")
+
+            }
+        })
+    }
     let backendCheckoutUrl = URL(string: "https://abundant-elderly-universe.glitch.me/checkout")!  // An example backend endpoint
 
     override func viewDidLoad() {
@@ -22,6 +38,7 @@ class ExampleCheckoutViewController: UIViewController {
 
         buyButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         buyButton.isEnabled = false
+        addBankAccount.isEnabled = false
 
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
@@ -55,7 +72,7 @@ class ExampleCheckoutViewController: UIViewController {
                 self.linkBankPaymentController = LinkPaymentController(paymentIntentClientSecret: paymentIntentClientSecret, returnURL: configuration.returnURL)
 
                 DispatchQueue.main.async {
-                    self.buyButton.isEnabled = true
+                    self.addBankAccount.isEnabled = true
                 }
             })
         task.resume()
@@ -63,16 +80,20 @@ class ExampleCheckoutViewController: UIViewController {
 
     @objc
     func didTapCheckoutButton() {
-        linkBankPaymentController?.present(from: self, completion: { result in
-            switch result {
-
-            case .success():
-                print("yay")
-            case .failure(let error):
-                print("error \(error.localizedDescription)")
-
-            }
+        linkBankPaymentController?.confirm(from: self, completion: { paymentResult in
+                        switch paymentResult {
+                        case .completed:
+                            self.displayAlert("Your order is confirmed!")
+                        case .canceled:
+                            print("Canceled!")
+                        case .failed(let error):
+                            print(error)
+                            DispatchQueue.main.async {
+                                self.displayAlert("Payment failed: \n\(error.localizedDescription)")
+                            }
+                        }
         })
+
 //        // MARK: Start the checkout process
 //        paymentSheet?.present(from: self) { paymentResult in
 //            // MARK: Handle the payment result

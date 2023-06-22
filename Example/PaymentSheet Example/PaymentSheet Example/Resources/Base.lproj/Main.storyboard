@@ -129,7 +129,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="uGe-f3-L0f">
-                                <rect key="frame" x="20" y="112" width="374" height="545.5"/>
+                                <rect key="frame" x="20" y="112" width="374" height="615.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your cart" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DgE-aS-jOe">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="26.5"/>
@@ -354,8 +354,40 @@
                                             <constraint firstAttribute="height" constant="20" id="hoq-Rh-n0l"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rm7-0L-hQi">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cMu-Dl-9g3">
                                         <rect key="frame" x="0.0" y="495.5" width="374" height="50"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vwy-CV-HyE">
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                <state key="normal" title="Bank Account">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <state key="disabled" title="Loading">
+                                                    <color key="titleColor" systemColor="systemGray4Color"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="didTapBankAccount:" destination="ViG-Ud-ejY" eventType="touchUpInside" id="IoB-YM-G7U"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="Vwy-CV-HyE" secondAttribute="bottom" id="JaM-9P-N4S"/>
+                                            <constraint firstItem="Vwy-CV-HyE" firstAttribute="leading" secondItem="cMu-Dl-9g3" secondAttribute="leading" id="Ms6-aw-mhv"/>
+                                            <constraint firstAttribute="height" constant="50" id="NvM-gg-epk"/>
+                                            <constraint firstItem="Vwy-CV-HyE" firstAttribute="top" secondItem="cMu-Dl-9g3" secondAttribute="top" id="XyS-l4-SmY"/>
+                                            <constraint firstAttribute="trailing" secondItem="Vwy-CV-HyE" secondAttribute="trailing" id="xlV-51-3Uz"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rm7-0L-hQi">
+                                        <rect key="frame" x="0.0" y="565.5" width="374" height="50"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2L4-Af-OWD">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
@@ -402,6 +434,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addBankAccount" destination="Vwy-CV-HyE" id="qNW-1y-n9H"/>
                         <outlet property="buyButton" destination="2L4-Af-OWD" id="m6f-Bk-h4t"/>
                     </connections>
                 </viewController>
