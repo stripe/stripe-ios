@@ -47,6 +47,19 @@ extension Intent {
             return elementsSession.linkSettings?.fundingSources
         }
     }
+    
+    var linkPopupWebviewOption: LinkSettings.PopupWebviewOption {
+        return {
+            switch self {
+            case .paymentIntent(let paymentIntent):
+                return paymentIntent.linkSettings?.popupWebviewOption
+            case .setupIntent(let setupIntent):
+                return setupIntent.linkSettings?.popupWebviewOption
+            case .deferredIntent(let elementsSession, _):
+                return elementsSession.linkSettings?.popupWebviewOption
+            }
+        }() ?? .shared
+    }
 
     var countryCode: String? {
         switch self {

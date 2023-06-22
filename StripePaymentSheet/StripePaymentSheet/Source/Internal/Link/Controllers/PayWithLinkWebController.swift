@@ -153,33 +153,43 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
 
     /// Defaults to the app's key window
     func present(over viewController: UIViewController? = nil) {
+        let sessionType = self.context.intent.linkPopupWebviewOption
+        STPAnalyticsClient.sharedClient.logLinkPopupShow(sessionType: sessionType)
         Task { @MainActor in
-            // TODO: Log attempt to show web session
             do {
                 let linkPopupUrl = try await LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
                 let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
                     guard let returnURL = returnURL else {
                         // TODO: Get analytics logs here: Did the user start a session and then reject the non-ephemeralSession dialog? ASWebAuthenticationSession.cancelledLogin error
+                        if let error = error as? NSError,
+                           error.domain == ASWebAuthenticationSessionErrorDomain,
+                           error.code == ASWebAuthenticationSessionError.canceledLogin.rawValue {
+                            STPAnalyticsClient.sharedClient.logLinkPopupShow(sessionType: sessionType )
+                        } else {
+                            STPAnalyticsClient.sharedClient.logLinkPopupError(error: error, sessionType: sessionType)
+                        }
                         self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
                         return
                     }
                     do {
-                        // TODO: Log that authentication session succeeded
                         let result = try LinkPopupURLParser.result(with: returnURL)
                         let paymentOption = PaymentOption.link(option: PaymentSheet.LinkConfirmOption.withPaymentMethod(paymentMethod: result.pm))
+                        STPAnalyticsClient.sharedClient.logLinkPopupSuccess(sessionType: sessionType )
                         self.payWithLinkDelegate?.payWithLinkWebControllerDidComplete(self, intent: self.context.intent, with: paymentOption)
                     } catch {
-                        // TODO: Send analytics error here
-                        print(error)
+                        STPAnalyticsClient.sharedClient.logLinkPopupError(error: error, sessionType: sessionType)
                         self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
                     }
                 }
                 self.presentationVC = viewController
+                if self.context.intent.linkPopupWebviewOption == .ephemeral {
+                    webAuthSession.prefersEphemeralWebBrowserSession = true
+                }
                 webAuthSession.presentationContextProvider = self
                 self.webAuthSession = webAuthSession
                 webAuthSession.start()
             } catch {
-                // Handle errors (including LinkURLParams errors)
+                STPAnalyticsClient.sharedClient.logLinkPopupError(error: error, sessionType: sessionType)
                 self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
             }
         }

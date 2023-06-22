@@ -17,8 +17,8 @@ extension STPAnalyticsClient {
         isCustom: Bool = false, configuration: PaymentSheet.Configuration, intentConfig: PaymentSheet.IntentConfiguration?
     ) {
         logPaymentSheetEvent(event: paymentSheetInitEventValue(
-                                isCustom: isCustom,
-                                configuration: configuration),
+                             isCustom: isCustom,
+                             configuration: configuration),
                              configuration: configuration,
                              intentConfig: intentConfig)
     }
@@ -81,8 +81,8 @@ extension STPAnalyticsClient {
         intentConfig: PaymentSheet.IntentConfiguration? = nil
     ) {
         logPaymentSheetEvent(event: paymentSheetPaymentOptionSelectEventValue(
-                                isCustom: isCustom,
-                                paymentMethod: paymentMethod),
+            isCustom: isCustom,
+            paymentMethod: paymentMethod),
                              intentConfig: intentConfig)
     }
 
@@ -238,6 +238,7 @@ extension STPAnalyticsClient {
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = activeLinkSession
+        additionalParams["link_"] = activeLinkSession
         additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
         additionalParams["mpe_config"] = configuration?.analyticPayload
         additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
@@ -253,6 +254,20 @@ extension STPAnalyticsClient {
 
         log(analytic: analytic)
     }
+    
+    func logLinkPopupEvent(
+        event: STPAnalyticEvent,
+        duration: TimeInterval? = nil,
+        sessionType: LinkSettings.PopupWebviewOption,
+        error: Error? = nil) {
+            var params : [String: Any] = ["session_type": sessionType]
+            if let error = error {
+                params["error"] = error.nonGenericDescription
+            }
+            logPaymentSheetEvent(event: event,
+                                 duration: duration,
+                                 params: params)
+        }
 
     var isSimulatorOrTest: Bool {
         #if targetEnvironment(simulator)
