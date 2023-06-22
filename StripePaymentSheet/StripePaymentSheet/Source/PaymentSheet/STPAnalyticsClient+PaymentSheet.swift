@@ -53,6 +53,7 @@ extension STPAnalyticsClient {
             duration: AnalyticsHelper.shared.getDuration(for: .checkout),
             linkEnabled: linkEnabled,
             activeLinkSession: activeLinkSession,
+            linkSessionType: linkSessionType,
             currency: currency,
             intentConfig: intentConfig
         )
@@ -240,7 +241,9 @@ extension STPAnalyticsClient {
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = activeLinkSession
-        additionalParams["link_session_type"] = linkSessionType
+        if let linkSessionType = linkSessionType {
+            additionalParams["link_session_type"] = linkSessionType.rawValue
+        }
         additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
         additionalParams["mpe_config"] = configuration?.analyticPayload
         additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
