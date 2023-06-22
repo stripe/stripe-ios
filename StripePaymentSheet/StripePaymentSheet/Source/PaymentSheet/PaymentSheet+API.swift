@@ -380,7 +380,7 @@ extension PaymentSheet {
                             // Overwrite the form specs that were already loaded from disk
                             switch intent {
                             case .paymentIntent(let paymentIntent):
-                                _ = FormSpecProvider.shared.loadFrom(paymentIntent.allResponseFields["payment_method_specs"] ?? [:])
+                                _ = FormSpecProvider.shared.loadFrom(paymentIntent.allResponseFields["payment_method_specs"] ?? [String: Any]())
                             case .setupIntent:
                                 break // Not supported
                             case .deferredIntent(elementsSession: let elementsSession, intentConfig: _):
