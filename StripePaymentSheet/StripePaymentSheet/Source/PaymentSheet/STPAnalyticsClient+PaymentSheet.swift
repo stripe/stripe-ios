@@ -82,8 +82,8 @@ extension STPAnalyticsClient {
         intentConfig: PaymentSheet.IntentConfiguration? = nil
     ) {
         logPaymentSheetEvent(event: paymentSheetPaymentOptionSelectEventValue(
-            isCustom: isCustom,
-            paymentMethod: paymentMethod),
+                             isCustom: isCustom,
+                             paymentMethod: paymentMethod),
                              intentConfig: intentConfig)
     }
 
@@ -240,7 +240,6 @@ extension STPAnalyticsClient {
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = activeLinkSession
-        additionalParams["link_"] = activeLinkSession
         additionalParams["link_session_type"] = linkSessionType
         additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
         additionalParams["mpe_config"] = configuration?.analyticPayload
@@ -258,20 +257,6 @@ extension STPAnalyticsClient {
         log(analytic: analytic)
     }
     
-    func logLinkPopupEvent(
-        event: STPAnalyticEvent,
-        duration: TimeInterval? = nil,
-        sessionType: LinkSettings.PopupWebviewOption,
-        error: Error? = nil) {
-            var params : [String: Any] = [:]
-            if let error = error {
-                params["error"] = error.nonGenericDescription
-            }
-            logPaymentSheetEvent(event: event,
-                                 duration: duration,
-                                 params: params)
-        }
-
     var isSimulatorOrTest: Bool {
         #if targetEnvironment(simulator)
             return true

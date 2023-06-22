@@ -11,53 +11,53 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension STPAnalyticsClient {
-
+    
     // MARK: - Signup
-
+    
     func logLinkSignupCheckboxChecked() {
         self.logPaymentSheetEvent(event: .linkSignupCheckboxChecked)
     }
-
+    
     func logLinkSignupFlowPresented() {
         self.logPaymentSheetEvent(event: .linkSignupFlowPresented)
     }
-
+    
     func logLinkSignupStart() {
         AnalyticsHelper.shared.startTimeMeasurement(.linkSignup)
         self.logPaymentSheetEvent(event: .linkSignupStart)
     }
-
+    
     func logLinkSignupComplete() {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkSignup)
         self.logPaymentSheetEvent(event: .linkSignupComplete, duration: duration)
     }
-
+    
     func logLinkSignupFailure() {
         self.logPaymentSheetEvent(event: .linkSignupFailure)
     }
-
+    
     // MARK: - 2FA
-
+    
     func logLink2FAStart() {
         self.logPaymentSheetEvent(event: .link2FAStart)
     }
-
+    
     func logLink2FAStartFailure() {
         self.logPaymentSheetEvent(event: .link2FAStartFailure)
     }
-
+    
     func logLink2FAComplete() {
         self.logPaymentSheetEvent(event: .link2FAComplete)
     }
-
+    
     func logLink2FAFailure() {
         self.logPaymentSheetEvent(event: .link2FAFailure)
     }
-
+    
     func logLink2FACancel() {
         self.logPaymentSheetEvent(event: .link2FACancel)
     }
-
+    
     func logLinkAccountLookupFailure() {
         self.logPaymentSheetEvent(event: .linkAccountLookupFailure)
     }
@@ -67,25 +67,39 @@ extension STPAnalyticsClient {
         AnalyticsHelper.shared.startTimeMeasurement(.linkPopup)
         self.logLinkPopupEvent(event: .linkPopupShow, sessionType: sessionType)
     }
-
+    
     func logLinkPopupSuccess(sessionType: LinkSettings.PopupWebviewOption) {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
         self.logLinkPopupEvent(event: .linkPopupSuccess, duration: duration, sessionType: sessionType)
     }
-
+    
     func logLinkPopupCancel(sessionType: LinkSettings.PopupWebviewOption) {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
         self.logLinkPopupEvent(event: .linkPopupCancel, duration: duration, sessionType: sessionType)
     }
-
+    
     func logLinkPopupError(error: Error?, sessionType: LinkSettings.PopupWebviewOption) {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
         self.logLinkPopupEvent(event: .linkPopupError, duration: duration, sessionType: sessionType, error: error)
     }
-
+    
     func logLinkPopupLogout(sessionType: LinkSettings.PopupWebviewOption) {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
         self.logPaymentSheetEvent(event: .linkPopupLogout, duration: duration)
     }
-
+    
+    func logLinkPopupEvent(
+        event: STPAnalyticEvent,
+        duration: TimeInterval? = nil,
+        sessionType: LinkSettings.PopupWebviewOption,
+        error: Error? = nil) {
+            var params : [String: Any] = [:]
+            if let error = error {
+                params["error"] = error.localizedDescription
+            }
+            logPaymentSheetEvent(event: event,
+                                 duration: duration,
+                                 params: params)
+        }
+    
 }
