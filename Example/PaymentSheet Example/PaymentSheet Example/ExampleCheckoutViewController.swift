@@ -13,7 +13,7 @@ import UIKit
 class ExampleCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
     var paymentSheet: PaymentSheet?
-    var linkBankPaymentController: LinkBankPaymentController?
+    var linkBankPaymentController: LinkPaymentController?
 
     let backendCheckoutUrl = URL(string: "https://abundant-elderly-universe.glitch.me/checkout")!  // An example backend endpoint
 
@@ -52,7 +52,7 @@ class ExampleCheckoutViewController: UIViewController {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
 
-                self.linkBankPaymentController = LinkBankPaymentController(paymentIntentClientSecret: paymentIntentClientSecret, configuration: configuration, returnURL: "payments-example://stripe-redirect")
+                self.linkBankPaymentController = LinkPaymentController(paymentIntentClientSecret: paymentIntentClientSecret, returnURL: configuration.returnURL)
 
                 DispatchQueue.main.async {
                     self.buyButton.isEnabled = true

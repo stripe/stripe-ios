@@ -8,11 +8,16 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-typealias STPLinkAccountSessionBlock = (LinkAccountSession?, Error?) -> Void
-typealias STPLinkAccountSessionsAttachPaymentIntentBlock = (STPPaymentIntent?, Error?) -> Void
-typealias STPLinkAccountSessionsAttachSetupIntentBlock = (STPSetupIntent?, Error?) -> Void
+@_spi(STP)
+public typealias STPLinkAccountSessionBlock = (LinkAccountSession?, Error?) -> Void
+@_spi(STP)
+public typealias STPLinkAccountSessionsAttachPaymentIntentBlock = (STPPaymentIntent?, Error?) -> Void
+@_spi(STP)
+public typealias STPLinkAccountSessionsAttachSetupIntentBlock = (STPSetupIntent?, Error?) -> Void
 
-extension STPAPIClient {
+@_spi(STP)
+public extension STPAPIClient {
+
     func createLinkAccountSession(
         setupIntentID: String,
         clientSecret: String,
@@ -86,6 +91,9 @@ extension STPAPIClient {
     ) {
         var parameters: [String: Any] = [
             "client_secret": clientSecret,
+            // TODO FIX THIS
+            "attach_required": false,
+            "product": "instant_debits",
         ]
         if let paymentMethodType = STPPaymentMethod.string(from: paymentMethodType) {
             parameters["payment_method_data[type]"] = paymentMethodType
