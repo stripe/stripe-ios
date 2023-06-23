@@ -10,6 +10,18 @@ import UIKit
 
 @_spi(STP) import StripeCore
 
+struct Manifest: Decodable {
+    let hostedAuthURL: URL
+    let successURL: URL
+    let cancelURL: URL
+
+    enum CodingKeys: String, CodingKey {
+        case hostedAuthURL = "hosted_auth_url"
+        case successURL = "success_url"
+        case cancelURL = "cancel_url"
+    }
+}
+
 /// For internal SDK use only
 final class InstantDebitsOnlyAuthenticationSessionManager: NSObject {
 
@@ -101,31 +113,9 @@ final class InstantDebitsOnlyAuthenticationSessionManager: NSObject {
             }
         }
 
-        /**
-         This terribly hacky animation disabling is needed to control the presentation of ASWebAuthenticationSession underlying view controller.
-         Since we present a modal already that itself presents ASWebAuthenticationSession, the double modal animation is jarring and a bad UX.
-         We disable animations for a second. Sometimes there is a delay in creating the ASWebAuthenticationSession underlying view controller
-         to be safe, I made the delay a full second. I didn't find a good way to make this approach less clowny.
-         PresentedViewController is not KVO compliant and the notifications sent by presentation view controller that could help with knowing when
-         ASWebAuthenticationSession underlying view controller finished presenting are considered private API.
-         */
-        let animationsEnabledOriginalValue = UIView.areAnimationsEnabled
-        if #available(iOS 13, *) {
-//            UIView.setAnimationsEnabled(false)
-        }
-
         if !authSession.start() {
-            if #available(iOS 13, *) {
-                UIView.setAnimationsEnabled(animationsEnabledOriginalValue)
-            }
             promise.reject(with: InstantDebitsOnlyAuthenticationSessionManager.Error.failedToStart)
             return promise
-        }
-        
-        if #available(iOS 13, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                UIView.setAnimationsEnabled(animationsEnabledOriginalValue)
-            }
         }
 
         return promise
@@ -159,7 +149,6 @@ extension InstantDebitsOnlyAuthenticationSessionManager {
             .first(where: { $0.name == "payment_method_id" })?
             .value
     }
-
 }
 
 private extension URL {
@@ -171,5 +160,4 @@ private extension URL {
             self.path == otherURL.path
         )
     }
-
 }

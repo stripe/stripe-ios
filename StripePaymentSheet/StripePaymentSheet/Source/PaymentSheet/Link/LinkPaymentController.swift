@@ -135,7 +135,7 @@ import UIKit
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             payWithLinkContinuation = continuation
             bottomSheetViewController.contentStack = [instantDebitsController]
-            instantDebitsController.startInstantDebitsOnlyWebFlow()
+//            instantDebitsController.startInstantDebitsOnlyWebFlow()
         }
     }
 
