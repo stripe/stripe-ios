@@ -205,13 +205,10 @@ import UIKit
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
-                        print("canceled")
                         continuation.resume(throwing: Error.canceled)
                     case .failed:
-                        print("failed")
                         continuation.resume(throwing: error ?? Error.canceled)
                     case .succeeded:
-                        print("succeeded")
                         continuation.resume()
                     @unknown default:
                         fatalError()
@@ -226,11 +223,11 @@ import UIKit
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
-                        print("canceled")
+                        continuation.resume(throwing: Error.canceled)
                     case .failed:
-                        print("failed")
+                        continuation.resume(throwing: error ?? Error.canceled)
                     case .succeeded:
-                        print("succeeded")
+                        continuation.resume()
                     @unknown default:
                         fatalError()
                     }
@@ -290,5 +287,4 @@ extension LinkPaymentController: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
         payWithLinkContinuation?.resume(throwing: Error.canceled)
     }
-
 }

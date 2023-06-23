@@ -25,9 +25,7 @@ protocol InstantDebitsOnlyViewControllerDelegate: AnyObject {
 
     func instantDebitsOnlyViewControllerDidFail(_ controller: InstantDebitsOnlyViewController, error: Error)
 
-    func instantDebitsOnlyViewControllerDidComplete(
-        _ controller: InstantDebitsOnlyViewController
-    )
+    func instantDebitsOnlyViewControllerDidComplete(_ controller: InstantDebitsOnlyViewController)
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -112,7 +110,6 @@ final class InstantDebitsOnlyViewController: UIViewController {
         return view
     }()
 
-    private let feedbackGenerator = UINotificationFeedbackGenerator()
     private let manifest: Manifest
     private let configuration: PaymentSheet.Configuration
 
