@@ -61,6 +61,15 @@ import UIKit
         self.init(intentSecret: .setupIntentClientSecret(setupIntentClientSecret), returnURL: returnURL, billingDetails: billingDetails)
     }
 
+    /// Initializes a new `LinkPaymentController` instance.
+    /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
+    /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
+    /// - Parameter returnURL: A URL that redirects back to your app for flows that complete authentication in another app (such as a bank app).
+    /// - Parameter billingDetails: Any information about the customer you've already collected.
+    @_spi(LinkOnly) public convenience init(intentConfiguration: PaymentSheet.IntentConfiguration, returnURL: String? = nil, billingDetails: PaymentSheet.BillingDetails? = nil) {
+        self.init(intentSecret: .deferredIntent(intentConfiguration), returnURL: returnURL, billingDetails: billingDetails)
+    }
+
     private init(intentSecret: PaymentSheet.InitializationMode, returnURL: String?, billingDetails: PaymentSheet.BillingDetails?) {
         self.mode = intentSecret
         var configuration = PaymentSheet.Configuration()
@@ -131,8 +140,28 @@ import UIKit
                                                    additionalParameteres: parameters) { [weak self] linkAccountSession, error in
                     self?.generateManifest(continuation: continuation, error: error, linkAccountSession: linkAccountSession)
                 }
-            case .deferredIntent:
-                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment controller is not implemented for deferred intent yet."))
+            case .deferredIntent(let intentConfiguration):
+                let amount: Int?
+                let currency: String?
+                switch intentConfiguration.mode {
+                case let .payment(amount: _amount, currency: _currency, _, _):
+                    amount = _amount
+                    currency = _currency
+                case let .setup(currency: _currency, _):
+                    amount = nil
+                    currency = _currency
+                }
+                // TODO(vardges): figure out unique session ID.
+                apiClient
+                    .createLinkAccountSessionForDeferredIntent(
+                        sessionId: "123234234",
+                        amount: amount,
+                        currency: currency,
+                        onBehalfOf: intentConfiguration.onBehalfOf,
+                        additionalParameters: ["product": "instant_debits"]
+                    ) { [weak self] linkAccountSession, error in
+                            self?.generateManifest(continuation: continuation, error: error, linkAccountSession: linkAccountSession)
+                        }
             }
         }
         defer {
@@ -202,6 +231,7 @@ import UIKit
             assertionFailure("`confirm` should not be called without the customer authorizing Link. Make sure to call `present` first if your customer hasn't previously selected Link as a payment method.")
             throw PaymentSheetError.unknown(debugDescription: "confirm called without authorizing Link")
         }
+        let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController, appearance: .default)
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             switch mode {
             case .paymentIntentClientSecret(let clientSecret):
@@ -209,7 +239,7 @@ import UIKit
                 paymentIntentParams.paymentMethodId = paymentMethodId
                 paymentIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
                 STPPaymentHandler.shared().confirmPayment(
-                    paymentIntentParams, with: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default)
+                    paymentIntentParams, with: authenticationContext
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
@@ -227,7 +257,7 @@ import UIKit
                 setupIntentParams.paymentMethodID = paymentMethodId
                 setupIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
                 STPPaymentHandler.shared().confirmSetupIntent(
-                    setupIntentParams, with: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default)
+                    setupIntentParams, with: authenticationContext
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
@@ -240,8 +270,26 @@ import UIKit
                         fatalError()
                     }
                 }
-            case .deferredIntent:
-                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment confirmation is not implemented for deferred intent yet."))
+            case .deferredIntent(let intentConfiguration):
+                let paymentMethod = STPPaymentMethod(stripeId: paymentMethodId)
+                PaymentSheet
+                    .handleDeferredIntentConfirmation(
+                        confirmType: .saved(paymentMethod),
+                        configuration: configuration,
+                        intentConfig: intentConfiguration,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: STPPaymentHandler.shared(),
+                        isFlowController: false) { result in
+                    switch result {
+                    case .canceled:
+                        continuation.resume(throwing: Error.canceled)
+                    case .failed(let error):
+                        continuation.resume(throwing: error)
+                    case .completed:
+                        continuation.resume()
+
+                    }
+                }
             }
         }
     }
