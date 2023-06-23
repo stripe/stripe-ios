@@ -20,9 +20,29 @@ import UIKit
     private let mode: PaymentSheet.InitializationMode
     private let configuration: PaymentSheet.Configuration
 
-    private var intent: Intent?
     private var payWithLinkContinuation: CheckedContinuation<Void, Swift.Error>?
-    private var paymentOption: PaymentOption?
+    private var paymentMethodId: String?
+
+    private lazy var loadingViewController: LoadingViewController = {
+        let loadingViewController = LoadingViewController(
+            delegate: self,
+            appearance: PaymentSheet.Appearance.default,
+            isTestMode: configuration.apiClient.isTestmode,
+            loadingViewHeight: 244
+        )
+        return loadingViewController
+    }()
+
+    /// The parent view controller to present
+    private lazy var bottomSheetViewController: BottomSheetViewController = {
+        let vc = BottomSheetViewController(
+            contentViewController: loadingViewController,
+            appearance: PaymentSheet.Appearance.default,
+            isTestMode: configuration.apiClient.isTestmode,
+            didCancelNative3DS2: {}
+        )
+        return vc
+    }()
 
     /// Initializes a new `LinkPaymentController` instance.
     /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
@@ -76,33 +96,80 @@ import UIKit
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
-        let linkController: PayWithLinkWebController = try await withCheckedThrowingContinuation { [self] continuation in
-            PaymentSheet.load(mode: mode, configuration: configuration) { result in
-                switch result {
-                case .success(let intent, _, let isLinkEnabled):
-                    guard isLinkEnabled else {
-                        continuation.resume(throwing: LinkPaymentController.Error.unavailable)
-                        return
-                    }
-                    self.intent = intent
-                    let linkController = PayWithLinkWebController(
-                        intent: intent,
-                        configuration: self.configuration,
-                        shouldOfferApplePay: false,
-                        shouldFinishOnClose: true,
-                        callToAction: .customWithLock(title: String.Localized.continue)
-                    )
-                    continuation.resume(returning: linkController)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
+        presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: PaymentSheet.Appearance.default)
+
+        let instantDebitsController: InstantDebitsOnlyViewController = try await withCheckedThrowingContinuation { [self] continuation in
+            let apiClient = self.configuration.apiClient
+            let parameters = [
+                "attach_required": false,
+                "product": "instant_debits",
+            ]
+            switch mode {
+            case .paymentIntentClientSecret(let clientSecret):
+                guard let paymentIntentId = STPPaymentIntent.id(fromClientSecret: clientSecret) else {
+                    continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Invalid client secret"))
+                    return
                 }
+                apiClient.createLinkAccountSession(paymentIntentID: paymentIntentId,
+                                                   clientSecret: clientSecret,
+                                                   paymentMethodType: .link,
+                                                   customerName: configuration.defaultBillingDetails.name,
+                                                   customerEmailAddress: configuration.defaultBillingDetails.email,
+                                                   additionalParameteres: parameters) { [weak self] linkAccountSession, error in
+                    self?.generateManifest(continuation: continuation, error: error, linkAccountSession: linkAccountSession)
+                }
+            case .setupIntentClientSecret(let clientSecret):
+                guard let setupIntentId = STPSetupIntent.id(fromClientSecret: clientSecret) else {
+                    continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Invalid client secret"))
+                    return
+                }
+                apiClient.createLinkAccountSession(setupIntentID: setupIntentId,
+                                                   clientSecret: clientSecret,
+                                                   paymentMethodType: .link,
+                                                   customerName: configuration.defaultBillingDetails.name,
+                                                   customerEmailAddress: configuration.defaultBillingDetails.email,
+                                                   additionalParameteres: parameters) { [weak self] linkAccountSession, error in
+                    self?.generateManifest(continuation: continuation, error: error, linkAccountSession: linkAccountSession)
+                }
+            case .deferredIntent:
+                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment controller is not implemented for deferred intent yet."))
             }
         }
-        linkController.payWithLinkDelegate = self
-        defer { linkController.cancel() }
+        defer {
+            // reset the stack
+            bottomSheetViewController.contentStack = [loadingViewController]
+            bottomSheetViewController.dismiss(animated: true)
+        }
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             payWithLinkContinuation = continuation
-            linkController.present(over: presentingViewController)
+            bottomSheetViewController.contentStack = [instantDebitsController]
+            instantDebitsController.startInstantDebitsOnlyWebFlow()
+        }
+    }
+
+    private func generateManifest(continuation: CheckedContinuation<InstantDebitsOnlyViewController, Swift.Error>,
+                                  error: Swift.Error?,
+                                  linkAccountSession: LinkAccountSession?) {
+        if let error = error {
+            continuation.resume(throwing: error)
+            return
+        }
+
+        guard let linkAccountSession = linkAccountSession else {
+            continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Failed to create link account session"))
+            return
+        }
+
+        configuration.apiClient.generatedLinkAccountSessionManifest(with: linkAccountSession.clientSecret) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let manifest):
+                let instantDebitsViewController = InstantDebitsOnlyViewController(manifest: manifest, configuration: self.configuration)
+                instantDebitsViewController.delegate = self
+                continuation.resume(returning: instantDebitsViewController)
+            case .failure(let error):
+                continuation.resume(throwing: error)
+            }
         }
     }
 
@@ -131,46 +198,50 @@ import UIKit
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func confirm(from presentingViewController: UIViewController) async throws {
-        if (intent == nil || paymentOption == nil) && LinkAccountService().hasSessionCookie {
-            // If the customer has a Link cookie, `present` may not need to have been called - try to load here
-            paymentOption = try await withCheckedThrowingContinuation { [self] continuation in
-                PaymentSheet.load(mode: mode, configuration: configuration) { result in
-                    switch result {
-                    case .success(let intent, _, let isLinkEnabled):
-                        guard isLinkEnabled else {
-                            continuation.resume(throwing: Error.unavailable)
-                            return
-                        }
-                        self.intent = intent
-                        // TODO(bmelts): can we reliably determine the customer's previously used funding source (if any)?
-                        continuation.resume(returning: .link(option: .wallet))
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
-        }
-        guard let intent = intent, let paymentOption = paymentOption else {
+        guard let paymentMethodId = paymentMethodId else {
             assertionFailure("`confirm` should not be called without the customer authorizing Link. Make sure to call `present` first if your customer hasn't previously selected Link as a payment method.")
             throw PaymentSheetError.unknown(debugDescription: "confirm called without authorizing Link")
         }
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-            PaymentSheet.confirm(
-                configuration: configuration,
-                authenticationContext: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default),
-                intent: intent,
-                paymentOption: paymentOption,
-                paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-                isFlowController: false
-            ) { result in
-                switch result {
-                case .completed:
-                    continuation.resume()
-                case .canceled:
-                    continuation.resume(throwing: Error.canceled)
-                case .failed(let error):
-                    continuation.resume(throwing: error)
+            switch mode {
+            case .paymentIntentClientSecret(let clientSecret):
+                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret, paymentMethodType: .link)
+                paymentIntentParams.paymentMethodId = paymentMethodId
+                paymentIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
+                STPPaymentHandler.shared().confirmPayment(
+                    paymentIntentParams, with: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default)
+                ) { (status, _, error) in
+                    switch status {
+                    case .canceled:
+                        continuation.resume(throwing: Error.canceled)
+                    case .failed:
+                        continuation.resume(throwing: error ?? Error.canceled)
+                    case .succeeded:
+                        continuation.resume()
+                    @unknown default:
+                        fatalError()
+                    }
                 }
+            case .setupIntentClientSecret(let clientSecret):
+                let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: clientSecret, paymentMethodType: .link)
+                setupIntentParams.paymentMethodID = paymentMethodId
+                setupIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
+                STPPaymentHandler.shared().confirmSetupIntent(
+                    setupIntentParams, with: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default)
+                ) { (status, _, error) in
+                    switch status {
+                    case .canceled:
+                        continuation.resume(throwing: Error.canceled)
+                    case .failed:
+                        continuation.resume(throwing: error ?? Error.canceled)
+                    case .succeeded:
+                        continuation.resume()
+                    @unknown default:
+                        fatalError()
+                    }
+                }
+            case .deferredIntent:
+                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment confirmation is not implemented for deferred intent yet."))
             }
         }
     }
@@ -196,13 +267,32 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension LinkPaymentController: PayWithLinkWebControllerDelegate {
-    func payWithLinkWebControllerDidComplete(_ payWithLinkWebController: PayWithLinkWebController, intent: Intent, with paymentOption: PaymentOption) {
-        self.intent = intent
-        self.paymentOption = paymentOption
+extension LinkPaymentController: InstantDebitsOnlyViewControllerDelegate {
+
+    func instantDebitsOnlyViewControllerDidProducePaymentMethod(_ controller: InstantDebitsOnlyViewController, with paymentMethodId: String) {
+        self.paymentMethodId = paymentMethodId
     }
 
-    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
+    func instantDebitsOnlyViewControllerDidCancel(_ controller: InstantDebitsOnlyViewController) {
+        payWithLinkContinuation?.resume(throwing: Error.canceled)
+    }
+
+    func instantDebitsOnlyViewControllerDidFail(_ controller: InstantDebitsOnlyViewController, error: Swift.Error) {
+        payWithLinkContinuation?.resume(throwing: error)
+    }
+
+    func instantDebitsOnlyViewControllerDidComplete(
+        _ controller: InstantDebitsOnlyViewController
+    ) {
+        payWithLinkContinuation?.resume(returning: ())
+    }
+}
+
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+@_spi(LinkOnly)
+extension LinkPaymentController: LoadingViewControllerDelegate {
+    func shouldDismiss(_ loadingViewController: LoadingViewController) {
         payWithLinkContinuation?.resume(throwing: Error.canceled)
     }
 }
