@@ -18,7 +18,11 @@ protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
 class CustomerAddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?
-    let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.card, .USBankAccount]
+
+    var paymentMethodTypes: [PaymentSheet.PaymentMethodType] {
+       CustomerSheet.paymentSheetPaymentMethodTypes(requestedPaymentMethods: configuration.supportedPaymentMethodTypes)
+    }
+
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         return paymentMethodTypesView.selected
     }
@@ -249,7 +253,7 @@ extension CustomerAddPaymentMethodViewController {
                 self.delegate?.updateErrorLabel(for: genericError)
             }
         }
-        //Oof need to plumb this through!
+
         client.collectBankAccountForSetup(
             clientSecret: clientSecret,
             returnURL: configuration.returnURL,

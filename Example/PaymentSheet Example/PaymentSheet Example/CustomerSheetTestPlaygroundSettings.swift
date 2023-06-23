@@ -71,11 +71,25 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case never
         case full
     }
+    enum PaymentMethodCard: String, PickerEnum {
+        static var enumName: String { "Card" }
+
+        case on
+        case off
+    }
+    enum PaymentMethodUSBankAccount: String, PickerEnum {
+        static var enumName: String { "USBankAccount" }
+
+        case on
+        case off
+    }
 
     var customerMode: CustomerMode
     var customerId: String?
     var paymentMethodMode: PaymentMethodMode
     var applePay: ApplePay
+    var showCard: PaymentMethodCard
+    var showUSBankAccount: PaymentMethodUSBankAccount
     var headerTextForSelectionScreen: String?
     var defaultBillingAddress: DefaultBillingAddress
     var autoreload: Autoreload
@@ -91,6 +105,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    customerId: nil,
                                                    paymentMethodMode: .setupIntent,
                                                    applePay: .on,
+                                                   showCard: .on,
+                                                   showUSBankAccount: .off,
                                                    headerTextForSelectionScreen: nil,
                                                    defaultBillingAddress: .off,
                                                    autoreload: .on,

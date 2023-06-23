@@ -92,6 +92,7 @@ import UIKit
 @_spi(PrivateBetaCustomerSheet) open class StripeCustomerAdapter: CustomerAdapter {
     let customerEphemeralKeyProvider: (() async throws -> CustomerEphemeralKey)
     let setupIntentClientSecretProvider: (() async throws -> String)?
+//    let configuration: CustomerSheet.Configuration
     let apiClient: STPAPIClient
 
     /// - Parameter customerEphemeralKeyProvider: A block that returns a CustomerEphemeralKey.
@@ -103,9 +104,11 @@ import UIKit
     ///
     public init(customerEphemeralKeyProvider: @escaping () async throws -> CustomerEphemeralKey,
                 setupIntentClientSecretProvider: (() async throws -> String)? = nil,
+//                configuration: CustomerSheet.Configuration,
                 apiClient: STPAPIClient = .shared) {
         self.customerEphemeralKeyProvider = customerEphemeralKeyProvider
         self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
+//        self.configuration = configuration
         self.apiClient = apiClient
     }
 
