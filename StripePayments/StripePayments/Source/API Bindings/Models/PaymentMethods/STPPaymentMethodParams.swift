@@ -623,6 +623,10 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         case .paynow:
             self.type = .paynow
             self.billingDetails = paymentMethod.billingDetails
+        case .zip:
+            self.type = .zip
+            self.billingDetails = paymentMethod.billingDetails
+            return nil
         // All reusable PaymentMethods go below:
         case .SEPADebit,
             .bacsDebit,
@@ -1129,7 +1133,7 @@ extension STPPaymentMethodParams {
             usBankAccount = STPPaymentMethodUSBankAccountParams()
         case .cashApp:
             cashApp = STPPaymentMethodCashAppParams()
-        case .cardPresent, .linkInstantDebit, .paynow:
+        case .cardPresent, .linkInstantDebit, .paynow, .zip:
             // These payment methods don't have any params
             break
         case .unknown:
@@ -1209,6 +1213,8 @@ extension STPPaymentMethodParams {
             return STPLocalizedString("Unknown", "Default missing source type label")
         case .paynow:
             return "PayNow"
+        case .zip:
+            return "Zip"
         @unknown default:
             return STPLocalizedString("Unknown", "Default missing source type label")
         }

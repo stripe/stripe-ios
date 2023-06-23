@@ -637,7 +637,8 @@ public class STPPaymentHandler: NSObject {
             .affirm,
             .linkInstantDebit,
             .cashApp,
-            .paynow:
+            .paynow,
+            .zip:
             return false
 
         case .unknown:

@@ -69,6 +69,8 @@ import Foundation
     case cashApp
     /// A PayNow payment method
     case paynow
+    /// A Zip payment method
+    case zip
     /// An unknown type.
     case unknown
 
@@ -139,6 +141,8 @@ import Foundation
             return STPLocalizedString("Unknown", "Default missing source type label")
         case .paynow:
             return "PayNow"
+        case .zip:
+            return "Zip"
         @unknown default:
             return STPLocalizedString("Unknown", "Default missing source type label")
         }
@@ -203,6 +207,8 @@ import Foundation
             return "us_bank_account"
         case .cashApp:
             return "cashapp"
+        case .zip:
+            return "zip"
         case .unknown:
             return "unknown"
         case .paynow:

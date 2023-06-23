@@ -540,6 +540,8 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "cashApp"
         case .paynow:
             return "PayNow"
+        case .zip:
+            return "zip"
         }
     }
 }
