@@ -38,6 +38,7 @@ class PhoneOtpViewController: IdentityFlowViewController {
                             return .disabled
                         }
                     }(),
+                    isPrimary: false,
                     didTap: {
                         self.generateOtp()
                     }
