@@ -13,7 +13,7 @@ import Foundation
 import UIKit
 
 extension PaymentSheet {
-    public enum PaymentMethodType: Equatable, Hashable {
+    enum PaymentMethodType: Equatable, Hashable {
 
         func supportsAddingRequirements() -> [PaymentMethodTypeRequirement] {
             switch self {
