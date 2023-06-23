@@ -49,6 +49,8 @@ class PhoneOtpView: UIView {
         return stackView
     }()
 
+    private let submittingIndicator = ActivityIndicator()
+    
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -83,12 +85,13 @@ class PhoneOtpView: UIView {
         stackView.addArrangedSubview(otpBodyLabel)
         stackView.addArrangedSubview(otpTextField)
         stackView.addArrangedSubview(otpErrorField)
+        stackView.addArrangedSubview(submittingIndicator)
 
         NSLayoutConstraint.activate([
             warningIconView.widthAnchor.constraint(equalToConstant: 16),
             warningIconView.heightAnchor.constraint(equalToConstant: 16),
             otpTextField.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            otpTextField.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            otpTextField.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
 
         addAndPinSubview(stackView)
@@ -103,20 +106,32 @@ class PhoneOtpView: UIView {
         switch viewModel {
         case .InputtingOTP:
             otpTextField.isEnabled = true
+            otpTextField.becomeFirstResponder()
             otpErrorField.isHidden = true
+            submittingIndicator.isHidden = true
+            submittingIndicator.stopAnimating()
         case .SubmittingOTP:
             otpTextField.isEnabled = true
             otpErrorField.isHidden = true
+            submittingIndicator.isHidden = false
+            submittingIndicator.startAnimating()
         case .ErrorOTP:
             otpTextField.value = ""
+            otpTextField.resignFirstResponder()
             otpTextField.isEnabled = true
             otpErrorField.isHidden = false
+            submittingIndicator.isHidden = true
+            submittingIndicator.stopAnimating()
         case .RequestingOTP:
             otpTextField.isEnabled = false
             otpErrorField.isHidden = true
+            submittingIndicator.isHidden = true
+            submittingIndicator.stopAnimating()
         case .RequestingCannotVerify:
             otpTextField.isEnabled = false
             otpErrorField.isHidden = true
+            submittingIndicator.isHidden = true
+            submittingIndicator.stopAnimating()
         }
         delegate?.viewStateDidUpdate()
     }
