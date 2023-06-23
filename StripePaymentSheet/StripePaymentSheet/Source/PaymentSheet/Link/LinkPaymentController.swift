@@ -289,6 +289,26 @@ import UIKit
 
                     }
                 }
+            case .setupIntentClientSecret(let clientSecret):
+                let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: clientSecret, paymentMethodType: .link)
+                setupIntentParams.paymentMethodID = paymentMethodId
+                setupIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
+                STPPaymentHandler.shared().confirmSetupIntent(
+                    setupIntentParams, with: AuthenticationContext(presentingViewController: presentingViewController, appearance: .default)
+                ) { (status, _, error) in
+                    switch status {
+                    case .canceled:
+                        continuation.resume(throwing: Error.canceled)
+                    case .failed:
+                        continuation.resume(throwing: error ?? Error.canceled)
+                    case .succeeded:
+                        continuation.resume()
+                    @unknown default:
+                        fatalError()
+                    }
+                }
+            case .deferredIntent:
+                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment confirmation is not implemented for deferred intent yet."))
             }
         }
     }
