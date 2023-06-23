@@ -148,6 +148,9 @@ final class InstantDebitsOnlyViewController: UIViewController {
     }
 
     func setBankAccountInfo(details: InstantDebitsOnlyAuthenticationSessionManager.RedactedPaymentDetails) {
+        if details.bankIconCode == nil && details.bankName == nil && details.last4 == nil {
+            return
+        }
         bankInfoView.setBankAccountInfo(iconCode: details.bankIconCode, bankName: details.bankName, last4: details.last4)
         containerView.toggleArrangedSubview(bankInfoView, shouldShow: true, animated: false)
     }
