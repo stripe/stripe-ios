@@ -222,10 +222,6 @@ extension CustomerSheet: LoadingViewControllerDelegate {
             return .applePay()
         case .stripeId(let paymentMethodId):
             let paymentMethods = try await self.fetchPaymentMethods()
-//            let paymentMethods = try await self.fetchPaymentMethods().filter { paymentMethod in
-//                CustomerSheet.filteredPaymentMethods(requestedPaymentMethods: [paymentMethod.type])
-                //oof -- need config
-//            }
             guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                 return nil
             }

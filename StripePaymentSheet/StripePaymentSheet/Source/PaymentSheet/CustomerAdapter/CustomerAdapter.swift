@@ -92,7 +92,7 @@ import UIKit
 @_spi(PrivateBetaCustomerSheet) open class StripeCustomerAdapter: CustomerAdapter {
     let customerEphemeralKeyProvider: (() async throws -> CustomerEphemeralKey)
     let setupIntentClientSecretProvider: (() async throws -> String)?
-//    let configuration: CustomerSheet.Configuration
+    let configuration: CustomerSheet.Configuration
     let apiClient: STPAPIClient
 
     /// - Parameter customerEphemeralKeyProvider: A block that returns a CustomerEphemeralKey.
@@ -104,11 +104,11 @@ import UIKit
     ///
     public init(customerEphemeralKeyProvider: @escaping () async throws -> CustomerEphemeralKey,
                 setupIntentClientSecretProvider: (() async throws -> String)? = nil,
-//                configuration: CustomerSheet.Configuration,
+                configuration: CustomerSheet.Configuration,
                 apiClient: STPAPIClient = .shared) {
         self.customerEphemeralKeyProvider = customerEphemeralKeyProvider
         self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
-//        self.configuration = configuration
+        self.configuration = configuration
         self.apiClient = apiClient
     }
 
@@ -138,7 +138,7 @@ import UIKit
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
             // List the Customer's saved PaymentMethods
-            let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]  // hardcoded for now
+            let savedPaymentMethodTypes = CustomerSheet.filteredPaymentMethods(requestedPaymentMethods: configuration.supportedPaymentMethodTypes)
             apiClient.listPaymentMethods(
                 forCustomer: customerEphemeralKey.id,
                 using: customerEphemeralKey.ephemeralKeySecret,

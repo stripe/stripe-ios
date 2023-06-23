@@ -129,7 +129,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         return configuration
     }
 
-    func customerAdapter(customerId: String, ephemeralKey: String) -> StripeCustomerAdapter {
+    func customerAdapter(customerId: String, ephemeralKey: String, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter {
         let customerAdapter: StripeCustomerAdapter
         switch settings.paymentMethodMode {
         case .setupIntent:
@@ -138,12 +138,13 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
                 .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
             }, setupIntentClientSecretProvider: {
                 return try await self.backend.createSetupIntent(customerId: customerId)
-            })
+            }, configuration: configuration)
         case .createAndAttach:
             customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
                 // This should be a block that fetches this from your server
                 .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
-            })
+            }, setupIntentClientSecretProvider: nil,
+            configuration: configuration)
         }
         return customerAdapter
     }
@@ -209,7 +210,7 @@ extension CustomerSheetTestPlaygroundController {
                 // Create Customer Sheet
                 var configuration = self.customerSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
                 configuration.applePayEnabled = self.applePayEnabled()
-                let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey)
+                let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey, configuration: configuration)
                 self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
 
                 // Retrieve selected PM
