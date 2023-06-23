@@ -126,11 +126,11 @@ let JSONKeyObject = "object"
         )
     }
 
-    class func parseResponse<ResType: STPAPIResponseDecodable>(
+    class func parseResponse(
         _ response: URLResponse?,
         body: Data?,
         error: Error?,
-        completion: @escaping (ResType?, HTTPURLResponse?, Error?) -> Void
+        completion: @escaping (ResponseType?, HTTPURLResponse?, Error?) -> Void
     ) {
         // Derive HTTP URL response
         var httpResponse: HTTPURLResponse?
@@ -139,7 +139,7 @@ let JSONKeyObject = "object"
         }
 
         // Wrap completion block with main thread dispatch
-        let safeCompletion: ((ResType?, Error?) -> Void) = { responseObject, responseError in
+        let safeCompletion: ((ResponseType?, Error?) -> Void) = { responseObject, responseError in
             stpDispatchToMainThreadIfNecessary({
                 completion(responseObject, httpResponse, responseError)
             })
@@ -168,12 +168,12 @@ let JSONKeyObject = "object"
         // STPEmptyStripeResponse as special.
         // We probably always want errors to override object deserialization: re-evaluate
         // this hack when building the new API client.
-        if ResType.self == STPEmptyStripeResponse.self {
+        if ResponseType.self == STPEmptyStripeResponse.self {
             if let error: Error =
                 NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
             {
                 safeCompletion(nil, error)
-            } else if let responseObject = ResType.decodedObject(
+            } else if let responseObject = ResponseType.decodedObject(
                 fromAPIResponse: jsonDictionary
             ) {
                 safeCompletion(responseObject, nil)
@@ -184,7 +184,7 @@ let JSONKeyObject = "object"
         }
         // END OF STPEmptyStripeResponse HACK
 
-        if let responseObject = ResType.decodedObject(fromAPIResponse: jsonDictionary) {
+        if let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary) {
             safeCompletion(responseObject, nil)
         } else {
             let error: Error =
