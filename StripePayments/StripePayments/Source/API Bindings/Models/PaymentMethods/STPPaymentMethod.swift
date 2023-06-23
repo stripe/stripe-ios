@@ -210,7 +210,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
 
     // MARK: - STPAPIResponseDecodable
     /// :nodoc:
-    @objc required init(
+    @objc @_spi(STP) public required init(
         stripeId: String
     ) {
         self.stripeId = stripeId
