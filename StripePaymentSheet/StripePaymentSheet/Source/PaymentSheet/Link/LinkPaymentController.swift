@@ -100,7 +100,7 @@ import UIKit
 
         let instantDebitsController: InstantDebitsOnlyViewController = try await withCheckedThrowingContinuation { [self] continuation in
             let apiClient = self.configuration.apiClient
-            let parameters = [
+            let parameters: [String: Any] = [
                 "attach_required": false,
                 "product": "instant_debits",
             ]
