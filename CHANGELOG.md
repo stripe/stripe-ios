@@ -1,3 +1,7 @@
+## X.Y.Z 2023-XX-YY
+### PaymentSheet
+* [Fixed] Affirm no longer requires shipping details.
+
 ## 23.9.2 2023-06-20
 ### Payments
 * [Fixed] Fixed a bug causing Cash App Pay SetupIntents to incorrectly state they were canceled when they succeeded.
