@@ -57,12 +57,6 @@ final class InstantDebitsOnlyViewController: UIViewController {
         self.delegate?.instantDebitsOnlyViewControllerDidComplete(self)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        // TODO vav REMOVE
-        setBankAccountInfo()
-    }
-
     private lazy var cancelButton: Button = {
         let button = Button(
             configuration: .linkSecondary(),
@@ -140,8 +134,7 @@ final class InstantDebitsOnlyViewController: UIViewController {
         dynamicHeightContainer.updateHeight()
 
         view.addAndPinSubview(dynamicHeightContainer)
-        // TODO vav remove
-//        containerView.alpha = 0.0
+        containerView.alpha = 0.0
 
         containerView.toggleArrangedSubview(bankInfoView, shouldShow: false, animated: false)
     }
@@ -154,8 +147,8 @@ final class InstantDebitsOnlyViewController: UIViewController {
         )
     }
 
-    func setBankAccountInfo() {
-        bankInfoView.setBankAccountInfo()
+    func setBankAccountInfo(details: InstantDebitsOnlyAuthenticationSessionManager.RedactedPaymentDetails) {
+        bankInfoView.setBankAccountInfo(iconCode: details.bankIconCode, bankName: details.bankName, last4: details.last4)
         containerView.toggleArrangedSubview(bankInfoView, shouldShow: true, animated: false)
     }
 
@@ -177,17 +170,16 @@ final class InstantDebitsOnlyViewController: UIViewController {
             switch result {
             case .success(let successResult):
                 switch successResult {
-                case .success(let paymentMethodID):
+                case .success(let details):
                     self.confirmButton.update(state: .enabled)
-                    self.delegate?.instantDebitsOnlyViewControllerDidProducePaymentMethod(self, with: paymentMethodID)
-                    self.setBankAccountInfo()
+                    self.delegate?.instantDebitsOnlyViewControllerDidProducePaymentMethod(self, with: details.paymentMethodID)
+                    self.setBankAccountInfo(details: details)
                 case.canceled:
                     self.confirmButton.update(state: .disabled)
                     self.delegate?.instantDebitsOnlyViewControllerDidCancel(self)
                 }
             case .failure(let error):
                 self.confirmButton.update(state: .disabled)
-                print(error.localizedDescription)
                 self.delegate?.instantDebitsOnlyViewControllerDidFail(self, error: error)
             }
         }

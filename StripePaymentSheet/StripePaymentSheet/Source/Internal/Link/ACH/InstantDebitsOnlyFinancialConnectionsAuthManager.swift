@@ -27,8 +27,15 @@ final class InstantDebitsOnlyAuthenticationSessionManager: NSObject {
 
     // MARK: - Types
 
+    struct RedactedPaymentDetails {
+        let paymentMethodID: String
+        let bankName: String?
+        let bankIconCode: String?
+        let last4: String?
+    }
+
     enum Result {
-        case success(paymentMethodID: String)
+        case success(details: RedactedPaymentDetails)
         case canceled
     }
 
@@ -89,8 +96,12 @@ final class InstantDebitsOnlyAuthenticationSessionManager: NSObject {
                 }
 
                 if returnUrl.matchesSchemeHostAndPath(of: manifest.successURL) {
-                    if let paymentMethodID = Self.extractPaymentMethodID(from: returnUrl) {
-                        promise.fullfill(with: .success(.success(paymentMethodID: paymentMethodID)))
+                    if let paymentMethodID = Self.extractValue(from: returnUrl, key: "payment_method_id") {
+                        let details = RedactedPaymentDetails(paymentMethodID: paymentMethodID,
+                                                             bankName: Self.extractValue(from: returnUrl, key: "bank_name"),
+                                                             bankIconCode: Self.extractValue(from: returnUrl, key: "bank_icon_code"),
+                                                             last4: Self.extractValue(from: returnUrl, key: "last4"))
+                        promise.fullfill(with: .success(.success(details: details)))
                     } else {
                         promise.reject(with: InstantDebitsOnlyAuthenticationSessionManager.Error.noPaymentDetailsID)
                     }
@@ -138,7 +149,7 @@ extension InstantDebitsOnlyAuthenticationSessionManager: ASWebAuthenticationPres
 
 extension InstantDebitsOnlyAuthenticationSessionManager {
 
-    private static func extractPaymentMethodID(from url: URL) -> String? {
+    private static func extractValue(from url: URL, key: String) -> String? {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             assertionFailure("Invalid URL")
             return nil
@@ -146,7 +157,7 @@ extension InstantDebitsOnlyAuthenticationSessionManager {
 
         return components
             .queryItems?
-            .first(where: { $0.name == "payment_method_id" })?
+            .first(where: { $0.name == key })?
             .value
     }
 }

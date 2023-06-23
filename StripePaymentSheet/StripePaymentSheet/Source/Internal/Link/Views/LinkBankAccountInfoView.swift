@@ -85,10 +85,11 @@ final class LinkBankAccountInfoView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setBankAccountInfo() {
-        let iconCode: String? = nil
+    func setBankAccountInfo(iconCode: String?, bankName: String?, last4: String?) {
         bankIconView.image = PaymentSheetImageLibrary.bankIcon(for: iconCode)
-        primaryLabel.text = "Stripe Test Bank"
-        secondaryLabel.text = "••••\(6789)"
+        primaryLabel.text = bankName
+        if let last4 = last4 {
+            secondaryLabel.text = "••••\(last4)"
+        }
     }
 }
