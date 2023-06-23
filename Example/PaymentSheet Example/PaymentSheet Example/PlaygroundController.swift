@@ -386,11 +386,6 @@ extension PlaygroundController {
             self.clientSecret = json["intentClientSecret"]
             self.ephemeralKey = json["customerEphemeralKeySecret"]
             self.customerID = json["customerId"]
-            print(self.clientSecret)
-            print(self.customerID)
-            self.ephemeralKey = "ek_test_YWNjdF8xSHZUSTdMdTVvM1AxOFpwLFZ2b2RpYm1OWTlFdENUWVNXeEVBVWRDV0NFV0J4cng_00mIpuhG8O"
-            self.clientSecret = "pi_3NMDS8Lu5o3P18Zp0gG8qvq6_secret_Kev9VIJhMqNsG9elAlEYqXzez"
-            self.customerID = "cus_O8UPWqkXNgic71"
             self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
             self.amount = Int(json["amount"] ?? "")
             StripeAPI.defaultPublishableKey = json["publishableKey"]
