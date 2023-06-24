@@ -105,6 +105,9 @@
 /* Section title for collection phone number */
 "Phone Number" = "Phone Number";
 
+/* Back button title for returning to the phone verification page */
+"Phone Verification" = "Phone Verification";
+
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Photo Library";
 
