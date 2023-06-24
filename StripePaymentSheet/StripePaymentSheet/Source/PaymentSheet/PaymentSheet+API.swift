@@ -378,39 +378,39 @@ extension PaymentSheet {
 
                         loadSpecsPromise.observe { _ in
                             // Overwrite the form specs that were already loaded from disk
-                            switch intent {
-                            case .paymentIntent(let paymentIntent):
-                                _ = FormSpecProvider.shared.loadFrom(paymentIntent.allResponseFields["payment_method_specs"] ?? [String: Any]())
-                            case .setupIntent:
-                                break // Not supported
-                            case .deferredIntent(elementsSession: let elementsSession, intentConfig: _):
-                                _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
-                            }
-                            linkAccountPromise.observe { linkAccountResult in
-                                switch linkAccountResult {
-                                case .success(let linkAccount):
-                                    LinkAccountContext.shared.account = linkAccount
-
-                                    completion(
-                                        .success(
-                                            intent: intent,
-                                            savedPaymentMethods: savedPaymentMethods,
-                                            isLinkEnabled: intent.supportsLink
-                                        )
-                                    )
-                                case .failure:
-                                    LinkAccountContext.shared.account = nil
-
-                                    // Move forward without Link
-                                    completion(
-                                        .success(
-                                            intent: intent,
-                                            savedPaymentMethods: savedPaymentMethods,
-                                            isLinkEnabled: false
-                                        )
-                                    )
-                                }
-                            }
+//                            switch intent {
+//                            case .paymentIntent(let paymentIntent):
+//                                _ = FormSpecProvider.shared.loadFrom(paymentIntent.allResponseFields["payment_method_specs"] ?? [String: Any]())
+//                            case .setupIntent:
+//                                break // Not supported
+//                            case .deferredIntent(elementsSession: let elementsSession, intentConfig: _):
+//                                _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+//                            }
+//                            linkAccountPromise.observe { linkAccountResult in
+//                                switch linkAccountResult {
+//                                case .success(let linkAccount):
+//                                    LinkAccountContext.shared.account = linkAccount
+//
+//                                    completion(
+//                                        .success(
+//                                            intent: intent,
+//                                            savedPaymentMethods: savedPaymentMethods,
+//                                            isLinkEnabled: intent.supportsLink
+//                                        )
+//                                    )
+//                                case .failure:
+//                                    LinkAccountContext.shared.account = nil
+//
+//                                    // Move forward without Link
+//                                    completion(
+//                                        .success(
+//                                            intent: intent,
+//                                            savedPaymentMethods: savedPaymentMethods,
+//                                            isLinkEnabled: false
+//                                        )
+//                                    )
+//                                }
+//                            }
                         }
                     case .failure(let error):
                         completion(.failure(error))
@@ -420,40 +420,78 @@ extension PaymentSheet {
                 completion(.failure(error))
             }
         }
+        
+        Task {
+            do {
+                // 1a. Fetch PaymentIntent, SetupIntent, or ElementsSession
+                async let _intent = fetchIntent(mode: mode, configuration: configuration)
+                
+                // 1b. List the Customer's saved PaymentMethods
+                async let savedPaymentMethods = fetchSavedPaymentMethods(configuration: configuration)
 
-        // Fetch PaymentIntent, SetupIntent, or ElementsSession
-//        try await fetchIntent(mode: mode, configuration: configuration)
-
-        // List the Customer's saved PaymentMethods
-        let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]  // hardcoded for now
-        if let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret {
-            configuration.apiClient.listPaymentMethods(
-                forCustomer: customerID,
-                using: ephemeralKey,
-                types: savedPaymentMethodTypes
-            ) { paymentMethods, error in
-                guard let paymentMethods = paymentMethods, error == nil else {
-                    let error =
-                        error
-                        ?? PaymentSheetError.unknown(
-                            debugDescription: "Failed to retrieve PaymentMethods for the customer"
+                // 1c. Load misc singletons
+                async let _ = loadMiscellaneousSingletons() // note: Swift implicitly waits for this before exiting the scope.
+                
+                let intent = try await _intent
+                // Overwrite the form specs that were already loaded from disk
+                switch intent {
+                case .paymentIntent(let paymentIntent):
+                    _ = FormSpecProvider.shared.loadFrom(paymentIntent.allResponseFields["payment_method_specs"] ?? [String: Any]())
+                case .setupIntent:
+                    break // Not supported
+                case .deferredIntent(elementsSession: let elementsSession, intentConfig: _):
+                    _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                }
+                
+                // Load link account session. Continue without Link if it errors.
+                let linkAccount = try? await _lookupLinkAccount(intent: intent, configuration: configuration)
+                LinkAccountContext.shared.account = linkAccount
+                
+                // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
+                // TODO: We're fetching the customer's saved card and us_bank_account PMs, and then filtering - this is backwards!
+                let filteredSavedPaymentMethods = try await savedPaymentMethods
+                    .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
+                    .filter {
+                        $0.paymentSheetPaymentMethodType().supportsSavedPaymentMethod(
+                            configuration: configuration,
+                            intent: intent
                         )
-                    paymentMethodsPromise.reject(with: error)
+                    }
+
+                // Warn the merchant if we see unactivated payment method types in the Intent
+                warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: intent.unactivatedPaymentMethodTypes)
+                // Ensure that there's at least 1 payment method type available for the intent and configuration.
+                let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
+                guard !paymentMethodTypes.isEmpty else {
+                    completion(.failure(PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)))
                     return
                 }
-                paymentMethodsPromise.resolve(with: paymentMethods)
+                
+                completion(
+                    .success(
+                        intent: intent,
+                        savedPaymentMethods: filteredSavedPaymentMethods,
+                        isLinkEnabled: intent.supportsLink
+                    )
+                )
+            } catch {
+                completion(.failure(error))
             }
-        } else {
-            paymentMethodsPromise.resolve(with: [])
         }
-
-        // Load configuration
-        AddressSpecProvider.shared.loadAddressSpecs {
-            // Load form specs
-            FormSpecProvider.shared.load { _ in
-                // Load BSB data
-                BSBNumberProvider.shared.loadBSBData {
-                    loadSpecsPromise.resolve(with: ())
+    }
+    
+    /// Loads miscellaneous singletons
+    static func loadMiscellaneousSingletons() async -> Bool {
+        await withCheckedContinuation { continuation in
+            Task {
+                AddressSpecProvider.shared.loadAddressSpecs {
+                    // Load form specs
+                    FormSpecProvider.shared.load { _ in
+                        // Load BSB data
+                        BSBNumberProvider.shared.loadBSBData {
+                            continuation.resume(returning: true)
+                        }
+                    }
                 }
             }
         }
@@ -586,6 +624,27 @@ extension PaymentSheet {
         case .deferredIntent(let intentConfig):
             let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig)
             return .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
+        }
+    }
+    
+    static func fetchSavedPaymentMethods(configuration: Configuration) async throws -> [STPPaymentMethod] {
+        let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]  // hardcoded for now
+        guard let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret else {
+            return []
+        }
+        return try await withCheckedThrowingContinuation { continuation in
+            configuration.apiClient.listPaymentMethods(
+                forCustomer: customerID,
+                using: ephemeralKey,
+                types: savedPaymentMethodTypes
+            ) { paymentMethods, error in
+                guard let paymentMethods = paymentMethods, error == nil else {
+                    let error = error ?? PaymentSheetError.unknown(debugDescription: "Failed to retrieve PaymentMethods for the customer")
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: paymentMethods)
+            }
         }
     }
 
