@@ -63,32 +63,6 @@ extension STPAPIClient {
             parameters: parameters
         )
     }
-
-    /// Async helper version of `retrievePaymentIntent`
-    func retrievePaymentIntent(clientSecret: String, expand: [String]) async throws -> STPPaymentIntent {
-        return try await withCheckedThrowingContinuation { continuation in
-            retrievePaymentIntent(withClientSecret: clientSecret, expand: expand) { paymentIntent, error in
-                guard let paymentIntent = paymentIntent else {
-                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
-                    return
-                }
-                continuation.resume(returning: paymentIntent)
-            }
-        }
-    }
-
-    /// Async helper version of `retrieveSetupIntent`
-    func retrieveSetupIntent(clientSecret: String, expand: [String]) async throws -> STPSetupIntent {
-        return try await withCheckedThrowingContinuation { continuation in
-            retrieveSetupIntent(withClientSecret: clientSecret, expand: expand) { setupIntent, error in
-                guard let setupIntent = setupIntent else {
-                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
-                    return
-                }
-                continuation.resume(returning: setupIntent)
-            }
-        }
-    }
 }
 
 extension PaymentSheet.IntentConfiguration {

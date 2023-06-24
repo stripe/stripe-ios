@@ -434,6 +434,22 @@ extension STPAPIClient {
             completion(paymentIntent, error)
         }
     }
+    
+    /// Async helper version of `retrievePaymentIntent`
+    @_spi(STP) public func retrievePaymentIntent(
+        clientSecret: String,
+        expand: [String] = []
+    ) async throws -> STPPaymentIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            retrievePaymentIntent(withClientSecret: clientSecret, expand: expand) { paymentIntent, error in
+                guard let paymentIntent = paymentIntent else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                    return
+                }
+                continuation.resume(returning: paymentIntent)
+            }
+        }
+    }
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
@@ -591,6 +607,22 @@ extension STPAPIClient {
             parameters: parameters
         ) { setupIntent, _, error in
             completion(setupIntent, error)
+        }
+    }
+    
+    /// Async helper version of `retrieveSetupIntent`
+    @_spi(STP) public func retrieveSetupIntent(
+        clientSecret: String,
+        expand: [String] = []
+    ) async throws -> STPSetupIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            retrieveSetupIntent(withClientSecret: clientSecret, expand: expand) { setupIntent, error in
+                guard let setupIntent = setupIntent else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                    return
+                }
+                continuation.resume(returning: setupIntent)
+            }
         }
     }
 
