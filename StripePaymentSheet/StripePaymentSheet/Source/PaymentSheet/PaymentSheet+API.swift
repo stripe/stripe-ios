@@ -422,84 +422,7 @@ extension PaymentSheet {
         }
 
         // Fetch PaymentIntent, SetupIntent, or ElementsSession
-        switch mode {
-        case .paymentIntentClientSecret(let clientSecret):
-            let paymentIntentHandlerCompletionBlock: ((STPPaymentIntent) -> Void) = { paymentIntent in
-                guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
-                    // Error if the PaymentIntent is in a terminal state
-                    let message = "PaymentSheet received a PaymentIntent in a terminal state: \(paymentIntent.status)"
-                    completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
-                    return
-                }
-                intentPromise.resolve(with: .paymentIntent(paymentIntent))
-            }
-            configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret) { result in
-                switch result {
-                case .success(let paymentIntent):
-                    paymentIntentHandlerCompletionBlock(paymentIntent)
-                case .failure:
-                    // Fallback to regular retrieve PI when retrieve PI with preferences fails
-                    configuration.apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {
-                        paymentIntent,
-                        error in
-                        guard let paymentIntent = paymentIntent, error == nil else {
-                            let error =
-                                error
-                                ?? PaymentSheetError.unknown(
-                                    debugDescription: "Failed to retrieve PaymentIntent"
-                                )
-                            intentPromise.reject(with: error)
-                            return
-                        }
-
-                        paymentIntentHandlerCompletionBlock(paymentIntent)
-                    }
-                }
-            }
-        case .setupIntentClientSecret(let clientSecret):
-            let setupIntentHandlerCompletionBlock: ((STPSetupIntent) -> Void) = { setupIntent in
-                guard ![.succeeded, .canceled].contains(setupIntent.status) else {
-                    // Error if the SetupIntent is in a terminal state
-                    let message = "PaymentSheet received a SetupIntent in a terminal state: \(setupIntent.status)"
-                    completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
-                    return
-                }
-                intentPromise.resolve(with: .setupIntent(setupIntent))
-            }
-
-            configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret) { result in
-                switch result {
-                case .success(let setupIntent):
-                    setupIntentHandlerCompletionBlock(setupIntent)
-                case .failure:
-                    // Fallback to regular retrieve SI when retrieve SI with preferences fails
-                    configuration.apiClient.retrieveSetupIntent(withClientSecret: clientSecret) { setupIntent, error in
-                        guard let setupIntent = setupIntent, error == nil else {
-                            let error =
-                                error
-                                ?? PaymentSheetError.unknown(
-                                    debugDescription: "Failed to retrieve SetupIntent"
-                                )
-                            intentPromise.reject(with: error)
-                            return
-                        }
-
-                        setupIntentHandlerCompletionBlock(setupIntent)
-                    }
-                }
-            }
-
-        case .deferredIntent(let intentConfig):
-
-            configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig) { result in
-                switch result {
-                case .success(let elementsSession):
-                    intentPromise.resolve(with: .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig))
-                case .failure(let error):
-                    intentPromise.reject(with: error)
-                }
-            }
-        }
+//        try await fetchIntent(mode: mode, configuration: configuration)
 
         // List the Customer's saved PaymentMethods
         let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]  // hardcoded for now
@@ -585,7 +508,7 @@ extension PaymentSheet {
         return promise
     }
 
-    static func lookupLinkAccount(
+    static func _lookupLinkAccount(
         intent: Intent,
         configuration: Configuration
     ) async throws -> PaymentSheetLinkAccount? {
@@ -626,6 +549,43 @@ extension PaymentSheet {
             return try await lookUpConsumerSession(email: customer.email)
         } else {
             return nil
+        }
+    }
+    
+    static func fetchIntent(mode: InitializationMode, configuration: Configuration) async throws -> Intent {
+        switch mode {
+        case .paymentIntentClientSecret(let clientSecret):
+            let paymentIntent: STPPaymentIntent
+            do {
+                paymentIntent = try await configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret)
+            } catch {
+                // Fallback to regular retrieve PI when retrieve PI with preferences fails
+                paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+            }
+            guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
+                // Error if the PaymentIntent is in a terminal state
+                let message = "PaymentSheet received a PaymentIntent in a terminal state: \(paymentIntent.status)"
+                throw PaymentSheetError.unknown(debugDescription: message)
+            }
+            return .paymentIntent(paymentIntent)
+        case .setupIntentClientSecret(let clientSecret):
+            let setupIntent: STPSetupIntent
+            do {
+                setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret)
+            } catch {
+                // Fallback to regular retrieve SI when retrieve SI with preferences fails
+                setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
+            }
+            guard ![.succeeded, .canceled].contains(setupIntent.status) else {
+                // Error if the SetupIntent is in a terminal state
+                let message = "PaymentSheet received a SetupIntent in a terminal state: \(setupIntent.status)"
+                throw PaymentSheetError.unknown(debugDescription: message)
+            }
+            return .setupIntent(setupIntent)
+
+        case .deferredIntent(let intentConfig):
+            let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig)
+            return .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
         }
     }
 
