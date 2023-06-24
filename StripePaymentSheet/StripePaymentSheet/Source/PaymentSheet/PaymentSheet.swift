@@ -132,7 +132,7 @@ public class PaymentSheet {
         }
 
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
-        PaymentSheet.load(
+        PaymentSheetLoader.load(
             mode: mode,
             configuration: configuration
         ) { result in

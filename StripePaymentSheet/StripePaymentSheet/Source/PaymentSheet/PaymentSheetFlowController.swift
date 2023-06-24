@@ -189,7 +189,7 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            PaymentSheet.load(
+            PaymentSheetLoader.load(
                 mode: mode,
                 configuration: configuration
             ) { result in
@@ -331,7 +331,7 @@ extension PaymentSheet {
             latestUpdateContext = UpdateContext(id: updateID)
 
             // 1. Load the intent, payment methods, and link data from the Stripe API
-            PaymentSheet.load(
+            PaymentSheetLoader.load(
                 mode: .deferredIntent(intentConfiguration),
                 configuration: configuration
             ) { [weak self] loadResult in
