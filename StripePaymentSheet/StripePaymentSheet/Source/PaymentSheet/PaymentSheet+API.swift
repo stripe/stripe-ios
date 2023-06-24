@@ -535,7 +535,7 @@ extension PaymentSheet {
             }
         }
     }
-
+    
     static func lookupLinkAccount(
         intent: Intent,
         configuration: Configuration
@@ -583,6 +583,50 @@ extension PaymentSheet {
         }
 
         return promise
+    }
+
+    static func lookupLinkAccount(
+        intent: Intent,
+        configuration: Configuration
+    ) async throws -> PaymentSheetLinkAccount? {
+        // Only lookup the consumer account if Link is supported
+        guard intent.supportsLink else {
+            return nil
+        }
+
+        let linkAccountService = LinkAccountService(apiClient: configuration.apiClient)
+        func lookUpConsumerSession(email: String?) async throws -> PaymentSheetLinkAccount? {
+            if let email = email, linkAccountService.hasEmailLoggedOut(email: email) {
+                return nil
+            }
+
+            return try await withCheckedThrowingContinuation { continuation in
+                linkAccountService.lookupAccount(withEmail: email) { result in
+                    switch result {
+                    case .success(let linkAccount):
+                        continuation.resume(with: .success(linkAccount))
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        }
+
+        if linkAccountService.hasSessionCookie {
+            return try await lookUpConsumerSession(email: nil)
+        } else if let email = linkAccountService.getLastSignUpEmail() {
+            return try await lookUpConsumerSession(email: email)
+        } else if let email = configuration.defaultBillingDetails.email {
+            return try await lookUpConsumerSession(email: email)
+        } else if let customerID = configuration.customer?.id,
+            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+        {
+            let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
+            // If there's an error in this call we can just ignore it
+            return try await lookUpConsumerSession(email: customer.email)
+        } else {
+            return nil
+        }
     }
 
     // MARK: - Helper methods
