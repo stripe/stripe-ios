@@ -2,6 +2,9 @@
 ### PaymentSheet
 * [Fixed] Affirm no longer requires shipping details.
 
+### CustomerSheet
+* [Added] Added `billingDetailsCollectionConfiguration` to configure how you want to collect billing details (private beta).
+
 ## 23.9.2 2023-06-20
 ### Payments
 * [Fixed] Fixed a bug causing Cash App Pay SetupIntents to incorrectly state they were canceled when they succeeded.
