@@ -7,19 +7,38 @@
 //
 
 import Foundation
-import StripePaymentSheet
+@_spi(LinkOnly) @_spi(ExperimentalPaymentSheetDecouplingAPI) import StripePaymentSheet
 import UIKit
 
 class ExampleCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
+    @IBOutlet weak var addBankAccount: UIButton!
     var paymentSheet: PaymentSheet?
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
+    var linkBankPaymentController: LinkPaymentController?
+
+    @IBAction func didTapBankAccount(_ sender: Any) {
+        linkBankPaymentController?.present(from: self, completion: { result in
+            switch result {
+
+            case .success():
+                print("yay")
+                DispatchQueue.main.async {
+                    self.buyButton.isEnabled = true
+                }
+            case .failure(let error):
+                print("error \(error.localizedDescription)")
+
+            }
+        })
+    }
+    let backendCheckoutUrl = URL(string: "https://abundant-elderly-universe.glitch.me/checkout")!  // An example backend endpoint
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         buyButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         buyButton.isEnabled = false
+//        addBankAccount.isEnabled = false
 
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
@@ -45,19 +64,24 @@ class ExampleCheckoutViewController: UIViewController {
                 // MARK: Create a PaymentSheet instance
                 var configuration = PaymentSheet.Configuration()
                 configuration.merchantDisplayName = "Example, Inc."
-                configuration.applePay = .init(
-                    merchantId: "com.foo.example", merchantCountryCode: "US")
                 configuration.customer = .init(
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
-                configuration.allowsDelayedPaymentMethods = true
-                self.paymentSheet = PaymentSheet(
-                    paymentIntentClientSecret: paymentIntentClientSecret,
-                    configuration: configuration)
+
+                let intentConfiguration = PaymentSheet
+                    .IntentConfiguration(
+                        mode: .payment(amount: 100, currency: "usd"),
+                        paymentMethodTypes: ["link"]) { paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+                            print(paymentMethod, shouldSavePaymentMethod, intentCreationCallback)
+                            intentCreationCallback(.success("COMPLETE_WITHOUT_CONFIRMING_INTENT"))
+                }
+
+                self.linkBankPaymentController = LinkPaymentController(intentConfiguration: intentConfiguration, returnURL: configuration.returnURL)
+//                self.linkBankPaymentController = LinkPaymentController(paymentIntentClientSecret: paymentIntentClientSecret, returnURL: configuration.returnURL)
 
                 DispatchQueue.main.async {
-                    self.buyButton.isEnabled = true
+                    self.addBankAccount.isEnabled = true
                 }
             })
         task.resume()
@@ -65,19 +89,35 @@ class ExampleCheckoutViewController: UIViewController {
 
     @objc
     func didTapCheckoutButton() {
-        // MARK: Start the checkout process
-        paymentSheet?.present(from: self) { paymentResult in
-            // MARK: Handle the payment result
-            switch paymentResult {
-            case .completed:
-                self.displayAlert("Your order is confirmed!")
-            case .canceled:
-                print("Canceled!")
-            case .failed(let error):
-                print(error)
-                self.displayAlert("Payment failed: \n\(error.localizedDescription)")
-            }
-        }
+        linkBankPaymentController?.confirm(from: self, completion: { paymentResult in
+                        switch paymentResult {
+                        case .completed:
+                            DispatchQueue.main.async {
+                                self.displayAlert("Your order is confirmed!")
+                            }
+                        case .canceled:
+                            print("Canceled!")
+                        case .failed(let error):
+                            print(error)
+                            DispatchQueue.main.async {
+                                self.displayAlert("Payment failed: \n\(error.localizedDescription)")
+                            }
+                        }
+        })
+
+//        // MARK: Start the checkout process
+//        paymentSheet?.present(from: self) { paymentResult in
+//            // MARK: Handle the payment result
+//            switch paymentResult {
+//            case .completed:
+//                self.displayAlert("Your order is confirmed!")
+//            case .canceled:
+//                print("Canceled!")
+//            case .failed(let error):
+//                print(error)
+//                self.displayAlert("Payment failed: \n\(error.localizedDescription)")
+//            }
+//        }
     }
 
     func displayAlert(_ message: String) {

@@ -69,7 +69,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="UMG-Qh-vSf">
-                                        <rect key="frame" x="0.0" y="72" width="222" height="24"/>
+                                        <rect key="frame" x="0.0" y="72" width="222" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="PaymentSheet.FlowController (SwiftUI)"/>
                                         <connections>
@@ -77,11 +77,19 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="or6-aq-0to">
-                                        <rect key="frame" x="0.0" y="108" width="222" height="30"/>
+                                        <rect key="frame" x="0.0" y="84" width="222" height="12"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="CustomerSheet (test playground)"/>
                                         <connections>
                                             <segue destination="AjW-Xm-4P3" kind="show" identifier="" destinationCreationSelector="showSwiftUICustomerSheetTestPlayground:" id="hYA-FT-Tj0"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="Kxs-Rx-cOC" userLabel="LinkPayController (test playground)">
+                                        <rect key="frame" x="0.0" y="108" width="222" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="LinkPayController (test playground)"/>
+                                        <connections>
+                                            <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showLinkPayControllerTestPlayground:" id="Bor-pN-XVZ"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1520,7 +1528,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="hYA-FT-Tj0"/>
+        <segue reference="ani-OQ-XpC"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="opaqueSeparatorColor">

@@ -72,6 +72,46 @@ extension View {
         )
     }
 
+    /// Presents a sheet for a customer to select a payment option.
+    /// - Parameter isPresented: A binding to whether the sheet is presented.
+    /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
+    /// - Parameter onSheetDismissed: Called after the payment options sheet is dismissed.
+    public func linkPaymentOptionsSheet(
+        isPresented: Binding<Bool>,
+        linkPaymentController: LinkPaymentController,
+        onSheetDismissed: (() -> Void)?
+    ) -> some View {
+        self.modifier(
+            PaymentSheet.LinkPaymentControllerPresentationModifier(
+                isPresented: isPresented,
+                linkPaymentController: linkPaymentController,
+                action: .presentPaymentOptions,
+                optionsCompletion: onSheetDismissed,
+                paymentCompletion: nil
+            )
+        )
+    }
+
+    /// Confirm the payment, presenting a sheet for the user to confirm their payment if needed.
+    /// - Parameter isConfirming: A binding to whether the payment is being confirmed. This will present a sheet if needed. It will be updated to `false` after performing the payment confirmation.
+    /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
+    /// - Parameter onCompletion: Called with the result of the payment after the payment confirmation is done and the sheet (if any) is dismissed.
+    public func linkPaymentConfirmationSheet(
+        isConfirming: Binding<Bool>,
+        linkPaymentController: LinkPaymentController,
+        onCompletion: @escaping (PaymentSheetResult) -> Void
+    ) -> some View {
+        self.modifier(
+            PaymentSheet.LinkPaymentControllerPresentationModifier(
+                isPresented: isConfirming,
+                linkPaymentController: linkPaymentController,
+                action: .confirm,
+                optionsCompletion: nil,
+                paymentCompletion: onCompletion
+            )
+        )
+    }
+
     /// :nodoc:
     @available(
         *, deprecated,
@@ -277,6 +317,83 @@ extension PaymentSheet {
         }
     }
 
+    struct LinkPaymentControllerPresenter: UIViewRepresentable {
+        @Binding var presented: Bool
+        weak var linkPaymentController: LinkPaymentController?
+        let action: FlowControllerAction
+        let optionsCompletion: (() -> Void)?
+        let paymentCompletion: ((PaymentSheetResult) -> Void)?
+
+        func makeCoordinator() -> Coordinator {
+            return Coordinator(parent: self)
+        }
+
+        func makeUIView(context: Context) -> UIView {
+            return context.coordinator.view
+        }
+
+        func updateUIView(_ uiView: UIView, context: Context) {
+            context.coordinator.parent = self
+            context.coordinator.presented = presented
+        }
+
+        class Coordinator {
+            var parent: LinkPaymentControllerPresenter
+            let view = UIView()
+
+            var presented: Bool {
+                didSet {
+                    switch (oldValue, presented) {
+                    case (false, false):
+                        break
+                    case (false, true):
+                        guard let viewController = findViewController(for: view) else {
+                            parent.presented = false
+                            return
+                        }
+                        presentPaymentSheet(on: viewController)
+                    case (true, false):
+                        guard let viewController = findViewController(for: view) else {
+                            parent.presented = true
+                            return
+                        }
+                        forciblyDismissPaymentSheet(from: viewController)
+                    case (true, true):
+                        break
+                    }
+                }
+            }
+
+            init(parent: LinkPaymentControllerPresenter) {
+                self.parent = parent
+                self.presented = parent.presented
+            }
+
+            func presentPaymentSheet(on controller: UIViewController) {
+                let presenter = findViewControllerPresenter(from: controller)
+
+                switch parent.action {
+                case .confirm:
+                    parent.linkPaymentController?.confirm(from: presenter) { (result) in
+                        self.parent.presented = false
+                        self.parent.paymentCompletion?(result)
+                    }
+                case .presentPaymentOptions:
+                    parent.linkPaymentController?.present(from: presenter) {_ in
+                        self.parent.presented = false
+                        self.parent.optionsCompletion?()
+                    }
+                }
+            }
+
+            func forciblyDismissPaymentSheet(from controller: UIViewController) {
+                if let bsvc = controller.presentedViewController as? BottomSheetViewController {
+                    bsvc.didTapOrSwipeToDismiss()
+                }
+            }
+        }
+    }
+
     struct PaymentSheetFlowControllerPresenter: UIViewRepresentable {
         @Binding var presented: Bool
         weak var paymentSheetFlowController: PaymentSheet.FlowController?
@@ -387,6 +504,26 @@ extension PaymentSheet {
                 PaymentSheetFlowControllerPresenter(
                     presented: $isPresented,
                     paymentSheetFlowController: paymentSheetFlowController,
+                    action: action,
+                    optionsCompletion: optionsCompletion,
+                    paymentCompletion: paymentCompletion
+                )
+            )
+        }
+    }
+
+    struct LinkPaymentControllerPresentationModifier: ViewModifier {
+        @Binding var isPresented: Bool
+        let linkPaymentController: LinkPaymentController
+        let action: FlowControllerAction
+        let optionsCompletion: (() -> Void)?
+        let paymentCompletion: ((PaymentSheetResult) -> Void)?
+
+        func body(content: Content) -> some View {
+            content.background(
+                LinkPaymentControllerPresenter(
+                    presented: $isPresented,
+                    linkPaymentController: linkPaymentController,
                     action: action,
                     optionsCompletion: optionsCompletion,
                     paymentCompletion: paymentCompletion

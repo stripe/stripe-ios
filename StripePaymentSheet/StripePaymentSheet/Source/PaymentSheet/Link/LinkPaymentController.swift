@@ -21,7 +21,7 @@ import UIKit
     private let configuration: PaymentSheet.Configuration
 
     private var payWithLinkContinuation: CheckedContinuation<Void, Swift.Error>?
-    private var paymentMethodId: String?
+    public var paymentMethodId: String?
 
     private lazy var loadingViewController: LoadingViewController = {
         let loadingViewController = LoadingViewController(
@@ -201,8 +201,6 @@ import UIKit
         }
     }
 
-    weak var presentingViewController: UIViewController?
-
     /// Completes the Link payment or setup.
     /// - Note: Once `completion` is called with a `.completed` result, this `LinkPaymentController` instance should no longer be used, as payment/setup intents should not be reused. Other results indicate cancellation or failure, and do not invalidate the instance.
     /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer
@@ -322,16 +320,21 @@ extension LinkPaymentController: InstantDebitsOnlyViewControllerDelegate {
 
     func instantDebitsOnlyViewControllerDidCancel(_ controller: InstantDebitsOnlyViewController) {
         payWithLinkContinuation?.resume(throwing: Error.canceled)
+        payWithLinkContinuation = nil
+        paymentMethodId = nil
     }
 
     func instantDebitsOnlyViewControllerDidFail(_ controller: InstantDebitsOnlyViewController, error: Swift.Error) {
         payWithLinkContinuation?.resume(throwing: error)
+        payWithLinkContinuation = nil
+        paymentMethodId = nil
     }
 
     func instantDebitsOnlyViewControllerDidComplete(
         _ controller: InstantDebitsOnlyViewController
     ) {
         payWithLinkContinuation?.resume(returning: ())
+        payWithLinkContinuation = nil
     }
 }
 
@@ -340,6 +343,9 @@ extension LinkPaymentController: InstantDebitsOnlyViewControllerDelegate {
 @_spi(LinkOnly)
 extension LinkPaymentController: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
-        payWithLinkContinuation?.resume(throwing: Error.canceled)
+        guard let payWithLinkContinuation = payWithLinkContinuation else { return }
+        payWithLinkContinuation.resume(throwing: Error.canceled)
+        self.payWithLinkContinuation = nil
+        paymentMethodId = nil
     }
 }
