@@ -69,8 +69,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func presentCustomerSheet() {
         customerSheet?.present(from: rootViewController, completion: { result in
             switch result {
-
-            case .selected(let paymentOptionSelection):
+            case .success(let paymentOptionSelection):
                 self.paymentOptionSelection = paymentOptionSelection
 
                 let alertController = self.makeAlertController()
@@ -80,7 +79,8 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
                     alertController.message = "Success: payment method not set"
                 }
                 self.rootViewController.present(alertController, animated: true)
-            case .error(let error):
+
+            case .failure(let error):
                 print("Something went wrong: \(error)")
             }
         })

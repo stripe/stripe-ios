@@ -351,7 +351,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     } onSuccess: {
                         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: "apple_pay")
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                            self.csCompletion?(.selected(paymentOptionSelection))
+                            self.csCompletion?(.success(paymentOptionSelection))
                         }
                     }
 
@@ -365,7 +365,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     } onSuccess: {
                         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: type)
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                            self.csCompletion?(.selected(paymentOptionSelection))
+                            self.csCompletion?(.success(paymentOptionSelection))
                         }
                     }
                 default:
@@ -550,17 +550,17 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             case .applePay:
                 let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.applePay()
                 self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                    self.csCompletion?(.selected(paymentOptionSelection))
+                    self.csCompletion?(.success(paymentOptionSelection))
                 }
             case .stripeId(let paymentMethodId):
                 if let paymentMethod = self.savedPaymentOptionsViewController.savedPaymentMethods.first(where: { $0.stripeId == paymentMethodId }) {
                     let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
                     self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                        self.csCompletion?(.selected(paymentOptionSelection))
+                        self.csCompletion?(.success(paymentOptionSelection))
                     }
                 } else {
                     self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                        self.csCompletion?(.selected(nil))
+                        self.csCompletion?(.success(nil))
                     }
                 }
             default:
@@ -569,7 +569,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
         } else {
             self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                self.csCompletion?(.selected(nil))
+                self.csCompletion?(.success(nil))
             }
         }
     }

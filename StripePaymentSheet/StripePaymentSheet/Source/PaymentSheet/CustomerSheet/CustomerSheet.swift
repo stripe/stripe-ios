@@ -23,7 +23,7 @@ internal enum InternalCustomerSheetResult {
 @_spi(PrivateBetaCustomerSheet) public class CustomerSheet {
     let configuration: CustomerSheet.Configuration
 
-    internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
+    internal typealias CustomerSheetCompletion = (Result<PaymentOptionSelection?, Error>) -> Void
 
     /// The STPPaymentHandler instance
     @available(iOSApplicationExtension, unavailable)
@@ -70,20 +70,12 @@ internal enum InternalCustomerSheetResult {
 
     var customerAdapter: CustomerAdapter
 
-    /// The result of the CustomerSheet
-    @frozen public enum CustomerSheetResult {
-        /// The customer selected a payment method.
-        case selected(PaymentOptionSelection?)
-        /// An error occurred when presenting the sheet
-        case error(Error)
-    }
-
     private var csCompletion: CustomerSheetCompletion?
 
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     public func present(from presentingViewController: UIViewController,
-                        completion csCompletion: @escaping (CustomerSheetResult) -> Void
+                        completion csCompletion: @escaping (Result<PaymentOptionSelection?, Error>) -> Void
     ) {
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
@@ -105,7 +97,7 @@ internal enum InternalCustomerSheetResult {
             let error = CustomerSheetError.unknown(
                 debugDescription: "presentingViewController is already presenting a view controller"
             )
-            csCompletion(.error(error))
+            csCompletion(.failure(error))
             return
         }
         loadPaymentMethodInfo { result in
@@ -113,7 +105,7 @@ internal enum InternalCustomerSheetResult {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption)):
                 self.present(from: presentingViewController, savedPaymentMethods: savedPaymentMethods, selectedPaymentMethodOption: selectedPaymentMethodOption)
             case .failure(let error):
-                csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
+                csCompletion(.failure(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
                 DispatchQueue.main.async {
                     self.bottomSheetViewController.dismiss(animated: true)
                 }
@@ -149,7 +141,7 @@ internal enum InternalCustomerSheetResult {
     }
     // MARK: - Internal Properties
     var completion: (() -> Void)?
-    var userCompletion: ((CustomerSheetResult) -> Void)?
+    var userCompletion: ((Result<PaymentOptionSelection?, Error>) -> Void)?
 }
 
 extension CustomerSheet {
