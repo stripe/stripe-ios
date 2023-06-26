@@ -12,6 +12,7 @@ final class AnalyticsHelper {
     enum TimeMeasurement {
         case checkout
         case linkSignup
+        case linkPopup
     }
 
     static let shared = AnalyticsHelper()

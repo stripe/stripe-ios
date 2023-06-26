@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 extension STPAnalyticsClient {
 
@@ -60,5 +61,46 @@ extension STPAnalyticsClient {
     func logLinkAccountLookupFailure() {
         self.logPaymentSheetEvent(event: .linkAccountLookupFailure)
     }
+
+    // MARK: - popup
+    func logLinkPopupShow(sessionType: LinkSettings.PopupWebviewOption) {
+        AnalyticsHelper.shared.startTimeMeasurement(.linkPopup)
+        self.logLinkPopupEvent(event: .linkPopupShow, sessionType: sessionType)
+    }
+
+    func logLinkPopupSuccess(sessionType: LinkSettings.PopupWebviewOption) {
+        let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
+        self.logLinkPopupEvent(event: .linkPopupSuccess, duration: duration, sessionType: sessionType)
+    }
+
+    func logLinkPopupCancel(sessionType: LinkSettings.PopupWebviewOption) {
+        let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
+        self.logLinkPopupEvent(event: .linkPopupCancel, duration: duration, sessionType: sessionType)
+    }
+
+    func logLinkPopupError(error: Error?, sessionType: LinkSettings.PopupWebviewOption) {
+        let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
+        self.logLinkPopupEvent(event: .linkPopupError, duration: duration, sessionType: sessionType, error: error)
+    }
+
+    func logLinkPopupLogout(sessionType: LinkSettings.PopupWebviewOption) {
+        let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
+        self.logLinkPopupEvent(event: .linkPopupLogout, duration: duration, sessionType: sessionType)
+    }
+
+    func logLinkPopupEvent(
+        event: STPAnalyticEvent,
+        duration: TimeInterval? = nil,
+        sessionType: LinkSettings.PopupWebviewOption,
+        error: Error? = nil) {
+            var params: [String: Any] = [:]
+            if let error = error {
+                params["error"] = error.localizedDescription
+            }
+            logPaymentSheetEvent(event: event,
+                                 duration: duration,
+                                 linkSessionType: sessionType,
+                                 params: params)
+        }
 
 }

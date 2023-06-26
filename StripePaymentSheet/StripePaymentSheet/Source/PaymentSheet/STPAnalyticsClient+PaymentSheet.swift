@@ -17,8 +17,8 @@ extension STPAnalyticsClient {
         isCustom: Bool = false, configuration: PaymentSheet.Configuration, intentConfig: PaymentSheet.IntentConfiguration?
     ) {
         logPaymentSheetEvent(event: paymentSheetInitEventValue(
-                                isCustom: isCustom,
-                                configuration: configuration),
+                             isCustom: isCustom,
+                             configuration: configuration),
                              configuration: configuration,
                              intentConfig: intentConfig)
     }
@@ -29,6 +29,7 @@ extension STPAnalyticsClient {
         result: PaymentSheetResult,
         linkEnabled: Bool,
         activeLinkSession: Bool,
+        linkSessionType: LinkSettings.PopupWebviewOption?,
         currency: String?,
         intentConfig: PaymentSheet.IntentConfiguration? = nil
     ) {
@@ -52,6 +53,7 @@ extension STPAnalyticsClient {
             duration: AnalyticsHelper.shared.getDuration(for: .checkout),
             linkEnabled: linkEnabled,
             activeLinkSession: activeLinkSession,
+            linkSessionType: linkSessionType,
             currency: currency,
             intentConfig: intentConfig
         )
@@ -81,8 +83,8 @@ extension STPAnalyticsClient {
         intentConfig: PaymentSheet.IntentConfiguration? = nil
     ) {
         logPaymentSheetEvent(event: paymentSheetPaymentOptionSelectEventValue(
-                                isCustom: isCustom,
-                                paymentMethod: paymentMethod),
+                             isCustom: isCustom,
+                             paymentMethod: paymentMethod),
                              intentConfig: intentConfig)
     }
 
@@ -225,6 +227,7 @@ extension STPAnalyticsClient {
         duration: TimeInterval? = nil,
         linkEnabled: Bool? = nil,
         activeLinkSession: Bool? = nil,
+        linkSessionType: LinkSettings.PopupWebviewOption? = nil,
         configuration: PaymentSheet.Configuration? = nil,
         currency: String? = nil,
         intentConfig: PaymentSheet.IntentConfiguration? = nil,
@@ -238,6 +241,9 @@ extension STPAnalyticsClient {
         additionalParams["duration"] = duration
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = activeLinkSession
+        if let linkSessionType = linkSessionType {
+            additionalParams["link_session_type"] = linkSessionType.rawValue
+        }
         additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
         additionalParams["mpe_config"] = configuration?.analyticPayload
         additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
