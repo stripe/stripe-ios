@@ -50,7 +50,7 @@ class PhoneOtpView: UIView {
     }()
 
     private let submittingIndicator = ActivityIndicator()
-    
+
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -91,7 +91,7 @@ class PhoneOtpView: UIView {
             warningIconView.widthAnchor.constraint(equalToConstant: 16),
             warningIconView.heightAnchor.constraint(equalToConstant: 16),
             otpTextField.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            otpTextField.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
+            otpTextField.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
         ])
 
         addAndPinSubview(stackView)
