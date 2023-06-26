@@ -73,7 +73,7 @@ extension STPAPIClient {
     ) {
         var params: [String: Any] = [
             "pii": [
-                "personal_id_number": pii
+                "personal_id_number": pii,
             ],
         ]
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
@@ -94,7 +94,7 @@ extension STPAPIClient {
     ) {
         var params: [String: Any] = [
             "pii": [
-                "ssn_last_4": ssnLast4
+                "ssn_last_4": ssnLast4,
             ],
         ]
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
@@ -230,7 +230,7 @@ extension STPAPIClient {
     public func createToken(forCVCUpdate cvc: String, completion: STPTokenCompletionBlock? = nil) {
         var params: [String: Any] = [
             "cvc_update": [
-                "cvc": cvc
+                "cvc": cvc,
             ],
         ]
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
@@ -303,7 +303,7 @@ extension STPAPIClient {
     ) {
         let endpoint = "\(APIEndpointSources)/\(identifier)"
         let parameters = [
-            "client_secret": secret
+            "client_secret": secret,
         ]
         APIRequest<STPSource>.getWith(
             self,
@@ -434,7 +434,7 @@ extension STPAPIClient {
             completion(paymentIntent, error)
         }
     }
-    
+
     /// Async helper version of `retrievePaymentIntent`
     @_spi(STP) public func retrievePaymentIntent(
         clientSecret: String,
@@ -542,7 +542,7 @@ extension STPAPIClient {
             endpoint: "\(APIEndpointPaymentIntents)/\(paymentIntentID)/source_cancel",
             additionalHeaders: authorizationHeader(using: publishableKeyOverride),
             parameters: [
-                "source": sourceID
+                "source": sourceID,
             ]
         ) { paymentIntent, _, responseError in
             completion(paymentIntent, responseError)
@@ -609,7 +609,7 @@ extension STPAPIClient {
             completion(setupIntent, error)
         }
     }
-    
+
     /// Async helper version of `retrieveSetupIntent`
     @_spi(STP) public func retrieveSetupIntent(
         clientSecret: String,
@@ -708,7 +708,7 @@ extension STPAPIClient {
             endpoint: "\(APIEndpointSetupIntents)/\(setupIntentID)/source_cancel",
             additionalHeaders: authorizationHeader(using: publishableKeyOverride),
             parameters: [
-                "source": sourceID
+                "source": sourceID,
             ]
         ) { setupIntent, _, responseError in
             completion(setupIntent, responseError)
@@ -817,7 +817,7 @@ extension STPAPIClient {
             endpoint: "\(APIEndpoint3DS2)/challenge_complete",
             additionalHeaders: authorizationHeader(using: publishableKeyOverride),
             parameters: [
-                "source": sourceID
+                "source": sourceID,
             ]
         ) { _, response, responseError in
             completion(response?.statusCode == 200, responseError)
@@ -1050,7 +1050,7 @@ extension STPAPIClient {
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
             parameters: [
-                "customer": customerID
+                "customer": customerID,
             ]
         ) { _, _, error in
             completion(error)

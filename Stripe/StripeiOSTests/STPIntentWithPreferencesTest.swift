@@ -86,13 +86,13 @@ class STPIntentWithPreferencesTest: XCTestCase {
     func testRetrieveElementSession_deferredPayment() async {
         let expectation = XCTestExpectation(description: "Retrieve ElementsSession")
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        
+
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 2000,
                                                                            currency: "USD",
                                                                            setupFutureUsage: .onSession),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             confirmHandler: { _, _, _ in })
-        
+
         do {
             let elementsSession = try await client.retrieveElementsSession(withIntentConfig: intentConfig)
             XCTAssertNotNil(elementsSession)
@@ -116,7 +116,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                                            setupFutureUsage: .offSession),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             confirmHandler: { _, _, _ in })
-        
+
         do {
             let elementsSession = try await client.retrieveElementsSession(withIntentConfig: intentConfig)
             XCTAssertNotNil(elementsSession)
@@ -132,9 +132,9 @@ class STPIntentWithPreferencesTest: XCTestCase {
             XCTFail()
         }
     }
-    
+
     // MARK: PaymentSheet.IntentConfiguration+elementsSessionPayload tests
-    
+
     func testElementsSessionPayload_Payment() throws {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 2000,
                                                                            currency: "USD",

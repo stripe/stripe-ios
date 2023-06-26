@@ -43,7 +43,7 @@ let JSONKeyObject = "object"
             }
         )
     }
-    
+
     /// Async version
     @_spi(STP) public class func post(
         with apiClient: STPAPIClient,
@@ -85,7 +85,7 @@ let JSONKeyObject = "object"
             }
         )
     }
-    
+
     /// Async version
     @_spi(STP) public class func getWith(
         _ apiClient: STPAPIClient,
@@ -103,7 +103,7 @@ let JSONKeyObject = "object"
             }
         }
     }
-    
+
     @_spi(STP) public class func delete(
         with apiClient: STPAPIClient,
         endpoint: String,

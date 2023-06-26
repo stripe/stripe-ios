@@ -68,7 +68,7 @@ class PaymentSheetAPITest: XCTestCase {
     }
 
     // MARK: - load and confirm tests
-    
+
     func testPaymentSheetLoadAndConfirmWithPaymentIntent() {
         let expectation = XCTestExpectation(description: "Retrieve Payment Intent With Preferences")
         let types = ["ideal", "card", "bancontact", "sofort"]
@@ -139,7 +139,7 @@ class PaymentSheetAPITest: XCTestCase {
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
-    
+
     func testPaymentSheetLoadAndConfirmWithDeferredIntent() {
         let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
         let confirmExpectation = XCTestExpectation(description: "Confirm deferred intent")

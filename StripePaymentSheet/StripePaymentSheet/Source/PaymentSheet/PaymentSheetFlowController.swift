@@ -429,7 +429,7 @@ extension PaymentSheet {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerDelegate {
-    func PaymentSheetFlowControllerViewControllerShouldClose(
+    func paymentSheetFlowControllerViewControllerShouldClose(
         _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
     ) {
         PaymentSheetFlowControllerViewController.dismiss(animated: true) {
@@ -438,7 +438,7 @@ extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerD
         }
     }
 
-    func PaymentSheetFlowControllerViewControllerDidUpdateSelection(
+    func paymentSheetFlowControllerViewControllerDidUpdateSelection(
         _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
     ) {
         // no-op

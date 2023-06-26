@@ -5,8 +5,8 @@
 //  Created by Yuki Tokuhiro on 6/24/23.
 //
 
-import XCTest
 @testable @_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) import StripePaymentSheet
+import XCTest
 
 final class PaymentSheetLoaderTest: XCTestCase {
     let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
@@ -15,7 +15,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
         config.apiClient = apiClient
         return config
     }()
-    
+
     func testPaymentSheetLoadWithSetupIntent() {
         let expectation = XCTestExpectation(description: "Retrieve Setup Intent With Preferences")
         let types = ["ideal", "card", "bancontact", "sofort"]
@@ -46,7 +46,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
-    
+
     func testPaymentSheetLoadWithSetupIntentAttachedPaymentMethod() {
         let expectation = XCTestExpectation(
             description: "Load SetupIntent with an attached payment method"
@@ -143,7 +143,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
     }
 
     func testLoadPerformance() {
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in}
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD"),
                                                             confirmHandler: confirmHandler)
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()

@@ -17,7 +17,6 @@ import UIKit
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
 
-
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
     static func confirm(
         configuration: PaymentSheet.Configuration,

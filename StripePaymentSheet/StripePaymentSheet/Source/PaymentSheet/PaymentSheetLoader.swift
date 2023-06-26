@@ -21,7 +21,7 @@ final class PaymentSheetLoader {
         )
         case failure(Error)
     }
-    
+
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
         mode: PaymentSheet.InitializationMode,
@@ -32,14 +32,14 @@ final class PaymentSheetLoader {
             do {
                 // Fetch PaymentIntent, SetupIntent, or ElementsSession
                 async let _intent = fetchIntent(mode: mode, configuration: configuration)
-                
+
                 // List the Customer's saved PaymentMethods
                 // TODO: Use v1/elements/sessions to fetch saved PMS https://jira.corp.stripe.com/browse/MOBILESDK-964
                 async let savedPaymentMethods = fetchSavedPaymentMethods(configuration: configuration)
 
                 // Load misc singletons
                 async let _ = loadMiscellaneousSingletons() // note: Swift implicitly waits for this before exiting the scope.
-                
+
                 let intent = try await _intent
                 // Overwrite the form specs that were already loaded from disk
                 switch intent {
@@ -50,11 +50,11 @@ final class PaymentSheetLoader {
                 case .deferredIntent(elementsSession: let elementsSession, intentConfig: _):
                     _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
                 }
-                
+
                 // Load link account session. Continue without Link if it errors.
                 let linkAccount = try? await lookupLinkAccount(intent: intent, configuration: configuration)
                 LinkAccountContext.shared.account = linkAccount
-                
+
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                 // TODO: Use v1/elements/sessions to fetch saved PMS https://jira.corp.stripe.com/browse/MOBILESDK-964
                 let filteredSavedPaymentMethods = try await savedPaymentMethods
@@ -77,7 +77,7 @@ final class PaymentSheetLoader {
             }
         }
     }
-    
+
     /// Loads miscellaneous singletons
     static func loadMiscellaneousSingletons() async -> Bool {
         await withCheckedContinuation { continuation in
@@ -134,7 +134,7 @@ final class PaymentSheetLoader {
             return nil
         }
     }
-    
+
     static func fetchIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration) async throws -> Intent {
         let intent: Intent
         switch mode {
@@ -186,7 +186,7 @@ final class PaymentSheetLoader {
         }
         return intent
     }
-    
+
     static func fetchSavedPaymentMethods(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
         let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]  // hardcoded for now
         guard let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret else {

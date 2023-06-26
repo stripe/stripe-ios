@@ -10,7 +10,7 @@ extension STPTestingAPIClient {
     static var shared: STPTestingAPIClient {
         return .shared()
     }
-    
+
     func fetchPaymentIntent(
         types: [String],
         currency: String = "eur",
@@ -36,11 +36,11 @@ extension STPTestingAPIClient {
                 completion(.failure(error!))
                 return
             }
-            
+
             completion(.success(clientSecret))
         }
     }
-    
+
     func fetchPaymentIntent(
         types: [String],
         currency: String = "eur",
@@ -71,7 +71,7 @@ extension STPTestingAPIClient {
                 completion(.failure(error!))
                 return
             }
-            
+
             completion(.success(clientSecret))
         }
     }
