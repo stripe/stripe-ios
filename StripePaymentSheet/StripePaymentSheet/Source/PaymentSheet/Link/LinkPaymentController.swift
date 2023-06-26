@@ -276,7 +276,8 @@ import UIKit
                         intentConfig: intentConfiguration,
                         authenticationContext: authenticationContext,
                         paymentHandler: STPPaymentHandler.shared(),
-                        isFlowController: false) { result in
+                        isFlowController: true,
+                        mandateData: STPMandateDataParams.makeWithInferredValues()) { result in
                     switch result {
                     case .canceled:
                         continuation.resume(throwing: Error.canceled)
@@ -343,7 +344,12 @@ extension LinkPaymentController: InstantDebitsOnlyViewControllerDelegate {
 @_spi(LinkOnly)
 extension LinkPaymentController: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
-        guard let payWithLinkContinuation = payWithLinkContinuation else { return }
+        guard let payWithLinkContinuation = payWithLinkContinuation else {
+            // reset the stack
+//            bottomSheetViewController.contentStack = [loadingViewController]
+//            bottomSheetViewController.dismiss(animated: true)
+            return
+        }
         payWithLinkContinuation.resume(throwing: Error.canceled)
         self.payWithLinkContinuation = nil
         paymentMethodId = nil

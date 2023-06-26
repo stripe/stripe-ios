@@ -627,7 +627,8 @@ extension PaymentSheet {
     static func makePaymentIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         paymentIntent: STPPaymentIntent,
-        configuration: PaymentSheet.Configuration
+        configuration: PaymentSheet.Configuration,
+        mandateData: STPMandateDataParams? = nil
     ) -> STPPaymentIntentParams {
         let params: STPPaymentIntentParams
         let shouldSave: Bool
@@ -660,6 +661,9 @@ extension PaymentSheet {
 
         let options = STPConfirmPaymentMethodOptions()
         options.setSetupFutureUsageIfNecessary(shouldSave, paymentMethodType: paymentMethodType, customer: configuration.customer)
+        if let mandateData = mandateData {
+            params.mandateData = mandateData
+        }
         params.paymentMethodOptions = options
         params.returnURL = configuration.returnURL
         params.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
@@ -669,7 +673,8 @@ extension PaymentSheet {
     static func makeSetupIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         setupIntent: STPSetupIntent,
-        configuration: PaymentSheet.Configuration
+        configuration: PaymentSheet.Configuration,
+        mandateData: STPMandateDataParams? = nil
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
         switch confirmPaymentMethodType {
@@ -694,6 +699,9 @@ extension PaymentSheet {
             if params.paymentMethodType == .payPal {
                 params.mandateData = .makeWithInferredValues()
             }
+        }
+        if let mandateData = mandateData {
+            params.mandateData = mandateData
         }
         params.returnURL = configuration.returnURL
         return params
