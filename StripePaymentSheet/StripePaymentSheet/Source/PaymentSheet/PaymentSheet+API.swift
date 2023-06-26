@@ -237,7 +237,9 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
-                        completion: paymentHandlerCompletion
+                        completion: { actionStatus, intent, error in
+                            paymentHandlerCompletion(actionStatus, nil, intent, error)
+                        }
                     )
                 case .setupIntent(let setupIntent):
                     let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
@@ -247,7 +249,9 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
-                        completion: paymentHandlerCompletion
+                        completion: { actionStatus, intent, error in
+                            paymentHandlerCompletion(actionStatus, nil, intent, error)
+                        }
                     )
                 case .deferredIntent(_, let intentConfig):
                     handleDeferredIntentConfirmation(
