@@ -486,7 +486,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .off
-        settings.shippingInfo = .onWithDefaults
         loadPlayground(
             app,
             settings

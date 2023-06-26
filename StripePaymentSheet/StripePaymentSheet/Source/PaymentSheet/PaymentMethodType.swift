@@ -306,7 +306,7 @@ extension PaymentSheet {
                     case .blik, .card, .cardPresent, .UPI, .weChatPay:
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
-                        .linkInstantDebit, .bancontact, .iDEAL, .cashApp:
+                            .linkInstantDebit, .bancontact, .iDEAL, .cashApp, .affirm:
                         return [.returnURL]
                     case .USBankAccount:
                         return [
@@ -317,7 +317,7 @@ extension PaymentSheet {
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit, .sofort:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .afterpayClearpay, .affirm:
+                    case .afterpayClearpay:
                         return [.returnURL, .shippingAddress]
                     case .link, .unknown:
                         return [.unsupported]
