@@ -38,7 +38,7 @@ final class PaymentSheetLoader {
                 async let savedPaymentMethods = fetchSavedPaymentMethods(configuration: configuration)
 
                 // Load misc singletons
-                async let _ = loadMiscellaneousSingletons() // note: Swift implicitly waits for this before exiting the scope.
+                await loadMiscellaneousSingletons()
 
                 let intent = try await _intent
                 // Overwrite the form specs that were already loaded from disk
@@ -79,7 +79,7 @@ final class PaymentSheetLoader {
     }
 
     /// Loads miscellaneous singletons
-    static func loadMiscellaneousSingletons() async -> Bool {
+    static func loadMiscellaneousSingletons() async {
         await withCheckedContinuation { continuation in
             Task {
                 AddressSpecProvider.shared.loadAddressSpecs {
@@ -87,7 +87,7 @@ final class PaymentSheetLoader {
                     FormSpecProvider.shared.load { _ in
                         // Load BSB data
                         BSBNumberProvider.shared.loadBSBData {
-                            continuation.resume(returning: true)
+                            continuation.resume()
                         }
                     }
                 }
