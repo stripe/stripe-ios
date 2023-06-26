@@ -103,8 +103,6 @@ extension StripeAPI.VerificationPageCollectedData {
             self.phone = nil
         case .phoneOtp:
             self.phoneOtp = nil
-            break
-
         }
     }
 
