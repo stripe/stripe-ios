@@ -151,10 +151,9 @@ import UIKit
                     amount = nil
                     currency = _currency
                 }
-                // TODO(vardges): figure out unique session ID.
                 apiClient
                     .createLinkAccountSessionForDeferredIntent(
-                        sessionId: "123234234",
+                        sessionId: "ios_instant_debits_only_\(UUID().uuidString)",
                         amount: amount,
                         currency: currency,
                         onBehalfOf: intentConfiguration.onBehalfOf,
