@@ -233,6 +233,17 @@ workflows:
         - webhook_url: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
         - webhook_url_on_error: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
     - deploy-to-bitrise-io@2: {}
+  financial-connections-stability-tests-for-edge:
+    before_run:
+    - prep_all
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "5"
+        - scheme: FinancialConnections Example
+    - deploy-to-bitrise-io@2: {}
   framework-tests:
     steps:
     - fastlane@3:
