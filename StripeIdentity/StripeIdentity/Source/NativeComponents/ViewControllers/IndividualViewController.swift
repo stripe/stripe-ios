@@ -30,7 +30,7 @@ final class IndividualViewController: IdentityFlowViewController {
         sheetController: VerificationSheetControllerProtocol
     ) {
         self.individualContent = individualContent
-        self.missing = missing.intersection([.name, .dob, .idNumber, .address])
+        self.missing = missing.intersection([.name, .dob, .idNumber, .address, .phoneNumber])
         individualElement = IndividualFormElement(
             individualContent: individualContent,
             missing: missing,
