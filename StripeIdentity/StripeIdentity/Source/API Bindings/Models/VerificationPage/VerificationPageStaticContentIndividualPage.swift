@@ -17,6 +17,6 @@ extension StripeAPI {
         let idNumberCountries: [String: String]
         let idNumberCountryNotListedTextButtonText: String
         let addressCountryNotListedTextButtonText: String
-        let phoneNumberCountries: [String: String]? // TODO(ccen) read from server
+        let phoneNumberCountries: [String: String]
     }
 }
