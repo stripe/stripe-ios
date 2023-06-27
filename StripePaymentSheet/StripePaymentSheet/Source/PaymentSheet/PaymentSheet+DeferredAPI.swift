@@ -19,6 +19,7 @@ extension PaymentSheet {
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
+        mandateData: STPMandateDataParams? = nil,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
         // Hack: Add deferred to analytics product usage as a hack to get it into the payment_user_agent string in the request to create a PaymentMethod
@@ -59,7 +60,8 @@ extension PaymentSheet {
                         let paymentIntentParams = makePaymentIntentParams(
                             confirmPaymentMethodType: confirmType,
                             paymentIntent: paymentIntent,
-                            configuration: configuration
+                            configuration: configuration,
+                            mandateData: mandateData
                         )
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
@@ -85,7 +87,8 @@ extension PaymentSheet {
                         let setupIntentParams = makeSetupIntentParams(
                             confirmPaymentMethodType: confirmType,
                             setupIntent: setupIntent,
-                            configuration: configuration
+                            configuration: configuration,
+                            mandateData: mandateData
                         )
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,
