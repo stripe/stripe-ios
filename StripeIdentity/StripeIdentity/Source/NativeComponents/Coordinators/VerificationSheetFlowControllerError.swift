@@ -19,6 +19,8 @@ enum VerificationSheetFlowControllerError: Error {
     case missingSelfieConfig
     /// Attempted to open a URL that could not be constructed from the given string
     case malformedURL(String)
+    /// The server did not include "phoneOtp" , but 'phone_otp' is a missing field
+    case missingPhoneOtpContent
     /// An unknown error occurred elsewhere in the stack
     case unknown(Error)
 }
@@ -50,6 +52,10 @@ extension VerificationSheetFlowControllerError: AnalyticLoggableError {
         case .missingSelfieConfig:
             payload = [
                 "type": "missing_selfie"
+            ]
+        case .missingPhoneOtpContent:
+            payload = [
+                "type": "missing_phone_otp"
             ]
         case .malformedURL(let value):
             payload = [
