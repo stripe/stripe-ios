@@ -350,7 +350,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
     }
 
-    fileprivate func transitionWithUpdatedDataResult(result: Result<StripeAPI.VerificationPageData, Error>) {
+    private func transitionWithUpdatedDataResult(result: Result<StripeAPI.VerificationPageData, Error>) {
         saveCheckSubmitAndTransition(
             collectedData: nil,
             updateDataResult: result,
