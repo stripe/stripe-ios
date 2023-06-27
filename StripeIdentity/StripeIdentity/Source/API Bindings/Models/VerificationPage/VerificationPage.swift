@@ -25,6 +25,7 @@ extension StripeAPI {
         let individual: VerificationPageStaticContentIndividualPage
         let countryNotListed: VerificationPageStaticContentCountryNotListedPage
         let individualWelcome: VerificationPageStaticContentIndividualWelcomePage
+        let phoneOtp: VerificationPageStaticContentPhoneOtpPage?
         /// The short-lived URL that can be used in the case that the client cannot support the VerificationSession.
         let fallbackUrl: String
         /// Unique identifier for the object.
