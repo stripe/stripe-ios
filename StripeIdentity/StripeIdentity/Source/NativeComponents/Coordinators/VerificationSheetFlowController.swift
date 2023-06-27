@@ -458,8 +458,17 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         staticContent: StripeAPI.VerificationPage,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
+        guard let phoneOtpContent = staticContent.phoneOtp
+        else {
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(
+                    VerificationSheetFlowControllerError.missingPhoneOtpContent
+                )
+            )
+        }
         return PhoneOtpViewController(
-            phoneOtpContent: staticContent.phoneOtp!,
+            phoneOtpContent: phoneOtpContent,
             sheetController: sheetController
         )
     }
