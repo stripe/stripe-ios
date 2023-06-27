@@ -79,7 +79,7 @@ class PhoneOtpViewController: IdentityFlowViewController {
 
         let bodyText = {
             if let localPhoneNumber = sheetController.collectedData.phone {
-                return phoneOtpContent.body.replacingOccurrences(of: "&phone_number&", with: "(***)*****\(localPhoneNumber.number!.suffix(2))")
+                return phoneOtpContent.body.replacingOccurrences(of: "&phone_number&", with: localPhoneNumber.phoneNumber!.suffix(4))
             } else {
                 return phoneOtpContent.body.replacingOccurrences(of: "&phone_number&", with: phoneOtpContent.redactedPhoneNumber!)
             }
@@ -139,5 +139,12 @@ extension PhoneOtpViewController {
         sheetController?.generatePhoneOtp { [weak self] _ in
             self?.phoneOtpView.configure(with: .InputtingOTP)
         }
+    }
+}
+
+// MARK: - IdentityDataCollecting
+extension PhoneOtpViewController: IdentityDataCollecting {
+    var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
+        return [.phoneOtp]
     }
 }

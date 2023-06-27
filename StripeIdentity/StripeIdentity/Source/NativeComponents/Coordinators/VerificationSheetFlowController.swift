@@ -459,14 +459,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         return PhoneOtpViewController(
-            phoneOtpContent: StripeAPI.VerificationPageStaticContentPhoneOtpPage(),
+            phoneOtpContent: staticContent.phoneOtp!,
             sheetController: sheetController
         )
-
-//        return PhoneOtpViewController(
-//            phoneOtpContent: staticContent.phoneOtp,
-//            sheetController: sheetController
-//        )
     }
 
     func makeBiometricConsentViewController(
