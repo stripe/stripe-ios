@@ -268,6 +268,28 @@ extension STPAPIClient {
         )
     }
 
+    func generatedLinkAccountSessionManifest(
+        with clientSecret: String,
+        completion: @escaping (Result<Manifest, Error>) -> Void
+    ) {
+        let future: Future<Manifest> = self.post(
+            resource: "link_account_sessions/generate_hosted_url",
+            parameters: [
+                "client_secret": clientSecret,
+                "fullscreen": true,
+                "hide_close_button": true,
+            ]
+        )
+        future.observe { result in
+            switch result {
+            case .success(let manifest):
+                completion(.success(manifest))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
     func createLinkAccountSession(
         for consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
