@@ -39,8 +39,8 @@ class PhoneOtpViewController: IdentityFlowViewController {
                         }
                     }(),
                     isPrimary: false,
-                    didTap: {
-                        self.generateOtp()
+                    didTap: { [weak self] in
+                        self?.generateOtp()
                     }
                 ),
                 .init(
@@ -60,9 +60,9 @@ class PhoneOtpViewController: IdentityFlowViewController {
                         }
                     }(),
                     isPrimary: false,
-                    didTap: {
-                        self.phoneOtpView.configure(with: .RequestingCannotVerify)
-                        self.sheetController?.sendCannotVerifyPhoneOtpAndTransition { [weak self] in
+                    didTap: { [weak self] in
+                        self?.phoneOtpView.configure(with: .RequestingCannotVerify)
+                        self?.sheetController?.sendCannotVerifyPhoneOtpAndTransition { [weak self] in
                             self?.phoneOtpView.reset()
                         }
                     }
@@ -79,9 +79,11 @@ class PhoneOtpViewController: IdentityFlowViewController {
 
         let bodyText = {
             if let localPhoneNumber = sheetController.collectedData.phone {
-                return phoneOtpContent.body.replacingOccurrences(of: "&phone_number&", with: localPhoneNumber.phoneNumber!.suffix(4))
+                // If phone number is collected locally use the non-nil number
+                return phoneOtpContent.body.replacingOccurrences(of: "&phone_number&", with: localPhoneNumber.phoneNumber?.suffix(4) ?? "")
             } else {
-                return phoneOtpContent.body.replacingOccurrences(of: "&phone_number&", with: phoneOtpContent.redactedPhoneNumber!)
+                // Otherwise use the server provided non-nil number
+                return phoneOtpContent.body.replacingOccurrences(of: "&phone_number&", with: phoneOtpContent.redactedPhoneNumber ?? "")
             }
         }()
 
@@ -116,7 +118,6 @@ class PhoneOtpViewController: IdentityFlowViewController {
 }
 
 extension PhoneOtpViewController: PhoneOtpViewDelegate {
-    ///
     func didInputFullOtp(newOtp: String) {
         phoneOtpView.configure(with: .SubmittingOTP(newOtp))
 
