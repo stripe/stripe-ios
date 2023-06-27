@@ -69,7 +69,7 @@ final class IndividualFormElement: ContainerElement {
 
         if let phoneNumberSectionElement = phoneNumberSectionElement{
             let phoneNumberElement = phoneNumberSectionElement.elements[0] as! PhoneNumberElement
-            collectedPhoneNumber = StripeAPI.VerificationPageDataPhone(countryCode: phoneNumberElement.selectedCountryCode, number: phoneNumberElement.phoneNumber?.string(as: .e164))
+            collectedPhoneNumber = StripeAPI.VerificationPageDataPhone(country: phoneNumberElement.selectedCountryCode, phoneNumber: phoneNumberElement.phoneNumber?.string(as: .e164))
         }
 
         return StripeAPI.VerificationPageCollectedData(
@@ -108,8 +108,7 @@ final class IndividualFormElement: ContainerElement {
         elements = [Element]()
 
         if missing.contains(.phoneNumber) {
-//            phoneNumberSectionElement = elementsFactory.makePhoneSection(countries: Array(individualContent.phoneNumberCountries.keys))
-            phoneNumberSectionElement = elementsFactory.makePhoneSection(countries: ["US"]) // TODO(ccen) read from server
+            phoneNumberSectionElement = elementsFactory.makePhoneSection(countries: Array(individualContent.phoneNumberCountries.keys))
             elements.append(phoneNumberSectionElement!)
         } else {
             phoneNumberSectionElement = nil

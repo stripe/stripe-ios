@@ -95,6 +95,9 @@
     "title": "Provide personal information",
     "phone_number_countries": {
       "US": "United States"
+    },
+    "phone_number_countries": {
+      "US": "United States"
     }
   },
   "individual_welcome": {
