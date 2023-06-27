@@ -67,8 +67,7 @@ final class IndividualFormElement: ContainerElement {
             )
         }
 
-        if let phoneNumberSectionElement = phoneNumberSectionElement{
-            let phoneNumberElement = phoneNumberSectionElement.elements[0] as! PhoneNumberElement
+        if let phoneNumberSectionElement = phoneNumberSectionElement, let phoneNumberElement = phoneNumberSectionElement.elements[0] as? PhoneNumberElement {
             collectedPhoneNumber = StripeAPI.VerificationPageDataPhone(country: phoneNumberElement.selectedCountryCode, phoneNumber: phoneNumberElement.phoneNumber?.string(as: .e164))
         }
 
