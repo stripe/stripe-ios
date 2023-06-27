@@ -10,7 +10,7 @@ import Foundation
 
 extension StripeAPI {
     struct VerificationPageDataPhone: Encodable, Equatable {
-        let countryCode: String?
-        let number: String?
+        let country: String?
+        let phoneNumber: String?
     }
 }
