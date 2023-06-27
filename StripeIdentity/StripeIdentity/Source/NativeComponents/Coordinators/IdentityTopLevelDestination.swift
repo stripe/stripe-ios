@@ -16,4 +16,5 @@ enum IdentityTopLevelDestination {
     case individualWelcomeDestination
     case individualDestination
     case confirmationDestination
+    case phoneOtpDestination
 }

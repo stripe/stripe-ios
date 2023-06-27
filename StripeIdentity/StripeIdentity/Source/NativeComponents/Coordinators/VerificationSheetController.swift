@@ -61,12 +61,29 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
 
+    /// Submit OTP with VerificationPageData API and transition if OTP is valid or request failed.
+    /// Call invalidOtp callback when the request is successful but OTP is invalid.
+    func saveOtpAndMaybeTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        otp otpValue: String,
+        completion: @escaping () -> Void,
+        invalidOtp: @escaping () -> Void
+    )
+
     func verifyAndTransition(
         simulateDelay: Bool
     )
 
     func unverifyAndTransition(
         simulateDelay: Bool
+    )
+
+    /// Request a new phoneOtp, transition to error view controller if request failed, callback on successCallback otherwise.
+    func generatePhoneOtp(using successCallback: @escaping (StripeAPI.VerificationPageData) -> Void)
+
+    /// Send the cannotVerifyPhoneOtp request and transition accordingly.
+    func sendCannotVerifyPhoneOtpAndTransition(
+        completion: @escaping () -> Void
     )
 
     /// Transition to CountryNotListedViewController without any API request
@@ -318,11 +335,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         apiClient.verifyTestVerificationSession(
             simulateDelay: simulateDelay
         ).observe(on: .main) { [weak self] result in
-            self?.saveCheckSubmitAndTransition(
-                collectedData: nil,
-                updateDataResult: result,
-                completion: {}
-            )
+            self?.transitionWithVerificaionPageDataResult(result)
         }
     }
 
@@ -332,12 +345,30 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         apiClient.unverifyTestVerificationSession(
             simulateDelay: simulateDelay
         ).observe(on: .main) { [weak self] result in
-            self?.saveCheckSubmitAndTransition(
-                collectedData: nil,
-                updateDataResult: result,
-                completion: {}
-            )
+            self?.transitionWithVerificaionPageDataResult(result)
         }
+    }
+
+    func generatePhoneOtp(using successCallback: @escaping (StripeAPI.VerificationPageData) -> Void) {
+        apiClient.generatePhoneOtp().observe(on: .main) { [weak self] result in
+            self?.handleVerificationPageDataResult(updateDataResult: result, successPageData: successCallback)
+        }
+    }
+
+    func sendCannotVerifyPhoneOtpAndTransition(
+        completion: @escaping() -> Void
+    ) {
+        apiClient.cannotPhoneVerifyOtp().observe(on: .main) { [weak self] result in
+            self?.transitionWithVerificaionPageDataResult(result, completion: completion)
+        }
+    }
+
+    private func transitionWithUpdatedDataResult(result: Result<StripeAPI.VerificationPageData, Error>) {
+        saveCheckSubmitAndTransition(
+            collectedData: nil,
+            updateDataResult: result,
+            completion: {}
+        )
     }
 
     // MARK: - Transition without save
@@ -421,6 +452,28 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 updateDataResult: result,
                 completion: completion
             )
+        }
+    }
+
+    func saveOtpAndMaybeTransition(from fromScreen: IdentityAnalyticsClient.ScreenName, otp otpValue: String, completion: @escaping () -> Void = {}, invalidOtp: @escaping () -> Void) {
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen)
+        let phoneOtpData = StripeAPI.VerificationPageCollectedData(phoneOtp: otpValue)
+        apiClient.updateIdentityVerificationPageData(
+            updating: .init(
+                clearData: calculateClearData(dataToBeCollected: phoneOtpData),
+                collectedData: phoneOtpData
+            )
+        ).observe(on: .main) { [weak self] updateDataResult in
+            self?.handleVerificationPageDataResult(collectedData: phoneOtpData, updateDataResult: updateDataResult, completion: completion) { successPageData in
+                if successPageData.requirements.missing.contains(.phoneOtp) {
+                    invalidOtp()
+                } else {
+                    self?.checkSubmitAndTransition(
+                        updateDataResult: updateDataResult,
+                        completion: completion
+                    )
+                }
+            }
         }
     }
 

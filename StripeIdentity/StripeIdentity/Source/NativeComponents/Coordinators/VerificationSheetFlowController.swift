@@ -395,6 +395,13 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     sheetController: sheetController
                 )
             )
+        case .phoneOtpDestination:
+            return completion(
+                makePhoneOtpViewController(
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                )
+            )
         case .confirmationDestination:
             return completion(
                 SuccessViewController(
@@ -443,6 +450,25 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         return IndividualViewController(
             individualContent: staticContent.individual,
             missing: staticContent.requirements.missing,
+            sheetController: sheetController
+        )
+    }
+
+    func makePhoneOtpViewController(
+        staticContent: StripeAPI.VerificationPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        guard let phoneOtpContent = staticContent.phoneOtp
+        else {
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(
+                    VerificationSheetFlowControllerError.missingPhoneOtpContent
+                )
+            )
+        }
+        return PhoneOtpViewController(
+            phoneOtpContent: phoneOtpContent,
             sheetController: sheetController
         )
     }
@@ -709,6 +735,8 @@ extension Set<StripeAPI.VerificationPageFieldType> {
             return .individualWelcomeDestination
         } else if !self.isDisjoint(with: [.idNumber, .address, .phoneNumber]) {
             return .individualDestination
+        } else if self.contains(.phoneOtp) {
+            return .phoneOtpDestination
         } else if self.isEmpty {
             return .confirmationDestination
         } else {

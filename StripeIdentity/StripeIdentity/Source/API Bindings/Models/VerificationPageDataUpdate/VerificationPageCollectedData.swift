@@ -22,6 +22,7 @@ extension StripeAPI {
         private(set) var name: VerificationPageDataName?
         private(set) var address: RequiredInternationalAddress?
         private(set) var phone: VerificationPageDataPhone?
+        private(set) var phoneOtp: String?
 
         init(
             biometricConsent: Bool? = nil,
@@ -33,7 +34,8 @@ extension StripeAPI {
             dob: VerificationPageDataDob? = nil,
             name: VerificationPageDataName? = nil,
             address: RequiredInternationalAddress? = nil,
-            phone: VerificationPageDataPhone? = nil
+            phone: VerificationPageDataPhone? = nil,
+            phoneOtp: String? = nil
         ) {
             self.biometricConsent = biometricConsent
             self.face = face
@@ -45,6 +47,7 @@ extension StripeAPI {
             self.name = name
             self.address = address
             self.phone = phone
+            self.phoneOtp = phoneOtp
         }
     }
 }
@@ -65,7 +68,9 @@ extension StripeAPI.VerificationPageCollectedData {
             idNumber: otherData.idNumber ?? self.idNumber,
             dob: otherData.dob ?? self.dob,
             name: otherData.name ?? self.name,
-            address: otherData.address ?? self.address
+            address: otherData.address ?? self.address,
+            phone: otherData.phone ?? self.phone,
+            phoneOtp: otherData.phoneOtp ?? self.phoneOtp
         )
     }
 
@@ -97,9 +102,7 @@ extension StripeAPI.VerificationPageCollectedData {
         case .phoneNumber:
             self.phone = nil
         case .phoneOtp:
-            // no-op
-            break
-
+            self.phoneOtp = nil
         }
     }
 
@@ -144,6 +147,12 @@ extension StripeAPI.VerificationPageCollectedData {
         }
         if self.address != nil {
             ret.insert(.address)
+        }
+        if self.phone != nil {
+            ret.insert(.phoneNumber)
+        }
+        if self.phoneOtp != nil {
+            ret.insert(.phoneOtp)
         }
         return ret
     }
