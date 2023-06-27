@@ -1,3 +1,7 @@
+## X.Y.Z 2023-XX-YY
+### PaymentSheet
+* [Added] US bank accounts are now supported when initializing with an IntentConfiguration (in private beta).
+
 ## 23.9.3 2023-06-26
 ### PaymentSheet
 * [Fixed] Affirm no longer requires shipping details.
