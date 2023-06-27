@@ -33,6 +33,21 @@ import UIKit
         return loadingViewController
     }()
 
+    @_spi(LinkOnly) public struct PaymentOptionDisplayData {
+        /// An image representing a payment method; e.g. the Link logo
+        public let image: UIImage
+        /// A user facing string representing the payment method; e.g. "Link" or "····4242" for a card
+        public let label: String
+    }
+
+    /// Contains information about the customer's desired payment option.
+    /// You can use this to e.g. display the payment option in your UI.
+    @_spi(LinkOnly) public var paymentOption: PaymentOptionDisplayData? {
+        if paymentMethodId == nil { return nil }
+
+        return PaymentOptionDisplayData(image: Image.pm_type_link.makeImage(), label: STPPaymentMethodType.link.displayName)
+    }
+
     /// The parent view controller to present
     private lazy var bottomSheetViewController: BottomSheetViewController = {
         let vc = BottomSheetViewController(
@@ -90,9 +105,13 @@ import UIKit
         Task {
             do {
                 try await present(from: presentingViewController)
-                completion(.success(()))
+                DispatchQueue.main.async {
+                    completion(.success(()))
+                }
             } catch {
-                completion(.failure(error))
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
             }
         }
     }
@@ -106,7 +125,11 @@ import UIKit
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: PaymentSheet.Appearance.default)
-
+        defer {
+            // reset the stack
+            bottomSheetViewController.contentStack = [loadingViewController]
+            bottomSheetViewController.dismiss(animated: true)
+        }
         let instantDebitsController: InstantDebitsOnlyViewController = try await withCheckedThrowingContinuation { [self] continuation in
             let apiClient = self.configuration.apiClient
             let parameters: [String: Any] = [
@@ -159,15 +182,11 @@ import UIKit
                         onBehalfOf: intentConfiguration.onBehalfOf,
                         additionalParameters: ["product": "instant_debits"]
                     ) { [weak self] linkAccountSession, error in
-                            self?.generateManifest(continuation: continuation, error: error, linkAccountSession: linkAccountSession)
-                        }
+                        self?.generateManifest(continuation: continuation, error: error, linkAccountSession: linkAccountSession)
+                    }
             }
         }
-        defer {
-            // reset the stack
-            bottomSheetViewController.contentStack = [loadingViewController]
-            bottomSheetViewController.dismiss(animated: true)
-        }
+
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             payWithLinkContinuation = continuation
             bottomSheetViewController.contentStack = [instantDebitsController]
@@ -209,11 +228,17 @@ import UIKit
         Task {
             do {
                 try await confirm(from: presentingViewController)
-                completion(.completed)
+                DispatchQueue.main.async {
+                    completion(.completed)
+                }
             } catch Error.canceled {
-                completion(.canceled)
+                DispatchQueue.main.async {
+                    completion(.canceled)
+                }
             } catch {
-                completion(.failed(error: error))
+                DispatchQueue.main.async {
+                    completion(.failed(error: error))
+                }
             }
         }
     }
@@ -344,14 +369,8 @@ extension LinkPaymentController: InstantDebitsOnlyViewControllerDelegate {
 @_spi(LinkOnly)
 extension LinkPaymentController: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
-        guard let payWithLinkContinuation = payWithLinkContinuation else {
-            // reset the stack
-//            bottomSheetViewController.contentStack = [loadingViewController]
-//            bottomSheetViewController.dismiss(animated: true)
-            return
-        }
-        payWithLinkContinuation.resume(throwing: Error.canceled)
-        self.payWithLinkContinuation = nil
+        payWithLinkContinuation?.resume(throwing: Error.canceled)
+        payWithLinkContinuation = nil
         paymentMethodId = nil
     }
 }

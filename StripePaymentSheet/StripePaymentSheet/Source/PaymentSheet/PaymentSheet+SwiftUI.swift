@@ -76,7 +76,7 @@ extension View {
     /// - Parameter isPresented: A binding to whether the sheet is presented.
     /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
     /// - Parameter onSheetDismissed: Called after the payment options sheet is dismissed.
-    public func linkPaymentOptionsSheet(
+    @_spi(LinkOnly) public func linkPaymentOptionsSheet(
         isPresented: Binding<Bool>,
         linkPaymentController: LinkPaymentController,
         onSheetDismissed: (() -> Void)?
@@ -96,7 +96,7 @@ extension View {
     /// - Parameter isConfirming: A binding to whether the payment is being confirmed. This will present a sheet if needed. It will be updated to `false` after performing the payment confirmation.
     /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
     /// - Parameter onCompletion: Called with the result of the payment after the payment confirmation is done and the sheet (if any) is dismissed.
-    public func linkPaymentConfirmationSheet(
+    @_spi(LinkOnly) public func linkPaymentConfirmationSheet(
         isConfirming: Binding<Bool>,
         linkPaymentController: LinkPaymentController,
         onCompletion: @escaping (PaymentSheetResult) -> Void
