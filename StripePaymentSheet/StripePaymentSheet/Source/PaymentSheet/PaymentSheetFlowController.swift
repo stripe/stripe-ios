@@ -189,7 +189,7 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            PaymentSheet.load(
+            PaymentSheetLoader.load(
                 mode: mode,
                 configuration: configuration
             ) { result in
@@ -332,7 +332,7 @@ extension PaymentSheet {
             latestUpdateContext = UpdateContext(id: updateID)
 
             // 1. Load the intent, payment methods, and link data from the Stripe API
-            PaymentSheet.load(
+            PaymentSheetLoader.load(
                 mode: .deferredIntent(intentConfiguration),
                 configuration: configuration
             ) { [weak self] loadResult in
@@ -430,7 +430,7 @@ extension PaymentSheet {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerDelegate {
-    func PaymentSheetFlowControllerViewControllerShouldClose(
+    func paymentSheetFlowControllerViewControllerShouldClose(
         _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
     ) {
         PaymentSheetFlowControllerViewController.dismiss(animated: true) {
@@ -439,7 +439,7 @@ extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerD
         }
     }
 
-    func PaymentSheetFlowControllerViewControllerDidUpdateSelection(
+    func paymentSheetFlowControllerViewControllerDidUpdateSelection(
         _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
     ) {
         // no-op

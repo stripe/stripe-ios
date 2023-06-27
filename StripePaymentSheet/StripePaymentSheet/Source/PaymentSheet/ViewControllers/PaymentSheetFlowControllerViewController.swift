@@ -14,9 +14,9 @@ import Foundation
 import UIKit
 
 protocol PaymentSheetFlowControllerViewControllerDelegate: AnyObject {
-    func PaymentSheetFlowControllerViewControllerShouldClose(
+    func paymentSheetFlowControllerViewControllerShouldClose(
         _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController)
-    func PaymentSheetFlowControllerViewControllerDidUpdateSelection(
+    func paymentSheetFlowControllerViewControllerDidUpdateSelection(
         _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController)
 }
 
@@ -398,12 +398,12 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     private func didTapAddButton() {
         switch mode {
         case .selectingSaved:
-            self.delegate?.PaymentSheetFlowControllerViewControllerShouldClose(self)
+            self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)
         case .addingNew:
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
                 addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
             } else {
-                self.delegate?.PaymentSheetFlowControllerViewControllerShouldClose(self)
+                self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)
             }
         }
 
@@ -411,7 +411,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
 
     func didDismiss() {
         // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen
-        delegate?.PaymentSheetFlowControllerViewControllerShouldClose(self)
+        delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
             configureEditSavedPaymentMethodsButton()
@@ -458,10 +458,10 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             error = nil // Clear any errors
             updateUI()
         case .applePay, .link, .saved:
-            delegate?.PaymentSheetFlowControllerViewControllerDidUpdateSelection(self)
+            delegate?.paymentSheetFlowControllerViewControllerDidUpdateSelection(self)
             updateUI()
             if isDismissable, !selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
-                delegate?.PaymentSheetFlowControllerViewControllerShouldClose(self)
+                delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)
             }
         }
     }

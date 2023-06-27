@@ -314,14 +314,13 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     func fetchSetupIntent(clientSecret: String, completion: @escaping ((Result<STPSetupIntent, Error>) -> Void) ) {
-        configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret) { result in
-            switch result {
-            case .success(let setupIntent):
+        Task {
+            do {
+                let setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret)
                 completion(.success(setupIntent))
-            case .failure(let error):
+            } catch {
                 completion(.failure(error))
             }
-
         }
     }
 
