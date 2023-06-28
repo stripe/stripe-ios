@@ -69,24 +69,30 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func presentCustomerSheet() {
         customerSheet?.present(from: rootViewController, completion: { result in
             switch result {
-            case .success(let customerSheetResult):
-                self.paymentOptionSelection = customerSheetResult.paymentOptionSelection
+            case .selected(let paymentOptionSelection), .canceled(let paymentOptionSelection):
+                self.paymentOptionSelection = paymentOptionSelection
+
+                var status = "canceled"
+                if case .selected = result {
+                    status = "selected"
+                }
 
                 let alertController = self.makeAlertController()
-                if let selection = customerSheetResult.paymentOptionSelection {
-                    alertController.message = "Success: \(selection.displayData().label): \(customerSheetResult.status)"
+                if let selection = paymentOptionSelection {
+                    alertController.message = "Success: \(selection.displayData().label), \(status)"
                 } else {
-                    alertController.message = "Success: payment method not set: \(customerSheetResult.status)"
+                    alertController.message = "Success: payment method not set: \(status)"
                 }
 
-                if let selection = customerSheetResult.paymentOptionSelection,
-                    case .paymentMethod(let paymentMethod, let paymentOptionDisplayData) = selection {
-
-                }
+                //Getting access to the payment Method ID:
+                // if let selection = paymentOptionSelection,
+                //   case .paymentMethod(let paymentMethod, let paymentOptionDisplayData) = selection {
+                //
+                //}
 
                 self.rootViewController.present(alertController, animated: true)
 
-            case .failure(let error):
+            case .error(let error):
                 print("Something went wrong: \(error)")
             }
         })
