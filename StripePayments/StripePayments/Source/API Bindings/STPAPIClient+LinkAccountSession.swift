@@ -65,13 +65,13 @@ public extension STPAPIClient {
         amount: Int?,
         currency: String?,
         onBehalfOf: String?,
+        additionalParameters: [String: Any] = [:],
         completion: @escaping STPLinkAccountSessionBlock
     ) {
         let endpoint: String = "connections/link_account_sessions_for_deferred_payment"
-        var parameters: [String: Any] = [
-            "unique_id": sessionId,
-            "verification_method": STPPaymentMethodOptions.USBankAccount.VerificationMethod.automatic.rawValue, // Hardcoded b/c the merchant can't choose in the deferred flow
-        ]
+        var parameters = additionalParameters
+        parameters["unique_id"] = sessionId
+        parameters["verification_method"] = STPPaymentMethodOptions.USBankAccount.VerificationMethod.automatic.rawValue // Hardcoded b/c the merchant can't choose in the deferred flow
         parameters["amount"] = amount
         parameters["currency"] = currency
         parameters["on_behalf_of"] = onBehalfOf
