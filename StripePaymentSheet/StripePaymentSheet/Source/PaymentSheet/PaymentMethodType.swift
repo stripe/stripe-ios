@@ -249,11 +249,6 @@ extension PaymentSheet {
             intent: Intent,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> PaymentMethodAvailabilityStatus {
-            if paymentMethod == .USBankAccount, case .deferredIntent = intent, !PaymentSheet.enableACHV2InDeferredFlow {
-                // TODO(DeferredIntent): Remove this code when https://jira.corp.stripe.com/browse/BANKCON-6731 is complete
-                return .notSupported
-            }
-
             guard let stpPaymentMethodType = paymentMethod.stpPaymentMethodType else {
                 // if the payment method cannot be represented as a `STPPaymentMethodType` attempt to read it
                 // as a dynamic payment method
