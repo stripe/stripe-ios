@@ -74,6 +74,12 @@ final class PlaygroundMainViewModel: ObservableObject {
             PlaygroundUserDefaults.enableTransactionsPermission = enableTransactionsPermission
         }
     }
+    
+    @Published var enableBalancesPermission: Bool = PlaygroundUserDefaults.enableBalancesPermission {
+        didSet {
+            PlaygroundUserDefaults.enableBalancesPermission = enableBalancesPermission
+        }
+    }
 
     enum CustomScenario: String, CaseIterable, Identifiable {
         case none = "none"
@@ -147,6 +153,7 @@ final class PlaygroundMainViewModel: ObservableObject {
             flow: flow.rawValue,
             email: email,
             enableTransactionsPermission: enableTransactionsPermission,
+            enableBalancesPermission: enableBalancesPermission,
             customScenario: customScenario.rawValue,
             customPublicKey: customPublicKey,
             customSecretKey: customSecretKey
@@ -200,6 +207,7 @@ private func SetupPlayground(
     flow: String,
     email: String,
     enableTransactionsPermission: Bool,
+    enableBalancesPermission: Bool,
     customScenario: String,
     customPublicKey: String,
     customSecretKey: String,
@@ -221,6 +229,7 @@ private func SetupPlayground(
         requestBody["flow"] = flow
         requestBody["email"] = email
         requestBody["enable_transactions_permission"] = enableTransactionsPermission
+        requestBody["enable_balances_permission"] = enableBalancesPermission
         requestBody["custom_scenario"] = customScenario
         requestBody["custom_public_key"] = customPublicKey
         requestBody["custom_secret_key"] = customSecretKey
