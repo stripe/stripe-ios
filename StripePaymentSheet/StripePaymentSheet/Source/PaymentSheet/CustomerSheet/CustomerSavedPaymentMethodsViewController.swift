@@ -351,7 +351,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     } onSuccess: {
                         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: "apple_pay")
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                            self.csCompletion?(.success(paymentOptionSelection))
+                            self.csCompletion?(.success(.init(paymentOptionSelection: paymentOptionSelection, status: .completed)))
                         }
                     }
 
@@ -365,7 +365,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     } onSuccess: {
                         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: type)
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                            self.csCompletion?(.success(paymentOptionSelection))
+                            self.csCompletion?(.success(.init(paymentOptionSelection: paymentOptionSelection, status: .completed)))
                         }
                     }
                 default:
@@ -550,17 +550,17 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             case .applePay:
                 let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.applePay()
                 self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                    self.csCompletion?(.success(paymentOptionSelection))
+                    self.csCompletion?(.success(.init(paymentOptionSelection: paymentOptionSelection, status: .canceled)))
                 }
             case .stripeId(let paymentMethodId):
                 if let paymentMethod = self.savedPaymentOptionsViewController.savedPaymentMethods.first(where: { $0.stripeId == paymentMethodId }) {
                     let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
                     self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                        self.csCompletion?(.success(paymentOptionSelection))
+                        self.csCompletion?(.success(.init(paymentOptionSelection: paymentOptionSelection, status: .canceled)))
                     }
                 } else {
                     self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                        self.csCompletion?(.success(nil))
+                        self.csCompletion?(.success(.init(paymentOptionSelection: nil, status: .canceled)))
                     }
                 }
             default:
@@ -569,7 +569,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
         } else {
             self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                self.csCompletion?(.success(nil))
+                self.csCompletion?(.success(.init(paymentOptionSelection: nil, status: .canceled)))
             }
         }
     }

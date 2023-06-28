@@ -23,7 +23,7 @@ internal enum InternalCustomerSheetResult {
 @_spi(PrivateBetaCustomerSheet) public class CustomerSheet {
     let configuration: CustomerSheet.Configuration
 
-    internal typealias CustomerSheetCompletion = (Result<PaymentOptionSelection?, Error>) -> Void
+    internal typealias CustomerSheetCompletion = (Result<CustomerSheetResult, Error>) -> Void
 
     /// The STPPaymentHandler instance
     @available(iOSApplicationExtension, unavailable)
@@ -72,10 +72,26 @@ internal enum InternalCustomerSheetResult {
 
     private var csCompletion: CustomerSheetCompletion?
 
+    public struct CustomerSheetResult {
+        public enum Status {
+            // Customer selected a payment method and completed the sheet
+            case completed
+
+            // Customer dismissed the sheet without selecting a different payment method
+            case canceled
+        }
+
+        // Payment Method Option that was selected when the sheet was completed, or the last payment method if the sheet was canceled
+        public let paymentOptionSelection: PaymentOptionSelection?
+
+        // Associated status with how the sheet was dismissed
+        public let status: Status
+    }
+
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     public func present(from presentingViewController: UIViewController,
-                        completion csCompletion: @escaping (Result<PaymentOptionSelection?, Error>) -> Void
+                        completion csCompletion: @escaping (Result<CustomerSheetResult, Error>) -> Void
     ) {
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
