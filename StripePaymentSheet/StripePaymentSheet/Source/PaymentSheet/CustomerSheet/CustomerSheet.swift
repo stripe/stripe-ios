@@ -23,14 +23,14 @@ internal enum InternalCustomerSheetResult {
 @_spi(PrivateBetaCustomerSheet) public class CustomerSheet {
     let configuration: CustomerSheet.Configuration
 
-    internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
-
     /// The STPPaymentHandler instance
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     lazy var paymentHandler: STPPaymentHandler = {
         STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler())
     }()
+
+    internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
 
     /// The parent view controller to present
     @available(iOSApplicationExtension, unavailable)
