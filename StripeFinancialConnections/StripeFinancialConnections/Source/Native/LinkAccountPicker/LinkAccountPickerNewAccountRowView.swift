@@ -31,10 +31,6 @@ final class LinkAccountPickerNewAccountRowView: UIView {
             horizontalStackView.addArrangedSubview(
                 CreateTitleLabelView(
                     title: title
-//                    ?? STPLocalizedString(
-//                        "New bank account",
-//                        "A button that allows users to add an additional bank account for future payments."
-//                    )
                 )
             )
         }

@@ -74,7 +74,7 @@ final class PlaygroundMainViewModel: ObservableObject {
             PlaygroundUserDefaults.enableTransactionsPermission = enableTransactionsPermission
         }
     }
-    
+
     @Published var enableBalancesPermission: Bool = PlaygroundUserDefaults.enableBalancesPermission {
         didSet {
             PlaygroundUserDefaults.enableBalancesPermission = enableBalancesPermission

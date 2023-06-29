@@ -24,7 +24,6 @@ protocol LinkAccountPickerBodyViewDelegate: AnyObject {
 final class LinkAccountPickerBodyView: UIView {
 
     private let accountTuples: [FinancialConnectionsAccountTuple]
-    private let accounts: [FinancialConnectionsPartnerAccount]
     private let addNewAccount: FinancialConnectionsNetworkingAccountPicker.AddNewAccount
     weak var delegate: LinkAccountPickerBodyViewDelegate?
 
@@ -40,7 +39,6 @@ final class LinkAccountPickerBodyView: UIView {
         addNewAccount: FinancialConnectionsNetworkingAccountPicker.AddNewAccount
     ) {
         self.accountTuples = accountTuples
-        self.accounts = accountTuples.map { $0.partnerAccount }
         self.addNewAccount = addNewAccount
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
@@ -66,9 +64,7 @@ final class LinkAccountPickerBodyView: UIView {
                     )
                 }
             )
-            let rowTitles = AccountPickerHelpers.rowTitles(
-                forAccount: accountTuple.partnerAccount
-            )
+            let rowTitles = AccountPickerHelpers.rowTitles(forAccount: accountTuple.partnerAccount)
             accountRowView.configure(
                 institutionImageUrl: accountTuple.partnerAccount.institution?.icon?.default,
                 leadingTitle: rowTitles.leadingTitle,

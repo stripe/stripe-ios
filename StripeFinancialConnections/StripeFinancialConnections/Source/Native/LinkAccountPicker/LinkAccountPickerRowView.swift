@@ -86,6 +86,7 @@ final class LinkAccountPickerRowView: UIView {
         trailingIconImageView = nil
         if let trailingIconImageUrl = trailingIconImageUrl {
             let trailingIconImageView = UIImageView()
+            trailingIconImageView.contentMode = .scaleAspectFit
             NSLayoutConstraint.activate([
                 trailingIconImageView.widthAnchor.constraint(equalToConstant: 16),
                 trailingIconImageView.heightAnchor.constraint(equalToConstant: 16),

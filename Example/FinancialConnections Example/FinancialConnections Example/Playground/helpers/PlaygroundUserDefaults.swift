@@ -45,7 +45,7 @@ final class PlaygroundUserDefaults {
         defaultValue: false
     )
     static var enableTransactionsPermission: Bool
-    
+
     @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_BALANCES_PERMISSION",
         defaultValue: false
