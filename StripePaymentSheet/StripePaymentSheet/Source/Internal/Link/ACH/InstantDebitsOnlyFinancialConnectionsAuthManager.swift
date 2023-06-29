@@ -133,6 +133,10 @@ final class InstantDebitsOnlyAuthenticationSessionManager: NSObject {
 
         return promise
     }
+
+    func cancel() {
+        authSession?.cancel()
+    }
 }
 
 // MARK: - ASWebAuthenticationPresentationContextProviding

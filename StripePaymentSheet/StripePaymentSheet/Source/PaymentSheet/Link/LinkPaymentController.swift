@@ -22,6 +22,11 @@ import UIKit
 
     private var payWithLinkContinuation: CheckedContinuation<Void, Swift.Error>?
     private var paymentMethodId: String?
+    private var instantDebitsOnlyAuthenticationSessionManager: InstantDebitsOnlyAuthenticationSessionManager? {
+        willSet {
+            instantDebitsOnlyAuthenticationSessionManager?.cancel()
+        }
+    }
 
     private lazy var loadingViewController: LoadingViewController = {
         let loadingViewController = LoadingViewController(
@@ -126,11 +131,9 @@ import UIKit
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: PaymentSheet.Appearance.default)
         defer {
-            // reset the stack
-            bottomSheetViewController.contentStack = [loadingViewController]
             bottomSheetViewController.dismiss(animated: true)
         }
-        let instantDebitsController: InstantDebitsOnlyViewController = try await withCheckedThrowingContinuation { [self] continuation in
+        let manifest: Manifest = try await withCheckedThrowingContinuation { [self] continuation in
             let apiClient = self.configuration.apiClient
             let parameters: [String: Any] = [
                 "attach_required": false,
@@ -189,12 +192,31 @@ import UIKit
 
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             payWithLinkContinuation = continuation
-            bottomSheetViewController.contentStack = [instantDebitsController]
-            instantDebitsController.startInstantDebitsOnlyWebFlow()
+            instantDebitsOnlyAuthenticationSessionManager = InstantDebitsOnlyAuthenticationSessionManager(window: presentingViewController.view.window)
+            instantDebitsOnlyAuthenticationSessionManager?
+                .start(manifest: manifest)
+                .observe { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let successResult):
+                        switch successResult {
+                        case .success(let details):
+                            self.paymentMethodId = details.paymentMethodID
+                            self.payWithLinkContinuation?.resume(returning: ())
+                        case.canceled:
+                            self.paymentMethodId = nil
+                            self.payWithLinkContinuation?.resume(throwing: Error.canceled)
+                        }
+                    case .failure(let error):
+                        self.paymentMethodId = nil
+                        self.payWithLinkContinuation?.resume(throwing: error)
+                    }
+                    self.payWithLinkContinuation = nil
+                }
         }
     }
 
-    private func generateManifest(continuation: CheckedContinuation<InstantDebitsOnlyViewController, Swift.Error>,
+    private func generateManifest(continuation: CheckedContinuation<Manifest, Swift.Error>,
                                   error: Swift.Error?,
                                   linkAccountSession: LinkAccountSession?) {
         if let error = error {
@@ -207,13 +229,10 @@ import UIKit
             return
         }
 
-        configuration.apiClient.generatedLinkAccountSessionManifest(with: linkAccountSession.clientSecret) { [weak self] result in
-            guard let self = self else { return }
+        configuration.apiClient.generatedLinkAccountSessionManifest(with: linkAccountSession.clientSecret) { result in
             switch result {
             case .success(let manifest):
-                let instantDebitsViewController = InstantDebitsOnlyViewController(manifest: manifest, configuration: self.configuration)
-                instantDebitsViewController.delegate = self
-                continuation.resume(returning: instantDebitsViewController)
+                continuation.resume(returning: manifest)
             case .failure(let error):
                 continuation.resume(throwing: error)
             }
@@ -338,39 +357,12 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension LinkPaymentController: InstantDebitsOnlyViewControllerDelegate {
-
-    func instantDebitsOnlyViewControllerDidProducePaymentMethod(_ controller: InstantDebitsOnlyViewController, with paymentMethodId: String) {
-        self.paymentMethodId = paymentMethodId
-    }
-
-    func instantDebitsOnlyViewControllerDidCancel(_ controller: InstantDebitsOnlyViewController) {
-        payWithLinkContinuation?.resume(throwing: Error.canceled)
-        payWithLinkContinuation = nil
-        paymentMethodId = nil
-    }
-
-    func instantDebitsOnlyViewControllerDidFail(_ controller: InstantDebitsOnlyViewController, error: Swift.Error) {
-        payWithLinkContinuation?.resume(throwing: error)
-        payWithLinkContinuation = nil
-        paymentMethodId = nil
-    }
-
-    func instantDebitsOnlyViewControllerDidComplete(
-        _ controller: InstantDebitsOnlyViewController
-    ) {
-        payWithLinkContinuation?.resume(returning: ())
-        payWithLinkContinuation = nil
-    }
-}
-
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 @_spi(LinkOnly)
 extension LinkPaymentController: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
+        instantDebitsOnlyAuthenticationSessionManager = nil
+        paymentMethodId = nil
         payWithLinkContinuation?.resume(throwing: Error.canceled)
         payWithLinkContinuation = nil
-        paymentMethodId = nil
     }
 }
