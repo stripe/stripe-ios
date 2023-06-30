@@ -84,12 +84,6 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
                     alertController.message = "Success: payment method not set: \(status)"
                 }
 
-                //Getting access to the payment Method ID:
-                // if let selection = paymentOptionSelection,
-                //   case .paymentMethod(let paymentMethod, let paymentOptionDisplayData) = selection {
-                //
-                //}
-
                 self.rootViewController.present(alertController, animated: true)
 
             case .error(let error):
