@@ -107,7 +107,7 @@ class SheetNavigationBar: UIView {
             NSLayoutConstraint.activate([
                 constraint,
                 testModeView.centerYAnchor.constraint(equalTo: centerYAnchor),
-                testModeView.widthAnchor.constraint(equalToConstant: 82),
+                testModeView.widthAnchor.constraint(equalToConstant: 194),
                 testModeView.heightAnchor.constraint(equalToConstant: 23),
             ])
             self.testModeConstraint = constraint

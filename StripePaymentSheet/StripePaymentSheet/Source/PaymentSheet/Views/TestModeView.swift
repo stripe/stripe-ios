@@ -23,7 +23,7 @@ class TestModeView: UIView {
 
     private lazy var testLabel: UILabel = {
         let label = UILabel()
-        label.text = "TEST MODE"
+        label.text = "Your card will not be charged."
         label.textColor = UIColor.testModeTextColor
         label.textAlignment = .center
         label.adjustsFontForContentSizeCategory = true
