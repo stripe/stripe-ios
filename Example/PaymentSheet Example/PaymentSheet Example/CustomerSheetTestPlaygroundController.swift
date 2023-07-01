@@ -81,7 +81,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
                 if let selection = paymentOptionSelection {
                     alertController.message = "Success: \(selection.displayData().label), \(status)"
                 } else {
-                    alertController.message = "Success: payment method not set: \(status)"
+                    alertController.message = "Success: payment method not set, \(status)"
                 }
 
                 self.rootViewController.present(alertController, animated: true)

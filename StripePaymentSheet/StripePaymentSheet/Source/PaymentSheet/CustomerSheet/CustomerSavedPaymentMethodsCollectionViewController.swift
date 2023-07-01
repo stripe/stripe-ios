@@ -239,7 +239,13 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-        self.updateUI(selectedSavedPaymentOption: self.originalSelectedSavedPaymentMethod)
+
+        // In the add payment flow, selectedViewModelIndex is set, and then
+        // the view is loaded. Checking selectedViewModelIndex is needed to avoid
+        // override selecting the newly added payment method.
+        if selectedViewModelIndex == nil {
+            self.updateUI(selectedSavedPaymentOption: self.originalSelectedSavedPaymentMethod)
+        }
     }
 
     // MARK: - Private methods
