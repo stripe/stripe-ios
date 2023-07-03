@@ -76,7 +76,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
         buyButton.isEnabled = false
         linkPaymentController.present(from: self) { [weak self] result in
             switch result {
-            case .success(()):
+            case .success:
                 self?.updateButtons()
             case .failure(let error):
                 print(error as Any)
