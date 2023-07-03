@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 5/16/23.
 //
 
-@testable@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentSheet
 import XCTest
 
 final class PaymentSheetDeferredValidatorTests: XCTestCase {
