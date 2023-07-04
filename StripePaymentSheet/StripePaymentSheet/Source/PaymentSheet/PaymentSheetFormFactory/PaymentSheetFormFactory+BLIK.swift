@@ -30,7 +30,6 @@ extension PaymentSheetFormFactory {
             phoneElement: phoneElement)
 
         let allElements: [Element?] = [
-            makeBLIKHeader(),
             makeCodeField(),
             contactInformationElement,
             billingAddressElement,
@@ -39,15 +38,13 @@ extension PaymentSheetFormFactory {
         return FormElement(autoSectioningElements: autoSectioningElements, theme: theme)
     }
 
-    private func makeBLIKHeader() -> StaticElement {
-        return makeSectionTitleLabelWith(text: STPLocalizedString("Buy using a BLIK Code",
-                                                                  "Header text shown above a BLIK Code 6-digit code field"))
-    }
 
     private func makeCodeField() -> PaymentMethodElementWrapper<TextFieldElement> {
-        return PaymentMethodElementWrapper(TextFieldElement.makeVPA(theme: theme)) { vpa, params in
+        return PaymentMethodElementWrapper(TextFieldElement.makeBlikCode(theme: theme)) { blikCode, params in
             let blik = params.paymentMethodParams.blik ?? STPPaymentMethodBLIKParams()
-        
+            
+            
+            
             params.paymentMethodParams.blik = blik
             return params
         }
