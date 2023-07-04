@@ -145,6 +145,8 @@ class PaymentSheetFormFactory {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         } else if paymentMethod == .UPI {
             return makeDefaultsApplierWrapper(for: makeUPI())
+        } else if paymentMethod == .blik{
+            return makeDefaultsApplierWrapper(for: makeBLIK())
         } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
             // special case, display mandate for Cash App when setting up or pi+sfu
             additionalElements = [makeCashAppMandate()]
