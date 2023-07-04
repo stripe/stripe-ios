@@ -158,6 +158,8 @@ extension STPPaymentMethodType {
                     return .pm_type_upi
                 case .cashApp:
                     return .pm_type_cashapp
+                case .blik:
+                    return .pm_type_blik
                 default:
                     return nil
                 }
