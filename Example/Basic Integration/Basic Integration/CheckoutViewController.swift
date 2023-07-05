@@ -20,11 +20,11 @@ class CheckoutViewController: UIViewController {
     // https://github.com/stripe/example-mobile-backend/tree/v18.1.0, click "Deploy to Heroku", and follow
     // the instructions (don't worry, it's free). Replace nil on the line below with your
     // Heroku URL (it looks like https://blazing-sunrise-1234.herokuapp.com ).
-    var backendBaseURL: String?
+    var backendBaseURL: String? = "https://stripe-basic-integration-backend-example.glitch.me"
 
     // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/apple-pay
     // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
-    var appleMerchantID: String? = ""
+    var appleMerchantID: String? = "merchant.com.stripe"
 
     // These values will be shown to the user when they purchase with Apple Pay.
     let companyName = "Emoji Apparel"
@@ -109,6 +109,10 @@ class CheckoutViewController: UIViewController {
             return result + product.price
         }
         paymentContext.paymentCurrency = self.paymentCurrency
+        if #available(iOS 17.0, *) {
+            // Set `applePayLaterAvailability` if Apple Pay Later is not available for this transaction e.g. the customer is buying unsupported items like alcohol or you're saving the customer's card details for future usage.
+            paymentContext.applePayLaterAvailability = .unavailableRecurringTransaction
+        }
 
         self.tableView = UITableView()
 
