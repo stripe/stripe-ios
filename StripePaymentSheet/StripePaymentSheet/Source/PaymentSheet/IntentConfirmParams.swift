@@ -26,6 +26,7 @@ class IntentConfirmParams {
 
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: PaymentSheet.PaymentMethodType
+    let paymentIntentParams: STPPaymentIntentParams
 
     /// True if the customer opts to save their payment method for future payments.
     var saveForFutureUseCheckboxState: SaveForFutureUseCheckboxState = .hidden
@@ -55,20 +56,30 @@ class IntentConfirmParams {
     }
 
     convenience init(type: PaymentSheet.PaymentMethodType) {
+        // TODO: Retreive this client string
+        let clientSecret = ""
         if let paymentType = type.stpPaymentMethodType {
-            let params = STPPaymentMethodParams(type: paymentType)
-            self.init(params: params, type: type)
+            let method_params = STPPaymentMethodParams(type: paymentType)
+            let intent_params  = STPPaymentIntentParams(clientSecret: clientSecret, paymentMethodType: paymentType)
+            
+            self.init(method_params: method_params, intent_params: intent_params, type: type)
         } else {
-            let params = STPPaymentMethodParams(type: .unknown)
-            params.rawTypeString = PaymentSheet.PaymentMethodType.string(from: type)
-            self.init(params: params, type: type)
+            
+            let method_params = STPPaymentMethodParams(type: .unknown)
+            let intent_params  = STPPaymentIntentParams(clientSecret: clientSecret , paymentMethodType: .unknown)
+            method_params.rawTypeString = PaymentSheet.PaymentMethodType.string(from: type)
+            
+            self.init(method_params: method_params, intent_params: intent_params, type: type)
         }
     }
-
-    init(params: STPPaymentMethodParams, type: PaymentSheet.PaymentMethodType) {
+    
+    init(method_params: STPPaymentMethodParams, intent_params: STPPaymentIntentParams, type: PaymentSheet.PaymentMethodType) {
         self.paymentMethodType = type
-        self.paymentMethodParams = params
+        self.paymentMethodParams = method_params
+        self.paymentIntentParams = intent_params
     }
+    
+   
 
     func makeDashboardParams(
         paymentIntentClientSecret: String,
