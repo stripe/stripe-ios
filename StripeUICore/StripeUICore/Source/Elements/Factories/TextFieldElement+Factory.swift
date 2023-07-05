@@ -136,8 +136,7 @@ import UIKit
             guard !text.isEmpty else {
                 return isOptional ? .valid : .invalid(Error.empty)
             }
-            // TODO: Validate Blik number
-            return STPVPANumberValidator.stringIsValidVPANumber(text) ? .valid : .invalid(invalidError)
+            return STPVPANumberValidator.stringIsValidBlikCode(text) ?.valid: .invalid(invalidError)
         }
         
         public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {

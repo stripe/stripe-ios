@@ -25,4 +25,14 @@ import Foundation
         let predicate = NSPredicate(format: "SELF MATCHES %@", pattern)
         return predicate.evaluate(with: string?.lowercased())
     }
+    
+    public class func stringIsValidBlikCode(_ string: String?) -> Bool {
+        if string == nil || (string?.count ?? 0) > 6 {
+            return false
+        }
+        // regex from https://stackoverflow.com/questions/55143204/how-to-validate-a-upi-id-using-regex
+        let pattern = "^[0-9]{6}$"
+        let predicate = NSPredicate(format: "SELF MATCHES %@", pattern)
+        return predicate.evaluate(with: string)
+    }
 }
