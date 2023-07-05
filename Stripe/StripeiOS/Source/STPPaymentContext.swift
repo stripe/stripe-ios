@@ -105,6 +105,11 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         apiClient = STPAPIClient.shared
         modalPresentationStyle = .fullScreen
         state = STPPaymentContextState.none
+        if #available(macOS 14.0, iOS 17.0, *) {
+            self._applePayLaterAvailability = PKApplePayLaterAvailability.available
+        } else {
+            self._applePayLaterAvailability = 0
+        }
         super.init()
         retryLoading()
     }
@@ -327,6 +332,20 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             )
         }
     }
+    
+    /// A value that indicates whether Apple Pay Later is available for a transaction.
+    /// Defaults to enabled.
+    /// - Seealso: This property is mirrors `PKPaymentRequest.applePayLaterAvailability`
+    @available(macOS 14.0, iOS 17.0, *)
+    @objc public var applePayLaterAvailability: PKApplePayLaterAvailability {
+        get {
+           _applePayLaterAvailability as! PKApplePayLaterAvailability
+        }
+        set {
+          _applePayLaterAvailability = newValue
+        }
+    }
+    private var _applePayLaterAvailability: Any
     /// The presentation style used for all view controllers presented modally by the context.
     /// Since custom transition styles are not supported, you should set this to either
     /// `UIModalPresentationFullScreen`, `UIModalPresentationPageSheet`, or `UIModalPresentationFormSheet`.
@@ -1049,6 +1068,10 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             country: paymentCountry,
             currency: paymentCurrency
         )
+        
+        if #available(macOS 14.0, iOS 17.0, *) {
+            paymentRequest.applePayLaterAvailability = applePayLaterAvailability._convertedToSwiftValue()
+        }
 
         let summaryItems = paymentSummaryItems
         paymentRequest.paymentSummaryItems = summaryItems
@@ -1203,4 +1226,20 @@ private var kSTPPaymentCoordinatorAssociatedObjectKey = 0
 /// :nodoc:
 @_spi(STP) extension STPPaymentContext: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier = "STPPaymentContext"
+}
+
+@available(macOS 14.0, iOS 17.0, *)
+extension PKApplePayLaterAvailability {
+    func _convertedToSwiftValue() -> PKPaymentRequest.ApplePayLaterAvailability {
+        switch self {
+        case .available:
+            return .available
+        case .unavailableItemIneligible:
+            return .unavailable(.itemIneligible)
+        case .unavailableRecurringTransaction:
+            return .unavailable(.recurringTransaction)
+        @unknown default:
+            fatalError()
+        }
+    }
 }
