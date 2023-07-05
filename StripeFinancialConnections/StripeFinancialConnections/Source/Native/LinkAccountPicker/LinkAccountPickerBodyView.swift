@@ -89,7 +89,7 @@ final class LinkAccountPickerBodyView: UIView {
         // add a 'new bank account' button row
         let newAccountRowView = LinkAccountPickerNewAccountRowView(
             title: addNewAccount.body,
-            imageUrl: addNewAccount.icon.default,
+            imageUrl: addNewAccount.icon?.default,
             didSelect: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.linkAccountPickerBodyView(
@@ -123,7 +123,7 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
-                        name: "Advantage Plus Checking",
+                        name: "Advantage Plus Checking With Extra Words",
                         displayableAccountNumbers: "1324",
                         linkedAccountId: nil,
                         balanceAmount: 100000,

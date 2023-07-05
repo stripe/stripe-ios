@@ -671,34 +671,18 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
     ) {
-        pushPane(nextPane, animated: true)
+        dataManager.linkedAccounts = [selectedAccount]
     }
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount,
-        institution: FinancialConnectionsInstitution
+        didRequestSuccessPaneWithInstitution institution: FinancialConnectionsInstitution
     ) {
+        assert(dataManager.linkedAccounts?.count == 1, "expected a selected account to be set")
         dataManager.institution = institution
-        dataManager.linkedAccounts = [selectedAccount]
         pushPane(.success, animated: true)
-    }
-
-    func linkAccountPickerViewController(
-        _ viewController: LinkAccountPickerViewController,
-        requestedStepUpVerificationWithSelectedAccount selectedAccount: FinancialConnectionsPartnerAccount
-    ) {
-        dataManager.linkedAccounts = [selectedAccount]
-        pushPane(.networkingLinkStepUpVerification, animated: true)
-    }
-
-    func linkAccountPickerViewController(
-        _ viewController: LinkAccountPickerViewController,
-        didReceiveTerminalError error: Error
-    ) {
-        showTerminalError(error)
     }
 
     func linkAccountPickerViewController(
@@ -707,6 +691,20 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
     ) {
         dataManager.institution = institution
         pushPane(.partnerAuth, animated: true)
+    }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    ) {
+        pushPane(nextPane, animated: true)
+    }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        showTerminalError(error)
     }
 }
 

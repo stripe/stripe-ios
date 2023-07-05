@@ -11,6 +11,7 @@ final class AccountPickerHelpers {
     static func rowTitles(forAccount account: FinancialConnectionsPartnerAccount) -> (
         leadingTitle: String, trailingTitle: String?
     ) {
+        // TODO: think about the fact that caption changes balance ~info
         let willDisplayBalanceInfoInSubtitle = account.balanceInfo != nil
         if willDisplayBalanceInfoInSubtitle {
             return (account.name, "••••\(account.displayableAccountNumbers ?? "")")

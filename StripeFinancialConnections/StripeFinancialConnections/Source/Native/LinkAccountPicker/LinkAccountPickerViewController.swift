@@ -18,13 +18,12 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount,
-        institution: FinancialConnectionsInstitution
+        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
     )
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        requestedStepUpVerificationWithSelectedAccount selectedAccount: FinancialConnectionsPartnerAccount
+        didRequestSuccessPaneWithInstitution institution: FinancialConnectionsInstitution
     )
 
     func linkAccountPickerViewController(
@@ -170,26 +169,13 @@ final class LinkAccountPickerViewController: UIViewController {
             .accountPickerAccount
             .nextPaneOnSelection
 
-        if nextPane == .networkingLinkStepUpVerification {
-            delegate?.linkAccountPickerViewController(
-                self,
-                requestedStepUpVerificationWithSelectedAccount: selectedAccountTuple.partnerAccount
-            )
-        } else if nextPane == .partnerAuth {
-            if let institution = selectedAccountTuple.partnerAccount.institution {
-                delegate?.linkAccountPickerViewController(
-                    self,
-                    requestedPartnerAuthWithInstitution: institution
-                )
-            } else {
-                delegate?.linkAccountPickerViewController(
-                    self,
-                    didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
-                        debugDescription: "LinkAccountPicker wanted to go to partner_auth but there is no institution."
-                    )
-                )
-            }
-        } else if nextPane == .success {
+        // update data model with selected account
+        delegate?.linkAccountPickerViewController(
+            self,
+            didSelectAccount: selectedAccountTuple.partnerAccount
+        )
+
+        if nextPane == .success {
             let linkingAccountsLoadingView = LinkingAccountsLoadingView(
                 numberOfSelectedAccounts: 1,
                 businessName: businessName
@@ -209,7 +195,10 @@ final class LinkAccountPickerViewController: UIViewController {
                                 pane: .linkAccountPicker
                             )
                         if let institution = institutionList.data.first {
-                            self.delegate?.linkAccountPickerViewController(self, didSelectAccount: selectedAccountTuple.partnerAccount, institution: institution)
+                            self.delegate?.linkAccountPickerViewController(
+                                self,
+                                didRequestSuccessPaneWithInstitution: institution
+                            )
                         } else {
                             // this should never happen, but in case it does we want to force a
                             // a terminal error so user can start again with a fresh state
@@ -239,6 +228,20 @@ final class LinkAccountPickerViewController: UIViewController {
                         self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
                     }
                 }
+        } else if nextPane == .partnerAuth {
+            if let institution = selectedAccountTuple.partnerAccount.institution {
+                delegate?.linkAccountPickerViewController(
+                    self,
+                    requestedPartnerAuthWithInstitution: institution
+                )
+            } else {
+                delegate?.linkAccountPickerViewController(
+                    self,
+                    didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
+                        debugDescription: "LinkAccountPicker wanted to go to partner_auth but there is no institution."
+                    )
+                )
+            }
         } else if let nextPane = nextPane {
             if nextPane == .bankAuthRepair {
                 dataSource
