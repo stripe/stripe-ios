@@ -1,6 +1,6 @@
 ## X.Y.Z 2023-XX-YY
 ### PaymentSheet
-* [Added] You can now collect payment details before creating a PaymentIntent/SetupIntent - see https://stripe.com/docs/payments/accept-a-payment-deferred. This integration also lets you confirm the Intent on the server - see https://stripe.com/docs/payments/finalize-payments-on-the-server.
+* [Added] You can now collect payment details before creating a PaymentIntent or SetupIntent. See [our docs](https://stripe.com/docs/payments/accept-a-payment-deferred) for more info. This integration also allows you to [confirm the Intent on the server](https://stripe.com/docs/payments/finalize-payments-on-the-server).
 * [Added] US bank accounts are now supported when initializing with an IntentConfiguration.
 
 ## 23.9.3 2023-06-26
