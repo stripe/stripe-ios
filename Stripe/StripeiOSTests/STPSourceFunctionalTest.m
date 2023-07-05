@@ -11,6 +11,7 @@
 @import StripeCore;
 
 #import "STPTestingAPIClient.h"
+#import "STPFixtures.h"
 
 @interface STPSourceFunctionalTest : XCTestCase
 @end
@@ -623,18 +624,28 @@
     }];
     [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
-/*
-// Failing test, due to USD not being a valid currency:
- https://jira.corp.stripe.com/browse/RUN_MOBILESDK-2454
+
+// 7/5/2023: Unfortunately we have to mock this test out because Wechat is strict about the usage of test merchants
+// in production.  We were previously using:
+// STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_live_L4KL0pF017Jgv9hBaWzk4xoB"];
+// However, unable to continue with running this test live in production
 - (void)testCreateSource_wechatPay {
     STPSourceParams *params = [STPSourceParams wechatPayParamsWithAmount:1010
                                                                 currency:@"usd"
                                                                    appId:@"wxa0df51ec63e578ce"
                                                      statementDescriptor:nil];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_live_L4KL0pF017Jgv9hBaWzk4xoB"];
+    id mockClient = OCMClassMock([STPAPIClient class]);
+    OCMStub([mockClient createSourceWithParams:[OCMArg any]
+                                    completion:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation) {
+        void (^completion)(STPSource *data, NSError *error);
+        [invocation getArgument:&completion atIndex:3];
+        completion(STPFixtures.weChatPaySource, nil);
+    });
+
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
-    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+    [mockClient createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
         XCTAssertEqual(source.type, STPSourceTypeWeChatPay);
@@ -650,5 +661,4 @@
     }];
     [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
-*/
 @end
