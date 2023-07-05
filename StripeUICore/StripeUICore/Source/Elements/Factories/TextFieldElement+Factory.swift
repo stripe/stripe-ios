@@ -139,11 +139,14 @@ import UIKit
             // TODO: Validate Blik number
             return STPVPANumberValidator.stringIsValidVPANumber(text) ? .valid : .invalid(invalidError)
         }
-
+        
         public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
             return .init(type: .numberPad, textContentType: .none, autocapitalization: .none)
         }
-
+        
+        public func maxLength(for text: String) -> Int {
+            return 6
+        }
     }
 
     static func makeBlikCode(theme: ElementsUITheme = .default) -> TextFieldElement {
