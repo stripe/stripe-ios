@@ -45,22 +45,19 @@ extension STPAnalyticsClient {
             success = true
         }
 
-        print(success)
-        print(deferredIntentConfirmationType?.rawValue ?? "—")
-
-//        logPaymentSheetEvent(
-//            event: paymentSheetPaymentEventValue(
-//                isCustom: isCustom,
-//                paymentMethod: paymentMethod,
-//                success: success
-//            ),
-//            duration: AnalyticsHelper.shared.getDuration(for: .checkout),
-//            linkEnabled: linkEnabled,
-//            activeLinkSession: activeLinkSession,
-//            linkSessionType: linkSessionType,
-//            currency: currency,
-//            intentConfig: intentConfig
-//        )
+        logPaymentSheetEvent(
+            event: paymentSheetPaymentEventValue(
+                isCustom: isCustom,
+                paymentMethod: paymentMethod,
+                success: success
+            ),
+            duration: AnalyticsHelper.shared.getDuration(for: .checkout),
+            linkEnabled: linkEnabled,
+            activeLinkSession: activeLinkSession,
+            linkSessionType: linkSessionType,
+            currency: currency,
+            intentConfig: intentConfig
+        )
     }
 
     func logPaymentSheetShow(
