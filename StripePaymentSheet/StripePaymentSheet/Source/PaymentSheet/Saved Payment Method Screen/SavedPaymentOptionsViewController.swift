@@ -54,6 +54,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let customerID: String?
         let showApplePay: Bool
         let showLink: Bool
+        let removeSavedDialogBody: String?
 
         enum AutoSelectDefaultBehavior {
             /// will only autoselect default has been stored locally
@@ -379,7 +380,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
 
         let alertController = UIAlertController(
             title: paymentMethod.removalMessage.title,
-            message: paymentMethod.removalMessage.message,
+            message: configuration.removeSavedDialogBody != nil ? configuration.removeSavedDialogBody : paymentMethod.removalMessage.message,
             preferredStyle: .alert
         )
 

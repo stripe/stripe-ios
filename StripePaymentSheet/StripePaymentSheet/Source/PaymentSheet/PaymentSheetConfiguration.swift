@@ -108,6 +108,7 @@ extension PaymentSheet {
         /// for payment and setup intents.
         public var primaryButtonLabel: String?
 
+        
         private var styleRawValue: Int = 0  // SheetStyle.automatic.rawValue
         /// The color styling to use for PaymentSheet UI
         /// Default value is SheetStyle.automatic
@@ -163,6 +164,8 @@ extension PaymentSheet {
         /// If `never` is used for a required field for the Payment Method used during checkout,
         /// you **must** provide an appropriate value as part of `defaultBillingDetails`.
         public var billingDetailsCollectionConfiguration = BillingDetailsCollectionConfiguration()
+        
+        public var removeSavedDialogBody: String?
     }
 
     /// Configuration related to the Stripe Customer
