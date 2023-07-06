@@ -17,7 +17,7 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_PayWithLinkButton)
 final class PayWithLinkButton: UIControl {
-    
+
     struct Constants {
         static let defaultSize: CGSize = .init(width: 200, height: 44)
         static let logoSize: CGSize = .init(width: 29, height: 13)
@@ -28,45 +28,45 @@ final class PayWithLinkButton: UIControl {
         static let cardBrandInsets: UIEdgeInsets = .init(top: 1, left: 0, bottom: 0, right: 0)
         static let arrowInsets: UIEdgeInsets = .init(top: 1, left: 0, bottom: 0, right: 0)
     }
-    
+
     /// Link account of the current user.
     var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountContext.shared.account {
         didSet {
             updateUI()
         }
     }
-    
+
     var cornerRadius: CGFloat = ElementsUI.defaultCornerRadius {
         didSet {
             setNeedsLayout()
         }
     }
-    
+
     override var isHighlighted: Bool {
         didSet {
             applyStyle()
         }
     }
-    
+
     override var isEnabled: Bool {
         didSet {
             applyStyle()
         }
     }
-    
+
     override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: Constants.defaultSize.height)
     }
-    
+
     private let titleBaseFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium)
-    
+
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private lazy var emailLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -81,7 +81,7 @@ final class PayWithLinkButton: UIControl {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private lazy var last4Label: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -91,7 +91,7 @@ final class PayWithLinkButton: UIControl {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private lazy var payWithLinkView: UILabel = {
         let linkView = UILabel()
         linkView.textAlignment = .center
@@ -100,30 +100,30 @@ final class PayWithLinkButton: UIControl {
         linkView.translatesAutoresizingMaskIntoConstraints = false
         linkView.font = UIFont.systemFont(ofSize: 15, weight: .medium)
             .scaled(withTextStyle: .callout, maximumPointSize: 16)
-        
-        let payWithLinkString = NSMutableAttributedString(string:String.Localized.pay_with_payment_method)
+
+        let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_payment_method)
 
         // Create the Link logo attachment
         let linkImage = Image.link_logo.makeImage(template: true)
         let linkAttachment = NSTextAttachment(image: linkImage)
         let linkLogoRatio = linkImage.size.width / linkImage.size.height
-        
+
         // Link logo should be a little taller than the height of a cap in SF Medium
         let linkLogoHeight = linkView.font.capHeight + (linkView.font.pointSize * 0.15)
         linkAttachment.bounds = CGRect(x: 0, y: 0, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
-        
+
         // Add a spacer before the Link logo and after the Link logo
         let range = payWithLinkString.mutableString.range(of: "%@")
         payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location + range.length)
         payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location)
-        
+
         // Add the Link attachment
         payWithLinkString.replaceOccurrences(of: "%@", with: linkAttachment)
-        
+
         linkView.attributedText = payWithLinkString
         return linkView
     }()
-    
+
     private lazy var payWithStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             payWithLinkView,
@@ -135,8 +135,7 @@ final class PayWithLinkButton: UIControl {
         stackView.alignment = .center
         return stackView
     }()
-    
-    
+
     private lazy var emailSeparatorView: UIView = Self.makeSeparatorView()
     private lazy var emailStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
@@ -152,21 +151,21 @@ final class PayWithLinkButton: UIControl {
         stackView.alignment = .center
         return stackView
     }()
-    
+
     private lazy var cardBrandSeparatorView: UIView = Self.makeSeparatorView()
     private lazy var cardBrandView: UIImageView = {
         let brandView = UIImageView(image: STPImageLibrary.unknownCardCardImage())
         brandView.translatesAutoresizingMaskIntoConstraints = false
         brandView.contentMode = .scaleAspectFill
-        
+
         NSLayoutConstraint.activate([
             brandView.widthAnchor.constraint(equalToConstant: Constants.cardBrandSize.width),
             brandView.heightAnchor.constraint(equalToConstant: Constants.cardBrandSize.height),
         ])
-        
+
         return brandView
     }()
-    
+
     private lazy var cardStackView: UIStackView = {
         let logoView = Self.makeLogoView()
         let stackView = UIStackView(arrangedSubviews: [
@@ -184,143 +183,143 @@ final class PayWithLinkButton: UIControl {
         stackView.alignment = .center
         return stackView
     }()
-    
+
     enum LinkAccountState {
         case noValidAccount
         case hasCard(last4: String, brand: STPCardBrand)
         case hasEmail(email: String)
     }
-    
+
     var linkAccountState: LinkAccountState {
         if !(linkAccount?.isRegistered ?? false) {
             return .noValidAccount
         }
-        
+
         if let last4 = linkAccount?.last4, let brand = linkAccount?.lastBrand {
             return .hasCard(last4: last4, brand: brand)
         }
-        
+
         if let email = linkAccount?.email {
             return .hasEmail(email: email)
         }
-        
+
         return .noValidAccount
     }
-    
+
     init() {
         super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true
         setupUI()
         applyStyle()
         updateUI()
-        
+
         // Listen for account changes
         LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         // Stop listening for account changes
         LinkAccountContext.shared.removeObserver(self)
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         applyCornerRadius()
     }
-    
+
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         bounds.contains(point) ? self : nil
     }
-    
+
     @objc
     func onAccountChange(_ notification: Notification) {
         DispatchQueue.main.async { [weak self] in
             self?.linkAccount = notification.object as? PaymentSheetLinkAccount
         }
     }
-    
+
 }
 
 // MARK: - UI
 
 private extension PayWithLinkButton {
-    
+
     static func makeSpacerString(width: CGFloat) -> NSAttributedString {
         let spacerAttachment = NSTextAttachment()
         spacerAttachment.bounds = CGRect(x: 0, y: 0, width: width, height: 0)
         return NSAttributedString(attachment: spacerAttachment)
     }
-    
+
     static func makeLogoView() -> UIImageView {
         let logoView = UIImageView(image: Image.link_logo.makeImage(template: true))
         logoView.translatesAutoresizingMaskIntoConstraints = false
         logoView.contentMode = .scaleAspectFill
-        
+
         NSLayoutConstraint.activate([
             logoView.widthAnchor.constraint(equalToConstant: Constants.logoSize.width),
             logoView.heightAnchor.constraint(equalToConstant: Constants.logoSize.height),
         ])
-        
+
         return logoView
     }
-    
+
     static func makeArrowView() -> UIImageView {
         let arrowView = UIImageView(image: Image.link_arrow.makeImage(template: true)
             .withAlignmentRectInsets(Constants.cardBrandInsets)
         )
         arrowView.translatesAutoresizingMaskIntoConstraints = false
         arrowView.contentMode = .scaleAspectFill
-        
+
         NSLayoutConstraint.activate([
             arrowView.widthAnchor.constraint(equalToConstant: Constants.arrowSize.width),
             arrowView.heightAnchor.constraint(equalToConstant: Constants.arrowSize.height),
         ])
-        
+
         return arrowView
     }
-    
+
     static func makeSeparatorView() -> UIView {
         let lineView = UIView()
         lineView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             lineView.widthAnchor.constraint(equalToConstant: Constants.separatorSize.width),
             lineView.heightAnchor.constraint(equalToConstant: Constants.separatorSize.height),
         ])
-        
+
         return lineView
     }
-    
+
     func setupUI() {
         directionalLayoutMargins = Constants.margins
         addSubview(payWithStackView)
         addSubview(emailStackView)
         addSubview(cardStackView)
-        
+
         NSLayoutConstraint.activate([
             payWithStackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             payWithStackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             payWithStackView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
-            
+
             emailStackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             emailStackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             emailStackView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
-            
+
             // Keep the views within the button, compressing the email if needed
             emailStackView.leadingAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.leadingAnchor),
             emailStackView.trailingAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor),
-            
+
             cardStackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             cardStackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             cardStackView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
-            
+
         ])
     }
-    
+
     func updateUI() {
         switch linkAccountState {
         case .hasCard(let last4, let brand):
@@ -330,14 +329,14 @@ private extension PayWithLinkButton {
                 )
             cardBrandView.image = cardImage
             last4Label.text = last4
-            
+
             cardStackView.isHidden = false
             payWithLinkView.isHidden = true
             emailStackView.isHidden = true
             payWithStackView.isHidden = true
         case .hasEmail(let email):
             emailLabel.text = email
-            
+
             payWithLinkView.isHidden = true
             cardStackView.isHidden = true
             emailStackView.isHidden = false
@@ -349,25 +348,25 @@ private extension PayWithLinkButton {
         }
         updateAccessibilityContent()
     }
-    
+
 }
 
 // MARK: - Styling
 
 private extension PayWithLinkButton {
-    
+
     var effectiveCornerRadius: CGFloat {
         // Matches the formula used by `PKPaymentButton` for calculating
         // the effective corner radius. The effective corner radius is snapped
         // to half the button's height if the corner radius is
         // greater or equals than approx. 1/3 of the height (`threshold`).
         let threshold = 0.32214
-        
+
         return cornerRadius >= bounds.height * threshold
         ? bounds.height / 2
         : cornerRadius
     }
-    
+
     func applyStyle() {
         // Foreground
         let foregroundColor = self.foregroundColor(for: state)
@@ -377,23 +376,23 @@ private extension PayWithLinkButton {
         payWithStackView.tintColor = foregroundColor
         cardStackView.tintColor = foregroundColor
         emailLabel.textColor = foregroundColor
-        
+
         // Background
         backgroundColor = backgroundColor(for: state)
-        
+
         // Separators
         emailSeparatorView.backgroundColor = separatorColor(for: state)
         cardBrandSeparatorView.backgroundColor = separatorColor(for: state)
     }
-    
+
     func applyCornerRadius() {
         if #available(iOS 13.0, *) {
             layer.cornerCurve = .continuous
         }
-        
+
         layer.cornerRadius = effectiveCornerRadius
     }
-    
+
     func foregroundColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
@@ -402,7 +401,7 @@ private extension PayWithLinkButton {
             return UIColor.linkPrimaryButtonForeground
         }
     }
-    
+
     func backgroundColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
@@ -413,7 +412,7 @@ private extension PayWithLinkButton {
             return UIColor.linkBrand
         }
     }
-    
+
     func separatorColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
@@ -424,26 +423,26 @@ private extension PayWithLinkButton {
             return UIColor.linkBrand600
         }
     }
-    
+
 }
 
 // MARK: - Accessibility
 
 private extension PayWithLinkButton {
-    
+
     func updateAccessibilityContent() {
         if isEnabled {
             accessibilityTraits = [.button]
         } else {
             accessibilityTraits = [.button, .notEnabled]
         }
-        
+
         // To use Xcode SwiftUI Previews, comment out the following `accessibilityLabel` setter:
         accessibilityLabel = String(
             format: String.Localized.pay_with_payment_method,
             STPPaymentMethodType.link.displayName
         )
-        
+
         switch linkAccountState {
         case .hasCard(let last4, let brand):
             accessibilityValue = "\(STPCardBrandUtilities.stringFrom(brand) ?? "Unknown") \(last4)"
@@ -451,9 +450,9 @@ private extension PayWithLinkButton {
             accessibilityValue = email
         case .noValidAccount:
             accessibilityValue = nil
-        }        
+        }
     }
-    
+
 }
 
 // For previews in Xcode
@@ -462,23 +461,23 @@ import SwiftUI
 
 struct UIViewPreview<View: UIView>: UIViewRepresentable {
     let view: View
-    
+
     init(_ builder: @escaping () -> View) {
         view = builder()
     }
-    
+
     // MARK: UIViewRepresentable
     func makeUIView(context: Context) -> UIView {
         return view
     }
-    
+
     func updateUIView(_ view: UIView, context: Context) {
         view.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         view.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }
 
-fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
+private struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
     let email: String
     let redactedPhoneNumber: String?
     let last4: String?
@@ -487,7 +486,7 @@ fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
     let isLoggedIn: Bool
 }
 
-fileprivate func makeAccountStub(email: String, isRegistered: Bool, last4: String?, lastBrand: STPCardBrand?) -> LinkAccountStub {
+private func makeAccountStub(email: String, isRegistered: Bool, last4: String?, lastBrand: STPCardBrand?) -> LinkAccountStub {
     return LinkAccountStub(
         email: email,
         redactedPhoneNumber: "+1********55",
