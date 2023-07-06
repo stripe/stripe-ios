@@ -164,6 +164,7 @@ extension PaymentSheet {
         /// you **must** provide an appropriate value as part of `defaultBillingDetails`.
         public var billingDetailsCollectionConfiguration = BillingDetailsCollectionConfiguration()
 
+        /// Optional configuration to display a custom message when a saved payment method is removed.
         public var removeSavedDialogBody: String?
     }
 
