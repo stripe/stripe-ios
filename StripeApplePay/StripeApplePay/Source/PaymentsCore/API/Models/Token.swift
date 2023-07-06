@@ -11,12 +11,13 @@ import PassKit
 @_spi(STP) import StripeCore
 
 extension StripeAPI {
-    struct Token: UnknownFieldsDecodable {
-        var _allResponseFieldsStorage: NonEncodableParameters?
+    // Internal note: @_spi(StripeApplePayTokenization) is intended for limited public use. See https://docs.google.com/document/d/1Z9bTUBvDDufoqTaQeI3A0Cxdsoj_D0IkxdWX-GB-RTQ
+    @_spi(StripeApplePayTokenization) public struct Token: UnknownFieldsDecodable {
+        public var _allResponseFieldsStorage: NonEncodableParameters?
 
         /// The value of the token. You can store this value on your server and use it to make charges and customers.
         /// - seealso: https://stripe.com/docs/payments/charges-api
-        let id: String
+        public let id: String
         /// Whether or not this token was created in livemode. Will be YES if you used your Live Publishable Key, and NO if you used your Test Publishable Key.
         var livemode: Bool
         /// The type of this token.

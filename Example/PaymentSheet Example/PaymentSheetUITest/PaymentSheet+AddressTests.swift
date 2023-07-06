@@ -149,18 +149,18 @@ US
         app.textFields["Address"].waitForExistenceAndTap()
 
         // Enter partial address and tap first result
-        app.typeText("4 Pennsylvania Plaza")
-        let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", "4 Pennsylvania Plaza")).element
+        app.typeText("354 Oyster Point")
+        let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", "354 Oyster Point Blvd")).element
         _ = searchedCell.waitForExistence(timeout: 5)
         searchedCell.tap()
 
         // Verify text fields
         _ = app.textFields["Address line 1"].waitForExistence(timeout: 5)
-        XCTAssertEqual(app.textFields["Address line 1"].value as! String, "4 Pennsylvania Plaza")
+        XCTAssertEqual(app.textFields["Address line 1"].value as! String, "354 Oyster Point Blvd")
         XCTAssertEqual(app.textFields["Address line 2"].value as! String, "")
-        XCTAssertEqual(app.textFields["City"].value as! String, "New York")
-        XCTAssertEqual(app.textFields["State"].value as! String, "New York")
-        XCTAssertEqual(app.textFields["ZIP"].value as! String, "10001")
+        XCTAssertEqual(app.textFields["City"].value as! String, "South San Francisco")
+        XCTAssertEqual(app.textFields["State"].value as! String, "California")
+        XCTAssertEqual(app.textFields["ZIP"].value as! String, "94080")
 
         // Type in phone number
         app.textFields["Phone"].tap()
@@ -176,8 +176,8 @@ US
         // The merchant app should get back the expected address
         let expectedAddress = """
 Jane Doe
-4 Pennsylvania Plaza
-New York NY 10001
+354 Oyster Point Blvd
+South San Francisco CA 94080
 US
 +15555555555
 """

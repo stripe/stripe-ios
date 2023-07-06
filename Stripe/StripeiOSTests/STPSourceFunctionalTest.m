@@ -11,6 +11,7 @@
 @import StripeCore;
 
 #import "STPTestingAPIClient.h"
+#import "STPFixtures.h"
 
 @interface STPSourceFunctionalTest : XCTestCase
 @end
@@ -624,15 +625,53 @@
     [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
-- (void)testCreateSource_wechatPay {
+// 7/5/2023:
+// Previously, we were allowed to use live keys and test w/ wechat on sources would generated "ios_native_url"
+// however, this is no longer possible.  Therefore, to get ample test coverage, we will have two tests:
+// - testCreateSource_wechatPay_testMode - run in test mode, to ensure we can still call sources
+// - testCreateSource_wechatPay_mocked - run a mocked version which is what we would expect in live mode
+- (void)testCreateSource_wechatPay_testMode {
+    STPSourceParams *params = [STPSourceParams wechatPayParamsWithAmount:1010
+                                                                currency:@"usd"
+                                                                   appId:@"wxa0df51ec63e578ce"
+                                                     statementDescriptor:nil];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_h0JFD5q63mLThM5JVSbrREmR"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
+    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeWeChatPay);
+        XCTAssertEqual(source.status, STPSourceStatusPending);
+        XCTAssertEqualObjects(source.amount, params.amount);
+        XCTAssertNil(source.redirect);
+
+        STPSourceWeChatPayDetails *wechat = source.weChatPayDetails;
+        XCTAssertNotNil(wechat);
+        // Will not be generated in test mode
+        // XCTAssertNotNil(wechat.weChatAppURL);
+
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
+}
+
+- (void)testCreateSource_wechatPay_mocked {
     STPSourceParams *params = [STPSourceParams wechatPayParamsWithAmount:1010
                                                                 currency:@"usd"
                                                                    appId:@"wxa0df51ec63e578ce"
                                                      statementDescriptor:nil];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_live_L4KL0pF017Jgv9hBaWzk4xoB"];
+    id mockClient = OCMClassMock([STPAPIClient class]);
+    OCMStub([mockClient createSourceWithParams:[OCMArg any]
+                                    completion:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation) {
+        void (^completion)(STPSource *data, NSError *error);
+        [invocation getArgument:&completion atIndex:3];
+        completion(STPFixtures.weChatPaySource, nil);
+    });
+
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
-    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+    [mockClient createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
         XCTAssertEqual(source.type, STPSourceTypeWeChatPay);
@@ -648,5 +687,4 @@
     }];
     [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
-
 @end
