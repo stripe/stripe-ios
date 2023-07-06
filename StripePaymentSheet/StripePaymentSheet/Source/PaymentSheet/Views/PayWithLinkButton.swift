@@ -425,10 +425,10 @@ private extension PayWithLinkButton {
         }
         
         // To use Xcode SwiftUI Previews, comment out the following `accessibilityLabel` setter:
-        //        accessibilityLabel = String(
-        //            format: String.Localized.pay_with_payment_method,
-        //            STPPaymentMethodType.link.displayName
-        //        )
+        accessibilityLabel = String(
+            format: String.Localized.pay_with_payment_method,
+            STPPaymentMethodType.link.displayName
+        )
         
         if let email = linkAccount?.email {
             accessibilityValue = email
