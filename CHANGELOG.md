@@ -1,4 +1,4 @@
-## X.Y.Z 2023-XX-YY
+## 23.9.4 2023-07-05
 ### PaymentSheet
 * [Added] US bank accounts are now supported when initializing with an IntentConfiguration (in private beta).
 
