@@ -159,7 +159,8 @@ extension STPPaymentMethodType {
                 case .cashApp:
                     return .pm_type_cashapp
                 case .blik:
-                    return .pm_type_blik
+                    // Temp image
+                    return .pm_type_card
                 default:
                     return nil
                 }
