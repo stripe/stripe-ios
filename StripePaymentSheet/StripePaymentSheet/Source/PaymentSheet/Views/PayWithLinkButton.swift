@@ -74,7 +74,7 @@ final class PayWithLinkButton: UIControl {
             .scaled(withTextStyle: .callout, maximumPointSize: 16)
 
         // Cut off the end of the email if needed, the customer doesn't care as much about the domain
-        emailLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.lineBreakMode = .byTruncatingTail
 
         label.adjustsFontForContentSizeCategory = true
@@ -185,8 +185,26 @@ final class PayWithLinkButton: UIControl {
         return stackView
     }()
     
-    @objc private var hasValidLinkAccount: Bool {
-        return linkAccount?.isRegistered ?? false
+    enum LinkAccountState {
+        case noValidAccount
+        case hasCard(last4: String, brand: STPCardBrand)
+        case hasEmail(email: String)
+    }
+    
+    var linkAccountState: LinkAccountState {
+        if !(linkAccount?.isRegistered ?? false) {
+            return .noValidAccount
+        }
+        
+        if let last4 = linkAccount?.last4, let brand = linkAccount?.lastBrand {
+            return .hasCard(last4: last4, brand: brand)
+        }
+        
+        if let email = linkAccount?.email {
+            return .hasEmail(email: email)
+        }
+        
+        return .noValidAccount
     }
     
     init() {
@@ -304,12 +322,8 @@ private extension PayWithLinkButton {
     }
     
     func updateUI() {
-        // Switch between 3 states:
-        // Has last4 and brand
-        // Has email
-        // Fallback to no account
-        if let last4 = linkAccount?.last4, let brand = linkAccount?.lastBrand {
-            emailLabel.text = last4
+        switch linkAccountState {
+        case .hasCard(let last4, let brand):
             let cardImage = STPImageLibrary.cardBrandImage(for: brand)
                 .withAlignmentRectInsets(
                     Constants.cardBrandInsets
@@ -321,14 +335,14 @@ private extension PayWithLinkButton {
             payWithLinkView.isHidden = true
             emailStackView.isHidden = true
             payWithStackView.isHidden = true
-        } else if let email = linkAccount?.email {
+        case .hasEmail(let email):
             emailLabel.text = email
             
             payWithLinkView.isHidden = true
             cardStackView.isHidden = true
             emailStackView.isHidden = false
             payWithStackView.isHidden = true
-        } else {
+        case .noValidAccount:
             emailStackView.isHidden = true
             cardStackView.isHidden = true
             payWithStackView.isHidden = false
@@ -430,13 +444,14 @@ private extension PayWithLinkButton {
             STPPaymentMethodType.link.displayName
         )
         
-        if let email = linkAccount?.email {
-            accessibilityValue = email
-        } else if let last4 = linkAccount?.last4, let brand = linkAccount?.lastBrand {
+        switch linkAccountState {
+        case .hasCard(let last4, let brand):
             accessibilityValue = "\(STPCardBrandUtilities.stringFrom(brand) ?? "Unknown") \(last4)"
-        } else {
+        case .hasEmail(let email):
+            accessibilityValue = email
+        case .noValidAccount:
             accessibilityValue = nil
-        }
+        }        
     }
     
 }
