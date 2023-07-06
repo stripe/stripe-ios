@@ -625,11 +625,37 @@
     [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
-// 7/5/2023: Unfortunately we have to mock this test out because Wechat is strict about the usage of test merchants
-// in production.  We were previously using:
-// STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_live_L4KL0pF017Jgv9hBaWzk4xoB"];
-// However, unable to continue with running this test live in production
-- (void)testCreateSource_wechatPay {
+// 7/5/2023:
+// Previously, we were allowed to use live keys and test w/ wechat on sources would generated "ios_native_url"
+// however, this is no longer possible.  Therefore, to get ample test coverage, we will have two tests:
+// - testCreateSource_wechatPay_testMode - run in test mode, to ensure we can still call sources
+// - testCreateSource_wechatPay_mocked - run a mocked version which is what we would expect in live mode
+- (void)testCreateSource_wechatPay_testMode {
+    STPSourceParams *params = [STPSourceParams wechatPayParamsWithAmount:1010
+                                                                currency:@"usd"
+                                                                   appId:@"wxa0df51ec63e578ce"
+                                                     statementDescriptor:nil];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_h0JFD5q63mLThM5JVSbrREmR"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
+    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeWeChatPay);
+        XCTAssertEqual(source.status, STPSourceStatusPending);
+        XCTAssertEqualObjects(source.amount, params.amount);
+        XCTAssertNil(source.redirect);
+
+        STPSourceWeChatPayDetails *wechat = source.weChatPayDetails;
+        XCTAssertNotNil(wechat);
+        // Will not be generated in test mode
+        // XCTAssertNotNil(wechat.weChatAppURL);
+
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
+}
+
+- (void)testCreateSource_wechatPay_mocked {
     STPSourceParams *params = [STPSourceParams wechatPayParamsWithAmount:1010
                                                                 currency:@"usd"
                                                                    appId:@"wxa0df51ec63e578ce"
