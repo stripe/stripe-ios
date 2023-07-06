@@ -43,9 +43,7 @@ extension PaymentSheetFormFactory {
         return PaymentMethodElementWrapper(TextFieldElement.makeBlikCode(theme: theme)) { textField, params in
             let _ = params.paymentMethodParams.blik ?? STPPaymentMethodBLIKParams()
             let blikOptions = STPConfirmBLIKOptions(code: textField.text)
-            let confirmPaymentMethodOptions = STPConfirmPaymentMethodOptions()
-            confirmPaymentMethodOptions.blikOptions = blikOptions
-            params.paymentIntentParams.paymentMethodOptions = confirmPaymentMethodOptions
+            params.paymentMethodOptions.blikOptions = blikOptions
             return params
         }
     }
