@@ -199,8 +199,10 @@ extension CustomerSheetTestPlaygroundController {
                   let ephemeralKey = json["customerEphemeralKeySecret"], !ephemeralKey.isEmpty,
                   let customerId = json["customerId"], !customerId.isEmpty,
                   let publishableKey = json["publishableKey"] else {
-                self.isLoading = false
-                self.currentlyRenderedSettings = self.settings
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
+                }
                 return
             }
 
