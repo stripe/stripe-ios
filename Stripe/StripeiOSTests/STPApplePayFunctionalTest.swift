@@ -10,7 +10,7 @@ import PassKit
 import XCTest
 
 @testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeApplePay
+@testable@_spi(STP)@_spi(StripeApplePayTokenization) import StripeApplePay
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
