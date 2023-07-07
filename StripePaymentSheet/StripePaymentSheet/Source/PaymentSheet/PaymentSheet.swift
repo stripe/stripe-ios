@@ -267,8 +267,8 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 intent: paymentSheetViewController.intent,
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler,
-                isFlowController: false)
-            { result, deferredIntentConfirmationType in
+                isFlowController: false
+            ) { result, deferredIntentConfirmationType in
                 if case let .failed(error) = result {
                     self.mostRecentError = error
                 }
@@ -291,9 +291,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 }
             }
         } else {
-            confirm { result, deferredIntentConfirmationType in
-                completion(result, deferredIntentConfirmationType)
-            }
+            confirm(completion)
         }
     }
 

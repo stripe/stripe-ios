@@ -40,9 +40,7 @@ extension PaymentSheet {
                 let applePayContext = STPApplePayContext.create(
                     intent: intent,
                     configuration: configuration,
-                    completion: { result, deferredIntentConfirmationType in
-                        completion(result, deferredIntentConfirmationType)
-                    }
+                    completion: completion
                 )
             else {
                 assertionFailure(PaymentSheetError.applePayNotSupportedOrMisconfigured.debugDescription)
