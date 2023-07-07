@@ -1042,36 +1042,6 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
-    func testDeferredPaymentIntent_ServerSideConfirmation_SEPA() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.integrationType = .deferred_ssc
-        settings.currency = .eur
-        settings.allowsDelayedPMs = .on
-        loadPlayground(
-            app,
-            settings
-        )
-
-        app.buttons["Present PaymentSheet"].tap()
-
-        guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else { XCTFail("Couldn't find SEPA"); return; }
-        sepa.tap()
-
-        app.textFields["Full name"].tap()
-        app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Address line 1"].tap()
-        app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["ZIP"].tap()
-        app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
-        app.buttons["Pay €50.99"].tap()
-        let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-    }
-
     func testDeferredPaymentIntent_SeverSideConfirmation_LostCardDecline() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.integrationType = .deferred_ssc
@@ -1889,8 +1859,87 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
  }
  */
 
+// MARK: - SEPA tests
+class PaymentSheet_SEPA_UI_Tests: PaymentSheetUITestCase {
+    func testSEPADebit_PaymentSheet_SetupIntent_ClientSideConfirmation() {
+        _testSEPA(ui: .paymentSheet, mode: .setup, integrationType: .normal)
+    }
+    
+    func testSEPADebit_PaymentSheet_SetupIntent_ServerSideConfirmation() {
+        _testSEPA(ui: .paymentSheet, mode: .setup, integrationType: .deferred_ssc)
+    }
+    
+    func testSEPADebit_PaymentSheet_PaymentIntent_ClientSideConfirmation() {
+        _testSEPA(ui: .paymentSheet, mode: .payment, integrationType: .normal)
+    }
+    
+    func testSEPADebit_PaymentSheet_PaymentIntent_ServerSideConfirmation() {
+        _testSEPA(ui: .paymentSheet, mode: .payment, integrationType: .deferred_ssc)
+    }
+    
+    func testSEPADebit_PaymentSheet_PaymentIntentWithSetupFutureUsage_ClientSideConfirmation() {
+        _testSEPA(ui: .paymentSheet, mode: .paymentWithSetup, integrationType: .normal)
+    }
+    
+    func testSEPADebit_PaymentSheet_PaymentIntentWithSetupFutureUsage_ServerSideConfirmation() {
+        _testSEPA(ui: .paymentSheet, mode: .paymentWithSetup, integrationType: .deferred_ssc)
+    }
+    
+    // Only test one scenario w/ FlowController - the confirm code is shared between it and PaymentSheet
+    func testSEPADebit_PaymentSheetFlowController_PaymentIntent_ClientSideConfirmation() {
+        _testSEPA(ui: .flowController, mode: .payment, integrationType: .normal)
+    }
+}
+
 // MARK: Helpers
 extension PaymentSheetUITestCase {
+    func _testSEPA(ui: PaymentSheetTestPlaygroundSettings.UIStyle, mode: PaymentSheetTestPlaygroundSettings.Mode, integrationType: PaymentSheetTestPlaygroundSettings.IntegrationType) {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = mode
+        settings.applePayEnabled = .off
+        settings.uiStyle = ui
+        settings.integrationType = integrationType
+        settings.currency = .eur
+        settings.allowsDelayedPMs = .on
+        loadPlayground(
+            app,
+            settings
+        )
+        switch ui {
+        case .paymentSheet:
+            app.buttons["Present PaymentSheet"].tap()
+        case .flowController:
+            app.buttons["Payment method"].tap()
+        }
+
+        guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else { XCTFail("Couldn't find SEPA"); return; }
+        sepa.tap()
+
+        app.textFields["Full name"].tap()
+        app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
+        app.textFields["Address line 1"].tap()
+        app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+        app.textFields["ZIP"].tap()
+        app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+        switch ui {
+        case .paymentSheet:
+            if mode == .setup {
+                app.buttons["Set up"].tap()
+            } else {
+                app.buttons["Pay €50.99"].tap()
+            }
+        case .flowController:
+            app.buttons["Continue"].tap()
+            app.buttons["Confirm"].tap()
+        }
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+    
     func _testUSBankAccount(mode: PaymentSheetTestPlaygroundSettings.Mode, integrationType: PaymentSheetTestPlaygroundSettings.IntegrationType) {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new

@@ -283,8 +283,7 @@ extension PaymentSheet {
                         // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods, .unsupportedForSetup]
                     case .SEPADebit:
-                        // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
-                        return [.userSupportsDelayedPaymentMethods, .unsupportedForSetup]
+                        return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,

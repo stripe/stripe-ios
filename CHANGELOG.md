@@ -1,6 +1,7 @@
 ## x.x.x
 ### PaymentSheet
 * [Fixed] Update stp_icon_add@3x.png to 8bit color depth (Thanks @jszumski)
+* [Added] Enable SEPA Debit for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.
 
 ### CustomerSheet
 * [Fixed] Ability to removing payment method immediately after adding it.
