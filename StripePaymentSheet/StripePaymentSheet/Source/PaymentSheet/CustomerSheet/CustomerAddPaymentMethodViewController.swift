@@ -235,8 +235,9 @@ extension CustomerAddPaymentMethodViewController {
             result,
             _,
             error in
-            if error != nil {
-                self.delegate?.updateErrorLabel(for: genericError)
+            if let error = error {
+                let errorToUse = PaymentSheetError.unknown(debugDescription: error.nonGenericDescription)
+                self.delegate?.updateErrorLabel(for: errorToUse)
                 return
             }
             guard let financialConnectionsResult = result else {

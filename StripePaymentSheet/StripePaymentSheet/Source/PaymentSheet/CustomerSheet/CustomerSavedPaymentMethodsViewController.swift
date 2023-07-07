@@ -397,12 +397,16 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             }
         }
     }
+    //TODO: Clean this up - we should have a single function which calls out to
+    // setupIntentClientSecretForCustomerAttach
+    var veryHackyClientSecret: String? = nil
     private func getClientSecret() async -> String? {
         self.processingInFlight = true
         updateUI(animated: false)
         var clientSecret: String
         do {
             clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
+            veryHackyClientSecret = clientSecret
         } catch {
             STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
             self.processingInFlight = false
@@ -426,7 +430,11 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         Task {
             var clientSecret: String
             do {
-                clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
+                if let cs = veryHackyClientSecret {
+                    clientSecret  = cs
+                } else {
+                    clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
+                }
             } catch {
                 STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
                 self.processingInFlight = false
