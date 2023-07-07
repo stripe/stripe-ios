@@ -372,6 +372,7 @@ private extension PayWithLinkButton {
         let foregroundColor = self.foregroundColor(for: state)
         titleLabel.textColor = foregroundColor
         payWithLinkView.tintColor = foregroundColor
+        payWithLinkView.textColor = foregroundColor
         emailStackView.tintColor = foregroundColor
         payWithStackView.tintColor = foregroundColor
         cardStackView.tintColor = foregroundColor
