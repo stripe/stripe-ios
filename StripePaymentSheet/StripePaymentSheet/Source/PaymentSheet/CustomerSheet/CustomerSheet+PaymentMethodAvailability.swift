@@ -13,19 +13,35 @@ extension CustomerSheet {
     static func paymentSheetPaymentMethodTypes(requestedPaymentMethods: [STPPaymentMethodType]) -> [PaymentSheet.PaymentMethodType] {
         let filtered: [STPPaymentMethodType] = CustomerSheet.filteredPaymentMethods(requestedPaymentMethods: requestedPaymentMethods)
 
+        var uniquePMTypes: Set<STPPaymentMethodType> = []
+
         var pmTypes: [PaymentSheet.PaymentMethodType] = []
         for pm in filtered {
             guard let paymentMethodString = STPPaymentMethod.string(from: pm) else {
                 continue
             }
-            pmTypes += [PaymentSheet.PaymentMethodType(from: paymentMethodString)]
+            if uniquePMTypes.contains(pm) {
+                #if DEBUG
+                print("[Stripe SDK]: CustomerSheet found duplicate payment method:\(paymentMethodString)")
+                #endif
+            } else {
+                uniquePMTypes.insert(pm)
+                pmTypes += [PaymentSheet.PaymentMethodType(from: paymentMethodString)]
+            }
         }
         return pmTypes
     }
 
     static func filteredPaymentMethods(requestedPaymentMethods: [STPPaymentMethodType]) -> [STPPaymentMethodType] {
         requestedPaymentMethods.filter { type in
-            CustomerSheet.supportedPaymentMethods.contains(type)
+            let isSupported = CustomerSheet.supportedPaymentMethods.contains(type)
+            if type == .USBankAccount && !FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
+                #if DEBUG
+                print("[Stripe SDK]: CustomerSheet:\(PaymentSheet.PaymentMethodTypeRequirement.financialConnectionsSDK.debugDescription)")
+                #endif
+                return false
+            }
+            return isSupported
         }
     }
 }
