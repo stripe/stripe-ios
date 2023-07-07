@@ -1,4 +1,7 @@
 ## X.Y.Z 2023-XX-YY
+### Payments
+* [Fixed] A bug where `mandate_data` was not being properly attached to PayPal SetupIntent's.
+
 ### PaymentSheet
 * [Added] US bank accounts are now supported when initializing with an IntentConfiguration (in private beta).
 
