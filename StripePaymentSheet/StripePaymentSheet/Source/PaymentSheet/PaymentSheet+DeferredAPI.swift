@@ -145,7 +145,7 @@ extension PaymentSheet {
     }
 }
 
-extension PaymentSheet.IntentConfiguration: STPAnalyticsProtocol {
+@_spi(STP) extension PaymentSheet.IntentConfiguration: STPAnalyticsProtocol {
     public static var stp_analyticsIdentifier: String {
         return "deferred-intent"
     }

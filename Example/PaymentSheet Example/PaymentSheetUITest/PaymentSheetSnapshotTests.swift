@@ -13,7 +13,7 @@ import StripeCoreTestUtils
 import UIKit
 
 @_spi(STP)@testable import StripeCore
-@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @testable import StripePaymentSheet
+@_spi(STP)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: FBSnapshotTestCase {
