@@ -1,4 +1,6 @@
 ## X.Y.Z 2023-XX-YY
+### Apple Pay
+* [Fixed] ApplePay sheet prompts the user to add a card if none is registered.
 ### Payments
 * [Fixed] A bug where `mandate_data` was not being properly attached to PayPal SetupIntent's.
 ### PaymentSheet
