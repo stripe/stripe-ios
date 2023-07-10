@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
@@ -28,6 +29,9 @@ final class PaymentSheetLoader {
         configuration: PaymentSheet.Configuration,
         completion: @escaping (LoadingResult) -> Void
     ) {
+        let loadingStartTime = CFAbsoluteTimeGetCurrent()
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetStartedLoading)
+        
         Task { @MainActor in
             do {
                 // Fetch PaymentIntent, SetupIntent, or ElementsSession
@@ -65,6 +69,9 @@ final class PaymentSheetLoader {
                             intent: intent
                         )
                     }
+                
+                let loadingEndTime = CFAbsoluteTimeGetCurrent() - loadingStartTime
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoaded, duration: loadingEndTime)
                 completion(
                     .success(
                         intent: intent,
@@ -73,6 +80,7 @@ final class PaymentSheetLoader {
                     )
                 )
             } catch {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed, error: error as? AnalyticLoggableError)
                 completion(.failure(error))
             }
         }
