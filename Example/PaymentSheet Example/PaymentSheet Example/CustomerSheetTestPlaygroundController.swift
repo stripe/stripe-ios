@@ -118,11 +118,15 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
 
         var supportedPaymentMethodTypes: [STPPaymentMethodType] = []
-        if settings.showCard == .on {
-            supportedPaymentMethodTypes += [.card]
-        }
-        if settings.showUSBankAccount == .on {
-            supportedPaymentMethodTypes += [.USBankAccount]
+        switch(settings.enabledPaymentMethods) {
+        case .card:
+            supportedPaymentMethodTypes = [.card]
+        case .usBank:
+            supportedPaymentMethodTypes = [.USBankAccount]
+        case .card_usbank:
+            supportedPaymentMethodTypes = [.card, .USBankAccount]
+        case .usBank_card:
+            supportedPaymentMethodTypes = [.USBankAccount, .card]
         }
         configuration.supportedPaymentMethodTypes = supportedPaymentMethodTypes
 
