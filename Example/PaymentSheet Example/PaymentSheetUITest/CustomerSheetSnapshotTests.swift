@@ -11,8 +11,8 @@ import UIKit
 
 @_spi(STP)@testable import StripeCore
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaCustomerSheet) @testable import StripePaymentSheet
-@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @_spi(PrivateBetaCustomerSheet) @testable import StripePaymentsUI
+@_spi(STP) @_spi(PrivateBetaCustomerSheet) @testable import StripePaymentSheet
+@_spi(STP) @_spi(PrivateBetaCustomerSheet) @testable import StripePaymentsUI
 @_spi(STP)@testable import StripeUICore
 
 // For backend example
