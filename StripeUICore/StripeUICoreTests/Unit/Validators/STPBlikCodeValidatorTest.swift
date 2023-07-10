@@ -16,19 +16,19 @@ class STPBlikCodeValidatorTest: XCTestCase {
     func testBlikCode_valid() {
         XCTAssertTrue(STPBlikCodeValidator.stringIsValidBlikCode("123456"))
     }
-      
+
     func testBlikCode_lessThanSixDigits() {
         XCTAssertFalse(STPBlikCodeValidator.stringIsValidBlikCode("1234"))
     }
-      
+
     func testBlikCode_moreThanSixDigits() {
         XCTAssertFalse(STPBlikCodeValidator.stringIsValidBlikCode("1234567"))
     }
-      
+
     func testBlikCode_nil() {
         XCTAssertFalse(STPBlikCodeValidator.stringIsValidBlikCode(nil))
     }
-      
+
     func testBlikCode_nonNumeric() {
         XCTAssertFalse(STPBlikCodeValidator.stringIsValidBlikCode("12a456"))
     }
