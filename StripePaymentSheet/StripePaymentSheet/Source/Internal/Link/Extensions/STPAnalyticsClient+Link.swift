@@ -55,6 +55,10 @@ extension STPAnalyticsClient {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
         self.logLinkPopupEvent(event: .linkPopupCancel, duration: duration, sessionType: sessionType)
     }
+    
+    func logLinkPopupSkipped() {
+        logPaymentSheetEvent(event: .linkPopupSkipped)
+    }
 
     func logLinkPopupError(error: Error?, sessionType: LinkSettings.PopupWebviewOption) {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)

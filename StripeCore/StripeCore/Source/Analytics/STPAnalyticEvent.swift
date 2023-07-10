@@ -122,6 +122,7 @@ import Foundation
     case linkPopupShow = "link.popup.show"
     case linkPopupSuccess = "link.popup.success"
     case linkPopupCancel = "link.popup.cancel"
+    case linkPopupSkipped = "link.popup.skipped"
     case linkPopupError = "link.popup.error"
     case linkPopupLogout = "link.popup.logout"
 
