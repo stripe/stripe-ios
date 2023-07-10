@@ -7,16 +7,29 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension CustomerSheet {
-
     static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
+}
 
-    static func paymentSheetPaymentMethodTypes(requestedPaymentMethods: [STPPaymentMethodType]) -> [PaymentSheet.PaymentMethodType] {
-        let filtered: [STPPaymentMethodType] = CustomerSheet.filteredPaymentMethods(requestedPaymentMethods: requestedPaymentMethods)
+extension Array where Element == STPPaymentMethodType {
+    func customerSheetSupportedPaymentMethodTypes() -> [STPPaymentMethodType] {
+        self.filter { type in
+            let isSupported = CustomerSheet.supportedPaymentMethods.contains(type)
+            if type == .USBankAccount && !FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
+                #if DEBUG
+                print("[Stripe SDK]: CustomerSheet:\(PaymentSheet.PaymentMethodTypeRequirement.financialConnectionsSDK.debugDescription)")
+                #endif
+                return false
+            }
+            return isSupported
+        }
+    }
 
+    // Internal Helper used for displaying payment method types to add
+    func toPaymentSheetPaymentMethodTypes() -> [PaymentSheet.PaymentMethodType] {
         var uniquePMTypes: Set<STPPaymentMethodType> = []
 
         var pmTypes: [PaymentSheet.PaymentMethodType] = []
-        for pm in filtered {
+        for pm in self {
             guard let paymentMethodString = STPPaymentMethod.string(from: pm) else {
                 continue
             }
@@ -31,17 +44,5 @@ extension CustomerSheet {
         }
         return pmTypes
     }
-
-    static func filteredPaymentMethods(requestedPaymentMethods: [STPPaymentMethodType]) -> [STPPaymentMethodType] {
-        requestedPaymentMethods.filter { type in
-            let isSupported = CustomerSheet.supportedPaymentMethods.contains(type)
-            if type == .USBankAccount && !FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
-                #if DEBUG
-                print("[Stripe SDK]: CustomerSheet:\(PaymentSheet.PaymentMethodTypeRequirement.financialConnectionsSDK.debugDescription)")
-                #endif
-                return false
-            }
-            return isSupported
-        }
-    }
 }
+

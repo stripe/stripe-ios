@@ -20,7 +20,8 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?
 
     var paymentMethodTypes: [PaymentSheet.PaymentMethodType] {
-       CustomerSheet.paymentSheetPaymentMethodTypes(requestedPaymentMethods: configuration.supportedPaymentMethodTypes)
+        let filtered = configuration.supportedPaymentMethodTypes.customerSheetSupportedPaymentMethodTypes()
+        return filtered.toPaymentSheetPaymentMethodTypes()
     }
 
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
