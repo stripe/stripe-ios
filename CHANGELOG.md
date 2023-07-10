@@ -1,4 +1,4 @@
-## X.Y.Z 2023-XX-YY
+## 23.10.0 2023-07-10
 ### Payments
 * [Fixed] A bug where `mandate_data` was not being properly attached to PayPal SetupIntent's.
 ### PaymentSheet
