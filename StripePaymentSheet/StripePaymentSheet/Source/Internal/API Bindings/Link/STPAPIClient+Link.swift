@@ -101,10 +101,6 @@ extension STPAPIClient {
             resource: endpoint,
             parameters: parameters
         ) { (result: Result<ConsumerSession.SessionWithPublishableKey, Error>) in
-            if case .success(let signupResponse) = result {
-                cookieStore.updateSessionCookie(with: signupResponse.authSessionClientSecret)
-            }
-
             completion(result)
         }
     }

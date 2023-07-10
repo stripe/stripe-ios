@@ -51,14 +51,9 @@ class LinkURLGenerator {
         // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
         let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.regionCode ?? "XX"
 
-        // Get email from the billing details, or the Customer object if the billing details are empty
-        var customerEmail = configuration.defaultBillingDetails.email
-        if customerEmail == nil,
-           let customerID = configuration.customer?.id,
-           let ephemeralKey = configuration.customer?.ephemeralKeySecret,
-           let customer = try? await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
-        {
-            customerEmail = customer.email
+        var customerEmail: String? = nil
+        if let psLinkAccountEmail = LinkAccountContext.shared.account?.email {
+            customerEmail = psLinkAccountEmail
         }
 
         let merchantInfo = LinkURLParams.MerchantInfo(businessName: configuration.merchantDisplayName, country: merchantCountryCode)
