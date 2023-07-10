@@ -47,6 +47,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             delegate: self)
     }()
+    private var cachedClientSecret: String?
+
     var paymentMethodTypes: [PaymentSheet.PaymentMethodType] {
         let filtered = configuration.customerSheetSupportedPaymentMethodTypes(customerAdapter: customerAdapter)
         return filtered.toPaymentSheetPaymentMethodTypes()
@@ -343,15 +345,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         switch mode {
         case .addingNewWithSetupIntent:
             if let behavior = addPaymentMethodViewController.overrideActionButtonBehavior {
-                Task {
-                    if let clientSecret = await getClientSecret() {
-                        addPaymentMethodViewController.didTapCallToActionButton(behavior: behavior,
-                                                                                clientSecret: clientSecret,
-                                                                                from: self)
-                    } else {
-                        print("failed")
-                    }
-                }
+                handleOverrideAction(behavior: behavior)
             } else {
                 guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
                     return
@@ -399,26 +393,20 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             }
         }
     }
-    //TODO: Clean this up - we should have a single function which calls out to
-    // setupIntentClientSecretForCustomerAttach
-    var veryHackyClientSecret: String? = nil
-    private func getClientSecret() async -> String? {
+
+    private func handleOverrideAction(behavior: OverrideableBuyButtonBehavior) {
         self.processingInFlight = true
         updateUI(animated: false)
-        var clientSecret: String
-        do {
-            clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
-            veryHackyClientSecret = clientSecret
-        } catch {
-            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
+        Task {
+            guard let clientSecret = await fetchClientSecret() else {
+                self.processingInFlight = false
+                self.updateUI()
+                return
+            }
             self.processingInFlight = false
-            self.error = error
             self.updateUI()
-            return nil
+            addPaymentMethodViewController.didTapCallToActionButton(behavior: behavior, clientSecret: clientSecret, from: self)
         }
-        self.processingInFlight = false
-        self.updateUI()
-        return clientSecret
     }
 
     private func addPaymentOption(paymentOption: PaymentOption) {
@@ -430,17 +418,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
 
         Task {
-            var clientSecret: String
-            do {
-                if let cs = veryHackyClientSecret {
-                    clientSecret  = cs
-                } else {
-                    clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
-                }
-            } catch {
-                STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
+            guard let clientSecret = await fetchClientSecret() else {
                 self.processingInFlight = false
-                self.error = error
                 self.updateUI()
                 return
             }
@@ -458,6 +437,22 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 }
             }
         }
+    }
+
+    private func fetchClientSecret() async -> String? {
+        var clientSecret: String? = nil
+        do {
+            if let cs = cachedClientSecret {
+                clientSecret = cs
+            } else {
+                clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
+                cachedClientSecret = clientSecret
+            }
+        } catch {
+            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
+            self.error = error
+        }
+        return clientSecret
     }
 
     func confirm(intent: Intent?, paymentOption: PaymentOption) {
