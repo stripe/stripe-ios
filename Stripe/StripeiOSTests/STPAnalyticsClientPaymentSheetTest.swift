@@ -180,8 +180,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let payload = client.payload(from: analytic, apiClient: apiClient)
 
         // verify
-        XCTAssertEqual(15, payload.count)
+        XCTAssertEqual(16, payload.count)
         XCTAssertNotNil(payload["device_type"] as? String)
+        XCTAssertEqual("Wi-Fi", payload["network_type"] as? String)
         // In xctest, this is the version of Xcode
         XCTAssertNotNil(payload["app_version"] as? String)
         XCTAssertEqual("none", payload["ocr_type"] as? String)
