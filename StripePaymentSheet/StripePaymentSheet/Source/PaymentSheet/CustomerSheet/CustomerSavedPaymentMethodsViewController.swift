@@ -327,17 +327,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
-    func fetchSetupIntent(clientSecret: String, completion: @escaping ((Result<STPSetupIntent, Error>) -> Void) ) {
-        Task {
-            do {
-                let setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret)
-                completion(.success(setupIntent))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
     private func didTapActionButton() {
         error = nil
         updateUI()
@@ -423,19 +412,14 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
-
-            self.fetchSetupIntent(clientSecret: clientSecret) { result in
-                switch result {
-                case .success(let stpSetupIntent):
-                    let setupIntent = Intent.setupIntent(stpSetupIntent)
-                    self.confirm(intent: setupIntent, paymentOption: paymentOption)
-                case .failure(let error):
-                    STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
-                    self.processingInFlight = false
-                    self.error = error
-                    self.updateUI()
-                }
+            guard let fetchedSetupIntent = await fetchSetupIntent(clientSecret: clientSecret) else {
+                self.processingInFlight = false
+                self.updateUI()
+                return
             }
+            let setupIntent = Intent.setupIntent(fetchedSetupIntent)
+            //TODO: refactor so that we can call `processingInFlight = false` in this context
+            self.confirm(intent: setupIntent, paymentOption: paymentOption)
         }
     }
 
@@ -453,6 +437,17 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             self.error = error
         }
         return clientSecret
+    }
+
+    private func fetchSetupIntent(clientSecret: String) async -> STPSetupIntent? {
+        var setupIntent: STPSetupIntent?
+        do {
+            setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret)
+        } catch {
+            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
+            self.error = error
+        }
+        return setupIntent
     }
 
     func confirm(intent: Intent?, paymentOption: PaymentOption) {
