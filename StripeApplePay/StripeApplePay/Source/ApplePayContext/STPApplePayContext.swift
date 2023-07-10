@@ -107,7 +107,11 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         delegate: _stpinternal_STPApplePayContextDelegateBase?
     ) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
-        if !StripeAPI.canSubmitPaymentRequest(paymentRequest) {
+        if paymentRequest.merchantIdentifier.isEmpty {
+            return nil
+        }
+        // "In versions of iOS prior to version 12.0 and watchOS prior to version 5.0, the amount of the grand total must be greater than zero."
+        if !(paymentRequest.paymentSummaryItems.last?.amount.floatValue ?? 0.0 >= 0) {
             return nil
         }
 
