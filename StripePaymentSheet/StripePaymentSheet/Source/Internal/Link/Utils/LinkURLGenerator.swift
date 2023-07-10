@@ -53,12 +53,12 @@ class LinkURLGenerator {
 
         // Get email from the previously fetched account in the Link button, or the billing details, or the Customer object
         var customerEmail = LinkAccountContext.shared.account?.email
-        
+
         if customerEmail == nil,
            let defaultBillingEmail = configuration.defaultBillingDetails.email {
             customerEmail = defaultBillingEmail
         }
-        
+
         if customerEmail == nil,
            let customerID = configuration.customer?.id,
            let ephemeralKey = configuration.customer?.ephemeralKeySecret,
