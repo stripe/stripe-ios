@@ -56,7 +56,8 @@ extension STPAnalyticsClient {
             activeLinkSession: activeLinkSession,
             linkSessionType: linkSessionType,
             currency: currency,
-            intentConfig: intentConfig
+            intentConfig: intentConfig,
+            deferredIntentConfirmationType: deferredIntentConfirmationType
         )
     }
 
