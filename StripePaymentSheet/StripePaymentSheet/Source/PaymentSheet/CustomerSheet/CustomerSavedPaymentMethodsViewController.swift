@@ -668,7 +668,6 @@ extension CustomerSavedPaymentMethodsViewController: CustomerAddPaymentMethodVie
         updateUI()
     }
     func updateErrorLabel(for error: Error?) {
-        //test me please
         set(error: error)
     }
 }
