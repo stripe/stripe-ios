@@ -5,13 +5,13 @@
 //  Created by Nick Porter on 7/5/23.
 //
 
+import CoreTelephony
 import Foundation
 import SystemConfiguration
-import CoreTelephony
 
 /// A class which can detect the current network type of the device
 class NetworkDetector {
-    
+
     static func getConnectionType() -> String? {
         guard let reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "www.stripe.com") else {
             return nil
@@ -26,11 +26,11 @@ class NetworkDetector {
         guard isReachable else {
             return nil
         }
-        
+
         guard isWWAN else {
             return "Wi-Fi"
         }
-        
+
         let networkInfo = CTTelephonyNetworkInfo()
         let carrierType = networkInfo.serviceCurrentRadioAccessTechnology
 
@@ -48,7 +48,7 @@ class NetworkDetector {
         default:
             return "5G"
         }
-        
+
     }
-    
+
 }
