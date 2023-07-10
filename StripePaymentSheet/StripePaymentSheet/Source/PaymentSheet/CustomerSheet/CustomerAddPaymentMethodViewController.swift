@@ -16,13 +16,11 @@ protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
 
 @objc(STP_Internal_CustomerAddPaymentMethodViewController)
 class CustomerAddPaymentMethodViewController: UIViewController {
+
+    let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+
     // MARK: - Read-only Properties
     weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?
-
-    var paymentMethodTypes: [PaymentSheet.PaymentMethodType] {
-        let filtered = configuration.supportedPaymentMethodTypes.customerSheetSupportedPaymentMethodTypes()
-        return filtered.toPaymentSheetPaymentMethodTypes()
-    }
 
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         return paymentMethodTypesView.selected
@@ -103,10 +101,12 @@ class CustomerAddPaymentMethodViewController: UIViewController {
 
     required init(
         configuration: CustomerSheet.Configuration,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         delegate: CustomerAddPaymentMethodViewControllerDelegate
     ) {
         self.configuration = configuration
         self.delegate = delegate
+        self.paymentMethodTypes = paymentMethodTypes
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = configuration.appearance.colors.background
     }

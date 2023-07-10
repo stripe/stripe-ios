@@ -10,20 +10,32 @@ extension CustomerSheet {
     static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
 }
 
-extension Array where Element == STPPaymentMethodType {
-    func customerSheetSupportedPaymentMethodTypes() -> [STPPaymentMethodType] {
-        self.filter { type in
-            let isSupported = CustomerSheet.supportedPaymentMethods.contains(type)
-            if type == .USBankAccount && !FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
-                #if DEBUG
-                print("[Stripe SDK]: CustomerSheet:\(PaymentSheet.PaymentMethodTypeRequirement.financialConnectionsSDK.debugDescription)")
-                #endif
-                return false
+extension CustomerSheet.Configuration {
+
+    // Called internally from CustomerSheet to determine what payment methods to query for
+    func customerSheetSupportedPaymentMethodTypes(customerAdapter: CustomerAdapter) -> [STPPaymentMethodType] {
+        self.supportedPaymentMethodTypes.filter { type in
+            var isSupported = CustomerSheet.supportedPaymentMethods.contains(type)
+            if type == .USBankAccount {
+                if !FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
+                    #if DEBUG
+                    print("[Stripe SDK]: CustomerSheet:\(PaymentSheet.PaymentMethodTypeRequirement.financialConnectionsSDK.debugDescription)")
+                    #endif
+                    isSupported = false
+                }
+                if !customerAdapter.canCreateSetupIntents {
+                    #if DEBUG
+                    print("[Stripe SDK]: CustomerSheet - customerAdapater must be able to create setupIntents")
+                    #endif
+                    isSupported = false
+                }
             }
             return isSupported
         }
     }
+}
 
+extension Array where Element == STPPaymentMethodType {
     // Internal Helper used for displaying payment method types to add
     func toPaymentSheetPaymentMethodTypes() -> [PaymentSheet.PaymentMethodType] {
         var uniquePMTypes: Set<STPPaymentMethodType> = []

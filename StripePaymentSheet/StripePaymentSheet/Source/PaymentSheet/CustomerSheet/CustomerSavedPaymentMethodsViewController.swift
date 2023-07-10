@@ -44,8 +44,13 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private lazy var addPaymentMethodViewController: CustomerAddPaymentMethodViewController = {
         return CustomerAddPaymentMethodViewController(
             configuration: configuration,
+            paymentMethodTypes: paymentMethodTypes,
             delegate: self)
     }()
+    var paymentMethodTypes: [PaymentSheet.PaymentMethodType] {
+        let filtered = configuration.customerSheetSupportedPaymentMethodTypes(customerAdapter: customerAdapter)
+        return filtered.toPaymentSheetPaymentMethodTypes()
+    }
 
     var selectedPaymentOption: PaymentOption? {
         switch mode {
@@ -87,7 +92,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }()
     private lazy var actionButton: ConfirmButton = {
         let button = ConfirmButton(
-            callToAction: self.callToAction(),
+            callToAction: self.defaultCallToAction(),
             applePayButtonType: .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
@@ -234,10 +239,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         var actionButtonStatus: ConfirmButton.Status = .enabled
         var showActionButton: Bool = true
 
-        var callToAction = callToAction()
-//        if let customCtaLabel = configuration.primaryButtonLabel {
-//            callToAction = .customWithLock(title: customCtaLabel)
-//        }
+        var callToAction = defaultCallToAction()
 
         switch mode {
         case .selectingSaved:
@@ -308,7 +310,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     }
 
-    private func callToAction() -> ConfirmButton.CallToActionType {
+    private func defaultCallToAction() -> ConfirmButton.CallToActionType {
         switch mode {
         case .selectingSaved:
             return .custom(title: STPLocalizedString(
