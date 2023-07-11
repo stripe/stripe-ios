@@ -66,7 +66,7 @@ class IntentConfirmParams {
             self.init(params: params, type: type)
         }
     }
-    
+
     init(params: STPPaymentMethodParams, type: PaymentSheet.PaymentMethodType) {
         self.paymentMethodType = type
         self.paymentMethodParams = params
