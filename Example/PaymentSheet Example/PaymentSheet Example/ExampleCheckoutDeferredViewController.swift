@@ -5,12 +5,8 @@
 //  Created by Yuki Tokuhiro on 3/31/23.
 //
 // This is an example of an integration using PaymentSheet where you collect payment details before creating an Intent.
-//  ⚠️🏗 This integration is in private beta. Please email us at mobile-deferred-intents-beta@stripe.com if you're interested in participating!
 
-//  Note: Do not import Stripe using `@_spi(ExperimentalPaymentSheetDecouplingAPI)` in production.
-//  This exposes internal functionality which may cause unexpected behavior if used directly.
-// TODO(porter) Remove ExperimentalPaymentSheetDecouplingAPI usage before GA
-@_spi (ExperimentalPaymentSheetDecouplingAPI) import StripePaymentSheet
+import StripePaymentSheet
 import UIKit
 
 // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred

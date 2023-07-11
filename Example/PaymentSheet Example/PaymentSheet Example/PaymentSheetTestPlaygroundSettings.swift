@@ -80,6 +80,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case aud
         case gbp
         case inr
+        case pln
     }
 
     enum MerchantCountry: String, PickerEnum {

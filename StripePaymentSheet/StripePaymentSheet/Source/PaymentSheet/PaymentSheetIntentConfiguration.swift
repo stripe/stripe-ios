@@ -7,8 +7,7 @@
 
 import Foundation
 
-@_spi(ExperimentalPaymentSheetDecouplingAPI) public extension PaymentSheet {
-    /// 🚧 Under construction
+public extension PaymentSheet {
     /// Contains information needed to render PaymentSheet
     /// The values are used to calculate the payment methods displayed and influence the UI.
     /// - Note: The PaymentIntent or SetupIntent you create on your server must have the same values or the payment/setup will fail.

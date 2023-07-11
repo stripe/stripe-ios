@@ -44,6 +44,8 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     private(set) var publishableKey: String?
 
     let email: String
+    var last4: String?
+    var lastBrand: STPCardBrand?
 
     var lastPM: LinkPMDisplayDetails? {
         let linkAccountService = LinkAccountService(cookieStore: cookieStore)
