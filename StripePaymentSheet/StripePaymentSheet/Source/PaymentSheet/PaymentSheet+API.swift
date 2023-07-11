@@ -197,7 +197,6 @@ extension PaymentSheet {
                     handleDeferredIntentConfirmation(
                         confirmType: .new(
                             params: paymentMethodParams,
-                            //TODO: look at this more
                             options: STPConfirmPaymentMethodOptions(),
                             shouldSave: false
                         ),
@@ -348,8 +347,7 @@ extension PaymentSheet {
     enum ConfirmPaymentMethodType {
         case saved(STPPaymentMethod)
         /// - paymentMethod: Pass this if you created a PaymentMethod already (e.g. for the deferred flow).
-        case new(params: STPPaymentMethodParams, options: STPConfirmPaymentMethodOptions ,paymentMethod: STPPaymentMethod? = nil, shouldSave: Bool)
-
+        case new(params: STPPaymentMethodParams, options: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, shouldSave: Bool)
         var shouldSave: Bool {
             switch self {
             case .saved:
@@ -397,9 +395,7 @@ extension PaymentSheet {
             }
         }
 
-        
         let options = params.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-        
         options.setSetupFutureUsageIfNecessary(shouldSave, paymentMethodType: paymentMethodType, customer: configuration.customer)
         if let mandateData = mandateData {
             params.mandateData = mandateData
@@ -424,14 +420,14 @@ extension PaymentSheet {
                 paymentMethodType: paymentMethod.type
             )
             params.paymentMethodID = paymentMethod.stripeId
-        case let .new(paymentMethodParams,_, paymentMethod, _):
+
+        case let .new(paymentMethodParams, _, paymentMethod, _):
             if let paymentMethod {
                 params = STPSetupIntentConfirmParams(
                     clientSecret: setupIntent.clientSecret,
                     paymentMethodType: paymentMethod.type
                 )
                 params.paymentMethodID = paymentMethod.stripeId
-                
             } else {
                 params = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams

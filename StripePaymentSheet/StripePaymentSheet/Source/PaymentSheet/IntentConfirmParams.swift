@@ -56,9 +56,6 @@ class IntentConfirmParams {
     }
 
     convenience init(type: PaymentSheet.PaymentMethodType) {
-        
-        let options = STPConfirmPaymentMethodOptions()
-        
         if let paymentType = type.stpPaymentMethodType {
             let params = STPPaymentMethodParams(type: paymentType)
             self.init(params: params, options: options, type: type)
@@ -69,10 +66,11 @@ class IntentConfirmParams {
         }
     }
     
-    init(params: STPPaymentMethodParams, options: STPConfirmPaymentMethodOptions, type: PaymentSheet.PaymentMethodType) {
+
+    init(params: STPPaymentMethodParams, type: PaymentSheet.PaymentMethodType) {
         self.paymentMethodType = type
         self.paymentMethodParams = params
-        self.paymentMethodOptions = options
+        self.paymentMethodOptions = STPConfirmPaymentMethodOptions()
     }
     
    

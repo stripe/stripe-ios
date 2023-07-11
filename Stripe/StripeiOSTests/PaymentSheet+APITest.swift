@@ -349,7 +349,7 @@ class PaymentSheetAPITest: XCTestCase {
         return intentConfirmParams
     }
     var valid_card_checkbox_deselected: IntentConfirmParams {
-        let intentConfirmParams = IntentConfirmParams(params: ._testValidCardValue(), type: .card)
+        let intentConfirmParams = IntentConfirmParams(params: ._testValidCardValue(),type: .card)
         intentConfirmParams.saveForFutureUseCheckboxState = .deselected
         return intentConfirmParams
     }
@@ -436,7 +436,7 @@ class PaymentSheetAPITest: XCTestCase {
 
     func testDeferredConfirm_new_expired_card() {
         // Note: This fails when the PM is created
-        let invalid_exp_year_card = IntentConfirmParams(params: .init(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil), type: .card)
+        let invalid_exp_year_card = IntentConfirmParams(params: .init(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil),type: .card)
         _testDeferredConfirm(
             inputPaymentOption: .new(confirmParams: invalid_exp_year_card),
             expectedShouldSavePaymentMethod: false,
@@ -469,7 +469,7 @@ class PaymentSheetAPITest: XCTestCase {
 
     func testDeferredConfirm_new_insufficient_funds_card() {
         // Note: This fails when the intent is confirmed
-        let insufficient_funds_new_PM = IntentConfirmParams(params: ._testCardValue(number: "4000000000009995"), type: .card)
+        let insufficient_funds_new_PM = IntentConfirmParams(params: ._testCardValue(number: "4000000000009995"),type: .card)
         _testDeferredConfirm(
             inputPaymentOption: .new(confirmParams: insufficient_funds_new_PM),
             expectedShouldSavePaymentMethod: false,
@@ -965,12 +965,14 @@ class PaymentSheetAPITest: XCTestCase {
 
     func testMakeIntentParams_always_sets_paymentMethodType() {
         let examplePaymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
+        let options = STPConfirmPaymentMethodOptions()
         let examplePaymentMethod = STPFixtures.paymentMethod()
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
+        
         let confirmTypes: [PaymentSheet.ConfirmPaymentMethodType] = [
-            .new(params: examplePaymentMethodParams, shouldSave: false),
-            .new(params: examplePaymentMethodParams, paymentMethod: examplePaymentMethod, shouldSave: false),
+            .new(params: examplePaymentMethodParams, options: options, shouldSave: false),
+            .new(params: examplePaymentMethodParams, options: options, paymentMethod: examplePaymentMethod, shouldSave: false),
             .saved(examplePaymentMethod),
         ]
         for confirmType in confirmTypes {
@@ -1000,12 +1002,13 @@ class PaymentSheetAPITest: XCTestCase {
     func testMakeIntentParams_paypal_sets_mandate() {
         let paypalPaymentMethodParams = STPPaymentMethodParams(payPal: .init(), billingDetails: nil, metadata: nil)
         let paypalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: ["id": "pm_123", "type": "paypal"])!
+        let options = STPConfirmPaymentMethodOptions()
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
         // Confirming w/ a new Paypal PM...
         let confirmTypes: [PaymentSheet.ConfirmPaymentMethodType] = [
-            .new(params: paypalPaymentMethodParams, shouldSave: false),
-            .new(params: paypalPaymentMethodParams, paymentMethod: paypalPaymentMethod, shouldSave: false),
+            .new(params: paypalPaymentMethodParams, options: options,  shouldSave: false),
+            .new(params: paypalPaymentMethodParams, options: options,paymentMethod: paypalPaymentMethod, shouldSave: false),
         ]
 
         for confirmType in confirmTypes {
