@@ -13,6 +13,8 @@ import UIKit
 
 protocol PaymentSheetLinkAccountInfoProtocol {
     var email: String { get }
+    var last4: String? { get }
+    var lastBrand: STPCardBrand? { get }
     var redactedPhoneNumber: String? { get }
     var isRegistered: Bool { get }
     var isLoggedIn: Bool { get }
@@ -38,6 +40,8 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     private(set) var publishableKey: String?
 
     let email: String
+    var last4: String?
+    var lastBrand: STPCardBrand?
 
     var redactedPhoneNumber: String? {
         return currentSession?.redactedPhoneNumber
