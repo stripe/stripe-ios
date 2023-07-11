@@ -417,8 +417,27 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 return
             }
             let setupIntent = Intent.setupIntent(fetchedSetupIntent)
-            // TODO: refactor so that we can call `processingInFlight = false` in this context
-            self.confirm(intent: setupIntent, paymentOption: paymentOption)
+
+            guard let paymentMethod = await self.confirm(intent: setupIntent, paymentOption: paymentOption) else {
+                self.processingInFlight = false
+                self.updateUI()
+                return
+            }
+            let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.newPaymentMethod(paymentMethod)
+            self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
+                STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
+                self.processingInFlight = false
+                self.error = error
+                self.updateUI()
+            } onSuccess: {
+                STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentSuccess()
+                self.processingInFlight = false
+                self.actionButton.update(state: .disabled, animated: true) {
+                    self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                        self.csCompletion?(.selected(paymentOptionSelection))
+                    }
+                }
+            }
         }
     }
 
@@ -449,36 +468,37 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         return setupIntent
     }
 
-    func confirm(intent: Intent?, paymentOption: PaymentOption) {
-        self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(intent, with: paymentOption, completion: { result in
-            self.processingInFlight = false
-            switch result {
-            case .canceled:
-                STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentCanceled()
-                self.updateUI()
-            case .failed(let error):
-                STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
-                self.error = error
-                self.updateUI()
-            case .completed(let intent):
-                guard let intent = intent as? STPSetupIntent,
-                      let paymentMethod = intent.paymentMethod else {
-                    STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
-                    self.processingInFlight = false
-                    // Not ideal (but also very rare): If this fails, customers will need to know there is an error
-                    // so that they can back out and try again
-                    self.error = CustomerSheetError.unknown(debugDescription: "Unexpected error occured")
-                    self.updateUI()
-                    assertionFailure("addPaymentOption confirmation completed, but PaymentMethod is missing")
-                    return
-                }
-                self.processingInFlight = false
-                self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
-                self.mode = .selectingSaved
-                self.updateUI(animated: true)
-                self.reinitAddPaymentMethodViewController()
+    func confirm(intent: Intent?, paymentOption: PaymentOption) async -> STPPaymentMethod? {
+        var paymentMethod: STPPaymentMethod?
+        do {
+            paymentMethod = try await withCheckedThrowingContinuation { continuation in
+                self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(intent, with: paymentOption, completion: { result in
+                    switch result {
+                    case .canceled:
+                        STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentCanceled()
+                        continuation.resume(with: .success(nil))
+                    case .failed(let error):
+                        STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
+                        continuation.resume(throwing: error)
+                    case .completed(let intent):
+                        guard let intent = intent as? STPSetupIntent,
+                              let paymentMethod = intent.paymentMethod else {
+                            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
+                            // Not ideal (but also very rare): If this fails, customers will need to know there is an error
+                            // so that they can back out and try again
+                            self.error = CustomerSheetError.unknown(debugDescription: "Unexpected error occured")
+                            assertionFailure("addPaymentOption confirmation completed, but PaymentMethod is missing")
+                            continuation.resume(throwing: CustomerSheetError.unknown(debugDescription: "Unexpected error occured"))
+                            return
+                        }
+                        continuation.resume(with: .success(paymentMethod))
+                    }
+                })
             }
-        })
+        } catch {
+            self.error = error
+        }
+        return paymentMethod
     }
 
     private func addPaymentOptionToCustomer(paymentOption: PaymentOption) {
