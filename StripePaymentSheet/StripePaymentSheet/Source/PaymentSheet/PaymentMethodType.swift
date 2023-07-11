@@ -81,7 +81,7 @@ extension PaymentSheet {
                 return STPPaymentMethod.string(from: .cashApp)
             case .blik:
                 return STPPaymentMethod.string(from: .blik)
-            
+
             case .dynamic(let str):
                 return str
             }

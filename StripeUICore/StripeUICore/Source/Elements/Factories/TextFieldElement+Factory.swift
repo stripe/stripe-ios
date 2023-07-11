@@ -123,7 +123,7 @@ import UIKit
     static func makeVPA(theme: ElementsUITheme = .default) -> TextFieldElement {
         return TextFieldElement(configuration: VPAConfiguration(), theme: theme)
     }
-    
+
     // MARK: - Blik code
     struct BlikCodeConfiguration: TextFieldElementConfiguration {
         public let label = String.Localized.blik_code
@@ -138,11 +138,11 @@ import UIKit
             }
             return STPBlikCodeValidator.stringIsValidBlikCode(text) ?.valid: .invalid(invalidError)
         }
-        
+
         public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
             return .init(type: .numberPad, textContentType: .none, autocapitalization: .none)
         }
-        
+
         public func maxLength(for text: String) -> Int {
             return 6
         }
@@ -151,9 +151,6 @@ import UIKit
     static func makeBlikCode(theme: ElementsUITheme = .default) -> TextFieldElement {
         return TextFieldElement(configuration: BlikCodeConfiguration(), theme: theme)
     }
-    
-    
-    
 
     // MARK: - Phone number
     struct PhoneNumberConfiguration: TextFieldElementConfiguration {
