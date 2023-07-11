@@ -251,7 +251,7 @@ extension STPAnalyticsClient {
         additionalParams["currency"] = currency
         additionalParams["is_decoupled"] = intentConfig != nil
         additionalParams["error"] = error?.serializeForLogging()
-        
+
         for (param, param_value) in params {
             additionalParams[param] = param_value
         }

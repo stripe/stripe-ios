@@ -31,7 +31,7 @@ final class PaymentSheetLoader {
     ) {
         let loadingStartTime = CFAbsoluteTimeGetCurrent()
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetStartedLoading)
-        
+
         Task { @MainActor in
             do {
                 // Fetch PaymentIntent, SetupIntent, or ElementsSession
@@ -69,7 +69,7 @@ final class PaymentSheetLoader {
                             intent: intent
                         )
                     }
-                
+
                 let loadingEndTime = CFAbsoluteTimeGetCurrent() - loadingStartTime
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoaded, duration: loadingEndTime)
                 completion(
