@@ -181,6 +181,9 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
 
     private func canceledWithoutError() {
         STPAnalyticsClient.sharedClient.logLinkPopupCancel(sessionType: self.context.intent.linkPopupWebviewOption)
+//      If the user closed the popup, remove any Link account state.
+//      Otherwise, a user would have to *log in* if they wanted to log out.
+        LinkAccountService.defaultCookieStore.clear()
         self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
     }
 
@@ -199,7 +202,6 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 // Canceled for another reason - raise an error.
                 self.canceledWithError(error: error)
             }
-            self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
             return
         }
         do {
@@ -207,11 +209,18 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             switch result.link_status {
             case .complete:
                 let paymentOption = PaymentOption.link(option: PaymentSheet.LinkConfirmOption.withPaymentMethod(paymentMethod: result.pm))
+
+                // Cache the PM details
+                let las = LinkAccountService()
+                las.setLastPMDetails(pm: result.pm)
+
                 STPAnalyticsClient.sharedClient.logLinkPopupSuccess(sessionType: self.context.intent.linkPopupWebviewOption)
                 self.payWithLinkDelegate?.payWithLinkWebControllerDidComplete(self, intent: self.context.intent, with: paymentOption)
             case .logout:
-                // We don't store any Link session information locally at the moment. Treat this as a cancel.
-                self.canceledWithoutError()
+                // Delete the account information
+                LinkAccountService.defaultCookieStore.clear()
+                STPAnalyticsClient.sharedClient.logLinkPopupLogout(sessionType: self.context.intent.linkPopupWebviewOption)
+                self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
             }
         } catch {
             self.canceledWithError(error: error)

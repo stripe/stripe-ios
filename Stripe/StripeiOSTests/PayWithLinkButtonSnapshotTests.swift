@@ -76,7 +76,7 @@ class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
 
     func testRegistered_withCardInfo() {
         let sut = PayWithLinkButton()
-        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true, last4: "3155", lastBrand: .visa)
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true, lastPM: .init(last4: "3155", brand: .visa))
         verify(sut)
     }
 
@@ -97,18 +97,16 @@ extension PayWithLinkButtonSnapshotTests {
     fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
         let redactedPhoneNumber: String?
-        let last4: String?
-        let lastBrand: STPCardBrand?
+        let lastPM: LinkPMDisplayDetails?
         let isRegistered: Bool
         let isLoggedIn: Bool
     }
 
-    fileprivate func makeAccountStub(email: String, isRegistered: Bool, last4: String? = nil, lastBrand: STPCardBrand? = nil) -> LinkAccountStub {
+    fileprivate func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails? = nil) -> LinkAccountStub {
         return LinkAccountStub(
             email: email,
             redactedPhoneNumber: "+1********55",
-            last4: last4,
-            lastBrand: lastBrand,
+            lastPM: lastPM,
             isRegistered: isRegistered,
             isLoggedIn: false
         )

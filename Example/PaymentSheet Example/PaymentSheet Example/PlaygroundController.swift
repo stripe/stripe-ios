@@ -265,6 +265,7 @@ class PlaygroundController: ObservableObject {
 
     func didTapResetConfig() {
         self.settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        PaymentSheet.resetCustomer()
     }
 
     func appearanceButtonTapped() {
