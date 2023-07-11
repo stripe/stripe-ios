@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
@@ -15,7 +16,7 @@ import UIKit
 @available(macCatalystApplicationExtension, unavailable)
 final class PayWithLinkController {
 
-    typealias CompletionBlock = ((PaymentSheetResult) -> Void)
+    typealias CompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 
     private let paymentHandler: STPPaymentHandler
 
@@ -76,14 +77,14 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             isFlowController: false
-        ) { result, _ in
-            self.completion?(result)
+        ) { result, deferredIntentConfirmationType in
+            self.completion?(result, deferredIntentConfirmationType)
             self.selfRetainer = nil
         }
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
-        completion?(.canceled)
+        completion?(.canceled, nil)
         selfRetainer = nil
     }
 

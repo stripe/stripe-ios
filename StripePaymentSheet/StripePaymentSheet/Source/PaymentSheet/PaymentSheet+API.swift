@@ -308,12 +308,7 @@ extension PaymentSheet {
             switch confirmOption {
             case .wallet:
                 let linkController = PayWithLinkController(intent: intent, configuration: configuration)
-                linkController.present(
-                    completion: { result in
-                        // TODO(Link): Set intent confirmation type
-                        completion(result, nil)
-                    }
-                )
+                linkController.present(completion: completion)
             case .signUp(let linkAccount, let phoneNumber, let legalName, let paymentMethodParams):
                 linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: .checkbox) { result in
                     switch result {
