@@ -300,6 +300,11 @@ extension PaymentSheet {
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
+
+                        // Store the payment details to display on the button:
+                        let linkAccountService = LinkAccountService(apiClient: configuration.apiClient)
+                        linkAccountService.setLastPMDetails(params: paymentMethodParams)
+
                         createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure()

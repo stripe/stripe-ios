@@ -195,8 +195,8 @@ final class PayWithLinkButton: UIControl {
             return .noValidAccount
         }
 
-        if let last4 = linkAccount?.last4, let brand = linkAccount?.lastBrand {
-            return .hasCard(last4: last4, brand: brand)
+        if let lastPM = linkAccount?.lastPM {
+            return .hasCard(last4: lastPM.last4, brand: lastPM.brand)
         }
 
         if let email = linkAccount?.email {
@@ -481,18 +481,16 @@ struct UIViewPreview<View: UIView>: UIViewRepresentable {
 private struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
     let email: String
     let redactedPhoneNumber: String?
-    let last4: String?
-    let lastBrand: STPCardBrand?
+    let lastPM: LinkPMDisplayDetails?
     let isRegistered: Bool
     let isLoggedIn: Bool
 }
 
-private func makeAccountStub(email: String, isRegistered: Bool, last4: String?, lastBrand: STPCardBrand?) -> LinkAccountStub {
+private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> LinkAccountStub {
     return LinkAccountStub(
         email: email,
         redactedPhoneNumber: "+1********55",
-        last4: last4,
-        lastBrand: lastBrand,
+        lastPM: lastPM,
         isRegistered: isRegistered,
         isLoggedIn: false
     )
@@ -507,17 +505,17 @@ struct LinkButtonPreviews_Previews: PreviewProvider {
             }.padding()
             UIViewPreview {
                 let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "theop@example.com", isRegistered: true, last4: nil, lastBrand: nil)
+                lb.linkAccount = makeAccountStub(email: "theop@example.com", isRegistered: true, lastPM: nil)
                 return lb
             }.padding()
             UIViewPreview {
                 let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "theopetersonmarks@longestemaildomain.com", isRegistered: true, last4: nil, lastBrand: nil)
+                lb.linkAccount = makeAccountStub(email: "theopetersonmarks@longestemaildomain.com", isRegistered: true, lastPM: nil)
                 return lb
             }.padding()
             UIViewPreview {
                 let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "test@test.com", isRegistered: true, last4: "3155", lastBrand: .visa)
+                lb.linkAccount = makeAccountStub(email: "test@test.com", isRegistered: true, lastPM: .init(last4: "3155", brand: .visa))
                 return lb
             }.padding()
         }
