@@ -166,13 +166,12 @@ class AddPaymentMethodViewController: UIViewController {
         self.previousCustomerInput = previousCustomerInput
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-        self.view.backgroundColor = configuration.appearance.colors.background
     }
 
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = configuration.appearance.colors.background
 
         let stackView = UIStackView(arrangedSubviews: [
             paymentMethodTypesView, paymentMethodDetailsContainerView,
