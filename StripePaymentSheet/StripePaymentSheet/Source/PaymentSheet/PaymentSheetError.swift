@@ -29,6 +29,7 @@ public enum PaymentSheetError: Error {
     case errorHandlingNextAction
     case unrecognizedHandlerStatus
     case accountLinkFailure
+    case setupIntentClientSecretProviderNil
     /// No payment method types available error.
     case noPaymentMethodTypesAvailable(intentPaymentMethods: [STPPaymentMethodType])
 
@@ -119,6 +120,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "Failed to create Link account session"
         case .linkNotAuthorized:
             return "confirm called without authorizing Link"
+        case .setupIntentClientSecretProviderNil:
+            return "setupIntentClientSecretForCustomerAttach, but setupIntentClientSecretProvider is nil"
         case .unknown:
             return "unknown"
         }

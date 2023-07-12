@@ -191,10 +191,7 @@ import UIKit
 
     open func setupIntentClientSecretForCustomerAttach() async throws -> String {
         guard let setupIntentClientSecretProvider = setupIntentClientSecretProvider else {
-//            TODO
-            throw PaymentSheetError.missingClientSecret
-
-//            throw PaymentSheetError.unknown(debugDescription: "setupIntentClientSecretForCustomerAttach, but setupIntentClientSecretProvider is nil") // TODO: This is a programming error, setupIntentClientSecretForCustomerAttach should not be called if canCreateSetupIntents is false
+            throw PaymentSheetError.setupIntentClientSecretProviderNil // TODO: This is a programming error, setupIntentClientSecretForCustomerAttach should not be called if canCreateSetupIntents is false
         }
         return try await setupIntentClientSecretProvider()
     }
