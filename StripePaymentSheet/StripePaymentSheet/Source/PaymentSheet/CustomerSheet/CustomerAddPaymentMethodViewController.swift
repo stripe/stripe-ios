@@ -26,6 +26,8 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         return paymentMethodTypesView.selected
     }
     var paymentOption: PaymentOption? {
+        var params = IntentConfirmParams(type: selectedPaymentMethodType)
+        params = paymentMethodFormElement.applyDefaults(params: params)
         if let params = paymentMethodFormElement.updateParams(
             params: IntentConfirmParams(type: selectedPaymentMethodType)
         ) {
@@ -75,6 +77,10 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
 
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
+        if selectedPaymentMethodType == .USBankAccount,
+           let usBankAccountFormElement = usBankAccountFormElement {
+            return usBankAccountFormElement
+        }
         return makeElement(for: selectedPaymentMethodType)
     }()
 
