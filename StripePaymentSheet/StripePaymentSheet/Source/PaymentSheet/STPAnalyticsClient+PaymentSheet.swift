@@ -231,7 +231,7 @@ extension STPAnalyticsClient {
         configuration: PaymentSheet.Configuration? = nil,
         currency: String? = nil,
         intentConfig: PaymentSheet.IntentConfiguration? = nil,
-        error: AnalyticLoggableError? = nil,
+        error: Error? = nil,
         params: [String: Any] = [:]
     ) {
         var additionalParams = [:] as [String: Any]
@@ -250,7 +250,9 @@ extension STPAnalyticsClient {
         additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
         additionalParams["currency"] = currency
         additionalParams["is_decoupled"] = intentConfig != nil
-        additionalParams["error"] = error?.serializeForLogging()
+        
+        additionalParams["error_domain"] = (error as? NSError)?.domain
+        additionalParams["error_code"] = (error as? NSError)?.code
 
         for (param, param_value) in params {
             additionalParams[param] = param_value
