@@ -118,7 +118,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
 
         var supportedPaymentMethodTypes: [STPPaymentMethodType] = []
-        switch(settings.enabledPaymentMethods) {
+        switch settings.enabledPaymentMethods {
         case .card:
             supportedPaymentMethodTypes = [.card]
         case .usBank:

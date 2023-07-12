@@ -57,4 +57,3 @@ extension Array where Element == STPPaymentMethodType {
         return pmTypes
     }
 }
-

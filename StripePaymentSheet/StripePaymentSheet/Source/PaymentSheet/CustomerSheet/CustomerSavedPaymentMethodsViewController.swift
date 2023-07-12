@@ -424,7 +424,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func fetchClientSecret() async -> String? {
-        var clientSecret: String? = nil
+        var clientSecret: String?
         do {
             if let cs = cachedClientSecret {
                 clientSecret = cs
