@@ -952,6 +952,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             )
         } else {
             prepareMockPaymentSheet(appearance: appearance,
+                                    customer: customer,
                                     applePayEnabled: applePayEnabled,
                                     intentConfig: intentConfig)
         }
@@ -1006,7 +1007,9 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             StripeAPI.defaultPublishableKey = publishableKey
 
             var config = self.configuration
-            config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+            if customer != "guest" {
+                config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+            }
             config.appearance = appearance
 
             if !applePayEnabled {
@@ -1026,10 +1029,13 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     }
 
     private func prepareMockPaymentSheet(appearance: PaymentSheet.Appearance,
+                                         customer: String,
                                          applePayEnabled: Bool = true,
                                          intentConfig: PaymentSheet.IntentConfiguration? = nil) {
         var config = self.configuration
-        config.customer = .init(id: "nobody", ephemeralKeySecret: "test")
+        if customer == "guest" {
+            config.customer = .init(id: "nobody", ephemeralKeySecret: "test")
+        }
         config.appearance = appearance
         config.apiClient = stubbedAPIClient()
         if !applePayEnabled {
