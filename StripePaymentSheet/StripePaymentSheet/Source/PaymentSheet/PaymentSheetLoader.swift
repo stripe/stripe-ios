@@ -80,7 +80,7 @@ final class PaymentSheetLoader {
                     )
                 )
             } catch {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed, error: error as? AnalyticLoggableError)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed, error: error)
                 completion(.failure(error))
             }
         }
