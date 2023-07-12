@@ -14,7 +14,7 @@ extension CustomerSheet.Configuration {
 
     // Called internally from CustomerSheet to determine what payment methods to query for
     func customerSheetSupportedPaymentMethodTypes(customerAdapter: CustomerAdapter) -> [STPPaymentMethodType] {
-        self.supportedPaymentMethodTypes.filter { type in
+        self.paymentMethodTypes.filter { type in
             var isSupported = CustomerSheet.supportedPaymentMethods.contains(type)
             if type == .USBankAccount {
                 if !FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {

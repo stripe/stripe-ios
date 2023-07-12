@@ -128,7 +128,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         case .usBank_card:
             supportedPaymentMethodTypes = [.USBankAccount, .card]
         }
-        configuration.supportedPaymentMethodTypes = supportedPaymentMethodTypes
+        configuration.paymentMethodTypes = supportedPaymentMethodTypes
 
         return configuration
     }

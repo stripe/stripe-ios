@@ -47,7 +47,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         stubReturningCustomerWithCardResponse()
 
         var configuration = CustomerSheet.Configuration()
-        configuration.supportedPaymentMethodTypes = [.card]
+        configuration.paymentMethodTypes = [.card]
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {
@@ -74,7 +74,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         stubReturningCustomerWithUSBankAccountResponse()
 
         var configuration = CustomerSheet.Configuration()
-        configuration.supportedPaymentMethodTypes = [.USBankAccount]
+        configuration.paymentMethodTypes = [.USBankAccount]
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {
@@ -102,7 +102,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         stubReturningCustomerWithCardResponse()
 
         var configuration = CustomerSheet.Configuration()
-        configuration.supportedPaymentMethodTypes = [.card, .USBankAccount]
+        configuration.paymentMethodTypes = [.card, .USBankAccount]
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {

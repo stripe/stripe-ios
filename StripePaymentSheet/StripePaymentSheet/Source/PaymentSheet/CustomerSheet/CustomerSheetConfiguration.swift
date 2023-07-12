@@ -42,10 +42,11 @@ extension CustomerSheet {
         /// Whether to show Apple Pay as an option
         public var applePayEnabled: Bool = false
 
-        /// PaymentMethods to be shown.  CustomerSheet supports the following payment method types:
+        /// An ordered list of supported payment methods PaymentMethods to be shown.
+        /// CustomerSheet's supports payment method types are:
         /// .card
         /// .USBankAccount
-        public var supportedPaymentMethodTypes: [STPPaymentMethodType] = [.card]
+        public var paymentMethodTypes: [STPPaymentMethodType] = [.card]
 
         /// Optional configuration for setting the header text of the Payment Method selection screen
         public var headerTextForSelectionScreen: String?

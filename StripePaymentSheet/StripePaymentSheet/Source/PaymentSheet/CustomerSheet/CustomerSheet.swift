@@ -162,10 +162,10 @@ internal enum InternalCustomerSheetResult {
 extension CustomerSheet.Configuration {
     func validate() {
         // Check that there are no duplicates
-        let setSupportedPaymentMethods = Set(self.supportedPaymentMethodTypes)
-        if setSupportedPaymentMethods.count != self.supportedPaymentMethodTypes.count {
+        let setSupportedPaymentMethods = Set(self.paymentMethodTypes)
+        if setSupportedPaymentMethods.count != self.paymentMethodTypes.count {
 #if DEBUG
-            print("[Stripe SDK]: CustomerSheet found duplicate payment methods in \(self.supportedPaymentMethodTypes)")
+            print("[Stripe SDK]: CustomerSheet found duplicate payment methods in \(self.paymentMethodTypes)")
 #endif
         }
     }
