@@ -70,17 +70,21 @@ internal enum InternalCustomerSheetResult {
 
     var customerAdapter: CustomerAdapter
 
+    private var csCompletion: CustomerSheetCompletion?
+
     /// The result of the CustomerSheet
     @frozen public enum CustomerSheetResult {
         /// The customer cancelled the sheet. (e.g. by tapping outside it or tapping the "X")
-        case canceled
-        /// The customer selected a payment method.
+        /// The associated value is the original payment method, before the sheet was opened, as long
+        /// that payment method is still available.
+        case canceled(PaymentOptionSelection?)
+
+        /// The customer selected a payment method. The associated value is the selected payment method.
         case selected(PaymentOptionSelection?)
+
         /// An error occurred when presenting the sheet
         case error(Error)
     }
-
-    private var csCompletion: CustomerSheetCompletion?
 
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
@@ -151,7 +155,7 @@ internal enum InternalCustomerSheetResult {
     }
     // MARK: - Internal Properties
     var completion: (() -> Void)?
-    var userCompletion: ((CustomerSheetResult) -> Void)?
+    var userCompletion: ((Result<PaymentOptionSelection?, Error>) -> Void)?
 }
 
 extension CustomerSheet {
@@ -221,7 +225,7 @@ extension CustomerSheet: LoadingViewControllerDelegate {
             guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                 return nil
             }
-            return CustomerSheet.PaymentOptionSelection.savedPaymentMethod(matchingPaymentMethod)
+            return CustomerSheet.PaymentOptionSelection.paymentMethod(matchingPaymentMethod)
         default:
             return nil
         }

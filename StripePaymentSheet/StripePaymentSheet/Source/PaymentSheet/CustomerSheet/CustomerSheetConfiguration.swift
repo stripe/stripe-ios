@@ -73,21 +73,13 @@ extension CustomerSheet {
         }
         /// Apple Pay is the selected payment option.
         case applePay(paymentOptionDisplayData: PaymentOptionDisplayData)
-        /// A saved payment method was selected.
-        case saved(paymentMethod: STPPaymentMethod, paymentOptionDisplayData: PaymentOptionDisplayData)
-        /// A new payment method was saved and selected.
-        case new(paymentMethod: STPPaymentMethod, paymentOptionDisplayData: PaymentOptionDisplayData)
+        /// A Stripe payment method was selected
+        case paymentMethod(paymentMethod: STPPaymentMethod, paymentOptionDisplayData: PaymentOptionDisplayData)
 
         /// Create a PaymentOptionSelection for a saved payment method.
-        public static func savedPaymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
+        public static func paymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
             let data = PaymentOptionDisplayData(image: paymentMethod.makeIcon(), label: paymentMethod.paymentSheetLabel)
-            return .saved(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
-        }
-
-        /// Create a PaymentOptionSelection for a new payment method.
-        public static func newPaymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
-            let data = PaymentOptionDisplayData(image: paymentMethod.makeIcon(), label: paymentMethod.paymentSheetLabel)
-            return .new(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
+            return .paymentMethod(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
         }
 
         /// Create a PaymentOptionSelection for Apple Pay.
@@ -102,9 +94,7 @@ extension CustomerSheet {
             switch self {
             case .applePay(let paymentOptionDisplayData):
                 return paymentOptionDisplayData
-            case .saved(_, let paymentOptionDisplayData):
-                return paymentOptionDisplayData
-            case .new(_, let paymentOptionDisplayData):
+            case .paymentMethod(_, let paymentOptionDisplayData):
                 return paymentOptionDisplayData
             }
         }
@@ -113,9 +103,7 @@ extension CustomerSheet {
             switch self {
             case .applePay:
                 return .applePay
-            case .saved(let paymentMethod, _):
-                return .stripeId(paymentMethod.stripeId)
-            case .new(let paymentMethod, _):
+            case .paymentMethod(let paymentMethod, _):
                 return .stripeId(paymentMethod.stripeId)
             }
         }
