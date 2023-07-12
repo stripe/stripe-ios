@@ -84,7 +84,7 @@ extension PaymentSheet {
                     let params = makePaymentIntentParams(
                         confirmPaymentMethodType: .new(
                             params: confirmParams.paymentMethodParams,
-                            options: confirmParams.paymentMethodOptions,
+                            options: confirmParams.ConfirmPaymentMethodOptions,
                             shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
                         ),
                         paymentIntent: paymentIntent,
@@ -101,7 +101,7 @@ extension PaymentSheet {
                 let setupIntentParams = makeSetupIntentParams(
                     confirmPaymentMethodType: .new(
                         params: confirmParams.paymentMethodParams,
-                        options: confirmParams.paymentMethodOptions,
+                        options: confirmParams.ConfirmPaymentMethodOptions,
                         shouldSave: false
                     ),
                     setupIntent: setupIntent,
@@ -117,7 +117,7 @@ extension PaymentSheet {
                 handleDeferredIntentConfirmation(
                     confirmType: .new(
                         params: confirmParams.paymentMethodParams,
-                        options: confirmParams.paymentMethodOptions,
+                        options: confirmParams.ConfirmPaymentMethodOptions,
                         shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
                     ),
                     configuration: configuration,
