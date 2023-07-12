@@ -82,8 +82,6 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "Unrecognized STPPaymentHandlerActionStatus status"
         case .invalidClientSecret:
             return "Invalid client secret"
-        case .failedToCreateLinkSession:
-            return "Failed to create Link account session"
         case .accountLinkFailure:
             return STPLocalizedString(
                 "Something went wrong when linking your account.\nPlease try again later.",
@@ -113,6 +111,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "Updating Link payment details without valid session"
         case .linkLookupNotFound:
             return "Link account not found"
+        case .failedToCreateLinkSession:
+            return "Failed to create Link account session"
         case .linkNotAuthorized:
             return "confirm called without authorizing Link"
         }
