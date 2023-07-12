@@ -15,7 +15,7 @@ import StripeCoreTestUtils
 import XCTest
 
 class FlowControllerStateTests: XCTestCase {
-    
+
     func testAddPaymentMethodViewControllerDelegate() {
         let exp = expectation(description: "No delegate methods should be called during init but before viewDidLoad")
         exp.isInverted = true
@@ -26,30 +26,28 @@ class FlowControllerStateTests: XCTestCase {
         config.apiClient.publishableKey = "pk_123"
         let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
         let apmvcDelegate = StubAPMVCDelegate(expectation: exp)
-        let _ = AddPaymentMethodViewController(intent: intent, configuration: config, delegate: apmvcDelegate)
+        _ = AddPaymentMethodViewController(intent: intent, configuration: config, delegate: apmvcDelegate)
         waitForExpectations(timeout: 0.1)
     }
 }
-
 
 class StubAPMVCDelegate: AddPaymentMethodViewControllerDelegate {
     let expectation: XCTestExpectation
     init(expectation: XCTestExpectation) {
         self.expectation = expectation
     }
-    
+
     func didUpdate(_ viewController: StripePaymentSheet.AddPaymentMethodViewController) {
         expectation.fulfill()
     }
-    
+
     func shouldOfferLinkSignup(_ viewController: StripePaymentSheet.AddPaymentMethodViewController) -> Bool {
         expectation.fulfill()
         return true
     }
-    
+
     func updateErrorLabel(for: Error?) {
         expectation.fulfill()
     }
-    
-    
+
 }
