@@ -20,14 +20,16 @@ class CustomerSheetTests: APIStubbedTestCase {
         let stubbedAPIClient = stubbedAPIClient()
         stubNewCustomerResponse()
 
+        let configuration = CustomerSheet.Configuration()
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {
             return "si_789"
-        }, apiClient: stubbedAPIClient)
+        }, configuration: configuration,
+        apiClient: stubbedAPIClient)
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
-        let customerSheet = CustomerSheet(configuration: CustomerSheet.Configuration(), customer: customerAdapter)
+        let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, let selectedPaymentMethod)) = result else {
                 XCTFail()
@@ -44,14 +46,16 @@ class CustomerSheetTests: APIStubbedTestCase {
         let stubbedAPIClient = stubbedAPIClient()
         stubReturningCustomerWithCardResponse()
 
+        let configuration = CustomerSheet.Configuration()
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {
             return "si_789"
-        }, apiClient: stubbedAPIClient)
+        }, configuration: configuration,
+        apiClient: stubbedAPIClient)
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
-        let customerSheet = CustomerSheet(configuration: CustomerSheet.Configuration(), customer: customerAdapter)
+        let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, let selectedPaymentMethod)) = result else {
                 XCTFail()
@@ -72,11 +76,13 @@ class CustomerSheetTests: APIStubbedTestCase {
         stubbedURLSessionConfig.timeoutIntervalForRequest = fastTimeoutIntervalForRequest
         let stubbedAPIClient = stubbedAPIClient(configuration: stubbedURLSessionConfig)
 
+        let configuration = CustomerSheet.Configuration()
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {
             return "si_789"
-        }, apiClient: stubbedAPIClient)
+        }, configuration: configuration,
+        apiClient: stubbedAPIClient)
 
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
@@ -87,7 +93,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         }
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completion block called")
-        let customerSheet = CustomerSheet(configuration: CustomerSheet.Configuration(), customer: customerAdapter)
+        let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
             guard case .failure(let error) = result,
                   let nserror = error as NSError?,

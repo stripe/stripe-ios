@@ -418,7 +418,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 return
             }
             let setupIntent = Intent.setupIntent(fetchedSetupIntent)
-            //TODO: refactor so that we can call `processingInFlight = false` in this context
+            // TODO: refactor so that we can call `processingInFlight = false` in this context
             self.confirm(intent: setupIntent, paymentOption: paymentOption)
         }
     }
