@@ -432,6 +432,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         preparePaymentSheet(
+            customer: "guest",
             automaticPaymentMethods: false,
             useLink: true
         )
@@ -445,6 +446,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         preparePaymentSheet(
+            customer: "guest",
             appearance: .snapshotTestTheme,
             automaticPaymentMethods: false,
             useLink: true
@@ -459,6 +461,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         preparePaymentSheet(
+            customer: "guest",
             automaticPaymentMethods: false,
             useLink: true
         )
@@ -475,6 +478,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         appearance.colors.componentBackground = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.00)
         appearance.borderWidth = 0.0
         preparePaymentSheet(
+            customer: "guest",
             appearance: appearance,
             automaticPaymentMethods: false,
             useLink: true
