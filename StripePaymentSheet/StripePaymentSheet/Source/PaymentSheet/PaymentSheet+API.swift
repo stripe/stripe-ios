@@ -274,7 +274,10 @@ extension PaymentSheet {
                     STPPaymentMethodParams
                 ) -> Void = { linkAccount, paymentMethodParams in
                     guard linkAccount.sessionState == .verified else {
-                        assertionFailure("Creating payment details without a verified session")
+                        // We don't support 2FA in the native mobile Link flow, so if 2FA is required then this is a no-op.
+                        // Just fall through and don't save the card details to Link.
+                        STPAnalyticsClient.sharedClient.logLinkPopupSkipped()
+
                         // Attempt to confirm directly with params
                         confirmWithPaymentMethodParams(paymentMethodParams)
                         return
@@ -301,6 +304,11 @@ extension PaymentSheet {
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
+
+                        // Store the payment details to display on the button:
+                        let linkAccountService = LinkAccountService(apiClient: configuration.apiClient)
+                        linkAccountService.setLastPMDetails(params: paymentMethodParams)
+
                         createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure()

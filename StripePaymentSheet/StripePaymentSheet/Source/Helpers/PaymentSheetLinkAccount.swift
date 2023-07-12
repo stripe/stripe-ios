@@ -13,9 +13,15 @@ import UIKit
 
 protocol PaymentSheetLinkAccountInfoProtocol {
     var email: String { get }
+    var lastPM: LinkPMDisplayDetails? { get }
     var redactedPhoneNumber: String? { get }
     var isRegistered: Bool { get }
     var isLoggedIn: Bool { get }
+}
+
+struct LinkPMDisplayDetails {
+    let last4: String
+    let brand: STPCardBrand
 }
 
 class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
@@ -38,6 +44,13 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     private(set) var publishableKey: String?
 
     let email: String
+    var last4: String?
+    var lastBrand: STPCardBrand?
+
+    var lastPM: LinkPMDisplayDetails? {
+        let linkAccountService = LinkAccountService(cookieStore: cookieStore)
+        return linkAccountService.getLastPMDetails()
+    }
 
     var redactedPhoneNumber: String? {
         return currentSession?.redactedPhoneNumber

@@ -111,17 +111,11 @@ import Foundation
     case linkSignupComplete = "link.signup.complete"
     case linkSignupFailure = "link.signup.failure"
 
-    // MARK: - Link 2FA
-    case link2FAStart = "link.2fa.start"
-    case link2FAStartFailure = "link.2fa.start_failure"
-    case link2FAComplete = "link.2fa.complete"
-    case link2FACancel = "link.2fa.cancel"
-    case link2FAFailure = "link.2fa.failure"
-
     // MARK: - Link Popup
     case linkPopupShow = "link.popup.show"
     case linkPopupSuccess = "link.popup.success"
     case linkPopupCancel = "link.popup.cancel"
+    case linkPopupSkipped = "link.popup.skipped"
     case linkPopupError = "link.popup.error"
     case linkPopupLogout = "link.popup.logout"
 

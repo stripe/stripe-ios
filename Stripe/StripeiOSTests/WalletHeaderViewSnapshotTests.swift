@@ -183,6 +183,7 @@ extension WalletHeaderViewSnapshotTests {
     fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
         let redactedPhoneNumber: String?
+        let lastPM: LinkPMDisplayDetails?
         let isRegistered: Bool
         let isLoggedIn: Bool
     }
@@ -191,6 +192,7 @@ extension WalletHeaderViewSnapshotTests {
         return LinkAccountStub(
             email: "customer@example.com",
             redactedPhoneNumber: "+1********55",
+            lastPM: nil,
             isRegistered: true,
             isLoggedIn: true
         )

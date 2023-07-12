@@ -118,9 +118,7 @@ final class PaymentSheetLoader {
             }
         }
 
-        if linkAccountService.hasSessionCookie {
-            return try await lookUpConsumerSession(email: nil)
-        } else if let email = linkAccountService.getLastSignUpEmail() {
+        if let email = linkAccountService.getLastSignUpEmail() {
             return try await lookUpConsumerSession(email: email)
         } else if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email)
