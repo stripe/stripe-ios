@@ -207,7 +207,9 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
-        app.staticTexts["+ Add"].tap()
+        let addButton = app.staticTexts["+ Add"]
+        XCTAssertTrue(addButton.waitForExistence(timeout: 60.0))
+        addButton.tap()
 
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()

@@ -70,12 +70,12 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.collectPhone)
                         SettingView(setting: $playgroundController.settings.collectAddress)
                     }
-                    Spacer()
-                    Divider()
-                    CustomerSheetButtons()
-                        .environmentObject(playgroundController)
                 }
             }
+            Spacer()
+            Divider()
+            CustomerSheetButtons()
+                .environmentObject(playgroundController)
         }
     }
 
