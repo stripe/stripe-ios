@@ -15,6 +15,10 @@ import StripePayments
 /// Most errors do not originate from PaymentSheet itself; instead, they come from the Stripe API
 /// or other SDK components like STPPaymentHandler, PassKit (Apple Pay), etc.
 public enum PaymentSheetError: Error {
+    
+    /// An unknown error.
+    @available(*, deprecated, message: "Depcreated in favor of specfic errors defined in PaymentSheetError.")
+    case unknown(debugDescription: String)
 
     // MARK: Generic errors
     case missingClientSecret
@@ -115,6 +119,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "Failed to create Link account session"
         case .linkNotAuthorized:
             return "confirm called without authorizing Link"
+        case .unknown(debugDescription: let debugDescription):
+            return debugDescription
         }
     }
 }
