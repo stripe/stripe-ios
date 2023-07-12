@@ -17,7 +17,6 @@ import StripePayments
 public enum PaymentSheetError: Error {
     
     /// An unknown error.
-    @available(*, deprecated, message: "Depcreated in favor of specfic errors defined in PaymentSheetError.")
     case unknown(debugDescription: String)
 
     // MARK: Generic errors
@@ -65,8 +64,9 @@ extension PaymentSheetError: CustomDebugStringConvertible {
         // TODO: Expired ephemeral key
         return false
     }
-
-    public var debugDescription: String {
+    
+    /// A string that can safley be logged to our analytics service that does not contain any PII
+    public var safeLoggingString: String {
         switch self {
         case .missingClientSecret:
             return "The client secret is missing"
@@ -119,8 +119,18 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "Failed to create Link account session"
         case .linkNotAuthorized:
             return "confirm called without authorizing Link"
+        case .unknown:
+            return "unknown"
+        }
+    }
+    
+    /// A description logged to a developer for debugging
+    public var debugDescription: String {
+        switch self {
         case .unknown(debugDescription: let debugDescription):
             return debugDescription
+        default:
+            return safeLoggingString
         }
     }
 }
