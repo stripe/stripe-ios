@@ -1033,7 +1033,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
                                          applePayEnabled: Bool = true,
                                          intentConfig: PaymentSheet.IntentConfiguration? = nil) {
         var config = self.configuration
-        if customer == "guest" {
+        if customer != "guest" {
             config.customer = .init(id: "nobody", ephemeralKeySecret: "test")
         }
         config.appearance = appearance
