@@ -15,7 +15,7 @@ import StripePayments
 /// Most errors do not originate from PaymentSheet itself; instead, they come from the Stripe API
 /// or other SDK components like STPPaymentHandler, PassKit (Apple Pay), etc.
 public enum PaymentSheetError: Error {
-    
+
     /// An unknown error.
     case unknown(debugDescription: String)
 
@@ -64,7 +64,7 @@ extension PaymentSheetError: CustomDebugStringConvertible {
         // TODO: Expired ephemeral key
         return false
     }
-    
+
     /// A string that can safley be logged to our analytics service that does not contain any PII
     public var safeLoggingString: String {
         switch self {
@@ -123,14 +123,14 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "unknown"
         }
     }
-    
+
     /// A description logged to a developer for debugging
     public var debugDescription: String {
         switch self {
         case .unknown(debugDescription: let debugDescription):
-            return debugDescription
+            return "An error occured in PaymentSheet. " + debugDescription
         default:
-            return safeLoggingString
+            return "An error occured in PaymentSheet. " + safeLoggingString
         }
     }
 }
