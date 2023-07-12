@@ -1,0 +1,45 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "pm_123456123456789",
+      "object": "payment_method",
+      "billing_details": {
+        "address": {
+          "city": null,
+          "country": null,
+          "line1": null,
+          "line2": null,
+          "postal_code": null,
+          "state": null
+        },
+        "email": "johndoe@gmail.com",
+        "name": "John Doe",
+        "phone": null
+      },
+      "created": 1689196732,
+      "customer": "cus_123456789123456789",
+      "livemode": false,
+      "type": "us_bank_account",
+      "us_bank_account": {
+        "account_holder_type": "individual",
+        "account_type": "checking",
+        "bank_name": "STRIPE TEST BANK",
+        "financial_connections_account": "fca_1NTAQrLu123456789123",
+        "fingerprint": "FF123456789123456789",
+        "last4": "6789",
+        "linked_account": "fca_1N123456789",
+        "networks": {
+          "preferred": "ach",
+          "supported": [
+            "ach"
+          ]
+        },
+        "routing_number": "110000000",
+        "status_details": null
+      }
+    }
+  ],
+  "has_more": false,
+  "url": "/v1/payment_methods"
+}
