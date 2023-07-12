@@ -146,8 +146,7 @@ final class PaymentSheetLoader {
             }
             guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
                 // Error if the PaymentIntent is in a terminal state
-                let message = "PaymentSheet received a PaymentIntent in a terminal state: \(paymentIntent.status)"
-                throw PaymentSheetError.unknown(debugDescription: message)
+                throw PaymentSheetError.paymentIntentInTerminalState(status: paymentIntent.status)
             }
             intent = .paymentIntent(paymentIntent)
         case .setupIntentClientSecret(let clientSecret):
@@ -160,8 +159,7 @@ final class PaymentSheetLoader {
             }
             guard ![.succeeded, .canceled].contains(setupIntent.status) else {
                 // Error if the SetupIntent is in a terminal state
-                let message = "PaymentSheet received a SetupIntent in a terminal state: \(setupIntent.status)"
-                throw PaymentSheetError.unknown(debugDescription: message)
+                throw PaymentSheetError.setupIntentInTerminalState(status: setupIntent.status)
             }
             intent = .setupIntent(setupIntent)
 
@@ -197,7 +195,7 @@ final class PaymentSheetLoader {
                 types: savedPaymentMethodTypes
             ) { paymentMethods, error in
                 guard let paymentMethods = paymentMethods, error == nil else {
-                    let error = error ?? PaymentSheetError.unknown(debugDescription: "Failed to retrieve PaymentMethods for the customer")
+                    let error = error ?? PaymentSheetError.fetchPaymentMethodsFailure
                     continuation.resume(throwing: error)
                     return
                 }

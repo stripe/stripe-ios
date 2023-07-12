@@ -123,10 +123,10 @@ extension PaymentSheet {
         case .canceled:
             return .canceled
         case .failed:
-            let error = error ?? PaymentSheetError.unknown(debugDescription: "Unknown error occured while handling intent next action")
+            let error = error ?? PaymentSheetError.errorHandlingNextAction
             return .failed(error: error)
         @unknown default:
-            return .failed(error: PaymentSheetError.unknown(debugDescription: "Unrecognized STPPaymentHandlerActionStatus status"))
+            return .failed(error: PaymentSheetError.unrecognizedHandlerStatus)
         }
     }
 
