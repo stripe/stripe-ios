@@ -117,18 +117,18 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
 
-        var supportedPaymentMethodTypes: [STPPaymentMethodType] = []
-        switch settings.enabledPaymentMethods {
+        var paymentMethodTypes: [STPPaymentMethodType] = []
+        switch settings.paymentMethodTypes {
         case .card:
-            supportedPaymentMethodTypes = [.card]
+            paymentMethodTypes = [.card]
         case .usBank:
-            supportedPaymentMethodTypes = [.USBankAccount]
+            paymentMethodTypes = [.USBankAccount]
         case .card_usbank:
-            supportedPaymentMethodTypes = [.card, .USBankAccount]
+            paymentMethodTypes = [.card, .USBankAccount]
         case .usBank_card:
-            supportedPaymentMethodTypes = [.USBankAccount, .card]
+            paymentMethodTypes = [.USBankAccount, .card]
         }
-        configuration.paymentMethodTypes = supportedPaymentMethodTypes
+        configuration.paymentMethodTypes = paymentMethodTypes
 
         return configuration
     }
