@@ -4,7 +4,7 @@ project_type: ios
 app:
   envs:
   - FASTLANE_XCODE_LIST_TIMEOUT: "120"
-  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   - BITRISE_PROJECT_PATH: Stripe.xcworkspace
   - GIT_AUTHOR_NAME: Bitrise CI
   - GIT_AUTHOR_EMAIL: mobile-sdk-team@stripe.com
@@ -335,6 +335,8 @@ workflows:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
         machine_type_id: g2-m1.8core
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   test-builds-xcode-143:
     steps:
     - xcode-build-for-test@2:
