@@ -121,7 +121,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             DispatchQueue.main.async {
                 completion(
                     .failure(
-                        PaymentSheetError.unknown(debugDescription: "Don't call sign up if not needed")
+                        PaymentSheetError.linkSignUpNotRequired
                     )
                 )
             }
@@ -162,7 +162,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             DispatchQueue.main.async {
                 completion(
                     .failure(
-                        PaymentSheetError.unknown(debugDescription: "Don't call verify if not needed")
+                        PaymentSheetError.linkCallVerifyNotRequired
                     )
                 )
             }
@@ -193,7 +193,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             DispatchQueue.main.async {
                 completion(
                     .failure(
-                        PaymentSheetError.unknown(debugDescription: "Don't call verify if not needed")
+                        PaymentSheetError.linkCallVerifyNotRequired
                     )
                 )
             }
@@ -223,9 +223,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             assertionFailure()
             completion(
                 .failure(
-                    PaymentSheetError.unknown(
-                        debugDescription: "Linking account session without valid consumer session"
-                    )
+                    PaymentSheetError.linkingWithoutValidSession
                 )
             )
             return
@@ -246,7 +244,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         guard let session = currentSession else {
             assertionFailure()
             completion(
-                .failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session"))
+                .failure(PaymentSheetError.savingWithoutValidLinkSession)
             )
             return
         }
@@ -267,7 +265,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     ) {
         guard let session = currentSession else {
             assertionFailure()
-            completion(.failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session")))
+            completion(.failure(PaymentSheetError.savingWithoutValidLinkSession))
             return
         }
         retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
@@ -284,7 +282,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     ) {
         guard let session = currentSession else {
             assertionFailure()
-            completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
+            completion(.failure(PaymentSheetError.payingWithoutValidLinkSession))
             return
         }
 
@@ -302,9 +300,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             assertionFailure()
             return completion(
                 .failure(
-                    PaymentSheetError.unknown(
-                        debugDescription: "Deleting Link payment details without valid session"
-                    )
+                    PaymentSheetError.deletingWithoutValidLinkSession
                 )
             )
         }
@@ -328,9 +324,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             assertionFailure()
             return completion(
                 .failure(
-                    PaymentSheetError.unknown(
-                        debugDescription: "Updating Link payment details without valid session"
-                    )
+                    PaymentSheetError.updatingWithoutValidLinkSession
                 )
             )
         }
@@ -444,13 +438,13 @@ private extension PaymentSheetLinkAccount {
                     self?.currentSession = session.consumerSession
                     self?.publishableKey = session.publishableKey
                     completion(.success(()))
-                case .notFound(let errorMessage):
+                case .notFound(let message):
                     completion(
-                        .failure(PaymentSheetError.unknown(debugDescription: errorMessage))
+                        .failure(PaymentSheetError.linkLookupNotFound(serverErrorMessage: message))
                     )
                 case .noAvailableLookupParams:
                     completion(
-                        .failure(PaymentSheetError.unknown(debugDescription: "The client secret is missing"))
+                        .failure(PaymentSheetError.missingClientSecret)
                     )
                 }
             case .failure(let error):
