@@ -114,5 +114,33 @@ public extension PaymentSheet {
                 setupFutureUsage: SetupFutureUsage = .offSession
             )
         }
+        
+        /// An async version of `ConfirmHandler`.
+        typealias AsyncConfirmHandler = (
+            _ paymentMethod: STPPaymentMethod,
+            _ shouldSavePaymentMethod: Bool
+        ) async throws -> String
+        
+        /// An async version of the initializer. See the other initializer for documentation.
+        init(
+            mode: Mode,
+            paymentMethodTypes: [String]? = nil,
+            onBehalfOf: String? = nil,
+            confirmHandler2: @escaping AsyncConfirmHandler
+        ) {
+            self.mode = mode
+            self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
+            self.confirmHandler = { paymentMethod, shouldSavePaymentMethod, callback in
+                Task {
+                    do {
+                        let clientSecret = try await confirmHandler2(paymentMethod, shouldSavePaymentMethod)
+                        callback(.success(clientSecret))
+                    } catch {
+                        callback(.failure(error))
+                    }
+                }
+            }
+        }
     }
 }
