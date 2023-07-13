@@ -250,7 +250,7 @@ extension STPAnalyticsClient {
         additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
         additionalParams["currency"] = currency
         additionalParams["is_decoupled"] = intentConfig != nil
-        
+
         additionalParams["error_domain"] = (error as? NSError)?.domain
         additionalParams["error_code"] = (error as? NSError)?.code
 
