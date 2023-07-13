@@ -48,6 +48,7 @@ class STPElementsSessionTest: XCTestCase {
 
         XCTAssertNotNil(elementsSession.linkSettings)
         XCTAssertEqual(elementsSession.countryCode, "US")
+        XCTAssertEqual(elementsSession.merchantCountryCode, "US")
         XCTAssertNotNil(elementsSession.paymentMethodSpecs)
     }
 
