@@ -35,7 +35,12 @@ class CustomerSheetUITest: XCTestCase {
         selectButton.tap()
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
-        let paymentMethodButton = app.staticTexts["Success: ••••4242"]  // The card should be saved now
+
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        confirmButton.tap()
+
+        let paymentMethodButton = app.staticTexts["Success: ••••4242, selected"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
     }
 
@@ -56,7 +61,12 @@ class CustomerSheetUITest: XCTestCase {
 
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
-        let paymentMethodButton = app.staticTexts["Success: ••••4242"]  // The card should be saved now
+
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        confirmButton.tap()
+
+        let paymentMethodButton = app.staticTexts["Success: ••••4242, selected"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
     }
 
@@ -79,7 +89,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
         confirmButton.tap()
 
-        let paymentMethodButton = app.staticTexts["Success: Apple Pay"]  // The card should be saved now
+        let paymentMethodButton = app.staticTexts["Success: Apple Pay, selected"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
     }
 
@@ -114,15 +124,86 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
         closeButton.tap()
 
-        dismissAlertView(alertBody: "Success: payment method unset", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
 
         let selectButtonFinal = app.staticTexts["None"]
         XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: 60.0))
-
     }
 
-    func presentCSAndAddCardFrom(buttonLabel: String) {
-        let selectButton = app.staticTexts[buttonLabel]
+    func testAddTwoPaymentMethods_RemoveTwoPaymentMethods_noapplepay() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .off
+        loadPlayground(
+            app,
+            settings
+        )
+
+        presentCSAndAddCardFrom(buttonLabel: "None", tapAdd: false)
+        presentCSAndAddCardFrom(buttonLabel: "••••4242")
+
+        let selectButton = app.staticTexts["••••4242"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        selectButton.tap()
+
+        let editButton = app.staticTexts["Edit"]
+        XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
+        editButton.tap()
+
+        removeFirstPaymentMethodInList()
+        removeFirstPaymentMethodInList()
+
+        let doneButton = app.staticTexts["Done"]
+        XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
+        doneButton.tap()
+
+        let closeButton = app.buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
+        closeButton.tap()
+
+        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
+
+        let selectButtonFinal = app.staticTexts["None"]
+        XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: 60.0))
+    }
+
+    func testNoPrevPM_AddPM_canceled_noApplePay() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .off
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let selectButton = app.staticTexts["None"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        selectButton.tap()
+
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Save"].tap()
+
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        // Don't tap confirm!
+
+        let closeButton = app.buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
+        closeButton.tap()
+
+        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
+    }
+
+    func testNoPrevPM_AddPM_canceled_ApplePay() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let selectButton = app.staticTexts["None"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
@@ -130,7 +211,91 @@ class CustomerSheetUITest: XCTestCase {
 
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
-        dismissAlertView(alertBody: "Success: ••••4242", alertTitle: "Complete", buttonToTap: "OK")
+
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        // Don't tap confirm!
+
+        let closeButton = app.buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
+        closeButton.tap()
+
+        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
+    }
+
+    func testPrevPM_AddPM_canceled_noApplePay() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .off
+        loadPlayground(
+            app,
+            settings
+        )
+
+        presentCSAndAddCardFrom(buttonLabel: "None", tapAdd: false)
+        let selectButton = app.staticTexts["••••4242"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        selectButton.tap()
+
+        app.staticTexts["+ Add"].tap()
+
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Save"].tap()
+
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        // Don't tap!
+
+        let closeButton = app.buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
+        closeButton.tap()
+
+        dismissAlertView(alertBody: "Success: ••••4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
+    }
+
+    func testPrevPM_AddPM_canceled_ApplePay() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        presentCSAndAddCardFrom(buttonLabel: "None")
+        let selectButton = app.staticTexts["••••4242"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        selectButton.tap()
+
+        app.staticTexts["Apple Pay"].tap()
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        // Don't tap!
+
+        let closeButton = app.buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
+        closeButton.tap()
+
+        dismissAlertView(alertBody: "Success: ••••4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
+    }
+
+    func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
+        let selectButton = app.staticTexts[buttonLabel]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        selectButton.tap()
+
+        if tapAdd {
+            app.staticTexts["+ Add"].tap()
+        }
+
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Save"].tap()
+
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        confirmButton.tap()
+
+        dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
 
     func removeFirstPaymentMethodInList() {
