@@ -323,11 +323,7 @@ class AddPaymentMethodViewController: UIViewController {
             email: email
         )
         let client = STPBankAccountCollector()
-        let errorText = STPLocalizedString(
-            "Something went wrong when linking your account.\nPlease try again later.",
-            "Error message when an error case happens when linking your account"
-        )
-        let genericError = PaymentSheetError.unknown(debugDescription: errorText)
+        let genericError = PaymentSheetError.accountLinkFailure
 
         let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = {
             result,

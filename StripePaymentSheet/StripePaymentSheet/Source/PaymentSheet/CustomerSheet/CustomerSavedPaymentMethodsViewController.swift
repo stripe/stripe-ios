@@ -76,7 +76,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             customerAdapter: self.customerAdapter,
             configuration: .init(
                 showApplePay: showApplePay,
-                autoSelectDefaultBehavior: shouldShowPaymentMethodCarousel ? .onlyIfMatched : .none
+                autoSelectDefaultBehavior: .onlyIfMatched
             ),
             appearance: configuration.appearance,
             delegate: self
@@ -356,7 +356,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     }
 
                 case .saved(let paymentMethod):
-                    let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
+                    let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
                     let type = STPPaymentMethod.string(from: paymentMethod.type)
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
                         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: type)
@@ -434,22 +434,10 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     assertionFailure("addPaymentOption confirmation completed, but PaymentMethod is missing")
                     return
                 }
-
-                let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.newPaymentMethod(paymentMethod)
-                self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
-                    STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
-                    self.processingInFlight = false
-                    self.error = error
-                    self.updateUI()
-                } onSuccess: {
-                    STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentSuccess()
-                    self.processingInFlight = false
-                    self.actionButton.update(state: .disabled, animated: true) {
-                        self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                            self.csCompletion?(.selected(paymentOptionSelection))
-                        }
-                    }
-                }
+                self.processingInFlight = false
+                self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
+                self.mode = .selectingSaved
+                self.updateUI(animated: true)
             }
         })
     }
@@ -489,23 +477,10 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                         }
                         return
                     }
-                    let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.savedPaymentMethod(paymentMethod)
-                    self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
-                        self.processingInFlight = false
-                        STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
-                        self.error = error
-                        self.actionButton.update(state: .enabled, animated: true) {
-                            self.updateUI()
-                        }
-                    } onSuccess: {
-                        self.processingInFlight = false
-                        STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachSuccess()
-                        self.actionButton.update(state: .disabled, animated: true) {
-                            self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                                self.csCompletion?(.selected(paymentOptionSelection))
-                            }
-                        }
-                    }
+                    self.processingInFlight = false
+                    self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
+                    self.mode = .selectingSaved
+                    self.updateUI(animated: true)
                 }
             }
         }
@@ -570,14 +545,31 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func handleDismissSheet() {
-        if savedPaymentOptionsViewController.originalSelectedSavedPaymentMethod != nil &&
-            savedPaymentOptionsViewController.selectedPaymentOption == nil {
-            delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                self.csCompletion?(.selected(nil))
+        if let originalSelectedPaymentMethod = savedPaymentOptionsViewController.originalSelectedSavedPaymentMethod {
+            switch originalSelectedPaymentMethod {
+            case .applePay:
+                let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.applePay()
+                self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                    self.csCompletion?(.canceled(paymentOptionSelection))
+                }
+            case .stripeId(let paymentMethodId):
+                if let paymentMethod = self.savedPaymentOptionsViewController.savedPaymentMethods.first(where: { $0.stripeId == paymentMethodId }) {
+                    let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
+                    self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                        self.csCompletion?(.canceled(paymentOptionSelection))
+                    }
+                } else {
+                    self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                        self.csCompletion?(.canceled(nil))
+                    }
+                }
+            default:
+                assertionFailure("Selected payment method was something other than a saved payment method or apple pay")
             }
+
         } else {
-            delegate?.savedPaymentMethodsViewControllerDidCancel(self) {
-                self.csCompletion?(.canceled)
+            self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                self.csCompletion?(.canceled(nil))
             }
         }
     }
