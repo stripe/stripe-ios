@@ -438,9 +438,9 @@ private extension PaymentSheetLinkAccount {
                     self?.currentSession = session.consumerSession
                     self?.publishableKey = session.publishableKey
                     completion(.success(()))
-                case .notFound:
+                case .notFound(let message):
                     completion(
-                        .failure(PaymentSheetError.linkLookupNotFound)
+                        .failure(PaymentSheetError.linkLookupNotFound(serverErrorMessage: message))
                     )
                 case .noAvailableLookupParams:
                     completion(

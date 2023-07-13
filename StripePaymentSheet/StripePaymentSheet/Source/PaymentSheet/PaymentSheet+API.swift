@@ -43,8 +43,8 @@ extension PaymentSheet {
                     completion: completion
                 )
             else {
-                assertionFailure(PaymentSheetError.applePayNotSupported.debugDescription)
-                completion(.failed(error: PaymentSheetError.applePayNotSupported))
+                assertionFailure(PaymentSheetError.applePayNotSupportedOrMisconfigured.debugDescription)
+                completion(.failed(error: PaymentSheetError.applePayNotSupportedOrMisconfigured))
                 return
             }
             applePayContext.presentApplePay()

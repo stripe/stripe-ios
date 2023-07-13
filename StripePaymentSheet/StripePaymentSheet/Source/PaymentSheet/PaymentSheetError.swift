@@ -23,7 +23,7 @@ public enum PaymentSheetError: Error {
     case missingClientSecret
     case invalidClientSecret
     case unexpectedResponseFromStripeAPI
-    case applePayNotSupported
+    case applePayNotSupportedOrMisconfigured
     case alreadyPresented
     case flowControllerConfirmFailed(message: String)
     case errorHandlingNextAction
@@ -49,7 +49,7 @@ public enum PaymentSheetError: Error {
     case payingWithoutValidLinkSession
     case deletingWithoutValidLinkSession
     case updatingWithoutValidLinkSession
-    case linkLookupNotFound
+    case linkLookupNotFound(serverErrorMessage: String)
     case failedToCreateLinkSession
     case linkNotAuthorized
 
@@ -73,7 +73,7 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "The client secret is missing"
         case .unexpectedResponseFromStripeAPI:
             return "Unexpected response from Stripe API."
-        case .applePayNotSupported:
+        case .applePayNotSupportedOrMisconfigured:
             return "Attempted Apple Pay but it's not supported by the device, not configured, or missing a presenter"
         case .deferredIntentValidationFailed(message: let message):
             return message
@@ -130,10 +130,12 @@ extension PaymentSheetError: CustomDebugStringConvertible {
     /// A description logged to a developer for debugging
     public var debugDescription: String {
         switch self {
-        case .unknown(debugDescription: let debugDescription):
-            return "An error occured in PaymentSheet. " + debugDescription
+        case .unknown(debugDescription: let message):
+            return "An unknown error occurred in PaymentSheet. " + message
+        case .linkLookupNotFound(serverErrorMessage: let message):
+            return "An error occurred in PaymentSheet. " + message
         default:
-            return "An error occured in PaymentSheet. " + safeLoggingString
+            return "An error occurred in PaymentSheet. " + safeLoggingString
         }
     }
 }
