@@ -305,14 +305,13 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(continueButton.waitForExistence(timeout: 60.0))
         continueButton.tap()
 
-        //Because we are running in a mocked env, as soon as we tap the continue button, we should see the test bank
+        // Because we are running in a mocked env, as soon as we tap the continue button, we should see the test bank
         let testBankLinkedBankAccount = app.staticTexts["Test Bank"]
         XCTAssertTrue(testBankLinkedBankAccount.waitForExistence(timeout: 60.0))
 
-
         let saveButton = app.buttons["Save"]
         XCTAssertTrue(saveButton.waitForExistence(timeout: 60.0))
-        //Because things are mocked, this is as far as we can currently (unless we start mocking.. hmm)
+        // Because things are mocked, this is as far as we can currently
     }
 
     func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
