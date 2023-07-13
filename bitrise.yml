@@ -331,6 +331,10 @@ workflows:
     before_run:
     - prep_all
     after_run: []
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core
   test-builds-xcode-143:
     steps:
     - xcode-build-for-test@2:
