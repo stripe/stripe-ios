@@ -109,10 +109,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         return cookieStore.read(key: .lastLogoutEmail) == hashedEmail
     }
 
-    func getLastSignUpEmail() -> String? {
-        return cookieStore.read(key: .lastSignupEmail)
-    }
-
     func getLastPMDetails() -> LinkPMDisplayDetails? {
         if let lastBrandString = cookieStore.read(key: .lastPMBrand),
            let last4 = cookieStore.read(key: .lastPMLast4) {
