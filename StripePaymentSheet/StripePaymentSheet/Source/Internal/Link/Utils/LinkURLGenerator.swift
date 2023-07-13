@@ -47,7 +47,7 @@ class LinkURLGenerator {
 
         // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
         let customerCountryCode = intent.countryCode ?? configuration.defaultBillingDetails.address.country ?? Locale.current.regionCode ?? "US"
-        
+
         let merchantCountryCode = intent.merchantCountryCode ?? customerCountryCode
 
         // Get email from the previously fetched account in the Link button, or the billing details, or the Customer object
@@ -111,5 +111,4 @@ extension LinkURLParams {
 enum LinkURLGeneratorError: Error {
     case urlCreationFailed
     case noPublishableKey
-    case noMerchantCountryCode
 }

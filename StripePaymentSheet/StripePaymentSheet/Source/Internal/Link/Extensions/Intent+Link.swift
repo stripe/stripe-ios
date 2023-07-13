@@ -71,7 +71,7 @@ extension Intent {
             return elementsSession.countryCode
         }
     }
-    
+
     var merchantCountryCode: String? {
         switch self {
         case .paymentIntent(let paymentIntent):

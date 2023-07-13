@@ -146,7 +146,7 @@ public class STPPaymentIntent: NSObject {
 
     /// Country code of the merchant.
     @_spi(STP) public let merchantCountryCode: String?
-    
+
     /// :nodoc:
     @objc public override var description: String {
         let props: [String] = [
