@@ -69,20 +69,23 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func presentCustomerSheet() {
         customerSheet?.present(from: rootViewController, completion: { result in
             switch result {
-            case .canceled:
-                let alertController = self.makeAlertController()
-                alertController.message = "Canceled"
-                self.rootViewController.present(alertController, animated: true)
-            case .selected(let paymentOptionSelection):
+            case .selected(let paymentOptionSelection), .canceled(let paymentOptionSelection):
                 self.paymentOptionSelection = paymentOptionSelection
 
-                let alertController = self.makeAlertController()
-                if let paymentOptionSelection = paymentOptionSelection {
-                    alertController.message = "Success: \(paymentOptionSelection.displayData().label)"
-                } else {
-                    alertController.message = "Success: payment method unset"
+                var status = "canceled"
+                if case .selected = result {
+                    status = "selected"
                 }
+
+                let alertController = self.makeAlertController()
+                if let selection = paymentOptionSelection {
+                    alertController.message = "Success: \(selection.displayData().label), \(status)"
+                } else {
+                    alertController.message = "Success: payment method not set, \(status)"
+                }
+
                 self.rootViewController.present(alertController, animated: true)
+
             case .error(let error):
                 print("Something went wrong: \(error)")
             }
