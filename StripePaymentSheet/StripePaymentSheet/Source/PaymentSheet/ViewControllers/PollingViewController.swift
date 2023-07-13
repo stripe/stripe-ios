@@ -23,7 +23,7 @@ class PollingViewController: UIViewController {
 
     // MARK: State
 
-    private let deadline = Date().addingTimeInterval(60 * 5) // in 5 minutes
+    private let deadline: Date
     private var oneSecondTimer: Timer?
     private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
@@ -162,8 +162,9 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerActionParams, appearance: PaymentSheet.Appearance) {
+    init(currentAction: STPPaymentHandlerActionParams, deadline: Date, appearance: PaymentSheet.Appearance) {
         self.currentAction = currentAction
+        self.deadline = deadline
         self.appearance = appearance
         super.init(nibName: nil, bundle: nil)
     }

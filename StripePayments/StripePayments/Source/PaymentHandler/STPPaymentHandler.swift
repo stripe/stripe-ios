@@ -1310,7 +1310,8 @@ public class STPPaymentHandler: NSObject {
             else {
                 return
             }
-            presentingVC.presentPollingVCForAction(currentAction)
+            let deadline = Date().addingTimeInterval(60 * 5) // 5 minutes
+            presentingVC.presentPollingVCForAction(action: currentAction, deadline: deadline)
         case .cashAppRedirectToApp:
             guard
                 let returnURL = URL(string: currentAction.returnURLString ?? "")
@@ -2310,7 +2311,7 @@ extension STPPaymentHandler {
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController)
-    func presentPollingVCForAction(_ action: STPPaymentHandlerActionParams)
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, deadline: Date)
 }
 
 @_spi(STP) public protocol FormSpecPaymentHandler {
