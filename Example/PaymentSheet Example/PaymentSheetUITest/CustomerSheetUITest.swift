@@ -281,6 +281,40 @@ class CustomerSheetUITest: XCTestCase {
         dismissAlertView(alertBody: "Success: ••••4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
 
+    func testCustomerSheetStandard_applePayOff_addUSBankAccount() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .off
+        settings.paymentMethodTypes = .card_usbank
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let selectButton = app.staticTexts["None"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        selectButton.tap()
+
+        let usBankAccountPMSelectorButton = app.staticTexts["US Bank Account"]
+        XCTAssertTrue(usBankAccountPMSelectorButton.waitForExistence(timeout: 60.0))
+        usBankAccountPMSelectorButton.tap()
+
+        try! fillUSBankData(app)
+
+        let continueButton = app.buttons["Continue"]
+        XCTAssertTrue(continueButton.waitForExistence(timeout: 60.0))
+        continueButton.tap()
+
+        //Because we are running in a mocked env, as soon as we tap the continue button, we should see the test bank
+        let testBankLinkedBankAccount = app.staticTexts["Test Bank"]
+        XCTAssertTrue(testBankLinkedBankAccount.waitForExistence(timeout: 60.0))
+
+
+        let saveButton = app.buttons["Save"]
+        XCTAssertTrue(saveButton.waitForExistence(timeout: 60.0))
+        //Because things are mocked, this is as far as we can currently (unless we start mocking.. hmm)
+    }
+
     func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
         let selectButton = app.staticTexts[buttonLabel]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
