@@ -139,6 +139,16 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             updateUI(selectedSavedPaymentOption: originalSelectedSavedPaymentMethod)
         }
     }
+    var unsyncedSavedPaymentMethods: [STPPaymentMethod] {
+        didSet {
+            if let firstPaymentMethod = self.unsyncedSavedPaymentMethods.first {
+                let paymentOption = CustomerPaymentOption(value: firstPaymentMethod.stripeId)
+                updateUI(selectedSavedPaymentOption: paymentOption)
+            } else {
+                updateUI(selectedSavedPaymentOption: originalSelectedSavedPaymentMethod)
+            }
+        }
+    }
 
     /// Whether or not there are any payment options we can show
     /// i.e. Are there any cells besides the Add cell?
@@ -201,12 +211,17 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         self.customerAdapter = customerAdapter
         self.appearance = appearance
         self.delegate = delegate
+        self.unsyncedSavedPaymentMethods = []
         super.init(nibName: nil, bundle: nil)
         updateUI(selectedSavedPaymentOption: nil)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    public func didAddSavedPaymentMethod(paymentMethod: STPPaymentMethod) {
+        let unsyncedSavedPaymentMethodsCopy = unsyncedSavedPaymentMethods
+        self.unsyncedSavedPaymentMethods = [paymentMethod] + unsyncedSavedPaymentMethodsCopy
     }
 
     // MARK: - UIViewController
@@ -224,7 +239,13 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-        self.updateUI(selectedSavedPaymentOption: self.originalSelectedSavedPaymentMethod)
+
+        // In the add payment flow, selectedViewModelIndex is set, and then
+        // the view is loaded. Checking selectedViewModelIndex is needed to avoid
+        // override selecting the newly added payment method.
+        if selectedViewModelIndex == nil {
+            self.updateUI(selectedSavedPaymentOption: self.originalSelectedSavedPaymentMethod)
+        }
     }
 
     // MARK: - Private methods
@@ -242,10 +263,14 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
             return Selection.saved(paymentMethod: paymentMethod)
         }
+        let unsyncedSavedPMViewModels = self.unsyncedSavedPaymentMethods.compactMap { paymentMethod in
+            return Selection.saved(paymentMethod: paymentMethod)
+        }
 
         self.viewModels =
         [.add]
         + (self.configuration.showApplePay ? [.applePay] : [])
+        + unsyncedSavedPMViewModels
         + savedPMViewModels
 
         if self.configuration.autoSelectDefaultBehavior != .none {

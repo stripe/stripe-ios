@@ -8,6 +8,9 @@
 ### PaymentSheet
 * [Added] US bank accounts are now supported when initializing with an IntentConfiguration.
 
+### CustomerSheet
+* [Changed] Breaking interface change for `CustomerSheetResult`. `CustomerSheetResult.canceled` now has a nullable associated value signifying that there is no selected payment method. Please use both `.canceled(StripeOptionSelection?)` and `.selected(PaymentOptionSelection?)` to update your UI to show the latest selected payment method.
+
 ## 23.9.3 2023-06-26
 ### PaymentSheet
 * [Fixed] Affirm no longer requires shipping details.
