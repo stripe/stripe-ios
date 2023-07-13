@@ -206,6 +206,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             stripeDescription: nil,
             linkSettings: nil,
             livemode: false,
+            merchantCountryCode: "US",
             nextAction: action,
             orderedPaymentMethodTypes: [],
             paymentMethodID: "test",
