@@ -80,7 +80,8 @@ final class PaymentSheetLoader {
                     )
                 )
             } catch {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed, error: error)
+                let loadingEndTime = CFAbsoluteTimeGetCurrent() - loadingStartTime
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed, duration: loadingEndTime, error: error)
                 completion(.failure(error))
             }
         }
