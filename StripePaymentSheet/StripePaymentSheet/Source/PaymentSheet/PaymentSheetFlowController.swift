@@ -461,8 +461,8 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
         presentingViewController.present(authenticationViewController, animated: true, completion: nil)
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, deadline: Date, format: String) {
-        let pollingVC = PollingViewController(currentAction: action, deadline: deadline, format: format,
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, deadline: Date, type: STPPaymentMethodType) {
+        let pollingVC = PollingViewController(currentAction: action, deadline: deadline, type: type,
                                                       appearance: self.appearance)
         presentingViewController.present(pollingVC, animated: true, completion: nil)
     }

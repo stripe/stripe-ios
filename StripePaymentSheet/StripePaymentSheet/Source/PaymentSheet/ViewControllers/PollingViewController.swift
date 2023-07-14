@@ -24,7 +24,7 @@ class PollingViewController: UIViewController {
     // MARK: State
 
     private let deadline: Date
-    private let format: String
+    private let paymentMethodType: STPPaymentMethodType
     private var oneSecondTimer: Timer?
     private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
@@ -56,16 +56,19 @@ class PollingViewController: UIViewController {
     }
 
     private var instructionLabelAttributedText: NSAttributedString {
-        let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
-        let attrText = NSMutableAttributedString(string: String(
-            format: format,
-            timeRemaining
-        ))
-
-        attrText.addAttributes([.foregroundColor: appearance.colors.primary],
-                               range: NSString(string: attrText.string).range(of: timeRemaining))
-
-        return attrText
+        switch paymentMethodType {
+        case .UPI:
+               let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
+               let attrText = NSMutableAttributedString(string: String(
+                   format: .Localized.open_upi_app,
+                   timeRemaining
+               ))
+               attrText.addAttributes([.foregroundColor: appearance.colors.primary],
+                                      range: NSString(string: attrText.string).range(of: timeRemaining))
+               return attrText
+        default:
+               fatalError("No instructionLabelAttributedText for PaymentMethodType")
+        }
     }
 
     private var pollingState: PollingState = .polling {
@@ -163,10 +166,10 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerActionParams, deadline: Date, format: String, appearance: PaymentSheet.Appearance) {
+    init(currentAction: STPPaymentHandlerActionParams, deadline: Date, type: STPPaymentMethodType, appearance: PaymentSheet.Appearance) {
         self.currentAction = currentAction
         self.deadline = deadline
-        self.format = format
+        self.paymentMethodType = type
         self.appearance = appearance
         super.init(nibName: nil, bundle: nil)
     }
