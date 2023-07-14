@@ -115,7 +115,7 @@ extension XCTestCase {
 
         let emailField = context.textFields["Email"]
         emailField.forceTapWhenHittableInTestCase(self)
-        app.typeText("not_a_real_user@stripe.com")
+        app.typeText("test@example.com")
     }
 
     func waitToDisappear(_ target: Any?) {

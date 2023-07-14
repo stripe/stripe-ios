@@ -17,7 +17,8 @@ class CustomerSheetUITest: XCTestCase {
         continueAfterFailure = false
 
         app = XCUIApplication()
-        app.launchEnvironment = ["UITesting": "true"]
+        app.launchEnvironment = ["UITesting": "true",
+                                 "USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "true"]
         app.launch()
     }
 
@@ -305,13 +306,26 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(continueButton.waitForExistence(timeout: 60.0))
         continueButton.tap()
 
-        // Because we are running in a mocked env, as soon as we tap the continue button, we should see the test bank
-        let testBankLinkedBankAccount = app.staticTexts["Test Bank"]
+        // Go through connections flow
+        app.buttons["Agree and continue"].tap()
+        app.staticTexts["Test Institution"].forceTapElement()
+        app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
+        app.buttons["Link account"].tap()
+        XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
+        app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
+
+        let testBankLinkedBankAccount = app.staticTexts["StripeBank"]
         XCTAssertTrue(testBankLinkedBankAccount.waitForExistence(timeout: 60.0))
 
         let saveButton = app.buttons["Save"]
         XCTAssertTrue(saveButton.waitForExistence(timeout: 60.0))
-        // Because things are mocked, this is as far as we can currently
+        saveButton.tap()
+
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        confirmButton.tap()
+
+        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
 
     func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
