@@ -281,8 +281,8 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         completion()
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, deadline: Date) {
-        let pollingVC = PollingViewController(currentAction: action, deadline: deadline,
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, deadline: Date, format: String) {
+        let pollingVC = PollingViewController(currentAction: action, deadline: deadline, format: format,
                                                       appearance: self.appearance)
         pushContentViewController(pollingVC)
     }

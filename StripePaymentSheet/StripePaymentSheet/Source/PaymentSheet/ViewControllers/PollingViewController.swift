@@ -24,6 +24,7 @@ class PollingViewController: UIViewController {
     // MARK: State
 
     private let deadline: Date
+    private let format: String
     private var oneSecondTimer: Timer?
     private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
@@ -57,7 +58,7 @@ class PollingViewController: UIViewController {
     private var instructionLabelAttributedText: NSAttributedString {
         let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
         let attrText = NSMutableAttributedString(string: String(
-            format: .Localized.open_upi_app,
+            format: format,
             timeRemaining
         ))
 
@@ -162,9 +163,10 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerActionParams, deadline: Date, appearance: PaymentSheet.Appearance) {
+    init(currentAction: STPPaymentHandlerActionParams, deadline: Date, format: String, appearance: PaymentSheet.Appearance) {
         self.currentAction = currentAction
         self.deadline = deadline
+        self.format = format
         self.appearance = appearance
         super.init(nibName: nil, bundle: nil)
     }
