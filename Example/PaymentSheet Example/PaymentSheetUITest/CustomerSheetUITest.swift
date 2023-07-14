@@ -18,7 +18,8 @@ class CustomerSheetUITest: XCTestCase {
 
         app = XCUIApplication()
         app.launchEnvironment = ["UITesting": "true",
-                                 "USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "true"]
+                                 "USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "true",
+        ]
         app.launch()
     }
 
