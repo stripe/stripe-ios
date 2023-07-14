@@ -43,10 +43,8 @@ extension PaymentSheet {
                     completion: completion
                 )
             else {
-                let message =
-                    "Attempted Apple Pay but it's not supported by the device, not configured, or missing a presenter"
-                assertionFailure(message)
-                completion(.failed(error: PaymentSheetError.unknown(debugDescription: message)))
+                assertionFailure(PaymentSheetError.applePayNotSupportedOrMisconfigured.debugDescription)
+                completion(.failed(error: PaymentSheetError.applePayNotSupportedOrMisconfigured))
                 return
             }
             applePayContext.presentApplePay()
@@ -258,9 +256,7 @@ extension PaymentSheet {
                     ConsumerPaymentDetails
                 ) -> Void = { linkAccount, paymentDetails in
                     guard let paymentMethodParams = linkAccount.makePaymentMethodParams(from: paymentDetails) else {
-                        let error = PaymentSheetError.unknown(
-                            debugDescription: "Paying with Link without valid session"
-                        )
+                        let error = PaymentSheetError.payingWithoutValidLinkSession
                         completion(.failed(error: error))
                         return
                     }

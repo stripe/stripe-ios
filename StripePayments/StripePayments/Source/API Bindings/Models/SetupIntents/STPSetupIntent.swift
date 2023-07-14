@@ -47,6 +47,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     @_spi(STP) public let linkSettings: LinkSettings?
     /// Country code of the user.
     @_spi(STP) public let countryCode: String?
+    /// Country code of the merchant.
+    @_spi(STP) public let merchantCountryCode: String?
     // MARK: - Deprecated
 
     /// Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
@@ -70,6 +72,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         stripeDescription: String?,
         linkSettings: LinkSettings?,
         livemode: Bool,
+        merchantCountryCode: String?,
         nextAction: STPIntentAction?,
         orderedPaymentMethodTypes: [STPPaymentMethodType],
         paymentMethodID: String?,
@@ -91,6 +94,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         self.linkSettings = linkSettings
         self.livemode = livemode
         self.nextAction = nextAction
+        self.merchantCountryCode = merchantCountryCode
         self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
         self.paymentMethodID = paymentMethodID
         self.paymentMethod = paymentMethod
@@ -120,6 +124,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             "lastSetupError = \(String(describing: lastSetupError))",
             "linkSettings = \(String(describing: linkSettings))",
             "livemode = \(livemode ? "YES" : "NO")",
+            "merchantCountryCode = \(String(describing: merchantCountryCode))",
             "nextAction = \(String(describing: nextAction))",
             "paymentMethodId = \(paymentMethodID ?? "")",
             "paymentMethod = \(String(describing: paymentMethod))",
@@ -188,6 +193,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             var dict = setupIntentDict
             dict["ordered_payment_method_types"] = orderedPaymentMethodTypes
             dict["unactivated_payment_method_types"] = response["unactivated_payment_method_types"]
+            dict["merchant_country"] = response["merchant_country"]
             dict["link_settings"] = response["link_settings"]
             return decodeSTPSetupIntentObject(fromAPIResponse: dict)
         } else {
@@ -214,6 +220,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         }
 
         let countryCode = dict.stp_string(forKey: "country_code")
+        let merchantCountryCode = dict.stp_string(forKey: "merchant_country")
         let customerID = dict.stp_string(forKey: "customer")
         let stripeDescription = dict.stp_string(forKey: "description")
         let linkSettings = LinkSettings.decodedObject(
@@ -252,6 +259,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             stripeDescription: stripeDescription,
             linkSettings: linkSettings,
             livemode: livemode,
+            merchantCountryCode: merchantCountryCode,
             nextAction: nextAction,
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
             paymentMethodID: paymentMethodID,
