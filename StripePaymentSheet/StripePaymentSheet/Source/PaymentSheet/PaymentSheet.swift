@@ -122,10 +122,8 @@ public class PaymentSheet {
 
         // Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
-            assertionFailure("presentingViewController is already presenting a view controller")
-            let error = PaymentSheetError.unknown(
-                debugDescription: "presentingViewController is already presenting a view controller"
-            )
+            assertionFailure(PaymentSheetError.alreadyPresented.debugDescription)
+            let error = PaymentSheetError.alreadyPresented
             completion(.failed(error: error))
             return
         }

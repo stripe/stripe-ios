@@ -71,4 +71,15 @@ extension Intent {
             return elementsSession.countryCode
         }
     }
+
+    var merchantCountryCode: String? {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.merchantCountryCode
+        case .setupIntent(let setupIntent):
+            return setupIntent.merchantCountryCode
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.merchantCountryCode
+        }
+    }
 }

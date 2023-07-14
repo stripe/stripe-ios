@@ -142,7 +142,7 @@ import UIKit
             switch mode {
             case .paymentIntentClientSecret(let clientSecret):
                 guard let paymentIntentId = STPPaymentIntent.id(fromClientSecret: clientSecret) else {
-                    continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Invalid client secret"))
+                    continuation.resume(throwing: PaymentSheetError.invalidClientSecret)
                     return
                 }
                 apiClient.createLinkAccountSession(paymentIntentID: paymentIntentId,
@@ -155,7 +155,7 @@ import UIKit
                 }
             case .setupIntentClientSecret(let clientSecret):
                 guard let setupIntentId = STPSetupIntent.id(fromClientSecret: clientSecret) else {
-                    continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Invalid client secret"))
+                    continuation.resume(throwing: PaymentSheetError.invalidClientSecret)
                     return
                 }
                 apiClient.createLinkAccountSession(setupIntentID: setupIntentId,
@@ -225,7 +225,7 @@ import UIKit
         }
 
         guard let linkAccountSession = linkAccountSession else {
-            continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Failed to create link account session"))
+            continuation.resume(throwing: PaymentSheetError.failedToCreateLinkSession)
             return
         }
 
@@ -270,7 +270,7 @@ import UIKit
     @_spi(LinkOnly) public func confirm(from presentingViewController: UIViewController) async throws {
         guard let paymentMethodId = paymentMethodId else {
             assertionFailure("`confirm` should not be called without the customer authorizing Link. Make sure to call `present` first if your customer hasn't previously selected Link as a payment method.")
-            throw PaymentSheetError.unknown(debugDescription: "confirm called without authorizing Link")
+            throw PaymentSheetError.linkNotAuthorized
         }
         let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController, appearance: .default)
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in

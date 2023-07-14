@@ -657,7 +657,7 @@ class PaymentSheetAPITest: XCTestCase {
                 XCTFail()
                 return
             }
-            XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occured in PaymentSheet. Your PaymentIntent currency (GBP) does not match the PaymentSheet.IntentConfiguration currency (USD).")
+            XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occurred in PaymentSheet. Your PaymentIntent currency (GBP) does not match the PaymentSheet.IntentConfiguration currency (USD).")
         }
         waitForExpectations(timeout: 10)
     }
@@ -713,7 +713,7 @@ class PaymentSheetAPITest: XCTestCase {
                 XCTFail()
                 return
             }
-            XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occured in PaymentSheet. Your SetupIntent usage (onSession) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (offSession).")
+            XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occurred in PaymentSheet. Your SetupIntent usage (onSession) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (offSession).")
         }
         waitForExpectations(timeout: 10)
     }
