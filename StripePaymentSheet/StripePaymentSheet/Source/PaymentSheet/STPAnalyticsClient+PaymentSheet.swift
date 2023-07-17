@@ -252,7 +252,6 @@ extension STPAnalyticsClient {
         additionalParams["is_decoupled"] = intentConfig != nil
 
         additionalParams["error_domain"] = (error as? NSError)?.domain
-        additionalParams["error_code"] = (error as? NSError)?.code
 
         for (param, param_value) in params {
             additionalParams[param] = param_value
