@@ -29,8 +29,8 @@ final class PaymentSheetLoader {
         configuration: PaymentSheet.Configuration,
         completion: @escaping (LoadingResult) -> Void
     ) {
-        let loadingStartTime = CFAbsoluteTimeGetCurrent()
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetStartedLoading)
+        let loadingStartDate = Date()
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadStarted)
 
         Task { @MainActor in
             do {
@@ -70,8 +70,8 @@ final class PaymentSheetLoader {
                         )
                     }
 
-                let loadingEndTime = CFAbsoluteTimeGetCurrent() - loadingStartTime
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoaded, duration: loadingEndTime)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadSucceeded,
+                                                                     duration: loadingStartDate.timeIntervalSinceNow)
                 completion(
                     .success(
                         intent: intent,
@@ -80,8 +80,9 @@ final class PaymentSheetLoader {
                     )
                 )
             } catch {
-                let loadingEndTime = CFAbsoluteTimeGetCurrent() - loadingStartTime
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed, duration: loadingEndTime, error: error)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed,
+                                                                     duration: loadingStartDate.timeIntervalSinceNow,
+                                                                     error: error)
                 completion(.failure(error))
             }
         }
