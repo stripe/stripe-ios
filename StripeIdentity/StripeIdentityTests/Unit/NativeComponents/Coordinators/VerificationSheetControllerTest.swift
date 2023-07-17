@@ -172,7 +172,8 @@ final class VerificationSheetControllerTest: XCTestCase {
                     idNumber: false,
                     dob: false,
                     name: false,
-                    address: false
+                    address: false,
+                    phoneOtp: false
                 ),
                 collectedData: mockData
             )

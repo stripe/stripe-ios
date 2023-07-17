@@ -170,7 +170,7 @@ enum VerificationPageDataUpdateMock {
 enum PhoneOtpPageMock {
     static let`default` = StripeAPI.VerificationPageStaticContentPhoneOtpPage(
         title: "Enter verification code",
-        body: "Enter the code sent to you phone &phone_number& to continue.",
+        body: "Enter the code sent to you phone {phone_number} to continue.",
         redactedPhoneNumber: "(***)*****35",
         errorOtpMessage: "Error confirming verification code",
         resendButtonText: "Resend code",

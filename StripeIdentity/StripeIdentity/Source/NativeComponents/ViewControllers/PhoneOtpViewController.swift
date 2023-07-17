@@ -80,10 +80,10 @@ class PhoneOtpViewController: IdentityFlowViewController {
         let bodyText = {
             if let localPhoneNumber = sheetController.collectedData.phone {
                 // If phone number is collected locally use the non-nil number
-                return phoneOtpContent.body.replacingOccurrences(of: "&phone_number&", with: localPhoneNumber.phoneNumber?.suffix(4) ?? "")
+                return phoneOtpContent.body.replacingOccurrences(of: "{phone_number}", with: localPhoneNumber.phoneNumber?.suffix(4) ?? "")
             } else {
                 // Otherwise use the server provided non-nil number
-                return phoneOtpContent.body.replacingOccurrences(of: "&phone_number&", with: phoneOtpContent.redactedPhoneNumber ?? "")
+                return phoneOtpContent.body.replacingOccurrences(of: "{phone_number}", with: phoneOtpContent.redactedPhoneNumber ?? "")
             }
         }()
 
@@ -100,8 +100,7 @@ class PhoneOtpViewController: IdentityFlowViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
         updateUI()
         generateOtp()
     }

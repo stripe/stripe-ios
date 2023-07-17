@@ -33,6 +33,7 @@ final class PhoneOtpViewControllerTest: XCTestCase {
 
         vc = PhoneOtpViewController(phoneOtpContent: phoneOtpContent, sheetController: mockSheetController)
 
+        vc.viewWillAppear(false)
     }
 
     func testGenerateCodeOnceWhenLoads() {
