@@ -130,6 +130,7 @@ class SheetNavigationBar: UIView {
 
     @objc
     private func didTapCloseButton() {
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
         delegate?.sheetNavigationBarDidClose(self)
     }
 
