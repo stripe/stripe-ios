@@ -322,7 +322,7 @@ class PaymentSheetViewController: UIViewController {
                 "Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc."
             )
         case .selectingSaved:
-            headerLabel.isHidden = false
+            headerLabel.isHidden = shouldShowWalletHeader
             headerLabel.text =
                 shouldShowWalletHeader && intent.isPaymentIntent
                 ? STPLocalizedString(
