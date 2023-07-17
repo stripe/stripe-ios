@@ -323,16 +323,10 @@ class PaymentSheetViewController: UIViewController {
             )
         case .selectingSaved:
             headerLabel.isHidden = shouldShowWalletHeader
-            headerLabel.text =
-                shouldShowWalletHeader && intent.isPaymentIntent
-                ? STPLocalizedString(
-                    "Pay using",
-                    "Title shown above a section containing various payment options"
-                )
-                : STPLocalizedString(
-                    "Select your payment method",
-                    "Title shown above a carousel containing the customer's payment methods"
-                )
+            headerLabel.text = STPLocalizedString(
+                "Select your payment method",
+                "Title shown above a carousel containing the customer's payment methods"
+            )
         }
 
         // Content
