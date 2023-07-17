@@ -41,6 +41,7 @@ enum VerificationPageDataMock: String, MockData {
     case noErrors = "VerificationPageData_no_errors"
     case noErrorsNeedback = "VerificationPageData_no_errors_needback"
     case submitted = "VerificationPageData_submitted"
+    case submittedNotClosed = "VerificationPageData_submitted_not_closed"
 
     static func noErrorsWithMissings(
         with missingRequirements: Set<StripeAPI.VerificationPageFieldType>
@@ -53,7 +54,8 @@ enum VerificationPageDataMock: String, MockData {
                 missing: missingRequirements
             ),
             status: noErrorsResponse.status,
-            submitted: noErrorsResponse.submitted
+            submitted: noErrorsResponse.submitted,
+            closed: noErrorsResponse.closed
         )
     }
 }
