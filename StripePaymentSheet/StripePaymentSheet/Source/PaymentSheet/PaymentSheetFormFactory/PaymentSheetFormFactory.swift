@@ -41,7 +41,9 @@ class PaymentSheetFormFactory {
     let countryCode: String?
 
     var canSaveToLink: Bool {
-        return (supportsLinkCard && paymentMethod == .card && saveMode != .merchantRequired)
+        // For Link private beta, only save cards in ".none" mode: If there is no Customer object.
+        // We don't want to override the merchant's own "Save this card" checkbox.
+        return (supportsLinkCard && paymentMethod == .card && saveMode == .none)
     }
 
     var theme: ElementsUITheme {
