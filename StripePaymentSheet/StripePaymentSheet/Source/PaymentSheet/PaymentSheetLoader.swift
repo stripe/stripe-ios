@@ -118,9 +118,7 @@ final class PaymentSheetLoader {
             }
         }
 
-        if let email = linkAccountService.getLastSignUpEmail() {
-            return try await lookUpConsumerSession(email: email)
-        } else if let email = configuration.defaultBillingDetails.email {
+        if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email)
         } else if let customerID = configuration.customer?.id,
             let ephemeralKey = configuration.customer?.ephemeralKeySecret
