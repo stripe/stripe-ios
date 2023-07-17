@@ -45,7 +45,7 @@ struct ExamplePaymentStatusView: View {
             case .failed(let error):
                 Image(systemName: "xmark.octagon.fill").foregroundColor(.red)
                 Text("Payment failed: \((error as NSError).debugDescription)")
-                    .font(.system(size: 8.0))
+                    .font(.system(size: 12.0))
             case .canceled:
                 Image(systemName: "xmark.octagon.fill").foregroundColor(.orange)
                 Text("Payment canceled.")
