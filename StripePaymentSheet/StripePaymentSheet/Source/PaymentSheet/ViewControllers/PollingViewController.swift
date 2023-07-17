@@ -166,11 +166,18 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerActionParams, deadline: Date, type: STPPaymentMethodType, appearance: PaymentSheet.Appearance) {
+    init(currentAction: STPPaymentHandlerActionParams, type: STPPaymentMethodType, appearance: PaymentSheet.Appearance) {
         self.currentAction = currentAction
-        self.deadline = deadline
         self.paymentMethodType = type
         self.appearance = appearance
+
+        switch paymentMethodType {
+            case .UPI:
+                    deadline = Date().addingTimeInterval(60 * 5)
+            default:
+                   fatalError("No Deadline for PaymentMethodType")
+        }
+
         super.init(nibName: nil, bundle: nil)
     }
 
