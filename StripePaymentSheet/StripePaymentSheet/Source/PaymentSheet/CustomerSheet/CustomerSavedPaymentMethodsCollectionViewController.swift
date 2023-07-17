@@ -262,6 +262,10 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         + unsyncedSavedPMViewModels
         + savedPMViewModels
 
+        // Select default
+        self.selectedViewModelIndex = self.viewModels.firstIndex(where: { $0 == selectedSavedPaymentOption })
+        ?? nil
+
         DispatchQueue.main.async {
             self.collectionView.reloadData()
             self.collectionView.selectItem(at: self.selectedIndexPath, animated: false, scrollPosition: [])
