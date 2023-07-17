@@ -264,7 +264,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
 
         // Select default
         self.selectedViewModelIndex = self.viewModels.firstIndex(where: { $0 == selectedSavedPaymentOption })
-        ?? nil
 
         DispatchQueue.main.async {
             self.collectionView.reloadData()
