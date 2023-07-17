@@ -228,7 +228,7 @@ final class PayWithLinkButton: UIControl {
     //        // Stop listening for account changes
     //        LinkAccountContext.shared.removeObserver(self)
     //    }
-        
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
