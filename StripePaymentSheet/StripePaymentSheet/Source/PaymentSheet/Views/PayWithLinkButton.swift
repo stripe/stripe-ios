@@ -30,7 +30,7 @@ final class PayWithLinkButton: UIControl {
     }
 
     /// Link account of the current user.
-    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountStub(email: "none@stripe.com", redactedPhoneNumber: nil, lastPM: nil, isRegistered: false, isLoggedIn: false) {
+    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountStub(email: "", redactedPhoneNumber: nil, lastPM: nil, isRegistered: false, isLoggedIn: false) {
         didSet {
             updateUI()
         }
