@@ -239,17 +239,40 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         else {
             // Transition to generic error screen
             transitionWithVerificaionPageDataResult(
-                nil,
+                updateDataResult,
                 completion: completion
             )
             return
         }
+
         // If finished collecting, submit and transition
         if updateData.requirements.missing.isEmpty {
-            apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] result in
-                self?.isVerificationPageSubmitted = (try? result.get())?.submitted == true
+            apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] submittedData in
+                self?.isVerificationPageSubmitted = (try? submittedData.get())?.submittedAndClosed() == true
+
+                // Checking the response of submit
+                guard case .success(let resultData) = submittedData
+                else {
+                    self?.isVerificationPageSubmitted = false
+                    self?.transitionWithVerificaionPageDataResult(submittedData, completion: completion)
+                    return
+                }
+
+                self?.isVerificationPageSubmitted = resultData.submitted == true && resultData.closed == true
+
+                if resultData.needsFallback() {
+                    // Checking the buffered VerificationPageResponse, update its missings with the new missings
+                    guard let verificationPageResponse = try? self?.verificationPageResponse?.get() else {
+                        assertionFailure("Fail to get VerificationPageResponse is nil")
+                        return
+                    }
+                    self?.verificationPageResponse = .success(verificationPageResponse.copyWithNewMissings(newMissings: resultData.requirements.missing))
+                    // clear collected data
+                    self?.collectedData = StripeAPI.VerificationPageCollectedData()
+
+                }
                 self?.transitionWithVerificaionPageDataResult(
-                    result,
+                    submittedData,
                     completion: completion
                 )
             }
@@ -358,8 +381,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     func sendCannotVerifyPhoneOtpAndTransition(
         completion: @escaping() -> Void
     ) {
-        apiClient.cannotPhoneVerifyOtp().observe(on: .main) { [weak self] result in
-            self?.transitionWithVerificaionPageDataResult(result, completion: completion)
+        apiClient.cannotPhoneVerifyOtp().observe(on: .main) { [weak self] updatedDataResult in
+            self?.transitionWithUpdatedDataResult(result: updatedDataResult)
         }
     }
 

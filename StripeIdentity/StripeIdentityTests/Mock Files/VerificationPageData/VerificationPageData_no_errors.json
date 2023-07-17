@@ -2,6 +2,7 @@
    "id": "VS_123",
    "status": "requires_input",
    "submitted": false,
+   "closed": false,
    "requirements": {
        "errors": [],
        "missing": []
