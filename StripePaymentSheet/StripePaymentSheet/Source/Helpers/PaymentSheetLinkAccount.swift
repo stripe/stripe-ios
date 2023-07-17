@@ -136,12 +136,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             consentAction: consentAction.rawValue,
             with: apiClient,
             cookieStore: cookieStore
-        ) { [weak self, email] result in
+        ) { [weak self] result in
             switch result {
             case .success(let signupResponse):
                 self?.currentSession = signupResponse.consumerSession
                 self?.publishableKey = signupResponse.publishableKey
-                self?.cookieStore.write(key: .lastSignupEmail, value: email)
                 completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))
