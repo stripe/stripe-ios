@@ -80,15 +80,12 @@ class PaymentSheetViewController: UIViewController {
         let showApplePay = !shouldShowWalletHeader && isApplePayEnabled
         let showLink = !shouldShowWalletHeader && isLinkEnabled
 
-        let autoSelectsDefaultPaymentMethod = !shouldShowWalletHeader
-
         return SavedPaymentOptionsViewController(
             savedPaymentMethods: savedPaymentMethods,
             configuration: .init(
                 customerID: configuration.customer?.id,
                 showApplePay: showApplePay,
-                showLink: showLink,
-                autoSelectDefaultBehavior: autoSelectsDefaultPaymentMethod ? .defaultFirst : .none
+                showLink: showLink
             ),
             appearance: configuration.appearance,
             delegate: self
