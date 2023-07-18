@@ -321,7 +321,7 @@ import UIKit
                         authenticationContext: authenticationContext,
                         paymentHandler: STPPaymentHandler.shared(),
                         isFlowController: true,
-                        mandateData: STPMandateDataParams.makeWithInferredValues()) { result in
+                        mandateData: STPMandateDataParams.makeWithInferredValues()) { result, _ in
                     switch result {
                     case .canceled:
                         continuation.resume(throwing: Error.canceled)
