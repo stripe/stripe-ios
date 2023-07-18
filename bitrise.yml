@@ -38,6 +38,7 @@ stages:
     workflows:
     - framework-tests: {}
     - test-builds-xcode-143: {}
+    - test-builds-xcode-143-release: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
@@ -342,6 +343,20 @@ workflows:
     - xcode-build-for-test@2:
         inputs:
         - scheme: AllStripeFrameworks
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=16.4
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core
+  test-builds-xcode-143-release:
+    steps:
+    - xcode-build-for-test@2:
+        inputs:
+        - scheme: AllStripeFrameworks
+	- configuration: Release
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=16.4
     before_run:
