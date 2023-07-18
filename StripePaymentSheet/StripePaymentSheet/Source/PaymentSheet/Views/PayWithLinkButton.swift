@@ -29,6 +29,14 @@ final class PayWithLinkButton: UIControl {
         static let arrowInsets: UIEdgeInsets = .init(top: 1, left: 0, bottom: 0, right: 0)
     }
 
+    fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
+        let email: String
+        let redactedPhoneNumber: String?
+        let lastPM: LinkPMDisplayDetails?
+        let isRegistered: Bool
+        let isLoggedIn: Bool
+    }
+
     /// Link account of the current user.
     var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountStub(email: "", redactedPhoneNumber: nil, lastPM: nil, isRegistered: false, isLoggedIn: false) {
         didSet {
@@ -478,16 +486,8 @@ struct UIViewPreview<View: UIView>: UIViewRepresentable {
     }
 }
 
-private struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
-    let email: String
-    let redactedPhoneNumber: String?
-    let lastPM: LinkPMDisplayDetails?
-    let isRegistered: Bool
-    let isLoggedIn: Bool
-}
-
-private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> LinkAccountStub {
-    return LinkAccountStub(
+private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> PayWithLinkButton.LinkAccountStub {
+    return PayWithLinkButton.LinkAccountStub(
         email: email,
         redactedPhoneNumber: "+1********55",
         lastPM: lastPM,
