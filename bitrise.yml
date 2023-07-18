@@ -51,7 +51,6 @@ stages:
     workflows:
     - framework-tests: {}
     - test-builds-xcode-143: {}
-    - test-builds-xcode-143-release: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
@@ -67,6 +66,7 @@ stages:
     workflows:
     - framework-tests: {}
     - test-builds-xcode-143: {}
+    - test-builds-xcode-143-release: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
