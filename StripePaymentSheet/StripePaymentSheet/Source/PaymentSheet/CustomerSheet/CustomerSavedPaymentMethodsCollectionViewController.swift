@@ -63,17 +63,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
 
     struct Configuration {
         let showApplePay: Bool
-
-        enum AutoSelectDefaultBehavior {
-            /// will only autoselect default has been stored locally
-            case onlyIfMatched
-            /// will try to use locally stored default, or revert to first available
-            case defaultFirst
-            /// No auto selection
-            case none
-        }
-
-        let autoSelectDefaultBehavior: AutoSelectDefaultBehavior
     }
 
     var hasRemovablePaymentMethods: Bool {
@@ -273,11 +262,8 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         + unsyncedSavedPMViewModels
         + savedPMViewModels
 
-        if self.configuration.autoSelectDefaultBehavior != .none {
-            // Select default
-            self.selectedViewModelIndex = self.viewModels.firstIndex(where: { $0 == selectedSavedPaymentOption })
-            ?? (self.configuration.autoSelectDefaultBehavior == .defaultFirst ? 1 : nil)
-        }
+        // Select default
+        self.selectedViewModelIndex = self.viewModels.firstIndex(where: { $0 == selectedSavedPaymentOption })
 
         DispatchQueue.main.async {
             self.collectionView.reloadData()

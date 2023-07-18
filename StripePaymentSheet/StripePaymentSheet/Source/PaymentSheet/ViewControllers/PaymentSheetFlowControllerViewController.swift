@@ -156,8 +156,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             configuration: .init(
                 customerID: configuration.customer?.id,
                 showApplePay: isApplePayEnabled,
-                showLink: isLinkEnabled,
-                autoSelectDefaultBehavior: intent.supportsLink ? .onlyIfMatched : .defaultFirst
+                showLink: isLinkEnabled
             ),
             appearance: configuration.appearance
         )

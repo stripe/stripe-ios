@@ -75,8 +75,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             savedPaymentMethodsConfiguration: self.configuration,
             customerAdapter: self.customerAdapter,
             configuration: .init(
-                showApplePay: showApplePay,
-                autoSelectDefaultBehavior: .onlyIfMatched
+                showApplePay: showApplePay
             ),
             appearance: configuration.appearance,
             delegate: self
