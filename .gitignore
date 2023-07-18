@@ -50,7 +50,13 @@ fastlane/.env
 # Xcode Related files
 
 .package.resolved
-Stripe.xcworkspace
+Stripe.xcworkspace/.tuist-generated
+Stripe.xcworkspace/contents.xcworkspacedata
+Stripe.xcworkspace/xcuserdata/*
+Stripe.xcworkspace/xcshareddata/*
 Stripe*/*.xcodeproj
 Example/**/*.xcodeproj
 Testers/**/*.xcodeproj
+
+# But make sure to store the Package.resolved file for Xcode Cloud
+!Stripe.xcworkspace/xcshareddata/swiftpm
