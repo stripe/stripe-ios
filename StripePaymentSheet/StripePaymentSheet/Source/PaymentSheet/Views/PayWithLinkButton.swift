@@ -486,14 +486,6 @@ struct UIViewPreview<View: UIView>: UIViewRepresentable {
     }
 }
 
-private struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
-    let email: String
-    let redactedPhoneNumber: String?
-    let lastPM: LinkPMDisplayDetails?
-    let isRegistered: Bool
-    let isLoggedIn: Bool
-}
-
 private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> LinkAccountStub {
     return LinkAccountStub(
         email: email,
