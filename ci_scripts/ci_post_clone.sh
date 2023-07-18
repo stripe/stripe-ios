@@ -9,4 +9,3 @@ curl -L https://github.com/tuist/tuist/releases/download/`cat .tuist-version`/tu
 unzip tuist-bin/tuist.zip -d tuist-bin/
 cd "${script_dir}/.."
 ./tuist-bin/tuist generate -n
-xcodebuild -resolvePackageDependencies -workspace Stripe.xcworkspace -scheme "PaymentSheet Example"
