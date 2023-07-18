@@ -1,3 +1,7 @@
+## X.X.X
+### PaymentSheet
+* [Fixed] Fixed bugs in Link private beta.
+
 ## 23.11.0 2023-07-17
 ### CustomerSheet
 * [Changed] Breaking interface change for `CustomerSheetResult`. `CustomerSheetResult.canceled` now has a nullable associated value signifying that there is no selected payment method. Please use both `.canceled(StripeOptionSelection?)` and `.selected(PaymentOptionSelection?)` to update your UI to show the latest selected payment method.
