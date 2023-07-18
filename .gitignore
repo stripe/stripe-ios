@@ -19,7 +19,6 @@ Tests/installation_tests/carthage/Carthage/*
 vendor/*
 .bundle/
 tuist-bin
-tuist.zip
 temp_docs
 
 *.pbxuser
