@@ -486,8 +486,8 @@ struct UIViewPreview<View: UIView>: UIViewRepresentable {
     }
 }
 
-private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> LinkAccountStub {
-    return LinkAccountStub(
+private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> PayWithLinkButton.LinkAccountStub {
+    return PayWithLinkButton.LinkAccountStub(
         email: email,
         redactedPhoneNumber: "+1********55",
         lastPM: lastPM,
