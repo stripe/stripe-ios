@@ -100,7 +100,7 @@ class PhoneOtpViewController: IdentityFlowViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         updateUI()
         generateOtp()
     }

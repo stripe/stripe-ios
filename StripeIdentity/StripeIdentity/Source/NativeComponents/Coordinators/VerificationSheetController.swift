@@ -248,30 +248,31 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         // If finished collecting, submit and transition
         if updateData.requirements.missing.isEmpty {
             apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] submittedData in
-                self?.isVerificationPageSubmitted = (try? submittedData.get())?.submittedAndClosed() == true
+                guard let self = self else { return }
+                self.isVerificationPageSubmitted = (try? submittedData.get())?.submittedAndClosed() == true
 
                 // Checking the response of submit
                 guard case .success(let resultData) = submittedData
                 else {
-                    self?.isVerificationPageSubmitted = false
-                    self?.transitionWithVerificaionPageDataResult(submittedData, completion: completion)
+                    self.isVerificationPageSubmitted = false
+                    self.transitionWithVerificaionPageDataResult(submittedData, completion: completion)
                     return
                 }
 
-                self?.isVerificationPageSubmitted = resultData.submitted == true && resultData.closed == true
+                self.isVerificationPageSubmitted = resultData.submitted == true && resultData.closed == true
 
                 if resultData.needsFallback() {
                     // Checking the buffered VerificationPageResponse, update its missings with the new missings
-                    guard let verificationPageResponse = try? self?.verificationPageResponse?.get() else {
+                    guard let verificationPageResponse = try? self.verificationPageResponse?.get() else {
                         assertionFailure("Fail to get VerificationPageResponse is nil")
                         return
                     }
-                    self?.verificationPageResponse = .success(verificationPageResponse.copyWithNewMissings(newMissings: resultData.requirements.missing))
+                    self.verificationPageResponse = .success(verificationPageResponse.copyWithNewMissings(newMissings: resultData.requirements.missing))
                     // clear collected data
-                    self?.collectedData = StripeAPI.VerificationPageCollectedData()
+                    self.collectedData = StripeAPI.VerificationPageCollectedData()
 
                 }
-                self?.transitionWithVerificaionPageDataResult(
+                self.transitionWithVerificaionPageDataResult(
                     submittedData,
                     completion: completion
                 )
