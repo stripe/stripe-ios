@@ -44,7 +44,8 @@ let workspace = Workspace(
                 .project(path: "StripeFinancialConnections", target: "StripeFinancialConnections"),
                 .project(path: "Stripe3DS2", target: "Stripe3DS2"),
                 .project(path: "StripeLinkCore", target: "StripeLinkCore"),
-            ])
+            ]),
+	    archiveAction: .archiveAction(configuration: "AllStripeFrameworksRelease")
         ),
         Scheme(
             name: "AllStripeFrameworksCatalyst",
