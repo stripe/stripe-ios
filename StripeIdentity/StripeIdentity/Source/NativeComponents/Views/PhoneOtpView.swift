@@ -95,6 +95,7 @@ class PhoneOtpView: UIView {
         ])
 
         addAndPinSubview(stackView)
+        configure(with: viewModel)
     }
 
     required init?(coder: NSCoder) {
