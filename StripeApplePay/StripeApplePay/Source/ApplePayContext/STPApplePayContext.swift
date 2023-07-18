@@ -214,7 +214,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         /// The merchant backend used the special string instead of a intent client secret, so we completed the payment without confirming an intent.
         case none
     }
-    ///
+    /// Tracks where the call to confirm the PaymentIntent or SetupIntent happened.
     @_spi(STP) public var confirmType: ConfirmType?
     // Internal state
     private var paymentState: PaymentState = .notStarted

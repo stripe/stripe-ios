@@ -29,8 +29,8 @@ extension PaymentSheet {
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         // Translates a STPPaymentHandler result to a PaymentResult
-        let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, STPAnalyticsClient.DeferredIntentConfirmationType?, NSObject?, NSError?) -> Void = { status, deferredIntentConfirmationType, _, error in
-            completion(makePaymentSheetResult(for: status, error: error), deferredIntentConfirmationType)
+        let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSError?) -> Void = { status, error in
+            completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
         switch paymentOption {
@@ -75,8 +75,8 @@ extension PaymentSheet {
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext,
-                            completion: { actionStatus, intent, error in
-                                paymentHandlerCompletion(actionStatus, nil, intent, error)
+                            completion: { actionStatus, _, error in
+                                paymentHandlerCompletion(actionStatus, error)
                             }
                         )
                     }
@@ -92,8 +92,8 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         params,
                         with: authenticationContext,
-                        completion: { actionStatus, intent, error in
-                            paymentHandlerCompletion(actionStatus, nil, intent, error)
+                        completion: { actionStatus, _, error in
+                            paymentHandlerCompletion(actionStatus, error)
                         }
                     )
                 }
@@ -110,8 +110,8 @@ extension PaymentSheet {
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
-                    completion: { actionStatus, intent, error in
-                        paymentHandlerCompletion(actionStatus, nil, intent, error)
+                    completion: { actionStatus, _, error in
+                        paymentHandlerCompletion(actionStatus, error)
                     }
                 )
             // MARK: ↪ Deferred Intent
@@ -145,8 +145,8 @@ extension PaymentSheet {
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
                     with: authenticationContext,
-                    completion: { actionStatus, intent, error in
-                        paymentHandlerCompletion(actionStatus, nil, intent, error)
+                    completion: { actionStatus, _, error in
+                        paymentHandlerCompletion(actionStatus, error)
                     }
                 )
             // MARK: ↪ SetupIntent
@@ -159,8 +159,8 @@ extension PaymentSheet {
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
-                    completion: { actionStatus, intent, error in
-                        paymentHandlerCompletion(actionStatus, nil, intent, error)
+                    completion: { actionStatus, _, error in
+                        paymentHandlerCompletion(actionStatus, error)
                     }
                 )
             // MARK: ↪ Deferred Intent
@@ -187,8 +187,8 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
-                        completion: { actionStatus, intent, error in
-                            paymentHandlerCompletion(actionStatus, nil, intent, error)
+                        completion: { actionStatus, _, error in
+                            paymentHandlerCompletion(actionStatus, error)
                         }
                     )
                 case .setupIntent(let setupIntent):
@@ -198,8 +198,8 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
-                        completion: { actionStatus, intent, error in
-                            paymentHandlerCompletion(actionStatus, nil, intent, error)
+                        completion: { actionStatus, _, error in
+                            paymentHandlerCompletion(actionStatus, error)
                         }
                     )
                 case .deferredIntent(_, let intentConfig):
@@ -235,8 +235,8 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
-                        completion: { actionStatus, intent, error in
-                            paymentHandlerCompletion(actionStatus, nil, intent, error)
+                        completion: { actionStatus, _, error in
+                            paymentHandlerCompletion(actionStatus, error)
                         }
                     )
                 case .setupIntent(let setupIntent):
@@ -247,8 +247,8 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
-                        completion: { actionStatus, intent, error in
-                            paymentHandlerCompletion(actionStatus, nil, intent, error)
+                        completion: { actionStatus, _, error in
+                            paymentHandlerCompletion(actionStatus, error)
                         }
                     )
                 case .deferredIntent(_, let intentConfig):
