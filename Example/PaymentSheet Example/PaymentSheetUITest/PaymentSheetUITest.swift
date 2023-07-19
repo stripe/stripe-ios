@@ -690,7 +690,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         XCTAssertFalse(payButton.isEnabled)
     }
-    
+
     func testSEPADebitPaymentMethod_PaymentSheet() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
 //        settings.mode = .payment

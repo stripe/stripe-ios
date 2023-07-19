@@ -1886,7 +1886,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 }
 
 extension Element {
-    
+
     /// A convenience method that overwrites the one defined in Element.swift that unwraps any Elements wrapped in `PaymentMethodElementWrapper`
     /// and returns all Elements underneath this Element, including this Element.
     public func getAllUnwrappedSubElements() -> [Element] {
@@ -1905,19 +1905,19 @@ extension Element {
             return [self]
         }
     }
-    
+
     func getTextFieldElement(_ label: String) -> TextFieldElement? {
         return getAllUnwrappedSubElements()
             .compactMap { $0 as? TextFieldElement }
             .first { $0.configuration.label == label }
     }
-    
+
     func getDropdownFieldElement(_ label: String) -> DropdownFieldElement? {
         return getAllUnwrappedSubElements()
             .compactMap { $0 as? DropdownFieldElement }
             .first { $0.label == label }
     }
-    
+
     func getMandateElement() -> SimpleMandateElement? {
         return getAllUnwrappedSubElements()
             .compactMap { $0 as? SimpleMandateElement }

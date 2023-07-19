@@ -114,13 +114,13 @@ public extension PaymentSheet {
                 setupFutureUsage: SetupFutureUsage = .offSession
             )
         }
-        
+
         /// An async version of `ConfirmHandler`.
         typealias AsyncConfirmHandler = (
             _ paymentMethod: STPPaymentMethod,
             _ shouldSavePaymentMethod: Bool
         ) async throws -> String
-        
+
         /// An async version of the initializer. See the other initializer for documentation.
         init(
             mode: Mode,
