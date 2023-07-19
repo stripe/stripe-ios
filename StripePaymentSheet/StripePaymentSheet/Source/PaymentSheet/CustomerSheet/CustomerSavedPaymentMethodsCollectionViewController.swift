@@ -67,7 +67,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
 
     var hasRemovablePaymentMethods: Bool {
         return (
-            !savedPaymentMethods.isEmpty
+            !savedPaymentMethods.isEmpty || !unsyncedSavedPaymentMethods.isEmpty
         )
     }
 
@@ -388,6 +388,9 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                 self.collectionView.deleteItems(at: [indexPath])
             } completion: { _ in
                 self.savedPaymentMethods.removeAll(where: {
+                    $0.stripeId == paymentMethod.stripeId
+                })
+                self.unsyncedSavedPaymentMethods.removeAll(where: {
                     $0.stripeId == paymentMethod.stripeId
                 })
 
