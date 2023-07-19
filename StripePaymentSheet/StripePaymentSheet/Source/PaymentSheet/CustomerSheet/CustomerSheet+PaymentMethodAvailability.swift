@@ -7,7 +7,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension CustomerSheet {
-    //TODO: Add .USBankAccount when ready to launch
+    // TODO: Add .USBankAccount when ready to launch
     static var supportedPaymentMethods: [STPPaymentMethodType] = [.card]
 }
 
