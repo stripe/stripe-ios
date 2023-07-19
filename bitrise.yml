@@ -428,6 +428,10 @@ workflows:
         inputs:
         - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
         title: Check PaymentSheet test sharding
+    - script@1:
+        inputs:
+        - content: ./ci_scripts/check_image_format.sh
+        title: Check png image format is 8-bit
     - fastlane@3:
         inputs:
         - lane: build_extras
