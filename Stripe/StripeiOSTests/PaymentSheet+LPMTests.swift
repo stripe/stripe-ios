@@ -63,8 +63,11 @@ extension PaymentSheet_LPMTests {
         }
     }
 
-    /// A helper method that tests confirmation flows ("normal" client-side confirmation, deferred client-side confirmation, deferred server-side confirmation) for a payment method.
-    /// - Parameter intentKind: Which kind of Intent you want to test
+    /// A helper method that tests three confirmation flows successfully complete:
+    /// 1. normal" client-side confirmation
+    /// 2. deferred client-side confirmation
+    /// 3. deferred server-side
+    /// - Parameter intentKind: Which kind of Intent you want to test.
     /// - Parameter currency: A valid currency for the payment method you're testing
     /// - Parameter paymentMethodType: The payment method type you're testing
     /// - Parameter formCompleter: A closure that takes the form for your payment method. Your implementaiton should fill in the form's textfields etc. You can also perform additional checks e.g. to ensure certain fields are shown/hidden.

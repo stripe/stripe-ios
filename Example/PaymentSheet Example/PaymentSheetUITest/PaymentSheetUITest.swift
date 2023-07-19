@@ -695,10 +695,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     // Other confirmation flows are tested in PaymentSheet+LPMTests.swift
     func testSEPADebitPaymentMethod_PaymentSheet() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-//        settings.mode = .payment
-//        settings.applePayEnabled = .off
-//        settings.uiStyle = .paymentSheet
-//        settings.integrationType = .normal
         settings.currency = .eur
         settings.allowsDelayedPMs = .on
         loadPlayground(
