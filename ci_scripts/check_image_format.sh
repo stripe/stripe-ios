@@ -12,7 +12,7 @@ SHOULD_FAIL=0
 for subdir in `ls ${stripe_ios_dir}`; do
     TEMPNODE="${stripe_ios_dir}/${subdir}"
     if [[ -d "${TEMPNODE}" ]] && [[ x"${subdir}" != x"build" ]]; then
-	for png in `find ${TEMPNODE} -type f -path '*Resources*.png'`; do
+	for png in `find "${TEMPNODE}" -type f -path '*Resources*.png'`; do
 	    OUTPUT=`file "${png}"`
 
 	    echo ${OUTPUT} | grep -e "-bit"
