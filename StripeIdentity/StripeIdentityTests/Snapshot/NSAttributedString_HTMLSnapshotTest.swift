@@ -54,7 +54,7 @@ final class NSAttributedString_HTMLSnapshotTest: FBSnapshotTestCase {
         // Test that link color matches tint color
         textView.tintColor = .systemPink
 
-        //        recordMode = true
+//                recordMode = true
     }
 
     func testDefaultStyle() throws {

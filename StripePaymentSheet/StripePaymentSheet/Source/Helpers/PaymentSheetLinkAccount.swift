@@ -136,79 +136,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             consentAction: consentAction.rawValue,
             with: apiClient,
             cookieStore: cookieStore
-        ) { [weak self, email] result in
+        ) { [weak self] result in
             switch result {
             case .success(let signupResponse):
                 self?.currentSession = signupResponse.consumerSession
                 self?.publishableKey = signupResponse.publishableKey
-                self?.cookieStore.write(key: .lastSignupEmail, value: email)
-                completion(.success(()))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-
-    func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard case .requiresVerification = sessionState else {
-            DispatchQueue.main.async {
-                completion(.success(false))
-            }
-            return
-        }
-
-        guard let session = currentSession else {
-            assertionFailure()
-            DispatchQueue.main.async {
-                completion(
-                    .failure(
-                        PaymentSheetError.linkCallVerifyNotRequired
-                    )
-                )
-            }
-            return
-        }
-
-        session.startVerification(
-            with: apiClient,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: publishableKey
-        ) { [weak self] result in
-            switch result {
-            case .success(let newSession):
-                self?.currentSession = newSession
-                completion(.success(newSession.hasStartedSMSVerification))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-
-    func verify(with oneTimePasscode: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard case .requiresVerification = sessionState,
-            hasStartedSMSVerification,
-            let session = currentSession
-        else {
-            assertionFailure()
-            DispatchQueue.main.async {
-                completion(
-                    .failure(
-                        PaymentSheetError.linkCallVerifyNotRequired
-                    )
-                )
-            }
-            return
-        }
-
-        session.confirmSMSVerification(
-            with: oneTimePasscode,
-            with: apiClient,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: publishableKey
-        ) { [weak self] result in
-            switch result {
-            case .success(let verifiedSession):
-                self?.currentSession = verifiedSession
                 completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))

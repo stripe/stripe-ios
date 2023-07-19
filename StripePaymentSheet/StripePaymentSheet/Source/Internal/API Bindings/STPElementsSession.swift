@@ -25,6 +25,9 @@ import Foundation
     /// Country code of the user.
     public let countryCode: String?
 
+    /// Country code of the merchant.
+    public let merchantCountryCode: String?
+
     /// A map describing payment method types form specs.
     public let paymentMethodSpecs: [[AnyHashable: Any]]?
 
@@ -40,6 +43,7 @@ import Foundation
             "unactivatedPaymentMethodTypes = \(String(describing: unactivatedPaymentMethodTypes))",
             "linkSettings = \(String(describing: linkSettings))",
             "countryCode = \(String(describing: countryCode))",
+            "merchantCountryCode = \(String(describing: merchantCountryCode))",
             "paymentMethodSpecs = \(String(describing: paymentMethodSpecs))",
         ]
 
@@ -52,6 +56,7 @@ import Foundation
         orderedPaymentMethodTypes: [STPPaymentMethodType],
         unactivatedPaymentMethodTypes: [STPPaymentMethodType],
         countryCode: String?,
+        merchantCountryCode: String?,
         linkSettings: LinkSettings?,
         paymentMethodSpecs: [[AnyHashable: Any]]?
     ) {
@@ -60,6 +65,7 @@ import Foundation
         self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
         self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
         self.countryCode = countryCode
+        self.merchantCountryCode = merchantCountryCode
         self.linkSettings = linkSettings
         self.paymentMethodSpecs = paymentMethodSpecs
         super.init()
@@ -84,6 +90,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             orderedPaymentMethodTypes: paymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
             countryCode: paymentMethodPrefDict["country_code"] as? String,
+            merchantCountryCode: dict["merchant_country"] as? String,
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]
             ),

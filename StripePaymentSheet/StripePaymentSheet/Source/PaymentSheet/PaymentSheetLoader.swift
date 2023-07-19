@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
@@ -28,6 +29,9 @@ final class PaymentSheetLoader {
         configuration: PaymentSheet.Configuration,
         completion: @escaping (LoadingResult) -> Void
     ) {
+        let loadingStartDate = Date()
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadStarted)
+
         Task { @MainActor in
             do {
                 // Fetch PaymentIntent, SetupIntent, or ElementsSession
@@ -65,6 +69,9 @@ final class PaymentSheetLoader {
                             intent: intent
                         )
                     }
+
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadSucceeded,
+                                                                     duration: loadingStartDate.timeIntervalSinceNow)
                 completion(
                     .success(
                         intent: intent,
@@ -73,6 +80,9 @@ final class PaymentSheetLoader {
                     )
                 )
             } catch {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed,
+                                                                     duration: loadingStartDate.timeIntervalSinceNow,
+                                                                     error: error)
                 completion(.failure(error))
             }
         }
@@ -118,9 +128,7 @@ final class PaymentSheetLoader {
             }
         }
 
-        if let email = linkAccountService.getLastSignUpEmail() {
-            return try await lookUpConsumerSession(email: email)
-        } else if let email = configuration.defaultBillingDetails.email {
+        if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email)
         } else if let customerID = configuration.customer?.id,
             let ephemeralKey = configuration.customer?.ephemeralKeySecret

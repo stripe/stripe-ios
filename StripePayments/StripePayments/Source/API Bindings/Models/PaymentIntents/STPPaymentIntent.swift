@@ -144,6 +144,9 @@ public class STPPaymentIntent: NSObject {
     /// Country code of the user.
     @_spi(STP) public let countryCode: String?
 
+    /// Country code of the merchant.
+    @_spi(STP) public let merchantCountryCode: String?
+
     /// :nodoc:
     @objc public override var description: String {
         let props: [String] = [
@@ -165,6 +168,7 @@ public class STPPaymentIntent: NSObject {
             "linkSettings = \(String(describing: linkSettings))",
             "livemode = \(livemode)",
             "nextAction = \(String(describing: nextAction))",
+            "merchantCountryCode = \(String(describing: merchantCountryCode))",
             "paymentMethodId = \(String(describing: paymentMethodId))",
             "paymentMethod = \(String(describing: paymentMethod))",
             "paymentMethodOptions = \(String(describing: paymentMethodOptions))",
@@ -194,6 +198,7 @@ public class STPPaymentIntent: NSObject {
         linkSettings: LinkSettings?,
         livemode: Bool,
         nextAction: STPIntentAction?,
+        merchantCountryCode: String?,
         orderedPaymentMethodTypes: [STPPaymentMethodType],
         paymentMethod: STPPaymentMethod?,
         paymentMethodId: String?,
@@ -221,6 +226,7 @@ public class STPPaymentIntent: NSObject {
         self.linkSettings = linkSettings
         self.livemode = livemode
         self.nextAction = nextAction
+        self.merchantCountryCode = merchantCountryCode
         self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
         self.paymentMethod = paymentMethod
         self.paymentMethodId = paymentMethodId
@@ -255,6 +261,7 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             // Consolidates expanded payment_intent and ordered_payment_method_types into singular dict for decoding
             var dict = paymentIntentDict
             dict["country_code"] = paymentMethodPrefDict["country_code"]
+            dict["merchant_country"] = response["merchant_country"]
             dict["ordered_payment_method_types"] = orderedPaymentMethodTypes
             dict["unactivated_payment_method_types"] = response["unactivated_payment_method_types"]
             dict["link_settings"] = response["link_settings"]
@@ -313,6 +320,7 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             nextAction: STPIntentAction.decodedObject(
                 fromAPIResponse: dict["next_action"] as? [AnyHashable: Any]
             ),
+            merchantCountryCode: dict["merchant_country"] as? String,
             orderedPaymentMethodTypes: STPPaymentMethod.paymentMethodTypes(
                 from: dict["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings
             ),
