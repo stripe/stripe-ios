@@ -691,6 +691,8 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         XCTAssertFalse(payButton.isEnabled)
     }
 
+    // This only tests the PaymentSheet + PaymentIntent flow.
+    // Other confirmation flows are tested in PaymentSheet+LPMTests.swift
     func testSEPADebitPaymentMethod_PaymentSheet() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
 //        settings.mode = .payment

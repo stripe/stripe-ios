@@ -37,7 +37,7 @@ final class PaymentSheet_LPMTests: XCTestCase {
 
     @MainActor
     func testSEPADebitConfirmFlows() async throws {
-        await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .dynamic("sepa_debit")) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .dynamic("sepa_debit")) { form in
             form.getTextFieldElement("Full name")?.setText("Foo")
             form.getTextFieldElement("Email")?.setText("f@z.c")
             form.getTextFieldElement("IBAN")?.setText("DE89370400440532013000")
@@ -57,9 +57,9 @@ extension PaymentSheet_LPMTests {
         case setupIntent
     }
 
-    func _testConfirm(intentKinds: [IntentKind], currency: String, paymentMethodType: PaymentSheet.PaymentMethodType, formCompleter: (PaymentMethodElement) -> Void) async {
+    func _testConfirm(intentKinds: [IntentKind], currency: String, paymentMethodType: PaymentSheet.PaymentMethodType, formCompleter: (PaymentMethodElement) -> Void) async throws {
         for intentKind in intentKinds {
-            await _testConfirm(intentKind: intentKind, currency: currency, paymentMethodType: paymentMethodType, formCompleter: formCompleter)
+            try await _testConfirm(intentKind: intentKind, currency: currency, paymentMethodType: paymentMethodType, formCompleter: formCompleter)
         }
     }
 
@@ -69,76 +69,74 @@ extension PaymentSheet_LPMTests {
     /// - Parameter paymentMethodType: The payment method type you're testing
     /// - Parameter formCompleter: A closure that takes the form for your payment method. Your implementaiton should fill in the form's textfields etc. You can also perform additional checks e.g. to ensure certain fields are shown/hidden.
     @MainActor
-    func _testConfirm(intentKind: IntentKind, currency: String, paymentMethodType: PaymentSheet.PaymentMethodType, formCompleter: (PaymentMethodElement) -> Void) async {
+    func _testConfirm(intentKind: IntentKind, currency: String, paymentMethodType: PaymentSheet.PaymentMethodType, formCompleter: (PaymentMethodElement) -> Void) async throws {
         func makeDeferredIntent(_ intentConfig: PaymentSheet.IntentConfiguration) -> Intent {
             return .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig)
         }
         let paymentMethodString = PaymentSheet.PaymentMethodType.string(from: paymentMethodType)!
         let intents: [(String, Intent)]
+        let mandateDataParamsForServerSideConfirmation: [String: Any] = [ // We require merchants to set this themselves for server-side confirmation
+            "mandate_data": [
+                "customer_acceptance": [
+                    "type": "online",
+                    "online": [
+                        "user_agent": "123",
+                        "ip_address": "172.18.117.125",
+                    ],
+                ] as [String: Any],
+            ],
+        ]
         switch intentKind {
         case .paymentIntent:
+            let paymentIntent: STPPaymentIntent = try await {
+                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString])
+                return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+            }()
             let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { _, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString])
             }
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { paymentMethod, _ in
-                return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString], paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: [
-                    "mandate_data": [
-                        "customer_acceptance": [
-                            "type": "online",
-                            "online": [
-                                "user_agent": "123",
-                                "ip_address": "172.18.117.125",
-                            ],
-                        ] as [String: Any],
-                    ],
-                ])
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString], paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: mandateDataParamsForServerSideConfirmation)
             }
             intents = [
+                ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred PaymentIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
         case .paymentIntentWithSetupFutureUsage:
+            let paymentIntent: STPPaymentIntent = try await {
+                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString], otherParams: ["setup_future_usage": "off_session"])
+                return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+            }()
             let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { _, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString], otherParams: ["setup_future_usage": "off_session"])
             }
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, _ in
-                return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString], paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: [
+                let otherParams = [
                     "setup_future_usage": "off_session",
-                    "mandate_data": [
-                        "customer_acceptance": [
-                            "type": "online",
-                            "online": [
-                                "user_agent": "123",
-                                "ip_address": "172.18.117.125",
-                            ],
-                        ] as [String: Any],
-                    ],
-                ])
+                ].merging(mandateDataParamsForServerSideConfirmation) { _, b in b }
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString], paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: otherParams)
             }
             intents = [
+                ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
         case .setupIntent:
+            let setupIntent: STPSetupIntent = try await {
+                let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: [paymentMethodString])
+                return try await apiClient.retrieveSetupIntent(clientSecret: clientSecret)
+            }()
             let deferredCSC = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession)) { _, _ in
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: [paymentMethodString])
             }
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession)) { paymentMethod, _ in
-                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: [paymentMethodString], paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: [
-                    "mandate_data": [
-                        "customer_acceptance": [
-                            "type": "online",
-                            "online": [
-                                "user_agent": "123",
-                                "ip_address": "172.18.117.125",
-                            ],
-                        ] as [String: Any],
-                    ],
-                ])
+                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: [paymentMethodString], paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: mandateDataParamsForServerSideConfirmation)
             }
             intents = [
-                ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
+                ("SetupIntent", .setupIntent(setupIntent)),
+                ("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
+                ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
         }
         for (description, intent) in intents {
@@ -160,7 +158,7 @@ extension PaymentSheet_LPMTests {
             let e = expectation(description: "Confirm")
             paymentHandler._redirectShim = { _, _, _ in
                 // This gets called instead of the PaymentSheet.confirm callback if the Intent is successfully confirmed and requires next actions.
-                print("✅ \(description): Successfully confirmed the intent. It's status is now requires_action.")
+                print("✅ \(description): Successfully confirmed the intent. Its status is now requires_action.")
                 e.fulfill()
             }
             // Confirm the intent with the form details
@@ -170,7 +168,7 @@ extension PaymentSheet_LPMTests {
                 intent: intent,
                 paymentOption: .new(confirmParams: intentConfirmParams),
                 paymentHandler: paymentHandler
-            ) { result in
+            ) { result, _  in
                 e.fulfill()
                 switch result {
                 case .failed(error: let error):
