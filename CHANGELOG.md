@@ -1,3 +1,6 @@
+## x.x.x
+* [Fixed] Update stp_icon_add@3x.png to 8bit color depth (Thanks @jszumski)
+
 ## 23.11.1 2023-07-18
 ### PaymentSheet
 * [Fixed] Fixed various bugs in Link private beta.
