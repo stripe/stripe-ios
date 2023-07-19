@@ -50,7 +50,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private var cachedClientSecret: String?
 
     var paymentMethodTypes: [PaymentSheet.PaymentMethodType] {
-        let filtered = configuration.customerSheetSupportedPaymentMethodTypes(customerAdapter: customerAdapter)
+        let filtered = configuration.supportedPaymentMethodTypesForAdd(customerAdapter: customerAdapter)
         return filtered.toPaymentSheetPaymentMethodTypes()
     }
 

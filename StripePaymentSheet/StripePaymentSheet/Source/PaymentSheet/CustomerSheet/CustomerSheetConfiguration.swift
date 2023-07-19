@@ -45,7 +45,6 @@ extension CustomerSheet {
         /// An ordered list of supported payment methods PaymentMethods to be shown.
         /// CustomerSheet's supports payment method types are:
         /// .card
-        /// .USBankAccount
         public var paymentMethodTypes: [STPPaymentMethodType] = [.card]
 
         /// Optional configuration for setting the header text of the Payment Method selection screen
