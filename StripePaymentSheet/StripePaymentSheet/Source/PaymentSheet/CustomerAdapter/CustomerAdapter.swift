@@ -138,7 +138,7 @@ import UIKit
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
             // List the Customer's saved PaymentMethods
-            let savedPaymentMethodTypes = configuration.supportedPaymentMethodTypesForList(customerAdapter: self)
+            let savedPaymentMethodTypes = configuration.supportedPaymentMethodTypesForList()
             apiClient.listPaymentMethods(
                 forCustomer: customerEphemeralKey.id,
                 using: customerEphemeralKey.ephemeralKeySecret,

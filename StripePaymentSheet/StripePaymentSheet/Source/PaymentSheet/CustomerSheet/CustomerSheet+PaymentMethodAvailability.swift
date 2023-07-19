@@ -36,7 +36,7 @@ extension CustomerSheet.Configuration {
     }
 
     // Called internally from CustomerSheet to determine what payment methods to query for
-    func supportedPaymentMethodTypesForList(customerAdapter: CustomerAdapter) -> [STPPaymentMethodType] {
+    func supportedPaymentMethodTypesForList() -> [STPPaymentMethodType] {
         self.dedupedPaymentMethodTypes.filter { type in
             CustomerSheet.supportedPaymentMethods.contains(type)
         }
@@ -74,6 +74,9 @@ extension CustomerSheet.Configuration {
             }
         }
 #endif
+        if self.paymentMethodTypes.isEmpty {
+            assertionFailure("[Stripe SDK]: CustomerSheet configuration invalid - paymentMethodTypes empty")
+        }
     }
 }
 
