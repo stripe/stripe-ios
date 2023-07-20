@@ -71,7 +71,7 @@ final class PaymentSheetLoader {
                     }
 
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadSucceeded,
-                                                                     duration: loadingStartDate.timeIntervalSinceNow)
+                                                                     duration: Date().timeIntervalSince(loadingStartDate))
                 completion(
                     .success(
                         intent: intent,
@@ -81,7 +81,7 @@ final class PaymentSheetLoader {
                 )
             } catch {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed,
-                                                                     duration: loadingStartDate.timeIntervalSinceNow,
+                                                                     duration: Date().timeIntervalSince(loadingStartDate),
                                                                      error: error)
                 completion(.failure(error))
             }
