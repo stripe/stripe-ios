@@ -423,21 +423,10 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
-            let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
-            self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
-                STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
-                self.processingInFlight = false
-                self.error = error
-                self.updateUI()
-            } onSuccess: {
-                STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentSuccess()
-                self.processingInFlight = false
-                self.actionButton.update(state: .disabled, animated: true) {
-                    self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
-                        self.csCompletion?(.selected(paymentOptionSelection))
-                    }
-                }
-            }
+            self.processingInFlight = false
+            self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
+            self.mode = .selectingSaved
+            self.updateUI(animated: true)
         }
     }
 
