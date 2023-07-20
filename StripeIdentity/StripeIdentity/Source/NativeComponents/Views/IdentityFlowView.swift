@@ -199,12 +199,12 @@ extension IdentityFlowView {
         tapGesture.delegate = self
         scrollView.addGestureRecognizer(tapGesture)
     }
-    
+
     @objc func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
         // Dismiss the keyboard when the scrollView is tapped
         scrollView.endEditing(true)
     }
-    
+
     fileprivate func installViews() {
         // Install scroll subviews: header + content
         scrollContainerStackView.addArrangedSubview(headerView)
