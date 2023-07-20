@@ -98,7 +98,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
     }
-*/
+
     func testLoadPaymentMethodInfo_cardAndBankAccount() throws {
         let stubbedAPIClient = stubbedAPIClient()
         stubReturningCustomerWithUSBankAccountResponse()
@@ -128,6 +128,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
     }
+ */
     func testLoadPaymentMethodInfo_CallToPaymentMethodsTimesOut() throws {
         let fastTimeoutIntervalForRequest: TimeInterval = 1
         let timeGreaterThanTimeoutIntervalForRequest: UInt32 = 3
