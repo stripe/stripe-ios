@@ -82,7 +82,7 @@ class IdentityFlowView: UIView {
 
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.keyboardDismissMode = .onDrag
+        scrollView.keyboardDismissMode = .none
         return scrollView
     }()
 
@@ -124,6 +124,7 @@ class IdentityFlowView: UIView {
 
         backgroundColor = .systemBackground
 
+        setUpScollView()
         installViews()
         installConstraints()
     }
@@ -178,9 +179,32 @@ class IdentityFlowView: UIView {
     }
 }
 
+// MARK: - UIGestureRecognizerDelegate
+extension IdentityFlowView: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        // Allow the tap gesture recognizer to recognize the tap
+        // only if the touch is outside the subviews of the scrollView
+        if let touchedView = touch.view, touchedView === scrollView {
+            return true
+        }
+        return false
+    }
+}
+
 // MARK: - Private Helpers
 
 extension IdentityFlowView {
+    fileprivate func setUpScollView() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        tapGesture.delegate = self
+        scrollView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
+        // Dismiss the keyboard when the scrollView is tapped
+        scrollView.endEditing(true)
+    }
+    
     fileprivate func installViews() {
         // Install scroll subviews: header + content
         scrollContainerStackView.addArrangedSubview(headerView)
