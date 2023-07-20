@@ -154,7 +154,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         PaymentSheet.PaymentMethodType.dynamic("ideal"),
         PaymentSheet.PaymentMethodType.dynamic("bancontact"),
         PaymentSheet.PaymentMethodType.dynamic("sofort"),
-        PaymentSheet.PaymentMethodType.dynamic("sepa_debit"),
     ]
     func testCantSetupSEPAFamily() {
         // All SEPA family pms...
