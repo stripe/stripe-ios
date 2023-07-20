@@ -230,13 +230,14 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
-    func testUSBankAccount_only() {
-        let configuration = configuration(paymentMethodTypes: [.USBankAccount])
-
-        prepareCS(configuration: configuration)
-        presentCS(darkMode: false)
-        verify(cs.bottomSheetViewController.view!)
-    }
+// TODO: Uncomment when enabling USBankAccount
+//    func testUSBankAccount_only() {
+//        let configuration = configuration(paymentMethodTypes: [.USBankAccount])
+//
+//        prepareCS(configuration: configuration)
+//        presentCS(darkMode: false)
+//        verify(cs.bottomSheetViewController.view!)
+//    }
     func testUSBankAccount_card() {
         let configuration = configuration(paymentMethodTypes: [.USBankAccount, .card])
 
@@ -251,13 +252,14 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
-    func testUSBankAccount_only_dark() {
-        let configuration = configuration(paymentMethodTypes: [.USBankAccount])
-
-        prepareCS(configuration: configuration)
-        presentCS(darkMode: true)
-        verify(cs.bottomSheetViewController.view!)
-    }
+// TODO: Uncomment when enabling USBankAccount
+//    func testUSBankAccount_only_dark() {
+//        let configuration = configuration(paymentMethodTypes: [.USBankAccount])
+//
+//        prepareCS(configuration: configuration)
+//        presentCS(darkMode: true)
+//        verify(cs.bottomSheetViewController.view!)
+//    }
     func testUSBankAccount_card_dark() {
         let configuration = configuration(paymentMethodTypes: [.USBankAccount, .card])
 
@@ -272,7 +274,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         presentCS(darkMode: true)
         verify(cs.bottomSheetViewController.view!)
     }
-
+/* TODO: Uncomment when enabling USBankAccount
     func testUSBankAccount_bdcc_0000() {
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
@@ -331,6 +333,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
+*/
     func stubbedPaymentMethod() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
