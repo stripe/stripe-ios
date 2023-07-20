@@ -76,6 +76,15 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         }
     }
 
+    var bottomNoticeAttributedString: NSAttributedString? {
+        if selectedPaymentMethodType == .USBankAccount {
+            if let usBankPaymentMethodElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement {
+                return usBankPaymentMethodElement.mandateString
+            }
+        }
+        return nil
+    }
+
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
         if selectedPaymentMethodType == .USBankAccount,
            let usBankAccountFormElement = usBankAccountFormElement {
