@@ -423,7 +423,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
-            let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.newPaymentMethod(paymentMethod)
+            let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
             self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
                 STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
                 self.processingInFlight = false
