@@ -4,6 +4,7 @@
 
 ### CustomerSheet
 * [Fixed] Ability to removing payment method immediately after adding it.
+* [Fixed] Re-init addPaymentMethodViewController after adding payment method to allow for adding another payment method
 
 ## 23.11.1 2023-07-18
 ### PaymentSheet
