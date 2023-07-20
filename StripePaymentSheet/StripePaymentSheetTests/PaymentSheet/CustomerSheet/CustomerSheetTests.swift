@@ -69,6 +69,8 @@ class CustomerSheetTests: APIStubbedTestCase {
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
     }
+// TODO: Uncomment when enabling USBankAccount
+/*
     func testLoadPaymentMethodInfo_singleBankAccount() throws {
         let stubbedAPIClient = stubbedAPIClient()
         stubReturningCustomerWithUSBankAccountResponse()
@@ -96,6 +98,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
     }
+*/
     func testLoadPaymentMethodInfo_cardAndBankAccount() throws {
         let stubbedAPIClient = stubbedAPIClient()
         stubReturningCustomerWithUSBankAccountResponse()
