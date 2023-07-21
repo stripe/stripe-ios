@@ -490,8 +490,7 @@ class CustomerSheetUITest: XCTestCase {
 
         dismissAlertView(alertBody: "Success: ••••4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
-    // TODO: Uncomment when enabling USBankAccount
-/*
+
     func testCustomerSheetStandard_applePayOff_addUSBankAccount() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -527,9 +526,19 @@ class CustomerSheetUITest: XCTestCase {
         let testBankLinkedBankAccount = app.staticTexts["StripeBank"]
         XCTAssertTrue(testBankLinkedBankAccount.waitForExistence(timeout: 60.0))
 
+        let saveMandate = app.textViews["By saving your bank account for PaymentSheetExample you agree to authorize payments pursuant to these terms."]
+        XCTAssertTrue(saveMandate.waitForExistence(timeout: 60.0))
+        let saveMandateLink = app.links["these terms"]
+        XCTAssertTrue(saveMandateLink.waitForExistence(timeout: 60.0))
+
         let saveButton = app.buttons["Save"]
         XCTAssertTrue(saveButton.waitForExistence(timeout: 60.0))
         saveButton.tap()
+
+        let continueMandate = app.textViews["By continuing, you agree to authorize payments pursuant to these terms."]
+        XCTAssertTrue(continueMandate.waitForExistence(timeout: 60.0))
+        let continueMandateLink = app.links["these terms"]
+        XCTAssertTrue(continueMandateLink.waitForExistence(timeout: 60.0))
 
         let confirmButton = app.buttons["Confirm"]
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
@@ -537,7 +546,7 @@ class CustomerSheetUITest: XCTestCase {
 
         dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
-*/
+
     func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
         let selectButton = app.staticTexts[buttonLabel]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))

@@ -123,12 +123,9 @@ class CustomerAdapterTests: APIStubbedTestCase {
         XCTAssertEqual(pms[0].stripeId, expectedPaymentMethods[0].stripeId)
         await waitForExpectations(timeout: 2)
     }
-// TODO: Uncomment when enabling USBankAccount
-/*
     func testFetchPM_CardAndUSBankAccount() async throws {
     // TODO
     }
-*/
     func testAttachPM() async throws {
         let expectedPaymentMethods = [STPFixtures.paymentMethod()]
         let expectedPaymentMethodsJSON = [STPFixtures.paymentMethodJSON()]
