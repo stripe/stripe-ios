@@ -188,7 +188,8 @@ extension String.Localized {
     }
     
     static var go_to_banking_app: String {
-        STPLocalizedString("Confirm the payment in your bank's app to complete the purchase.",
+        STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
     }
+
 }
