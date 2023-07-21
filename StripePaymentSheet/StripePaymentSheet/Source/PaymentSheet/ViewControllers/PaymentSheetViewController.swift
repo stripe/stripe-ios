@@ -88,8 +88,7 @@ class PaymentSheetViewController: UIViewController {
                 customerID: configuration.customer?.id,
                 showApplePay: showApplePay,
                 showLink: showLink,
-                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                autoSelectDefaultBehavior: autoSelectsDefaultPaymentMethod ? .defaultFirst : .none
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage
             ),
             appearance: configuration.appearance,
             delegate: self

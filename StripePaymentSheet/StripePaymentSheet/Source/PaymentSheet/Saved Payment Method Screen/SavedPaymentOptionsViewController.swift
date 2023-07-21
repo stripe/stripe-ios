@@ -55,17 +55,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         let showApplePay: Bool
         let showLink: Bool
         let removeSavedPaymentMethodMessage: String?
-
-        enum AutoSelectDefaultBehavior {
-            /// will only autoselect default has been stored locally
-            case onlyIfMatched
-            /// will try to use locally stored default, or revert to first available
-            case defaultFirst
-            /// No auto selection
-            case none
-        }
-
-        let autoSelectDefaultBehavior: AutoSelectDefaultBehavior
     }
 
     var hasRemovablePaymentMethods: Bool {
