@@ -186,7 +186,7 @@ extension String.Localized {
             "Paypal mandate text"
         )
     }
-    
+
     static var go_to_banking_app: String {
         STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
