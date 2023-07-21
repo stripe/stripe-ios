@@ -531,6 +531,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private func reinitAddPaymentMethodViewController() {
         self.addPaymentMethodViewController = CustomerAddPaymentMethodViewController(
             configuration: configuration,
+            paymentMethodTypes: paymentMethodTypes,
             delegate: self)
     }
 
