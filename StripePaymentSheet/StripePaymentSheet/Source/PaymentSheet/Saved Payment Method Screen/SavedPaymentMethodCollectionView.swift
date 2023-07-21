@@ -203,7 +203,7 @@ extension SavedPaymentMethodCollectionView {
             let translatedPoint = deleteButton.convert(point, from: self)
 
             // Ensures taps on the delete button are handled properly as it lives outside its cells' bounds
-            if deleteButton.bounds.contains(translatedPoint) && !deleteButton.isUserInteractionEnabled {
+            if deleteButton.bounds.contains(translatedPoint) && !deleteButton.isHidden {
                 return deleteButton.hitTest(translatedPoint, with: event)
             }
 
@@ -319,17 +319,13 @@ extension SavedPaymentMethodCollectionView {
 
             if isRemovingPaymentMethods {
                 if case .saved = viewModel {
-                    deleteButton.alpha = 1.0
-                    deleteButton.isUserInteractionEnabled = true
-
-                    deleteButton.isEnabled = true
+                    deleteButton.isHidden = false
                     deleteButton.backgroundColor = appearance.colors.danger
                     deleteButton.iconColor = appearance.colors.danger.contrastingColor
                     contentView.bringSubviewToFront(deleteButton)
                     applyDefaultStyle()
                 } else {
-                    deleteButton.alpha = 0.0
-                    deleteButton.isUserInteractionEnabled = false
+                    deleteButton.isHidden = true
 
                     // apply disabled style
                     shadowRoundedRectangle.isEnabled = false
@@ -341,8 +337,7 @@ extension SavedPaymentMethodCollectionView {
                 }
 
             } else if isSelected {
-                deleteButton.alpha = 0.0
-                deleteButton.isUserInteractionEnabled = false
+                deleteButton.isHidden = true
                 shadowRoundedRectangle.isEnabled = true
                 label.textColor = appearance.colors.text
                 paymentMethodLogo.alpha = 1
@@ -355,8 +350,7 @@ extension SavedPaymentMethodCollectionView {
                 shadowRoundedRectangle.layer.borderColor = appearance.colors.primary.cgColor
                 shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
             } else {
-                deleteButton.alpha = 0.0
-                deleteButton.isUserInteractionEnabled = false
+                deleteButton.isHidden = true
                 shadowRoundedRectangle.isEnabled = true
                 applyDefaultStyle()
             }
