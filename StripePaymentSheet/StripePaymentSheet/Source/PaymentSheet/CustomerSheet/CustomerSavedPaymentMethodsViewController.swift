@@ -427,6 +427,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
             self.mode = .selectingSaved
             self.updateUI(animated: true)
+            self.reinitAddPaymentMethodViewController()
         }
     }
 
