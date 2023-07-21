@@ -20,10 +20,11 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         mandateData: STPMandateDataParams? = nil,
-        completion: @escaping (PaymentSheetResult) -> Void
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         // Hack: Add deferred to analytics product usage as a hack to get it into the payment_user_agent string in the request to create a PaymentMethod
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: IntentConfiguration.self)
+
         Task { @MainActor in
             do {
                 var confirmType = confirmType
@@ -44,8 +45,7 @@ extension PaymentSheet {
                                                                                  shouldSavePaymentMethod: confirmType.shouldSave)
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
-                    completion(.completed)
-                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetForceSuccess)
+                    completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.none)
                     return
                 }
 
@@ -67,7 +67,7 @@ extension PaymentSheet {
                             paymentIntentParams,
                             with: authenticationContext
                         ) { status, _, error in
-                            completion(makePaymentSheetResult(for: status, error: error))
+                            completion(makePaymentSheetResult(for: status, error: error), .client)
                         }
                     } else {
                         // 4b. Server-side confirmation
@@ -76,7 +76,7 @@ extension PaymentSheet {
                             with: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, _, error in
-                            completion(makePaymentSheetResult(for: status, error: error))
+                            completion(makePaymentSheetResult(for: status, error: error), .server)
                         }
                     }
                 case .setup:
@@ -94,7 +94,7 @@ extension PaymentSheet {
                             setupIntentParams,
                             with: authenticationContext
                         ) { status, _, error in
-                            completion(makePaymentSheetResult(for: status, error: error))
+                            completion(makePaymentSheetResult(for: status, error: error), .client)
                         }
                     } else {
                         // 4b. Server-side confirmation
@@ -103,12 +103,12 @@ extension PaymentSheet {
                             with: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, _, error in
-                            completion(makePaymentSheetResult(for: status, error: error))
+                            completion(makePaymentSheetResult(for: status, error: error), .server)
                         }
                     }
                 }
             } catch {
-                completion(.failed(error: error))
+                completion(.failed(error: error), nil)
             }
         }
     }
@@ -123,10 +123,10 @@ extension PaymentSheet {
         case .canceled:
             return .canceled
         case .failed:
-            let error = error ?? PaymentSheetError.unknown(debugDescription: "Unknown error occured while handling intent next action")
+            let error = error ?? PaymentSheetError.errorHandlingNextAction
             return .failed(error: error)
         @unknown default:
-            return .failed(error: PaymentSheetError.unknown(debugDescription: "Unrecognized STPPaymentHandlerActionStatus status"))
+            return .failed(error: PaymentSheetError.unrecognizedHandlerStatus)
         }
     }
 

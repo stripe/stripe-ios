@@ -120,9 +120,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
 
-/* Title shown above a section containing various payment options */
-"Pay using" = "Pay using";
-
 /* Pay with {payment method} */
 "Pay with %@" = "Pay with %@";
 

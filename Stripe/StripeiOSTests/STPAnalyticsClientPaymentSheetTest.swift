@@ -134,7 +134,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             linkEnabled: false,
             activeLinkSession: false,
             linkSessionType: .ephemeral,
-            currency: "USD"
+            currency: "USD",
+            deferredIntentConfirmationType: nil
         )
 
         let event4 = XCTestExpectation(description: "mc_custom_payment_applepay_failure")
@@ -146,7 +147,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             linkEnabled: false,
             activeLinkSession: false,
             linkSessionType: .ephemeral,
-            currency: "USD"
+            currency: "USD",
+            deferredIntentConfirmationType: nil
         )
 
         let event5 = XCTestExpectation(description: "mc_custom_paymentoption_applepay_select")
@@ -229,7 +231,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             linkEnabled: false,
             activeLinkSession: false,
             linkSessionType: .ephemeral,
-            currency: "USD"
+            currency: "USD",
+            deferredIntentConfirmationType: nil
         )
 
         let duration = client.lastPayload?["duration"] as? TimeInterval

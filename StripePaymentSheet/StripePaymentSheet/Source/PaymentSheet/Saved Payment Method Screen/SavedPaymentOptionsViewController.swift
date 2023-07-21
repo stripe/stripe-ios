@@ -54,17 +54,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         let customerID: String?
         let showApplePay: Bool
         let showLink: Bool
-
-        enum AutoSelectDefaultBehavior {
-            /// will only autoselect default has been stored locally
-            case onlyIfMatched
-            /// will try to use locally stored default, or revert to first available
-            case defaultFirst
-            /// No auto selection
-            case none
-        }
-
-        let autoSelectDefaultBehavior: AutoSelectDefaultBehavior
     }
 
     var hasRemovablePaymentMethods: Bool {
@@ -222,11 +211,9 @@ class SavedPaymentOptionsViewController: UIViewController {
             + (configuration.showLink ? [.link] : [])
             + savedPMViewModels
 
-        if configuration.autoSelectDefaultBehavior != .none {
-            // Select default
-            selectedViewModelIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod })
-                ?? (configuration.autoSelectDefaultBehavior == .defaultFirst ? 1 : nil)
-        }
+        // Select default
+        selectedViewModelIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod })
+            ?? 1
 
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])

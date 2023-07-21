@@ -122,10 +122,8 @@ public class PaymentSheet {
 
         // Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
-            assertionFailure("presentingViewController is already presenting a view controller")
-            let error = PaymentSheetError.unknown(
-                debugDescription: "presentingViewController is already presenting a view controller"
-            )
+            assertionFailure(PaymentSheetError.alreadyPresented.debugDescription)
+            let error = PaymentSheetError.alreadyPresented
             completion(.failed(error: error))
             return
         }
@@ -259,29 +257,29 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewController,
         with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult) -> Void
+        completion: @escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         let presentingViewController = paymentSheetViewController.presentingViewController
-        let confirm: (@escaping (PaymentSheetResult) -> Void) -> Void = { completion in
+        let confirm: (@escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void = { completion in
             PaymentSheet.confirm(
                 configuration: self.configuration,
                 authenticationContext: self.bottomSheetViewController,
                 intent: paymentSheetViewController.intent,
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler,
-                isFlowController: false)
-            { result in
+                isFlowController: false
+            ) { result, deferredIntentConfirmationType in
                 if case let .failed(error) = result {
                     self.mostRecentError = error
                 }
-                completion(result)
+                completion(result, deferredIntentConfirmationType)
             }
         }
 
         if case .applePay = paymentOption {
             // Don't present the Apple Pay sheet on top of the Payment Sheet
             paymentSheetViewController.dismiss(animated: true) {
-                confirm { result in
+                confirm { result, deferredIntentConfirmationType in
                     if case .completed = result {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
@@ -289,13 +287,11 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                         presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
                                                                   appearance: self.configuration.appearance)
                     }
-                    completion(result)
+                    completion(result, deferredIntentConfirmationType)
                 }
             }
         } else {
-            confirm { result in
-                completion(result)
-            }
+            confirm(completion)
         }
     }
 

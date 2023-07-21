@@ -239,7 +239,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"
 
-    static let baseEndpoint = "https://stp-mobile-ci-test-backend-v7.stripedemos.com"
+    static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
     static var endpointSelectorEndpoint: String {
         return "\(baseEndpoint)/endpoints"
     }

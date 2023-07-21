@@ -44,12 +44,11 @@ class LinkURLGenerator {
         guard let publishableKey = configuration.apiClient.publishableKey ?? STPAPIClient.shared.publishableKey else {
             throw LinkURLGeneratorError.noPublishableKey
         }
-        guard let merchantCountryCode = intent.countryCode else {
-            throw LinkURLGeneratorError.noMerchantCountryCode
-        }
 
         // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
-        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.regionCode ?? "XX"
+        let customerCountryCode = intent.countryCode ?? configuration.defaultBillingDetails.address.country ?? Locale.current.regionCode ?? "US"
+
+        let merchantCountryCode = intent.merchantCountryCode ?? customerCountryCode
 
         // Get email from the previously fetched account in the Link button, or the billing details, or the Customer object
         var customerEmail = LinkAccountContext.shared.account?.email
@@ -112,5 +111,4 @@ extension LinkURLParams {
 enum LinkURLGeneratorError: Error {
     case urlCreationFailed
     case noPublishableKey
-    case noMerchantCountryCode
 }
