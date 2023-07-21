@@ -57,7 +57,7 @@ extension CustomerSheet {
         public var billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration()
 
         /// Optional configuration to display a custom message when a saved payment method is removed.
-        public var removeSavedDialogBody: String?
+        public var removeSavedPaymentMethodMessage: String?
 
         public init () {
         }

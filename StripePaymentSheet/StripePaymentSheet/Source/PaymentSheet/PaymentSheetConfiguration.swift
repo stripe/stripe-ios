@@ -165,7 +165,7 @@ extension PaymentSheet {
         public var billingDetailsCollectionConfiguration = BillingDetailsCollectionConfiguration()
 
         /// Optional configuration to display a custom message when a saved payment method is removed.
-        public var removeSavedDialogBody: String?
+        public var removeSavedPaymentMethodMessage: String?
     }
 
     /// Configuration related to the Stripe Customer
