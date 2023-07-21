@@ -20,9 +20,6 @@ Section header for address fields */
 /* Label for a checkbox that makes customers billing address same as their shipping address */
 "Billing address is same as shipping" = "Billing address is same as shipping";
 
-/* Label for BLIK code number field on form */
-"BLIK code" = "BLIK code";
-
 /* Placeholder for AU BECS BSB number */
 "BSB number" = "BSB number";
 
@@ -37,9 +34,6 @@ Section header for address fields */
 
 /* Label for Company field on form */
 "Company" = "Company";
-
-/* Text for alert message when user needs to confirm payment in their banking app */
-"Confirm the payment in your bank's app to complete the purchase." = "Confirm the payment in your bank's app to complete the purchase.";
 
 /* Text for continue button */
 "Continue" = "Continue";
@@ -179,9 +173,6 @@ Label of an address field */
 
 /* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Use rotor to access links";
-
-/* Error message when BLIK code is invalid */
-"Your BLIK code is incomplete." = "Your BLIK code is incomplete.";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Your email is invalid.";
