@@ -22,14 +22,22 @@ extension PaymentSheetFormFactory {
         )
         let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && !canSaveToLink
 
-        // Link can't collect phone.
-        let includePhone = !configuration.linkPaymentMethodsOnly
-            && configuration.billingDetailsCollectionConfiguration.phone == .always
-
-        let contactInformationSection = makeContactInformation(
-            includeName: false, // Name is included in the card details section.
-            includeEmail: configuration.billingDetailsCollectionConfiguration.email == .always,
-            includePhone: includePhone)
+        // Make Contact Information section
+        let contactInformationSection: SectionElement? = {
+            let emailElement: Element? = configuration.billingDetailsCollectionConfiguration.email == .always ? makeEmail() : nil
+            // Link can't collect phone.
+            let includePhone = !configuration.linkPaymentMethodsOnly && configuration.billingDetailsCollectionConfiguration.phone == .always
+            let phoneElement: Element? = includePhone ? makePhone() : nil
+            let contactInformationElements = [emailElement, phoneElement].compactMap { $0 }
+            guard !contactInformationElements.isEmpty else {
+                return nil
+            }
+            return SectionElement(
+                title: .Localized.contact_information,
+                elements: contactInformationElements,
+                theme: theme
+            )
+        }()
 
         let previousCardInput = previousCustomerInput?.paymentMethodParams.card
         let formattedExpiry: String? = {
