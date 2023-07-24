@@ -122,7 +122,7 @@ We use [Tuist](https://tuist.io) to generate Xcode projects, and all Xcode relat
 If you want to build from the master branch you need to follow these steps:
 
 - Clone the repository and `cd` into its directory.
-- Install Tuist by running `curl -Ls https://install.tuist.io | bash`
+- Install Tuist by following the instructions at [tuist.io](https://docs.tuist.io/tutorial/get-started/).
 - Run `tuist generate`, optionally pass the `-n` option if you don't want to open Xcode automatically.
 
 You can build any of the generated targets as you normally would.
