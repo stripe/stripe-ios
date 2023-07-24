@@ -1,4 +1,4 @@
-## x.x.x
+## 23.11.2 2023-07-24
 ### PaymentSheet
 * [Fixed] Update stp_icon_add@3x.png to 8bit color depth (Thanks @jszumski)
 
