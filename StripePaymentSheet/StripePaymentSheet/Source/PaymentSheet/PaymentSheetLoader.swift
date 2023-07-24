@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
@@ -28,6 +29,9 @@ final class PaymentSheetLoader {
         configuration: PaymentSheet.Configuration,
         completion: @escaping (LoadingResult) -> Void
     ) {
+        let loadingStartDate = Date()
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadStarted)
+
         Task { @MainActor in
             do {
                 // Fetch PaymentIntent, SetupIntent, or ElementsSession
@@ -65,6 +69,9 @@ final class PaymentSheetLoader {
                             intent: intent
                         )
                     }
+
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadSucceeded,
+                                                                     duration: Date().timeIntervalSince(loadingStartDate))
                 completion(
                     .success(
                         intent: intent,
@@ -73,6 +80,9 @@ final class PaymentSheetLoader {
                     )
                 )
             } catch {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed,
+                                                                     duration: Date().timeIntervalSince(loadingStartDate),
+                                                                     error: error)
                 completion(.failure(error))
             }
         }
@@ -118,11 +128,7 @@ final class PaymentSheetLoader {
             }
         }
 
-        if linkAccountService.hasSessionCookie {
-            return try await lookUpConsumerSession(email: nil)
-        } else if let email = linkAccountService.getLastSignUpEmail() {
-            return try await lookUpConsumerSession(email: email)
-        } else if let email = configuration.defaultBillingDetails.email {
+        if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email)
         } else if let customerID = configuration.customer?.id,
             let ephemeralKey = configuration.customer?.ephemeralKeySecret
@@ -148,8 +154,7 @@ final class PaymentSheetLoader {
             }
             guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
                 // Error if the PaymentIntent is in a terminal state
-                let message = "PaymentSheet received a PaymentIntent in a terminal state: \(paymentIntent.status)"
-                throw PaymentSheetError.unknown(debugDescription: message)
+                throw PaymentSheetError.paymentIntentInTerminalState(status: paymentIntent.status)
             }
             intent = .paymentIntent(paymentIntent)
         case .setupIntentClientSecret(let clientSecret):
@@ -162,8 +167,7 @@ final class PaymentSheetLoader {
             }
             guard ![.succeeded, .canceled].contains(setupIntent.status) else {
                 // Error if the SetupIntent is in a terminal state
-                let message = "PaymentSheet received a SetupIntent in a terminal state: \(setupIntent.status)"
-                throw PaymentSheetError.unknown(debugDescription: message)
+                throw PaymentSheetError.setupIntentInTerminalState(status: setupIntent.status)
             }
             intent = .setupIntent(setupIntent)
 
@@ -199,7 +203,7 @@ final class PaymentSheetLoader {
                 types: savedPaymentMethodTypes
             ) { paymentMethods, error in
                 guard let paymentMethods = paymentMethods, error == nil else {
-                    let error = error ?? PaymentSheetError.unknown(debugDescription: "Failed to retrieve PaymentMethods for the customer")
+                    let error = error ?? PaymentSheetError.fetchPaymentMethodsFailure
                     continuation.resume(throwing: error)
                     return
                 }

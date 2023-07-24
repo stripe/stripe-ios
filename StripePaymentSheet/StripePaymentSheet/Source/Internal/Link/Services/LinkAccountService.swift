@@ -109,8 +109,47 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         return cookieStore.read(key: .lastLogoutEmail) == hashedEmail
     }
 
-    func getLastSignUpEmail() -> String? {
-        return cookieStore.read(key: .lastSignupEmail)
+    func getLastPMDetails() -> LinkPMDisplayDetails? {
+        if let lastBrandString = cookieStore.read(key: .lastPMBrand),
+           let last4 = cookieStore.read(key: .lastPMLast4) {
+            let brand = STPCard.brand(from: lastBrandString)
+            return LinkPMDisplayDetails(last4: last4, brand: brand)
+        }
+        return nil
+    }
+
+    func setLastPMDetails(newDetails: LinkPMDisplayDetails?) {
+        if let newDetails = newDetails,
+            let brandString = STPCardBrandUtilities.stringFrom(newDetails.brand) {
+            cookieStore.write(key: .lastPMBrand, value: brandString, allowSync: false)
+            cookieStore.write(key: .lastPMLast4, value: newDetails.last4, allowSync: false)
+        } else {
+            cookieStore.delete(key: .lastPMBrand)
+            cookieStore.delete(key: .lastPMLast4)
+        }
+    }
+
+    func setLastPMDetails(params: STPPaymentMethodParams) {
+        if let last4 = params.card?.last4,
+           let number = params.card?.number
+        {
+            let brand = STPCardValidator.brand(forNumber: number)
+            let pmDetails = LinkPMDisplayDetails(last4: last4, brand: brand)
+            self.setLastPMDetails(newDetails: pmDetails)
+        } else {
+            self.setLastPMDetails(newDetails: nil)
+        }
+    }
+
+    func setLastPMDetails(pm: STPPaymentMethod) {
+        if let last4 = pm.card?.last4,
+           let brand = pm.card?.brand
+        {
+            let pmDetails = LinkPMDisplayDetails(last4: last4, brand: brand)
+            self.setLastPMDetails(newDetails: pmDetails)
+        } else {
+            self.setLastPMDetails(newDetails: nil)
+        }
     }
 
 }

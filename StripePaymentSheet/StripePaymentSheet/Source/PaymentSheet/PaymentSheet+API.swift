@@ -26,11 +26,11 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool = false,
         paymentMethodID: String? = nil,
-        completion: @escaping (PaymentSheetResult) -> Void
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         // Translates a STPPaymentHandler result to a PaymentResult
-        let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void = { status, _, error in
-            completion(makePaymentSheetResult(for: status, error: error))
+        let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSError?) -> Void = { status, error in
+            completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
         switch paymentOption {
@@ -43,10 +43,8 @@ extension PaymentSheet {
                     completion: completion
                 )
             else {
-                let message =
-                    "Attempted Apple Pay but it's not supported by the device, not configured, or missing a presenter"
-                assertionFailure(message)
-                completion(.failed(error: PaymentSheetError.unknown(debugDescription: message)))
+                assertionFailure(PaymentSheetError.applePayNotSupportedOrMisconfigured.debugDescription)
+                completion(.failed(error: PaymentSheetError.applePayNotSupportedOrMisconfigured), nil)
                 return
             }
             applePayContext.presentApplePay()
@@ -62,7 +60,7 @@ extension PaymentSheet {
                         paymentMethod,
                         error in
                         if let error = error {
-                            completion(.failed(error: error))
+                            completion(.failed(error: error), nil)
                             return
                         }
                         let paymentIntentParams = confirmParams.makeDashboardParams(
@@ -77,7 +75,9 @@ extension PaymentSheet {
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext,
-                            completion: paymentHandlerCompletion
+                            completion: { actionStatus, _, error in
+                                paymentHandlerCompletion(actionStatus, error)
+                            }
                         )
                     }
                 } else {
@@ -92,7 +92,9 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         params,
                         with: authenticationContext,
-                        completion: paymentHandlerCompletion
+                        completion: { actionStatus, _, error in
+                            paymentHandlerCompletion(actionStatus, error)
+                        }
                     )
                 }
             // MARK: ↪ SetupIntent
@@ -108,7 +110,9 @@ extension PaymentSheet {
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
-                    completion: paymentHandlerCompletion
+                    completion: { actionStatus, _, error in
+                        paymentHandlerCompletion(actionStatus, error)
+                    }
                 )
             // MARK: ↪ Deferred Intent
             case .deferredIntent(_, let intentConfig):
@@ -141,7 +145,9 @@ extension PaymentSheet {
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
                     with: authenticationContext,
-                    completion: paymentHandlerCompletion
+                    completion: { actionStatus, _, error in
+                        paymentHandlerCompletion(actionStatus, error)
+                    }
                 )
             // MARK: ↪ SetupIntent
             case .setupIntent(let setupIntent):
@@ -153,7 +159,9 @@ extension PaymentSheet {
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
-                    completion: paymentHandlerCompletion
+                    completion: { actionStatus, _, error in
+                        paymentHandlerCompletion(actionStatus, error)
+                    }
                 )
             // MARK: ↪ Deferred Intent
             case .deferredIntent(_, let intentConfig):
@@ -179,7 +187,9 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
-                        completion: paymentHandlerCompletion
+                        completion: { actionStatus, _, error in
+                            paymentHandlerCompletion(actionStatus, error)
+                        }
                     )
                 case .setupIntent(let setupIntent):
                     let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
@@ -188,7 +198,9 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
-                        completion: paymentHandlerCompletion
+                        completion: { actionStatus, _, error in
+                            paymentHandlerCompletion(actionStatus, error)
+                        }
                     )
                 case .deferredIntent(_, let intentConfig):
                     handleDeferredIntentConfirmation(
@@ -223,7 +235,9 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
-                        completion: paymentHandlerCompletion
+                        completion: { actionStatus, _, error in
+                            paymentHandlerCompletion(actionStatus, error)
+                        }
                     )
                 case .setupIntent(let setupIntent):
                     let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
@@ -233,7 +247,9 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
-                        completion: paymentHandlerCompletion
+                        completion: { actionStatus, _, error in
+                            paymentHandlerCompletion(actionStatus, error)
+                        }
                     )
                 case .deferredIntent(_, let intentConfig):
                     handleDeferredIntentConfirmation(
@@ -254,10 +270,8 @@ extension PaymentSheet {
                     ConsumerPaymentDetails
                 ) -> Void = { linkAccount, paymentDetails in
                     guard let paymentMethodParams = linkAccount.makePaymentMethodParams(from: paymentDetails) else {
-                        let error = PaymentSheetError.unknown(
-                            debugDescription: "Paying with Link without valid session"
-                        )
-                        completion(.failed(error: error))
+                        let error = PaymentSheetError.payingWithoutValidLinkSession
+                        completion(.failed(error: error), nil)
                         return
                     }
 
@@ -270,7 +284,10 @@ extension PaymentSheet {
                     STPPaymentMethodParams
                 ) -> Void = { linkAccount, paymentMethodParams in
                     guard linkAccount.sessionState == .verified else {
-                        assertionFailure("Creating payment details without a verified session")
+                        // We don't support 2FA in the native mobile Link flow, so if 2FA is required then this is a no-op.
+                        // Just fall through and don't save the card details to Link.
+                        STPAnalyticsClient.sharedClient.logLinkPopupSkipped()
+
                         // Attempt to confirm directly with params
                         confirmWithPaymentMethodParams(paymentMethodParams)
                         return
@@ -297,6 +314,11 @@ extension PaymentSheet {
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
+
+                        // Store the payment details to display on the button:
+                        let linkAccountService = LinkAccountService(apiClient: configuration.apiClient)
+                        linkAccountService.setLastPMDetails(params: paymentMethodParams)
+
                         createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure()
@@ -309,7 +331,7 @@ extension PaymentSheet {
                             // The request failed because invalid info was provided. In this case
                             // we should surface the error and let the user correct the information
                             // and try again.
-                            completion(.failed(error: error))
+                            completion(.failed(error: error), nil)
                         } else {
                             // Attempt to confirm directly with params as a fallback.
                             confirmWithPaymentMethodParams(paymentMethodParams)

@@ -146,38 +146,6 @@ extension ConsumerSession {
             completion: completion)
     }
 
-    func startVerification(
-        type: VerificationSession.SessionType = .sms,
-        locale: Locale = .autoupdatingCurrent,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
-    ) {
-        apiClient.startVerification(
-            for: clientSecret,
-            type: type,
-            locale: locale,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-
-    func confirmSMSVerification(
-        with code: String,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
-    ) {
-        apiClient.confirmSMSVerification(
-            for: clientSecret,
-            with: code,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-
     func createLinkAccountSession(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,

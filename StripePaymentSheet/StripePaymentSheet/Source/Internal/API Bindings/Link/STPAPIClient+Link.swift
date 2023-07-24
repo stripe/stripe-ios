@@ -101,10 +101,6 @@ extension STPAPIClient {
             resource: endpoint,
             parameters: parameters
         ) { (result: Result<ConsumerSession.SessionWithPublishableKey, Error>) in
-            if case .success(let signupResponse) = result {
-                cookieStore.updateSessionCookie(with: signupResponse.authSessionClientSecret)
-            }
-
             completion(result)
         }
     }
@@ -206,66 +202,6 @@ extension STPAPIClient {
 
             completion(result.map { $0.consumerSession })
         }
-    }
-
-    func startVerification(
-        for consumerSessionClientSecret: String,
-        type: ConsumerSession.VerificationSession.SessionType,
-        locale: Locale,
-        cookieStore: LinkCookieStore,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
-    ) {
-
-        let typeString: String = {
-            switch type {
-            case .sms:
-                return "SMS"
-            case .unparsable, .signup, .email:
-                assertionFailure("We don't support any verification except sms")
-                return ""
-            }
-        }()
-        let endpoint: String = "consumers/sessions/start_verification"
-
-        let parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "type": typeString,
-            "locale": locale.toLanguageTag(),
-        ]
-
-        makeConsumerSessionRequest(
-            endpoint: endpoint,
-            parameters: parameters,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion
-        )
-    }
-
-    func confirmSMSVerification(
-        for consumerSessionClientSecret: String,
-        with code: String,
-        cookieStore: LinkCookieStore,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
-    ) {
-        let endpoint: String = "consumers/sessions/confirm_verification"
-
-        let parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "type": "SMS",
-            "code": code,
-            "request_surface": "ios_payment_element",
-        ]
-
-        makeConsumerSessionRequest(
-            endpoint: endpoint,
-            parameters: parameters,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion
-        )
     }
 
     func generatedLinkAccountSessionManifest(

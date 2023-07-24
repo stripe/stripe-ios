@@ -134,7 +134,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             linkEnabled: false,
             activeLinkSession: false,
             linkSessionType: .ephemeral,
-            currency: "USD"
+            currency: "USD",
+            deferredIntentConfirmationType: nil
         )
 
         let event4 = XCTestExpectation(description: "mc_custom_payment_applepay_failure")
@@ -146,7 +147,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             linkEnabled: false,
             activeLinkSession: false,
             linkSessionType: .ephemeral,
-            currency: "USD"
+            currency: "USD",
+            deferredIntentConfirmationType: nil
         )
 
         let event5 = XCTestExpectation(description: "mc_custom_paymentoption_applepay_select")
@@ -180,8 +182,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let payload = client.payload(from: analytic, apiClient: apiClient)
 
         // verify
-        XCTAssertEqual(15, payload.count)
+        XCTAssertEqual(16, payload.count)
         XCTAssertNotNil(payload["device_type"] as? String)
+        XCTAssertEqual("Wi-Fi", payload["network_type"] as? String)
         // In xctest, this is the version of Xcode
         XCTAssertNotNil(payload["app_version"] as? String)
         XCTAssertEqual("none", payload["ocr_type"] as? String)
@@ -228,7 +231,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             linkEnabled: false,
             activeLinkSession: false,
             linkSessionType: .ephemeral,
-            currency: "USD"
+            currency: "USD",
+            deferredIntentConfirmationType: nil
         )
 
         let duration = client.lastPayload?["duration"] as? TimeInterval

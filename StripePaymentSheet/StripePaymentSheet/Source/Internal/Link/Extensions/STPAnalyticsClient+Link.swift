@@ -36,28 +36,6 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .linkSignupFailure)
     }
 
-    // MARK: - 2FA
-
-    func logLink2FAStart() {
-        self.logPaymentSheetEvent(event: .link2FAStart)
-    }
-
-    func logLink2FAStartFailure() {
-        self.logPaymentSheetEvent(event: .link2FAStartFailure)
-    }
-
-    func logLink2FAComplete() {
-        self.logPaymentSheetEvent(event: .link2FAComplete)
-    }
-
-    func logLink2FAFailure() {
-        self.logPaymentSheetEvent(event: .link2FAFailure)
-    }
-
-    func logLink2FACancel() {
-        self.logPaymentSheetEvent(event: .link2FACancel)
-    }
-
     func logLinkAccountLookupFailure() {
         self.logPaymentSheetEvent(event: .linkAccountLookupFailure)
     }
@@ -76,6 +54,10 @@ extension STPAnalyticsClient {
     func logLinkPopupCancel(sessionType: LinkSettings.PopupWebviewOption) {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
         self.logLinkPopupEvent(event: .linkPopupCancel, duration: duration, sessionType: sessionType)
+    }
+
+    func logLinkPopupSkipped() {
+        logPaymentSheetEvent(event: .linkPopupSkipped)
     }
 
     func logLinkPopupError(error: Error?, sessionType: LinkSettings.PopupWebviewOption) {

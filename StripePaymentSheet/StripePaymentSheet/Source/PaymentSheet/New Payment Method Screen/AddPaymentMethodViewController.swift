@@ -166,13 +166,12 @@ class AddPaymentMethodViewController: UIViewController {
         self.previousCustomerInput = previousCustomerInput
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-        self.view.backgroundColor = configuration.appearance.colors.background
     }
 
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = configuration.appearance.colors.background
 
         let stackView = UIStackView(arrangedSubviews: [
             paymentMethodTypesView, paymentMethodDetailsContainerView,
@@ -324,11 +323,7 @@ class AddPaymentMethodViewController: UIViewController {
             email: email
         )
         let client = STPBankAccountCollector()
-        let errorText = STPLocalizedString(
-            "Something went wrong when linking your account.\nPlease try again later.",
-            "Error message when an error case happens when linking your account"
-        )
-        let genericError = PaymentSheetError.unknown(debugDescription: errorText)
+        let genericError = PaymentSheetError.accountLinkFailure
 
         let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = {
             result,
