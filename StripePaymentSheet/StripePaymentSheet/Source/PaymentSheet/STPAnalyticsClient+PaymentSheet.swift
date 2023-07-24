@@ -260,6 +260,9 @@ extension STPAnalyticsClient {
         additionalParams["currency"] = currency
         additionalParams["is_decoupled"] = intentConfig != nil
         additionalParams["error_domain"] = (error as? NSError)?.domain
+        if let error = error as? PaymentSheetError {
+            additionalParams["error_message"] = error.safeLoggingString
+        }
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
 
         for (param, param_value) in params {
