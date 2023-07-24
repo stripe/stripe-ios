@@ -99,8 +99,8 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_cardAndBankAccount() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        stubReturningCustomerWithUSBankAccountResponse()
         stubReturningCustomerWithCardResponse()
+        stubReturningCustomerWithUSBankAccountResponse()
 
         var configuration = CustomerSheet.Configuration()
         configuration.paymentMethodTypes = [.card, .USBankAccount]
