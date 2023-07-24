@@ -296,7 +296,7 @@ extension PaymentSheet {
                 paymentOption: paymentOption,
                 paymentHandler: paymentHandler,
                 isFlowController: true
-            ) { [intent, configuration] result in
+            ) { [intent, configuration] result, deferredIntentConfirmationType in
                 STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
                     isCustom: true,
                     paymentMethod: paymentOption.analyticsValue,
@@ -305,7 +305,8 @@ extension PaymentSheet {
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                     linkSessionType: intent.linkPopupWebviewOption,
                     currency: intent.currency,
-                    intentConfig: intent.intentConfig
+                    intentConfig: intent.intentConfig,
+                    deferredIntentConfirmationType: deferredIntentConfirmationType
                 )
 
                 if case .completed = result, case .link = paymentOption {

@@ -160,4 +160,12 @@ import Foundation
 
     // MARK: - PaymentSheet Force Success
     case paymentSheetForceSuccess = "mc_force_success"
+
+    // MARK: - PaymentSheet initialization
+    case paymentSheetLoadStarted = "mc_load_started"
+    case paymentSheetLoadSucceeded = "mc_load_succeeded"
+    case paymentSheetLoadFailed = "mc_load_failed"
+
+    // MARK: - PaymentSheet dismiss
+    case paymentSheetDismissed = "mc_dismiss"
 }

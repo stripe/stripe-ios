@@ -75,8 +75,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             savedPaymentMethodsConfiguration: self.configuration,
             customerAdapter: self.customerAdapter,
             configuration: .init(
-                showApplePay: showApplePay,
-                autoSelectDefaultBehavior: .onlyIfMatched
+                showApplePay: showApplePay
             ),
             appearance: configuration.appearance,
             delegate: self
@@ -438,6 +437,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
                 self.mode = .selectingSaved
                 self.updateUI(animated: true)
+                self.reinitAddPaymentMethodViewController()
             }
         })
     }
@@ -481,9 +481,18 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
                     self.mode = .selectingSaved
                     self.updateUI(animated: true)
+                    self.reinitAddPaymentMethodViewController()
                 }
             }
         }
+    }
+
+    // Called after adding a new payment method to clear out any text
+    // that was entered as part of adding a new payment method.
+    private func reinitAddPaymentMethodViewController() {
+        self.addPaymentMethodViewController = CustomerAddPaymentMethodViewController(
+            configuration: configuration,
+            delegate: self)
     }
 
     private func set(error: Error?) {

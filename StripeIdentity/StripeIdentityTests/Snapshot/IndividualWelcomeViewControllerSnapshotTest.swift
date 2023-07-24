@@ -15,7 +15,7 @@ final class IndividualWelcomeViewControllerSnapshotTest: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        //        recordMode = true
+//                recordMode = true
     }
 
     func testViewIsConfiguredFromAPI() throws {

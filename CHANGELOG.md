@@ -1,3 +1,19 @@
+## x.x.x
+### PaymentSheet
+* [Fixed] Update stp_icon_add@3x.png to 8bit color depth (Thanks @jszumski)
+
+### CustomerSheet
+* [Fixed] Ability to removing payment method immediately after adding it.
+* [Fixed] Re-init addPaymentMethodViewController after adding payment method to allow for adding another payment method
+
+## 23.11.1 2023-07-18
+### PaymentSheet
+* [Fixed] Fixed various bugs in Link private beta.
+
+## 23.11.0 2023-07-17
+### CustomerSheet
+* [Changed] Breaking interface change for `CustomerSheetResult`. `CustomerSheetResult.canceled` now has a nullable associated value signifying that there is no selected payment method. Please use both `.canceled(StripeOptionSelection?)` and `.selected(PaymentOptionSelection?)` to update your UI to show the latest selected payment method.
+
 ## 23.10.0 2023-07-10
 ### Payments
 * [Fixed] A bug where `mandate_data` was not being properly attached to PayPal SetupIntent's.
@@ -7,9 +23,6 @@
 ## 23.9.4 2023-07-05
 ### PaymentSheet
 * [Added] US bank accounts are now supported when initializing with an IntentConfiguration.
-
-### CustomerSheet
-* [Changed] Breaking interface change for `CustomerSheetResult`. `CustomerSheetResult.canceled` now has a nullable associated value signifying that there is no selected payment method. Please use both `.canceled(StripeOptionSelection?)` and `.selected(PaymentOptionSelection?)` to update your UI to show the latest selected payment method.
 
 ## 23.9.3 2023-06-26
 ### PaymentSheet

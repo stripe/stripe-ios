@@ -17,7 +17,7 @@ import iOSSnapshotTestCase
 class STPAUBECSDebitFormViewSnapshotTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
-        //        self.recordMode = true
+//                self.recordMode = true
     }
 
     func testDefaultAppearance() {

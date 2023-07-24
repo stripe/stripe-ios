@@ -38,6 +38,7 @@ stages:
     workflows:
     - framework-tests: {}
     - test-builds-xcode-143: {}
+    - test-builds-xcode-143-release: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
@@ -331,11 +332,31 @@ workflows:
     before_run:
     - prep_all
     after_run: []
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   test-builds-xcode-143:
     steps:
     - xcode-build-for-test@2:
         inputs:
         - scheme: AllStripeFrameworks
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=16.4
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core
+  test-builds-xcode-143-release:
+    steps:
+    - xcode-build-for-test@2:
+        inputs:
+        - scheme: AllStripeFrameworks
+        - configuration: Release
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=16.4
     before_run:
@@ -407,6 +428,10 @@ workflows:
         inputs:
         - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
         title: Check PaymentSheet test sharding
+    - script@1:
+        inputs:
+        - content: ./ci_scripts/check_image_format.sh
+        title: Check png image format is 8-bit
     - fastlane@3:
         inputs:
         - lane: build_extras
