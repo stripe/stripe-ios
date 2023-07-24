@@ -129,7 +129,7 @@ extension PaymentSheetError: CustomDebugStringConvertible {
         let errorMsesageSuffix = {
             switch self {
             case .unknown(debugDescription: let message):
-                return "An unknown error occurred in PaymentSheet. " + message
+                return message
             case .linkLookupNotFound(serverErrorMessage: let message):
                 return "An error occurred in PaymentSheet. " + message
             case .missingClientSecret:
