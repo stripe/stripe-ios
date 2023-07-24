@@ -172,10 +172,10 @@ class PollingViewController: UIViewController {
         self.appearance = appearance
 
         switch paymentMethodType {
-            case .UPI:
-                    deadline = Date().addingTimeInterval(60 * 5)
-            default:
-                   fatalError("No Deadline for PaymentMethodType")
+        case .UPI:
+            deadline = Date().addingTimeInterval(60 * 5)
+        default:
+            fatalError("No Deadline for PaymentMethodType")
         }
 
         super.init(nibName: nil, bundle: nil)
