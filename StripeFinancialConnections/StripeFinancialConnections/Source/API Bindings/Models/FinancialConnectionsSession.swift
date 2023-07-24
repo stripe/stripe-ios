@@ -23,6 +23,16 @@ public extension StripeAPI {
             public let data: [StripeAPI.FinancialConnectionsAccount]
             /** True if this list has another page of items after this one that can be fetched. */
             public let hasMore: Bool
+
+            // MARK: - Internal Init
+
+            internal init(
+                data: [StripeAPI.FinancialConnectionsAccount],
+                hasMore: Bool
+            ) {
+                self.data = data
+                self.hasMore = hasMore
+            }
         }
 
         @_spi(STP) public enum PaymentAccount: Decodable {
