@@ -264,7 +264,7 @@ extension STPAnalyticsClient {
         if let error = error as? PaymentSheetError {
             additionalParams["error_message"] = error.safeLoggingString
         }
-        
+
         for (param, param_value) in params {
             additionalParams[param] = param_value
         }
