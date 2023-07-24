@@ -126,7 +126,7 @@ extension PaymentSheetError: CustomDebugStringConvertible {
 
     /// A description logged to a developer for debugging
     public var debugDescription: String {
-        let errorMsesageSuffix = {
+        let errorMessageSuffix = {
             switch self {
             case .unknown(debugDescription: let message):
                 return message
@@ -188,9 +188,9 @@ extension PaymentSheetError: CustomDebugStringConvertible {
 
         switch self {
         case .unknown:
-            return "An unknown error occurred in PaymentSheet. " + errorMsesageSuffix
+            return "An unknown error occurred in PaymentSheet. " + errorMessageSuffix
         default:
-            return "An error occurred in PaymentSheet. " + errorMsesageSuffix
+            return "An error occurred in PaymentSheet. " + errorMessageSuffix
         }
     }
 }
