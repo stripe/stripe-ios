@@ -122,9 +122,6 @@ extension PaymentSheetError: CustomDebugStringConvertible {
         case .linkNotAuthorized:
             return "linkNotAuthorized"
         }
-    }   case .unknown:
-            return "unknown"
-        }
     }
 
     /// A description logged to a developer for debugging
