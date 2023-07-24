@@ -184,13 +184,13 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             case .setupIntentClientSecretProviderNil:
                 return "setupIntentClientSecretForCustomerAttach, but setupIntentClientSecretProvider is nil"
             }
-        }
+        }()
 
         switch self {
         case .unknown:
-            return "An unknown error occurred in PaymentSheet. " + errorMsesageSuffix()
+            return "An unknown error occurred in PaymentSheet. " + errorMsesageSuffix
         default:
-            return "An error occurred in PaymentSheet. " + errorMsesageSuffix()
+            return "An error occurred in PaymentSheet. " + errorMsesageSuffix
         }
     }
 }
