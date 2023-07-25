@@ -48,11 +48,11 @@ extension STPAPIClient {
         var parameters: [String: Any] = [:]
         parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
-        
+
         var deferredIntent = [String: Any]()
         deferredIntent["mode"] = "setup"
         parameters["deferred_intent"] = deferredIntent
-        
+
         return try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointIntentWithPreferences,
