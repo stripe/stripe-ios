@@ -8,62 +8,34 @@ import Foundation
 
 @_spi(PrivateBetaCustomerSheet) @testable import StripePaymentSheet
 import XCTest
+@_spi(STP) import StripePaymentSheet
 
 class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
 
     func testSupportedPaymentMethodTypesForAdd_CardOnlySupported() {
         CustomerSheet.supportedPaymentMethods = [.card]
 
-        var configuration = CustomerSheet.Configuration()
-        configuration.paymentMethodTypes = [.card, .USBankAccount]
+        let elementSession = elementSession(orderedPaymentMethodTypes: ["card"])
+        let paymentMethodTypes = elementSession.customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: mockCustomerAdapterWithSetupIntent)
 
-        XCTAssertEqual(configuration.supportedPaymentMethodTypesForAdd(customerAdapter: mockCustomerAdapterWithSetupIntent), [.card])
+        XCTAssertEqual(paymentMethodTypes, [.card])
     }
+
     func testSupportedPaymentMethodTypesForAdd_WithSupportedUSBankAccount() {
         CustomerSheet.supportedPaymentMethods = [.card, .USBankAccount]
 
-        var configuration = CustomerSheet.Configuration()
-        configuration.paymentMethodTypes = [.card, .USBankAccount]
+        let elementSession = elementSession(orderedPaymentMethodTypes: ["card", "us_bank_account"])
+        let paymentMethodTypes = elementSession.customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: mockCustomerAdapterWithSetupIntent)
 
-        XCTAssertEqual(configuration.supportedPaymentMethodTypesForAdd(customerAdapter: mockCustomerAdapterWithSetupIntent), [.card, .USBankAccount])
+        XCTAssertEqual(paymentMethodTypes, [.card, .USBankAccount])
     }
     func testSupportedPaymentMethodTypesForAdd_WithSupportedUSBankAccount_NoSetupIntent() {
         CustomerSheet.supportedPaymentMethods = [.card, .USBankAccount]
 
-        var configuration = CustomerSheet.Configuration()
-        configuration.paymentMethodTypes = [.card, .USBankAccount]
+        let elementSession = elementSession(orderedPaymentMethodTypes: ["card", "us_bank_account"])
+        let paymentMethodTypes = elementSession.customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: mockCustomerAdapterWithoutSetupIntent)
 
-        XCTAssertEqual(configuration.supportedPaymentMethodTypesForAdd(customerAdapter: mockCustomerAdapterWithoutSetupIntent), [.card])
-    }
-
-    func testSupportedPaymentMethodTypesForList() {
-        CustomerSheet.supportedPaymentMethods = [.card]
-
-        var configuration = CustomerSheet.Configuration()
-        configuration.paymentMethodTypes = [.card, .USBankAccount]
-
-        XCTAssertEqual(configuration.supportedPaymentMethodTypesForList(), [.card])
-    }
-
-    func testDedupedPaymentMethodTypesIdentity() {
-        var configuration = CustomerSheet.Configuration()
-        configuration.paymentMethodTypes = [.card, .USBankAccount]
-        XCTAssertEqual(configuration.dedupedPaymentMethodTypes, [.card, .USBankAccount])
-    }
-    func testDedupedPaymentMethodTypes_dupeCard() {
-        var configuration = CustomerSheet.Configuration()
-        configuration.paymentMethodTypes = [.card, .card, .USBankAccount]
-        XCTAssertEqual(configuration.dedupedPaymentMethodTypes, [.card, .USBankAccount])
-    }
-    func testDedupedPaymentMethodTypes_dupeBoth() {
-        var configuration = CustomerSheet.Configuration()
-        configuration.paymentMethodTypes = [.card, .card, .USBankAccount, .USBankAccount]
-        XCTAssertEqual(configuration.dedupedPaymentMethodTypes, [.card, .USBankAccount])
-    }
-    func testDedupedPaymentMethodTypes_TestOrder() {
-        var configuration = CustomerSheet.Configuration()
-        configuration.paymentMethodTypes = [.USBankAccount, .card, .card, .USBankAccount, .USBankAccount]
-        XCTAssertEqual(configuration.dedupedPaymentMethodTypes, [.USBankAccount, .card])
+        XCTAssertEqual(paymentMethodTypes, [.card])
     }
 
     var mockCustomerAdapterWithSetupIntent: CustomerAdapter {
@@ -71,6 +43,15 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
     }
     var mockCustomerAdapterWithoutSetupIntent: CustomerAdapter {
         return MockCustomerAdapter(mockedValue: false)
+    }
+    // Should use the one from StripeiOSTests, but we don't have good infrastructure to share these
+    // and we're not using any details from it.
+    func elementSession(orderedPaymentMethodTypes: [String]) -> STPElementsSession {
+        let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": orderedPaymentMethodTypes,
+                                                                        "country_code": "US", ] as [String: Any],
+                                          "session_id": "123",
+        ]
+        return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
 }
 
