@@ -1,9 +1,10 @@
-## x.x.x
+## 23.11.2 2023-07-24
 ### PaymentSheet
 * [Fixed] Update stp_icon_add@3x.png to 8bit color depth (Thanks @jszumski)
 
 ### CustomerSheet
 * [Fixed] Ability to removing payment method immediately after adding it.
+* [Fixed] Re-init addPaymentMethodViewController after adding payment method to allow for adding another payment method
 
 ## 23.11.1 2023-07-18
 ### PaymentSheet
