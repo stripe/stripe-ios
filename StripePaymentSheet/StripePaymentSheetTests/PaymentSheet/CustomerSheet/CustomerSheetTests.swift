@@ -167,7 +167,6 @@ class CustomerSheetTests: APIStubbedTestCase {
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
     }
 
-
     private func stubSessions(paymentMethods: String) {
         stubSessions(
             fileMock: .elementsSessionsPaymentMethod_200,

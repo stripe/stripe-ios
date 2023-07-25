@@ -6,9 +6,8 @@
 
 import Foundation
 
-@_spi(PrivateBetaCustomerSheet) @testable import StripePaymentSheet
+@_spi(PrivateBetaCustomerSheet) @_spi(STP) @testable import StripePaymentSheet
 import XCTest
-@_spi(STP) import StripePaymentSheet
 
 class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
 
