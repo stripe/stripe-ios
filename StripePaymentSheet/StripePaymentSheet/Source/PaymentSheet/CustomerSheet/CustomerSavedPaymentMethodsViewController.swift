@@ -565,6 +565,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             configuration: configuration,
             paymentMethodTypes: paymentMethodTypes,
             delegate: self)
+        cachedClientSecret = nil
     }
 
     private func set(error: Error?) {
