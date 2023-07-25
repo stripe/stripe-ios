@@ -169,7 +169,7 @@ extension CustomerSheet {
             do {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentOption()
-                async let supportedPaymentMethodTypes = try self .retrieveSupportedPaymentMethodTypes()
+                async let supportedPaymentMethodTypes = try self.retrieveSupportedPaymentMethodTypes()
                 let (paymentMethods, selectedPaymentMethod, elementSesssion) = try await (paymentMethodsResult, selectedPaymentMethodResult, supportedPaymentMethodTypes)
                 completion(.success((paymentMethods, selectedPaymentMethod, elementSesssion)))
             } catch {
