@@ -139,4 +139,68 @@ import Foundation
             return STPLocalizedString("Unknown", "Default missing source type label")
         }
     }
+
+    /// The identifier for the payment method type as it is represented on an intent, e.g. "afterpay_clearpay" for Afterpay
+    @_spi(STP) public var identifier: String {
+        switch self {
+        case .card:
+            return "card"
+        case .alipay:
+            return "alipay"
+        case .grabPay:
+            return "grabpay"
+        case .iDEAL:
+            return "ideal"
+        case .FPX:
+            return "fpx"
+        case .cardPresent:
+            return "card_present"
+        case .SEPADebit:
+            return "sepa_debit"
+        case .AUBECSDebit:
+            return "au_becs_debit"
+        case .bacsDebit:
+            return "bacs_debit"
+        case .giropay:
+            return "giropay"
+        case .przelewy24:
+            return "p24"
+        case .EPS:
+            return "eps"
+        case .bancontact:
+            return "bancontact"
+        case .netBanking:
+            return "netbanking"
+        case .OXXO:
+            return "oxxo"
+        case .sofort:
+            return "sofort"
+        case .UPI:
+            return "upi"
+        case .payPal:
+            return "paypal"
+        case .afterpayClearpay:
+            return "afterpay_clearpay"
+        case .blik:
+            return "blik"
+        case .weChatPay:
+            return "wechat_pay"
+        case .boleto:
+            return "boleto"
+        case .link:
+            return "link"
+        case .klarna:
+            return "klarna"
+        case .linkInstantDebit:
+            return "TODO" // TODO(porter) figure out the correct id here
+        case .affirm:
+            return "affirm"
+        case .USBankAccount:
+            return "us_bank_account"
+        case .cashApp:
+            return "cashapp"
+        case .unknown:
+            return "unknown"
+        }
+    }
 }

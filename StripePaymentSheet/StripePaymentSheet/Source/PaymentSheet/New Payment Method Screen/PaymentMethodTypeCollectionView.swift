@@ -114,6 +114,8 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         selected = paymentMethodTypes[indexPath.item]
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetPaymentMethodTapped,
+                                                             params: ["selected_lpm": paymentMethodTypes[indexPath.row].identifier])
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -97,6 +97,18 @@ extension PaymentSheet {
             return ""
         }
 
+        /// The identifier for the payment method type as it is represented on an intent
+        var identifier: String {
+            if let stpPaymentMethodType = stpPaymentMethodType {
+                return stpPaymentMethodType.identifier
+            } else if case .dynamic(let name) = self {
+                return name
+            }
+
+            assertionFailure()
+            return ""
+        }
+
         var paymentSheetLabel: String {
             assertionFailure()
             return "Unknown"
