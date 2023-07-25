@@ -52,6 +52,7 @@ struct CustomerSheetTestPlayground: View {
                         }
                         SettingView(setting: $playgroundController.settings.paymentMethodMode)
                         SettingView(setting: $playgroundController.settings.applePay)
+                        SettingView(setting: $playgroundController.settings.paymentMethodTypes)
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
@@ -69,12 +70,12 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.collectPhone)
                         SettingView(setting: $playgroundController.settings.collectAddress)
                     }
-                    Spacer()
-                    Divider()
-                    CustomerSheetButtons()
-                        .environmentObject(playgroundController)
                 }
             }
+            Spacer()
+            Divider()
+            CustomerSheetButtons()
+                .environmentObject(playgroundController)
         }
     }
 

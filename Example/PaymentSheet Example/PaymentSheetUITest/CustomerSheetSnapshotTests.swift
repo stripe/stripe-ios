@@ -230,6 +230,110 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
+// TODO: Uncomment when enabling USBankAccount
+//    func testUSBankAccount_only() {
+//        let configuration = configuration(paymentMethodTypes: [.USBankAccount])
+//
+//        prepareCS(configuration: configuration)
+//        presentCS(darkMode: false)
+//        verify(cs.bottomSheetViewController.view!)
+//    }
+    func testUSBankAccount_card() {
+        let configuration = configuration(paymentMethodTypes: [.USBankAccount, .card])
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testCard_USBankAccount() {
+        let configuration = configuration(paymentMethodTypes: [.card, .USBankAccount])
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+// TODO: Uncomment when enabling USBankAccount
+//    func testUSBankAccount_only_dark() {
+//        let configuration = configuration(paymentMethodTypes: [.USBankAccount])
+//
+//        prepareCS(configuration: configuration)
+//        presentCS(darkMode: true)
+//        verify(cs.bottomSheetViewController.view!)
+//    }
+    func testUSBankAccount_card_dark() {
+        let configuration = configuration(paymentMethodTypes: [.USBankAccount, .card])
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testCard_USBankAccount_dark() {
+        let configuration = configuration(paymentMethodTypes: [.card, .USBankAccount])
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
+    }
+/* TODO: Uncomment when enabling USBankAccount
+    func testUSBankAccount_bdcc_0000() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .automatic)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc, paymentMethodTypes: [.USBankAccount])
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testUSBankAccount_bdcc_0200() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .always,
+                                                         email: .automatic,
+                                                         address: .automatic)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc, paymentMethodTypes: [.USBankAccount])
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testUSBankAccount_bdcc_0002() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .full)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc, paymentMethodTypes: [.USBankAccount])
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testUSBankAccount_bdcc_0202() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .always,
+                                                         email: .automatic,
+                                                         address: .full)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc, paymentMethodTypes: [.USBankAccount])
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testUSBankAccount_bdcc_1111() {
+        let bdcc = billingDetailsCollectionConfiguration(name: .never,
+                                                         phone: .never,
+                                                         email: .never,
+                                                         address: .never,
+                                                         attachDefaultsToPaymentMethod: true)
+        let configuration = configuration(defaultBillingDetails: billingDetails(),
+                                          billingDetailsCollectionConfiguration: bdcc,
+                                          paymentMethodTypes: [.USBankAccount])
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+*/
     func stubbedPaymentMethod() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
@@ -301,12 +405,14 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
     private func configuration(applePayEnabled: Bool = false,
                                defaultBillingDetails: PaymentSheet.BillingDetails = .init(),
                                billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration = .init(),
+                               paymentMethodTypes: [STPPaymentMethodType] = [.card],
                                appearance: PaymentSheet.Appearance = .default) -> CustomerSheet.Configuration {
         var config = CustomerSheet.Configuration()
         config.applePayEnabled = applePayEnabled
         config.appearance = appearance
         config.apiClient = stubbedAPIClient()
         config.defaultBillingDetails = defaultBillingDetails
+        config.paymentMethodTypes = paymentMethodTypes
         config.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
 
         return config

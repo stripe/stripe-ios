@@ -44,8 +44,15 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private lazy var addPaymentMethodViewController: CustomerAddPaymentMethodViewController = {
         return CustomerAddPaymentMethodViewController(
             configuration: configuration,
+            paymentMethodTypes: paymentMethodTypes,
             delegate: self)
     }()
+    private var cachedClientSecret: String?
+
+    var paymentMethodTypes: [PaymentSheet.PaymentMethodType] {
+        let filtered = configuration.supportedPaymentMethodTypesForAdd(customerAdapter: customerAdapter)
+        return filtered.toPaymentSheetPaymentMethodTypes()
+    }
 
     var selectedPaymentOption: PaymentOption? {
         switch mode {
@@ -86,7 +93,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }()
     private lazy var actionButton: ConfirmButton = {
         let button = ConfirmButton(
-            callToAction: self.callToAction(),
+            callToAction: self.defaultCallToAction(),
             applePayButtonType: .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
@@ -233,6 +240,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         var actionButtonStatus: ConfirmButton.Status = .enabled
         var showActionButton: Bool = true
 
+        var callToAction = defaultCallToAction()
+
         switch mode {
         case .selectingSaved:
             if savedPaymentOptionsViewController.selectedPaymentOption != nil {
@@ -242,7 +251,12 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             }
         case .addingNewPaymentMethodAttachToCustomer, .addingNewWithSetupIntent:
             self.actionButton.setHiddenIfNecessary(false)
-            actionButtonStatus = addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
+            if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
+                callToAction = overrideCallToAction
+                actionButtonStatus = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
+            } else {
+                actionButtonStatus = addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
+            }
         }
 
         if processingInFlight {
@@ -252,7 +266,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.actionButton.update(
             state: actionButtonStatus,
             style: .stripe,
-            callToAction: callToAction(),
+            callToAction: callToAction,
             animated: animated,
             completion: nil
         )
@@ -297,7 +311,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     }
 
-    private func callToAction() -> ConfirmButton.CallToActionType {
+    private func defaultCallToAction() -> ConfirmButton.CallToActionType {
         switch mode {
         case .selectingSaved:
             return .custom(title: STPLocalizedString(
@@ -312,27 +326,20 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
-    func fetchSetupIntent(clientSecret: String, completion: @escaping ((Result<STPSetupIntent, Error>) -> Void) ) {
-        Task {
-            do {
-                let setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret)
-                completion(.success(setupIntent))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
     private func didTapActionButton() {
         error = nil
         updateUI()
 
         switch mode {
         case .addingNewWithSetupIntent:
-            guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
-                return
+            if let behavior = addPaymentMethodViewController.overrideActionButtonBehavior {
+                handleOverrideAction(behavior: behavior)
+            } else {
+                guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
+                    return
+                }
+                addPaymentOption(paymentOption: newPaymentOption)
             }
-            addPaymentOption(paymentOption: newPaymentOption)
         case .addingNewPaymentMethodAttachToCustomer:
             guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
                 return
@@ -375,6 +382,21 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
+    private func handleOverrideAction(behavior: OverrideableBuyButtonBehavior) {
+        self.processingInFlight = true
+        updateUI(animated: false)
+        Task {
+            guard let clientSecret = await fetchClientSecret() else {
+                self.processingInFlight = false
+                self.updateUI()
+                return
+            }
+            self.processingInFlight = false
+            self.updateUI()
+            addPaymentMethodViewController.didTapCallToActionButton(behavior: behavior, clientSecret: clientSecret, from: self)
+        }
+    }
+
     private func addPaymentOption(paymentOption: PaymentOption) {
         guard case .new = paymentOption, customerAdapter.canCreateSetupIntents else {
             STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
@@ -384,30 +406,47 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
 
         Task {
-            var clientSecret: String
-            do {
-                clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
-            } catch {
-                STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
+            guard let clientSecret = await fetchClientSecret() else {
                 self.processingInFlight = false
-                self.error = error
                 self.updateUI()
                 return
             }
-
-            self.fetchSetupIntent(clientSecret: clientSecret) { result in
-                switch result {
-                case .success(let stpSetupIntent):
-                    let setupIntent = Intent.setupIntent(stpSetupIntent)
-                    self.confirm(intent: setupIntent, paymentOption: paymentOption)
-                case .failure(let error):
-                    STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
-                    self.processingInFlight = false
-                    self.error = error
-                    self.updateUI()
-                }
+            guard let fetchedSetupIntent = await fetchSetupIntent(clientSecret: clientSecret) else {
+                self.processingInFlight = false
+                self.updateUI()
+                return
             }
+            let setupIntent = Intent.setupIntent(fetchedSetupIntent)
+            // TODO: refactor so that we can call `processingInFlight = false` in this context
+            self.confirm(intent: setupIntent, paymentOption: paymentOption)
         }
+    }
+
+    private func fetchClientSecret() async -> String? {
+        var clientSecret: String?
+        do {
+            if let cs = cachedClientSecret {
+                clientSecret = cs
+            } else {
+                clientSecret = try await customerAdapter.setupIntentClientSecretForCustomerAttach()
+                cachedClientSecret = clientSecret
+            }
+        } catch {
+            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
+            self.error = error
+        }
+        return clientSecret
+    }
+
+    private func fetchSetupIntent(clientSecret: String) async -> STPSetupIntent? {
+        var setupIntent: STPSetupIntent?
+        do {
+            setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret)
+        } catch {
+            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
+            self.error = error
+        }
+        return setupIntent
     }
 
     func confirm(intent: Intent?, paymentOption: PaymentOption) {
@@ -492,6 +531,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private func reinitAddPaymentMethodViewController() {
         self.addPaymentMethodViewController = CustomerAddPaymentMethodViewController(
             configuration: configuration,
+            paymentMethodTypes: paymentMethodTypes,
             delegate: self)
     }
 
@@ -636,6 +676,9 @@ extension CustomerSavedPaymentMethodsViewController: CustomerAddPaymentMethodVie
     func didUpdate(_ viewController: CustomerAddPaymentMethodViewController) {
         error = nil
         updateUI()
+    }
+    func updateErrorLabel(for error: Error?) {
+        set(error: error)
     }
 }
 

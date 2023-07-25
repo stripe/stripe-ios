@@ -66,6 +66,7 @@ internal enum InternalCustomerSheetResult {
                 customer: CustomerAdapter) {
         self.configuration = configuration
         self.customerAdapter = customer
+        configuration.validate()
     }
 
     var customerAdapter: CustomerAdapter
