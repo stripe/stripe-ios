@@ -58,16 +58,16 @@ class PollingViewController: UIViewController {
     private var instructionLabelAttributedText: NSAttributedString {
         switch paymentMethodType {
         case .UPI:
-               let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
-               let attrText = NSMutableAttributedString(string: String(
-                   format: .Localized.open_upi_app,
-                   timeRemaining
-               ))
-               attrText.addAttributes([.foregroundColor: appearance.colors.primary],
-                                      range: NSString(string: attrText.string).range(of: timeRemaining))
-               return attrText
+            let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
+            let attrText = NSMutableAttributedString(string: String(
+                format: .Localized.open_upi_app,
+                timeRemaining
+            ))
+            attrText.addAttributes([.foregroundColor: appearance.colors.primary],
+                                   range: NSString(string: attrText.string).range(of: timeRemaining))
+            return attrText
         default:
-               fatalError("No instructionLabelAttributedText for PaymentMethodType")
+            fatalError("No instructionLabelAttributedText for PaymentMethodType")
         }
     }
 
