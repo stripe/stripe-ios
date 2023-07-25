@@ -169,8 +169,8 @@ extension CustomerSheet {
             do {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentOption()
-                async let supportedPaymentMethodTypes = try self.retrieveSupportedPaymentMethodTypes()
-                let (paymentMethods, selectedPaymentMethod, elementSesssion) = try await (paymentMethodsResult, selectedPaymentMethodResult, supportedPaymentMethodTypes)
+                async let merchantSupportedPaymentMethodTypes = try self.retrieveMerchantSupportedPaymentMethodTypes()
+                let (paymentMethods, selectedPaymentMethod, elementSesssion) = try await (paymentMethodsResult, selectedPaymentMethodResult, merchantSupportedPaymentMethodTypes)
                 completion(.success((paymentMethods, selectedPaymentMethod, elementSesssion)))
             } catch {
                 completion(.failure(error))
@@ -178,7 +178,7 @@ extension CustomerSheet {
         }
     }
 
-    func retrieveSupportedPaymentMethodTypes() async throws -> [STPPaymentMethodType] {
+    func retrieveMerchantSupportedPaymentMethodTypes() async throws -> [STPPaymentMethodType] {
         guard customerAdapter.canCreateSetupIntents else {
             return [.card]
         }
