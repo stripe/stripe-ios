@@ -108,7 +108,9 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private lazy var errorLabel: UILabel = {
         return ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     }()
-
+    private lazy var bottomNoticeTextField: UITextView = {
+        return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
+    }()
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -149,6 +151,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             paymentContainerView,
             errorLabel,
             actionButton,
+            bottomNoticeTextField,
         ])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -279,6 +282,9 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         } else {
             updateButtonVisibility()
         }
+
+        // Notice
+        updateBottomNotice()
     }
     private func contentViewControllerFor(mode: Mode) -> UIViewController? {
         if mode == .addingNewWithSetupIntent || mode == .addingNewPaymentMethodAttachToCustomer {
@@ -323,6 +329,22 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 "Save",
                 "A button used for saving a new payment method"
             ))
+        }
+    }
+
+    func updateBottomNotice() {
+        var shouldHideNotice = false
+        switch mode {
+        case .selectingSaved:
+            self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
+            shouldHideNotice = self.actionButton.isHidden || self.bottomNoticeTextField.attributedText?.length == 0
+
+        case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
+            self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
+            shouldHideNotice = self.bottomNoticeTextField.attributedText?.length == 0
+        }
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            self.bottomNoticeTextField.setHiddenIfNecessary(shouldHideNotice)
         }
     }
 
@@ -559,11 +581,13 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             navigationBar.additionalButton.setTitle(UIButton.doneButtonTitle, for: .normal)
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                 self.actionButton.setHiddenIfNecessary(true)
+                self.updateBottomNotice()
             }
         } else {
             let showActionButton = self.savedPaymentOptionsViewController.didSelectDifferentPaymentMethod()
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                 self.actionButton.setHiddenIfNecessary(!showActionButton)
+                self.updateBottomNotice()
             }
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
@@ -745,6 +769,7 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
                 } else {
                     STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenRemovePMSuccess()
                 }
+                updateBottomNotice()
             }
         }
 }
