@@ -16,8 +16,7 @@ final class AccountPickerAccountLoadErrorView: UIView {
     init(
         institution: FinancialConnectionsInstitution,
         didSelectAnotherBank: @escaping () -> Void,
-        didSelectTryAgain: (() -> Void)?,  // if nil, don't show button
-        didSelectEnterBankDetailsManually: (() -> Void)?  // if nil, don't show button
+        didSelectTryAgain: (() -> Void)?  // if nil, don't show button
     ) {
         super.init(frame: .zero)
 
@@ -37,19 +36,6 @@ final class AccountPickerAccountLoadErrorView: UIView {
             primaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
                 title: "Try again",  // TODO: once we localize, pull in the string from StripeCore `String.Localized.tryAgain`
                 action: didSelectTryAgain
-            )
-        } else if let didSelectEnterBankDetailsManually = didSelectEnterBankDetailsManually {
-            subtitle = STPLocalizedString(
-                "Please enter your bank details manually or select another bank.",
-                "The subtitle/description of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we instruct the user to enter their bank details manually or to try selecting another bank."
-            )
-            secondaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
-                title: String.Localized.enter_bank_details_manually,
-                action: didSelectEnterBankDetailsManually
-            )
-            primaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
-                title: String.Localized.select_another_bank,
-                action: didSelectAnotherBank
             )
         } else {
             subtitle = STPLocalizedString(
@@ -97,7 +83,6 @@ private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepre
 
     let institutionName: String
     let didSelectTryAgain: (() -> Void)?
-    let didSelectEnterBankDetailsManually: (() -> Void)?
 
     func makeUIView(context: Context) -> AccountPickerAccountLoadErrorView {
         AccountPickerAccountLoadErrorView(
@@ -109,8 +94,7 @@ private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepre
                 logo: nil
             ),
             didSelectAnotherBank: {},
-            didSelectTryAgain: didSelectTryAgain,
-            didSelectEnterBankDetailsManually: didSelectEnterBankDetailsManually
+            didSelectTryAgain: didSelectTryAgain
         )
     }
 
@@ -122,26 +106,12 @@ struct AccountPickerAccountLoadErrorView_Previews: PreviewProvider {
     static var previews: some View {
         AccountPickerAccountLoadErrorViewUIViewRepresentable(
             institutionName: "Chase",
-            didSelectTryAgain: {},
-            didSelectEnterBankDetailsManually: {}
+            didSelectTryAgain: {}
         )
 
         AccountPickerAccountLoadErrorViewUIViewRepresentable(
             institutionName: "Ally",
-            didSelectTryAgain: nil,
-            didSelectEnterBankDetailsManually: {}
-        )
-
-        AccountPickerAccountLoadErrorViewUIViewRepresentable(
-            institutionName: "Chase",
-            didSelectTryAgain: {},
-            didSelectEnterBankDetailsManually: nil
-        )
-
-        AccountPickerAccountLoadErrorViewUIViewRepresentable(
-            institutionName: "Chase",
-            didSelectTryAgain: nil,
-            didSelectEnterBankDetailsManually: nil
+            didSelectTryAgain: nil
         )
     }
 }

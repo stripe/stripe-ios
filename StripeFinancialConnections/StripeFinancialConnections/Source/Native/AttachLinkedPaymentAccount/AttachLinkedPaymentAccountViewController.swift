@@ -20,9 +20,6 @@ protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
     func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(
         _ viewController: AttachLinkedPaymentAccountViewController
     )
-    func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(
-        _ viewController: AttachLinkedPaymentAccountViewController
-    )
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -46,13 +43,6 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                 self.allowRetry = false
                 self.showErrorView(nil)
                 self.attachLinkedAccountIdToLinkAccountSession()
-            } : nil
-    }
-    private var didSelectManualEntry: (() -> Void)? {
-        return dataSource.manifest.allowManualEntry
-            ? { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.attachLinkedPaymentAccountViewControllerDidSelectManualEntry(self)
             } : nil
     }
     private var errorView: UIView?
@@ -130,8 +120,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                     {
                         let errorView = AccountNumberRetrievalErrorView(
                             institution: self.dataSource.institution,
-                            didSelectAnotherBank: self.didSelectAnotherBank,
-                            didSelectEnterBankDetailsManually: self.didSelectManualEntry
+                            didSelectAnotherBank: self.didSelectAnotherBank
                         )
                         self.showErrorView(errorView)
                         self.dataSource
@@ -146,8 +135,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                         let errorView = AccountPickerAccountLoadErrorView(
                             institution: self.dataSource.institution,
                             didSelectAnotherBank: self.didSelectAnotherBank,
-                            didSelectTryAgain: self.didSelectTryAgain,
-                            didSelectEnterBankDetailsManually: self.didSelectManualEntry
+                            didSelectTryAgain: self.didSelectTryAgain
                         )
                         self.showErrorView(errorView)
                         self.dataSource

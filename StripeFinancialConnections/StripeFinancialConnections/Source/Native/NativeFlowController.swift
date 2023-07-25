@@ -410,10 +410,6 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
         navigationController.popViewController(animated: true)
     }
 
-    func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController) {
-        pushPane(.manualEntry, animated: true)
-    }
-
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
         didCompleteWithAuthSession authSession: FinancialConnectionsAuthSession
@@ -460,10 +456,6 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
 
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController) {
         didSelectAnotherBank()
-    }
-
-    func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController) {
-        pushPane(.manualEntry, animated: true)
     }
 
     func accountPickerViewController(
@@ -650,12 +642,6 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
         _ viewController: AttachLinkedPaymentAccountViewController
     ) {
         didSelectAnotherBank()
-    }
-
-    func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(
-        _ viewController: AttachLinkedPaymentAccountViewController
-    ) {
-        pushPane(.manualEntry, animated: true)
     }
 }
 

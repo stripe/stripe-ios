@@ -15,7 +15,6 @@ import UIKit
 protocol PartnerAuthViewControllerDelegate: AnyObject {
     func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController)
-    func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController)
     func partnerAuthViewController(_ viewController: PartnerAuthViewController, didReceiveTerminalError error: Error)
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
@@ -202,30 +201,14 @@ final class PartnerAuthViewController: UIViewController {
                                 )
                             }
                         }()
-                        let endOfSubtitle: String = {
-                            if dataSource.manifest.allowManualEntry {
-                                return STPLocalizedString(
-                                    "Please enter your bank details manually or select another bank.",
-                                    "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                )
-                            } else {
-                                return STPLocalizedString(
-                                    "Please select another bank or try again later.",
-                                    "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                )
-                            }
-                        }()
+                        let endOfSubtitle = STPLocalizedString(
+                            "Please select another bank or try again later.",
+                            "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                        )
                         return beginningOfSubtitle + " " + endOfSubtitle
                     }(),
                     primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: dataSource.manifest.allowManualEntry
-                        ? ReusableInformationView.ButtonConfiguration(
-                            title: String.Localized.enter_bank_details_manually,
-                            action: { [weak self] in
-                                guard let self = self else { return }
-                                self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
-                            }
-                        ) : nil
+                    secondaryButtonConfiguration: nil
                 )
                 dataSource.analyticsClient.logExpectedError(
                     error,
@@ -242,28 +225,12 @@ final class PartnerAuthViewController: UIViewController {
                         ),
                         institution.name
                     ),
-                    subtitle: {
-                        if dataSource.manifest.allowManualEntry {
-                            return STPLocalizedString(
-                                "Please enter your bank details manually or select another bank.",
-                                "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                            )
-                        } else {
-                            return STPLocalizedString(
-                                "Please select another bank or try again later.",
-                                "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                            )
-                        }
-                    }(),
+                    subtitle: STPLocalizedString(
+                        "Please select another bank or try again later.",
+                        "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                    ),
                     primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: dataSource.manifest.allowManualEntry
-                        ? ReusableInformationView.ButtonConfiguration(
-                            title: String.Localized.enter_bank_details_manually,
-                            action: { [weak self] in
-                                guard let self = self else { return }
-                                self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
-                            }
-                        ) : nil
+                    secondaryButtonConfiguration: nil
                 )
                 dataSource.analyticsClient.logExpectedError(
                     error,

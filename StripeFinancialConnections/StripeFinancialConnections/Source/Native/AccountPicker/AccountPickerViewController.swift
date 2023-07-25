@@ -17,7 +17,6 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
-    func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
         didReceiveTerminalError error: Error
@@ -58,13 +57,6 @@ final class AccountPickerViewController: UIViewController {
                 self.allowAccountPollingRetry = false
                 self.showErrorView(nil)
                 self.pollAuthSessionAccounts()
-            } : nil
-    }
-    private var didSelectManualEntry: (() -> Void)? {
-        return dataSource.manifest.allowManualEntry
-            ? { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.accountPickerViewControllerDidSelectManualEntry(self)
             } : nil
     }
     private var errorView: UIView?
@@ -299,8 +291,7 @@ final class AccountPickerViewController: UIViewController {
         let errorView = AccountPickerAccountLoadErrorView(
             institution: dataSource.institution,
             didSelectAnotherBank: didSelectAnotherBank,
-            didSelectTryAgain: didSelectTryAgain,
-            didSelectEnterBankDetailsManually: didSelectManualEntry
+            didSelectTryAgain: didSelectTryAgain
         )
         showErrorView(errorView)
         dataSource
