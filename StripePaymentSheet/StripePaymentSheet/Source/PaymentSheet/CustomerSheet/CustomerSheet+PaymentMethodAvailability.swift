@@ -10,9 +10,10 @@ extension CustomerSheet {
     // TODO: Add .USBankAccount when ready to launch
     static var supportedPaymentMethods: [STPPaymentMethodType] = [.card]
 }
-extension STPElementsSession {
+
+extension Array where Element == STPPaymentMethodType {
     func customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: CustomerAdapter) -> [STPPaymentMethodType] {
-        return self.orderedPaymentMethodTypes.filter { type in
+        return self.filter { type in
             var isSupported = CustomerSheet.supportedPaymentMethods.contains(type)
             if type == .USBankAccount {
                 if !FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
@@ -31,9 +32,7 @@ extension STPElementsSession {
             return isSupported
         }
     }
-}
 
-extension Array where Element == STPPaymentMethodType {
     // Internal Helper used for displaying payment method types to add
     func toPaymentSheetPaymentMethodTypes() -> [PaymentSheet.PaymentMethodType] {
         var uniquePMTypes: Set<STPPaymentMethodType> = []
