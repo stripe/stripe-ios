@@ -170,6 +170,6 @@ import Foundation
     case paymentSheetDismissed = "mc_dismiss"
 
     // MARK: - PaymentSheet checkout
-    case paymentSheetPaymentMethodTapped = "mc_payment_method_tapped"
+    case paymentSheetCarouselPaymentMethodTapped = "mc_carousel_payment_method_tapped"
     case paymentSheetPayButtonTapped = "mc_pay_button_tapped"
 }
