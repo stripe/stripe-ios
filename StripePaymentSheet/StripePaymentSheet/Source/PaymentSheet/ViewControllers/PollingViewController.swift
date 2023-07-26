@@ -23,8 +23,6 @@ class PollingViewController: UIViewController {
 
     // MARK: State
 
-    private let deadline: Date
-    private let paymentMethodType: STPPaymentMethodType
     private var oneSecondTimer: Timer?
     private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
@@ -41,21 +39,6 @@ class PollingViewController: UIViewController {
         intentPoller.delegate = self
         return intentPoller
     }()
-
-    private var timeRemaining: TimeInterval {
-        return Date().compatibleDistance(to: deadline)
-    }
-
-    private var dateFormatter: DateComponentsFormatter {
-        let formatter = DateComponentsFormatter()
-        if timeRemaining > 60 {
-            formatter.zeroFormattingBehavior = .dropLeading
-        } else {
-            formatter.zeroFormattingBehavior = .pad
-        }
-        formatter.allowedUnits = [.minute, .second]
-        return formatter
-    }
 
     private var instructionLabelAttributedText: NSAttributedString {
         let text = "Your custom instruction text here"
