@@ -5,7 +5,62 @@
 
 import Combine
 @_spi(PrivateBetaCustomerSheet) import StripePaymentSheet
+import StripeApplePay
 import SwiftUI
+import PassKit
+
+class MyApplePayContextDelegate: NSObject, ApplePayContextDelegate {
+    var paymentMethodContinuation: CheckedContinuation<String?, Never>?
+    var setupIntentClientSecret: String?
+    
+    func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeCore.StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping StripeApplePay.STPIntentClientSecretCompletionBlock) {
+        paymentMethodContinuation?.resume(with: .success(paymentMethod.id))
+        completion(setupIntentClientSecret, nil)
+    }
+    
+    func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCompleteWith status: StripeApplePay.STPApplePayContext.PaymentStatus, error: Error?) {
+        
+    }
+}
+
+class MyApplePaySupportingCustomerAdapter: StripeCustomerAdapter {
+    let applePayContextDelegate = MyApplePayContextDelegate()
+    
+    @MainActor
+    override func setSelectedPaymentOption(paymentOption: CustomerPaymentOption?) async throws {
+        if paymentOption == .applePay,
+        let setupIntentClientSecret = try? await setupIntentClientSecretForCustomerAttach(){
+            // Set up Apple Pay
+            let merchantIdentifier = "merchant.com.your_app_name"
+            let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
+            
+            applePayContextDelegate.setupIntentClientSecret = setupIntentClientSecret
+
+            // Configure the line items on the payment request
+            paymentRequest.paymentSummaryItems = [
+                // The final line should represent your company;
+                // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
+                PKPaymentSummaryItem(label: "Setup Subscription", amount: 0),
+            ]
+            if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: applePayContextDelegate) {
+                // Present Apple Pay payment sheet
+                applePayContext.presentApplePay()
+                if let applePayPM = await withCheckedContinuation({ continuation in
+                    applePayContextDelegate.paymentMethodContinuation = continuation
+                }) {
+                    try await super.setSelectedPaymentOption(paymentOption: .stripeId(applePayPM))
+                } else {
+                    // Throw error, no PM from Apple Pay
+                }
+            } else {
+                // Throw error
+            }
+            
+        } else {
+            try await super.setSelectedPaymentOption(paymentOption: paymentOption)
+        }
+    }
+}
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
     static let defaultEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
@@ -144,7 +199,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         let customerAdapter: StripeCustomerAdapter
         switch settings.paymentMethodMode {
         case .setupIntent:
-            customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+            customerAdapter = MyApplePaySupportingCustomerAdapter(customerEphemeralKeyProvider: {
                 // This should be a block that fetches this from your server
                 .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
             }, setupIntentClientSecretProvider: {
