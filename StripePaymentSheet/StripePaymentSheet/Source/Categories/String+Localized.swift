@@ -186,4 +186,8 @@ extension String.Localized {
             "Paypal mandate text"
         )
     }
+
+    static var contact_information: String {
+        STPLocalizedString("Contact information", "Title for the contact information section")
+    }
 }
