@@ -19,19 +19,19 @@ class CustomerSheetTests: APIStubbedTestCase {
     func testLoadPaymentMethodInfo_newCustomer() throws {
         let stubbedAPIClient = stubbedAPIClient()
         stubNewCustomerResponse()
+        stubSessions(paymentMethods: "\"card\"")
 
         let configuration = CustomerSheet.Configuration()
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {
             return "si_789"
-        }, configuration: configuration,
-        apiClient: stubbedAPIClient)
+        }, apiClient: stubbedAPIClient)
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
-            guard case .success((let paymentMethods, let selectedPaymentMethod)) = result else {
+            guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
                 XCTFail()
                 return
             }
@@ -45,20 +45,19 @@ class CustomerSheetTests: APIStubbedTestCase {
     func testLoadPaymentMethodInfo_singleCard() throws {
         let stubbedAPIClient = stubbedAPIClient()
         stubReturningCustomerWithCardResponse()
+        stubSessions(paymentMethods: "\"card\"")
 
-        var configuration = CustomerSheet.Configuration()
-        configuration.paymentMethodTypes = [.card]
+        let configuration = CustomerSheet.Configuration()
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {
             return "si_789"
-        }, configuration: configuration,
-        apiClient: stubbedAPIClient)
+        }, apiClient: stubbedAPIClient)
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
-            guard case .success((let paymentMethods, let selectedPaymentMethod)) = result else {
+            guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
                 XCTFail()
                 return
             }
@@ -136,14 +135,14 @@ class CustomerSheetTests: APIStubbedTestCase {
         let stubbedURLSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
         stubbedURLSessionConfig.timeoutIntervalForRequest = fastTimeoutIntervalForRequest
         let stubbedAPIClient = stubbedAPIClient(configuration: stubbedURLSessionConfig)
+        stubSessions(paymentMethods: "\"card\"")
 
         let configuration = CustomerSheet.Configuration()
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {
             return "si_789"
-        }, configuration: configuration,
-        apiClient: stubbedAPIClient)
+        }, apiClient: stubbedAPIClient)
 
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
@@ -166,6 +165,39 @@ class CustomerSheetTests: APIStubbedTestCase {
             loadPaymentMethodInfo.fulfill()
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
+    }
+
+    private func stubSessions(paymentMethods: String) {
+        stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": paymentMethods,
+                        "<currency>": "\"usd\"",
+                    ]
+                )
+            }
+        )
+    }
+
+    private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
+        var template = String(data: data, encoding: .utf8)!
+        for (templateKey, templateValue) in variables {
+            let translated = template.replacingOccurrences(of: templateKey, with: templateValue)
+            template = translated
+        }
+        return template.data(using: .utf8)!
+    }
+    private func stubSessions(fileMock: FileMock, responseCallback: ((Data) -> Data)? = nil) {
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
+        } response: { _ in
+            let mockResponseData = try! fileMock.data()
+            let data = responseCallback?(mockResponseData) ?? mockResponseData
+            return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+        }
     }
 
     private func stubNewCustomerResponse() {
@@ -202,4 +234,6 @@ public class ClassForBundle {}
     case saved_payment_methods_200 = "MockFiles/saved_payment_methods_200"
     case saved_payment_methods_withCard_200 = "MockFiles/saved_payment_methods_withCard_200"
     case saved_payment_methods_withUSBank_200 = "MockFiles/saved_payment_methods_withUSBank_200"
+
+    case elementsSessionsPaymentMethod_200 = "MockFiles/elements_sessions_paymentMethod_200"
 }

@@ -124,19 +124,6 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
 
-        var paymentMethodTypes: [STPPaymentMethodType] = []
-        switch settings.paymentMethodTypes {
-        case .card:
-            paymentMethodTypes = [.card]
-        case .usBank:
-            paymentMethodTypes = [.USBankAccount]
-        case .card_usbank:
-            paymentMethodTypes = [.card, .USBankAccount]
-        case .usBank_card:
-            paymentMethodTypes = [.USBankAccount, .card]
-        }
-        configuration.paymentMethodTypes = paymentMethodTypes
-
         return configuration
     }
 
@@ -149,13 +136,12 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
                 .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
             }, setupIntentClientSecretProvider: {
                 return try await self.backend.createSetupIntent(customerId: customerId)
-            }, configuration: configuration)
+            })
         case .createAndAttach:
             customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
                 // This should be a block that fetches this from your server
                 .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
-            }, setupIntentClientSecretProvider: nil,
-            configuration: configuration)
+            }, setupIntentClientSecretProvider: nil)
         }
         return customerAdapter
     }

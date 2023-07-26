@@ -50,8 +50,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private var cachedClientSecret: String?
 
     var paymentMethodTypes: [PaymentSheet.PaymentMethodType] {
-        let filtered = configuration.supportedPaymentMethodTypesForAdd(customerAdapter: customerAdapter)
-        return filtered.toPaymentSheetPaymentMethodTypes()
+        let paymentMethodTypes = merchantSupportedPaymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: customerAdapter)
+        return paymentMethodTypes.toPaymentSheetPaymentMethodTypes()
     }
 
     var selectedPaymentOption: PaymentOption? {
@@ -65,6 +65,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             return savedPaymentOptionsViewController.selectedPaymentOption
         }
     }
+    let merchantSupportedPaymentMethodTypes: [STPPaymentMethodType]
 
     // MARK: - Views
     internal lazy var navigationBar: SheetNavigationBar = {
@@ -118,6 +119,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     required init(
         savedPaymentMethods: [STPPaymentMethod],
         selectedPaymentMethodOption: CustomerPaymentOption?,
+        merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
         configuration: CustomerSheet.Configuration,
         customerAdapter: CustomerAdapter,
         isApplePayEnabled: Bool,
@@ -126,6 +128,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     ) {
         self.savedPaymentMethods = savedPaymentMethods
         self.selectedPaymentMethodOption = selectedPaymentMethodOption
+        self.merchantSupportedPaymentMethodTypes = merchantSupportedPaymentMethodTypes
         self.configuration = configuration
         self.customerAdapter = customerAdapter
         self.isApplePayEnabled = isApplePayEnabled
