@@ -535,12 +535,13 @@ extension PaymentSheetFormFactory {
     /// - Parameter emailRequiredByPaymentMethod: Whether your payment method requires the email field.
     /// - Parameter phoneRequiredByPaymentMethod: Whether your payment method requires the phone field.
     func makeContactInformationSection(nameRequiredByPaymentMethod: Bool, emailRequiredByPaymentMethod: Bool, phoneRequiredByPaymentMethod: Bool) -> SectionElement? {
-        let nameElement = configuration.billingDetailsCollectionConfiguration.name == .always
-            || (configuration.billingDetailsCollectionConfiguration.name == .automatic && nameRequiredByPaymentMethod) ? makeName() : nil
-        let emailElement = configuration.billingDetailsCollectionConfiguration.email == .always
-            || (configuration.billingDetailsCollectionConfiguration.email == .automatic && emailRequiredByPaymentMethod) ? makeEmail() : nil
-        let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always
-            || (configuration.billingDetailsCollectionConfiguration.phone == .automatic && phoneRequiredByPaymentMethod) ? makePhone() : nil
+        let config = configuration.billingDetailsCollectionConfiguration
+        let nameElement = config.name == .always
+            || (config.name == .automatic && nameRequiredByPaymentMethod) ? makeName() : nil
+        let emailElement = config.email == .always
+            || (config.email == .automatic && emailRequiredByPaymentMethod) ? makeEmail() : nil
+        let phoneElement = config.phone == .always
+            || (config.phone == .automatic && phoneRequiredByPaymentMethod) ? makePhone() : nil
         let elements = ([nameElement, emailElement, phoneElement] as [Element?]).compactMap { $0 }
         guard !elements.isEmpty else { return nil }
 
