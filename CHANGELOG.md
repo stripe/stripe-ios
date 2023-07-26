@@ -1,3 +1,6 @@
+### Identity
+* [ADDED][2452](https://github.com/stripe/stripe-ios/pull/2452) Supports [phone verification](https://stripe.com/docs/identity/phone) in Identity mobile SDK.
+
 ## 23.11.2 2023-07-24
 ### PaymentSheet
 * [Fixed] Update stp_icon_add@3x.png to 8bit color depth (Thanks @jszumski)

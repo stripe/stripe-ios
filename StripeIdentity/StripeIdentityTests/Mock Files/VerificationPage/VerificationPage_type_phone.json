@@ -1,5 +1,5 @@
 {
-  "id": "vs_1MOrPwEGkPhabJTjzCzKF4DM",
+  "id": "vs_1MOrKBEGkPhabJTjBA2ohFAW",
   "object": "identity.verification_page",
   "biometric_consent": {
     "accept_button_text": "Accept and continue",
@@ -37,7 +37,7 @@
     },
     "motion_blur_min_duration": 500,
     "motion_blur_min_iou": 0.95,
-    "require_live_capture": true
+    "require_live_capture": false
   },
   "document_select": {
     "body": null,
@@ -49,7 +49,7 @@
     },
     "title": "Which form of identification do you want to use?"
   },
-  "fallback_url": "https://verify.stripe.com/start/test_YWNjdF8xTEliaExFR2tQaGFiSlRqLF9OOTlqVW84aWdKakk3dlBuM3gwWUdiejVrTkdUSWht0100PuDMlvY6",
+  "fallback_url": "https://verify.stripe.com/start/test_YWNjdF8xTEliaExFR2tQaGFiSlRqLF9OOTlkVWhpa0hIa2s2RndYTjFxMmNwSGdxYm9hbno40100QbvpMKxr",
   "individual": {
     "address_countries": {
       "AT": "Austria",
@@ -95,6 +95,9 @@
     "title": "Provide personal information",
     "phone_number_countries": {
       "US": "United States"
+    },
+    "phone_number_countries": {
+      "US": "United States"
     }
   },
   "individual_welcome": {
@@ -107,11 +110,9 @@
   "livemode": true,
   "requirements": {
     "missing": [
-      "biometric_consent",
-      "id_document_front",
-      "id_document_back",
-      "id_document_type",
-      "id_number"
+      "phone_number",
+      "dob",
+      "name"
     ]
   },
   "selfie": null,
