@@ -76,72 +76,71 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     }
 
     func presentCustomerSheet() {
-
-
-
         customerSheet?.present(from: rootViewController, completion: { result in
             switch result {
-
             case .canceled(let paymentOptionSelection):
                 //  Show paymentOptionSelection on your UI - if needed.
                 print("todo")
-
             case .selected(let paymentOptionSelection):
-
-                guard let paymentOptionSelection = paymentOptionSelection,
-                      let customerAdapter = self.customerAdapter else {
+                guard let paymentOptionSelection = paymentOptionSelection else {
+                    //None selected
                     return
                 }
-
                 switch paymentOptionSelection {
                 case .paymentMethod(let paymentMethod, let paymentOptionDisplayData):
-                    print("payment method Id: \(paymentMethod.stripeId)")
-                    // TODO: Send paymentMethodId to server
+                    print("\(paymentMethod.stripeId)")
+                    // TODO: Send paymentMethodId to your backend
                 case .applePay(let paymentOptionDisplayData):
-
-                    Task {
-                        guard let setupIntentClientSecret = try? await customerAdapter.setupIntentClientSecretForCustomerAttach() else {
-                            // Error handle
-                            return
-                        }
-                        let applePayContextDelegate = MyApplePayContextDelegate()
-                        let merchantIdentifier = "merchant.com.your_app_name"
-                        let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
-                        applePayContextDelegate.setupIntentClientSecret = setupIntentClientSecret
-                        applePayContextDelegate.customerAdapter = customerAdapter
-                        applePayContextDelegate.onCancelCallback = {
-                            self.presentCustomerSheet()
-                        }
-
-                        // Configure the line items on the payment request
-                        paymentRequest.paymentSummaryItems = [
-                            // The final line should represent your company;
-                            // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
-                            PKPaymentSummaryItem(label: "Setup Subscription", amount: 0),
-                        ]
-                        if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: applePayContextDelegate) {
-                            // Present Apple Pay payment sheet
-                            DispatchQueue.main.async {
-                                applePayContext.presentApplePay()
-                            }
-                            if let applePayPM = await withCheckedContinuation({ continuation in
-                                applePayContextDelegate.paymentMethodContinuation = continuation
-                            }) {
-                                try await customerAdapter.setSelectedPaymentOption(paymentOption: .stripeId(applePayPM))
-                            } else {
-                                self.presentCustomerSheet()
-                            }
-                        } else {
-                            self.presentCustomerSheet()
-                        }
-                    }
+                    self.handleApplePay()
                 }
-
 
             case .error(let error):
                 print("Something went wrong: \(error)")
             }
         })
+    }
+
+    func handleApplePay() {
+        Task {
+            guard let customerAdapter = self.customerAdapter,
+                let setupIntentClientSecret = try? await customerAdapter.setupIntentClientSecretForCustomerAttach() else {
+                // Error handle
+                return
+            }
+            let applePayContextDelegate = MyApplePayContextDelegate()
+            let merchantIdentifier = "merchant.com.your_app_name"
+            let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
+            applePayContextDelegate.setupIntentClientSecret = setupIntentClientSecret
+            applePayContextDelegate.customerAdapter = customerAdapter
+            applePayContextDelegate.onCancelCallback = {
+                self.presentCustomerSheet()
+            }
+
+            // Configure the line items on the payment request
+            paymentRequest.paymentSummaryItems = [
+                // The final line should represent your company;
+                // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
+                PKPaymentSummaryItem(label: "Setup Subscription", amount: 0),
+            ]
+            if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: applePayContextDelegate) {
+                // Present Apple Pay payment sheet
+                DispatchQueue.main.async {
+                    applePayContext.presentApplePay()
+                }
+                if let applePayPM = await withCheckedContinuation({ continuation in
+                    applePayContextDelegate.paymentMethodContinuation = continuation
+                }) {
+                    try await customerAdapter.setSelectedPaymentOption(paymentOption: .stripeId(applePayPM))
+                    // TODO: Send paymentMethodId to your backend
+                } else {
+                    try await customerAdapter.setSelectedPaymentOption(paymentOption: nil)
+                    self.presentCustomerSheet()
+                }
+            } else {
+                try await customerAdapter.setSelectedPaymentOption(paymentOption: nil)
+                self.presentCustomerSheet()
+            }
+        }
     }
 
     func customerSheetConfiguration(customerId: String, ephemeralKey: String) -> CustomerSheet.Configuration {
