@@ -155,10 +155,15 @@ class PaymentSheetFormFactory {
             additionalElements = [makePaypalMandate()]
         }
 
-        // 2. Element-based forms defined in JSON
         guard let spec = specFromJSONProvider() else {
-            fatalError()
+            assertionFailure("Failed to get form spec!")
+            return FormElement(elements: [], theme: theme)
         }
+        if paymentMethod.stpPaymentMethodType == .iDEAL && saveMode == .merchantRequired {
+            return makeiDEAL(spec: spec)
+        }
+
+        // 2. Element-based forms defined in JSON
         return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
     }
 }
@@ -325,7 +330,7 @@ extension PaymentSheetFormFactory {
 
     func makeBillingAddressSection(
         collectionMode: AddressSectionElement.CollectionMode = .all(),
-        countries: [String]?
+        countries: [String]? = nil
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
         let displayBillingSameAsShippingCheckbox: Bool
         let defaultAddress: AddressSectionElement.AddressDetails
@@ -377,6 +382,30 @@ extension PaymentSheetFormFactory {
     }
 
     // MARK: - PaymentMethod form definitions
+
+    func makeiDEAL(spec: FormSpec) -> PaymentMethodElement {
+        let contactSection: Element? = makeContactInformationSection(
+            nameRequiredByPaymentMethod: true,
+            emailRequiredByPaymentMethod: saveMode == .merchantRequired,
+            phoneRequiredByPaymentMethod: false
+        )
+        // Hack: Use the luxe spec to make the dropdown for convenience; it has the latest list of banks
+        let bankDropdown: Element? = spec.fields.reduce(nil) { dropdown, spec in
+            // Find the dropdown spec
+            if case .selector(let spec) = spec {
+                return makeDropdown(for: spec)
+            }
+            return dropdown
+        }
+
+        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let mandate: Element? = saveMode == .merchantRequired ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
+        let elements: [Element?] = [contactSection, bankDropdown, addressSection, mandate]
+        return FormElement(
+            autoSectioningElements: elements.compactMap { $0 },
+            theme: theme
+        )
+    }
 
     func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
         let isSaving = BoolReference()
@@ -549,6 +578,15 @@ extension PaymentSheetFormFactory {
             title: .Localized.contact_information,
             elements: elements,
             theme: theme)
+    }
+
+    func makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: Bool) -> Element? {
+        if configuration.billingDetailsCollectionConfiguration.address == .full
+            || (configuration.billingDetailsCollectionConfiguration.address == .automatic && requiredByPaymentMethod) {
+           return makeBillingAddressSection()
+        } else {
+            return nil
+        }
     }
 
     func makeDefaultsApplierWrapper<T: PaymentMethodElement>(for element: T) -> PaymentMethodElementWrapper<T> {

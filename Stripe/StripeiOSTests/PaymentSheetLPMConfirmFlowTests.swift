@@ -14,10 +14,11 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
-/// These tests exercise the different confirm flows for a give payment method.
-/// We have 9 different confirm flows based on the combination of:
+/// These tests exercise 9 different confirm flows based on the combination of:
 /// - The Stripe Intent: PaymentIntent or PaymentIntent+SFU or SetupIntent
 /// - The confirmation type: "Normal" intent-first client-side confirmation or "Deferred" client-side confirmation or "Deferred" server-side confirmation
+/// They can also test the presence/absence of particular fields for a payment method form e.g. the SEPA test asserts that there's a mandate element.
+/// 👀  See `testIdealConfirmFlows` for an example with comments.
 final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
     lazy var configuration: PaymentSheet.Configuration = {
@@ -46,15 +47,22 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         }
     }
 
+    /// 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
     @MainActor
     func testiDEALConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .dynamic("ideal")) { form in
+            // Fill out your payment method form in here.
+            // Note: Each required field you fill out implicitly tests that the field exists; if the field doesn't exist, the test will fail because the form is incomplete.
             form.getTextFieldElement("Full name")?.setText("Foo")
             XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
+            // You can also explicitly assert for the existence/absence of certain elements.
+            // e.g. iDEAL shouldn't show a mandate or email field for a vanilla payment
             XCTAssertNil(form.getMandateElement())
             XCTAssertNil(form.getTextFieldElement("Email"))
         }
 
+        // If your payment method shows different fields depending on the kind of intent, you can call `_testConfirm` multiple times with different intents.
+        // e.g. iDEAL should show an email field and mandate for PI+SFU and SIs, so we test those separately here:
         try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .dynamic("ideal")) { form in
             form.getTextFieldElement("Full name")?.setText("Foo")
             form.getTextFieldElement("Email")?.setText("f@z.c")
@@ -78,7 +86,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         }
     }
 
-    /// A helper method that tests three confirmation flows successfully complete:
+    /// A helper method that creates a form for the given `paymentMethodType` and tests three confirmation flows successfully complete:
     /// 1. normal" client-side confirmation
     /// 2. deferred client-side confirmation
     /// 3. deferred server-side
