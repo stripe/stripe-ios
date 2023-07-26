@@ -112,7 +112,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
             applePayContextDelegate.setupIntentClientSecret = setupIntentClientSecret
             applePayContextDelegate.customerAdapter = customerAdapter
-            applePayContextDelegate.onCancelCallback = {
+            applePayContextDelegate.onCancelOrErrorCallback = {
                 self.presentCustomerSheet()
             }
 
@@ -363,7 +363,7 @@ class MyApplePayContextDelegate: NSObject, ApplePayContextDelegate {
     var paymentMethodContinuation: CheckedContinuation<String?, Never>?
     var setupIntentClientSecret: String?
     var customerAdapter: CustomerAdapter?
-    var onCancelCallback: (() -> Void)?
+    var onCancelOrErrorCallback: (() -> Void)?
 
     func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeCore.StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping StripeApplePay.STPIntentClientSecretCompletionBlock) {
         paymentMethodContinuation?.resume(with: .success(paymentMethod.id))
@@ -375,7 +375,7 @@ class MyApplePayContextDelegate: NSObject, ApplePayContextDelegate {
             Task {
                 try await self.customerAdapter?.setSelectedPaymentOption(paymentOption: nil)
                 DispatchQueue.main.async {
-                    self.onCancelCallback?()
+                    self.onCancelOrErrorCallback?()
                 }
             }
 
