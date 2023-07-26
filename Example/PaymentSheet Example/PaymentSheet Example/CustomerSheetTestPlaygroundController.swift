@@ -6,6 +6,8 @@
 import Combine
 @_spi(PrivateBetaCustomerSheet) import StripePaymentSheet
 import SwiftUI
+import StripeApplePay
+import PassKit
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
     static let defaultEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
@@ -74,24 +76,67 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     }
 
     func presentCustomerSheet() {
+
+
+
         customerSheet?.present(from: rootViewController, completion: { result in
             switch result {
-            case .selected(let paymentOptionSelection), .canceled(let paymentOptionSelection):
-                self.paymentOptionSelection = paymentOptionSelection
 
-                var status = "canceled"
-                if case .selected = result {
-                    status = "selected"
+            case .canceled(let paymentOptionSelection):
+                //  Show paymentOptionSelection on your UI - if needed.
+                print("todo")
+
+            case .selected(let paymentOptionSelection):
+
+                guard let paymentOptionSelection = paymentOptionSelection,
+                      let customerAdapter = self.customerAdapter else {
+                    return
                 }
 
-                let alertController = self.makeAlertController()
-                if let selection = paymentOptionSelection {
-                    alertController.message = "Success: \(selection.displayData().label), \(status)"
-                } else {
-                    alertController.message = "Success: payment method not set, \(status)"
+                switch paymentOptionSelection {
+                case .paymentMethod(let paymentMethod, let paymentOptionDisplayData):
+                    print("payment method Id: \(paymentMethod.stripeId)")
+                    // TODO: Send paymentMethodId to server
+                case .applePay(let paymentOptionDisplayData):
+
+                    Task {
+                        guard let setupIntentClientSecret = try? await customerAdapter.setupIntentClientSecretForCustomerAttach() else {
+                            // Error handle
+                            return
+                        }
+                        let applePayContextDelegate = MyApplePayContextDelegate()
+                        let merchantIdentifier = "merchant.com.your_app_name"
+                        let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
+                        applePayContextDelegate.setupIntentClientSecret = setupIntentClientSecret
+                        applePayContextDelegate.customerAdapter = customerAdapter
+                        applePayContextDelegate.onCancelCallback = {
+                            self.presentCustomerSheet()
+                        }
+
+                        // Configure the line items on the payment request
+                        paymentRequest.paymentSummaryItems = [
+                            // The final line should represent your company;
+                            // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
+                            PKPaymentSummaryItem(label: "Setup Subscription", amount: 0),
+                        ]
+                        if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: applePayContextDelegate) {
+                            // Present Apple Pay payment sheet
+                            DispatchQueue.main.async {
+                                applePayContext.presentApplePay()
+                            }
+                            if let applePayPM = await withCheckedContinuation({ continuation in
+                                applePayContextDelegate.paymentMethodContinuation = continuation
+                            }) {
+                                try await customerAdapter.setSelectedPaymentOption(paymentOption: .stripeId(applePayPM))
+                            } else {
+                                self.presentCustomerSheet()
+                            }
+                        } else {
+                            self.presentCustomerSheet()
+                        }
+                    }
                 }
 
-                self.rootViewController.present(alertController, animated: true)
 
             case .error(let error):
                 print("Something went wrong: \(error)")
@@ -126,9 +171,10 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
 
         return configuration
     }
+    var customerAdapter: StripeCustomerAdapter? = nil
 
     func customerAdapter(customerId: String, ephemeralKey: String, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter {
-        let customerAdapter: StripeCustomerAdapter
+//        let customerAdapter: StripeCustomerAdapter
         switch settings.paymentMethodMode {
         case .setupIntent:
             customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
@@ -143,7 +189,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
                 .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
             }, setupIntentClientSecretProvider: nil)
         }
-        return customerAdapter
+        return customerAdapter!
     }
 
     func applePayEnabled() -> Bool {
@@ -310,5 +356,30 @@ class CustomerSheetBackend {
             throw NSError(domain: "test", code: 0, userInfo: nil) // Throw more specific error
         }
         return secret
+    }
+}
+
+
+class MyApplePayContextDelegate: NSObject, ApplePayContextDelegate {
+    var paymentMethodContinuation: CheckedContinuation<String?, Never>?
+    var setupIntentClientSecret: String?
+    var customerAdapter: CustomerAdapter?
+    var onCancelCallback: (() -> Void)?
+
+    func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeCore.StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping StripeApplePay.STPIntentClientSecretCompletionBlock) {
+        paymentMethodContinuation?.resume(with: .success(paymentMethod.id))
+        completion(setupIntentClientSecret, nil)
+    }
+
+    func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCompleteWith status: StripeApplePay.STPApplePayContext.PaymentStatus, error: Error?) {
+        if status == .userCancellation || status == .error {
+            Task {
+                try await self.customerAdapter?.setSelectedPaymentOption(paymentOption: nil)
+                DispatchQueue.main.async {
+                    self.onCancelCallback?()
+                }
+            }
+
+        }
     }
 }
