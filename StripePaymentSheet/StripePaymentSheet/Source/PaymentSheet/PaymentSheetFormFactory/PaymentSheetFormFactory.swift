@@ -530,18 +530,23 @@ extension PaymentSheetFormFactory {
         return StaticElement(view: label)
     }
 
-    func makeContactInformation(includeName: Bool, includeEmail: Bool, includePhone: Bool) -> SectionElement? {
-        let nameElement = includeName ? makeName() : nil
-        let emailElement = includeEmail ? makeEmail() : nil
-        let phoneElement = includePhone ? makePhone() : nil
-
-        let allElements: [Element?] = [nameElement, emailElement, phoneElement]
-        let elements = allElements.compactMap { $0 }
-
+    /// This method returns a "Contact information" Section containing a name, email, and phone field depending on the `PaymentSheet.Configuration.billingDetailsCollectionConfiguration` and your payment method's required fields.
+    /// - Parameter nameRequiredByPaymentMethod: Whether your payment method requires the name field.
+    /// - Parameter emailRequiredByPaymentMethod: Whether your payment method requires the email field.
+    /// - Parameter phoneRequiredByPaymentMethod: Whether your payment method requires the phone field.
+    func makeContactInformationSection(nameRequiredByPaymentMethod: Bool, emailRequiredByPaymentMethod: Bool, phoneRequiredByPaymentMethod: Bool) -> SectionElement? {
+        let config = configuration.billingDetailsCollectionConfiguration
+        let nameElement = config.name == .always
+            || (config.name == .automatic && nameRequiredByPaymentMethod) ? makeName() : nil
+        let emailElement = config.email == .always
+            || (config.email == .automatic && emailRequiredByPaymentMethod) ? makeEmail() : nil
+        let phoneElement = config.phone == .always
+            || (config.phone == .automatic && phoneRequiredByPaymentMethod) ? makePhone() : nil
+        let elements = ([nameElement, emailElement, phoneElement] as [Element?]).compactMap { $0 }
         guard !elements.isEmpty else { return nil }
 
         return SectionElement(
-            title: STPLocalizedString("Contact information", "Title for the contact information section"),
+            title: .Localized.contact_information,
             elements: elements,
             theme: theme)
     }
