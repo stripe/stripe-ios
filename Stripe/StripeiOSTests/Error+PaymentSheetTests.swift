@@ -27,7 +27,7 @@ class Error_PaymentSheetTests: XCTestCase {
         }
     }
 
-    func testPaymentSheetError_UsesDebubDescription() {
+    func testPaymentSheetError_UsesDebugDescription() {
         let error = PaymentSheetError.unknown(debugDescription: "Test debugDescription")
 
         XCTAssertEqual("An unknown error occurred in PaymentSheet. Test debugDescription", error.nonGenericDescription)

@@ -19,6 +19,7 @@ NSString *const STPTestJSONSetupIntent = @"SetupIntent";
 NSString *const STPTestJSONPaymentMethodCard = @"CardPaymentMethod";
 NSString *const STPTestJSONPaymentMethodApplePay = @"ApplePayPaymentMethod";
 NSString *const STPTestJSONPaymentMethodBacsDebit = @"BacsDebitPaymentMethod";
+NSString *const STPTestJSONSourceBankAccount = @"BankAccount";
 
 NSString *const STPTestJSONSource3DS = @"3DSSource";
 NSString *const STPTestJSONSourceAlipay = @"AlipaySource";
@@ -97,14 +98,14 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
 + (STPToken *)cardToken {
     NSDictionary *cardDict = [STPTestUtils jsonNamed:STPTestJSONCard];
     NSDictionary *tokenDict = @{
-                                @"id": @"id_for_token",
-                                @"object": @"token",
-                                @"livemode": @NO,
-                                @"created": @1353025450.0,
-                                @"type": @"card",
-                                @"used": @NO,
-                                @"card": cardDict
-                                };
+        @"id": @"id_for_token",
+        @"object": @"token",
+        @"livemode": @NO,
+        @"created": @1353025450.0,
+        @"type": @"card",
+        @"used": @NO,
+        @"card": cardDict
+    };
     return [STPToken decodedObjectFromAPIResponse:tokenDict];
 }
 
@@ -358,4 +359,11 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
 + (NSDictionary *)applePayPaymentMethodJSON {
     return [STPTestUtils jsonNamed:STPTestJSONPaymentMethodApplePay];
 }
++ (STPPaymentMethod *)bankAccountPaymentMethod {
+    return [STPPaymentMethod decodedObjectFromAPIResponse:[self bankAccountPaymentMethodJSON]];
+}
++ (NSDictionary *)bankAccountPaymentMethodJSON {
+    return [STPTestUtils jsonNamed:STPTestJSONSourceBankAccount];
+}
+
 @end

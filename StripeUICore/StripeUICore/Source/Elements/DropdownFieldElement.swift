@@ -54,6 +54,8 @@ import UIKit
         }
     }
     public var didUpdate: DidUpdateSelectedIndex?
+    /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
+    public let label: String?
 
     private(set) lazy var pickerView: UIPickerView = {
         let picker = UIPickerView()
@@ -76,7 +78,6 @@ import UIKit
     }()
 
     // MARK: - Private properties
-    private let label: String?
     private let theme: ElementsUITheme
     private var previouslySelectedIndex: Int
     private let disableDropdownWithSingleElement: Bool

@@ -77,36 +77,42 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
     }
 
     func testNoSavedPMs() {
+        stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration())
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
 
     func testNoSavedPMsDarkMode() {
+        stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration())
         presentCS(darkMode: true)
         verify(cs.bottomSheetViewController.view!)
     }
 
     func testNoSavedPMsCustomAppearance() {
+        stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(appearance: .snapshotTestTheme))
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
 
     func testOnlyApplePay() {
+        stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(applePayEnabled: true))
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
 
     func testOnlyApplePayDarkMode() {
+        stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(applePayEnabled: true))
         presentCS(darkMode: true)
         verify(cs.bottomSheetViewController.view!)
     }
 
     func testOnlyApplePayCustomAppearance() {
+        stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(applePayEnabled: true, appearance: .snapshotTestTheme))
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
@@ -120,6 +126,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
     /// 1 == .never
     /// 2 == (always || full)
     func testBillingDetailsCollection_0000() {
+        stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
                                                          email: .automatic,
@@ -130,6 +137,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_1000() {
+        stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .never,
                                                          phone: .automatic,
                                                          email: .automatic,
@@ -140,6 +148,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_2000() {
+        stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .always,
                                                          phone: .automatic,
                                                          email: .automatic,
@@ -150,6 +159,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0100() {
+        stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .never,
                                                          email: .automatic,
@@ -160,6 +170,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0200() {
+        stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .never,
                                                          email: .automatic,
@@ -170,6 +181,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0010() {
+        stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
                                                          email: .always,
@@ -180,6 +192,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0020() {
+        stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
                                                          email: .never,
@@ -190,6 +203,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0001() {
+        stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
                                                          email: .automatic,
@@ -200,6 +214,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0002() {
+        stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
                                                          email: .automatic,
@@ -210,6 +225,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_2222() {
+        stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .always,
                                                          phone: .always,
                                                          email: .always,
@@ -220,6 +236,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_2222_withDefaults() {
+        stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .always,
                                                          phone: .always,
                                                          email: .always,
@@ -230,6 +247,19 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
+    func testUSBankAccount_card() {
+        stubSessions(paymentMethods: "\"us_bank_account\", \"card\"")
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testCard_USBankAccount() {
+        stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
     func stubbedPaymentMethod() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
@@ -242,6 +272,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
     }
 
     func testOneSavedCardPM() {
+        stubSessions(paymentMethods: "\"card\"")
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = [stubbedPaymentMethod()]
         prepareCS(configuration: configuration(applePayEnabled: true), customerAdapter: customerAdapter)
@@ -250,6 +281,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
     }
 
     func testOneSavedCardPMDarkMode() {
+        stubSessions(paymentMethods: "\"card\"")
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = [stubbedPaymentMethod()]
         prepareCS(configuration: configuration(applePayEnabled: true), customerAdapter: customerAdapter)
@@ -258,6 +290,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
     }
 
     func testOneSavedCardPMCustomApperance() {
+        stubSessions(paymentMethods: "\"card\"")
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = [stubbedPaymentMethod()]
         prepareCS(configuration: configuration(applePayEnabled: true, appearance: .snapshotTestTheme), customerAdapter: customerAdapter)
@@ -266,6 +299,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
     }
 
     func testManySavedPMs() {
+        stubSessions(paymentMethods: "\"card\"")
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = Array(repeating: stubbedPaymentMethod(), count: 20)
         prepareCS(configuration: configuration(applePayEnabled: true), customerAdapter: customerAdapter)
@@ -377,6 +411,39 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
             file: file,
             line: line
         )
+    }
+
+    private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
+        var template = String(data: data, encoding: .utf8)!
+        for (templateKey, templateValue) in variables {
+            let translated = template.replacingOccurrences(of: templateKey, with: templateValue)
+            template = translated
+        }
+        return template.data(using: .utf8)!
+    }
+
+    private func stubSessions(paymentMethods: String) {
+        stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\(paymentMethods)",
+                        "<currency>": "\"usd\"",
+                    ]
+                )
+            }
+        )
+    }
+    private func stubSessions(fileMock: FileMock, responseCallback: ((Data) -> Data)? = nil) {
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
+        } response: { _ in
+            let mockResponseData = try! fileMock.data()
+            let data = responseCallback?(mockResponseData) ?? mockResponseData
+            return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+        }
     }
 }
 
