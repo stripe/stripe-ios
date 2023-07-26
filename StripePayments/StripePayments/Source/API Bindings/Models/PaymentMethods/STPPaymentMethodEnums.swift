@@ -192,7 +192,7 @@ import Foundation
         case .klarna:
             return "klarna"
         case .linkInstantDebit:
-            return "TODO" // TODO(porter) figure out the correct id here
+            return "link_instant_debits"
         case .affirm:
             return "affirm"
         case .USBankAccount:
