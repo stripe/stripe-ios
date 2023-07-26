@@ -1,5 +1,5 @@
 //
-//  PaymentSheet+LPMTests.swift
+//  PaymentSheet+LPMConfirmFlowTests.swift
 //  StripeiOSTests
 //
 //  Created by Yuki Tokuhiro on 7/18/23.
@@ -14,14 +14,12 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
-final class PaymentSheet_LPMTests: XCTestCase {
+/// These tests exercise the different confirm flows for a give payment method.
+/// We have 9 different confirm flows based on the combination of:
+/// - The Stripe Intent: PaymentIntent or PaymentIntent+SFU or SetupIntent
+/// - The confirmation type: "Normal" intent-first client-side confirmation or "Deferred" client-side confirmation or "Deferred" server-side confirmation
+final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-    lazy var paymentHandler: STPPaymentHandler = {
-        return STPPaymentHandler(
-            apiClient: apiClient,
-            formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()
-        )
-    }()
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
@@ -47,10 +45,27 @@ final class PaymentSheet_LPMTests: XCTestCase {
             XCTAssertNotNil(form.getMandateElement())
         }
     }
+
+    @MainActor
+    func testiDEALConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .dynamic("ideal")) { form in
+            form.getTextFieldElement("Full name")?.setText("Foo")
+            XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertNil(form.getTextFieldElement("Email"))
+        }
+
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .dynamic("ideal")) { form in
+            form.getTextFieldElement("Full name")?.setText("Foo")
+            form.getTextFieldElement("Email")?.setText("f@z.c")
+            XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
+            XCTAssertNotNil(form.getMandateElement())
+        }
+    }
 }
 
 // MARK: - Helper methods
-extension PaymentSheet_LPMTests {
+extension PaymentSheet_LPM_ConfirmFlowTests {
     enum IntentKind: CaseIterable {
         case paymentIntent
         case paymentIntentWithSetupFutureUsage
@@ -78,7 +93,8 @@ extension PaymentSheet_LPMTests {
         }
         let paymentMethodString = PaymentSheet.PaymentMethodType.string(from: paymentMethodType)!
         let intents: [(String, Intent)]
-        let mandateDataParamsForServerSideConfirmation: [String: Any] = [ // We require merchants to set this themselves for server-side confirmation
+        let paramsForServerSideConfirmation: [String: Any] = [ // We require merchants to set some extra parameters themselves for server-side confirmation
+            "return_url": "foo://bar",
             "mandate_data": [
                 "customer_acceptance": [
                     "type": "online",
@@ -99,7 +115,7 @@ extension PaymentSheet_LPMTests {
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString])
             }
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { paymentMethod, _ in
-                return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString], paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: mandateDataParamsForServerSideConfirmation)
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString], paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: paramsForServerSideConfirmation)
             }
             intents = [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
@@ -117,7 +133,7 @@ extension PaymentSheet_LPMTests {
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, _ in
                 let otherParams = [
                     "setup_future_usage": "off_session",
-                ].merging(mandateDataParamsForServerSideConfirmation) { _, b in b }
+                ].merging(paramsForServerSideConfirmation) { _, b in b }
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString], paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: otherParams)
             }
             intents = [
@@ -134,7 +150,7 @@ extension PaymentSheet_LPMTests {
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: [paymentMethodString])
             }
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession)) { paymentMethod, _ in
-                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: [paymentMethodString], paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: mandateDataParamsForServerSideConfirmation)
+                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: [paymentMethodString], paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: paramsForServerSideConfirmation)
             }
             intents = [
                 ("SetupIntent", .setupIntent(setupIntent)),
@@ -159,10 +175,13 @@ extension PaymentSheet_LPMTests {
                 return
             }
             let e = expectation(description: "Confirm")
+            let paymentHandler = STPPaymentHandler(apiClient: apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler())
+            var redirectShimCalled = false
             paymentHandler._redirectShim = { _, _, _ in
                 // This gets called instead of the PaymentSheet.confirm callback if the Intent is successfully confirmed and requires next actions.
-                print("✅ \(description): Successfully confirmed the intent. Its status is now requires_action.")
-                e.fulfill()
+                print("✅ \(description): Successfully confirmed the intent and saw a redirect attempt.")
+                paymentHandler._handleWillForegroundNotification()
+                redirectShimCalled = true
             }
             // Confirm the intent with the form details
             PaymentSheet.confirm(
@@ -177,7 +196,7 @@ extension PaymentSheet_LPMTests {
                 case .failed(error: let error):
                     XCTFail("❌ \(description): PaymentSheet.confirm failed - \(error)")
                 case .canceled:
-                    XCTFail("❌ \(description): PaymentSheet.confirm canceled!")
+                    XCTAssertTrue(redirectShimCalled, "❌ \(description): PaymentSheet.confirm canceled")
                 case .completed:
                     print("✅ \(description): PaymentSheet.confirm completed")
                 }
@@ -187,7 +206,7 @@ extension PaymentSheet_LPMTests {
     }
 }
 
-extension PaymentSheet_LPMTests: STPAuthenticationContext {
+extension PaymentSheet_LPM_ConfirmFlowTests: STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
     }
