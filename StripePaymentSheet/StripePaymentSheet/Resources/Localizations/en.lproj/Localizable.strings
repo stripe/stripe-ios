@@ -169,6 +169,9 @@ to be saved and used in future checkout sessions. */
 /* The label of a switch indicating whether to save the user's card for future payment */
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
 
+/* US Bank Account copy title for Mobile payment element form */
+"Save your bank account in just a few steps." = "Save your bank account in just a few steps.";
+
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
 
