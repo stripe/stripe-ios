@@ -234,13 +234,16 @@ class PollingViewController: UIViewController {
     // MARK: Timer handler
 
     @objc func updateTimer() {
-        guard timeRemaining > 0 else {
-            oneSecondTimer?.invalidate()
-            finishPolling()
-            return
+        dataProvider?.updateTimerCallback{ timeRemaining in
+            guard timeRemaining > 0 else {
+                oneSecondTimer?.invalidate()
+                finishPolling()
+                return
+            }
+
+            instructionLabel.attributedText = instructionLabelAttributedText
         }
 
-        instructionLabel.attributedText = instructionLabelAttributedText
     }
 
     // MARK: Private helpers
