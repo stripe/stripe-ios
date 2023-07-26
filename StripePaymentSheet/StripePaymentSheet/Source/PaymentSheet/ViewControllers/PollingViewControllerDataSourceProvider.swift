@@ -67,3 +67,18 @@ class UPIPaymentMethodDataSourceProvider: PaymentMethodDataSourceProvider{
         super.init(appearance: appearance, deadline: deadline)
     }
 }
+
+class BLIKPaymentMethodDataSourceProvider: PaymentMethodDataSourceProvider{
+
+    override var instructionLabelAttributedText: NSAttributedString {
+        let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
+        let attrText = NSMutableAttributedString(string: String(format: .Localized.approve_payment, timeRemaining))
+        attrText.addAttributes([.foregroundColor: appearance.colors.primary], range: NSString(string: attrText.string).range(of: timeRemaining))
+        return attrText
+    }
+
+    init(appearance: PaymentSheet.Appearance) {
+        let deadline = Date().addingTimeInterval(60)
+        super.init(appearance: appearance, deadline: deadline)
+    }
+}
