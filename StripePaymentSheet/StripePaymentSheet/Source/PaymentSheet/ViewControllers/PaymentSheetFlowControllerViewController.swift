@@ -395,7 +395,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
 
     @objc
     private func didTapAddButton() {
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetPayButtonTapped)
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped)
         switch mode {
         case .selectingSaved:
             self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)

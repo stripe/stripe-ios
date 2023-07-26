@@ -171,5 +171,5 @@ import Foundation
 
     // MARK: - PaymentSheet checkout
     case paymentSheetCarouselPaymentMethodTapped = "mc_carousel_payment_method_tapped"
-    case paymentSheetPayButtonTapped = "mc_pay_button_tapped"
+    case paymentSheetConfirmButtonTapped = "mc_confirm_button_tapped"
 }

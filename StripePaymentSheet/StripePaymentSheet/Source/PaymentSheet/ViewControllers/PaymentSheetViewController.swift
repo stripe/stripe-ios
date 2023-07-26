@@ -414,7 +414,7 @@ class PaymentSheetViewController: UIViewController {
 
     @objc
     private func didTapBuyButton() {
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetPayButtonTapped)
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped)
         switch mode {
         case .addingNew:
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
