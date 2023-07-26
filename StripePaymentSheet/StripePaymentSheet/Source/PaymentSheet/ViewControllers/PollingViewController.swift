@@ -29,6 +29,8 @@ class PollingViewController: UIViewController {
     private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
 
+    var dataProvider: PollingViewControllerDataSourceProvider?
+
     private lazy var intentPoller: IntentStatusPoller = {
         guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
               let clientSecret = currentAction.paymentIntent?.clientSecret else { fatalError() }
@@ -166,18 +168,10 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerActionParams, type: STPPaymentMethodType, appearance: PaymentSheet.Appearance) {
+    init(currentAction: STPPaymentHandlerActionParams, dataSourceProvider: PollingViewControllerDataSourceProvider, appearance: PaymentSheet.Appearance) {
         self.currentAction = currentAction
-        self.paymentMethodType = type
         self.appearance = appearance
-
-        switch paymentMethodType {
-        case .UPI:
-            deadline = Date().addingTimeInterval(60 * 5)
-        default:
-            fatalError("No Deadline for PaymentMethodType")
-        }
-
+        self.dataProvider = dataSourceProvider
         super.init(nibName: nil, bundle: nil)
     }
 
