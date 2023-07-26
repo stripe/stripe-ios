@@ -22,12 +22,12 @@ extension PaymentSheetFormFactory {
         )
         let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && !canSaveToLink
 
-        // Make Contact Information section
-        let contactInformationSection: SectionElement? = {
+        // Make section titled "Contact Information" w/ phone and email if merchant requires it.
+        let optionalPhoneAndEmailInformationSection: SectionElement? = {
             let emailElement: Element? = configuration.billingDetailsCollectionConfiguration.email == .always ? makeEmail() : nil
             // Link can't collect phone.
-            let includePhone = !configuration.linkPaymentMethodsOnly && configuration.billingDetailsCollectionConfiguration.phone == .always
-            let phoneElement: Element? = includePhone ? makePhone() : nil
+            let shouldIncludePhone = !configuration.linkPaymentMethodsOnly && configuration.billingDetailsCollectionConfiguration.phone == .always
+            let phoneElement: Element? = shouldIncludePhone ? makePhone() : nil
             let contactInformationElements = [emailElement, phoneElement].compactMap { $0 }
             guard !contactInformationElements.isEmpty else {
                 return nil
@@ -70,7 +70,7 @@ extension PaymentSheetFormFactory {
             }
         }()
 
-        let phoneElement = contactInformationSection?.elements.compactMap {
+        let phoneElement = optionalPhoneAndEmailInformationSection?.elements.compactMap {
             $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
         }.first
 
@@ -81,7 +81,7 @@ extension PaymentSheetFormFactory {
 
         let cardFormElement = FormElement(
             elements: [
-                contactInformationSection,
+                optionalPhoneAndEmailInformationSection,
                 cardSection,
                 billingAddressSection,
                 shouldDisplaySaveCheckbox ? saveCheckbox : nil,

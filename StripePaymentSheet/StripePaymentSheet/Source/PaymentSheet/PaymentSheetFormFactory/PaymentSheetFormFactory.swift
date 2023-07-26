@@ -530,7 +530,7 @@ extension PaymentSheetFormFactory {
         return StaticElement(view: label)
     }
 
-    /// This method returns a "Contact information" Section containing a name, email, and phone field depending on the `PaymentSheet.Configuration.billingDetailsCollectionConfiguration`and your payment method's required fields.
+    /// This method returns a "Contact information" Section containing a name, email, and phone field depending on the `PaymentSheet.Configuration.billingDetailsCollectionConfiguration` and your payment method's required fields.
     /// - Parameter nameRequiredByPaymentMethod: Whether your payment method requires the name field.
     /// - Parameter emailRequiredByPaymentMethod: Whether your payment method requires the email field.
     /// - Parameter phoneRequiredByPaymentMethod: Whether your payment method requires the phone field.
