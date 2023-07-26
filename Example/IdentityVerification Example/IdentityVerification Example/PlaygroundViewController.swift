@@ -12,7 +12,7 @@ import UIKit
 class PlaygroundViewController: UIViewController {
 
     // Constants
-    let baseURL = "https://reflective-fossil-rib.glitch.me"
+    let baseURL = "https://stripe-mobile-identity-verification-playground.glitch.me"
     let verifyEndpoint = "/create-verification-session"
 
     // Outlets
@@ -118,6 +118,9 @@ class PlaygroundViewController: UIViewController {
 
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
+        
+        // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
+        phoneOtpContainerView.isHidden = true
     }
 
     @objc
@@ -340,7 +343,7 @@ class PlaygroundViewController: UIViewController {
         case .document:
             documentOptionsContainerView.isHidden = false
             phoneOptionsContainerView.isHidden = true
-            phoneOtpContainerView.isHidden = false
+            // phoneOtpContainerView.isHidden = false
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
             fallbackToDocumentSwitch.isOn = false
@@ -349,7 +352,7 @@ class PlaygroundViewController: UIViewController {
         case .idNumber:
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = true
-            phoneOtpContainerView.isHidden = false
+            // phoneOtpContainerView.isHidden = false
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
             fallbackToDocumentSwitch.isOn = false
@@ -358,7 +361,7 @@ class PlaygroundViewController: UIViewController {
         case .address:
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = true
-            phoneOtpContainerView.isHidden = true
+            // phoneOtpContainerView.isHidden = true
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
             fallbackToDocumentSwitch.isOn = false
@@ -367,7 +370,7 @@ class PlaygroundViewController: UIViewController {
         case .phone:
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = false
-            phoneOtpContainerView.isHidden = true
+            // phoneOtpContainerView.isHidden = true
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
             fallbackToDocumentSwitch.isOn = false
