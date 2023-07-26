@@ -282,9 +282,15 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
     }
 
     func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType) {
-        let pollingVC = PollingViewController(currentAction: action, type: type,
-                                                      appearance: self.appearance)
-        pushContentViewController(pollingVC)
+        switch type {
+        case .UPI:
+            let pollingVC = PollingViewController(currentAction: action, dataSourceProvider: UPIPaymentMethodDataSourceProvider(appearance: self.appearance), appearance: self.appearance)
+            pushContentViewController(pollingVC)
+
+        default:
+            let pollingVC = PollingViewController(currentAction: action, dataSourceProvider: UPIPaymentMethodDataSourceProvider(appearance: self.appearance), appearance: self.appearance)
+            pushContentViewController(pollingVC)
+        }
     }
 
     func dismiss(_ authenticationViewController: UIViewController) {
