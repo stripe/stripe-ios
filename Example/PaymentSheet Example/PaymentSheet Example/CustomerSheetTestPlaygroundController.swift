@@ -10,19 +10,41 @@ import SwiftUI
 import PassKit
 
 class MyApplePayContextDelegate: NSObject, ApplePayContextDelegate {
-    var paymentMethodContinuation: CheckedContinuation<String?, Never>?
+    var paymentMethodContinuation: CheckedContinuation<String, Error>?
     var setupIntentClientSecret: String?
+    var paymentMethodID: String?
     
     func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeCore.StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping StripeApplePay.STPIntentClientSecretCompletionBlock) {
-        paymentMethodContinuation?.resume(with: .success(paymentMethod.id))
+        // Store the PaymentMethod ID for after SetupIntent confirmation
+        paymentMethodID = paymentMethod.id
+        
+        // Confirm the SetupIntent with the client secret
         completion(setupIntentClientSecret, nil)
     }
     
     func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCompleteWith status: StripeApplePay.STPApplePayContext.PaymentStatus, error: Error?) {
+        guard let paymentMethodContinuation = self.paymentMethodContinuation else {
+            assertionFailure("Programming error: Missing Apple Pay continuation.")
+            return
+        }
         
+        switch status {
+        case .success:
+            guard let paymentMethodID = paymentMethodID else {
+                assertionFailure("Programming error: PaymentMethod ID not available, but ApplePayContext succeeded")
+                self.paymentMethodContinuation?.resume(throwing: MyError.internalError)
+                return
+            }
+            paymentMethodContinuation.resume(returning: paymentMethodID)
+        case .error:
+            paymentMethodContinuation.resume(throwing: error ?? MyError.applePayFailed)
+        case .userCancellation:
+            paymentMethodContinuation.resume(throwing: MyError.userCancelled)
+        }
     }
 }
 
+@available(iOS 16.0, *)
 class MyApplePaySupportingCustomerAdapter: StripeCustomerAdapter {
     let applePayContextDelegate = MyApplePayContextDelegate()
     
@@ -37,29 +59,45 @@ class MyApplePaySupportingCustomerAdapter: StripeCustomerAdapter {
             applePayContextDelegate.setupIntentClientSecret = setupIntentClientSecret
 
             // Configure the line items on the payment request
-            paymentRequest.paymentSummaryItems = [
-                // The final line should represent your company;
-                // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
-                PKPaymentSummaryItem(label: "Setup Subscription", amount: 0),
-            ]
+            let billing = PKRecurringPaymentSummaryItem(label: "My Subscription", amount: NSDecimalNumber(string: "59.99"))
+            billing.startDate = Date()
+            billing.endDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
+            billing.intervalUnit = .month
+            
+            // Set the payment summary item and use it to configure a PKRecurringPaymentRequest
+            paymentRequest.paymentSummaryItems = [billing]
+            paymentRequest.recurringPaymentRequest = PKRecurringPaymentRequest(paymentDescription: "My Subscription",
+                                                                               regularBilling: billing,
+                                                                               managementURL: URL(string: "https://example.com")!)
+            
+            // Create an STPApplePayContext
             if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: applePayContextDelegate) {
                 // Present Apple Pay payment sheet
                 applePayContext.presentApplePay()
-                if let applePayPM = await withCheckedContinuation({ continuation in
+                
+                // Wait for the Apple Pay PaymentMethod
+                let applePayPM = try await withCheckedThrowingContinuation({ continuation in
                     applePayContextDelegate.paymentMethodContinuation = continuation
-                }) {
-                    try await super.setSelectedPaymentOption(paymentOption: .stripeId(applePayPM))
-                } else {
-                    // Throw error, no PM from Apple Pay
-                }
+                })
+                
+                // If it succeeds, set the resulting Apple Pay PaymentMethod as our selected payment option
+                try await super.setSelectedPaymentOption(paymentOption: .stripeId(applePayPM))
             } else {
-                // Throw error
+                // Apple Pay is disabled on this device.
+                throw MyError.applePayUnavailable
             }
-            
         } else {
+            // If a different payment option is selected, call StripeCustomerAdapter's setSelectedPaymentOption.
             try await super.setSelectedPaymentOption(paymentOption: paymentOption)
         }
     }
+}
+
+enum MyError: Error {
+    case applePayUnavailable
+    case applePayFailed
+    case internalError
+    case userCancelled
 }
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -199,12 +237,19 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         let customerAdapter: StripeCustomerAdapter
         switch settings.paymentMethodMode {
         case .setupIntent:
-            customerAdapter = MyApplePaySupportingCustomerAdapter(customerEphemeralKeyProvider: {
-                // This should be a block that fetches this from your server
-                .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
-            }, setupIntentClientSecretProvider: {
-                return try await self.backend.createSetupIntent(customerId: customerId)
-            }, configuration: configuration)
+            if #available(iOS 16.0, *) {
+                customerAdapter = MyApplePaySupportingCustomerAdapter(customerEphemeralKeyProvider: {
+                    // This should be a block that fetches this from your server
+                    .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+                }, setupIntentClientSecretProvider: {
+                    return try await self.backend.createSetupIntent(customerId: customerId)
+                }, configuration: configuration)
+            } else {
+                // Do not use
+                customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+                    .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+                }, configuration: configuration)
+            }
         case .createAndAttach:
             customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
                 // This should be a block that fetches this from your server
