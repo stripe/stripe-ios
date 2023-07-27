@@ -117,7 +117,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         selected = paymentMethodTypes[indexPath.item]
-        
+
         // Only log this event when this collection view is being used by PaymentSheet
         if isPaymentSheet {
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCarouselPaymentMethodTapped,
