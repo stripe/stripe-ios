@@ -513,7 +513,7 @@ extension PaymentSheetFormFactory {
     }
 
     private func makeUSBankAccountCopyLabel() -> StaticElement {
-        switch(configuration) {
+        switch configuration {
         case .customerSheet:
             return makeSectionTitleLabelWith(
                 text: STPLocalizedString(
