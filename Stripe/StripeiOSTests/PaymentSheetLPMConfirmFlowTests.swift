@@ -59,6 +59,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             // e.g. iDEAL shouldn't show a mandate or email field for a vanilla payment
             XCTAssertNil(form.getMandateElement())
             XCTAssertNil(form.getTextFieldElement("Email"))
+            // Tip: To help you debug, print out `form.getAllUnwrappedSubElements()`
         }
 
         // If your payment method shows different fields depending on the kind of intent, you can call `_testConfirm` multiple times with different intents.
