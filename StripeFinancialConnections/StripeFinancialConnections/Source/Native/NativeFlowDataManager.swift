@@ -17,6 +17,7 @@ protocol NativeFlowDataManager: AnyObject {
     var apiClient: FinancialConnectionsAPIClient { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var reduceManualEntryProminenceInErrors: Bool { get }
 
     var institution: FinancialConnectionsInstitution? { get set }
     var authSession: FinancialConnectionsAuthSession? { get set }
@@ -67,6 +68,9 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
             // show the "control" experience of showing logo in the nav bar
             return nil
         }
+    }
+    var reduceManualEntryProminenceInErrors: Bool {
+        return visualUpdate.reduceManualEntryProminenceInErrors
     }
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent
