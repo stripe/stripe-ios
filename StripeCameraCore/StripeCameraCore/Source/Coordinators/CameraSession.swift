@@ -441,7 +441,6 @@ extension CameraSession {
         guard let captureDevice = captureDevices.devices.first else {
             throw CameraSessionError.captureDeviceNotFound
         }
-        print("BGLM - captureDevice: \(captureDevice)")
 
         return try AVCaptureDeviceInput(device: captureDevice)
     }
