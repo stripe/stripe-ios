@@ -421,7 +421,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
 
         let alertController = UIAlertController(
             title: paymentMethod.removalMessage.title,
-            message: paymentMethod.removalMessage.message,
+            message: self.savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage != nil ? self.savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage : paymentMethod.removalMessage.message,
             preferredStyle: .alert
         )
 
