@@ -157,8 +157,10 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         PaymentSheet.PaymentMethodType.dynamic("sofort"),
     ]
     func testCantSetupSEPAFamily() {
-        // All SEPA family pms excluding SEPA itself...
-        for pm in sepaFamily.dropFirst() {
+        for pm in [
+            PaymentSheet.PaymentMethodType.dynamic("bancontact"),
+            PaymentSheet.PaymentMethodType.dynamic("sofort"),
+        ] {
             // ...can't be used for PIs...
             XCTAssertEqual(
                 PaymentSheet.PaymentMethodType.supportsAdding(
