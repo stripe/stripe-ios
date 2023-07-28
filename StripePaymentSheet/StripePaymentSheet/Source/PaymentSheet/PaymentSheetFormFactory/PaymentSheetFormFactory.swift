@@ -575,7 +575,7 @@ extension PaymentSheetFormFactory {
         guard !elements.isEmpty else { return nil }
 
         return SectionElement(
-            title: .Localized.contact_information,
+            title: elements.count > 1 ? .Localized.contact_information : nil,
             elements: elements,
             theme: theme)
     }
