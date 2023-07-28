@@ -159,7 +159,7 @@ class PaymentSheetFormFactory {
             assertionFailure("Failed to get form spec!")
             return FormElement(elements: [], theme: theme)
         }
-        if paymentMethod.stpPaymentMethodType == .iDEAL && saveMode == .merchantRequired {
+        if paymentMethod.stpPaymentMethodType == .iDEAL {
             return makeiDEAL(spec: spec)
         }
 
