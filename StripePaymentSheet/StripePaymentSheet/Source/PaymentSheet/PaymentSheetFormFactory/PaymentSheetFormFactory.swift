@@ -513,12 +513,22 @@ extension PaymentSheetFormFactory {
     }
 
     private func makeUSBankAccountCopyLabel() -> StaticElement {
-        return makeSectionTitleLabelWith(
-            text: STPLocalizedString(
-                "Pay with your bank account in just a few steps.",
-                "US Bank Account copy title for Mobile payment element form"
+        switch configuration {
+        case .customerSheet:
+            return makeSectionTitleLabelWith(
+                text: STPLocalizedString(
+                    "Save your bank account in just a few steps.",
+                    "US Bank Account copy title for Mobile payment element form"
+                )
             )
-        )
+        case .paymentSheet:
+            return makeSectionTitleLabelWith(
+                text: STPLocalizedString(
+                    "Pay with your bank account in just a few steps.",
+                    "US Bank Account copy title for Mobile payment element form"
+                )
+            )
+        }
     }
 
     func makeSectionTitleLabelWith(text: String) -> StaticElement {
