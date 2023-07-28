@@ -441,6 +441,7 @@ extension CameraSession {
         guard let captureDevice = captureDevices.devices.first else {
             throw CameraSessionError.captureDeviceNotFound
         }
+        print("BGLM - captureDevice: \(captureDevice)")
 
         return try AVCaptureDeviceInput(device: captureDevice)
     }
@@ -482,7 +483,7 @@ extension CameraSession.CameraPosition {
 
         case .back:
             if #available(iOS 13.0, *) {
-                return [.builtInDualCamera, .builtInDualWideCamera, .builtInWideAngleCamera]
+                return [.builtInTripleCamera, .builtInDualCamera, .builtInDualWideCamera, .builtInWideAngleCamera]
             } else {
                 return [.builtInDualCamera, .builtInWideAngleCamera]
             }
