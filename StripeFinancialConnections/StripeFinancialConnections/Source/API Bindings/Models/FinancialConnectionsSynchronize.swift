@@ -19,5 +19,6 @@ struct FinancialConnectionsSynchronize: Decodable {
     struct VisualUpdate: Decodable {
         let reducedBranding: Bool
         let merchantLogo: [String]
+        let reduceManualEntryProminenceInErrors: Bool
     }
 }

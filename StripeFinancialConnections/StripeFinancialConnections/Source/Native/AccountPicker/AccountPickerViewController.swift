@@ -61,7 +61,7 @@ final class AccountPickerViewController: UIViewController {
             } : nil
     }
     private var didSelectManualEntry: (() -> Void)? {
-        return dataSource.manifest.allowManualEntry
+        return (dataSource.manifest.allowManualEntry && !dataSource.reduceManualEntryProminenceInErrors)
             ? { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.accountPickerViewControllerDidSelectManualEntry(self)

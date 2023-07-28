@@ -146,6 +146,7 @@ final class PartnerAuthViewController: UIViewController {
         // PartnerAuth to try again
         navigationItem.hidesBackButton = true
 
+        let allowManualEntryInErrors = (dataSource.manifest.allowManualEntry && !dataSource.reduceManualEntryProminenceInErrors)
         let errorView: UIView?
         if let error = error as? StripeError,
             case .apiError(let apiError) = error,
@@ -203,7 +204,7 @@ final class PartnerAuthViewController: UIViewController {
                             }
                         }()
                         let endOfSubtitle: String = {
-                            if dataSource.manifest.allowManualEntry {
+                            if allowManualEntryInErrors {
                                 return STPLocalizedString(
                                     "Please enter your bank details manually or select another bank.",
                                     "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
@@ -218,7 +219,7 @@ final class PartnerAuthViewController: UIViewController {
                         return beginningOfSubtitle + " " + endOfSubtitle
                     }(),
                     primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: dataSource.manifest.allowManualEntry
+                    secondaryButtonConfiguration: allowManualEntryInErrors
                         ? ReusableInformationView.ButtonConfiguration(
                             title: String.Localized.enter_bank_details_manually,
                             action: { [weak self] in
@@ -243,7 +244,7 @@ final class PartnerAuthViewController: UIViewController {
                         institution.name
                     ),
                     subtitle: {
-                        if dataSource.manifest.allowManualEntry {
+                        if allowManualEntryInErrors {
                             return STPLocalizedString(
                                 "Please enter your bank details manually or select another bank.",
                                 "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
@@ -256,7 +257,7 @@ final class PartnerAuthViewController: UIViewController {
                         }
                     }(),
                     primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: dataSource.manifest.allowManualEntry
+                    secondaryButtonConfiguration: allowManualEntryInErrors
                         ? ReusableInformationView.ButtonConfiguration(
                             title: String.Localized.enter_bank_details_manually,
                             action: { [weak self] in
