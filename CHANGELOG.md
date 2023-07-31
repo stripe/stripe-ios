@@ -1,6 +1,6 @@
 ## x.y.z 2023-xx-yy
 ### PaymentSheet
-* [Added] Enable SEPA Debit, bancontact, iDEAL for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.
+* [Added] Enable SEPA Debit, bancontact, iDEAL, sofort for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.
 
 ### Identity
 * [ADDED][2452](https://github.com/stripe/stripe-ios/pull/2452) Supports [phone verification](https://stripe.com/docs/identity/phone) in Identity mobile SDK.

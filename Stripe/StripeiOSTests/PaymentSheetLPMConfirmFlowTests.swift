@@ -61,6 +61,22 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         }
     }
 
+    func testSofortConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .dynamic("sofort")) { form in
+            XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
+            XCTAssertNil(form.getTextFieldElement("Full name"))
+            XCTAssertNil(form.getTextFieldElement("Email"))
+            XCTAssertNil(form.getMandateElement())
+        }
+
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .dynamic("sofort")) { form in
+            XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
+            form.getTextFieldElement("Full name")?.setText("Foo")
+            form.getTextFieldElement("Email")?.setText("f@z.c")
+            XCTAssertNotNil(form.getMandateElement())
+        }
+    }
+
     /// 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
     func testiDEALConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .dynamic("ideal")) { form in
