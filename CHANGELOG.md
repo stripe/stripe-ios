@@ -1,9 +1,10 @@
 ## 23.12.0 2023-07-31
 ### PaymentSheet
 * [Added] Enable SEPA Debit and iDEAL for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.
+* [Added] Add removeSavedPaymentMethodMessage to PaymentSheet.Configuration and CustomerSheet.Configuration. 
 
 ### Identity
-* [ADDED][2452](https://github.com/stripe/stripe-ios/pull/2452) Supports [phone verification](https://stripe.com/docs/identity/phone) in Identity mobile SDK.
+* [Added] Supports [phone verification](https://stripe.com/docs/identity/phone) in Identity mobile SDK.
 
 
 ## 23.11.2 2023-07-24
