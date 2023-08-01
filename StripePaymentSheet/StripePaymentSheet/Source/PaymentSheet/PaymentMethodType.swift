@@ -290,10 +290,8 @@ extension PaymentSheet {
                         return [.returnURL]
                     case .USBankAccount:
                         return [.userSupportsDelayedPaymentMethods]
-                    case .sofort:
-                        // n.b. While sofort is itself not delayed, it turns into SEPA upon save, which IS delayed.
-                        return [.returnURL, .userSupportsDelayedPaymentMethods, .unsupportedForSetup]
-                    case .iDEAL, .bancontact:
+                    case .sofort, .iDEAL, .bancontact:
+                        // n.b. While sofort, iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                         // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                     case .SEPADebit:

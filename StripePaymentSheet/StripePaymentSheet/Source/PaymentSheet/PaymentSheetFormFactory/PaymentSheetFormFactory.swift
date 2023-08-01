@@ -163,6 +163,8 @@ class PaymentSheetFormFactory {
         }
         if paymentMethod.stpPaymentMethodType == .iDEAL {
             return makeiDEAL(spec: spec)
+        } else if paymentMethod.stpPaymentMethodType == .sofort {
+            return makeSofort(spec: spec)
         }
 
         // 2. Element-based forms defined in JSON
@@ -332,7 +334,8 @@ extension PaymentSheetFormFactory {
 
     func makeBillingAddressSection(
         collectionMode: AddressSectionElement.CollectionMode = .all(),
-        countries: [String]? = nil
+        countries: [String]? = nil,
+        countryAPIPath: String? = nil
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
         let displayBillingSameAsShippingCheckbox: Bool
         let defaultAddress: AddressSectionElement.AddressDetails
@@ -378,12 +381,44 @@ extension PaymentSheetFormFactory {
                 params.paymentMethodParams.nonnil_billingDetails.nonnil_address.postalCode = postalCode.text
             }
             params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country = section.selectedCountryCode
+            if let countryAPIPath {
+                params.paymentMethodParams.additionalAPIParameters[countryAPIPath] = section.selectedCountryCode
+            }
 
             return params
         }
     }
 
     // MARK: - PaymentMethod form definitions
+
+    func makeSofort(spec: FormSpec) -> PaymentMethodElement {
+        let contactSection: Element? = makeContactInformationSection(
+            nameRequiredByPaymentMethod: saveMode == .merchantRequired,
+            emailRequiredByPaymentMethod: saveMode == .merchantRequired,
+            phoneRequiredByPaymentMethod: false
+        )
+        // Hack: Use the luxe spec to get the latest list of accepted countries rather than hardcoding it here
+        let countries: [String]? = spec.fields.reduce(nil) { countries, fieldSpec in
+            if case let .country(countrySpec) = fieldSpec {
+                return countrySpec.allowedCountryCodes
+            }
+            return countries
+        }
+
+        let addressSection: Element? = {
+            if configuration.billingDetailsCollectionConfiguration.address == .full {
+                return makeBillingAddressSection(countries: countries, countryAPIPath: "sofort[country]")
+            } else {
+                return makeCountry(countryCodes: countries, apiPath: "sofort[country]")
+            }
+        }()
+        let mandate: Element? = saveMode == .merchantRequired ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c sofort saves bank details as a SEPA Direct Debit Payment Method
+        let elements: [Element?] = [contactSection, addressSection, mandate]
+        return FormElement(
+            autoSectioningElements: elements.compactMap { $0 },
+            theme: theme
+        )
+    }
 
     func makeBancontact() -> PaymentMethodElement {
         let contactSection: Element? = makeContactInformationSection(
