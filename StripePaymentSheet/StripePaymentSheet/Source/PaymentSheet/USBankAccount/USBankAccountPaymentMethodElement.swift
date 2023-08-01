@@ -31,7 +31,7 @@ final class USBankAccountPaymentMethodElement: Element {
     private let theme: ElementsUITheme
     private var linkedBank: LinkedBank? {
         didSet {
-            self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName, isSaving: savingAccount.value, theme: theme)
+            self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName, isSaving: savingAccount.value, configuration: configuration, theme: theme)
         }
     }
 
@@ -50,6 +50,7 @@ final class USBankAccountPaymentMethodElement: Element {
     static let ContinueMandateText: String = STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
     static let SaveAccountMandateText: String = STPLocalizedString("By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@).")
     static let MicrodepositCopy: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.", "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name")
+    static let MicrodepositCopy_CustomerSheet: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete before confirming your bank account with %@.", "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name")
 
     var canLinkAccount: Bool {
         let params = self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))
@@ -134,7 +135,7 @@ final class USBankAccountPaymentMethodElement: Element {
             guard let self = self else {
                 return
             }
-            self.mandateString = Self.attributedMandateText(for: self.linkedBank, merchantName: merchantName, isSaving: value, theme: theme)
+            self.mandateString = Self.attributedMandateText(for: self.linkedBank, merchantName: merchantName, isSaving: value, configuration: configuration, theme: theme)
             self.delegate?.didUpdate(element: self)
         }
     }
@@ -153,13 +154,16 @@ final class USBankAccountPaymentMethodElement: Element {
     class func attributedMandateText(for linkedBank: LinkedBank?,
                                      merchantName: String,
                                      isSaving: Bool,
+                                     configuration: PaymentSheetFormFactoryConfig,
                                      theme: ElementsUITheme = .default) -> NSMutableAttributedString? {
         guard let linkedBank = linkedBank else {
             return nil
         }
 
         var mandateText = isSaving ? String(format: Self.SaveAccountMandateText, merchantName) : Self.ContinueMandateText
-        if !linkedBank.instantlyVerified {
+        if case .customerSheet = configuration, !linkedBank.instantlyVerified {
+            mandateText =  String.init(format: Self.MicrodepositCopy_CustomerSheet, merchantName) + "\n" + mandateText
+        } else if case .paymentSheet = configuration, !linkedBank.instantlyVerified {
             mandateText =  String.init(format: Self.MicrodepositCopy, merchantName) + "\n" + mandateText
         }
         let formattedString = applyLinksToString(template: mandateText, links: links)
