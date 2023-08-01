@@ -153,6 +153,8 @@ class PaymentSheetFormFactory {
         } else if paymentMethod.stpPaymentMethodType == .payPal && saveMode == .merchantRequired {
             // Paypal requires mandate when setting up
             additionalElements = [makePaypalMandate()]
+        } else if paymentMethod.stpPaymentMethodType == .bancontact {
+            return makeBancontact()
         }
 
         guard let spec = specFromJSONProvider() else {
@@ -382,6 +384,21 @@ extension PaymentSheetFormFactory {
     }
 
     // MARK: - PaymentMethod form definitions
+
+    func makeBancontact() -> PaymentMethodElement {
+        let contactSection: Element? = makeContactInformationSection(
+            nameRequiredByPaymentMethod: true,
+            emailRequiredByPaymentMethod: saveMode == .merchantRequired,
+            phoneRequiredByPaymentMethod: false
+        )
+        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let mandate: Element? = saveMode == .merchantRequired ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
+        let elements: [Element?] = [contactSection, addressSection, mandate]
+        return FormElement(
+            autoSectioningElements: elements.compactMap { $0 },
+            theme: theme
+        )
+    }
 
     func makeiDEAL(spec: FormSpec) -> PaymentMethodElement {
         let contactSection: Element? = makeContactInformationSection(

@@ -1,3 +1,7 @@
+## X.Y.Z 2023-XX-YY
+### PaymentSheet
+* [Added] Enable bancontact for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.
+
 ## 23.12.0 2023-07-31
 ### PaymentSheet
 * [Added] Enable SEPA Debit and iDEAL for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.

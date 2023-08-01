@@ -19,6 +19,7 @@ import XCTest
 /// - The confirmation type: "Normal" intent-first client-side confirmation or "Deferred" client-side confirmation or "Deferred" server-side confirmation
 /// They can also test the presence/absence of particular fields for a payment method form e.g. the SEPA test asserts that there's a mandate element.
 /// 👀  See `testIdealConfirmFlows` for an example with comments.
+@MainActor
 final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
     lazy var configuration: PaymentSheet.Configuration = {
@@ -34,7 +35,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
     }
 
-    @MainActor
     func testSEPADebitConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .dynamic("sepa_debit")) { form in
             form.getTextFieldElement("Full name")?.setText("Foo")
@@ -47,8 +47,21 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         }
     }
 
+    func testBancontactConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .dynamic("bancontact")) { form in
+            form.getTextFieldElement("Full name")?.setText("Foo")
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertNil(form.getTextFieldElement("Email"))
+        }
+
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .dynamic("bancontact")) { form in
+            form.getTextFieldElement("Full name")?.setText("Foo")
+            form.getTextFieldElement("Email")?.setText("f@z.c")
+            XCTAssertNotNil(form.getMandateElement())
+        }
+    }
+
     /// 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
-    @MainActor
     func testiDEALConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .dynamic("ideal")) { form in
             // Fill out your payment method form in here.

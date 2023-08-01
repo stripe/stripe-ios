@@ -158,7 +158,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     ]
     func testCantSetupSEPAFamily() {
         for pm in [
-            PaymentSheet.PaymentMethodType.dynamic("bancontact"),
             PaymentSheet.PaymentMethodType.dynamic("sofort"),
         ] {
             // ...can't be used for PIs...
