@@ -328,7 +328,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 "A button used to confirm selecting a saved payment method"
             ))
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
-            return .custom(title: STPLocalizedString(
+            return .customWithLock(title: STPLocalizedString(
                 "Save",
                 "A button used for saving a new payment method"
             ))
