@@ -300,7 +300,11 @@ import Foundation
         STPLocalizedString("BLIK code", "Label for BLIK code number field on form")
     }
 
+    static var incomplete_blik_code: String {
+        STPLocalizedString("Your BLIK code is incomplete.", "Error message when BLIK code is incomplete")
+    }
+    
     static var invalid_blik_code: String {
-        STPLocalizedString("Your BLIK code is incomplete.", "Error message when BLIK code is invalid")
+        STPLocalizedString("Your BLIK code is invalid.", "Error message when BLIK code is invalid")
     }
 }
