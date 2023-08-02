@@ -120,7 +120,7 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
 
-/* Pay with {payment method} */
+/* Display text for the 'Pay with Link' button. 'Link' is a Stripe brand, %@ will be replaced by the 'Link' wordmark, which depicts the English word 'Link'. */
 "Pay with %@" = "Pay with %@";
 
 /* US Bank Account copy title for Mobile payment element form */
