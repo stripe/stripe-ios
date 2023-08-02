@@ -16,6 +16,7 @@ extension STPTestingAPIClient {
         currency: String = "eur",
         paymentMethodID: String? = nil,
         confirm: Bool = false,
+        otherParams: [String: Any] = [:],
         completion: @escaping (Result<(String), Error>) -> Void
     ) {
         var params = [String: Any]()
@@ -26,6 +27,7 @@ extension STPTestingAPIClient {
         if let paymentMethodID = paymentMethodID {
             params["payment_method"] = paymentMethodID
         }
+        params.merge(otherParams) { _, b in b }
 
         createPaymentIntent(
             withParams: params
@@ -45,34 +47,45 @@ extension STPTestingAPIClient {
         types: [String],
         currency: String = "eur",
         paymentMethodID: String? = nil,
-        confirm: Bool = false
+        confirm: Bool = false,
+        otherParams: [String: Any] = [:]
     ) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
             fetchPaymentIntent(
                 types: types,
                 currency: currency,
                 paymentMethodID: paymentMethodID,
-                confirm: confirm
+                confirm: confirm,
+                otherParams: otherParams
             ) { result in
                 continuation.resume(with: result)
             }
         }
     }
 
-    func fetchSetupIntent(types: [String], completion: @escaping (Result<(String), Error>) -> Void) {
-        createSetupIntent(
-            withParams: [
-                "payment_method_types": types,
-            ]
-        ) { clientSecret, error in
-            guard let clientSecret = clientSecret,
-                  error == nil
-            else {
-                completion(.failure(error!))
-                return
+    func fetchSetupIntent(
+        types: [String],
+        paymentMethodID: String? = nil,
+        confirm: Bool = false,
+        otherParams: [String: Any] = [:]
+    ) async throws -> String {
+        var params = [String: Any]()
+        params["payment_method_types"] = types
+        params["confirm"] = confirm
+        if let paymentMethodID = paymentMethodID {
+            params["payment_method"] = paymentMethodID
+        }
+        params.merge(otherParams) { _, b in b }
+        return try await withCheckedThrowingContinuation { continuation in
+            createSetupIntent(withParams: params) { clientSecret, error in
+                guard let clientSecret = clientSecret,
+                      error == nil
+                else {
+                    continuation.resume(throwing: error!)
+                    return
+                }
+                continuation.resume(returning: clientSecret)
             }
-
-            completion(.success(clientSecret))
         }
     }
 }

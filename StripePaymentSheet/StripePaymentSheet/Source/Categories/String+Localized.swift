@@ -192,4 +192,7 @@ extension String.Localized {
                            "Text for alert message when user needs to confirm payment in their banking app")
     }
 
+    static var contact_information: String {
+        STPLocalizedString("Contact information", "Title for the contact information section")
+    }
 }

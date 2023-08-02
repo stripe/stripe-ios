@@ -61,7 +61,7 @@ final class AccountPickerViewController: UIViewController {
             } : nil
     }
     private var didSelectManualEntry: (() -> Void)? {
-        return dataSource.manifest.allowManualEntry
+        return (dataSource.manifest.allowManualEntry && !dataSource.reduceManualEntryProminenceInErrors)
             ? { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.accountPickerViewControllerDidSelectManualEntry(self)
@@ -285,11 +285,10 @@ final class AccountPickerViewController: UIViewController {
             // select all accounts
             dataSource.updateSelectedAccounts(enabledAccounts)
         case .radioButton:
-            if enabledAccounts.count == 1 {
-                // select the one (and only) available account
-                dataSource.updateSelectedAccounts(enabledAccounts)
-            } else {  // accounts.count >= 2
-                // don't select any accounts (...let the user decide which one)
+            if let firstAccount = enabledAccounts.first {
+                dataSource.updateSelectedAccounts([firstAccount])
+            } else {
+                // defensive programming; it should never happen that we have 0 accounts
                 dataSource.updateSelectedAccounts([])
             }
         }

@@ -216,6 +216,16 @@ extern NSString *const STPTestJSONSourceSofort;
  */
 + (NSDictionary *)applePayPaymentMethodJSON;
 
+/**
+   Bank account payment method
+ */
++ (STPPaymentMethod *)bankAccountPaymentMethod;
+
+/**
+   Bank account payment payment method JSON Dictionary
+ */
++ (NSDictionary *)bankAccountPaymentMethodJSON;
+
 @end
 
 @interface STPJsonSources : NSObject

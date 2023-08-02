@@ -19,5 +19,7 @@ extension StripeAPI {
         case dob = "dob"
         case name = "name"
         case address = "address"
+        case phoneNumber = "phone_number"
+        case phoneOtp = "phone_otp"
     }
 }
