@@ -290,10 +290,10 @@ extension PaymentSheet {
                         return [.returnURL]
                     case .USBankAccount:
                         return [.userSupportsDelayedPaymentMethods]
-                    case .iDEAL, .bancontact, .sofort:
-                        // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
+                    case .sofort, .iDEAL, .bancontact:
+                        // n.b. While sofort, iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
+                        return [.returnURL, .userSupportsDelayedPaymentMethods]
                         // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
-                        return [.returnURL, .userSupportsDelayedPaymentMethods, .unsupportedForSetup]
                     case .SEPADebit:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:

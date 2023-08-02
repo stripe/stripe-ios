@@ -85,7 +85,8 @@ class PaymentSheetViewController: UIViewController {
             configuration: .init(
                 customerID: configuration.customer?.id,
                 showApplePay: showApplePay,
-                showLink: showLink
+                showLink: showLink,
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage
             ),
             appearance: configuration.appearance,
             delegate: self

@@ -156,35 +156,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         PaymentSheet.PaymentMethodType.dynamic("bancontact"),
         PaymentSheet.PaymentMethodType.dynamic("sofort"),
     ]
-    func testCantSetupSEPAFamily() {
-        // All SEPA family pms excluding SEPA itself...
-        for pm in sepaFamily.dropFirst() {
-            // ...can't be used for PIs...
-            XCTAssertEqual(
-                PaymentSheet.PaymentMethodType.supportsAdding(
-                    paymentMethod: pm,
-                    configuration: makeConfiguration(hasReturnURL: true),
-                    // ...if setup future usage is provided.
-                    intent: .paymentIntent(
-                        STPFixtures.makePaymentIntent(setupFutureUsage: .offSession)
-                    ),
-                    supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
-                ),
-                .missingRequirements([.unsupportedForSetup, .userSupportsDelayedPaymentMethods])
-            )
-
-            // ...and can't be set up
-            XCTAssertEqual(
-                PaymentSheet.PaymentMethodType.supportsAdding(
-                    paymentMethod: pm,
-                    configuration: makeConfiguration(hasReturnURL: true),
-                    intent: .setupIntent(STPFixtures.setupIntent()),
-                    supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
-                ),
-                .missingRequirements([.unsupportedForSetup, .userSupportsDelayedPaymentMethods])
-            )
-        }
-    }
 
     func testCanAddSEPAFamily() {
         // iDEAL and bancontact can be added if returnURL provided

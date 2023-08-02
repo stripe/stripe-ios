@@ -789,7 +789,8 @@ private func CreatePaneViewController(
                 authSession: authSession,
                 manifest: dataManager.manifest,
                 institution: institution,
-                analyticsClient: dataManager.analyticsClient
+                analyticsClient: dataManager.analyticsClient,
+                reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors
             )
             let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
             accountPickerViewController.delegate = nativeFlowController
@@ -810,7 +811,8 @@ private func CreatePaneViewController(
                 linkedAccountId: linkedAccountId,
                 analyticsClient: dataManager.analyticsClient,
                 authSessionId: dataManager.authSession?.id,
-                consumerSessionClientSecret: dataManager.consumerSession?.clientSecret
+                consumerSessionClientSecret: dataManager.consumerSession?.clientSecret,
+                reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors
             )
             let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
                 dataSource: dataSource
@@ -978,7 +980,8 @@ private func CreatePaneViewController(
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
-                analyticsClient: dataManager.analyticsClient
+                analyticsClient: dataManager.analyticsClient,
+                reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors
             )
             let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
             partnerAuthViewController.delegate = nativeFlowController
