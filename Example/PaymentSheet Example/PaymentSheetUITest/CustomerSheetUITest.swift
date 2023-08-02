@@ -583,6 +583,48 @@ class CustomerSheetUITest: XCTestCase {
 
         dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
+    func testCustomerSheetStandard_applePayOff_addUSBankAccount_MicroDeposit() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .off
+
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let selectButton = app.staticTexts["None"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        selectButton.tap()
+
+        let usBankAccountPMSelectorButton = app.staticTexts["US Bank Account"]
+        XCTAssertTrue(usBankAccountPMSelectorButton.waitForExistence(timeout: 60.0))
+        usBankAccountPMSelectorButton.tap()
+
+        try! fillUSBankData(app)
+
+        let continueButton = app.buttons["Continue"]
+        XCTAssertTrue(continueButton.waitForExistence(timeout: 60.0))
+        continueButton.tap()
+
+        // Go through connections flow
+        app.links["Manually verify instead"].tap()
+        try! fillUSBankData_microdeposits(app)
+
+        let continueManualEntry = app.buttons["manual_entry_continue_button"]
+        XCTAssertTrue(continueManualEntry.waitForExistence(timeout: 60.0))
+        continueManualEntry.tap()
+
+        let doneManualEntry = app.buttons["manual_entry_success_done_button"]
+        XCTAssertTrue(doneManualEntry.waitForExistence(timeout: 60.0))
+        doneManualEntry.tap()
+
+        let saveButton = app.buttons["Save"]
+        XCTAssertTrue(saveButton.waitForExistence(timeout: 60.0))
+        saveButton.tap()
+
+        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
+    }
     func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
         let selectButton = app.staticTexts[buttonLabel]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
