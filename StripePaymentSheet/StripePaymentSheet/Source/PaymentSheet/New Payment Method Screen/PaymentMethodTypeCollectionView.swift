@@ -121,7 +121,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         // Only log this event when this collection view is being used by PaymentSheet
         if isPaymentSheet {
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCarouselPaymentMethodTapped,
-                                                                 params: ["selected_lpm": paymentMethodTypes[indexPath.row].identifier])
+                                                                 paymentMethodTypeAnalyticsValue: paymentMethodTypes[indexPath.row].identifier)
         }
     }
 
