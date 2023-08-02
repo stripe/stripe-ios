@@ -26,7 +26,7 @@ extension PaymentSheet {
         var paymentMethodTypeAnalyticsValue: String? {
             switch self {
             case .applePay:
-                return PaymentSheet.PaymentMethodType.dynamic("apple_pay").identifier
+                return "apple_pay"
             case .saved(paymentMethod: let paymentMethod):
                 return paymentMethod.type.identifier
             case .new(confirmParams: let confirmParams):
