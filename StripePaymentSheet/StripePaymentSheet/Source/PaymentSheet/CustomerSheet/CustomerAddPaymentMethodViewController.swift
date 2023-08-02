@@ -28,9 +28,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     var paymentOption: PaymentOption? {
         var params = IntentConfirmParams(type: selectedPaymentMethodType)
         params = paymentMethodFormElement.applyDefaults(params: params)
-        if let params = paymentMethodFormElement.updateParams(
-            params: IntentConfirmParams(type: selectedPaymentMethodType)
-        ) {
+        if let params = paymentMethodFormElement.updateParams(params: params) {
             return .new(confirmParams: params)
         }
         return nil
