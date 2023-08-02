@@ -490,13 +490,11 @@ class CustomerSheetUITest: XCTestCase {
 
         dismissAlertView(alertBody: "Success: ••••4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
-    // TODO: Uncomment when enabling USBankAccount
-/*
+
     func testCustomerSheetStandard_applePayOff_addUSBankAccount() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePay = .off
-        settings.paymentMethodTypes = .card_usbank
         loadPlayground(
             app,
             settings
@@ -537,7 +535,7 @@ class CustomerSheetUITest: XCTestCase {
 
         dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
-*/
+
     func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
         let selectButton = app.staticTexts[buttonLabel]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
