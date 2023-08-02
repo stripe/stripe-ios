@@ -22,7 +22,7 @@ extension PaymentSheet {
         case saved(paymentMethod: STPPaymentMethod)
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
-        
+
         var paymentMethodTypeAnalyticsValue: String? {
             switch self {
             case .applePay:
