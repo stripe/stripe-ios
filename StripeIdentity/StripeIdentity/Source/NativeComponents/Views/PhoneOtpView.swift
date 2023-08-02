@@ -59,7 +59,7 @@ class PhoneOtpView: UIView {
         return stackView
     }()
 
-    var viewModel: ViewModel = .InputtingOTP
+    var viewModel: ViewModel?
 
     init(
         otpLength: Int,
@@ -95,14 +95,14 @@ class PhoneOtpView: UIView {
         ])
 
         addAndPinSubview(stackView)
-        configure(with: viewModel)
+        configure()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with viewModel: ViewModel) {
+    func configure(with viewModel: ViewModel? = nil) {
         self.viewModel = viewModel
         switch viewModel {
         case .InputtingOTP:
@@ -112,12 +112,12 @@ class PhoneOtpView: UIView {
             submittingIndicator.isHidden = true
             submittingIndicator.stopAnimating()
         case .SubmittingOTP:
-            otpTextField.isEnabled = true
+            otpTextField.isEnabled = false
             otpErrorField.isHidden = true
             submittingIndicator.isHidden = false
             submittingIndicator.startAnimating()
         case .ErrorOTP:
-            otpTextField.value = ""
+            otpTextField.performInvalidCodeAnimation()
             otpTextField.resignFirstResponder()
             otpTextField.isEnabled = true
             otpErrorField.isHidden = false
@@ -133,6 +133,10 @@ class PhoneOtpView: UIView {
             otpErrorField.isHidden = true
             submittingIndicator.isHidden = true
             submittingIndicator.stopAnimating()
+        case .none:
+            otpTextField.isEnabled = false
+            otpErrorField.isHidden = true
+            submittingIndicator.isHidden = true
         }
         delegate?.viewStateDidUpdate()
     }
