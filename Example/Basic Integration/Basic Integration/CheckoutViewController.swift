@@ -109,10 +109,12 @@ class CheckoutViewController: UIViewController {
             return result + product.price
         }
         paymentContext.paymentCurrency = self.paymentCurrency
+#if compiler(>=5.9)
         if #available(iOS 17.0, *) {
             // Set `applePayLaterAvailability` if Apple Pay Later is not available for this transaction e.g. the customer is buying unsupported items like alcohol or you're saving the customer's card details for future usage.
             paymentContext.applePayLaterAvailability = .unavailableRecurringTransaction
         }
+#endif
 
         self.tableView = UITableView()
 
@@ -201,7 +203,7 @@ class CheckoutViewController: UIViewController {
             #endif
             view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                view.heightAnchor.constraint(equalToConstant: 1)
+                view.heightAnchor.constraint(equalToConstant: 1),
             ])
             return view
         }
