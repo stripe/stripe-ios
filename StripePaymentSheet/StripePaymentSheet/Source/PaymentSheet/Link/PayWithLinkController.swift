@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
@@ -15,11 +16,11 @@ import UIKit
 @available(macCatalystApplicationExtension, unavailable)
 final class PayWithLinkController {
 
-    typealias CompletionBlock = PaymentSheetResultCompletionBlock
+    typealias CompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 
     private let paymentHandler: STPPaymentHandler
 
-    private var completion: PaymentSheetResultCompletionBlock?
+    private var completion: CompletionBlock?
 
     private var selfRetainer: PayWithLinkController?
 
@@ -46,7 +47,7 @@ final class PayWithLinkController {
 
     func present(
         from presentingController: UIViewController,
-        completion: @escaping PaymentSheetResultCompletionBlock
+        completion: @escaping CompletionBlock
     ) {
         // Similarly to `PKPaymentAuthorizationController`, `LinkController` should retain
         // itself while presented.
@@ -75,14 +76,15 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
             intent: intent,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
-            isFlowController: false) { result in
-                self.completion?(result)
-                self.selfRetainer = nil
-            }
+            isFlowController: false
+        ) { result, deferredIntentConfirmationType in
+            self.completion?(result, deferredIntentConfirmationType)
+            self.selfRetainer = nil
+        }
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
-        completion?(.canceled)
+        completion?(.canceled, nil)
         selfRetainer = nil
     }
 

@@ -250,8 +250,11 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         // been submitted and they can't go back to edit their input.
         let isSuccessState = nextViewController is SuccessViewController
 
+        // If it's biometric consent, it's either the first screen of a doc type verification, or the first doc-fallback screen of phone type verification, don't show go back.
+        let isBiometricConsent = nextViewController is BiometricConsentViewController
+
         // Don't display a back button, so replace the navigation stack
-        if isTransitioningFromLoading || isTransitioningFromDebug || isSuccessState {
+        if isTransitioningFromLoading || isTransitioningFromDebug || isSuccessState || isBiometricConsent {
             navigationController.setViewControllers([nextViewController], animated: shouldAnimate)
         } else {
             navigationController.pushViewController(nextViewController, animated: shouldAnimate)
@@ -328,8 +331,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         let missingRequirements =
             updateDataResponse?.requirements.missing ?? staticContent.requirements.missing
 
-        // Show success screen if submitted
-        if updateDataResponse?.submitted == true {
+        // Show success screen if submitted and closed
+        if updateDataResponse?.submittedAndClosed() == true {
             return completion(
                 SuccessViewController(
                     successContent: staticContent.success,
@@ -395,6 +398,13 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     sheetController: sheetController
                 )
             )
+        case .phoneOtpDestination:
+            return completion(
+                makePhoneOtpViewController(
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                )
+            )
         case .confirmationDestination:
             return completion(
                 SuccessViewController(
@@ -443,6 +453,25 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         return IndividualViewController(
             individualContent: staticContent.individual,
             missing: staticContent.requirements.missing,
+            sheetController: sheetController
+        )
+    }
+
+    func makePhoneOtpViewController(
+        staticContent: StripeAPI.VerificationPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        guard let phoneOtpContent = staticContent.phoneOtp
+        else {
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(
+                    VerificationSheetFlowControllerError.missingPhoneOtpContent
+                )
+            )
+        }
+        return PhoneOtpViewController(
+            phoneOtpContent: phoneOtpContent,
             sheetController: sheetController
         )
     }
@@ -707,8 +736,10 @@ extension Set<StripeAPI.VerificationPageFieldType> {
             return .selfieCaptureDestination
         } else if !self.isDisjoint(with: [.name, .dob]) {
             return .individualWelcomeDestination
-        } else if !self.isDisjoint(with: [.idNumber, .address]) {
+        } else if !self.isDisjoint(with: [.idNumber, .address, .phoneNumber]) {
             return .individualDestination
+        } else if self.contains(.phoneOtp) {
+            return .phoneOtpDestination
         } else if self.isEmpty {
             return .confirmationDestination
         } else {

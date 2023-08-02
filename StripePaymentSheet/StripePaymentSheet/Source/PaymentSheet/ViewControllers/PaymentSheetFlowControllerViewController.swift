@@ -157,7 +157,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 customerID: configuration.customer?.id,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
-                autoSelectDefaultBehavior: intent.supportsLink ? .onlyIfMatched : .defaultFirst
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage
             ),
             appearance: configuration.appearance
         )
@@ -396,6 +396,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
 
     @objc
     private func didTapAddButton() {
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped)
         switch mode {
         case .selectingSaved:
             self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)

@@ -18,7 +18,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        //        recordMode = true
+//                recordMode = true
     }
 
     // MARK: Not Floating

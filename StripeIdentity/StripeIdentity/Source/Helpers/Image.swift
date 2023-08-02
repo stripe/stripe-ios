@@ -20,6 +20,7 @@ import Foundation
     case iconClock = "icon_clock"
     case iconInfo = "icon_info"
     case iconWarning = "icon_warning"
+    case iconWarning2 = "icon_warning2"
     case iconWarning92 = "icon_warning_92"
     case iconCamera = "icon_camera"
 }

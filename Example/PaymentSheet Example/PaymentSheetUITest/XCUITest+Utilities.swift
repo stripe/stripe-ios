@@ -106,6 +106,18 @@ extension XCTestCase {
         }
     }
 
+    func fillUSBankData(_ app: XCUIApplication,
+                        container: XCUIElement? = nil) throws {
+        let context = container ?? app
+        let nameField = context.textFields["Full name"]
+        nameField.forceTapWhenHittableInTestCase(self)
+        app.typeText("John Doe")
+
+        let emailField = context.textFields["Email"]
+        emailField.forceTapWhenHittableInTestCase(self)
+        app.typeText("test@example.com")
+    }
+
     func waitToDisappear(_ target: Any?) {
         let exists = NSPredicate(format: "exists == 0")
         expectation(for: exists, evaluatedWith: target, handler: nil)

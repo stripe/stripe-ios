@@ -54,17 +54,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let customerID: String?
         let showApplePay: Bool
         let showLink: Bool
-
-        enum AutoSelectDefaultBehavior {
-            /// will only autoselect default has been stored locally
-            case onlyIfMatched
-            /// will try to use locally stored default, or revert to first available
-            case defaultFirst
-            /// No auto selection
-            case none
-        }
-
-        let autoSelectDefaultBehavior: AutoSelectDefaultBehavior
+        let removeSavedPaymentMethodMessage: String?
     }
 
     var hasRemovablePaymentMethods: Bool {
@@ -80,7 +70,12 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
         set {
             collectionView.isRemovingPaymentMethods = newValue
-            collectionView.reloadSections([0])
+            UIView.transition(with: collectionView,
+                              duration: 0.3,
+                              options: .transitionCrossDissolve,
+                              animations: {
+                self.collectionView.reloadData()
+            })
             if !collectionView.isRemovingPaymentMethods {
                 // re-select
                 collectionView.selectItem(
@@ -222,11 +217,9 @@ class SavedPaymentOptionsViewController: UIViewController {
             + (configuration.showLink ? [.link] : [])
             + savedPMViewModels
 
-        if configuration.autoSelectDefaultBehavior != .none {
-            // Select default
-            selectedViewModelIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod })
-                ?? (configuration.autoSelectDefaultBehavior == .defaultFirst ? 1 : nil)
-        }
+        // Select default
+        selectedViewModelIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod })
+            ?? 1
 
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
@@ -379,7 +372,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
 
         let alertController = UIAlertController(
             title: paymentMethod.removalMessage.title,
-            message: paymentMethod.removalMessage.message,
+            message: configuration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
             preferredStyle: .alert
         )
 

@@ -1,3 +1,32 @@
+## X.Y.Z 2023-XX-YY
+### PaymentSheet
+* [Added] Enable bancontact and sofort for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.
+
+## 23.12.0 2023-07-31
+### PaymentSheet
+* [Added] Enable SEPA Debit and iDEAL for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.
+* [Added] Add removeSavedPaymentMethodMessage to PaymentSheet.Configuration and CustomerSheet.Configuration. 
+
+### Identity
+* [Added] Supports [phone verification](https://stripe.com/docs/identity/phone) in Identity mobile SDK.
+
+
+## 23.11.2 2023-07-24
+### PaymentSheet
+* [Fixed] Update stp_icon_add@3x.png to 8bit color depth (Thanks @jszumski)
+
+### CustomerSheet
+* [Fixed] Ability to removing payment method immediately after adding it.
+* [Fixed] Re-init addPaymentMethodViewController after adding payment method to allow for adding another payment method
+
+## 23.11.1 2023-07-18
+### PaymentSheet
+* [Fixed] Fixed various bugs in Link private beta.
+
+## 23.11.0 2023-07-17
+### CustomerSheet
+* [Changed] Breaking interface change for `CustomerSheetResult`. `CustomerSheetResult.canceled` now has a nullable associated value signifying that there is no selected payment method. Please use both `.canceled(StripeOptionSelection?)` and `.selected(PaymentOptionSelection?)` to update your UI to show the latest selected payment method.
+
 ## 23.10.0 2023-07-10
 ### Payments
 * [Fixed] A bug where `mandate_data` was not being properly attached to PayPal SetupIntent's.
@@ -7,9 +36,6 @@
 ## 23.9.4 2023-07-05
 ### PaymentSheet
 * [Added] US bank accounts are now supported when initializing with an IntentConfiguration.
-
-### CustomerSheet
-* [Changed] Breaking interface change for `CustomerSheetResult`. `CustomerSheetResult.canceled` now has a nullable associated value signifying that there is no selected payment method. Please use both `.canceled(StripeOptionSelection?)` and `.selected(PaymentOptionSelection?)` to update your UI to show the latest selected payment method.
 
 ## 23.9.3 2023-06-26
 ### PaymentSheet

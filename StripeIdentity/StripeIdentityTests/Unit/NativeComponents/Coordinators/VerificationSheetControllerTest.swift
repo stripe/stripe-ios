@@ -172,7 +172,8 @@ final class VerificationSheetControllerTest: XCTestCase {
                     idNumber: false,
                     dob: false,
                     name: false,
-                    address: false
+                    address: false,
+                    phoneOtp: false
                 ),
                 collectedData: mockData
             )
@@ -525,6 +526,62 @@ final class VerificationSheetControllerTest: XCTestCase {
         )
     }
 
+    func testSaveDataSubmitsFallbackResponse() throws {
+        // Mock initial VerificationPage request successful
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        // Mock time to submit
+        mockFlowController.isFinishedCollecting = true
+
+        let mockDataResponse = try VerificationPageDataMock.noErrors.make()
+        let mockSubmitResponse = try VerificationPageDataMock.submittedNotClosed.make()
+        let mockData = VerificationPageDataUpdateMock.default.collectedData!
+
+        // Mock number of attempted scans
+        controller.analyticsClient.countDidStartDocumentScan(for: .front)
+        controller.analyticsClient.countDidStartDocumentScan(for: .back)
+        controller.analyticsClient.countDidStartDocumentScan(for: .back)
+
+        // Save data
+        controller.saveAndTransition(from: .biometricConsent, collectedData: mockData) {
+            self.exp.fulfill()
+        }
+
+        // Respond to save data request with success
+        mockAPIClient.verificationPageData.respondToRequests(with: .success(mockDataResponse))
+
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+        wait(for: [submitRequestExp], timeout: 1)
+
+        // Verify submit request
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+        mockAPIClient.verificationSessionSubmit.respondToRequests(
+            with: .success(mockSubmitResponse)
+        )
+
+        // Verify completion block is called
+        wait(for: [exp], timeout: 1)
+
+        // Verify missing got updated
+        XCTAssertEqual(try controller.verificationPageResponse?.get().requirements.missing, mockSubmitResponse.requirements.missing)
+
+        // Verify collectedData got cleared
+        XCTAssertEqual(controller.collectedData, StripeAPI.VerificationPageCollectedData())
+
+        // Verify submitted is false
+        XCTAssertEqual(controller.isVerificationPageSubmitted, false)
+
+        // Verify response sent to flowController
+        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        XCTAssertEqual(
+            try? mockFlowController.transitionedWithUpdateDataResult?.get(),
+            mockSubmitResponse
+        )
+    }
+
     func testSaveDataSubmitsErrorResponse() throws {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
@@ -625,6 +682,32 @@ final class VerificationSheetControllerTest: XCTestCase {
             mockAPIClient.verifyUnverifyRequest.requestHistory.first,
             ["simulateDelay": true]
         )
+    }
+
+    func testGeneratePhoneOtp() throws {
+        // Mock initial VerificationPage request successful
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        // Verify
+        controller.generatePhoneOtp { _ in
+            self.exp.fulfill()
+        }
+
+        XCTAssertEqual(mockAPIClient.verificationPageGeneratePhoneOtp.requestHistory.count, 1)
+
+        // Respond with generatePhoneOtp, trigger callback
+        mockAPIClient.verificationPageGeneratePhoneOtp.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testCannotVerifyPhoneOtp() throws {
+        // Mock initial VerificationPage request successful
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        // Verify
+        controller.sendCannotVerifyPhoneOtpAndTransition(completion: {})
+
+        XCTAssertEqual(mockAPIClient.verificationPageCannotVerifyPhoneOtp.requestHistory.count, 1)
     }
 
     func testDismissResultNotSubmitted() throws {

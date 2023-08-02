@@ -31,7 +31,8 @@ extension STPAnalyticsClient {
         activeLinkSession: Bool,
         linkSessionType: LinkSettings.PopupWebviewOption?,
         currency: String?,
-        intentConfig: PaymentSheet.IntentConfiguration? = nil
+        intentConfig: PaymentSheet.IntentConfiguration? = nil,
+        deferredIntentConfirmationType: DeferredIntentConfirmationType?
     ) {
         var success = false
         switch result {
@@ -55,7 +56,8 @@ extension STPAnalyticsClient {
             activeLinkSession: activeLinkSession,
             linkSessionType: linkSessionType,
             currency: currency,
-            intentConfig: intentConfig
+            intentConfig: intentConfig,
+            deferredIntentConfirmationType: deferredIntentConfirmationType
         )
     }
 
@@ -86,6 +88,12 @@ extension STPAnalyticsClient {
                              isCustom: isCustom,
                              paymentMethod: paymentMethod),
                              intentConfig: intentConfig)
+    }
+
+    enum DeferredIntentConfirmationType: String {
+        case server = "server"
+        case client = "client"
+        case none = "none"
     }
 
     // MARK: - String builders
@@ -231,6 +239,8 @@ extension STPAnalyticsClient {
         configuration: PaymentSheet.Configuration? = nil,
         currency: String? = nil,
         intentConfig: PaymentSheet.IntentConfiguration? = nil,
+        error: Error? = nil,
+        deferredIntentConfirmationType: DeferredIntentConfirmationType? = nil,
         params: [String: Any] = [:]
     ) {
         var additionalParams = [:] as [String: Any]
@@ -249,6 +259,10 @@ extension STPAnalyticsClient {
         additionalParams["locale"] = Locale.autoupdatingCurrent.identifier
         additionalParams["currency"] = currency
         additionalParams["is_decoupled"] = intentConfig != nil
+        additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
+        if let error = error as? PaymentSheetError {
+            additionalParams["error_message"] = error.safeLoggingString
+        }
 
         for (param, param_value) in params {
             additionalParams[param] = param_value

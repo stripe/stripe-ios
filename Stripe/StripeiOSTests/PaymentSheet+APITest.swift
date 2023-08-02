@@ -13,6 +13,7 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripeUICore
 
 class PaymentSheetAPITest: XCTestCase {
 
@@ -99,7 +100,7 @@ class PaymentSheetAPITest: XCTestCase {
                             intent: paymentIntent,
                             paymentOption: self.newCardPaymentOption,
                             paymentHandler: self.paymentHandler
-                        ) { result in
+                        ) { result, _ in
                             switch result {
                             case .completed:
                                 // 3. Fetch the PI
@@ -183,7 +184,7 @@ class PaymentSheetAPITest: XCTestCase {
                                      intent: .deferredIntent(elementsSession: elementsSession,
                                                              intentConfig: intentConfig),
                                      paymentOption: self.newCardPaymentOption,
-                                     paymentHandler: self.paymentHandler) { result in
+                                     paymentHandler: self.paymentHandler) { result, _ in
                     switch result {
                     case .completed:
                         confirmExpectation.fulfill()
@@ -248,7 +249,7 @@ class PaymentSheetAPITest: XCTestCase {
                                      intent: .deferredIntent(elementsSession: elementsSession,
                                                              intentConfig: intentConfig),
                                      paymentOption: self.newCardPaymentOption,
-                                     paymentHandler: self.paymentHandler) { result in
+                                     paymentHandler: self.paymentHandler) { result, _ in
                     switch result {
                     case .completed:
                         confirmExpectation.fulfill()
@@ -297,7 +298,7 @@ class PaymentSheetAPITest: XCTestCase {
                     intent: paymentIntent,
                     paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa")),
                     paymentHandler: self.paymentHandler
-                ) { result in
+                ) { result, _ in
                     switch result {
                     case .completed:
                         // 3. Fetch the PI
@@ -591,7 +592,7 @@ class PaymentSheetAPITest: XCTestCase {
             intent: intent,
             paymentOption: inputPaymentOption,
             paymentHandler: self.paymentHandler
-        ) { result in
+        ) { result, _ in
             XCTAssertTrue(Thread.isMainThread)
             switch (result, expectedResult) {
             case (.completed, .completed):
@@ -651,7 +652,7 @@ class PaymentSheetAPITest: XCTestCase {
             intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
             paymentHandler: paymentHandler
-        ) { result in
+        ) { result, _ in
             e.fulfill()
             guard case let .failed(error) = result else {
                 XCTFail()
@@ -680,7 +681,7 @@ class PaymentSheetAPITest: XCTestCase {
             intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
             paymentHandler: paymentHandler
-        ) { result in
+        ) { result, _ in
             e.fulfill()
             // The result is completed, even though the IntentConfiguration and PaymentIntent amounts are not the same
             guard case .completed = result else {
@@ -707,7 +708,7 @@ class PaymentSheetAPITest: XCTestCase {
             intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
             paymentHandler: paymentHandler
-        ) { result in
+        ) { result, _ in
             e.fulfill()
             guard case let .failed(error) = result else {
                 XCTFail()
@@ -736,7 +737,7 @@ class PaymentSheetAPITest: XCTestCase {
             intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
             paymentHandler: paymentHandler
-        ) { result in
+        ) { result, _ in
             e.fulfill()
             // The result is completed, even though the IntentConfiguration and SetupIntent setup_future_usage values are not the same
             guard case .completed = result else {
