@@ -478,16 +478,34 @@ final class PartnerAuthViewController: UIViewController {
                     return
                 }
                 self.lastHandledAuthenticationSessionReturnUrl = returnUrl
+
+                let logUrlReceived: (_ status: String?) -> Void = { [weak self] status in
+                    guard let self = self else { return }
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "auth_session.url_received",
+                            parameters: [
+                                "status": status ?? "null",
+                                "url": returnUrl?.absoluteString ?? "null",
+                                "auth_session_id": authSession.id,
+                            ],
+                            pane: .partnerAuth
+                        )
+                }
+
                 if let returnUrl = returnUrl,
                     returnUrl.scheme == "stripe",
                     let urlComponsents = URLComponents(url: returnUrl, resolvingAgainstBaseURL: true),
                     let status = urlComponsents.queryItems?.first(where: { $0.name == "status" })?.value
                 {
+                    logUrlReceived(status)
                     self.handleAuthSessionCompletionWithStatus(status, authSession)
                 }
                 // we did NOT get a `status` back from the backend,
                 // so assume a "cancel"
                 else {
+                    logUrlReceived(nil)
                     self.handleAuthSessionCompletionWithNoStatus(authSession, error)
                 }
 
