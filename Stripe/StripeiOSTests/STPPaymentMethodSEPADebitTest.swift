@@ -14,17 +14,17 @@ class STPPaymentMethodSEPADebitTest: XCTestCase {
         let requiredFields: [String]? = []
 
         for field in requiredFields ?? [] {
-            var response = STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable : Any]
+            var response = STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable: Any]
             response?.removeValue(forKey: field)
 
             XCTAssertNil(STPPaymentMethodSEPADebit.decodedObject(fromAPIResponse: response))
         }
 
-        XCTAssertNotNil(STPPaymentMethodSEPADebit.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable : Any]))
+        XCTAssertNotNil(STPPaymentMethodSEPADebit.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable: Any]))
     }
 
     func testDecodedObjectFromAPIResponseMapping() {
-        let response = STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable : Any]
+        let response = STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable: Any]
         let sepaDebit = STPPaymentMethodSEPADebit.decodedObject(fromAPIResponse: response)
 
         XCTAssertEqual(sepaDebit?.bankCode, "37040044")
@@ -34,7 +34,6 @@ class STPPaymentMethodSEPADebitTest: XCTestCase {
         XCTAssertEqual(sepaDebit?.last4, "3001")
         XCTAssertEqual(sepaDebit?.mandate, "NXDSYREGC9PSMKWY")
 
-        XCTAssertNotEqual(sepaDebit?.allResponseFields as! NSDictionary, response as! NSDictionary)
         XCTAssertEqual(sepaDebit?.allResponseFields as! NSDictionary, response as! NSDictionary)
     }
 }

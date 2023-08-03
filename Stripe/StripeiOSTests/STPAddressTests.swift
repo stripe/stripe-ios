@@ -190,7 +190,7 @@ class STPAddressTests: XCTestCase {
 
         // nil country is treated as generic postal requirement
         XCTAssertFalse(address.containsRequiredFields(.postalCode))
-        address.country = "IE" //should pass for country which doesn't require zip/postal
+        address.country = "IE" // should pass for country which doesn't require zip/postal
         XCTAssertTrue(address.containsRequiredFields(.postalCode))
         address.country = "US"
         XCTAssertFalse(address.containsRequiredFields(.postalCode))
@@ -225,7 +225,7 @@ class STPAddressTests: XCTestCase {
         XCTAssertFalse(address.containsRequiredFields(.full))
         address.postalCode = "ABCDE"
         XCTAssertFalse(address.containsRequiredFields(.full))
-        //postal must be numeric for US
+        // postal must be numeric for US
         address.postalCode = "10002"
         XCTAssertTrue(address.containsRequiredFields(.full))
         address.phone = "8885551212"
@@ -245,7 +245,6 @@ class STPAddressTests: XCTestCase {
         // UK requires ZIP
         address.postalCode = nil
         XCTAssertFalse(address.containsRequiredFields(.full))
-
 
         address.country = "IE" // Doesn't require postal or state, but allows them
         XCTAssertTrue(address.containsRequiredFields(.full))
@@ -327,7 +326,7 @@ class STPAddressTests: XCTestCase {
             STPContactField.postalAddress,
             STPContactField.emailAddress,
             STPContactField.phoneNumber,
-            STPContactField.name
+            STPContactField.name,
         ]) as? Set<STPContactField>
         XCTAssertFalse(address.containsRequiredShippingAddressFields(allFields))
 
@@ -343,13 +342,13 @@ class STPAddressTests: XCTestCase {
         XCTAssertTrue((address.containsRequiredShippingAddressFields(Set<STPContactField>([
             STPContactField.name,
             STPContactField.emailAddress,
-            STPContactField.phoneNumber
+            STPContactField.phoneNumber,
         ]))))
         address.phone = "555"
         XCTAssertFalse((address.containsRequiredShippingAddressFields(Set<STPContactField>([
             STPContactField.name,
             STPContactField.emailAddress,
-            STPContactField.phoneNumber
+            STPContactField.phoneNumber,
         ]))))
         XCTAssertFalse((address.containsRequiredShippingAddressFields(allFields)))
         address.country = "GB"
@@ -358,7 +357,7 @@ class STPAddressTests: XCTestCase {
         XCTAssertTrue((address.containsRequiredShippingAddressFields(Set<STPContactField>([
             STPContactField.name,
             STPContactField.emailAddress,
-            STPContactField.phoneNumber
+            STPContactField.phoneNumber,
         ]))))
 
         address.country = "US"
@@ -446,7 +445,7 @@ class STPAddressTests: XCTestCase {
                             STPContactField.postalAddress,
                             STPContactField.emailAddress,
                             STPContactField.phoneNumber,
-                            STPContactField.name
+                            STPContactField.name,
                         ]))))
 
     }
@@ -465,7 +464,7 @@ class STPAddressTests: XCTestCase {
             "line1": address.line1,
             "line2": address.line2,
             "postal_code": address.postalCode,
-            "state": address.state
+            "state": address.state,
         ],
             "name": address.name,
             "phone": address.phone,

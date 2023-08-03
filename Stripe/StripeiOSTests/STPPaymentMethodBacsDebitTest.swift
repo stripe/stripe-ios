@@ -15,7 +15,7 @@ class STPPaymentMethodBacsDebitTest: XCTestCase {
         let requiredFields: [String]? = []
 
         for field in requiredFields ?? [] {
-            var response = paymentMethodJSON?["bacs_debit"] as? [AnyHashable : Any]
+            var response = paymentMethodJSON?["bacs_debit"] as? [AnyHashable: Any]
             response?.removeValue(forKey: field)
 
             XCTAssertNil(STPPaymentMethodBacsDebit.decodedObject(fromAPIResponse: response))
@@ -27,7 +27,7 @@ class STPPaymentMethodBacsDebitTest: XCTestCase {
     }
 
     func testDecodedObjectFromAPIResponseMapping() {
-        let response = STPTestUtils.jsonNamed(STPTestJSONPaymentMethodBacsDebit)["bacs_debit"] as? [AnyHashable : Any]
+        let response = STPTestUtils.jsonNamed(STPTestJSONPaymentMethodBacsDebit)["bacs_debit"] as? [AnyHashable: Any]
         let bacs = STPPaymentMethodBacsDebit.decodedObject(fromAPIResponse: response)
         XCTAssertEqual(bacs?.fingerprint, "9eMbmctOrd8i7DYa")
         XCTAssertEqual(bacs?.last4, "2345")
