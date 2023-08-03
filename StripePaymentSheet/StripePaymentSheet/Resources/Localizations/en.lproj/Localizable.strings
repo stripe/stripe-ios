@@ -188,8 +188,8 @@ is not supported by the merchant */
 /* Error message when an error case happens when linking your account */
 "Something went wrong when linking your account.\nPlease try again later." = "Something went wrong when linking your account.\nPlease try again later.";
 
-/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete before confirming your bank account with %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete before confirming your bank account with %@.";
+/* Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions before saving your bank account with %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions before saving your bank account with %@.";
 
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
