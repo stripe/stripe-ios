@@ -129,7 +129,6 @@ final class NetworkingOTPView: UIView {
 
     private func userDidEnterValidOTPCode(_ otpCode: String) {
         otpTextField.resignFirstResponder()
-        // TODO(kgaidis): consider implementing a loading/grayed-out state for `otpTextField`
 
         dataSource.confirmVerificationSession(otpCode: otpCode)
             .observe { [weak self] result in
