@@ -1,17 +1,33 @@
+//  Converted to Swift 5.8.1 by Swiftify v5.8.28463 - https://swiftify.com/
 //
 //  STPStringUtilsTest.swift
-//  StripeiOS Tests
+//  Stripe
 //
-//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//  Created by Brian Dorfman on 9/8/16.
+//  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
-
-import Foundation
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPStringUtilsSwiftTest: XCTestCase {
+class STPStringUtilsTest: XCTestCase {
+    func testExpirationDateStrings() {
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: "12/1995"), "12/95")
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: "12 / 1995"), "12 / 95")
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: "12 /1995"), "12 /95")
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: "1295"), "1295")
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: "12/95"), "12/95")
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: "08/2001"), "08/01")
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: " 08/a 2001"), " 08/a 2001")
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: "20/2022"), "20/22")
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: "20/202222"), "20/22")
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: ""), "")
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: " "), " ")
+        XCTAssertEqual(STPStringUtils.expirationDateString(fromString: "12/"), "12/")
+    }
+    
+    
     func testParseRangeSingleTagSuccess1() {
         let exp = self.expectation(description: "Parsed")
         STPStringUtils.parseRange(
