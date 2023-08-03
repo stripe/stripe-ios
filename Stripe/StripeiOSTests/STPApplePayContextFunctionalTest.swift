@@ -9,8 +9,8 @@
 
 import OHHTTPStubs
 @testable import Stripe
-import StripeApplePay
-import StripeCoreTestUtils
+@testable import StripeApplePay
+@testable import StripeCoreTestUtils
 @testable import StripePayments
 
 class STPTestApplePayContextDelegate: NSObject, STPApplePayContextDelegate {

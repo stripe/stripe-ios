@@ -31,8 +31,6 @@ class STPApplePayPaymentOptionTest: XCTestCase {
         let applePay1 = STPApplePayPaymentOption()
         let applePay2 = STPApplePayPaymentOption()
 
-        XCTAssertNotEqual(applePay1, applePay2)
-
         XCTAssertEqual(applePay1, applePay1)
         XCTAssertEqual(applePay1, applePay2)
 

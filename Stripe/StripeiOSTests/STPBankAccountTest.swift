@@ -68,8 +68,6 @@ class STPBankAccountTest: XCTestCase {
         let bankAccount1 = STPBankAccount.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("BankAccount"))
         let bankAccount2 = STPBankAccount.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("BankAccount"))
 
-        XCTAssertNotEqual(bankAccount1, bankAccount2)
-
         XCTAssertEqual(bankAccount1, bankAccount1)
         XCTAssertEqual(bankAccount1, bankAccount2)
 
