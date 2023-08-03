@@ -447,10 +447,7 @@ private extension PayWithLinkButton {
         }
 
         // To use Xcode SwiftUI Previews, comment out the following `accessibilityLabel` setter:
-        accessibilityLabel = String(
-            format: String.Localized.pay_with_link,
-            STPPaymentMethodType.link.displayName
-        )
+        accessibilityLabel = String.Localized.pay_with_link
 
         switch linkAccountState {
         case .hasCard(let last4, let brand):
