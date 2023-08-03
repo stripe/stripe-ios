@@ -10,21 +10,21 @@
 class STPIntentActionTest: XCTestCase {
     func testDecodedObjectFromAPIResponseRedirectToURL() {
 
-        let decode: (([AnyHashable: Any]?) -> STPIntentAction)? = { dict in
-            return .decodedObject(fromAPIResponse: dict)!
+        let decode: (([AnyHashable: Any]?) -> STPIntentAction?) = { dict in
+            return .decodedObject(fromAPIResponse: dict)
         }
 
-        XCTAssertNil(decode?(nil))
-        XCTAssertNil(decode?([:]))
+        XCTAssertNil(decode(nil))
+        XCTAssertNil(decode([:]))
         XCTAssertNil(
-            decode?([
+            decode([
                         "redirect_to_url": [
                         "url": "http://stripe.com"
                     ],
                     ]),
             "fails without type")
 
-        let missingDetails = decode?(
+        let missingDetails = decode(
             [
                         "type": "redirect_to_url"
                     ])
@@ -34,7 +34,7 @@ class STPIntentActionTest: XCTestCase {
             .unknown,
             "Type becomes unknown if the redirect_to_url details are missing")
 
-        let badURL = decode?(
+        let badURL = decode(
             [
                         "type": "redirect_to_url",
                         "redirect_to_url": [
@@ -47,7 +47,7 @@ class STPIntentActionTest: XCTestCase {
             .unknown,
             "Type becomes unknown if the redirect_to_url details don't have a valid URL")
 
-        let missingReturnURL = decode?(
+        let missingReturnURL = decode(
             [
                         "type": "redirect_to_url",
                         "redirect_to_url": [
@@ -65,7 +65,7 @@ class STPIntentActionTest: XCTestCase {
             URL(string: "https://stripe.com/"))
         XCTAssertNil(missingReturnURL?.redirectToURL?.returnURL)
 
-        let badReturnURL = decode?(
+        let badReturnURL = decode(
             [
                         "type": "redirect_to_url",
                         "redirect_to_url": [
@@ -84,7 +84,7 @@ class STPIntentActionTest: XCTestCase {
             URL(string: "https://stripe.com/"))
         XCTAssertNil(badReturnURL?.redirectToURL?.returnURL)
 
-        let complete = decode?(
+        let complete = decode(
             [
                         "type": "redirect_to_url",
                         "redirect_to_url": [
