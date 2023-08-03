@@ -8,6 +8,8 @@
 //
 
 import UIKit
+import XCTest
+@testable import Stripe
 
 class TestViewController: UIViewController {
 }
@@ -15,13 +17,13 @@ class TestViewController: UIViewController {
 class STPUIVCStripeParentViewControllerTests: XCTestCase {
     func testNilParent() {
         let vc = UIViewController()
-        XCTAssertNil(vc.stp_parentViewControllerOfClass(UIViewController.self))
+        XCTAssertNil(vc.stp_parentViewControllerOf(UIViewController.self))
     }
 
     func testNavigationController() {
         let vc = UIViewController()
         let nav = UINavigationController(rootViewController: vc)
-        let parent = vc.stp_parentViewControllerOfClass(UINavigationController.self) as? UINavigationController
+        let parent = vc.stp_parentViewControllerOf(UINavigationController.self) as? UINavigationController
         XCTAssertEqual(nav, parent)
     }
 
@@ -31,7 +33,7 @@ class STPUIVCStripeParentViewControllerTests: XCTestCase {
         let nav = UINavigationController(rootViewController: vc)
         topLevel.addChild(nav)
         nav.didMove(toParent: topLevel)
-        let parent = vc.stp_parentViewControllerOfClass(TestViewController.self) as? TestViewController
+        let parent = vc.stp_parentViewControllerOf(TestViewController.self) as? TestViewController
         XCTAssertEqual(topLevel, parent)
     }
 }

@@ -8,6 +8,7 @@
 //
 
 import XCTest
+import Stripe
 
 class STPTokenTest: XCTestCase {
     func buildTokenResponse() -> [AnyHashable : Any]? {
@@ -35,17 +36,23 @@ class STPTokenTest: XCTestCase {
             "used": NSNumber(value: false),
             "card": cardDict,
             "type": "card"
-        ]
+        ] as [String : Any]
         return tokenDict
     }
 
     func testCreatingTokenWithAttributeDictionarySetsAttributes() {
-        let token = STPToken.decodedObject(fromAPIResponse: buildTokenResponse())
-        XCTAssertEqual(token?.tokenId(), "id_for_token")
-        XCTAssertEqual(token?.livemode(), false, "Generated token has the correct livemode")
-        XCTAssertEqual(token?.type(), STPTokenTypeCard, "Generated token has incorrect type")
+        guard
+            let token = STPToken.decodedObject(fromAPIResponse: buildTokenResponse()),
+            let timeInterval = token.created?.timeIntervalSince1970
+        else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(token.tokenId, "id_for_token")
+        XCTAssertEqual(token.livemode, false, "Generated token has the correct livemode")
+        XCTAssertEqual(token.type, STPTokenType.card, "Generated token has incorrect type")
 
-        XCTAssertEqualWithAccuracy(token?.created().timeIntervalSince1970, 1353025450.0, 1.0, "Generated token has the correct created time")
+        XCTAssertEqual(timeInterval, 1353025450.0, accuracy: 1.0, "Generated token has the correct created time")
     }
 
     func testCreatingTokenSetsAdditionalResponseFields() {
@@ -53,9 +60,9 @@ class STPTokenTest: XCTestCase {
         tokenResponse?["foo"] = "bar"
         let token = STPToken.decodedObject(fromAPIResponse: tokenResponse)
         let allResponseFields = token?.allResponseFields
-        XCTAssertEqual(allResponseFields?["foo"], "bar")
-        XCTAssertEqual(allResponseFields?["livemode"], NSNumber(value: false))
-        XCTAssertNil(allResponseFields)
+        XCTAssertEqual(allResponseFields?["foo"] as? String, "bar")
+        XCTAssertEqual(allResponseFields?["livemode"] as? NSNumber, NSNumber(value: false))
+        XCTAssertNil(allResponseFields?["baz"])
     }
 }
 
