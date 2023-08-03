@@ -24,7 +24,7 @@ class STPConfirmCardOptionsTest: XCTestCase {
         let propertyMap = STPConfirmCardOptions.propertyNamesToFormFieldNamesMapping()
         let expected = [
             "cvc": "cvc",
-            "network": "network"
+            "network": "network",
         ]
         XCTAssertEqual(propertyMap, expected)
     }

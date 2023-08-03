@@ -31,7 +31,7 @@ class STPCustomerTest: XCTestCase {
         let threeDSSource = STPTestUtils.jsonNamed("3DSSource")
 
         var customer = STPTestUtils.jsonNamed("Customer")
-        var sources = customer!["sources"] as? [AnyHashable : Any]
+        var sources = customer!["sources"] as? [AnyHashable: Any]
         sources?["data"] = [applePayCard1, card1, applePayCard2, card2, cardSource, threeDSSource]
         customer!["default_source"] = card1!["id"]
         if let sources {
@@ -50,9 +50,9 @@ class STPCustomerTest: XCTestCase {
         XCTAssertEqual(sut.sources[2].stripeID, cardSource!["id"] as! String)
         XCTAssertEqual(sut.sources[3].stripeID, threeDSSource!["id"] as! String)
 
-        XCTAssertEqual(sut.shippingAddress!.name, (customer!["shipping"] as! [AnyHashable : Any])["name"] as? String)
-        XCTAssertEqual(sut.shippingAddress!.phone, (customer!["shipping"] as! [AnyHashable : Any])["phone"] as? String)
-        let addressDict = (customer!["shipping"] as! [AnyHashable : Any])["address"] as! [AnyHashable : String]
+        XCTAssertEqual(sut.shippingAddress!.name, (customer!["shipping"] as! [AnyHashable: Any])["name"] as? String)
+        XCTAssertEqual(sut.shippingAddress!.phone, (customer!["shipping"] as! [AnyHashable: Any])["phone"] as? String)
+        let addressDict = (customer!["shipping"] as! [AnyHashable: Any])["address"] as! [AnyHashable: String]
         XCTAssertEqual(sut.shippingAddress!.city, addressDict["city"])
         XCTAssertEqual(sut.shippingAddress!.country, addressDict["country"])
         XCTAssertEqual(sut.shippingAddress!.line1, addressDict["line1"])

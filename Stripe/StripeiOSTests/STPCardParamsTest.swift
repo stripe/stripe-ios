@@ -49,8 +49,8 @@ class STPCardParamsTest: XCTestCase {
         XCTAssertEqual(cardParams.address.name, "Smith")
     }
 
-    //#pragma clang diagnostic push
-    //#pragma clang diagnostic ignored "-Wdeprecated"
+    // #pragma clang diagnostic push
+    // #pragma clang diagnostic ignored "-Wdeprecated"
 
     func testAddress() {
         let cardParams = STPCardParams()
@@ -95,7 +95,7 @@ class STPCardParamsTest: XCTestCase {
         XCTAssertEqual(cardParams.addressCountry, "US")
     }
 
-    //#pragma clang diagnostic pop
+    // #pragma clang diagnostic pop
 
     // MARK: - Description Tests
 

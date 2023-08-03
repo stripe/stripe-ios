@@ -15,7 +15,7 @@ class STPConnectAccountFunctionalTest: XCTestCase {
     var client: STPAPIClient!
     var individual: STPConnectAccountIndividualParams!
     var company: STPConnectAccountCompanyParams!
-    
+
     override func setUp() {
         super.setUp()
 

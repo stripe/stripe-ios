@@ -10,7 +10,7 @@
 class STPIntentActionTest: XCTestCase {
     func testDecodedObjectFromAPIResponseRedirectToURL() {
 
-        let decode: (([AnyHashable : Any]?) -> STPIntentAction)? = { dict in
+        let decode: (([AnyHashable: Any]?) -> STPIntentAction)? = { dict in
             return .decodedObject(fromAPIResponse: dict)!
         }
 
@@ -20,7 +20,7 @@ class STPIntentActionTest: XCTestCase {
             decode?([
                         "redirect_to_url": [
                         "url": "http://stripe.com"
-                    ]
+                    ],
                     ]),
             "fails without type")
 
@@ -39,7 +39,7 @@ class STPIntentActionTest: XCTestCase {
                         "type": "redirect_to_url",
                         "redirect_to_url": [
                         "url": "not a url"
-                    ]
+                    ],
                     ])
         XCTAssertNotNil(badURL)
         XCTAssertEqual(
@@ -52,7 +52,7 @@ class STPIntentActionTest: XCTestCase {
                         "type": "redirect_to_url",
                         "redirect_to_url": [
                         "url": "https://stripe.com/"
-                    ]
+                    ],
                     ])
         XCTAssertNotNil(missingReturnURL)
         XCTAssertEqual(
@@ -70,8 +70,8 @@ class STPIntentActionTest: XCTestCase {
                         "type": "redirect_to_url",
                         "redirect_to_url": [
                         "url": "https://stripe.com/",
-                        "return_url": "not a url"
-                    ]
+                        "return_url": "not a url",
+                    ],
                     ])
         XCTAssertNotNil(badReturnURL)
         XCTAssertEqual(
@@ -84,14 +84,13 @@ class STPIntentActionTest: XCTestCase {
             URL(string: "https://stripe.com/"))
         XCTAssertNil(badReturnURL?.redirectToURL?.returnURL)
 
-
         let complete = decode?(
             [
                         "type": "redirect_to_url",
                         "redirect_to_url": [
                         "url": "https://stripe.com/",
-                        "return_url": "my-app://payment-complete"
-                    ]
+                        "return_url": "my-app://payment-complete",
+                    ],
                     ])
         XCTAssertNotNil(complete)
         XCTAssertEqual(complete?.type, .redirectToURL)

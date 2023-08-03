@@ -9,7 +9,7 @@
 
 class STPFPXBankBrandTest: XCTestCase {
     func testStringFromBrand() {
-        let brands : [STPFPXBankBrand] = [
+        let brands: [STPFPXBankBrand] = [
             .affinBank,
             .allianceBank,
             .ambank,
