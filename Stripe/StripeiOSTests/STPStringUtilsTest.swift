@@ -92,7 +92,7 @@ class STPStringUtilsTest: XCTestCase {
         }
         waitForExpectations(timeout: 1)
     }
-    
+
     func testExpirationDateStrings() {
         XCTAssertEqual(STPStringUtils.expirationDateString(from: "12/1995"), "12/95")
         XCTAssertEqual(STPStringUtils.expirationDateString(from: "12 / 1995"), "12 / 95")

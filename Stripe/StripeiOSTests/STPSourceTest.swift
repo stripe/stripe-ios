@@ -7,9 +7,9 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @testable import StripePayments
 @testable import StripePaymentsUI
+import XCTest
 
 class STPSourceTest: XCTestCase {
     // MARK: - STPSourceType Tests
@@ -103,7 +103,6 @@ class STPSourceTest: XCTestCase {
                 XCTAssertEqual(string, "klarna")
             case STPSourceType.unknown:
                 XCTAssertNil(string)
-                break
             default:
                 break
             }
@@ -152,7 +151,6 @@ class STPSourceTest: XCTestCase {
                 XCTAssertEqual(string, "none")
             case .unknown:
                 XCTAssertNil(string)
-                break
             default:
                 break
             }
@@ -207,7 +205,6 @@ class STPSourceTest: XCTestCase {
                 XCTAssertEqual(string, "failed")
             case STPSourceStatus.unknown:
                 XCTAssertNil(string)
-                break
             default:
                 break
             }
@@ -244,7 +241,6 @@ class STPSourceTest: XCTestCase {
                 XCTAssertEqual(string, "single_use")
             case STPSourceUsage.unknown:
                 XCTAssertNil(string)
-                break
             default:
                 break
             }
@@ -309,7 +305,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.type, STPSourceType.threeDSecure)
         XCTAssertEqual(source?.usage, STPSourceUsage.singleUse)
         XCTAssertNil(source?.verification)
-        var threedsecure = response?["three_d_secure"] as? [AnyHashable : Any]
+        var threedsecure = response?["three_d_secure"] as? [AnyHashable: Any]
         threedsecure?.removeValue(forKey: "customer") // should be nil
 //        XCTAssertEqual(source?.details, threedsecure)
         XCTAssertNotNil(source?.details)
@@ -335,7 +331,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.type, STPSourceType.alipay)
         XCTAssertEqual(source?.usage, STPSourceUsage.singleUse)
         XCTAssertNil(source?.verification)
-        var alipayResponse = response!["alipay"] as? [AnyHashable : Any]
+        var alipayResponse = response!["alipay"] as? [AnyHashable: Any]
         alipayResponse?.removeValue(forKey: "native_url") // should be nil
         alipayResponse?.removeValue(forKey: "statement_descriptor") // should be nil
         XCTAssertEqual(source?.details as! NSDictionary, alipayResponse as! NSDictionary)
@@ -428,7 +424,7 @@ class STPSourceTest: XCTestCase {
             STPTestUtils.jsonNamed(STPTestJSONSourceMultibanco),
             STPTestUtils.jsonNamed(STPTestJSONSourceP24),
             STPTestUtils.jsonNamed(STPTestJSONSourceSEPADebit),
-            STPTestUtils.jsonNamed(STPTestJSONSourceSofort)
+            STPTestUtils.jsonNamed(STPTestJSONSourceSofort),
         ]
     }
 

@@ -7,9 +7,9 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+@testable import Stripe
 import UIKit
 import XCTest
-@testable import Stripe
 
 class TestViewController: UIViewController {
 }
@@ -37,45 +37,3 @@ class STPUIVCStripeParentViewControllerTests: XCTestCase {
         XCTAssertEqual(topLevel, parent)
     }
 }
-
-/**
- #import <XCTest/XCTest.h>
- #import <UIKit/UIKit.h>
-
-
- @interface TestViewController : UIViewController
- @end
-
- @implementation TestViewController
- @end
-
- @interface STPUIVCStripeParentViewControllerTests : XCTestCase
- @end
-
- @implementation STPUIVCStripeParentViewControllerTests
-
- - (void)testNilParent {
-     UIViewController *vc = [UIViewController new];
-     XCTAssertNil([vc stp_parentViewControllerOfClass:[UIViewController class]]);
- }
-
- - (void)testNavigationController {
-     UIViewController *vc = [UIViewController new];
-     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-     UINavigationController *parent = (UINavigationController *)[vc stp_parentViewControllerOfClass:[UINavigationController class]];
-     XCTAssertEqual(nav, parent);
- }
-
- - (void)testDeepHeirarchy {
-     UIViewController *topLevel = [TestViewController new];
-     UIViewController *vc = [UIViewController new];
-     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-     [topLevel addChildViewController:nav];
-     [nav didMoveToParentViewController:topLevel];
-     TestViewController *parent = (TestViewController *)[vc stp_parentViewControllerOfClass:[TestViewController class]];
-     XCTAssertEqual(topLevel, parent);
- }
-
- @end
-
- */

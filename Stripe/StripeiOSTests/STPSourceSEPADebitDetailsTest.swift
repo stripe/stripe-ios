@@ -7,14 +7,14 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @testable import StripePayments
+import XCTest
 
 class STPSourceSEPADebitDetailsTest: XCTestCase {
     // MARK: - Description Tests
 
     func testDescription() {
-        let sepaDebitDetails = STPSourceSEPADebitDetails.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable : Any])
+        let sepaDebitDetails = STPSourceSEPADebitDetails.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable: Any])
         XCTAssertNotNil(sepaDebitDetails?.description)
     }
 
@@ -24,17 +24,17 @@ class STPSourceSEPADebitDetailsTest: XCTestCase {
         let requiredFields: [String]? = []
 
         for field in requiredFields ?? [] {
-            var response = STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable : Any]
+            var response = STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable: Any]
             response?.removeValue(forKey: field)
 
             XCTAssertNil(STPSourceSEPADebitDetails.decodedObject(fromAPIResponse: response))
         }
 
-        XCTAssertNotNil(STPSourceSEPADebitDetails.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable : Any]))
+        XCTAssertNotNil(STPSourceSEPADebitDetails.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable: Any]))
     }
 
     func testDecodedObjectFromAPIResponseMapping() {
-        let response = STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable : Any]
+        let response = STPTestUtils.jsonNamed("SEPADebitSource")["sepa_debit"] as? [AnyHashable: Any]
         let sepaDebitDetails = STPSourceSEPADebitDetails.decodedObject(fromAPIResponse: response)
 
         XCTAssertEqual(sepaDebitDetails?.bankCode, "37040044")

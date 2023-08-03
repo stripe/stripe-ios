@@ -7,11 +7,11 @@
 //
 //
 
-import XCTest
 import Stripe
+import XCTest
 
 class STPTokenTest: XCTestCase {
-    func buildTokenResponse() -> [AnyHashable : Any]? {
+    func buildTokenResponse() -> [AnyHashable: Any]? {
         let cardDict = [
             "id": "card_123",
             "exp_month": "12",
@@ -35,8 +35,8 @@ class STPTokenTest: XCTestCase {
             "created": NSNumber(value: 1353025450.0),
             "used": NSNumber(value: false),
             "card": cardDict,
-            "type": "card"
-        ] as [String : Any]
+            "type": "card",
+        ] as [String: Any]
         return tokenDict
     }
 

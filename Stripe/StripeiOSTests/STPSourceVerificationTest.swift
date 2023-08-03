@@ -7,8 +7,8 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @testable import StripePayments
+import XCTest
 
 class STPSourceVerificationTest: XCTestCase {
     // MARK: - STPSourceVerificationStatus Tests
@@ -50,7 +50,6 @@ class STPSourceVerificationTest: XCTestCase {
                 XCTAssertEqual(string, "failed")
             case STPSourceVerificationStatus.unknown:
                 XCTAssertNil(string)
-                break
             default:
                 break
             }
@@ -60,7 +59,7 @@ class STPSourceVerificationTest: XCTestCase {
     // MARK: - Description Tests
 
     func testDescription() {
-        let verification = STPSourceVerification.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("SEPADebitSource")["verification"] as? [AnyHashable : Any])
+        let verification = STPSourceVerification.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("SEPADebitSource")["verification"] as? [AnyHashable: Any])
         XCTAssertNotNil(verification?.description)
     }
 
@@ -72,17 +71,17 @@ class STPSourceVerificationTest: XCTestCase {
         ]
 
         for field in requiredFields {
-            var response = STPTestUtils.jsonNamed("SEPADebitSource")["verification"] as? [AnyHashable : Any]
+            var response = STPTestUtils.jsonNamed("SEPADebitSource")["verification"] as? [AnyHashable: Any]
             response?.removeValue(forKey: field)
 
             XCTAssertNil(STPSourceVerification.decodedObject(fromAPIResponse: response))
         }
 
-        XCTAssertNotNil(STPSourceVerification.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("SEPADebitSource")["verification"] as? [AnyHashable : Any]))
+        XCTAssertNotNil(STPSourceVerification.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("SEPADebitSource")["verification"] as? [AnyHashable: Any]))
     }
 
     func testDecodedObjectFromAPIResponseMapping() {
-        let response = STPTestUtils.jsonNamed("SEPADebitSource")["verification"] as? [AnyHashable : Any]
+        let response = STPTestUtils.jsonNamed("SEPADebitSource")["verification"] as? [AnyHashable: Any]
         let verification = STPSourceVerification.decodedObject(fromAPIResponse: response)
 
         XCTAssertEqual(verification?.attemptsRemaining, NSNumber(value: 5))
