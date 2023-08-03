@@ -451,7 +451,7 @@ class CustomerSheetUITest: XCTestCase {
 
         app.staticTexts["+ Add"].tap()
 
-        try! fillCardData(app, cardNumber: "5555555555554444",  postalEnabled: true)
+        try! fillCardData(app, cardNumber: "5555555555554444", postalEnabled: true)
         app.buttons["Save"].tap()
 
         let confirmButton = app.buttons["Confirm"]
@@ -481,7 +481,7 @@ class CustomerSheetUITest: XCTestCase {
 
         app.staticTexts["+ Add"].tap()
 
-        try! fillCardData(app, cardNumber: "5555555555554444",  postalEnabled: true)
+        try! fillCardData(app, cardNumber: "5555555555554444", postalEnabled: true)
         app.buttons["Save"].tap()
 
         app.staticTexts["Apple Pay"].tap()
