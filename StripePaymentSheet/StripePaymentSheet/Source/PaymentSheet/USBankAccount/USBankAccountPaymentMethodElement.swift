@@ -50,7 +50,7 @@ final class USBankAccountPaymentMethodElement: Element {
     static let ContinueMandateText: String = STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
     static let SaveAccountMandateText: String = STPLocalizedString("By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@).")
     static let MicrodepositCopy: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.", "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name")
-    static let MicrodepositCopy_CustomerSheet: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete before confirming your bank account with %@.", "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name")
+    static let MicrodepositCopy_CustomerSheet: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions before saving your bank account with %@.", "Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name")
 
     var canLinkAccount: Bool {
         let params = self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))
