@@ -8,67 +8,53 @@
 //
 
 import XCTest
-
-class STPBankAccount {
-    private class func status(from string: String?) -> STPBankAccountStatus {
-    }
-
-    private class func string(from status: STPBankAccountStatus) -> String? {
-    }
-
-    private func setLast4(_ last4: String?) {
-    }
-}
+@testable import StripePayments
 
 class STPBankAccountTest: XCTestCase {
     // MARK: - STPBankAccountStatus Tests
 
     func testStatusFromString() {
-        XCTAssertEqual(STPBankAccount.status(from: "new"), STPBankAccountStatusNew)
-        XCTAssertEqual(STPBankAccount.status(from: "NEW"), STPBankAccountStatusNew)
+        XCTAssertEqual(STPBankAccount.status(from: "new"), STPBankAccountStatus.new)
+        XCTAssertEqual(STPBankAccount.status(from: "NEW"), STPBankAccountStatus.new)
 
-        XCTAssertEqual(STPBankAccount.status(from: "validated"), STPBankAccountStatusValidated)
-        XCTAssertEqual(STPBankAccount.status(from: "VALIDATED"), STPBankAccountStatusValidated)
+        XCTAssertEqual(STPBankAccount.status(from: "validated"), STPBankAccountStatus.validated)
+        XCTAssertEqual(STPBankAccount.status(from: "VALIDATED"), STPBankAccountStatus.validated)
 
-        XCTAssertEqual(STPBankAccount.status(from: "verified"), STPBankAccountStatusVerified)
-        XCTAssertEqual(STPBankAccount.status(from: "VERIFIED"), STPBankAccountStatusVerified)
+        XCTAssertEqual(STPBankAccount.status(from: "verified"), STPBankAccountStatus.verified)
+        XCTAssertEqual(STPBankAccount.status(from: "VERIFIED"), STPBankAccountStatus.verified)
 
-        XCTAssertEqual(STPBankAccount.status(from: "verification_failed"), STPBankAccountStatusVerificationFailed)
-        XCTAssertEqual(STPBankAccount.status(from: "VERIFICATION_FAILED"), STPBankAccountStatusVerificationFailed)
+        XCTAssertEqual(STPBankAccount.status(from: "verification_failed"), STPBankAccountStatus.verificationFailed)
+        XCTAssertEqual(STPBankAccount.status(from: "VERIFICATION_FAILED"), STPBankAccountStatus.verificationFailed)
 
-        XCTAssertEqual(STPBankAccount.status(from: "errored"), STPBankAccountStatusErrored)
-        XCTAssertEqual(STPBankAccount.status(from: "ERRORED"), STPBankAccountStatusErrored)
+        XCTAssertEqual(STPBankAccount.status(from: "errored"), STPBankAccountStatus.errored)
+        XCTAssertEqual(STPBankAccount.status(from: "ERRORED"), STPBankAccountStatus.errored)
 
-        XCTAssertEqual(STPBankAccount.status(from: "garbage"), STPBankAccountStatusNew)
-        XCTAssertEqual(STPBankAccount.status(from: "GARBAGE"), STPBankAccountStatusNew)
+        XCTAssertEqual(STPBankAccount.status(from: "garbage"), STPBankAccountStatus.new)
+        XCTAssertEqual(STPBankAccount.status(from: "GARBAGE"), STPBankAccountStatus.new)
     }
 
     func testStringFromStatus() {
         let values = [
-            NSNumber(value: STPBankAccountStatusNew),
-            NSNumber(value: STPBankAccountStatusValidated),
-            NSNumber(value: STPBankAccountStatusVerified),
-            NSNumber(value: STPBankAccountStatusVerificationFailed),
-            NSNumber(value: STPBankAccountStatusErrored)
+            STPBankAccountStatus.new,
+            STPBankAccountStatus.validated,
+            STPBankAccountStatus.verified,
+            STPBankAccountStatus.verificationFailed,
+            STPBankAccountStatus.errored
         ]
 
-        for statusNumber in values {
-            let status = statusNumber.intValue as? STPBankAccountStatus
-            var string: String?
-            if let status {
-                string = STPBankAccount.string(from: status)
-            }
+        for status in values {
+            let string = STPBankAccount.string(from: status)
 
             switch status {
-            case STPBankAccountStatusNew:
+            case STPBankAccountStatus.new:
                 XCTAssertEqual(string, "new")
-            case STPBankAccountStatusValidated:
+            case STPBankAccountStatus.validated:
                 XCTAssertEqual(string, "validated")
-            case STPBankAccountStatusVerified:
+            case STPBankAccountStatus.verified:
                 XCTAssertEqual(string, "verified")
-            case STPBankAccountStatusVerificationFailed:
+            case STPBankAccountStatus.verificationFailed:
                 XCTAssertEqual(string, "verification_failed")
-            case STPBankAccountStatusErrored:
+            case STPBankAccountStatus.errored:
                 XCTAssertEqual(string, "errored")
             default:
                 break
@@ -95,7 +81,7 @@ class STPBankAccountTest: XCTestCase {
 
     func testDescription() {
         let bankAccount = STPBankAccount.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("BankAccount"))
-        XCTAssert(bankAccount?.description)
+        XCTAssertNotNil(bankAccount?.description)
     }
 
     // MARK: - STPAPIResponseDecodable Tests
@@ -112,12 +98,12 @@ class STPBankAccountTest: XCTestCase {
 
         for field in requiredFields {
             var response = STPTestUtils.jsonNamed("BankAccount")
-            response.removeValue(forKey: field)
+            response!.removeValue(forKey: field)
 
             XCTAssertNil(STPBankAccount.decodedObject(fromAPIResponse: response))
         }
 
-        XCTAssert(STPBankAccount.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("BankAccount")))
+        XCTAssertNotNil(STPBankAccount.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("BankAccount")))
     }
 
     func testDecodedObjectFromAPIResponseMapping() {
@@ -126,16 +112,15 @@ class STPBankAccountTest: XCTestCase {
 
         XCTAssertEqual(bankAccount?.stripeID, "ba_1AZmya2eZvKYlo2CQzt7Fwnz")
         XCTAssertEqual(bankAccount?.accountHolderName, "Jane Austen")
-        XCTAssertEqual(bankAccount?.accountHolderType, STPBankAccountHolderTypeIndividual)
+        XCTAssertEqual(bankAccount?.accountHolderType, .individual)
         XCTAssertEqual(bankAccount?.bankName, "STRIPE TEST BANK")
         XCTAssertEqual(bankAccount?.country, "US")
         XCTAssertEqual(bankAccount?.currency, "usd")
         XCTAssertEqual(bankAccount?.fingerprint, "1JWtPxqbdX5Gamtc")
         XCTAssertEqual(bankAccount?.last4, "6789")
         XCTAssertEqual(bankAccount?.routingNumber, "110000000")
-        XCTAssertEqual(bankAccount?.status, STPBankAccountStatusNew)
+        XCTAssertEqual(bankAccount?.status, STPBankAccountStatus.new)
 
-        XCTAssertNotEqual(bankAccount?.allResponseFields, response)
-        XCTAssertEqual(bankAccount?.allResponseFields, response)
+        XCTAssertEqual(bankAccount!.allResponseFields as NSDictionary, response! as NSDictionary)
     }
 }

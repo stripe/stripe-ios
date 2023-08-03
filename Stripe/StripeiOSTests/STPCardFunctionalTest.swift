@@ -31,20 +31,20 @@ class STPCardFunctionalTest: XCTestCase {
 
         client.createToken(
             withCard: card) { token, error in
-            expectation.fulfill()
-
-            XCTAssertNil(error, "error should be nil %@", error?.localizedDescription)
+            XCTAssertNil(error, "error should be nil")
             XCTAssertNotNil(token, "token should not be nil")
 
             XCTAssertNotNil(token?.tokenId)
-            XCTAssertEqual(token?.type, STPTokenTypeCard)
-            XCTAssertEqual(6, token?.card.expMonth)
-            XCTAssertEqual(2024, token?.card.expYear)
-            XCTAssertEqual("4242", token?.card.last4)
-            XCTAssertEqual("usd", token?.card.currency)
-            XCTAssertEqual("10002", token?.card.address.postalCode)
+                XCTAssertEqual(token?.type, .card)
+            XCTAssertEqual(6, token?.card?.expMonth)
+            XCTAssertEqual(2024, token?.card?.expYear)
+            XCTAssertEqual("4242", token?.card?.last4)
+            XCTAssertEqual("usd", token?.card?.currency)
+            XCTAssertEqual("10002", token?.card?.address?.postalCode)
+                expectation.fulfill()
+
         }
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testCardTokenCreationWithInvalidParams() {
@@ -60,15 +60,14 @@ class STPCardFunctionalTest: XCTestCase {
 
         client.createToken(
             withCard: card) { token, error in
-            expectation.fulfill()
-
             XCTAssertNotNil(error, "error should not be nil")
             XCTAssertEqual((error as NSError?)?.code, 70)
-            XCTAssertEqual((error as NSError?)?.domain, STPError.stripeDomain())
-            XCTAssertEqual((error as NSError?)?.userInfo[STPError.errorParameterKey()], "number")
-            XCTAssertNil(token, "token should be nil: %@", token?.description)
+            XCTAssertEqual((error as NSError?)?.domain, STPError.stripeDomain)
+            XCTAssertEqual((error as NSError?)?.userInfo[STPError.errorParameterKey] as! String, "number")
+            XCTAssertNil(token, "token should be nil")
+            expectation.fulfill()
         }
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testCardTokenCreationWithExpiredCard() {
@@ -84,16 +83,15 @@ class STPCardFunctionalTest: XCTestCase {
 
         client.createToken(
             withCard: card) { token, error in
-            expectation.fulfill()
-
             XCTAssertNotNil(error, "error should not be nil")
             XCTAssertEqual((error as NSError?)?.code, 70)
-            XCTAssertEqual((error as NSError?)?.domain, STPError.stripeDomain())
-            XCTAssertEqual((error as NSError?)?.userInfo[STPError.cardErrorCodeKey()], STPError.invalidExpYear())
-            XCTAssertEqual((error as NSError?)?.userInfo[STPError.errorParameterKey()], "expYear")
-            XCTAssertNil(token, "token should be nil: %@", token?.description)
+            XCTAssertEqual((error as NSError?)?.domain, STPError.stripeDomain    )
+            XCTAssertEqual((error as NSError?)?.userInfo[STPError.cardErrorCodeKey] as! String, STPError.invalidExpYear)
+            XCTAssertEqual((error as NSError?)?.userInfo[STPError.errorParameterKey] as! String, "expYear")
+            XCTAssertNil(token, "token should be nil")
+            expectation.fulfill()
         }
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testInvalidKey() {
@@ -108,11 +106,11 @@ class STPCardFunctionalTest: XCTestCase {
         let expectation = self.expectation(description: "Card failure")
         client.createToken(
             withCard: card) { token, error in
-            expectation.fulfill()
             XCTAssertNil(token, "token should be nil")
             XCTAssertNotNil(error, "error should not be nil")
+            expectation.fulfill()
         }
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testCreateCVCUpdateToken() {
@@ -120,17 +118,15 @@ class STPCardFunctionalTest: XCTestCase {
 
         let expectation = self.expectation(description: "CVC Update Token Creation")
 
-        client.createToken(
-            forCVCUpdate: "1234") { token, error in
-            expectation.fulfill()
-
-            XCTAssertNil(error, "error should be nil %@", error?.localizedDescription)
+        client.createToken(forCVCUpdate: "1234") { token, error in
+            XCTAssertNil(error, "error should be nil")
             XCTAssertNotNil(token, "token should not be nil")
 
             XCTAssertNotNil(token?.tokenId)
-            XCTAssertEqual(token?.type, STPTokenTypeCvcUpdate, "token should be type CVC Update")
+            XCTAssertEqual(token?.type, .cvcUpdate, "token should be type CVC Update")
+            expectation.fulfill()
         }
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testInvalidCVC() {
@@ -140,11 +136,10 @@ class STPCardFunctionalTest: XCTestCase {
 
         client.createToken(
             forCVCUpdate: "1") { token, error in
-            expectation.fulfill()
-
             XCTAssertNil(token, "token should be nil")
             XCTAssertNotNil(error, "error should not be nil")
+            expectation.fulfill()
         }
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 }

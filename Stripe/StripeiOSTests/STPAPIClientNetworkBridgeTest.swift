@@ -13,7 +13,7 @@ import StripeCoreTestUtils
 import XCTest
 
 class StripeAPIBridgeNetworkTest: XCTestCase {
-    var client: STPAPIClient?
+    var client: STPAPIClient!
 
     override func setUp() {
         client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
@@ -34,7 +34,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             exp.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: PII
@@ -48,7 +48,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             exp.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testCreateTokenWithSSNLast4() {
@@ -60,7 +60,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             exp.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: Connect Accounts
@@ -76,7 +76,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             exp.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: Upload
@@ -86,15 +86,15 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
         let image = UIImage(
             named: "stp_test_upload_image.jpeg",
             in: Bundle(for: StripeAPIBridgeNetworkTest.self),
-            compatibleWith: nil)
+            compatibleWith: nil)!
 
-        client?.uploadImage(image, purpose: STPFilePurposeDisputeEvidence) { file, error in
+        client?.uploadImage(image, purpose: .disputeEvidence) { file, error in
             XCTAssertNotNil(file)
             XCTAssertNil(error)
             exp.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: Credit Cards
@@ -113,7 +113,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             exp.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testCVCUpdate() {
@@ -125,7 +125,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             exp.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: Sources
@@ -143,26 +143,29 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
 
         let params = STPSourceParams.cardParams(withCard: card)
 
-        client?.createSource(with: params) { [self] source, error in
-            XCTAssertNotNil(source)
+        client.createSource(with: params) { [self] source, error in
+            guard let source = source else {
+                XCTFail()
+                return
+            }
             XCTAssertNil(error)
             exp.fulfill()
 
-            client?.retrieveSource(withId: source?.stripeID, clientSecret: source?.clientSecret) { source2, error2 in
+            client?.retrieveSource(withId: source.stripeID, clientSecret: source.clientSecret!) { source2, error2 in
                 XCTAssertNotNil(source2)
                 XCTAssertNil(error2)
                 expR.fulfill()
             }
 
-            client?.startPollingSource(withId: source?.stripeID, clientSecret: source?.clientSecret, timeout: 10) { [self] source2, error2 in
+            client?.startPollingSource(withId: source.stripeID, clientSecret: source.clientSecret!, timeout: 10) { [self] source2, error2 in
                 XCTAssertNotNil(source2)
                 XCTAssertNil(error2)
-                client?.stopPollingSource(withId: source?.stripeID)
+                client?.stopPollingSource(withId: source.stripeID)
                 expP.fulfill()
             }
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: Payment Intents
@@ -175,20 +178,20 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
         testClient.createPaymentIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 
-            client?.retrievePaymentIntent(withClientSecret: clientSecret) { pi, error2 in
+            client?.retrievePaymentIntent(withClientSecret: clientSecret!) { pi, error2 in
                 XCTAssertNotNil(pi)
                 XCTAssertNil(error2)
                 exp.fulfill()
             }
 
-            client?.retrievePaymentIntent(withClientSecret: clientSecret, expand: ["metadata"]) { pi, error2 in
+            client?.retrievePaymentIntent(withClientSecret: clientSecret!, expand: ["metadata"]) { pi, error2 in
                 XCTAssertNotNil(pi)
                 XCTAssertNil(error2)
                 exp2.fulfill()
             }
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testConfirmPaymentIntent() {
@@ -205,7 +208,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
         testClient.createPaymentIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 
-            let params = STPPaymentIntentParams(clientSecret: clientSecret)
+            let params = STPPaymentIntentParams(clientSecret: clientSecret!)
             params.paymentMethodParams = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
 
             client?.confirmPaymentIntent(with: params) { pi, error2 in
@@ -218,7 +221,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
         testClient.createPaymentIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 
-            let params = STPPaymentIntentParams(clientSecret: clientSecret)
+            let params = STPPaymentIntentParams(clientSecret: clientSecret!)
             params.paymentMethodParams = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
 
             client?.confirmPaymentIntent(with: params) { pi, error2 in
@@ -228,7 +231,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             }
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: Setup Intents
@@ -240,14 +243,14 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
         testClient.createSetupIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 
-            client?.retrieveSetupIntent(withClientSecret: clientSecret) { si, error2 in
+            client?.retrieveSetupIntent(withClientSecret: clientSecret!) { si, error2 in
                 XCTAssertNotNil(si)
                 XCTAssertNil(error2)
                 exp.fulfill()
             }
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testConfirmSetupIntent() {
@@ -263,7 +266,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
         testClient.createSetupIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 
-            let params = STPSetupIntentConfirmParams(clientSecret: clientSecret)
+            let params = STPSetupIntentConfirmParams(clientSecret: clientSecret!)
             params.paymentMethodParams = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
 
             client?.confirmSetupIntent(with: params) { si, error2 in
@@ -273,7 +276,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             }
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: Payment Methods
@@ -295,7 +298,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             exp.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: Radar
@@ -309,7 +312,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             exp.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: ApplePay
@@ -339,7 +342,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             exp3.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testPKPaymentError() {
@@ -358,7 +361,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
             exp.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 }
 

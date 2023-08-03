@@ -12,17 +12,17 @@ class STPApplePayPaymentOptionTest: XCTestCase {
 
     func testImage() {
         let applePay = STPApplePayPaymentOption()
-        XCTAssert(applePay.image())
+        XCTAssertNotNil(applePay.image)
     }
 
     func testTemplateImage() {
         let applePay = STPApplePayPaymentOption()
-        XCTAssert(applePay.templateImage())
+        XCTAssertNotNil(applePay.templateImage)
     }
 
     func testLabel() {
         let applePay = STPApplePayPaymentOption()
-        XCTAssertEqual(applePay.label(), "Apple Pay")
+        XCTAssertEqual(applePay.label, "Apple Pay")
     }
 
     // MARK: - Equality Tests

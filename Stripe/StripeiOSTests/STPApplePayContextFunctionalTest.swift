@@ -10,10 +10,21 @@
 import OHHTTPStubs
 import StripeApplePay
 import StripeCoreTestUtils
+@testable import Stripe
+@testable import StripeApplePay
+@testable import StripePayments
 
 class STPTestApplePayContextDelegate: NSObject, STPApplePayContextDelegate {
+    func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCreatePaymentMethod paymentMethod: StripePayments.STPPaymentMethod, paymentInformation: PKPayment, completion: @escaping StripeApplePay.STPIntentClientSecretCompletionBlock) {
+        didCreatePaymentMethodDelegateMethod!(paymentMethod, paymentInformation, completion)
+    }
+    
+    func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCompleteWith status: StripePayments.STPPaymentStatus, error: Error?) {
+        didCompleteDelegateMethod!(status, error)
+    }
+    
     var didCompleteDelegateMethod: ((_ status: STPPaymentStatus, _ error: Error?) -> Void)?
-    var didCreatePaymentMethodDelegateMethod: ((_ paymentMethod: STPPaymentMethod?, _ paymentInformation: PKPayment?, _ completion: STPIntentClientSecretCompletionBlock) -> Void)?
+    var didCreatePaymentMethodDelegateMethod: ((_ paymentMethod: STPPaymentMethod?, _ paymentInformation: PKPayment?, _ completion: @escaping STPIntentClientSecretCompletionBlock) -> Void)?
 }
 
 //@implementation STPTestApplePayContextDelegate
@@ -35,20 +46,16 @@ class STPTestApplePayContextDelegate: NSObject, STPApplePayContextDelegate {
 //
 //API_AVAILABLE(ios(13.0))
 class STPApplePayContextFunctionalTest: XCTestCase {
-    var apiClient: STPApplePayContextFunctionalTestAPIClient?
-    var delegate: STPTestApplePayContextDelegate?
-    var context: STPApplePayContext?
+    var apiClient: STPApplePayContextFunctionalTestAPIClient!
+    var delegate: STPTestApplePayContextDelegate!
+    var context: STPApplePayContext!
 
     override func setUp() {
         delegate = STPTestApplePayContextDelegate()
-        if #available(iOS 13.0, *) {
-            let apiClient = STPApplePayContextFunctionalTestAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-            apiClient.setupStubs()
-            apiClient.applePayContext = context
-            self.apiClient = apiClient
-        } else {
-            XCTSkip("Unsupported iOS version")
-        }
+        let apiClient = STPApplePayContextFunctionalTestAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        apiClient.setupStubs()
+        apiClient.applePayContext = context
+        self.apiClient = apiClient
 
         context = STPApplePayContext(paymentRequest: STPFixtures.applePayRequest(), delegate: delegate)
         self.apiClient.applePayContext = context
@@ -57,7 +64,7 @@ class STPApplePayContextFunctionalTest: XCTestCase {
     }
 
     override func tearDown() {
-        HTTPStubs.removeAll()
+        HTTPStubs.removeAllStubs()
     }
 
     func testCompletesManualConfirmationPaymentIntent() {
@@ -80,25 +87,25 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         }
 
         // ...used with ApplePayContext
-        let context = STPApplePayContext(paymentRequest: STPFixtures.applePayRequest(), delegate: self.delegate)
+        let context = STPApplePayContext(paymentRequest: STPFixtures.applePayRequest(), delegate: self.delegate)!
         context.apiClient = apiClient
         _startApplePayForContext(withExpectedStatus: .success)
 
         // ...calls applePayContext:didCompleteWithStatus:error:
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
         delegate?.didCompleteDelegateMethod = { [self] status, error in
-            XCTAssertEqual(status, STPPaymentStatusSuccess)
+            XCTAssertEqual(status, .success)
             XCTAssertNil(error)
 
             // ...and results in a successful PI
-            apiClient?.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, paymentIntentRetrieveError in
+            apiClient?.retrievePaymentIntent(withClientSecret: clientSecret!) { paymentIntent, paymentIntentRetrieveError in
                 XCTAssertNil(paymentIntentRetrieveError)
-                XCTAssert(paymentIntent?.status == STPPaymentIntentStatusSucceeded)
+                XCTAssert(paymentIntent?.status == .succeeded)
                 didCallCompletion.fulfill()
             }
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testCompletesAutomaticConfirmationPaymentIntent() {
@@ -119,20 +126,20 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         // ...calls applePayContext:didCompleteWithStatus:error:
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
         delegate?.didCompleteDelegateMethod = { [self] status, error in
-            XCTAssertEqual(status, STPPaymentStatusSuccess)
+            XCTAssertEqual(status, .success)
             XCTAssertNil(error)
 
             // ...and results in a successful PI
-            apiClient?.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, paymentIntentRetrieveError in
+            apiClient?.retrievePaymentIntent(withClientSecret: clientSecret!) { paymentIntent, paymentIntentRetrieveError in
                 XCTAssertNil(paymentIntentRetrieveError)
-                XCTAssert(paymentIntent?.status == STPPaymentIntentStatusSucceeded)
-                XCTAssertEqual(paymentIntent?.shipping.name, "Jane Doe")
-                XCTAssertEqual(paymentIntent?.shipping.address.line1, "510 Townsend St")
+                XCTAssert(paymentIntent?.status == .succeeded)
+                XCTAssertEqual(paymentIntent?.shipping?.name, "Jane Doe")
+                XCTAssertEqual(paymentIntent?.shipping?.address?.line1, "510 Townsend St")
                 didCallCompletion.fulfill()
             }
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testCompletesAutomaticConfirmationPaymentIntentManualCapture() {
@@ -153,18 +160,18 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         // ...calls applePayContext:didCompleteWithStatus:error:
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
         delegate?.didCompleteDelegateMethod = { [self] status, error in
-            XCTAssertEqual(status, STPPaymentStatusSuccess)
+            XCTAssertEqual(status, .success)
             XCTAssertNil(error)
 
             // ...and results in a successful PI
-            apiClient?.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, paymentIntentRetrieveError in
+            apiClient?.retrievePaymentIntent(withClientSecret: clientSecret!) { paymentIntent, paymentIntentRetrieveError in
                 XCTAssertNil(paymentIntentRetrieveError)
-                XCTAssert(paymentIntent?.status == STPPaymentIntentStatusRequiresCapture)
+                XCTAssert(paymentIntent?.status == .requiresCapture)
                 didCallCompletion.fulfill()
             }
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testCompletesSetupIntent() {
@@ -185,18 +192,18 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         // ...calls applePayContext:didCompleteWithStatus:error:
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
         delegate?.didCompleteDelegateMethod = { [self] status, error in
-            XCTAssertEqual(status, STPPaymentStatusSuccess)
+            XCTAssertEqual(status, .success)
             XCTAssertNil(error)
 
             // ...and results in a successful PI
-            apiClient?.retrieveSetupIntent(withClientSecret: clientSecret) { setupIntent, setupIntentRetrieveError in
+            apiClient?.retrieveSetupIntent(withClientSecret: clientSecret!) { setupIntent, setupIntentRetrieveError in
                 XCTAssertNil(setupIntentRetrieveError)
-                XCTAssert(setupIntent?.status == STPSetupIntentStatusSucceeded)
+                XCTAssert(setupIntent?.status == .succeeded)
                 didCallCompletion.fulfill()
             }
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: - Error tests
@@ -219,13 +226,13 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
         delegate?.didCompleteDelegateMethod = { status, error in
             // ...and results in an error
-            XCTAssertEqual(status, STPPaymentStatusError)
+            XCTAssertEqual(status, .error)
             XCTAssertNotNil(error)
-            XCTAssertEqual((error as NSError?)?.domain, STPError.stripeDomain())
+            XCTAssertEqual((error as NSError?)?.domain, STPError.stripeDomain)
             didCallCompletion.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testBadSetupIntentClientSecretErrors() {
@@ -246,13 +253,13 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
         delegate?.didCompleteDelegateMethod = { status, error in
             // ...and results in an error
-            XCTAssertEqual(status, STPPaymentStatusError)
+            XCTAssertEqual(status, .error)
             XCTAssertNotNil(error)
-            XCTAssertEqual((error as NSError?)?.domain, STPError.stripeDomain())
+            XCTAssertEqual((error as NSError?)?.domain, STPError.stripeDomain)
             didCallCompletion.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     // MARK: - Cancel tests
@@ -274,12 +281,12 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
         delegate?.didCompleteDelegateMethod = { status, error in
             // ...and results in a 'user cancel' status
-            XCTAssertEqual(status, STPPaymentStatusUserCancellation)
+            XCTAssertEqual(status, .userCancellation)
             XCTAssertNil(error)
             didCallCompletion.fulfill()
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testCancelAfterPaymentIntentConfirmsStillSucceeds() {
@@ -303,13 +310,13 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         // ...calls applePayContext:didCompleteWithStatus:error:
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
         delegate?.didCompleteDelegateMethod = { [self] status, error in
-            XCTAssertEqual(status, STPPaymentStatusSuccess)
+            XCTAssertEqual(status, .success)
             XCTAssertNil(error)
 
             // ...and results in a successful PI
-            apiClient?.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, paymentIntentRetrieveError in
+            apiClient?.retrievePaymentIntent(withClientSecret: clientSecret!) { paymentIntent, paymentIntentRetrieveError in
                 XCTAssertNil(paymentIntentRetrieveError)
-                XCTAssert(paymentIntent?.status == STPPaymentIntentStatusSucceeded)
+                XCTAssert(paymentIntent?.status == .succeeded)
                 didCallCompletion.fulfill()
             }
         }
@@ -338,13 +345,13 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         // ...calls applePayContext:didCompleteWithStatus:error:
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
         delegate?.didCompleteDelegateMethod = { [self] status, error in
-            XCTAssertEqual(status, STPPaymentStatusSuccess)
+            XCTAssertEqual(status, .success)
             XCTAssertNil(error)
 
             // ...and results in a successful SI
-            apiClient?.retrieveSetupIntent(withClientSecret: clientSecret) { setupIntent, setupIntentRetrieveError in
+            apiClient?.retrieveSetupIntent(withClientSecret: clientSecret!) { setupIntent, setupIntentRetrieveError in
                 XCTAssertNil(setupIntentRetrieveError)
-                XCTAssert(setupIntent?.status == STPSetupIntentStatusSucceeded)
+                XCTAssert(setupIntent?.status == .succeeded)
                 didCallCompletion.fulfill()
             }
         }

@@ -8,11 +8,8 @@
 //
 
 import XCTest
-
-class STPBankAccountParams {
-    private func accountHolderTypeString() -> String? {
-    }
-}
+@testable import Stripe
+@testable import StripePayments
 
 class STPBankAccountParamsTest: XCTestCase {
     // MARK: -
@@ -37,30 +34,29 @@ class STPBankAccountParamsTest: XCTestCase {
     // MARK: - STPBankAccountHolderType Tests
 
     func testAccountHolderTypeFromString() {
-        XCTAssertEqual(STPBankAccountParams.accountHolderType(fromString: "individual"), STPBankAccountHolderTypeIndividual)
-        XCTAssertEqual(STPBankAccountParams.accountHolderType(fromString: "INDIVIDUAL"), STPBankAccountHolderTypeIndividual)
+        XCTAssertEqual(STPBankAccountParams.accountHolderType(from: "individual"), STPBankAccountHolderType.individual)
+        XCTAssertEqual(STPBankAccountParams.accountHolderType(from: "INDIVIDUAL"), STPBankAccountHolderType.individual)
 
-        XCTAssertEqual(STPBankAccountParams.accountHolderType(fromString: "company"), STPBankAccountHolderTypeCompany)
-        XCTAssertEqual(STPBankAccountParams.accountHolderType(fromString: "COMPANY"), STPBankAccountHolderTypeCompany)
+        XCTAssertEqual(STPBankAccountParams.accountHolderType(from: "company"), STPBankAccountHolderType.company)
+        XCTAssertEqual(STPBankAccountParams.accountHolderType(from: "COMPANY"), STPBankAccountHolderType.company)
 
-        XCTAssertEqual(STPBankAccountParams.accountHolderType(fromString: "garbage"), STPBankAccountHolderTypeIndividual)
-        XCTAssertEqual(STPBankAccountParams.accountHolderType(fromString: "GARBAGE"), STPBankAccountHolderTypeIndividual)
+        XCTAssertEqual(STPBankAccountParams.accountHolderType(from: "garbage"), STPBankAccountHolderType.individual)
+        XCTAssertEqual(STPBankAccountParams.accountHolderType(from: "GARBAGE"), STPBankAccountHolderType.individual)
     }
 
     func testStringFromAccountHolderType() {
         let values = [
-            NSNumber(value: STPBankAccountHolderTypeIndividual),
-            NSNumber(value: STPBankAccountHolderTypeCompany),
+            STPBankAccountHolderType.individual,
+            STPBankAccountHolderType.company,
         ]
 
-        for accountHolderTypeNumber in values {
-            let accountHolderType = accountHolderTypeNumber.intValue as? STPBankAccountHolderType
+        for accountHolderType in values {
             let string = STPBankAccountParams.string(from: accountHolderType)
 
             switch accountHolderType {
-            case STPBankAccountHolderTypeIndividual:
+            case STPBankAccountHolderType.individual:
                 XCTAssertEqual(string, "individual")
-            case STPBankAccountHolderTypeCompany:
+            case STPBankAccountHolderType.company:
                 XCTAssertEqual(string, "company")
             default:
                 break
@@ -72,7 +68,7 @@ class STPBankAccountParamsTest: XCTestCase {
 
     func testDescription() {
         let bankAccountParams = STPBankAccountParams()
-        XCTAssert(bankAccountParams.description)
+        XCTAssertNotNil(bankAccountParams.description)
     }
 
     // MARK: - STPFormEncodable Tests
@@ -102,16 +98,16 @@ class STPBankAccountParamsTest: XCTestCase {
             XCTAssert(formFieldName.count > 0)
         }
 
-        XCTAssertEqual(mapping.values.count, Set<AnyHashable>(mapping.values).count)
+        XCTAssertEqual(mapping.values.count, Set(mapping.values).count)
     }
 
     func testAccountHolderTypeString() {
         let bankAccountParams = STPBankAccountParams()
 
-        bankAccountParams.accountHolderType = STPBankAccountHolderTypeIndividual
+        bankAccountParams.accountHolderType = STPBankAccountHolderType.individual
         XCTAssertEqual(bankAccountParams.accountHolderTypeString(), "individual")
 
-        bankAccountParams.accountHolderType = STPBankAccountHolderTypeCompany
+        bankAccountParams.accountHolderType = .company
         XCTAssertEqual(bankAccountParams.accountHolderTypeString(), "company")
     }
 }

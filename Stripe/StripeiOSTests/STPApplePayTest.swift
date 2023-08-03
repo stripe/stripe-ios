@@ -34,29 +34,29 @@ class STPApplePaySwiftTest: XCTestCase {
     
     func testPaymentRequestWithMerchantIdentifierCountryCurrency() {
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: "foo", country: "GB", currency: "GBP")
-        XCTAssertEqual(paymentRequest?.merchantIdentifier, "foo")
+        XCTAssertEqual(paymentRequest.merchantIdentifier, "foo")
         if #available(iOS 12, *) {
-            let expectedNetworks = Set<AnyHashable>([
+            let expectedNetworks = Set<PKPaymentNetwork>([
                 .amex,
                 .masterCard,
                 .visa,
                 .discover,
                 .maestro
             ])
-            XCTAssertEqual(Set<AnyHashable>(paymentRequest?.supportedNetworks), expectedNetworks)
+            XCTAssertEqual(Set(paymentRequest.supportedNetworks), expectedNetworks)
         } else {
-            let expectedNetworks = Set<AnyHashable>([
+            let expectedNetworks = Set<PKPaymentNetwork>([
                 .amex,
                 .masterCard,
                 .visa,
                 .discover
             ])
-            XCTAssertEqual(Set<AnyHashable>(paymentRequest?.supportedNetworks), expectedNetworks)
+            XCTAssertEqual(Set(paymentRequest.supportedNetworks), expectedNetworks)
         }
-        XCTAssertEqual(paymentRequest?.merchantCapabilities, PKMerchantCapability.capability3DS)
-        XCTAssertEqual(paymentRequest?.countryCode, "GB")
-        XCTAssertEqual(paymentRequest?.currencyCode, "GBP")
-        XCTAssertEqual(paymentRequest?.requiredBillingContactFields, Set<AnyHashable>([.postalAddress]))
+        XCTAssertEqual(paymentRequest.merchantCapabilities, PKMerchantCapability.capability3DS)
+        XCTAssertEqual(paymentRequest.countryCode, "GB")
+        XCTAssertEqual(paymentRequest.currencyCode, "GBP")
+        XCTAssertEqual(paymentRequest.requiredBillingContactFields, Set([.postalAddress]))
     }
 
     func testCanSubmitPaymentRequestReturnsYES() {

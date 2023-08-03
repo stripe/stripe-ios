@@ -17,7 +17,7 @@ class STPBankAccountFunctionalTest: XCTestCase {
         bankAccount.routingNumber = "110000000"
         bankAccount.country = "US"
         bankAccount.accountHolderName = "Jimmy bob"
-        bankAccount.accountHolderType = STPBankAccountHolderTypeCompany
+        bankAccount.accountHolderType = STPBankAccountHolderType.company
 
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
@@ -25,19 +25,19 @@ class STPBankAccountFunctionalTest: XCTestCase {
         client.createToken(
             withBankAccount: bankAccount) { token, error in
             expectation.fulfill()
-            XCTAssertNil(error, "error should be nil %@", error?.localizedDescription)
+            XCTAssertNil(error, "error should be nil")
             XCTAssertNotNil(token, "token should not be nil")
 
             XCTAssertNotNil(token?.tokenId)
-            XCTAssertEqual(token?.type, STPTokenTypeBankAccount)
-            XCTAssertNotNil(token?.bankAccount.stripeID)
-            XCTAssertEqual("STRIPE TEST BANK", token?.bankAccount.bankName)
-            XCTAssertEqual("6789", token?.bankAccount.last4)
-            XCTAssertEqual("Jimmy bob", token?.bankAccount.accountHolderName)
-            XCTAssertEqual(token?.bankAccount.accountHolderType, STPBankAccountHolderTypeCompany)
+                XCTAssertEqual(token?.type, .bankAccount)
+            XCTAssertNotNil(token?.bankAccount?.stripeID)
+                XCTAssertEqual("STRIPE TEST BANK", token?.bankAccount?.bankName)
+                XCTAssertEqual("6789", token?.bankAccount?.last4)
+            XCTAssertEqual("Jimmy bob", token?.bankAccount?.accountHolderName)
+            XCTAssertEqual(token?.bankAccount?.accountHolderType, STPBankAccountHolderType.company)
         }
 
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
     func testInvalidKey() {
@@ -56,6 +56,6 @@ class STPBankAccountFunctionalTest: XCTestCase {
             XCTAssertNil(token, "token should be nil")
             XCTAssertNotNil(error, "error should not be nil")
         }
-        waitForExpectations(timeout: TestConstants.stpTestingNetworkRequestTimeout, handler: nil)
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 }
