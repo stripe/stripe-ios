@@ -143,16 +143,15 @@ class STPApplePayContextFunctionalTest: XCTestCase {
     }
 
     func testCompletesAutomaticConfirmationPaymentIntentManualCapture() {
-        let clientSecret: String? = nil
+        var clientSecret: String? = nil
         // An automatic confirmation PI with the PaymentMethod attached...
         let delegate = self.delegate
-        //    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
-        //        [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{@"capture_method": @"manual"} completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
-        //            XCTAssertNotNil(_clientSecret);
-        //            clientSecret = _clientSecret;
-        //            completion(clientSecret, nil);
-        //        }];
-        //    };
+        delegate?.didCreatePaymentMethodDelegateMethod = { paymentMethod, paymentInformation, completion in
+            STPTestingAPIClient.shared().createPaymentIntent(withParams: ["capture_method": "manual"]) { newClientSecret, error in
+                clientSecret = newClientSecret
+                completion(newClientSecret, nil)
+            }
+        }
 
         // ...used with ApplePayContext
         _startApplePayForContext(withExpectedStatus: .success)
