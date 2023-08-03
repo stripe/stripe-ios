@@ -6,4 +6,3 @@
 #import "STPTestingAPIClient.h"
 #import "STPTestUtils.h"
 #import "STPFixtures.h"
-#import "NSLocale+STPSwizzling.h"
