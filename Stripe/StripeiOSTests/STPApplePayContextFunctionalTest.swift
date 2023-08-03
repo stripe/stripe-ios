@@ -27,24 +27,6 @@ class STPTestApplePayContextDelegate: NSObject, STPApplePayContextDelegate {
     var didCreatePaymentMethodDelegateMethod: ((_ paymentMethod: STPPaymentMethod?, _ paymentInformation: PKPayment?, _ completion: @escaping STPIntentClientSecretCompletionBlock) -> Void)?
 }
 
-//@implementation STPTestApplePayContextDelegate
-//
-//- (void)applePayContext:(__unused STPApplePayContext *)context didCompleteWithStatus:(STPPaymentStatus)status error:(nullable NSError *)error {
-//    self.didCompleteDelegateMethod(status, error);
-//}
-//
-//- (void)applePayContext:(__unused STPApplePayContext *)context didCreatePaymentMethod:(STPPaymentMethod *)paymentMethod paymentInformation:(PKPayment *)paymentInformation completion:(nonnull STPIntentClientSecretCompletionBlock)completion {
-//    self.didCreatePaymentMethodDelegateMethod(paymentMethod, paymentInformation, completion);
-//}
-//
-//@end
-
-
-//@interface STPApplePayContext(Testing) <PKPaymentAuthorizationControllerDelegate>
-//@property (nonatomic, nullable) PKPaymentAuthorizationController *authorizationController;
-//@end
-//
-//API_AVAILABLE(ios(13.0))
 class STPApplePayContextFunctionalTest: XCTestCase {
     var apiClient: STPApplePayContextFunctionalTestAPIClient!
     var delegate: STPTestApplePayContextDelegate!
@@ -109,16 +91,15 @@ class STPApplePayContextFunctionalTest: XCTestCase {
     }
 
     func testCompletesAutomaticConfirmationPaymentIntent() {
-        let clientSecret: String? = nil
+        var clientSecret: String? = nil
         // An automatic confirmation PI with the PaymentMethod attached...
         let delegate = self.delegate
-        //    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
-        //        [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:nil completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
-        //            XCTAssertNotNil(_clientSecret);
-        //            clientSecret = _clientSecret;
-        //            completion(clientSecret, nil);
-        //        }];
-        //    };
+        delegate?.didCreatePaymentMethodDelegateMethod = { paymentMethod, paymentInformation, completion in
+            STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) { newClientSecret, error in
+                clientSecret = newClientSecret
+                completion(newClientSecret, nil)
+            }
+        }
 
         // ...used with ApplePayContext
         _startApplePayForContext(withExpectedStatus: .success)
@@ -174,16 +155,15 @@ class STPApplePayContextFunctionalTest: XCTestCase {
     }
 
     func testCompletesSetupIntent() {
-        let clientSecret: String? = nil
+        var clientSecret: String? = nil
         // An automatic confirmation SI...
         let delegate = self.delegate
-        //    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
-        //        [[STPTestingAPIClient sharedClient] createSetupIntentWithParams:nil completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
-        //            XCTAssertNotNil(_clientSecret);
-        //            clientSecret = _clientSecret;
-        //            completion(clientSecret, nil);
-        //        }];
-        //    };
+        delegate?.didCreatePaymentMethodDelegateMethod = { paymentMethod, paymentInformation, completion in
+            STPTestingAPIClient.shared().createSetupIntent(withParams: nil) { newClientSecret, error in
+                clientSecret = newClientSecret
+                completion(newClientSecret, nil)
+            }
+        }
 
         // ...used with ApplePayContext
         _startApplePayForContext(withExpectedStatus: .success)
@@ -208,9 +188,16 @@ class STPApplePayContextFunctionalTest: XCTestCase {
     // MARK: - Error tests
 
     func testBadPaymentIntentClientSecretErrors() {
-        let clientSecret: String? = nil
+        var clientSecret: String? = nil
         // An invalid PaymentIntent client secret...
         let delegate = self.delegate
+        delegate?.didCreatePaymentMethodDelegateMethod = { paymentMethod, paymentInformation, completion in
+            DispatchQueue.main.async {
+                clientSecret = "pi_bad_secret_1234"
+                completion(clientSecret, nil)
+            }
+        }
+
         //    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
         //        dispatch_async(dispatch_get_main_queue(), ^{
         //            clientSecret = @"pi_bad_secret_1234";
@@ -235,15 +222,15 @@ class STPApplePayContextFunctionalTest: XCTestCase {
     }
 
     func testBadSetupIntentClientSecretErrors() {
-        let clientSecret: String? = nil
+        var clientSecret: String? = nil
         // An invalid SetupIntent client secret...
         let delegate = self.delegate
-        //    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
-        //        dispatch_async(dispatch_get_main_queue(), ^{
-        //            clientSecret = @"seti_bad_secret_1234";
-        //            completion(clientSecret, nil);
-        //        });
-        //    };
+        delegate?.didCreatePaymentMethodDelegateMethod = { paymentMethod, paymentInformation, completion in
+            DispatchQueue.main.async {
+                clientSecret = "seti_bad_secret_1234"
+                completion(clientSecret, nil)
+            }
+        }
 
         // ...used with ApplePayContext
         _startApplePayForContext(withExpectedStatus: .failure)
@@ -266,15 +253,13 @@ class STPApplePayContextFunctionalTest: XCTestCase {
     func testCancelBeforeIntentConfirmsCancels() {
         // Cancelling Apple Pay *before* the context attempts to confirms the PI/SI...
         let delegate = self.delegate
-        //    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
-        //        [self.context paymentAuthorizationControllerDidFinish:self.context.authorizationController]; // Simulate cancel before passing PI to the context
-        //        // ...should never retrieve the PI (b/c it is cancelled before)
-        //        completion(@"A 'client secret' that triggers an exception if fetched", nil);
-        //    };
-
-        //    [self.context paymentAuthorizationController:self.context.authorizationController
-        //                                 didAuthorizePayment:[STPFixtures simulatorApplePayPayment]
-        //                                             handler:^(PKPaymentAuthorizationResult * __unused _Nonnull result) {}]; // Simulate user tapping 'Pay' button in Apple Pay
+        delegate?.didCreatePaymentMethodDelegateMethod = { paymentMethod, paymentInformation, completion in
+            self.context.paymentAuthorizationControllerDidFinish(self.context.authorizationController!)  // Simulate cancel before passing PI to the context
+            // ...should never retrieve the PI (b/c it is cancelled before)
+            completion("A 'client secret' that triggers an exception if fetched", nil)
+        }
+        // Simulate user tapping 'Pay' button in Apple Pay
+        self.context.paymentAuthorizationController(self.context.authorizationController!, didAuthorizePayment: STPFixtures.simulatorApplePayPayment()) { _ in }
 
         // ...calls applePayContext:didCompleteWithStatus:error:
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
@@ -292,20 +277,18 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         // Cancelling Apple Pay *after* the context attempts to confirm the PI...
         apiClient?.shouldSimulateCancelAfterConfirmBegins = true
 
-        let clientSecret: String? = nil
+        var clientSecret: String? = nil
         let delegate = self.delegate
-        //    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
-        //        [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:nil completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
-        //            XCTAssertNotNil(_clientSecret);
-        //            clientSecret = _clientSecret;
-        //            completion(clientSecret, nil);
-        //        }];
-        //    };
+        delegate?.didCreatePaymentMethodDelegateMethod = { paymentMethod, paymentInformation, completion in
+            STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) { newClientSecret, error in
+                clientSecret = newClientSecret
+                completion(newClientSecret, nil)
+            }
+        }
+        // Simulate user tapping 'Pay' button in Apple Pay
+        self.context.paymentAuthorizationController(self.context.authorizationController!, didAuthorizePayment: STPFixtures.simulatorApplePayPayment()) { _ in }
 
-        //    [self.context paymentAuthorizationController:self.context.authorizationController
-        //                                 didAuthorizePayment:[STPFixtures simulatorApplePayPayment]
-        //                                             handler:^(PKPaymentAuthorizationResult * __unused _Nonnull result) {}]; // Simulate user tapping 'Pay' button in Apple Pay
-        //
+        
         // ...calls applePayContext:didCompleteWithStatus:error:
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
         delegate?.didCompleteDelegateMethod = { [self] status, error in
@@ -327,19 +310,16 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         // Cancelling Apple Pay *after* the context attempts to confirm the SI...
         apiClient?.shouldSimulateCancelAfterConfirmBegins = true
 
-        let clientSecret: String? = nil
+        var clientSecret: String? = nil
         let delegate = self.delegate
-        //    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
-        //        [[STPTestingAPIClient sharedClient] createSetupIntentWithParams:nil completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
-        //            XCTAssertNotNil(_clientSecret);
-        //            clientSecret = _clientSecret;
-        //            completion(clientSecret, nil);
-        //        }];
-        //    };
-
-        //    [self.context paymentAuthorizationController:self.context.authorizationController
-        //                                 didAuthorizePayment:[STPFixtures simulatorApplePayPayment]
-        //                                             handler:^(PKPaymentAuthorizationResult * __unused _Nonnull result) {}]; // Simulate user tapping 'Pay' button in Apple Pay
+        delegate?.didCreatePaymentMethodDelegateMethod = { paymentMethod, paymentInformation, completion in
+            STPTestingAPIClient.shared().createSetupIntent(withParams: nil) { newClientSecret, error in
+                clientSecret = newClientSecret
+                completion(newClientSecret, nil)
+            }
+        }
+        // Simulate user tapping 'Pay' button in Apple Pay
+        self.context.paymentAuthorizationController(self.context.authorizationController!, didAuthorizePayment: STPFixtures.simulatorApplePayPayment()) { _ in }
 
         // ...calls applePayContext:didCompleteWithStatus:error:
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
