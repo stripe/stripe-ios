@@ -7,9 +7,9 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @testable import Stripe
 @testable import StripePayments
+import XCTest
 
 class STPBankAccountParamsTest: XCTestCase {
     // MARK: -

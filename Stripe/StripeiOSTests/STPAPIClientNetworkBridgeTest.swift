@@ -306,7 +306,7 @@ class StripeAPIBridgeNetworkTest: XCTestCase {
     func testCreateRadarSession() {
         let exp = expectation(description: "Create session")
 
-        client?.createRadarSession() { session, error in
+        client?.createRadarSession { session, error in
             XCTAssertNotNil(session)
             XCTAssertNil(error)
             exp.fulfill()

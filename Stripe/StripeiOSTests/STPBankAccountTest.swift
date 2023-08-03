@@ -7,8 +7,8 @@
 //
 //
 
-import XCTest
 @testable import StripePayments
+import XCTest
 
 class STPBankAccountTest: XCTestCase {
     // MARK: - STPBankAccountStatus Tests
@@ -39,7 +39,7 @@ class STPBankAccountTest: XCTestCase {
             STPBankAccountStatus.validated,
             STPBankAccountStatus.verified,
             STPBankAccountStatus.verificationFailed,
-            STPBankAccountStatus.errored
+            STPBankAccountStatus.errored,
         ]
 
         for status in values {

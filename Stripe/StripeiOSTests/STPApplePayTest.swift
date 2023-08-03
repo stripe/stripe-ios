@@ -31,7 +31,7 @@ class STPApplePaySwiftTest: XCTestCase {
         XCTAssertEqual((applePayDict["card"] as! NSDictionary)["name"] as! String, "Test Testerson")
         XCTAssertEqual(applePayDict["pk_token_instrument_name"] as! String, "Master Charge")
     }
-    
+
     func testPaymentRequestWithMerchantIdentifierCountryCurrency() {
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: "foo", country: "GB", currency: "GBP")
         XCTAssertEqual(paymentRequest.merchantIdentifier, "foo")
@@ -41,7 +41,7 @@ class STPApplePaySwiftTest: XCTestCase {
                 .masterCard,
                 .visa,
                 .discover,
-                .maestro
+                .maestro,
             ])
             XCTAssertEqual(Set(paymentRequest.supportedNetworks), expectedNetworks)
         } else {
@@ -49,7 +49,7 @@ class STPApplePaySwiftTest: XCTestCase {
                 .amex,
                 .masterCard,
                 .visa,
-                .discover
+                .discover,
             ])
             XCTAssertEqual(Set(paymentRequest.supportedNetworks), expectedNetworks)
         }

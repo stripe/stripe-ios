@@ -15,13 +15,12 @@ import XCTest
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 import ObjectiveC
 
 class STPLocaleSwizzling {
     static var stpLocaleOverride: NSLocale?
     static var hasSwizzled: Bool = false
-    
+
 }
 
 extension NSLocale {
