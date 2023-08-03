@@ -197,13 +197,6 @@ class STPApplePayContextFunctionalTest: XCTestCase {
             }
         }
 
-        //    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
-        //        dispatch_async(dispatch_get_main_queue(), ^{
-        //            clientSecret = @"pi_bad_secret_1234";
-        //            completion(clientSecret, nil);
-        //        });
-        //    };
-
         // ...used with ApplePayContext
         _startApplePayForContext(withExpectedStatus: .failure)
 
