@@ -10,6 +10,7 @@
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import XCTest
 
 class STPPaymentMethodTest: XCTestCase {
     // MARK: - STPPaymentMethodType Tests

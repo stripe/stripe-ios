@@ -5,6 +5,7 @@
 //  Created by Jack Flintermann on 5/24/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
+import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore

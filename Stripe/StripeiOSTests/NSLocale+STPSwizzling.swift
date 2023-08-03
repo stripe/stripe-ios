@@ -1,4 +1,12 @@
 //  Converted to Swift 5.8.1 by Swiftify v5.8.28463 - https://swiftify.com/
+import Foundation
+import XCTest
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsUI
 //
 //  NSLocale+STPSwizzling.swift
 //  StripeiOS Tests
@@ -10,7 +18,9 @@
 import Foundation
 import ObjectiveC
 
-private var _stpLocaleOverride: NSLocale?
+class STPLocaleSwizzling {
+    static var stpLocaleOverride: NSLocale?
+}
 
 extension NSLocale {
     override class func load() {
@@ -28,11 +38,11 @@ extension NSLocale {
         self.stp_setCurrentLocale(locale)
         block()
         self.stp_resetCurrentLocale()
-        assert((currentLocale == NSLocale.current), "Failed to reset locale.")
+        assert((currentLocale as Locale == NSLocale.current), "Failed to reset locale.")
     }
 
     class func stp_setCurrentLocale(_ locale: NSLocale?) {
-        stpLocaleOverride = locale
+        STPLocaleSwizzling.stpLocaleOverride = locale
     }
 
     class func stp_resetCurrentLocale() {
@@ -40,15 +50,15 @@ extension NSLocale {
     }
 
     @objc class func stp_current() -> Self {
-        return stpLocaleOverride ?? self.stp_current()
+        return STPLocaleSwizzling.stpLocaleOverride ?? self.stp_current()
     }
 
     @objc class func stp_autoUpdatingCurrent() -> Self {
-        return stpLocaleOverride ?? self.stp_autoUpdatingCurrent()
+        return STPLocaleSwizzling.stpLocaleOverride ?? self.stp_autoUpdatingCurrent()
     }
 
     @objc class func stp_system() -> Self {
-        return stpLocaleOverride ?? self.stp_system()
+        return STPLocaleSwizzling.stpLocaleOverride ?? self.stp_system()
     }
 }
 

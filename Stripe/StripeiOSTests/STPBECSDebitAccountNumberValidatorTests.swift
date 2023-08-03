@@ -7,6 +7,7 @@
 //
 
 @_spi(STP) import StripeCore
+import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore

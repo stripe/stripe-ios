@@ -1,4 +1,12 @@
 //  Converted to Swift 5.8.1 by Swiftify v5.8.28463 - https://swiftify.com/
+import Foundation
+import XCTest
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsUI
 //
 //  STPApplePayTest.swift
 //  Stripe
@@ -15,33 +23,33 @@ import XCTest
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
-
+import PassKit
 class STPApplePayTest: XCTestCase {
     func testPaymentRequestWithMerchantIdentifierCountryCurrency() {
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: "foo", country: "GB", currency: "GBP")
-        XCTAssertEqual(paymentRequest?.merchantIdentifier, "foo")
+        XCTAssertEqual(paymentRequest.merchantIdentifier, "foo")
         if #available(iOS 12, *) {
-            let expectedNetworks = Set<AnyHashable>([
+            let expectedNetworks = Set<PKPaymentNetwork>([
                 .amex,
                 .masterCard,
                 .visa,
                 .discover,
                 .maestro
             ])
-            XCTAssertEqual(Set<AnyHashable>(paymentRequest?.supportedNetworks), expectedNetworks)
+            XCTAssertEqual(paymentRequest?.supportedNetworks, expectedNetworks)
         } else {
-            let expectedNetworks = Set<AnyHashable>([
+            let expectedNetworks = Set<PKPaymentNetwork>([
                 .amex,
                 .masterCard,
                 .visa,
                 .discover
             ])
-            XCTAssertEqual(Set<AnyHashable>(paymentRequest?.supportedNetworks), expectedNetworks)
+            XCTAssertEqual(paymentRequest?.supportedNetworks, expectedNetworks)
         }
         XCTAssertEqual(paymentRequest?.merchantCapabilities.rawValue ?? 0, PKMerchantCapability.capability3DS.rawValue)
-        XCTAssertEqual(paymentRequest?.countryCode, "GB")
-        XCTAssertEqual(paymentRequest?.currencyCode, "GBP")
-        XCTAssertEqual(paymentRequest?.requiredBillingContactFields, Set<AnyHashable>([.postalAddress]))
+        XCTAssertEqual(paymentRequest.countryCode, "GB")
+        XCTAssertEqual(paymentRequest.currencyCode, "GBP")
+        XCTAssertEqual(paymentRequest?.requiredBillingContactFields, [.postalAddress])
     }
 
     func testCanSubmitPaymentRequestReturnsYES() {

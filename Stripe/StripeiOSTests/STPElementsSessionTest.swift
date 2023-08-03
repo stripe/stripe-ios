@@ -8,6 +8,7 @@
 import Foundation
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import XCTest
 
 class STPElementsSessionTest: XCTestCase {
 

@@ -5,6 +5,7 @@
 //  Created by Cameron Sabol on 7/15/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
+import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments

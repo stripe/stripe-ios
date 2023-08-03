@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 6/18/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
+import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore

@@ -3,6 +3,3 @@
 //
 
 #include "../../BuildConfigurations/StripeiOS Tests-Debug.xcconfig"
-
-SWIFT_OBJC_BRIDGING_HEADER = StripeiOSTests/StripeiOS Tests-Bridging-Header.h
-GCC_PREFIX_HEADER = StripeiOSTests/StripeTests-Prefix.pch

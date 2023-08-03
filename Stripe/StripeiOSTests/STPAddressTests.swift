@@ -1,4 +1,12 @@
 //  Converted to Swift 5.8.1 by Swiftify v5.8.28463 - https://swiftify.com/
+import Foundation
+import XCTest
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsUI
 //
 //  STPAddressTests.m
 //  Stripe
@@ -9,6 +17,7 @@
 
 import Contacts
 import PassKit
+import XCTest
 
 class STPAddressTests: XCTestCase {
     func testInitWithPKContact_complete() {

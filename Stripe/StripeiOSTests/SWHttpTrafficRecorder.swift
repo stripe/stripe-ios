@@ -1,4 +1,12 @@
 //  Converted to Swift 5.8.1 by Swiftify v5.8.28463 - https://swiftify.com/
+import Foundation
+import XCTest
+
+@testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsUI
 ///********************************************************************************
 /// Copyright 2015 Capital One Services, LLC
 /// SPDX-License-Identifier: Apache-2.0
