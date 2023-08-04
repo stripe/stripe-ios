@@ -47,7 +47,7 @@ extension FBSnapshotTestCase {
     func stp_preparedAndSizedViewForSnapshotTest(
         from navController: UINavigationController?
     )
-        -> UIView?
+        -> UIView
     {
         let viewController = navController?.topViewController
 
@@ -59,7 +59,8 @@ extension FBSnapshotTestCase {
             guard let scrollView = (viewController as? STPCoreScrollViewController)?.scrollView,
                 let navController = navController
             else {
-                return nil
+                XCTFail()
+                return UIView()
             }
             navController.view.layoutIfNeeded()
 
@@ -74,6 +75,6 @@ extension FBSnapshotTestCase {
             )
         }
 
-        return navController?.view
+        return navController!.view
     }
 }
