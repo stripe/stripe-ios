@@ -104,7 +104,6 @@ private func CreateWarningIconView() -> UIView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct InstitutionIconViewUIViewRepresentable: UIViewRepresentable {
 
     private let institution: FinancialConnectionsInstitution = FinancialConnectionsInstitution(
@@ -129,7 +128,6 @@ private struct InstitutionIconViewUIViewRepresentable: UIViewRepresentable {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct InstitutionIconView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

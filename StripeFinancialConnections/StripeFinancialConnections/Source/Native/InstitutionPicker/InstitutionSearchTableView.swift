@@ -14,7 +14,6 @@ private enum Section {
     case main
 }
 
-@available(iOSApplicationExtension, unavailable)
 protocol InstitutionSearchTableViewDelegate: AnyObject {
     func institutionSearchTableView(
         _ tableView: InstitutionSearchTableView,
@@ -23,7 +22,6 @@ protocol InstitutionSearchTableViewDelegate: AnyObject {
     func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView)
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class InstitutionSearchTableView: UIView {
 
     private let allowManualEntry: Bool
@@ -228,7 +226,6 @@ final class InstitutionSearchTableView: UIView {
 
 // MARK: - UITableViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionSearchTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let institution = dataSource.itemIdentifier(for: indexPath) {

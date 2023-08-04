@@ -9,7 +9,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class IndividualWelcomeViewController: IdentityFlowViewController {
     let flowViewModel: IdentityFlowView.ViewModel
     init(

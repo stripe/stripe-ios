@@ -278,14 +278,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
         }
     }
 
-    @objc public var formTextColor: UIColor = {
-        if #available(iOS 13.0, *) {
-            return UIColor.label
-        } else {
-            // Fallback on earlier versions
-            return UIColor.darkText
-        }
-    }()
+    @objc public var formTextColor: UIColor = .label
     {
         didSet {
             if oldValue != formTextColor {
@@ -296,14 +289,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
         }
     }
 
-    @objc public var formTextErrorColor: UIColor = {
-        if #available(iOS 13.0, *) {
-            return UIColor.systemRed
-        } else {
-            // Fallback on earlier versions
-            return UIColor.red
-        }
-    }()
+    @objc public var formTextErrorColor: UIColor = .systemRed
     {
         didSet {
             if oldValue != formTextErrorColor {
@@ -314,14 +300,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
         }
     }
 
-    @objc public var formPlaceholderColor: UIColor = {
-        if #available(iOS 13.0, *) {
-            return UIColor.placeholderText
-        } else {
-            // Fallback on earlier versions
-            return UIColor.lightGray
-        }
-    }()
+    @objc public var formPlaceholderColor: UIColor = .placeholderText
     {
         didSet {
             if oldValue != formPlaceholderColor {

@@ -22,12 +22,7 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
         config.requiredBillingAddressFields = .full
         config.shippingType = .shipping
         self.config = config
-        var customerContext: STPCustomerContext?
-        if #available(iOS 13.0, *) {
-            customerContext = Testing_StaticCustomerContext_Objc.init(customer: STPFixtures.customerWithCardTokenAndSourceSources(), paymentMethods: [STPFixtures.paymentMethod(), STPFixtures.paymentMethod()])
-        } else {
-            customerContext = STPMocks.staticCustomerContext(with: STPFixtures.customerWithCardTokenAndSourceSources(), paymentMethods: [STPFixtures.paymentMethod(), STPFixtures.paymentMethod()])
-        }
+        let customerContext = Testing_StaticCustomerContext_Objc.init(customer: STPFixtures.customerWithCardTokenAndSourceSources(), paymentMethods: [STPFixtures.paymentMethod(), STPFixtures.paymentMethod()])
         self.customerContext = customerContext
 
         let viewController = UIViewController()
@@ -44,22 +39,19 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
     }
 
     func testPushPaymentOptionsSmallTitle() {
-        if #available(iOS 12.0, *) {
-            buildPaymentContext()
+        buildPaymentContext()
 
-            hostViewController?.navigationBar.prefersLargeTitles = false
-            paymentContext?.largeTitleDisplayMode = UINavigationItem.LargeTitleDisplayMode.automatic
-            paymentContext?.pushPaymentOptionsViewController()
-            let view = stp_preparedAndSizedViewForSnapshotTest(from: hostViewController)!
-            STPSnapshotVerifyView(view, identifier: nil)
-        }
+        hostViewController?.navigationBar.prefersLargeTitles = false
+        paymentContext?.largeTitleDisplayMode = UINavigationItem.LargeTitleDisplayMode.automatic
+        paymentContext?.pushPaymentOptionsViewController()
+        let view = stp_preparedAndSizedViewForSnapshotTest(from: hostViewController)!
+        STPSnapshotVerifyView(view, identifier: nil)
     }
 
     // This test renders at a slightly larger size half the time.
     // We're deprecating Basic Integration soon, and we've spent enough time on this,
     // so these tests are being disabled for now.
     // - (void)testPushPaymentOptionsLargeTitle {
-    //    if (@available(iOS 12.0, *)) {
     //        [self buildPaymentContext];
     //
     //        self.hostViewController.navigationBar.prefersLargeTitles = YES;
@@ -67,25 +59,21 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
     //        [self.paymentContext pushPaymentOptionsViewController];
     //        UIView *view = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:self.hostViewController];
     //        STPSnapshotVerifyView(view, nil);
-    //    }
     // }
 
     func testPushShippingAddressSmallTitle() {
-        if #available(iOS 12.0, *) {
-            buildPaymentContext()
+        buildPaymentContext()
 
-            hostViewController?.navigationBar.prefersLargeTitles = false
-            paymentContext?.largeTitleDisplayMode = UINavigationItem.LargeTitleDisplayMode.automatic
-            paymentContext?.pushShippingViewController()
-            let view = stp_preparedAndSizedViewForSnapshotTest(from: hostViewController)!
-            STPSnapshotVerifyView(view, identifier: nil)
-        }
+        hostViewController?.navigationBar.prefersLargeTitles = false
+        paymentContext?.largeTitleDisplayMode = UINavigationItem.LargeTitleDisplayMode.automatic
+        paymentContext?.pushShippingViewController()
+        let view = stp_preparedAndSizedViewForSnapshotTest(from: hostViewController)!
+        STPSnapshotVerifyView(view, identifier: nil)
     }
     // This test renders at a slightly larger size half the time.
     // We're deprecating Basic Integration soon, and we've spent enough time on this,
     // so these tests are being disabled for now.
     // - (void)testPushShippingAddressLargeTitle {
-    //    if (@available(iOS 12.0, *)) {
     //        [self buildPaymentContext];
     //
     //        self.hostViewController.navigationBar.prefersLargeTitles = YES;
@@ -93,6 +81,5 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
     //        [self.paymentContext pushShippingViewController];
     //        UIView *view = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:self.hostViewController];
     //        STPSnapshotVerifyView(view, nil);
-    //    }
     // }
 }

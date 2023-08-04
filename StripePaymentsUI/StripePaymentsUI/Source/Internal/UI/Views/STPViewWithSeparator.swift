@@ -37,12 +37,7 @@ class STPViewWithSeparator: UIView {
     }
 
     func _addSeparators() {
-        if #available(iOS 13.0, *) {
-            topSeparator.backgroundColor = UIColor.opaqueSeparator
-        } else {
-            // Fallback on earlier versions
-            topSeparator.backgroundColor = UIColor.lightGray
-        }
+        topSeparator.backgroundColor = UIColor.opaqueSeparator
 
         topSeparator.translatesAutoresizingMaskIntoConstraints = false
         addSubview(topSeparator)
@@ -51,12 +46,7 @@ class STPViewWithSeparator: UIView {
             equalToConstant: _currentPixelHeight()
         )
 
-        if #available(iOS 13.0, *) {
-            bottomSeparator.backgroundColor = UIColor.opaqueSeparator
-        } else {
-            // Fallback on earlier versions
-            bottomSeparator.backgroundColor = UIColor.lightGray
-        }
+        bottomSeparator.backgroundColor = UIColor.opaqueSeparator
 
         bottomSeparator.translatesAutoresizingMaskIntoConstraints = false
         addSubview(bottomSeparator)

@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkStepUpVerificationBodyView: UIView {
 
     private let email: String
@@ -97,7 +96,6 @@ private func CreateCreateDotLabel() -> UIView {
     return dotLabel
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateResendCodeLabel(isEnabled: Bool, didSelect: @escaping () -> Void) -> UIView {
     let resendCodeLabel = AttributedTextView(
         font: .label(.medium),
@@ -145,7 +143,6 @@ private func CreateResendCodeLoadingView() -> UIView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct NetworkingLinkStepUpVerificationBodyViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> NetworkingLinkStepUpVerificationBodyView {
@@ -159,7 +156,6 @@ private struct NetworkingLinkStepUpVerificationBodyViewUIViewRepresentable: UIVi
     func updateUIView(_ uiView: NetworkingLinkStepUpVerificationBodyView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct NetworkingLinkStepUpVerificationBodyView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .leading) {

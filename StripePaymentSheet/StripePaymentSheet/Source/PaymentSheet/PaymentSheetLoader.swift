@@ -10,8 +10,6 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 final class PaymentSheetLoader {
     /// `PaymentSheet.load()` result.
     enum LoadingResult {

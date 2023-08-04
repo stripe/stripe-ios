@@ -36,21 +36,19 @@ import UIKit
         downloadOperationQueue.underlyingQueue = downloadQueue
 
         let configuration = urlSessionConfiguration
-        if #available(iOS 13.0, *) {
-            if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
-                .first
-            {
-                let diskCacheURL = cachesURL.appendingPathComponent("STPCache")
-                // 5MB memory cache, 30MB Disk cache
-                let cache = URLCache(
-                    memoryCapacity: 5_000_000,
-                    diskCapacity: 30_000_000,
-                    directory: diskCacheURL
-                )
-                configuration.urlCache = cache
-                configuration.requestCachePolicy = .useProtocolCachePolicy
-                self.urlCache = cache
-            }
+        if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+            .first
+        {
+            let diskCacheURL = cachesURL.appendingPathComponent("STPCache")
+            // 5MB memory cache, 30MB Disk cache
+            let cache = URLCache(
+                memoryCapacity: 5_000_000,
+                diskCapacity: 30_000_000,
+                directory: diskCacheURL
+            )
+            configuration.urlCache = cache
+            configuration.requestCachePolicy = .useProtocolCachePolicy
+            self.urlCache = cache
         }
 
         session = URLSession(configuration: configuration)

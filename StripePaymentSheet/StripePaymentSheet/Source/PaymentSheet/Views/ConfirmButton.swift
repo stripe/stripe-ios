@@ -448,20 +448,18 @@ class ConfirmButton: UIView {
                     self.titleLabel.text = text
 
                     // If differentiate without color is enabled, we should underline the button instead.
-                    if #available(iOS 13.0, *) {
-                        if UIAccessibility.shouldDifferentiateWithoutColor && status == .enabled,
-                            let font = self.titleLabel.font,
-                            let foregroundColor = self.titleLabel.textColor,
-                            let text = text
-                        {
-                            let attributes: [NSAttributedString.Key: Any] = [
-                                .font: font,
-                                .foregroundColor: foregroundColor,
-                                .underlineStyle: NSUnderlineStyle.single.rawValue,
-                            ]
-                            self.titleLabel.attributedText = NSAttributedString(
-                                string: text, attributes: attributes)
-                        }
+                    if UIAccessibility.shouldDifferentiateWithoutColor && status == .enabled,
+                        let font = self.titleLabel.font,
+                        let foregroundColor = self.titleLabel.textColor,
+                        let text = text
+                    {
+                        let attributes: [NSAttributedString.Key: Any] = [
+                            .font: font,
+                            .foregroundColor: foregroundColor,
+                            .underlineStyle: NSUnderlineStyle.single.rawValue,
+                        ]
+                        self.titleLabel.attributedText = NSAttributedString(
+                            string: text, attributes: attributes)
                     }
                 }
             } else {

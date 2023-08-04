@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
@@ -23,7 +22,6 @@ protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingSaveToLinkVerificationViewController: UIViewController {
 
     private let dataSource: NetworkingSaveToLinkVerificationDataSource
@@ -110,7 +108,6 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
 
 // MARK: - NetworkingOTPViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDelegate {
 
     func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView) {

@@ -59,11 +59,7 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 259, accuracy: 1.0)
 
         textField.font = UIFont(name: "Avenir", size: 44)!
-        if #available(iOS 13.0, *) {
-            XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 62, accuracy: 0.1)
-        } else {
-            XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 61, accuracy: 0.1)
-        }
+        XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 62, accuracy: 0.1)
         XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 478, accuracy: 0.1)
     }
 

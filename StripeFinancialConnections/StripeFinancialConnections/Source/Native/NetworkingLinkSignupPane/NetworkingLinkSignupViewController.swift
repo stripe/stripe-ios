@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol NetworkingLinkSignupViewControllerDelegate: AnyObject {
     func networkingLinkSignupViewController(
         _ viewController: NetworkingLinkSignupViewController,
@@ -28,7 +27,6 @@ protocol NetworkingLinkSignupViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkSignupViewController: UIViewController {
 
     private let dataSource: NetworkingLinkSignupDataSource
@@ -243,7 +241,6 @@ final class NetworkingLinkSignupViewController: UIViewController {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDelegate {
 
     func networkingLinkSignupBodyFormView(

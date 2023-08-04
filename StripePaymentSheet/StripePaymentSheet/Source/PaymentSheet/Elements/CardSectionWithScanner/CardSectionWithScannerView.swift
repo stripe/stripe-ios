@@ -18,7 +18,6 @@ import UIKit
  */
 /// For internal SDK use only
 @objc(STP_Internal_CardSectionWithScannerView)
-@available(iOS 13, macCatalyst 14, *)
 final class CardSectionWithScannerView: UIView {
     let cardSectionView: UIView
     lazy var cardScanButton: UIButton = {
@@ -58,7 +57,6 @@ final class CardSectionWithScannerView: UIView {
         addAndPinSubview(stack)
     }
 
-    @available(iOS 13, macCatalyst 14, *)
     @objc func didTapCardScanButton() {
         setCardScanVisible(true)
         cardScanningView.start()
@@ -83,7 +81,6 @@ final class CardSectionWithScannerView: UIView {
     }
 }
 
-@available(iOS 13, macCatalyst 14, *)
 extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
     func cardScanningView(_ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?) {
         setCardScanVisible(false)

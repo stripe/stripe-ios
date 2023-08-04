@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 class ConsentFooterView: HitTestView {
 
     private let agreeButtonText: String
@@ -98,7 +97,6 @@ class ConsentFooterView: HitTestView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ConsentFooterView {
@@ -117,7 +115,6 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct ConsentFooterView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {

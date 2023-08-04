@@ -74,8 +74,6 @@ public typealias STPRedirectContextPaymentIntentCompletionBlock = (String, Error
 /// @note You must retain this instance for the duration of the redirect flow.
 /// This class dismisses any presented view controller upon deallocation.
 /// See https://stripe.com/docs/sources/best-practices
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
     UIViewControllerTransitioningDelegate, STPSafariViewControllerDismissalDelegate
 {
@@ -574,8 +572,6 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 /// :nodoc:
 @_spi(STP) extension STPRedirectContext: STPURLCallbackListener {
     /// :nodoc:
@@ -617,8 +613,6 @@ protocol UIApplicationProtocol {
     func _open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey: Any], completionHandler: ((Bool) -> Void)?)
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension UIApplication: UIApplicationProtocol {
     func _open(_ url: URL, options: [OpenExternalURLOptionsKey: Any], completionHandler completion: ((Bool) -> Void)?) {
         open(url, options: options, completionHandler: completion)

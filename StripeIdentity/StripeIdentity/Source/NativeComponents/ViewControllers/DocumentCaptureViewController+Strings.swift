@@ -9,7 +9,6 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentCaptureViewController {
 
     func titleText(for side: DocumentSide) -> String {

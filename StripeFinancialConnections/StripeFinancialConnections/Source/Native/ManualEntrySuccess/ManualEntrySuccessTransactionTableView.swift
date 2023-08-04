@@ -253,7 +253,6 @@ private func CreateColumnView(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct ManualEntrySuccessTransactionTableViewUIViewRepresentable: UIViewRepresentable {
 
     let microdepositVerificationMethod: MicrodepositVerificationMethod
@@ -269,7 +268,6 @@ private struct ManualEntrySuccessTransactionTableViewUIViewRepresentable: UIView
     func updateUIView(_ uiView: ManualEntrySuccessTransactionTableView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct ManualEntrySuccessTransactionTableView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {

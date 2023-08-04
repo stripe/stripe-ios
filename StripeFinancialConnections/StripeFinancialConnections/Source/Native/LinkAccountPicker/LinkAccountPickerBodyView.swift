@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol LinkAccountPickerBodyViewDelegate: AnyObject {
     func linkAccountPickerBodyView(
         _ view: LinkAccountPickerBodyView,
@@ -21,7 +20,6 @@ protocol LinkAccountPickerBodyViewDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class LinkAccountPickerBodyView: UIView {
 
     private let accounts: [FinancialConnectionsPartnerAccount]
@@ -88,7 +86,6 @@ final class LinkAccountPickerBodyView: UIView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> LinkAccountPickerBodyView {
@@ -137,7 +134,6 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct LinkAccountPickerBodyView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .leading) {

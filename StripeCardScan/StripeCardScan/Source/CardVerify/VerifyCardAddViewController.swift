@@ -56,7 +56,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
             )
         )
 
-        if #available(iOS 13.0, *), scanPerformancePriority == .accurate {
+        if scanPerformancePriority == .accurate {
             uxAndOcrMainLoop = UxAndOcrMainLoop(
                 stateMachine: CardVerifyAccurateStateMachine(
                     requiredLastFour: nil,
