@@ -50,7 +50,7 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
             hostViewController?.navigationBar.prefersLargeTitles = false
             paymentContext?.largeTitleDisplayMode = UINavigationItem.LargeTitleDisplayMode.automatic
             paymentContext?.pushPaymentOptionsViewController()
-            let view = stp_preparedAndSizedViewForSnapshotTest(from: hostViewController)
+            let view = stp_preparedAndSizedViewForSnapshotTest(from: hostViewController)!
             STPSnapshotVerifyView(view, identifier: nil)
         }
     }
@@ -58,7 +58,7 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
     // This test renders at a slightly larger size half the time.
     // We're deprecating Basic Integration soon, and we've spent enough time on this,
     // so these tests are being disabled for now.
-    //- (void)testPushPaymentOptionsLargeTitle {
+    // - (void)testPushPaymentOptionsLargeTitle {
     //    if (@available(iOS 12.0, *)) {
     //        [self buildPaymentContext];
     //
@@ -68,7 +68,7 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
     //        UIView *view = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:self.hostViewController];
     //        STPSnapshotVerifyView(view, nil);
     //    }
-    //}
+    // }
 
     func testPushShippingAddressSmallTitle() {
         if #available(iOS 12.0, *) {
@@ -77,14 +77,14 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
             hostViewController?.navigationBar.prefersLargeTitles = false
             paymentContext?.largeTitleDisplayMode = UINavigationItem.LargeTitleDisplayMode.automatic
             paymentContext?.pushShippingViewController()
-            let view = stp_preparedAndSizedViewForSnapshotTest(from: hostViewController)
+            let view = stp_preparedAndSizedViewForSnapshotTest(from: hostViewController)!
             STPSnapshotVerifyView(view, identifier: nil)
         }
     }
     // This test renders at a slightly larger size half the time.
     // We're deprecating Basic Integration soon, and we've spent enough time on this,
     // so these tests are being disabled for now.
-    //- (void)testPushShippingAddressLargeTitle {
+    // - (void)testPushShippingAddressLargeTitle {
     //    if (@available(iOS 12.0, *)) {
     //        [self buildPaymentContext];
     //
@@ -94,5 +94,5 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
     //        UIView *view = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:self.hostViewController];
     //        STPSnapshotVerifyView(view, nil);
     //    }
-    //}
+    // }
 }

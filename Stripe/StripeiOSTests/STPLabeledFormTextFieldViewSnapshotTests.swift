@@ -7,16 +7,15 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-
 import iOSSnapshotTestCaseCore
 @testable @_spi(STP) import StripePaymentsUI
 
 class STPLabeledFormTextFieldViewSnapshotTests: FBSnapshotTestCase {
-    //- (void)setUp {
+    // - (void)setUp {
     //    [super setUp];
     //
     //    self.recordMode = YES;
-    //}
+    // }
 
     func testAppearance() {
         let formTextField = STPFormTextField()

@@ -11,9 +11,9 @@ import Stripe
 import StripeCoreTestUtils
 
 class STPPaymentMethodAfterpayClearpayTest: XCTestCase {
-    var afterpayJSON: [AnyHashable : Any]?
+    var afterpayJSON: [AnyHashable: Any]?
 
-    func _retrieveAfterpayJSON(_ completion: @escaping ([AnyHashable : Any]?) -> Void) {
+    func _retrieveAfterpayJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         if let afterpayJSON {
             completion(afterpayJSON)
         } else {
