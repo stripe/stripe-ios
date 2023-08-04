@@ -26,12 +26,12 @@ internal enum InternalCustomerSheetResult {
     internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
 
     /// The STPPaymentHandler instance
-            lazy var paymentHandler: STPPaymentHandler = {
+    lazy var paymentHandler: STPPaymentHandler = {
         STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler())
     }()
 
     /// The parent view controller to present
-            lazy var bottomSheetViewController: BottomSheetViewController = {
+    lazy var bottomSheetViewController: BottomSheetViewController = {
         let isTestMode = configuration.apiClient.isTestmode
         let vc = BottomSheetViewController(
             contentViewController: loadingViewController,
@@ -82,7 +82,7 @@ internal enum InternalCustomerSheetResult {
         case error(Error)
     }
 
-            public func present(from presentingViewController: UIViewController,
+    public func present(from presentingViewController: UIViewController,
                         completion csCompletion: @escaping (CustomerSheetResult) -> Void
     ) {
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
@@ -126,7 +126,7 @@ internal enum InternalCustomerSheetResult {
                                                       appearance: configuration.appearance)
     }
 
-            func present(from presentingViewController: UIViewController,
+    func present(from presentingViewController: UIViewController,
                  savedPaymentMethods: [STPPaymentMethod],
                  selectedPaymentMethodOption: CustomerPaymentOption?,
                  merchantSupportedPaymentMethodTypes: [STPPaymentMethodType]) {
@@ -219,7 +219,7 @@ extension CustomerSheet: LoadingViewControllerDelegate {
     /// Returns the selected Payment Option for this customer adapter.
     /// You can use this to obtain the selected payment method without loading the CustomerSheet.
     public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection?
-     {
+    {
         let selectedPaymentOption = try await self.fetchSelectedPaymentOption()
         switch selectedPaymentOption {
         case .applePay:
