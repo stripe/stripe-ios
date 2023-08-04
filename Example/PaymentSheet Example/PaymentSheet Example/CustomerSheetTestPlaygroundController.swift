@@ -56,6 +56,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
 
     func didTapResetConfig() {
         self.settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        self.appearance = PaymentSheet.Appearance.default
     }
 
     func appearanceButtonTapped() {
