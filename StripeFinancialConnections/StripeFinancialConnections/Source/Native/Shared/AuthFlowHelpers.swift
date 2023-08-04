@@ -32,7 +32,7 @@ final class AuthFlowHelpers {
         return urlString
     }
 
-        static func handleURLInTextFromBackend(
+    static func handleURLInTextFromBackend(
         url: URL,
         pane: FinancialConnectionsSessionManifest.NextPane,
         analyticsClient: FinancialConnectionsAnalyticsClient,
@@ -55,7 +55,7 @@ final class AuthFlowHelpers {
         }
     }
 
-        static func networkingOTPErrorMessage(
+    static func networkingOTPErrorMessage(
         fromError error: Error,
         otpType: String
     ) -> String? {

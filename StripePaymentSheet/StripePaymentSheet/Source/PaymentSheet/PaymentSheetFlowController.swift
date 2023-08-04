@@ -38,7 +38,7 @@ extension PaymentSheet {
     }
 
     /// A class that presents the individual steps of a payment flow
-            public class FlowController {
+        public class FlowController {
         // MARK: - Public properties
         /// Contains details about a payment method that can be displayed to the customer
         public struct PaymentOptionDisplayData {

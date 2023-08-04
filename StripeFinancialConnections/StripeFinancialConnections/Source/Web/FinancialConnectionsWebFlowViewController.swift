@@ -128,7 +128,7 @@ extension FinancialConnectionsWebFlowViewController {
         delegate = nil  // prevent the delegate from being called again
     }
 
-        private func startAuthenticationSession(
+    private func startAuthenticationSession(
         manifest: FinancialConnectionsSessionManifest,
         additionalQueryParameters: String? = nil
     ) {

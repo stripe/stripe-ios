@@ -10,7 +10,7 @@ import SafariServices
 
 extension SFSafariViewController {
 
-        static func present(url: URL) {
+    static func present(url: URL) {
         guard
             url.scheme == "http" || url.scheme == "https",
             let topMostViewController = UIViewController.topMostViewController()

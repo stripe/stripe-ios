@@ -93,7 +93,7 @@ extension STPPaymentHandler {
         return nil
     }
 
-            func _handleNextActionSpec(
+    func _handleNextActionSpec(
         forAction action: STPPaymentHandlerPaymentIntentActionParams,
         paymentIntentStatusSpec: FormSpec.NextActionSpec.ConfirmResponseStatusSpecs,
         urlSession: URLSession

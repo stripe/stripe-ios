@@ -62,7 +62,7 @@ final public class FinancialConnectionsSheet {
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((Result) -> Void)?
 
-        private var hostController: HostController?
+    private var hostController: HostController?
 
     private var wrapperViewController: ModalPresentationWrapperViewController?
 
@@ -101,7 +101,7 @@ final public class FinancialConnectionsSheet {
 
     // MARK: - Public
 
-        public func presentForToken(
+    public func presentForToken(
         from presentingViewController: UIViewController,
         completion: @escaping (TokenResult) -> Void
     ) {
@@ -123,7 +123,7 @@ final public class FinancialConnectionsSheet {
        - presentingViewController: The view controller to present the financial connections sheet.
        - completion: Called with the result of the financial connections session after the financial connections  sheet is dismissed.
      */
-        public func present(
+    public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (Result) -> Void
     ) {

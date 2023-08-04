@@ -160,7 +160,7 @@ public class STPPaymentHandler: NSObject {
     ///   - paymentParams: The params used to confirm the PaymentIntent. Note that this method overrides the value of `paymentParams.useStripeSDK` to `@YES`.
     ///   - authenticationContext: The authentication context used to authenticate the payment.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
-            @objc(confirmPayment:withAuthenticationContext:completion:)
+    @objc(confirmPayment:withAuthenticationContext:completion:)
     public func confirmPayment(
         _ paymentParams: STPPaymentIntentParams,
         with authenticationContext: STPAuthenticationContext,
@@ -262,7 +262,7 @@ public class STPPaymentHandler: NSObject {
         message: "Use confirmPayment(_:with:completion:) instead",
         renamed: "confirmPayment(_:with:completion:)"
     )
-            public func confirmPayment(
+    public func confirmPayment(
         withParams: STPPaymentIntentParams,
         authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
@@ -311,7 +311,7 @@ public class STPPaymentHandler: NSObject {
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during PaymentIntent confirmation.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
     /// - Note: The PaymentIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
-            @_spi(STP) public func handleNextAction(
+    @_spi(STP) public func handleNextAction(
         for paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
@@ -493,7 +493,7 @@ public class STPPaymentHandler: NSObject {
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
     @objc(handleNextActionForSetupIntent:withAuthenticationContext:returnURL:completion:)
-            public func handleNextAction(
+    public func handleNextAction(
         forSetupIntent setupIntentClientSecret: String,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
@@ -524,7 +524,7 @@ public class STPPaymentHandler: NSObject {
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
     /// - Note: The SetupIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
-            @_spi(STP) public func handleNextAction(
+    @_spi(STP) public func handleNextAction(
         for setupIntent: STPSetupIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,

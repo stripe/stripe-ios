@@ -12,15 +12,15 @@ import UIKit
 class FinancialConnectionsNavigationController: UINavigationController {
 
     // Swift 5.8 requires us to manually mark inits as unavailable as well:
-        override public init(navigationBarClass: AnyClass?, toolbarClass: AnyClass?) {
+    override public init(navigationBarClass: AnyClass?, toolbarClass: AnyClass?) {
         super.init(navigationBarClass: navigationBarClass, toolbarClass: toolbarClass)
     }
 
-        override public init(rootViewController: UIViewController) {
+    override public init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
     }
 
-        required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 

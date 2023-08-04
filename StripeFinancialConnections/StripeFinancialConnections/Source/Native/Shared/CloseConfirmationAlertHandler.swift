@@ -12,7 +12,7 @@ final class CloseConfirmationAlertHandler {
 
     private init() {}
 
-        static func present(
+    static func present(
         businessName: String?,
         showNetworkingLanguageInConfirmationAlert: Bool,
         didSelectOK: @escaping () -> Void
