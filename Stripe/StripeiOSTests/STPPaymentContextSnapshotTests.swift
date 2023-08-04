@@ -33,7 +33,7 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
         let viewController = UIViewController()
         hostViewController = stp_navigationControllerForSnapshotTest(withRootVC: viewController)
 
-        //    self.recordMode = YES;
+//        self.recordMode = true
     }
 
     func buildPaymentContext() {

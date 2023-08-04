@@ -44,7 +44,6 @@ class STPFileTest: XCTestCase {
                 XCTAssertEqual(string, "identity_document")
             case .unknown:
                 XCTAssertNil(string)
-                break
             default:
                 break
             }

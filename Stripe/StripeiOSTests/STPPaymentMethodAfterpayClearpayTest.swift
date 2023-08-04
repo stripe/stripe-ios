@@ -18,11 +18,10 @@ class STPPaymentMethodAfterpayClearpayTest: XCTestCase {
             completion(afterpayJSON)
         } else {
             let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-            //        [client retrievePaymentIntentWithClientSecret:@"pi_1HbSAfFY0qyl6XeWRnlezJ7K_secret_t6Ju9Z0hxOvslawK34uC1Wm2b"
-            //                                               expand:@[@"payment_method"] completion:^(STPPaymentIntent * _Nullable paymentIntent, __unused NSError * _Nullable error) {
-            //            self.afterpayJSON = paymentIntent.paymentMethod.afterpayClearpay.allResponseFields;
-            //            completion(self.afterpayJSON);
-            //        }];
+            client.retrievePaymentIntent(withClientSecret: "pi_1HbSAfFY0qyl6XeWRnlezJ7K_secret_t6Ju9Z0hxOvslawK34uC1Wm2b", expand: ["payment_method"]) { paymentIntent, _ in
+                self.afterpayJSON = paymentIntent?.paymentMethod?.afterpayClearpay?.allResponseFields
+                completion(self.afterpayJSON)
+            }
         }
     }
 

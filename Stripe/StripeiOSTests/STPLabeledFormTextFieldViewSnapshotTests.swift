@@ -11,11 +11,11 @@ import iOSSnapshotTestCaseCore
 @testable @_spi(STP) import StripePaymentsUI
 
 class STPLabeledFormTextFieldViewSnapshotTests: FBSnapshotTestCase {
-    // - (void)setUp {
-    //    [super setUp];
-    //
-    //    self.recordMode = YES;
-    // }
+    override func setUp() {
+        super.setUp()
+
+//        self.recordMode = true
+    }
 
     func testAppearance() {
         let formTextField = STPFormTextField()
