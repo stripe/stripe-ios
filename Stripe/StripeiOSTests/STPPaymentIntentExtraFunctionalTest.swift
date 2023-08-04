@@ -53,10 +53,10 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             XCTAssertNil(paymentIntent?.paymentMethodId)
                 XCTAssertEqual(paymentIntent?.status, .canceled)
                 XCTAssertEqual(paymentIntent?.setupFutureUsage, STPPaymentIntentSetupFutureUsage.none)
-            //#pragma clang diagnostic push
-            //#pragma clang diagnostic ignored "-Wdeprecated"
+            // #pragma clang diagnostic push
+            // #pragma clang diagnostic ignored "-Wdeprecated"
             XCTAssertNil(paymentIntent?.nextSourceAction)
-            //#pragma clang diagnostic pop
+            // #pragma clang diagnostic pop
             XCTAssertNil(paymentIntent!.nextAction)
 
             expectation.fulfill()
@@ -171,13 +171,13 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
                 URL(string: "example-app-scheme://authorized"))
 
             // Test deprecated property still works too
-            //#pragma clang diagnostic push
-            //#pragma clang diagnostic ignored "-Wdeprecated"
+            // #pragma clang diagnostic push
+            // #pragma clang diagnostic ignored "-Wdeprecated"
                 XCTAssertNotNil(paymentIntent?.nextSourceAction?.authorizeWithURL?.returnURL)
             XCTAssertEqual(
                 paymentIntent?.nextSourceAction?.authorizeWithURL?.returnURL,
                 URL(string: "example-app-scheme://authorized"))
-            //#pragma clang diagnostic pop
+            // #pragma clang diagnostic pop
 
             expectation.fulfill()
         }
@@ -547,7 +547,6 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
                 "test_key": "test_value"
             ])
 
-
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret!)
         paymentIntentParams.paymentMethodParams = params
 
@@ -729,7 +728,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             XCTAssertNotNil(paymentIntent?.paymentMethodId)
 
             // OXXO requires display the voucher as next step
-            let oxxoDisplayDetails = paymentIntent!.nextAction!.allResponseFields["oxxo_display_details"] as? [AnyHashable : Any]
+            let oxxoDisplayDetails = paymentIntent!.nextAction!.allResponseFields["oxxo_display_details"] as? [AnyHashable: Any]
             XCTAssertNotNil(oxxoDisplayDetails?["expires_after"])
             XCTAssertNotNil(oxxoDisplayDetails?["number"])
             XCTAssertEqual(paymentIntent?.status, .requiresAction)

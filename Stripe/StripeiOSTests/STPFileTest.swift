@@ -7,8 +7,8 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 @testable import StripePayments
+import XCTest
 
 class STPFileTest: XCTestCase {
     // MARK: - STPFilePurpose Tests

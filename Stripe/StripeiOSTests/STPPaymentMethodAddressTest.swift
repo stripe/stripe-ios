@@ -12,17 +12,17 @@ class STPPaymentMethodAddressTest: XCTestCase {
         let requiredFields: [String]? = []
 
         for field in requiredFields ?? [] {
-            var response = (STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard)["billing_details"] as! [AnyHashable : Any])["address"] as? [AnyHashable : Any]
+            var response = (STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard)["billing_details"] as! [AnyHashable: Any])["address"] as? [AnyHashable: Any]
             response?.removeValue(forKey: field)
 
             XCTAssertNil(STPPaymentMethodAddress.decodedObject(fromAPIResponse: response))
         }
 
-        XCTAssertNotNil(STPPaymentMethodAddress.decodedObject(fromAPIResponse: (STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard)["billing_details"] as? [AnyHashable : Any])!["address"] as? [AnyHashable : Any]))
+        XCTAssertNotNil(STPPaymentMethodAddress.decodedObject(fromAPIResponse: (STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard)["billing_details"] as? [AnyHashable: Any])!["address"] as? [AnyHashable: Any]))
     }
 
     func testDecodedObjectFromAPIResponseMapping() {
-        let response = (STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard)["billing_details"] as? [AnyHashable : Any])!["address"] as? [AnyHashable : Any]
+        let response = (STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard)["billing_details"] as? [AnyHashable: Any])!["address"] as? [AnyHashable: Any]
         let address = STPPaymentMethodAddress.decodedObject(fromAPIResponse: response)
         XCTAssertEqual(address?.city, "München")
         XCTAssertEqual(address?.country, "DE")

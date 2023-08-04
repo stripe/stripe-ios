@@ -8,10 +8,10 @@
 //
 
 import StripeCoreTestUtils
-import UIKit
-import XCTest
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentsUI
+import UIKit
+import XCTest
 
 /// Class that implements STPPaymentCardTextFieldDelegate and uses a block for each delegate method.
 class PaymentCardTextFieldBlockDelegate: NSObject, STPPaymentCardTextFieldDelegate {
@@ -868,7 +868,6 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         let isvalid = sut.isValid
         XCTAssertTrue(isvalid)
 
-
         let paymentMethodParams = sut.paymentMethodParams
         XCTAssertNotNil(paymentMethodParams)
 
@@ -1163,13 +1162,13 @@ class STPPaymentCardTextFieldUITests: XCTestCase {
         sut.paymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
 
         let delegate = PaymentCardTextFieldBlockDelegate()
-        delegate.willEndEditingForReturn = { textField in
+        delegate.willEndEditingForReturn = { _ in
             XCTAssertFalse(didEnd, "willEnd is called before didEnd")
             XCTAssertFalse(hasReturned, "willEnd is only called once")
             hasReturned = true
         }
-        
-        delegate.didEndEditing = { textField in
+
+        delegate.didEndEditing = { _ in
             XCTAssertTrue(hasReturned, "didEndEditing should be called after willEnd")
             XCTAssertFalse(didEnd, "didEnd is only called once")
             didEnd = true
@@ -1195,13 +1194,13 @@ class STPPaymentCardTextFieldUITests: XCTestCase {
         sut.paymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
         sut.postalCodeField.text = "90210"
         let delegate = PaymentCardTextFieldBlockDelegate()
-        delegate.willEndEditingForReturn = { textField in
+        delegate.willEndEditingForReturn = { _ in
             XCTAssertFalse(didEnd, "willEnd is called before didEnd")
             XCTAssertFalse(hasReturned, "willEnd is only called once")
             hasReturned = true
         }
-        
-        delegate.didEndEditing = { textField in
+
+        delegate.didEndEditing = { _ in
             XCTAssertTrue(hasReturned, "didEndEditing should be called after willEnd")
             XCTAssertFalse(didEnd, "didEnd is only called once")
             didEnd = true
