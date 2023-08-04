@@ -12,12 +12,12 @@
 class FakeEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
     var response: [AnyHashable: Any]?
     var expectation: XCTestExpectation?
-    
+
     init(response: [AnyHashable: Any]?, expectation: XCTestExpectation?) {
         self.response = response
         self.expectation = expectation
     }
-    
+
     func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping StripePayments.STPJSONResponseCompletionBlock) {
         completion(response!, nil)
         expectation?.fulfill()
@@ -30,16 +30,15 @@ class FailingEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
     }
 }
 
-
 class DelayingEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
     var response: [AnyHashable: Any]
     var expectation: XCTestExpectation
-    
+
     init(response: [AnyHashable: Any], expectation: XCTestExpectation) {
         self.response = response
         self.expectation = expectation
     }
-    
+
     func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping StripePayments.STPJSONResponseCompletionBlock) {
         expectation.fulfill()
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
@@ -48,7 +47,6 @@ class DelayingEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
     }
 }
 
-
 class STPEphemeralKeyManagerTest: XCTestCase {
     let apiVersion = "2015-03-03"
 
@@ -56,7 +54,7 @@ class STPEphemeralKeyManagerTest: XCTestCase {
         super.setUp()
     }
 
-    func mockKeyProvider(withKeyResponse keyResponse: [AnyHashable : Any]?) -> Any? {
+    func mockKeyProvider(withKeyResponse keyResponse: [AnyHashable: Any]?) -> Any? {
         let exp = expectation(description: "createCustomerKey")
         let mockKeyProvider = FakeEphemeralKeyProvider(response: keyResponse, expectation: exp)
         return mockKeyProvider
@@ -110,7 +108,7 @@ class STPEphemeralKeyManagerTest: XCTestCase {
         let keyResponse = expectedKey.allResponseFields
         let createExp = expectation(description: "createKey")
         createExp.assertForOverFulfill = true
-        
+
         let mockKeyProvider = DelayingEphemeralKeyProvider(response: keyResponse, expectation: createExp)
         let sut = STPEphemeralKeyManager(keyProvider: mockKeyProvider, apiVersion: apiVersion, performsEagerFetching: true)
         let getExp1 = expectation(description: "getOrCreateKey")
