@@ -97,6 +97,18 @@ extension PaymentSheet {
             return ""
         }
 
+        /// The identifier for the payment method type as it is represented on an intent
+        var identifier: String {
+            if let stpPaymentMethodType = stpPaymentMethodType {
+                return stpPaymentMethodType.identifier
+            } else if case .dynamic(let name) = self {
+                return name
+            }
+
+            assertionFailure()
+            return ""
+        }
+
         var paymentSheetLabel: String {
             assertionFailure()
             return "Unknown"
@@ -278,10 +290,10 @@ extension PaymentSheet {
                         return [.returnURL]
                     case .USBankAccount:
                         return [.userSupportsDelayedPaymentMethods]
-                    case .iDEAL, .bancontact, .sofort:
-                        // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
+                    case .sofort, .iDEAL, .bancontact:
+                        // n.b. While sofort, iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
+                        return [.returnURL, .userSupportsDelayedPaymentMethods]
                         // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
-                        return [.returnURL, .userSupportsDelayedPaymentMethods, .unsupportedForSetup]
                     case .SEPADebit:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:

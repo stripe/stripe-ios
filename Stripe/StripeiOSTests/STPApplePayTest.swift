@@ -31,4 +31,65 @@ class STPApplePaySwiftTest: XCTestCase {
         XCTAssertEqual((applePayDict["card"] as! NSDictionary)["name"] as! String, "Test Testerson")
         XCTAssertEqual(applePayDict["pk_token_instrument_name"] as! String, "Master Charge")
     }
+
+    func testPaymentRequestWithMerchantIdentifierCountryCurrency() {
+        let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: "foo", country: "GB", currency: "GBP")
+        XCTAssertEqual(paymentRequest.merchantIdentifier, "foo")
+        if #available(iOS 12, *) {
+            let expectedNetworks = Set<PKPaymentNetwork>([
+                .amex,
+                .masterCard,
+                .visa,
+                .discover,
+                .maestro,
+            ])
+            XCTAssertEqual(Set(paymentRequest.supportedNetworks), expectedNetworks)
+        } else {
+            let expectedNetworks = Set<PKPaymentNetwork>([
+                .amex,
+                .masterCard,
+                .visa,
+                .discover,
+            ])
+            XCTAssertEqual(Set(paymentRequest.supportedNetworks), expectedNetworks)
+        }
+        XCTAssertEqual(paymentRequest.merchantCapabilities, PKMerchantCapability.capability3DS)
+        XCTAssertEqual(paymentRequest.countryCode, "GB")
+        XCTAssertEqual(paymentRequest.currencyCode, "GBP")
+        XCTAssertEqual(paymentRequest.requiredBillingContactFields, Set([.postalAddress]))
+    }
+
+    func testCanSubmitPaymentRequestReturnsYES() {
+        let request = PKPaymentRequest()
+        request.merchantIdentifier = "foo"
+        request.paymentSummaryItems = [
+            PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00"))
+        ]
+
+        XCTAssertTrue(StripeAPI.canSubmitPaymentRequest(request))
+    }
+
+    func testCanSubmitPaymentRequestIfTotalIsZero() {
+        let request = PKPaymentRequest()
+        request.merchantIdentifier = "foo"
+        request.paymentSummaryItems = [
+            PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "0.00"))
+        ]
+
+        // "In versions of iOS prior to version 12.0 and watchOS prior to version 5.0, the amount of the grand total must be greater than zero."
+        if #available(iOS 12, *) {
+            XCTAssertTrue(StripeAPI.canSubmitPaymentRequest(request))
+        } else {
+            XCTAssertFalse(StripeAPI.canSubmitPaymentRequest(request))
+        }
+    }
+
+    func testCanSubmitPaymentRequestReturnsNOIfMerchantIdentifierIsNil() {
+        let request = PKPaymentRequest()
+        request.paymentSummaryItems = [
+            PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00"))
+        ]
+
+        XCTAssertFalse(StripeAPI.canSubmitPaymentRequest(request))
+    }
 }

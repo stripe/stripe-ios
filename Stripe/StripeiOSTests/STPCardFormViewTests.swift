@@ -73,14 +73,14 @@ class STPCardFormViewTests: XCTestCase {
     }
 
     func testHidingPostalCodeOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK") as Locale) {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK")) {
             let cardForm = STPCardFormView()
             XCTAssertTrue(cardForm.postalCodeField.isHidden)
         }
     }
 
     func testHidingPostalUPECodeOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK") as Locale) {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK")) {
             let cardForm = STPCardFormView(
                 billingAddressCollection: .automatic,
                 includeCardScanning: false,
@@ -94,7 +94,7 @@ class STPCardFormViewTests: XCTestCase {
     }
 
     func testNotHidingPostalUPECodeOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US")) {
             let cardForm = STPCardFormView(
                 billingAddressCollection: .automatic,
                 includeCardScanning: false,
@@ -108,7 +108,7 @@ class STPCardFormViewTests: XCTestCase {
     }
 
     func testPanLockedOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US")) {
             let cardForm = STPCardFormView(
                 billingAddressCollection: .automatic,
                 includeCardScanning: false,
@@ -129,7 +129,7 @@ class STPCardFormViewTests: XCTestCase {
             expiryYear: 25,
             cardBrand: .amex
         )
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US")) {
             let cardForm = STPCardFormView(
                 billingAddressCollection: .automatic,
                 includeCardScanning: false,

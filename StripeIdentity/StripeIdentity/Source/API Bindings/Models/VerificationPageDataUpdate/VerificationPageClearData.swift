@@ -20,6 +20,7 @@ extension StripeAPI {
         let dob: Bool?
         let name: Bool?
         let address: Bool?
+        let phoneOtp: Bool?
     }
 }
 
@@ -36,7 +37,8 @@ extension StripeAPI.VerificationPageClearData {
             idNumber: fields.contains(.idNumber),
             dob: fields.contains(.dob),
             name: fields.contains(.name),
-            address: fields.contains(.address)
+            address: fields.contains(.address),
+            phoneOtp: fields.contains(.phoneOtp)
         )
     }
 }

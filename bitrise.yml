@@ -428,6 +428,11 @@ workflows:
         title: fastlane legacy_tests_14
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=14.5
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core
+
     before_run:
     - prep_all
     after_run:
@@ -543,12 +548,6 @@ workflows:
         title: Generate size report
   ui-tests-1:
     steps:
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "5"
-        - scheme: LocalizationTester
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE

@@ -120,8 +120,8 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
 
-/* Pay with {payment method} */
-"Pay with %@" = "Pay with %@";
+/* Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'. */
+"Pay with Link" = "Pay with Link";
 
 /* US Bank Account copy title for Mobile payment element form */
 "Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
@@ -169,6 +169,9 @@ to be saved and used in future checkout sessions. */
 /* The label of a switch indicating whether to save the user's card for future payment */
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
 
+/* US Bank Account copy title for Mobile payment element form */
+"Save your bank account in just a few steps." = "Save your bank account in just a few steps.";
+
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
 
@@ -184,6 +187,9 @@ is not supported by the merchant */
 
 /* Error message when an error case happens when linking your account */
 "Something went wrong when linking your account.\nPlease try again later." = "Something went wrong when linking your account.\nPlease try again later.";
+
+/* Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@.";
 
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";

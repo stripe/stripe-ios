@@ -14,6 +14,7 @@ protocol AttachLinkedPaymentAccountDataSource: AnyObject {
     var institution: FinancialConnectionsInstitution { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var authSessionId: String? { get }
+    var reduceManualEntryProminenceInErrors: Bool { get }
 
     func attachLinkedAccountIdToLinkAccountSession() -> Future<FinancialConnectionsPaymentAccountResource>
 }
@@ -28,6 +29,7 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let authSessionId: String?
     private let consumerSessionClientSecret: String?
+    let reduceManualEntryProminenceInErrors: Bool
 
     init(
         apiClient: FinancialConnectionsAPIClient,
@@ -37,7 +39,8 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
         linkedAccountId: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         authSessionId: String?,
-        consumerSessionClientSecret: String?
+        consumerSessionClientSecret: String?,
+        reduceManualEntryProminenceInErrors: Bool
     ) {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
@@ -47,6 +50,7 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
         self.analyticsClient = analyticsClient
         self.authSessionId = authSessionId
         self.consumerSessionClientSecret = consumerSessionClientSecret
+        self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors
     }
 
     func attachLinkedAccountIdToLinkAccountSession() -> Future<FinancialConnectionsPaymentAccountResource> {
