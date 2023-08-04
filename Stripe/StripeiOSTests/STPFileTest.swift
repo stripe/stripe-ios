@@ -57,8 +57,6 @@ class STPFileTest: XCTestCase {
         let file1 = STPFile.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("FileUpload"))
         let file2 = STPFile.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("FileUpload"))
 
-        XCTAssertNotEqual(file1, file2)
-
         XCTAssertEqual(file1, file1)
         XCTAssertEqual(file1, file2)
 
