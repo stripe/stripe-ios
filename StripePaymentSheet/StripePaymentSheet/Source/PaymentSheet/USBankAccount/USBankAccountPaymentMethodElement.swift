@@ -150,6 +150,9 @@ final class USBankAccountPaymentMethodElement: Element {
         }
         self.delegate?.didUpdate(element: self)
     }
+    func getLinkedBank() -> LinkedBank? {
+        return linkedBank
+    }
 
     class func attributedMandateText(for linkedBank: LinkedBank?,
                                      merchantName: String,

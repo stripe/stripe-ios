@@ -451,7 +451,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             }
             self.processingInFlight = false
             if shouldDismissSheetOnConfirm(paymentMethod: paymentMethod, setupIntent: setupIntent) {
-                self.handleDismissSheet()
+                self.handleDismissSheet(shouldDismissImmediately: true)
             } else {
                 self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
                 self.mode = .selectingSaved
@@ -639,7 +639,38 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
-    private func handleDismissSheet() {
+    private func handleDismissSheet(shouldDismissImmediately: Bool = false) {
+        guard !shouldDismissImmediately else {
+            self.handleDismissSheet_completion()
+            return
+        }
+        if mode == .selectingSaved && !self.savedPaymentOptionsViewController.unsyncedSavedPaymentMethods.isEmpty {
+            if let selectedPaymentOption = self.savedPaymentOptionsViewController.selectedPaymentOption,
+               case .saved(let selectedPaymentMethod) = selectedPaymentOption,
+               self.savedPaymentOptionsViewController.unsyncedSavedPaymentMethods.first?.stripeId == selectedPaymentMethod.stripeId {
+                didTapActionButton()
+            } else {
+                self.handleDismissSheet_completion()
+            }
+        } else if mode == .addingNewWithSetupIntent && self.addPaymentMethodViewController.shouldPreventDismissal() {
+            let alertController = UIAlertController(title: String.Localized.closeFormTitle,
+                                                    message: String.Localized.paymentInfoWontBeSaved,
+                                                    preferredStyle: .alert)
+            let dismissAction = UIAlertAction(title: String.Localized.close, style: .destructive) { (_) in
+                alertController.dismiss(animated: true) {
+                    self.handleDismissSheet_completion()
+                }
+            }
+            alertController.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
+            alertController.addAction(dismissAction)
+            present(alertController, animated: true, completion: nil)
+        } else {
+            self.handleDismissSheet_completion()
+        }
+    }
+
+    // This method should ONLY be called from handleDismissSheet()
+    private func handleDismissSheet_completion() {
         if let originalSelectedPaymentMethod = savedPaymentOptionsViewController.originalSelectedSavedPaymentMethod {
             switch originalSelectedPaymentMethod {
             case .applePay:
