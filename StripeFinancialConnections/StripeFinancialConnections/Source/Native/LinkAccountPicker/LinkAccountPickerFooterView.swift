@@ -17,11 +17,6 @@ final class LinkAccountPickerFooterView: UIView {
 
     private lazy var connectAccountButton: Button = {
         let connectAccountButton = Button(configuration: .financialConnectionsPrimary)
-        connectAccountButton.title = STPLocalizedString(
-            "Connect account",
-            "A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."
-        )
-        connectAccountButton.isEnabled = false // disable by default
         connectAccountButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
         connectAccountButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -60,6 +55,9 @@ final class LinkAccountPickerFooterView: UIView {
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 24
         addAndPinSubview(verticalStackView)
+        
+        // setup the button
+        userSelectedAccount(nil)
     }
 
     required init?(coder: NSCoder) {
@@ -70,7 +68,19 @@ final class LinkAccountPickerFooterView: UIView {
         didSelectConnectAccount()
     }
 
-    func enableButton(_ enableButton: Bool) {
-        connectAccountButton.isEnabled = enableButton
+    func userSelectedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount?) {
+        connectAccountButton.isEnabled = (selectedAccount != nil)
+        
+        if let selectedAccount = selectedAccount, selectedAccount.isBroken {
+            connectAccountButton.title = STPLocalizedString(
+                "Repair and connect account",
+                "A button that initiates the process of repairing and connecting a users bank account. A bank account that needs to be repaired is one that lost connection to the users bank. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."
+            )
+        } else {
+            connectAccountButton.title = STPLocalizedString(
+                "Connect account",
+                "A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."
+            )
+        }
     }
 }

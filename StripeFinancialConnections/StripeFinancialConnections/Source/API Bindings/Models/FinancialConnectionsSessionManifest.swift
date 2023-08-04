@@ -18,6 +18,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case accountPicker = "account_picker"
         case attachLinkedPaymentAccount = "attach_linked_payment_account"
         case authOptions = "auth_options"
+        case bankAuthRepair = "bank_auth_repair"
         case consent = "consent"
         case institutionPicker = "institution_picker"
         case linkAccountPicker = "link_account_picker"

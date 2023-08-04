@@ -31,6 +31,9 @@ struct FinancialConnectionsPartnerAccount: Decodable {
             return nil
         }
     }
+    var isBroken: Bool {
+        return (status != "active")
+    }
 }
 
 struct FinancialConnectionsAuthSessionAccounts: Decodable {
@@ -41,4 +44,6 @@ struct FinancialConnectionsAuthSessionAccounts: Decodable {
 
 struct FinancialConnectionsNetworkedAccountsResponse: Decodable {
     let data: [FinancialConnectionsPartnerAccount]
+    let repairAuthorizationEnabled: Bool?
+    let partnerToCoreAuths: [String:String]?
 }

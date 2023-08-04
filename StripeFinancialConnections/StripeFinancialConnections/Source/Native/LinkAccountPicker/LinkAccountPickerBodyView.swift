@@ -25,6 +25,7 @@ protocol LinkAccountPickerBodyViewDelegate: AnyObject {
 final class LinkAccountPickerBodyView: UIView {
 
     private let accounts: [FinancialConnectionsPartnerAccount]
+    private let repairAuthorizationEnabled: Bool
     weak var delegate: LinkAccountPickerBodyViewDelegate?
 
     private lazy var verticalStackView: UIStackView = {
@@ -34,8 +35,9 @@ final class LinkAccountPickerBodyView: UIView {
         return verticalStackView
     }()
 
-    init(accounts: [FinancialConnectionsPartnerAccount]) {
+    init(accounts: [FinancialConnectionsPartnerAccount], repairAuthorizationEnabled: Bool) {
         self.accounts = accounts
+        self.repairAuthorizationEnabled = repairAuthorizationEnabled
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
     }
@@ -50,9 +52,10 @@ final class LinkAccountPickerBodyView: UIView {
 
         // list all accounts
         accounts.forEach { account in
-            let isDisabled = (account.status != "active")
+            let isAccountBroken = account.isBroken
             let accountRowView = LinkAccountPickerRowView(
-                isDisabled: isDisabled,
+                isDisabled: isAccountBroken && !repairAuthorizationEnabled,
+                isBroken: isAccountBroken,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.linkAccountPickerBodyView(
@@ -61,13 +64,12 @@ final class LinkAccountPickerBodyView: UIView {
                     )
                 }
             )
-            // TODO(kgaidis): when we implement repair logic, this will have new text
             let rowTitles = AccountPickerHelpers.rowTitles(forAccount: account)
             accountRowView.configure(
                 institutionImageUrl: account.institution?.icon?.default,
                 leadingTitle: rowTitles.leadingTitle,
                 trailingTitle: rowTitles.trailingTitle,
-                subtitle: isDisabled ? STPLocalizedString("Disconnected", "A subtitle on a button that represents a bank account. It explains to the user that this bank account is disconnected and needs to be re-added.") : AccountPickerHelpers.rowSubtitle(forAccount: account),
+                subtitle: isAccountBroken ? STPLocalizedString("Select to repair and connect", "A subtitle on a button that represents a bank account. It explains to the user that this bank account is disconnected from the bank and needs to be re-connected by going through the bank process.") : AccountPickerHelpers.rowSubtitle(forAccount: account),
                 isSelected: selectedAccount?.id == account.id
             )
             verticalStackView.addArrangedSubview(accountRowView)
@@ -128,7 +130,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                     status: "disabled",
                     institution: nil
                 ),
-            ]
+            ],
+            repairAuthorizationEnabled: true
         )
     }
 

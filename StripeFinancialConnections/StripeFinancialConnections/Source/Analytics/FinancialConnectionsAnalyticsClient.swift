@@ -166,6 +166,7 @@ extension FinancialConnectionsAnalyticsClient {
         _ viewController: UIViewController?
     ) -> FinancialConnectionsSessionManifest.NextPane {
         switch viewController {
+            // TODO(kgaidis): add bank repair
         case is ConsentViewController:
             return .consent
         case is InstitutionPickerViewController:

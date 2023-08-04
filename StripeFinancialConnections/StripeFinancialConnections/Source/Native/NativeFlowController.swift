@@ -823,6 +823,8 @@ private func CreatePaneViewController(
             assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil
         }
+    case .bankAuthRepair:
+        viewController = nil // TODO(kgaidis): implement
     case .consent:
         let consentDataSource = ConsentDataSourceImplementation(
             manifest: dataManager.manifest,
