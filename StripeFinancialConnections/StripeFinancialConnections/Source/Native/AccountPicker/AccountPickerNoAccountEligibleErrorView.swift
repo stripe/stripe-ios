@@ -11,7 +11,6 @@ import Foundation
 import UIKit
 
 // Same as Stripe.js `AccountNoneEligibleForPaymentMethodFailure`
-@available(iOSApplicationExtension, unavailable)
 final class AccountPickerNoAccountEligibleErrorView: UIView {
 
     init(
@@ -157,7 +156,6 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIViewRepresentable {
 
     let institutionName: String
@@ -186,7 +184,6 @@ private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIVie
     func updateUIView(_ uiView: AccountPickerNoAccountEligibleErrorView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
     static var previews: some View {
         AccountPickerNoAccountEligibleErrorViewUIViewRepresentable(

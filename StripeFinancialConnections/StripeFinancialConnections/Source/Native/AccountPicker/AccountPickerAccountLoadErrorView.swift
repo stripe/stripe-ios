@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class AccountPickerAccountLoadErrorView: UIView {
 
     init(
@@ -92,7 +91,6 @@ final class AccountPickerAccountLoadErrorView: UIView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepresentable {
 
     let institutionName: String
@@ -117,7 +115,6 @@ private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepre
     func updateUIView(_ uiView: AccountPickerAccountLoadErrorView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct AccountPickerAccountLoadErrorView_Previews: PreviewProvider {
     static var previews: some View {
         AccountPickerAccountLoadErrorViewUIViewRepresentable(

@@ -20,8 +20,6 @@ class PaymentSheetFormSpecPaymentHandler {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheetFormSpecPaymentHandler: FormSpecPaymentHandler {
     func handlePostConfirmPIStatusSpec(
         for paymentIntent: StripePayments.STPPaymentIntent?,
@@ -95,9 +93,7 @@ extension STPPaymentHandler {
         return nil
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    func _handleNextActionSpec(
+            func _handleNextActionSpec(
         forAction action: STPPaymentHandlerPaymentIntentActionParams,
         paymentIntentStatusSpec: FormSpec.NextActionSpec.ConfirmResponseStatusSpecs,
         urlSession: URLSession

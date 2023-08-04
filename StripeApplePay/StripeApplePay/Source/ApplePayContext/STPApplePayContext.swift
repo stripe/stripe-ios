@@ -128,16 +128,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
     /// - Parameters:
     ///   - completion:               Called after the Apple Pay sheet is presented
-    @available(
-        iOSApplicationExtension,
-        unavailable,
-        message: "Use `presentApplePay(from:completion:)` in App Extensions."
-    )
-    @available(
-        macCatalystApplicationExtension,
-        unavailable,
-        message: "Use `presentApplePay(from:completion:)` in App Extensions."
-    )
     @objc(presentApplePayWithCompletion:)
     public func presentApplePay(completion: STPVoidBlock? = nil) {
         let window = UIApplication.shared.windows.first { $0.isKeyWindow }

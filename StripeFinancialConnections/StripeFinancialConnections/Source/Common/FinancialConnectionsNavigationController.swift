@@ -9,22 +9,18 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 class FinancialConnectionsNavigationController: UINavigationController {
 
     // Swift 5.8 requires us to manually mark inits as unavailable as well:
-    @available(iOSApplicationExtension, unavailable)
-    override public init(navigationBarClass: AnyClass?, toolbarClass: AnyClass?) {
+        override public init(navigationBarClass: AnyClass?, toolbarClass: AnyClass?) {
         super.init(navigationBarClass: navigationBarClass, toolbarClass: toolbarClass)
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    override public init(rootViewController: UIViewController) {
+        override public init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    required init?(coder aDecoder: NSCoder) {
+        required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
@@ -65,7 +61,6 @@ class FinancialConnectionsNavigationController: UINavigationController {
 
 // MARK: - Track Swipe Back Analytics Events
 
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController: UINavigationControllerDelegate {
 
     private func listenToInteractivePopGestureRecognizer() {
@@ -106,7 +101,6 @@ extension FinancialConnectionsNavigationController: UINavigationControllerDelega
 
 // MARK: - Track Back Button Press Analytics Events
 
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 
     // `UINavigationBarDelegate` methods "just work" on `UINavigationController`
@@ -130,7 +124,6 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 
 // The purpose of this extension is to consolidate in one place
 // all the common changes to `UINavigationController`
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsNavigationController {
 
     func configureAppearanceForNative() {

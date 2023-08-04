@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 class ConsentBodyView: UIView {
 
     init(
@@ -41,7 +40,6 @@ class ConsentBodyView: UIView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateLabelView(
     title: String?,
     content: String?,
@@ -95,7 +93,6 @@ private func CreateLabelView(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ConsentBodyView {
@@ -131,7 +128,6 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: ConsentBodyView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct ConsentBodyView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .leading) {

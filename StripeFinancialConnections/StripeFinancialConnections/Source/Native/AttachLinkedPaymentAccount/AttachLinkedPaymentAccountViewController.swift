@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
     func attachLinkedPaymentAccountViewController(
         _ viewController: AttachLinkedPaymentAccountViewController,
@@ -25,7 +24,6 @@ protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class AttachLinkedPaymentAccountViewController: UIViewController {
 
     private let dataSource: AttachLinkedPaymentAccountDataSource

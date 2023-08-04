@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol InstitutionPickerViewControllerDelegate: AnyObject {
     func institutionPickerViewController(
         _ viewController: InstitutionPickerViewController,
@@ -21,7 +20,6 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 class InstitutionPickerViewController: UIViewController {
 
     // MARK: - Properties
@@ -142,7 +140,6 @@ class InstitutionPickerViewController: UIViewController {
 
 // MARK: - Data
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController {
 
     private func fetchFeaturedInstitutions(completionHandler: @escaping () -> Void) {
@@ -237,7 +234,6 @@ extension InstitutionPickerViewController {
 
 // MARK: - InstitutioNSearchBarDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
 
     func institutionSearchBar(_ searchBar: InstitutionSearchBar, didChangeText text: String) {
@@ -248,7 +244,6 @@ extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
 
 // MARK: - UIGestureRecognizerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -259,7 +254,6 @@ extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
 
 // MARK: - FeaturedInstitutionGridViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
 
     func featuredInstitutionGridView(
@@ -279,7 +273,6 @@ extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
 
 // MARK: - InstitutionSearchTableViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
 
     func institutionSearchTableView(
@@ -303,7 +296,6 @@ extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
 
 // MARK: - Constants
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController {
     enum Constants {
         static let queryDelay = TimeInterval(0.2)
@@ -312,7 +304,6 @@ extension InstitutionPickerViewController {
 
 // MARK: - Helpers
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateMainView(
     searchBar: UIView?,
     contentContainerView: UIView
@@ -330,7 +321,6 @@ private func CreateMainView(
     return verticalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateHeaderView(
     searchBar: UIView?
 ) -> UIView {
@@ -354,7 +344,6 @@ private func CreateHeaderView(
     return verticalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateHeaderTitleLabel() -> UIView {
     let headerTitleLabel = AttributedLabel(
         font: .heading(.large),

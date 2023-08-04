@@ -10,8 +10,7 @@ import UIKit
 
 extension UIViewController {
 
-    @available(iOSApplicationExtension, unavailable)
-    static func topMostViewController() -> UIViewController? {
+        static func topMostViewController() -> UIViewController? {
         guard let window = UIApplication.shared.customKeyWindow else {
             return nil
         }
@@ -25,8 +24,7 @@ extension UIViewController {
 
 extension UIApplication {
 
-    @available(iOSApplicationExtension, unavailable)
-    fileprivate var customKeyWindow: UIWindow? {
+        fileprivate var customKeyWindow: UIWindow? {
         let foregroundActiveWindow =
             connectedScenes
             .filter { $0.activationState == .foregroundActive }

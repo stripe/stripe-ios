@@ -9,7 +9,6 @@
 import AVFoundation
 import UIKit
 
-@available(macCatalyst 14.0, *)
 class STPCameraView: UIView {
     private var flashLayer: CALayer?
 

@@ -32,7 +32,6 @@ extension Optional: ScanningState {
 
 // MARK: - ImageScanningSession
 
-@available(iOSApplicationExtension, unavailable)
 final class ImageScanningSession<
     ExpectedClassificationType: Equatable,
     ScanningStateType: Equatable & ScanningState,
@@ -355,7 +354,6 @@ enum EmptyClassificationType: Equatable {
     case empty
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension ImageScanningSession where ExpectedClassificationType == EmptyClassificationType {
 
     func setStateScanned(capturedData: CapturedDataType) {

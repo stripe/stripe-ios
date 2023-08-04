@@ -79,9 +79,7 @@ final public class IdentityVerificationSheet {
     ///   - verificationSessionId: The id of a Stripe [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
     ///   - ephemeralKeySecret: A short-lived token that allows the SDK to access a [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
     ///   - configuration: Configuration for the `IdentityVerificationSheet` including your brand logo.
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    public convenience init(
+            public convenience init(
         verificationSessionId: String,
         ephemeralKeySecret: String,
         configuration: Configuration
@@ -123,8 +121,7 @@ final public class IdentityVerificationSheet {
     /// - Parameters:
     ///   - presentingViewController: The view controller to present the identity verification sheet.
     ///   - completion: Called with the result of the verification session after the identity verification sheet is dismissed.
-    @available(iOSApplicationExtension, unavailable)
-    public func present(
+        public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
     ) {
@@ -256,7 +253,6 @@ final public class IdentityVerificationSheet {
 // MARK: - VerificationFlowWebViewControllerDelegate
 
 @available(iOS 14.3, *)
-@available(iOSApplicationExtension, unavailable)
 extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
     func verificationFlowWebViewController(
         _ viewController: VerificationFlowWebViewController,

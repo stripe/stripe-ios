@@ -7,8 +7,6 @@
 
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension UIViewController {
     /// Convenience method that presents the view controller in a custom 'bottom sheet' style
     func presentAsBottomSheet(

@@ -10,7 +10,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class BiometricConsentViewController: IdentityFlowViewController {
 
     private let htmlView = HTMLViewWithIconLabels()
@@ -169,7 +168,6 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
 // MARK: - Private Helpers
 
-@available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController {
 
     fileprivate func updateUI() {
@@ -198,7 +196,6 @@ extension BiometricConsentViewController {
 
 // MARK: - IdentityDataCollecting
 
-@available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         return [.biometricConsent]
@@ -206,8 +203,6 @@ extension BiometricConsentViewController: IdentityDataCollecting {
 }
 
 // MARK: - UIScrollViewDelegate
-@available(iOS 13, *)
-@available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let scrolledToBottomYOffset = scrolledToBottomYOffset,
@@ -219,8 +214,6 @@ extension BiometricConsentViewController: UIScrollViewDelegate {
 }
 
 // MARK: - IdentityFlowViewDelegate
-@available(iOS 13, *)
-@available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: IdentityFlowViewDelegate {
     func scrollViewFullyLaiedOut(_ scrollView: UIScrollView) {
         guard scrolledToBottomYOffset == nil else {

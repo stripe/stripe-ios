@@ -10,7 +10,6 @@ import CoreMedia
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol FinancialConnectionsWebFlowViewControllerDelegate: AnyObject {
 
     func financialConnectionsWebFlow(
@@ -19,7 +18,6 @@ protocol FinancialConnectionsWebFlowViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class FinancialConnectionsWebFlowViewController: UIViewController {
 
     // MARK: - Properties
@@ -123,7 +121,6 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
 
 // MARK: - Helpers
 
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsWebFlowViewController {
 
     private func notifyDelegate(result: FinancialConnectionsSheet.Result) {
@@ -131,8 +128,7 @@ extension FinancialConnectionsWebFlowViewController {
         delegate = nil  // prevent the delegate from being called again
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    private func startAuthenticationSession(
+        private func startAuthenticationSession(
         manifest: FinancialConnectionsSessionManifest,
         additionalQueryParameters: String? = nil
     ) {
@@ -209,7 +205,6 @@ extension FinancialConnectionsWebFlowViewController {
 
 // MARK: - STPURLCallbackListener
 
-@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsWebFlowViewController: STPURLCallbackListener {
     func handleURLCallback(_ url: URL) -> Bool {
         DispatchQueue.main.async {
@@ -224,7 +219,6 @@ extension FinancialConnectionsWebFlowViewController: STPURLCallbackListener {
 
 // MARK: - UI Helpers
 
-@available(iOSApplicationExtension, unavailable)
 private extension FinancialConnectionsWebFlowViewController {
 
     @objc
@@ -248,7 +242,6 @@ private extension FinancialConnectionsWebFlowViewController {
 
 // MARK: - Authentication restart helpers
 
-@available(iOSApplicationExtension, unavailable)
 private extension FinancialConnectionsWebFlowViewController {
 
     private func restartAuthenticationIfNeeded() {

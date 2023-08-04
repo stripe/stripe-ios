@@ -35,24 +35,14 @@ class STPApplePaySwiftTest: XCTestCase {
     func testPaymentRequestWithMerchantIdentifierCountryCurrency() {
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: "foo", country: "GB", currency: "GBP")
         XCTAssertEqual(paymentRequest.merchantIdentifier, "foo")
-        if #available(iOS 12, *) {
-            let expectedNetworks = Set<PKPaymentNetwork>([
-                .amex,
-                .masterCard,
-                .visa,
-                .discover,
-                .maestro,
-            ])
-            XCTAssertEqual(Set(paymentRequest.supportedNetworks), expectedNetworks)
-        } else {
-            let expectedNetworks = Set<PKPaymentNetwork>([
-                .amex,
-                .masterCard,
-                .visa,
-                .discover,
-            ])
-            XCTAssertEqual(Set(paymentRequest.supportedNetworks), expectedNetworks)
-        }
+        let expectedNetworks = Set<PKPaymentNetwork>([
+            .amex,
+            .masterCard,
+            .visa,
+            .discover,
+            .maestro,
+        ])
+        XCTAssertEqual(Set(paymentRequest.supportedNetworks), expectedNetworks)
         XCTAssertEqual(paymentRequest.merchantCapabilities, PKMerchantCapability.capability3DS)
         XCTAssertEqual(paymentRequest.countryCode, "GB")
         XCTAssertEqual(paymentRequest.currencyCode, "GBP")
@@ -76,12 +66,7 @@ class STPApplePaySwiftTest: XCTestCase {
             PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "0.00"))
         ]
 
-        // "In versions of iOS prior to version 12.0 and watchOS prior to version 5.0, the amount of the grand total must be greater than zero."
-        if #available(iOS 12, *) {
-            XCTAssertTrue(StripeAPI.canSubmitPaymentRequest(request))
-        } else {
-            XCTAssertFalse(StripeAPI.canSubmitPaymentRequest(request))
-        }
+        XCTAssertTrue(StripeAPI.canSubmitPaymentRequest(request))
     }
 
     func testCanSubmitPaymentRequestReturnsNOIfMerchantIdentifierIsNil() {

@@ -395,9 +395,7 @@ private extension PayWithLinkButton {
     }
 
     func applyCornerRadius() {
-        if #available(iOS 13.0, *) {
-            layer.cornerCurve = .continuous
-        }
+        layer.cornerCurve = .continuous
 
         layer.cornerRadius = effectiveCornerRadius
     }

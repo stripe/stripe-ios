@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class PrepaneView: UIView {
 
     private let didSelectContinue: () -> Void
@@ -77,7 +76,6 @@ final class PrepaneView: UIView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateContentView(
     prepaneBodyModel: FinancialConnectionsOAuthPrepane.OauthPrepaneBody,
     prepanePartnerNoticeModel: FinancialConnectionsOAuthPrepane.OauthPrepanePartnerNotice?,
@@ -120,7 +118,6 @@ private func CreateContentView(
     return verticalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateFooterView(
     prepaneCtaModel: FinancialConnectionsOAuthPrepane.OauthPrepaneCTA,
     prepanePartnerNoticeModel: FinancialConnectionsOAuthPrepane.OauthPrepanePartnerNotice?,
@@ -153,7 +150,6 @@ private func CreateFooterView(
     return footerStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreatePartnerDisclosureView(
     partnerNoticeModel: FinancialConnectionsOAuthPrepane.OauthPrepanePartnerNotice,
     didSelectURL: @escaping (URL) -> Void
@@ -211,7 +207,6 @@ private func CreatePartnerDisclosureView(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> PrepaneView {
@@ -265,7 +260,6 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
 }
 
 @available(iOS 14.0, *)
-@available(iOSApplicationExtension, unavailable)
 struct PrepaneView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {

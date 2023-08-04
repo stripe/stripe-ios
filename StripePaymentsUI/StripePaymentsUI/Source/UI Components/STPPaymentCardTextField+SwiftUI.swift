@@ -9,8 +9,6 @@
 @_spi(STP) import StripePayments
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension STPPaymentCardTextField {
 
     /// A SwiftUI representation of an STPPaymentCardTextField.

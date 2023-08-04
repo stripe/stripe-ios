@@ -11,7 +11,6 @@ import Foundation
 import SwiftUI
 import UIKit
 
-@available(iOS 12, *)
 @_spi(STP) public struct FinancialConnectionsSDKAvailability {
     static let FinancialConnectionsSDKClass: FinancialConnectionsSDKInterface.Type? =
         NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation")

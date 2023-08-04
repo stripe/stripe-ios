@@ -160,9 +160,7 @@ public class STPPaymentHandler: NSObject {
     ///   - paymentParams: The params used to confirm the PaymentIntent. Note that this method overrides the value of `paymentParams.useStripeSDK` to `@YES`.
     ///   - authenticationContext: The authentication context used to authenticate the payment.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    @objc(confirmPayment:withAuthenticationContext:completion:)
+            @objc(confirmPayment:withAuthenticationContext:completion:)
     public func confirmPayment(
         _ paymentParams: STPPaymentIntentParams,
         with authenticationContext: STPAuthenticationContext,
@@ -264,9 +262,7 @@ public class STPPaymentHandler: NSObject {
         message: "Use confirmPayment(_:with:completion:) instead",
         renamed: "confirmPayment(_:with:completion:)"
     )
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    public func confirmPayment(
+            public func confirmPayment(
         withParams: STPPaymentIntentParams,
         authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
@@ -282,9 +278,7 @@ public class STPPaymentHandler: NSObject {
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during PaymentIntent confirmation.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
     @objc(handleNextActionForPayment:withAuthenticationContext:returnURL:completion:)
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    public func handleNextAction(
+            public func handleNextAction(
         forPayment paymentIntentClientSecret: String,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
@@ -317,9 +311,7 @@ public class STPPaymentHandler: NSObject {
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during PaymentIntent confirmation.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
     /// - Note: The PaymentIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    @_spi(STP) public func handleNextAction(
+            @_spi(STP) public func handleNextAction(
         for paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
@@ -401,9 +393,7 @@ public class STPPaymentHandler: NSObject {
     ///   - setupIntentConfirmParams: The params used to confirm the SetupIntent. Note that this method overrides the value of `setupIntentConfirmParams.useStripeSDK` to `@YES`.
     ///   - authenticationContext: The authentication context used to authenticate the SetupIntent.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be STPSetupIntentStatusSucceeded.
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    @objc(confirmSetupIntent:withAuthenticationContext:completion:)
+            @objc(confirmSetupIntent:withAuthenticationContext:completion:)
     public func confirmSetupIntent(
         _ setupIntentConfirmParams: STPSetupIntentConfirmParams,
         with authenticationContext: STPAuthenticationContext,
@@ -503,9 +493,7 @@ public class STPPaymentHandler: NSObject {
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
     @objc(handleNextActionForSetupIntent:withAuthenticationContext:returnURL:completion:)
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    public func handleNextAction(
+            public func handleNextAction(
         forSetupIntent setupIntentClientSecret: String,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
@@ -536,9 +524,7 @@ public class STPPaymentHandler: NSObject {
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
     /// - Note: The SetupIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    @_spi(STP) public func handleNextAction(
+            @_spi(STP) public func handleNextAction(
         for setupIntent: STPSetupIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
@@ -661,9 +647,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    func _handleNextAction(
+            func _handleNextAction(
         forPayment paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL returnURLString: String?,
@@ -708,9 +692,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    func _handleNextAction(
+            func _handleNextAction(
         for setupIntent: STPSetupIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL returnURLString: String?,
@@ -921,9 +903,7 @@ public class STPPaymentHandler: NSObject {
         return false
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    func _handleAuthenticationForCurrentAction() {
+            func _handleAuthenticationForCurrentAction() {
         guard let currentAction = currentAction,
             let authenticationAction = currentAction.nextAction()
         else {
@@ -1549,9 +1529,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    @objc func _handleWillForegroundNotification() {
+            @objc func _handleWillForegroundNotification() {
         NotificationCenter.default.removeObserver(
             self,
             name: UIApplication.willEnterForegroundNotification,
@@ -1561,18 +1539,14 @@ public class STPPaymentHandler: NSObject {
         _retrieveAndCheckIntentForCurrentAction()
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    @_spi(STP) public func _handleRedirect(to url: URL, withReturn returnURL: URL?) {
+            @_spi(STP) public func _handleRedirect(to url: URL, withReturn returnURL: URL?) {
         if let redirectShim = _redirectShim {
             redirectShim(url, returnURL, true)
         }
         _handleRedirect(to: url, fallbackURL: url, return: returnURL)
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    @_spi(STP) public func _handleRedirectToExternalBrowser(to url: URL, withReturn returnURL: URL?) {
+            @_spi(STP) public func _handleRedirectToExternalBrowser(to url: URL, withReturn returnURL: URL?) {
         if let redirectShim = _redirectShim {
             redirectShim(url, returnURL, false)
         }
@@ -1613,9 +1587,7 @@ public class STPPaymentHandler: NSObject {
     /// This method:
     /// 1. Redirects to an app using url
     /// 2. Open fallbackURL in a webview if 1) fails
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    ///
+            ///
     func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?) {
         var url = nativeURL
         guard let currentAction = currentAction else {
@@ -2035,8 +2007,6 @@ public class STPPaymentHandler: NSObject {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension STPPaymentHandler: SFSafariViewControllerDelegate {
     // MARK: - SFSafariViewControllerDelegate
     /// :nodoc:
@@ -2054,8 +2024,6 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 /// :nodoc:
 @_spi(STP) extension STPPaymentHandler: STPURLCallbackListener {
     /// :nodoc:

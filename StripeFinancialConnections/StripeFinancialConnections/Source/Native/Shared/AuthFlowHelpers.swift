@@ -32,8 +32,7 @@ final class AuthFlowHelpers {
         return urlString
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    static func handleURLInTextFromBackend(
+        static func handleURLInTextFromBackend(
         url: URL,
         pane: FinancialConnectionsSessionManifest.NextPane,
         analyticsClient: FinancialConnectionsAnalyticsClient,
@@ -56,8 +55,7 @@ final class AuthFlowHelpers {
         }
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    static func networkingOTPErrorMessage(
+        static func networkingOTPErrorMessage(
         fromError error: Error,
         otpType: String
     ) -> String? {

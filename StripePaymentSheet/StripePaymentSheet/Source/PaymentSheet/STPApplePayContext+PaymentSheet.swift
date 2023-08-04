@@ -117,8 +117,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension STPApplePayContext {
 
     static func create(

@@ -155,7 +155,6 @@ extension UIColor {
     ///   - backgroundColor: Background color.
     ///   - traitCollection: The base traits to use when resolving the color information.
     /// - Returns: Resolved color that offers the highest contrast ratio.
-    @available(iOS 13.0, *)
     func resolvedContrastingColor(
         forBackgroundColor backgroundColor: UIColor,
         traitCollection: UITraitCollection = .current

@@ -10,7 +10,6 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class ConsentBottomSheetView: UIView {
 
     private let didSelectOKAction: () -> Void
@@ -79,7 +78,6 @@ final class ConsentBottomSheetView: UIView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateContentView(
     headerTitle: String,
     headerSubtitle: String?,
@@ -108,7 +106,6 @@ private func CreateContentView(
     return verticalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateHeaderView(
     title: String,
     subtitle: String?,
@@ -140,7 +137,6 @@ private func CreateHeaderView(
     return verticalStack
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateBulletinAndExtraLabelView(
     bulletItems: [FinancialConnectionsBulletPoint],
     extraNotice: String?,
@@ -184,7 +180,6 @@ private func CreateBulletinAndExtraLabelView(
     return verticalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateBulletinView(
     title: String?,
     subtitle: String?,
@@ -235,7 +230,6 @@ private func CreateBulletinView(
     return horizontalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateLearnMoreLabel(
     text: String,
     didSelectURL: @escaping (URL) -> Void
@@ -250,7 +244,6 @@ private func CreateLearnMoreLabel(
     return label
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateFooterView(
     cta: String,
     actionTarget: ConsentBottomSheetView
@@ -269,7 +262,6 @@ private func CreateFooterView(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct ConsentBottomSheetViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ConsentBottomSheetView {
@@ -314,7 +306,6 @@ private struct ConsentBottomSheetViewUIViewRepresentable: UIViewRepresentable {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct ConsentBottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {

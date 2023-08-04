@@ -353,11 +353,7 @@ extension PaymentSheet.Configuration {
         var payload = [String: Any]()
         payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
         payload["apple_pay_config"] = applePay != nil
-        if #available(iOS 13.0, *) {
-            payload["style"] = style.rawValue
-        } else {
-            payload["style"] = 0 // SheetStyle.automatic.rawValue
-        }
+        payload["style"] = style.rawValue
 
         payload["customer"] = customer != nil
         payload["return_url"] = returnURL != nil

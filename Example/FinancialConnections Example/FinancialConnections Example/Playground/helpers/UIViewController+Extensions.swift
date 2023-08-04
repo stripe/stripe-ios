@@ -11,7 +11,11 @@ import UIKit
 
 extension UIViewController {
 
+<<<<<<< Updated upstream
     static func topMostViewController() -> UIViewController? {
+=======
+        static func topMostViewController() -> UIViewController? {
+>>>>>>> Stashed changes
         guard let window = UIApplication.shared.customKeyWindow else {
             return nil
         }
@@ -25,7 +29,11 @@ extension UIViewController {
 
 extension UIApplication {
 
+<<<<<<< Updated upstream
     fileprivate var customKeyWindow: UIWindow? {
+=======
+        fileprivate var customKeyWindow: UIWindow? {
+>>>>>>> Stashed changes
         let foregroundActiveWindow =
             connectedScenes
             .filter { $0.activationState == .foregroundActive }
