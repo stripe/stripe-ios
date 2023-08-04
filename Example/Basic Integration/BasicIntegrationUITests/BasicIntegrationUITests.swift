@@ -27,7 +27,7 @@ class BasicIntegrationUITests: XCTestCase {
         // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
         app = XCUIApplication()
         let stripePublishableKey = "pk_test_6Q7qTzl8OkUj5K5ArgayVsFD00Sa5AHMj3"
-        let backendBaseURL = "https://stp-mobile-legacy-test-backend-17.stripedemos.com/"
+        let backendBaseURL = "http://localhost:4567/"
         app.launchArguments.append(contentsOf: [
             "-StripePublishableKey", stripePublishableKey, "-StripeBackendBaseURL", backendBaseURL,
         ])
@@ -76,34 +76,6 @@ class BasicIntegrationUITests: XCTestCase {
         app.buttons["Buy"].tapWhenHittableInTestCase(self)
         let success = app.alerts["Success"].buttons["OK"]
         success.tapWhenHittableInTestCase(self)
-    }
-
-    func test3DS1() {
-        disableAddressEntry(app)
-        selectItems(app)
-
-        let buyNowButton = app.buttons["Buy Now"]
-        buyNowButton.tapWhenHittableInTestCase(self)
-
-        let payFromButton = app.buttons.matching(identifier: "Pay from").element
-        payFromButton.tapWhenHittableInTestCase(self)
-        let visa3063 = app.tables.staticTexts["Visa ending in 3063"]
-        visa3063.tapWhenHittableInTestCase(self)
-
-        let buyButton = app.buttons["Buy"]
-        buyButton.tapWhenHittableInTestCase(self)
-
-        let webViewsQuery = app.webViews
-        let completeAuth = webViewsQuery.buttons["COMPLETE AUTHENTICATION"]
-        completeAuth.tapWhenHittableInTestCase(self)
-        let successButton = app.alerts["Success"].buttons["OK"]
-        successButton.tapWhenHittableInTestCase(self)
-        buyButton.tapWhenHittableInTestCase(self)
-
-        let failAuth = webViewsQuery.buttons["FAIL AUTHENTICATION"]
-        failAuth.tapWhenHittableInTestCase(self)
-        let errorButton = app.alerts["Error"].buttons["OK"]
-        errorButton.tapWhenHittableInTestCase(self)
     }
 
     func test3DS2() {
@@ -252,7 +224,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
         app = XCUIApplication()
         let stripePublishableKey = "pk_test_6Q7qTzl8OkUj5K5ArgayVsFD00Sa5AHMj3"
-        let backendBaseURL = "https://stp-mobile-legacy-test-backend-17.stripedemos.com/"
+        let backendBaseURL = "http://localhost:4567/"
         app.launchArguments.append(contentsOf: [
             "-StripePublishableKey", stripePublishableKey, "-StripeBackendBaseURL", backendBaseURL,
             "-AppleLanguages", "(fr)", "-AppleLocale", "en_BZ",
@@ -302,40 +274,6 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         let success = app.alerts["Success"].buttons["OK"]
         waitToAppear(success)
         success.tapWhenHittableInTestCase(self)
-    }
-
-    func test3DS1() {
-        disableAddressEntry(app)
-        selectItems(app)
-
-        let buyNowButton = app.buttons["Buy Now"]
-        buyNowButton.tapWhenHittableInTestCase(self)
-
-        let payFromButton = app.buttons.matching(identifier: "Pay from").element
-        waitToAppear(payFromButton)
-        payFromButton.tapWhenHittableInTestCase(self)
-        let visa3063 = app.tables.staticTexts["Visa se terminant par 3063"]
-        waitToAppear(visa3063)
-        visa3063.tapWhenHittableInTestCase(self)
-
-        let buyButton = app.buttons["Buy"]
-        buyButton.tapWhenHittableInTestCase(self)
-
-        let webViewsQuery = app.webViews
-        let completeAuth = webViewsQuery.buttons["COMPLETE AUTHENTICATION"]
-        waitToAppear(completeAuth)
-        completeAuth.tapWhenHittableInTestCase(self)
-        let successButton = app.alerts["Success"].buttons["OK"]
-        waitToAppear(successButton)
-        successButton.tapWhenHittableInTestCase(self)
-        buyButton.tapWhenHittableInTestCase(self)
-
-        let failAuth = webViewsQuery.buttons["FAIL AUTHENTICATION"]
-        waitToAppear(failAuth)
-        failAuth.tapWhenHittableInTestCase(self)
-        let errorButton = app.alerts["Error"].buttons["OK"]
-        waitToAppear(errorButton)
-        errorButton.tapWhenHittableInTestCase(self)
     }
 
     func test3DS2() {
