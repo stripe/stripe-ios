@@ -21,7 +21,6 @@
 @property (nonatomic, readwrite, weak) STPFormTextField *cvcField;
 @property (nonatomic, readwrite, weak) STPFormTextField *postalCodeField;
 @property (nonatomic, readonly, weak) STPFormTextField *currentFirstResponderField;
-@property (nonatomic, readwrite, strong) STPPaymentCardTextFieldViewModel *viewModel;
 @property (nonatomic, copy) NSNumber *focusedTextFieldForLayout;
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;

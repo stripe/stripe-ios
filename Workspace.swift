@@ -17,7 +17,6 @@ let workspace = Workspace(
         "StripePaymentSheet",
         "StripeUICore",
         "Testers/IntegrationTester",
-        "Testers/LocalizationTester",
         "Example/UI Examples",
         "Example/FinancialConnections Example",
         "Example/CardImageVerification Example",
