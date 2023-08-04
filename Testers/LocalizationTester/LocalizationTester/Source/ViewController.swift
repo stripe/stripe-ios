@@ -10,7 +10,7 @@
 import PassKit
 @testable import Stripe
 
-enum LocalizedScreen : Int {
+enum LocalizedScreen: Int {
     case paymentCardTextField = 0
     case addCardVCStandard
     case addCardVCPrefilledShipping
@@ -53,7 +53,7 @@ private func TitleForLocalizedScreen(_ screen: LocalizedScreen) -> String? {
 
 class ViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
     private var screenTypes: [NSNumber]?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

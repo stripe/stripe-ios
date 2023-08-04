@@ -14,17 +14,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     @objc func keyboardDidShow() {
         (window!.rootViewController as? UINavigationController)?.topViewController?.view.endEditing(true)
     }
-    
+
     var window: UIWindow?
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        
+
         NotificationCenter.default.addObserver(
             self, selector: #selector(keyboardDidShow),
             name: UIResponder.keyboardWillShowNotification, object: nil)
-        
+
         let rootVC = ViewController()
         let navigationController = UINavigationController(rootViewController: rootVC)
         let window = UIWindow(frame: UIScreen.main.bounds)
@@ -33,5 +33,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = window
         return true
     }
-    
+
 }
