@@ -28,7 +28,7 @@ let project = Project(
             product: .app,
             bundleId: "com.stripe.LocalizationTester",
             infoPlist: "LocalizationTester/Info.plist",
-            sources: "LocalizationTester/Source/**/*.m",
+            sources: "LocalizationTester/Source/**/*",
             resources: "LocalizationTester/Resources/**",
             headers: .headers(
                 project: "LocalizationTester/Source/**/*.h"
