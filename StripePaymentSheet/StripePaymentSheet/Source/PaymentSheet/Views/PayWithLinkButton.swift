@@ -122,11 +122,13 @@ final class PayWithLinkButton: UIControl {
 
         // Add a spacer before the Link logo and after the Link logo
         let range = payWithLinkString.mutableString.range(of: "Link")
-        payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location + range.length)
-        payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location)
+        if range.location != NSNotFound {
+            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location + range.length)
+            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location)
 
-        // Add the Link attachment
-        payWithLinkString.replaceOccurrences(of: "Link", with: linkAttachment)
+            // Add the Link attachment
+            payWithLinkString.replaceOccurrences(of: "Link", with: linkAttachment)
+        }
 
         linkView.attributedText = payWithLinkString
         return linkView
