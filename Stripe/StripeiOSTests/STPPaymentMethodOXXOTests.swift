@@ -18,12 +18,10 @@ class STPPaymentMethodOXXOTests: XCTestCase {
             completion(oxxoJSON)
         } else {
             let client = STPAPIClient(publishableKey: STPTestingMEXPublishableKey)
-            //        [client retrievePaymentIntentWithClientSecret:@"pi_1GvAdyHNG4o8pO5l0dr078gf_secret_h0tJE5mSX9BPEkmpKSh93jBXi"
-            //                                               expand:@[@"payment_method"]
-            //                                           completion:^(STPPaymentIntent * _Nullable paymentIntent, __unused NSError * _Nullable error) {
-            //            self->_oxxoJSON = paymentIntent.paymentMethod.oxxo.allResponseFields;
-            //            completion(self.oxxoJSON);
-            //        }];
+            client.retrievePaymentIntent(withClientSecret: "pi_1GvAdyHNG4o8pO5l0dr078gf_secret_h0tJE5mSX9BPEkmpKSh93jBXi", expand: ["payment_method"]) { paymentIntent, _ in
+                self.oxxoJSON = paymentIntent?.paymentMethod?.oxxo?.allResponseFields
+                completion(self.oxxoJSON)
+            }
         }
     }
 

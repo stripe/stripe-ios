@@ -17,12 +17,10 @@ class STPPaymentMethodPayPalTests: XCTestCase {
             completion(payPalJSON)
         } else {
             let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-            //        [client retrievePaymentIntentWithClientSecret:@"pi_1HcI17FY0qyl6XeWcFAAbZCw_secret_oAZ9OCoeyIg8EPeBEdF96ZJOT"
-            //                                               expand:@[@"payment_method"]
-            //                                           completion:^(STPPaymentIntent * _Nullable paymentIntent, __unused NSError * _Nullable error) {
-            //            self->_payPalJSON = paymentIntent.lastPaymentError.paymentMethod.payPal.allResponseFields;
-            //            completion(self.payPalJSON);
-            //        }];
+            client.retrievePaymentIntent(withClientSecret: "pi_1HcI17FY0qyl6XeWcFAAbZCw_secret_oAZ9OCoeyIg8EPeBEdF96ZJOT", expand: ["payment_method"]) { paymentIntent, _ in
+                self.payPalJSON = paymentIntent?.lastPaymentError?.paymentMethod?.payPal?.allResponseFields
+                completion(self.payPalJSON)
+            }
         }
     }
 
