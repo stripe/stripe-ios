@@ -83,7 +83,6 @@
     STPSource *source = [STPFixtures iDEALSource];
     __block BOOL completionCalled = NO;
     NSError *fakeError = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
-
     STPRedirectContext *sut = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString * _Nonnull sourceID, NSString * _Nullable clientSecret, NSError * _Nullable error) {
         XCTAssertEqualObjects(source.stripeID, sourceID);
         XCTAssertEqualObjects(source.clientSecret, clientSecret);
