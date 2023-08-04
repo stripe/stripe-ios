@@ -37,6 +37,8 @@ extern NSString *const STPTestJSONSourceP24;
 extern NSString *const STPTestJSONSourceSEPADebit;
 extern NSString *const STPTestJSONSourceSofort;
 
+@class STPEphemeralKey;
+
 @interface STPFixtures : NSObject
 
 /**

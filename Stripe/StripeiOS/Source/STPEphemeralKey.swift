@@ -9,7 +9,7 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
+@objc(STPEphemeralKey) class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
     private(set) var stripeID: String
     private(set) var created: Date
     private(set) var livemode = false

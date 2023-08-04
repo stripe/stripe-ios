@@ -36,6 +36,10 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
 
 @import StripeCore;
 
+@interface STPEphemeralKey: NSObject <STPAPIResponseDecodable>
+
+@end
+
 @implementation STPFixtures
 
 + (STPConnectAccountParams *)accountParams {

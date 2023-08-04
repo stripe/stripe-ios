@@ -8,13 +8,21 @@
 
 #import <XCTest/XCTest.h>
 @import Stripe;
-
+@import StripePayments;
+@import StripeCore;
 
 #import "STPFixtures.h"
 
-@interface STPEphemeralKeyManager (Testing)
+@interface STPEphemeralKey: NSObject <STPAPIResponseDecodable>
+
+@end
+
+
+@interface `STPEphemeralKeyManager: NSObject
 @property (nonatomic) STPEphemeralKey *ephemeralKey;
 @property (nonatomic) NSDate *lastEagerKeyRefresh;
+- (instancetype)initWithKeyProvider:(NSObject<STPCustomerEphemeralKeyProvider> *)mockKeyProvider apiVersion:(NSString *)apiVersion performsEagerFetching:(BOOL)performsEagerFetching;
+- (void)getOrCreateKey:(void (^)(STPEphemeralKey*, NSError*))completion;
 @end
 
 @interface STPEphemeralKeyManagerTest : XCTestCase
