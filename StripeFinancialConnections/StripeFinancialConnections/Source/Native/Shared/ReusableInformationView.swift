@@ -11,7 +11,6 @@ import UIKit
 
 /// A reusable view that allows developers to quickly
 /// render information.
-@available(iOSApplicationExtension, unavailable)
 final class ReusableInformationView: UIView {
 
     enum IconType {
@@ -67,7 +66,6 @@ final class ReusableInformationView: UIView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateIconView(iconType: ReusableInformationView.IconType) -> UIView {
 
     switch iconType {
@@ -78,7 +76,6 @@ private func CreateIconView(iconType: ReusableInformationView.IconType) -> UIVie
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateFooterView(
     primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration?,
     secondaryButtonConfiguration: ReusableInformationView.ButtonConfiguration?,
@@ -127,7 +124,6 @@ private func CreateFooterView(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct ReusableInformationViewUIViewRepresentable: UIViewRepresentable {
 
     let primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration?
@@ -146,7 +142,6 @@ private struct ReusableInformationViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: ReusableInformationView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct ReusableInformationView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

@@ -162,11 +162,7 @@ class BoletoExampleViewController: UIViewController {
 
         title = "Boleto"
 
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBackground
-        } else {
-            view.backgroundColor = .white
-        }
+        view.backgroundColor = .systemBackground
 
         view.addSubview(scrollView)
         NSLayoutConstraint.activate([

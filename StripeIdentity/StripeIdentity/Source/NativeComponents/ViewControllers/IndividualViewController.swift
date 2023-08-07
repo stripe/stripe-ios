@@ -9,7 +9,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class IndividualViewController: IdentityFlowViewController {
 
     let individualContent: StripeAPI.VerificationPageStaticContentIndividualPage
@@ -84,7 +83,6 @@ final class IndividualViewController: IdentityFlowViewController {
 }
 
 // MARK: - IdentityDataCollecting
-@available(iOSApplicationExtension, unavailable)
 extension IndividualViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         return self.missing
@@ -92,7 +90,6 @@ extension IndividualViewController: IdentityDataCollecting {
 }
 
 // MARK: - ElementDelegate
-@available(iOSApplicationExtension, unavailable)
 extension IndividualViewController: ElementDelegate {
     func didUpdate(element: Element) {
         self.updateUI()

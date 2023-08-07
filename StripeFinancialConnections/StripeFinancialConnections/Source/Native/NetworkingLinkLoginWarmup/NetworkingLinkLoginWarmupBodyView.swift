@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkLoginWarmupBodyView: HitTestView {
 
     private let didSelectContinue: () -> Void
@@ -46,7 +45,6 @@ final class NetworkingLinkLoginWarmupBodyView: HitTestView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateContinueButton(
     email: String,
     didSelectContinue: @escaping () -> Void,
@@ -119,7 +117,6 @@ private func CreateArrowIconView() -> UIView {
     return imageView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateSkipButton(
     didSelectSkip: @escaping () -> Void
 ) -> UIView {
@@ -150,7 +147,6 @@ private func CreateSkipButton(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct NetworkingLinkLoginWarmupBodyViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> NetworkingLinkLoginWarmupBodyView {
@@ -164,7 +160,6 @@ private struct NetworkingLinkLoginWarmupBodyViewUIViewRepresentable: UIViewRepre
     func updateUIView(_ uiView: NetworkingLinkLoginWarmupBodyView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct NetworkingLinkLoginWarmupBodyView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .leading) {

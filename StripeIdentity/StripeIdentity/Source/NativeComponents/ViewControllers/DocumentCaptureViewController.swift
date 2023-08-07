@@ -12,7 +12,6 @@ import AVKit
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class DocumentCaptureViewController: IdentityFlowViewController {
 
     typealias DocumentImageScanningSession = ImageScanningSession<
@@ -404,7 +403,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
 // MARK: - ImageScanningSessionDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentCaptureViewController: ImageScanningSessionDelegate {
     typealias ExpectedClassificationType = DocumentSide
 
@@ -533,7 +531,6 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
 
 // MARK: - IdentityDataCollecting
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentCaptureViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         // Note: Always include the document back, even if the document type

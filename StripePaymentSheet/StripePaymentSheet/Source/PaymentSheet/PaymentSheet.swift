@@ -106,9 +106,7 @@ public class PaymentSheet {
     /// Presents a sheet for a customer to complete their payment
     /// - Parameter presentingViewController: The view controller to present a payment sheet
     /// - Parameter completion: Called with the result of the payment after the payment sheet is dismissed
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    public func present(
+            public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
@@ -157,14 +155,7 @@ public class PaymentSheet {
                         delegate: self
                     )
 
-                    // Workaround to silence a warning in the Catalyst target
-                    #if targetEnvironment(macCatalyst)
                     self.configuration.style.configure(paymentSheetVC)
-                    #else
-                    if #available(iOS 13.0, *) {
-                        self.configuration.style.configure(paymentSheetVC)
-                    }
-                    #endif
 
                     let updateBottomSheet: () -> Void = {
                         self.bottomSheetViewController.contentStack = [paymentSheetVC]
@@ -226,14 +217,10 @@ public class PaymentSheet {
     var completion: ((PaymentSheetResult) -> Void)?
 
     /// The STPPaymentHandler instance
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
+        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
 
     /// The parent view controller to present
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    lazy var bottomSheetViewController: BottomSheetViewController = {
+        lazy var bottomSheetViewController: BottomSheetViewController = {
         let isTestMode = configuration.apiClient.isTestmode
         let loadingViewController = LoadingViewController(
             delegate: self,
@@ -251,16 +238,12 @@ public class PaymentSheet {
             }
         )
 
-        if #available(iOS 13.0, *) {
-            configuration.style.configure(vc)
-        }
+        configuration.style.configure(vc)
         return vc
     }()
 
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
 
     func paymentSheetViewControllerShouldConfirm(
@@ -339,8 +322,6 @@ extension PaymentSheet: LoadingViewControllerDelegate {
     @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet"
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet: PayWithLinkWebControllerDelegate {
 
     func payWithLinkWebControllerDidComplete(
@@ -368,8 +349,6 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
 
 // MARK: - Link
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 private extension PaymentSheet {
 
     func presentPayWithLinkController(

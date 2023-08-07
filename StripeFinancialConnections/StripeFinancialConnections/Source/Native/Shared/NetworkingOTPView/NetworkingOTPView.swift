@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol NetworkingOTPViewDelegate: AnyObject {
     func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView)
     func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView)
@@ -24,7 +23,6 @@ protocol NetworkingOTPViewDelegate: AnyObject {
     func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error)
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingOTPView: UIView {
 
     private let dataSource: NetworkingOTPDataSource
@@ -129,7 +127,6 @@ final class NetworkingOTPView: UIView {
 
     private func userDidEnterValidOTPCode(_ otpCode: String) {
         otpTextField.resignFirstResponder()
-        // TODO(kgaidis): consider implementing a loading/grayed-out state for `otpTextField`
 
         dataSource.confirmVerificationSession(otpCode: otpCode)
             .observe { [weak self] result in

@@ -443,17 +443,26 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             }
             let setupIntent = Intent.setupIntent(fetchedSetupIntent)
 
-            guard let paymentMethod = await self.confirm(intent: setupIntent, paymentOption: paymentOption) else {
+            guard let setupIntent = await self.confirm(intent: setupIntent, paymentOption: paymentOption),
+                  let paymentMethod = setupIntent.paymentMethod else {
                 self.processingInFlight = false
                 self.updateUI()
                 return
             }
             self.processingInFlight = false
-            self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
-            self.mode = .selectingSaved
-            self.updateUI(animated: true)
-            self.reinitAddPaymentMethodViewController()
+            if shouldDismissSheetOnConfirm(paymentMethod: paymentMethod, setupIntent: setupIntent) {
+                self.handleDismissSheet(shouldDismissImmediately: true)
+            } else {
+                self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
+                self.mode = .selectingSaved
+                self.updateUI(animated: true)
+                self.reinitAddPaymentMethodViewController()
+            }
         }
+    }
+
+    private func shouldDismissSheetOnConfirm(paymentMethod: STPPaymentMethod, setupIntent: STPSetupIntent) -> Bool{
+        return paymentMethod.type == .USBankAccount && setupIntent.nextAction?.type == .verifyWithMicrodeposits
     }
 
     private func fetchClientSecret() async -> String? {
@@ -483,10 +492,10 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         return setupIntent
     }
 
-    func confirm(intent: Intent?, paymentOption: PaymentOption) async -> STPPaymentMethod? {
-        var paymentMethod: STPPaymentMethod?
+    func confirm(intent: Intent?, paymentOption: PaymentOption) async -> STPSetupIntent? {
+        var setupIntent: STPSetupIntent?
         do {
-            paymentMethod = try await withCheckedThrowingContinuation { continuation in
+            setupIntent = try await withCheckedThrowingContinuation { continuation in
                 self.delegate?.savedPaymentMethodsViewControllerShouldConfirm(intent, with: paymentOption, completion: { result in
                     switch result {
                     case .canceled:
@@ -496,8 +505,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                         STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
                         continuation.resume(throwing: error)
                     case .completed(let intent):
-                        guard let intent = intent as? STPSetupIntent,
-                              let paymentMethod = intent.paymentMethod else {
+                        guard let intent = intent as? STPSetupIntent else {
                             STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
                             // Not ideal (but also very rare): If this fails, customers will need to know there is an error
                             // so that they can back out and try again
@@ -506,14 +514,14 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                             continuation.resume(throwing: CustomerSheetError.unknown(debugDescription: "Unexpected error occured"))
                             return
                         }
-                        continuation.resume(with: .success(paymentMethod))
+                        continuation.resume(with: .success(intent))
                     }
                 })
             }
         } catch {
             self.error = error
         }
-        return paymentMethod
+        return setupIntent
     }
 
     private func addPaymentOptionToCustomer(paymentOption: PaymentOption) {
@@ -631,7 +639,38 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
-    private func handleDismissSheet() {
+    private func handleDismissSheet(shouldDismissImmediately: Bool = false) {
+        guard !shouldDismissImmediately else {
+            self.handleDismissSheet_completion()
+            return
+        }
+        if mode == .selectingSaved && !self.savedPaymentOptionsViewController.unsyncedSavedPaymentMethods.isEmpty {
+            if let selectedPaymentOption = self.savedPaymentOptionsViewController.selectedPaymentOption,
+               case .saved(let selectedPaymentMethod) = selectedPaymentOption,
+               self.savedPaymentOptionsViewController.unsyncedSavedPaymentMethods.first?.stripeId == selectedPaymentMethod.stripeId {
+                didTapActionButton()
+            } else {
+                self.handleDismissSheet_completion()
+            }
+        } else if mode == .addingNewWithSetupIntent && self.addPaymentMethodViewController.shouldPreventDismissal() {
+            let alertController = UIAlertController(title: String.Localized.closeFormTitle,
+                                                    message: String.Localized.paymentInfoWontBeSaved,
+                                                    preferredStyle: .alert)
+            let dismissAction = UIAlertAction(title: String.Localized.close, style: .destructive) { (_) in
+                alertController.dismiss(animated: true) {
+                    self.handleDismissSheet_completion()
+                }
+            }
+            alertController.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
+            alertController.addAction(dismissAction)
+            present(alertController, animated: true, completion: nil)
+        } else {
+            self.handleDismissSheet_completion()
+        }
+    }
+
+    // This method should ONLY be called from handleDismissSheet()
+    private func handleDismissSheet_completion() {
         if let originalSelectedPaymentMethod = savedPaymentOptionsViewController.originalSelectedSavedPaymentMethod {
             switch originalSelectedPaymentMethod {
             case .applePay:

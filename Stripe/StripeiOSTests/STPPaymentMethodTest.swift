@@ -151,7 +151,7 @@ class STPPaymentMethodTest: XCTestCase {
         let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: response)
         XCTAssertEqual(paymentMethod?.stripeId, "pm_123456789")
         XCTAssertEqual(paymentMethod?.created, Date(timeIntervalSince1970: 123_456_789))
-        XCTAssertEqual(paymentMethod?.liveMode, false)
+        XCTAssertEqual(paymentMethod!.liveMode, false)
         XCTAssertEqual(paymentMethod?.type, .card)
         XCTAssertNotNil(paymentMethod?.billingDetails)
         XCTAssertNotNil(paymentMethod?.card)

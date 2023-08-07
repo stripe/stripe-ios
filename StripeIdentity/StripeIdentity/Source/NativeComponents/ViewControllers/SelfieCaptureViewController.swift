@@ -12,7 +12,6 @@ import AVKit
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class SelfieCaptureViewController: IdentityFlowViewController {
 
     typealias SelfieImageScanningSession = ImageScanningSession<
@@ -271,7 +270,6 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 }
 
 // MARK: - Helpers
-@available(iOSApplicationExtension, unavailable)
 extension SelfieCaptureViewController {
     func updateUI() {
         configure(
@@ -325,7 +323,6 @@ extension SelfieCaptureViewController {
 }
 
 // MARK: - ImageScanningSessionDelegate
-@available(iOSApplicationExtension, unavailable)
 extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     func imageScanningSession(
         _ scanningSession: SelfieImageScanningSession,
@@ -456,7 +453,6 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 
 // MARK: - IdentityDataCollecting
 
-@available(iOSApplicationExtension, unavailable)
 extension SelfieCaptureViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         return [.face]

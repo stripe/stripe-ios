@@ -101,8 +101,7 @@ private func CreateSelectedBackgroundView() -> UIView {
 
 extension InstitutionSearchTableViewCell {
 
-    @available(iOSApplicationExtension, unavailable)
-    func customize(with institution: FinancialConnectionsInstitution) {
+        func customize(with institution: FinancialConnectionsInstitution) {
         institutionIconView.setImageUrl(institution.icon?.default)
         titleLabel.setText(institution.name)
         subtitleLabel.setText(AuthFlowHelpers.formatUrlString(institution.url) ?? "")

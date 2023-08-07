@@ -13,8 +13,6 @@ import AuthenticationServices
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 protocol PayWithLinkWebControllerDelegate: AnyObject {
 
     func payWithLinkWebControllerDidComplete(
@@ -42,8 +40,6 @@ protocol PayWithLinkCoordinating: AnyObject {
 /// Instantiate and present this controller when the user chooses to pay with Link.
 /// For internal SDK use only
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_PayWithLinkWebController)
 final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationContextProviding, STPAuthenticationContext {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
@@ -230,8 +226,6 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
 
 // MARK: - Coordinating
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension PayWithLinkWebController: PayWithLinkCoordinating {
 
     func confirm(

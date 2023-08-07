@@ -47,7 +47,7 @@ class STPShippingAddressViewControllerTest: XCTestCase {
 
     func testPrefilledBillingAddress_addAddressWithLimitedCountries() {
         // Zimbabwe does not require zip codes, while the default locale for tests (US) does
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW") as Locale) {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW")) {
             // Sanity checks
             XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
             XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
@@ -81,7 +81,7 @@ class STPShippingAddressViewControllerTest: XCTestCase {
 
     func testPrefilledBillingAddress_addAddress() {
         // Zimbabwe does not require zip codes, while the default locale for tests (US) does
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW") as Locale) {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW")) {
             // Sanity checks
             XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
             XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))

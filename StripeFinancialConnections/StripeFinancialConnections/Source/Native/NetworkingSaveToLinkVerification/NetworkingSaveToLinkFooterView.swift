@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 class NetworkingSaveToLinkFooterView: HitTestView {
 
     private let didSelectNotNow: () -> Void
@@ -54,7 +53,6 @@ class NetworkingSaveToLinkFooterView: HitTestView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct NetworkingSaveToLinkFooterViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> NetworkingSaveToLinkFooterView {
@@ -69,7 +67,6 @@ private struct NetworkingSaveToLinkFooterViewUIViewRepresentable: UIViewRepresen
 }
 
 @available(iOS 14.0, *)
-@available(iOSApplicationExtension, unavailable)
 struct NetworkingSaveToLinkFooterView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

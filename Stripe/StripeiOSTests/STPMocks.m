@@ -32,11 +32,7 @@
 }
 
 + (STPCustomerContext *)staticCustomerContextWithCustomer:(STPCustomer *)customer paymentMethods:(NSArray<STPPaymentMethod *> *)paymentMethods {
-    if (@available(iOS 13.0, *)) {
-        return [[Testing_StaticCustomerContext_Objc alloc] initWithCustomer:customer paymentMethods:paymentMethods];
-    } else {
-        return nil;
-    }
+    return [[Testing_StaticCustomerContext_Objc alloc] initWithCustomer:customer paymentMethods:paymentMethods];
 }
 
 + (STPPaymentConfiguration *)paymentConfigurationWithApplePaySupportingDevice {

@@ -10,8 +10,6 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 class STPSourcePoller: NSObject {
     required init(
         apiClient: STPAPIClient,
