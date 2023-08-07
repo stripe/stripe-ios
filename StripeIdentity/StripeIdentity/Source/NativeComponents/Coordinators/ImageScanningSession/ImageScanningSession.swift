@@ -176,6 +176,7 @@ final class ImageScanningSession<
     }
 
     func startIfNeeded(expectedClassification: ExpectedClassificationType) {
+        print("BGLM - start session if needed")
         if state == .initial {
             setupCameraAndStartScanning(expectedClassification: expectedClassification)
         }
@@ -255,16 +256,21 @@ final class ImageScanningSession<
         expectedClassification: ExpectedClassificationType
     ) {
         permissionsManager.requestCameraAccess(completeOnQueue: .main) { [weak self] granted in
+            print("BGLM - request camera sucees")
             guard let self = self else {
                 return
             }
 
             self.delegate?.imageScanningSession(self, didRequestCameraAccess: granted)
 
+            print("BGLM - request camera sucees: granted?: \(String(describing: granted))")
+            
             guard granted == true else {
                 self.state = .noCameraAccess
                 return
             }
+            
+            print("BGLM - to configure camera session")
 
             // Configure camera session
             // Tell the camera to automatically adjust focus to the center of
@@ -290,8 +296,10 @@ final class ImageScanningSession<
 
                 switch result {
                 case .success:
+                    print("BGLM - cameraSession configure success")
                     self.startScanning(expectedClassification: expectedClassification)
                 case .failed(let error):
+                    print("BGLM - cameraSession configure error: \(error)")
                     self.delegate?.imageScanningSession(self, cameraDidError: error)
                     self.state = .cameraError
                 }

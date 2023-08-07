@@ -637,13 +637,13 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     }
 
     private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
-        #if targetEnvironment(simulator)
-        return MockSimulatorCameraSession(
-            images: IdentityVerificationSheet.simulatorDocumentCameraImages
-        )
-        #else
+//        #if targetEnvironment(simulator)
+//        return MockSimulatorCameraSession(
+//            images: IdentityVerificationSheet.simulatorDocumentCameraImages
+//        )
+//        #else
         return CameraSession()
-        #endif
+//        #endif
     }
 
     private func makeSelfieCaptureCameraSession() -> CameraSessionProtocol {

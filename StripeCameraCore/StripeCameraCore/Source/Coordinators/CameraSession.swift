@@ -98,6 +98,7 @@ import AVKit
             sessionPreset: AVCaptureSession.Preset = .high,
             outputSettings: [String: Any] = [:]
         ) {
+            print("BGLM - cameraSessionInit")
             self.initialCameraPosition = initialCameraPosition
             self.initialOrientation = initialOrientation
             self.focusMode = focusMode
@@ -167,6 +168,7 @@ import AVKit
         completeOn queue: DispatchQueue,
         completion: @escaping (SetupResult) -> Void
     ) {
+        print("BGLM - cameraSession.configureSession")
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
 
@@ -433,12 +435,15 @@ extension CameraSession {
 
     fileprivate func captureDeviceInput(position: CameraPosition) throws -> AVCaptureDeviceInput {
         let captureDevices = AVCaptureDevice.DiscoverySession(
-            deviceTypes: position.captureDeviceTypes,
+            deviceTypes: [.builtInTrueDepthCamera, .builtInWideAngleCamera, .builtInDualCamera, .builtInDualWideCamera, .builtInTripleCamera, .builtInUltraWideCamera, .builtInTelephotoCamera],
             mediaType: .video,
-            position: position.captureDevicePosition
+            position: .back
         )
+        
+        print("BGLM - getting camera")
 
         guard let captureDevice = captureDevices.devices.first else {
+            print("BGLM - no camera found")
             throw CameraSessionError.captureDeviceNotFound
         }
 
@@ -482,6 +487,7 @@ extension CameraSession.CameraPosition {
 
         case .back:
             if #available(iOS 13.0, *) {
+//                return [.builtInTripleCamera, .builtInDualCamera, .builtInDualWideCamera, .builtInWideAngleCamera]
                 return [.builtInTripleCamera, .builtInDualCamera, .builtInDualWideCamera, .builtInWideAngleCamera]
             } else {
                 return [.builtInDualCamera, .builtInWideAngleCamera]

@@ -123,6 +123,8 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
         sheetController: VerificationSheetControllerProtocol,
         staticContent: StripeAPI.VerificationPageStaticContentDocumentSelectPage
     ) throws {
+        
+        print("BGLM - docType init")
 
         self.staticContent = staticContent
         super.init(sheetController: sheetController, analyticsScreenName: .documentTypeSelect)

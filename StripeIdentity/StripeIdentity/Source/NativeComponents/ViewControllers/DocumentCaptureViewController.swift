@@ -289,6 +289,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        print("BGLM - to startSession")
         imageScanningSession.startIfNeeded(expectedClassification: .front)
     }
 

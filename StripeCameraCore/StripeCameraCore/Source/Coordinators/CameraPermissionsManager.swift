@@ -56,6 +56,7 @@ import Foundation
         completeOnQueue queue: DispatchQueue = .main,
         completion: @escaping CompletionBlock
     ) {
+        print("BGLM - request camera access")
         let wrappedCompletion: CompletionBlock = { granted in
             queue.async {
                 completion(granted)
