@@ -1,4 +1,4 @@
-## X.Y.Z 2023-XX-YY
+## 23.13.0 2023-08-07
 ### PaymentSheet
 * [Added] Enable bancontact and sofort for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.
 ### CustomerSheet
