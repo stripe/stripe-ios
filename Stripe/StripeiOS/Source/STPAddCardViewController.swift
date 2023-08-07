@@ -815,7 +815,6 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     // MARK: - STPCardScanner
     /// :nodoc:
-    @available(macCatalyst 14.0, *)
     @objc
     public override func viewWillTransition(
         to size: CGSize,
@@ -824,7 +823,9 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         super.viewWillTransition(to: size, with: coordinator)
         let orientation = UIDevice.current.orientation
         if orientation.isPortrait || orientation.isLandscape {
-            cardScanner?.deviceOrientation = orientation
+            if #available(macCatalyst 14.0, *) {
+                cardScanner?.deviceOrientation = orientation
+            }
         }
         if isScanning {
             let indexPath = IndexPath(
