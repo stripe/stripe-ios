@@ -401,11 +401,11 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
             }
             let scannerCell = STPCardScannerTableViewCell()
             self.scannerCell = scannerCell
-            
+
             let cardScanner = STPCardScanner(delegate: self)
             cardScanner.cameraView = scannerCell.cameraView
             self.cardScanner = cardScanner
-            
+
             cardHeaderView?.buttonHidden = false
             cardHeaderView?.button?.setTitle(
                 String.Localized.scan_card_title_capitalization,
@@ -420,12 +420,11 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         }
     }
 
+    @available(macCatalyst 14.0, *)
     @objc func scanCard() {
-        if #available(macCatalyst 14.0, *) {
-            view.endEditing(true)
-            isScanning = true
-            cardScanner?.start()
-        }
+        view.endEditing(true)
+        isScanning = true
+        cardScanner?.start()
     }
 
     @objc func endEditing() {
@@ -816,6 +815,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     // MARK: - STPCardScanner
     /// :nodoc:
+    @available(macCatalyst 14.0, *)
     @objc
     public override func viewWillTransition(
         to size: CGSize,
@@ -824,9 +824,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         super.viewWillTransition(to: size, with: coordinator)
         let orientation = UIDevice.current.orientation
         if orientation.isPortrait || orientation.isLandscape {
-            if #available(macCatalyst 14.0, *) {
-                cardScanner?.deviceOrientation = orientation
-            }
+            cardScanner?.deviceOrientation = orientation
         }
         if isScanning {
             let indexPath = IndexPath(
