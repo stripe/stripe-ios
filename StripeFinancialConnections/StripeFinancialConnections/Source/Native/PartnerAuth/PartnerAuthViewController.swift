@@ -735,8 +735,8 @@ private extension PartnerAuthViewController {
              */
             return
         }
-        handleAuthSessionCompletionFromNativeRedirect(url)
         clearStateAndUnsubscribeFromNotifications()
+        handleAuthSessionCompletionFromNativeRedirect(url)
     }
 }
 
