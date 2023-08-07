@@ -29,7 +29,7 @@ import UIKit
     /// The attempt failed.
     /// - Parameter error: The error encountered by the customer. You can display its `localizedDescription` to the customer.
     case failed(error: Error)
-    
+
     internal var error: Error? {
         switch self {
         case .failed(error: let error):
