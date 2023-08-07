@@ -17,6 +17,7 @@ import UIKit
  A view that wraps a normal section and adds a "Scan card" button. Tapping the button displays a card scan view below the section.
  */
 /// For internal SDK use only
+@available(macCatalyst 14.0, *)
 @objc(STP_Internal_CardSectionWithScannerView)
 final class CardSectionWithScannerView: UIView {
     let cardSectionView: UIView
@@ -81,6 +82,7 @@ final class CardSectionWithScannerView: UIView {
     }
 }
 
+@available(macCatalyst 14.0, *)
 extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
     func cardScanningView(_ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?) {
         setCardScanVisible(false)
