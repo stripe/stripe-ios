@@ -34,7 +34,7 @@ extension STPAnalyticsClient {
         intentConfig: PaymentSheet.IntentConfiguration? = nil,
         deferredIntentConfirmationType: DeferredIntentConfirmationType?,
         paymentMethodTypeAnalyticsValue: String? = nil,
-        error: Error?
+        error: Error? = nil
     ) {
         var success = false
         switch result {
