@@ -33,7 +33,8 @@ extension STPAnalyticsClient {
         currency: String?,
         intentConfig: PaymentSheet.IntentConfiguration? = nil,
         deferredIntentConfirmationType: DeferredIntentConfirmationType?,
-        paymentMethodTypeAnalyticsValue: String? = nil
+        paymentMethodTypeAnalyticsValue: String? = nil,
+        error: Error?
     ) {
         var success = false
         switch result {
@@ -58,6 +59,7 @@ extension STPAnalyticsClient {
             linkSessionType: linkSessionType,
             currency: currency,
             intentConfig: intentConfig,
+            error: error,
             deferredIntentConfirmationType: deferredIntentConfirmationType,
             paymentMethodTypeAnalyticsValue: paymentMethodTypeAnalyticsValue
         )
@@ -266,6 +268,9 @@ extension STPAnalyticsClient {
         additionalParams["selected_lpm"] = paymentMethodTypeAnalyticsValue
         if let error = error as? PaymentSheetError {
             additionalParams["error_message"] = error.safeLoggingString
+        } else if let error = error as? NSError, let code = STPErrorCode(rawValue: error.code) {
+            // attempt log PII safe server error messages
+            additionalParams["error_message"] = code.description
         }
 
         for (param, param_value) in params {
