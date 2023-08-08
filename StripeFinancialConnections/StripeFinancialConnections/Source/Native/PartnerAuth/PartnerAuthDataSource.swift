@@ -15,12 +15,14 @@ protocol PartnerAuthDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var pendingAuthSession: FinancialConnectionsAuthSession? { get }
     var reduceManualEntryProminenceInErrors: Bool { get }
+    var disableAuthSessionRetrieval: Bool { get }
 
     func createAuthSession() -> Future<FinancialConnectionsAuthSession>
     func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
     func cancelPendingAuthSessionIfNeeded()
     func recordAuthSessionEvent(eventName: String, authSessionId: String)
     func clearReturnURL(authSession: FinancialConnectionsAuthSession, authURL: String) -> Future<FinancialConnectionsAuthSession>
+    func retrieveAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
 }
 
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
@@ -32,6 +34,9 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let reduceManualEntryProminenceInErrors: Bool
+    var disableAuthSessionRetrieval: Bool {
+        return manifest.features?["bank_connections_disable_defensive_auth_session_retrieval_on_complete"] == true
+    }
 
     // a "pending" auth session is a session which has started
     // BUT the session is still yet-to-be authorized
@@ -159,6 +164,19 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         )
         .observe { _ in
             // we don't do anything with the event response
+        }
+    }
+
+    func retrieveAuthSession(
+        _ authSession: FinancialConnectionsAuthSession
+    ) -> Future<FinancialConnectionsAuthSession> {
+        return apiClient.retrieveAuthSession(
+            clientSecret: clientSecret,
+            authSessionId: authSession.id
+        ).chained { [weak self] (authSession: FinancialConnectionsAuthSession) in
+            // update the `pendingAuthSession` with the latest from the server
+            self?.pendingAuthSession = authSession
+            return Promise(value: authSession)
         }
     }
 }
