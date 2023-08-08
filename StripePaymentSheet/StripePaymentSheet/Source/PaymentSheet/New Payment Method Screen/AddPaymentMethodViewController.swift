@@ -137,6 +137,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
+            isPaymentSheet: true,
             delegate: self
         )
         return view

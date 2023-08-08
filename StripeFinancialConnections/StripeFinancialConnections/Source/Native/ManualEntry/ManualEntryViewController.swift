@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol ManualEntryViewControllerDelegate: AnyObject {
     func manualEntryViewController(
         _ viewController: ManualEntryViewController,
@@ -20,7 +19,6 @@ protocol ManualEntryViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class ManualEntryViewController: UIViewController {
 
     private let dataSource: ManualEntryDataSource
@@ -125,7 +123,6 @@ final class ManualEntryViewController: UIViewController {
 
 // MARK: - ManualEntryFormViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension ManualEntryViewController: ManualEntryFormViewDelegate {
 
     func manualEntryFormViewTextDidChange(_ view: ManualEntryFormView) {

@@ -53,7 +53,6 @@ final class FinancialConnectionsAnalyticsClient {
             !parameters.contains(where: { type(of: $0.value) == FinancialConnectionsSessionManifest.NextPane.self }),
             "Do not pass NextPane enum. Use the raw value."
         )
-
         assert((parameters["pane"] as? String) != nil, "We expect pane to be set as a String for all analytics events.")
         analyticsClient.log(eventName: eventName, parameters: parameters)
     }
@@ -162,8 +161,7 @@ extension FinancialConnectionsAnalyticsClient {
         additionalParameters["account_holder_id"] = manifest.accountholderToken
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    static func paneFromViewController(
+        static func paneFromViewController(
         _ viewController: UIViewController?
     ) -> FinancialConnectionsSessionManifest.NextPane {
         switch viewController {

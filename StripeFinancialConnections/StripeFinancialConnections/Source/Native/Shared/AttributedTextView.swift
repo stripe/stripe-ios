@@ -90,8 +90,7 @@ final class AttributedTextView: HitTestView {
     }
 
     /// Helper that automatically handles extracting links and, optionally, opening it via `SFSafariViewController`
-    @available(iOSApplicationExtension, unavailable)
-    func setText(
+        func setText(
         _ text: String,
         action: @escaping ((URL) -> Void) = { url in
             SFSafariViewController.present(url: url)

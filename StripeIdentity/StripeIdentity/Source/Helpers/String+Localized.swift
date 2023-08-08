@@ -155,4 +155,12 @@ extension String.Localized {
         )
     }
 
+    // MARK: - Phone
+    static var phoneNumber: String {
+        STPLocalizedString(
+            "Phone Number",
+            "Section title for collection phone number"
+        )
+    }
+
 }

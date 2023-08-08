@@ -19,6 +19,7 @@ NSString *const STPTestJSONSetupIntent = @"SetupIntent";
 NSString *const STPTestJSONPaymentMethodCard = @"CardPaymentMethod";
 NSString *const STPTestJSONPaymentMethodApplePay = @"ApplePayPaymentMethod";
 NSString *const STPTestJSONPaymentMethodBacsDebit = @"BacsDebitPaymentMethod";
+NSString *const STPTestJSONSourceBankAccount = @"BankAccount";
 
 NSString *const STPTestJSONSource3DS = @"3DSSource";
 NSString *const STPTestJSONSourceAlipay = @"AlipaySource";
@@ -97,14 +98,14 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
 + (STPToken *)cardToken {
     NSDictionary *cardDict = [STPTestUtils jsonNamed:STPTestJSONCard];
     NSDictionary *tokenDict = @{
-                                @"id": @"id_for_token",
-                                @"object": @"token",
-                                @"livemode": @NO,
-                                @"created": @1353025450.0,
-                                @"type": @"card",
-                                @"used": @NO,
-                                @"card": cardDict
-                                };
+        @"id": @"id_for_token",
+        @"object": @"token",
+        @"livemode": @NO,
+        @"created": @1353025450.0,
+        @"type": @"card",
+        @"used": @NO,
+        @"card": cardDict
+    };
     return [STPToken decodedObjectFromAPIResponse:tokenDict];
 }
 
@@ -239,20 +240,6 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
     return config;
 }
 
-+ (STPEphemeralKey *)ephemeralKey {
-    NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"EphemeralKey"] mutableCopy];
-    NSTimeInterval interval = 100;
-    response[@"expires"] = @([[NSDate dateWithTimeIntervalSinceNow:interval] timeIntervalSince1970]);
-    return [STPEphemeralKey decodedObjectFromAPIResponse:response];
-}
-
-+ (STPEphemeralKey *)expiringEphemeralKey {
-    NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"EphemeralKey"] mutableCopy];
-    NSTimeInterval interval = 10;
-    response[@"expires"] = @([[NSDate dateWithTimeIntervalSinceNow:interval] timeIntervalSince1970]);
-    return [STPEphemeralKey decodedObjectFromAPIResponse:response];
-}
-
 + (PKPaymentRequest *)applePayRequest {
     PKPaymentRequest *paymentRequest = [StripeAPI paymentRequestWithMerchantIdentifier:@"foo" country:@"US" currency:@"USD"];
     paymentRequest.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"10.00"]]];
@@ -358,4 +345,11 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
 + (NSDictionary *)applePayPaymentMethodJSON {
     return [STPTestUtils jsonNamed:STPTestJSONPaymentMethodApplePay];
 }
++ (STPPaymentMethod *)bankAccountPaymentMethod {
+    return [STPPaymentMethod decodedObjectFromAPIResponse:[self bankAccountPaymentMethodJSON]];
+}
++ (NSDictionary *)bankAccountPaymentMethodJSON {
+    return [STPTestUtils jsonNamed:STPTestJSONSourceBankAccount];
+}
+
 @end

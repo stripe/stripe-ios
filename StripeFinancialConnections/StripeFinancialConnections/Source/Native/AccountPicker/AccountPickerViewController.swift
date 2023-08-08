@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
@@ -29,7 +28,6 @@ enum AccountPickerType {
     case radioButton
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class AccountPickerViewController: UIViewController {
 
     private let dataSource: AccountPickerDataSource
@@ -61,7 +59,7 @@ final class AccountPickerViewController: UIViewController {
             } : nil
     }
     private var didSelectManualEntry: (() -> Void)? {
-        return dataSource.manifest.allowManualEntry
+        return (dataSource.manifest.allowManualEntry && !dataSource.reduceManualEntryProminenceInErrors)
             ? { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.accountPickerViewControllerDidSelectManualEntry(self)
@@ -285,11 +283,10 @@ final class AccountPickerViewController: UIViewController {
             // select all accounts
             dataSource.updateSelectedAccounts(enabledAccounts)
         case .radioButton:
-            if enabledAccounts.count == 1 {
-                // select the one (and only) available account
-                dataSource.updateSelectedAccounts(enabledAccounts)
-            } else {  // accounts.count >= 2
-                // don't select any accounts (...let the user decide which one)
+            if let firstAccount = enabledAccounts.first {
+                dataSource.updateSelectedAccounts([firstAccount])
+            } else {
+                // defensive programming; it should never happen that we have 0 accounts
                 dataSource.updateSelectedAccounts([])
             }
         }
@@ -356,7 +353,6 @@ final class AccountPickerViewController: UIViewController {
 
 // MARK: - AccountPickerSelectionViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
 
     func accountPickerSelectionView(
@@ -369,7 +365,6 @@ extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
 
 // MARK: - AccountPickerDataSourceDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension AccountPickerViewController: AccountPickerDataSourceDelegate {
     func accountPickerDataSource(
         _ dataSource: AccountPickerDataSource,

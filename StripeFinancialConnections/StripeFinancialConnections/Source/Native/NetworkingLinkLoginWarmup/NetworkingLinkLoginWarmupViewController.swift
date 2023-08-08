@@ -9,7 +9,6 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol NetworkingLinkLoginWarmupViewControllerDelegate: AnyObject {
     func networkingLinkLoginWarmupViewControllerDidSelectContinue(
         _ viewController: NetworkingLinkLoginWarmupViewController
@@ -21,7 +20,6 @@ protocol NetworkingLinkLoginWarmupViewControllerDelegate: AnyObject {
     func networkingLinkLoginWarmupViewController(_ viewController: NetworkingLinkLoginWarmupViewController, didReceiveTerminalError error: Error)
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkLoginWarmupViewController: UIViewController {
 
     private let dataSource: NetworkingLinkLoginWarmupDataSource

@@ -77,7 +77,6 @@ public class STPBankAccountCollector: NSObject {
     ///   - completion:        Completion block to be called on completion of the operation.
     ///                        Upon success, the `STPPaymentIntent` instance will have an
     ///                        expanded `paymentMethod` containing detailed payment method information
-    @available(iOS 12, *)
     @objc(collectBankAccountForPaymentWithClientSecret:params:from:completion:)
     public func collectBankAccountForPayment(
         clientSecret: String,
@@ -104,7 +103,6 @@ public class STPBankAccountCollector: NSObject {
     ///   - completion:        Completion block to be called on completion of the operation.
     ///                        Upon success, the `STPPaymentIntent` instance will have an
     ///                        expanded `paymentMethod` containing detailed payment method information
-    @available(iOS 12, *)
     @objc(collectBankAccountForPaymentWithClientSecret:returnURL:params:from:completion:)
     public func collectBankAccountForPayment(
         clientSecret: String,
@@ -277,7 +275,6 @@ public class STPBankAccountCollector: NSObject {
     ///   - completion:        Completion block to be called on completion of the operation.
     ///                        Upon success, the `STPSetupIntent` instance will have an
     ///                        expanded `paymentMethod` containing detailed payment method information
-    @available(iOS 12, *)
     @objc(collectBankAccountForSetupWithClientSecret:params:from:completion:)
     public func collectBankAccountForSetup(
         clientSecret: String,
@@ -304,7 +301,6 @@ public class STPBankAccountCollector: NSObject {
     ///   - completion:        Completion block to be called on completion of the operation.
     ///                        Upon success, the `STPSetupIntent` instance will have an
     ///                        expanded `paymentMethod` containing detailed payment method information
-    @available(iOS 12, *)
     @objc(collectBankAccountForSetupWithClientSecret:returnURL:params:from:completion:)
     public func collectBankAccountForSetup(
         clientSecret: String,

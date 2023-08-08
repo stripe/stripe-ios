@@ -182,16 +182,6 @@ extern NSString *const STPTestJSONSourceSofort;
 + (STPPaymentConfiguration *)paymentConfiguration;
 
 /**
- A customer-scoped ephemeral key that expires in 100 seconds.
- */
-+ (STPEphemeralKey *)ephemeralKey;
-
-/**
- A customer-scoped ephemeral key that expires in 10 seconds.
- */
-+ (STPEphemeralKey *)expiringEphemeralKey;
-
-/**
  A PaymentMethod object
  */
 + (STPPaymentMethod *)paymentMethod;
@@ -215,6 +205,16 @@ extern NSString *const STPTestJSONSourceSofort;
  An Apple Pay Payment Method JSON dictionary.
  */
 + (NSDictionary *)applePayPaymentMethodJSON;
+
+/**
+   Bank account payment method
+ */
++ (STPPaymentMethod *)bankAccountPaymentMethod;
+
+/**
+   Bank account payment payment method JSON Dictionary
+ */
++ (NSDictionary *)bankAccountPaymentMethodJSON;
 
 @end
 

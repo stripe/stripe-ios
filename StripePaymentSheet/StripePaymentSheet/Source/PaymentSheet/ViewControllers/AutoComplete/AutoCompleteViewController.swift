@@ -28,9 +28,7 @@ class AutoCompleteViewController: UIViewController {
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
         searchCompleter.delegate = self
-        if #available(iOS 13.0, *) {
-            searchCompleter.resultTypes = .address
-        }
+        searchCompleter.resultTypes = .address
         return searchCompleter
     }()
 

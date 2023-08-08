@@ -7,8 +7,6 @@
 
 #include "Version.xcconfig"
 
-APPLICATION_EXTENSION_API_ONLY = YES
-
 CLANG_CXX_LANGUAGE_STANDARD = gnu++0x
 
 

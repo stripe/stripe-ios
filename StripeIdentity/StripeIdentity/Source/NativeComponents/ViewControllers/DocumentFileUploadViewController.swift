@@ -28,7 +28,6 @@ enum DocumentFileUploadViewControllerError: String, AnalyticLoggableStringError 
     case documentPickerDataNotFormattedAsImage
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     struct Styling {
@@ -468,14 +467,12 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
 // MARK: - UINavigationControllerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: UINavigationControllerDelegate {
     // Conformance is required for UIImagePickerController
 }
 
 // MARK: - UIImagePickerControllerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: UIImagePickerControllerDelegate {
     func imagePickerController(
         _ picker: UIImagePickerController,
@@ -514,7 +511,6 @@ extension DocumentFileUploadViewController: UIImagePickerControllerDelegate {
 
 // MARK: - UIDocumentPickerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
     func documentPicker(
         _ controller: UIDocumentPickerViewController,
@@ -570,7 +566,6 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
 
 // MARK: - DocumentUploaderDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: DocumentUploaderDelegate {
     func documentUploaderDidUploadFront(_ documentUploader: DocumentUploaderProtocol) {
         sheetController?.saveDocumentFrontAndDecideBack(
@@ -598,7 +593,6 @@ extension DocumentFileUploadViewController: DocumentUploaderDelegate {
 
 // MARK: - IdentityDataCollecting
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         // Note: Always include the document back, even if the document type

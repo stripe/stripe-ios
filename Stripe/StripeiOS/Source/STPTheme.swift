@@ -49,13 +49,9 @@ final public class STPTheme: NSObject {
                 alpha: alpha
             )
         }
-        if #available(iOS 13.0, *) {
-            return UIColor(dynamicProvider: { _ in
-                return colorBlock()
-            })
-        } else {
+        return UIColor(dynamicProvider: { _ in
             return colorBlock()
-        }
+        })
     }
 
     /// This color is automatically derived by reducing the brightness of the `primaryBackgroundColor` and is used as a separator color in table view cells.
@@ -79,13 +75,9 @@ final public class STPTheme: NSObject {
                 alpha: alpha
             )
         }
-        if #available(iOS 13.0, *) {
-            return UIColor(dynamicProvider: { _ in
-                return colorBlock()
-            })
-        } else {
+        return UIColor(dynamicProvider: { _ in
             return colorBlock()
-        }
+        })
     }
 
     /// The primary foreground color of this theme. This will be used as the text color for any important labels in a view with this theme (such as the text color for a text field that the user needs to fill out).
@@ -96,13 +88,9 @@ final public class STPTheme: NSObject {
 
     /// This color is automatically derived from the `secondaryForegroundColor` with a lower alpha component, used for disabled text.
     @objc public var tertiaryForegroundColor: UIColor {
-        if #available(iOS 13.0, *) {
-            return UIColor(dynamicProvider: { _ in
-                return self.primaryForegroundColor.withAlphaComponent(0.25)
-            })
-        } else {
-            return primaryForegroundColor.withAlphaComponent(0.25)
-        }
+        return UIColor(dynamicProvider: { _ in
+            return self.primaryForegroundColor.withAlphaComponent(0.25)
+        })
     }
 
     /// The accent color of this theme - it will be used for any buttons and other elements on a view that are important to highlight.
@@ -207,53 +195,17 @@ private typealias STPColorBlock = () -> UIColor
 
 // MARK: Default Colors
 
-private var STPThemeDefaultPrimaryBackgroundColor: UIColor {
-    if #available(iOS 13.0, *) {
-        return .secondarySystemBackground
-    } else {
-        return UIColor(red: 242.0 / 255.0, green: 242.0 / 255.0, blue: 245.0 / 255.0, alpha: 1)
-    }
-}
+private var STPThemeDefaultPrimaryBackgroundColor: UIColor = .secondarySystemBackground
 
-private var STPThemeDefaultSecondaryBackgroundColor: UIColor {
-    if #available(iOS 13.0, *) {
-        return .systemBackground
-    } else {
-        return .white
-    }
-}
+private var STPThemeDefaultSecondaryBackgroundColor: UIColor = .systemBackground
 
-private var STPThemeDefaultPrimaryForegroundColor: UIColor {
-    if #available(iOS 13.0, *) {
-        return .label
-    } else {
-        return UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 45.0 / 255.0, alpha: 1)
-    }
-}
+private var STPThemeDefaultPrimaryForegroundColor: UIColor = .label
 
-private var STPThemeDefaultSecondaryForegroundColor: UIColor {
-    if #available(iOS 13.0, *) {
-        return .secondaryLabel
-    } else {
-        return UIColor(red: 142.0 / 255.0, green: 142.0 / 255.0, blue: 147.0 / 255.0, alpha: 1)
-    }
-}
+private var STPThemeDefaultSecondaryForegroundColor: UIColor = .secondaryLabel
 
-private var STPThemeDefaultAccentColor: UIColor {
-    if #available(iOS 13.0, *) {
-        return .systemBlue
-    } else {
-        return UIColor(red: 0.0 / 255.0, green: 122.0 / 255.0, blue: 255.0 / 255.0, alpha: 1)
-    }
-}
+private var STPThemeDefaultAccentColor: UIColor = .systemBlue
 
-private var STPThemeDefaultErrorColor: UIColor {
-    if #available(iOS 13.0, *) {
-        return .systemRed
-    } else {
-        return UIColor(red: 255.0 / 255.0, green: 72.0 / 255.0, blue: 68.0 / 255.0, alpha: 1)
-    }
-}
+private var STPThemeDefaultErrorColor: UIColor = .systemRed
 
 // MARK: Default Fonts
 private let STPThemeDefaultFont = UIFont.systemFont(ofSize: 17)

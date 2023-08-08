@@ -9,7 +9,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class SuccessAccountListView: UIView {
 
     private let maxNumberOfAccountsListedBeforeShowingOnlyAccountCount = 4

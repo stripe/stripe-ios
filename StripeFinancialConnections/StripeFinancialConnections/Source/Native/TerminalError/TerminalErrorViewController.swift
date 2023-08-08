@@ -10,13 +10,11 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol TerminalErrorViewControllerDelegate: AnyObject {
     func terminalErrorViewController(_ viewController: TerminalErrorViewController, didCloseWithError error: Error)
     func terminalErrorViewControllerDidSelectManualEntry(_ viewController: TerminalErrorViewController)
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class TerminalErrorViewController: UIViewController {
 
     private let error: Error

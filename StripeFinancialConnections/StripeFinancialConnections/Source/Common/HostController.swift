@@ -8,7 +8,6 @@
 @_spi(STP) import StripeCore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol HostControllerDelegate: AnyObject {
 
     func hostController(
@@ -18,7 +17,6 @@ protocol HostControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 class HostController {
 
     // MARK: - Properties
@@ -62,7 +60,6 @@ class HostController {
 
 // MARK: - HostViewControllerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension HostController: HostViewControllerDelegate {
     func hostViewControllerDidFinish(_ viewController: HostViewController, lastError: Error?) {
         guard let error = lastError else {
@@ -121,7 +118,6 @@ extension HostController: HostViewControllerDelegate {
 
 // MARK: - Helpers
 
-@available(iOSApplicationExtension, unavailable)
 private extension HostController {
 
     func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest) {
@@ -145,7 +141,6 @@ private extension HostController {
 
 // MARK: - ConnectionsWebFlowViewControllerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
     func financialConnectionsWebFlow(
         viewController: FinancialConnectionsWebFlowViewController,
@@ -155,7 +150,6 @@ extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension HostController: NativeFlowControllerDelegate {
     func authFlow(controller: NativeFlowController, didFinish result: FinancialConnectionsSheet.Result) {
         guard let viewController = navigationController.topViewController else {

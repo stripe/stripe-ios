@@ -90,7 +90,6 @@ extension NSDecimalNumber {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 func buildRetrievingAccountsView() -> UIView {
     return ReusableInformationView(
         iconType: .loading,

@@ -38,6 +38,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
 
     func stubListPaymentMethods(
         key: CustomerEphemeralKey,
+        paymentMethodType: String,
         paymentMethodJSONs: [[AnyHashable: Any]],
         expectedCount: Int,
         apiClient: STPAPIClient
@@ -46,6 +47,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
         exp.expectedFulfillmentCount = expectedCount
         stub { urlRequest in
             if urlRequest.url?.absoluteString.contains("/payment_methods") ?? false
+                && urlRequest.url?.absoluteString.contains("type=\(paymentMethodType)") ?? false
                 && urlRequest.httpMethod == "GET"
             {
                 // Check to make sure we pass the ephemeral key correctly
@@ -72,6 +74,8 @@ class CustomerAdapterTests: APIStubbedTestCase {
                 ) as! [AnyHashable: Any]
             // Only send the example cards for a card request
             if urlRequest.url?.absoluteString.contains("card") ?? false {
+                pmList["data"] = paymentMethodJSONs
+            } else if urlRequest.url?.absoluteString.contains("us_bank_account") ?? false {
                 pmList["data"] = paymentMethodJSONs
             }
             DispatchQueue.main.async {
@@ -110,7 +114,9 @@ class CustomerAdapterTests: APIStubbedTestCase {
         let expectedPaymentMethodsJSON = [STPFixtures.paymentMethodJSON()]
         let apiClient = stubbedAPIClient()
         // Expect 1 call per PM: cards
-        stubListPaymentMethods(key: exampleKey, paymentMethodJSONs: expectedPaymentMethodsJSON, expectedCount: 1, apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethodsJSON, expectedCount: 1, apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: [], expectedCount: 1, apiClient: apiClient)
+
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
         let sut = StripeCustomerAdapter(customerEphemeralKeyProvider: ekm.getEphemeralKey, apiClient: apiClient)
         let pms = try await sut.fetchPaymentMethods()
@@ -120,12 +126,36 @@ class CustomerAdapterTests: APIStubbedTestCase {
         await waitForExpectations(timeout: 2)
     }
 
+    func testFetchPM_CardAndUSBankAccount() async throws {
+        let expectedPaymentMethods_card = [STPFixtures.paymentMethod()]
+        let expectedPaymentMethods_cardJSON = [STPFixtures.paymentMethodJSON()]
+
+        let expectedPaymentMethods_usbank = [STPFixtures.bankAccountPaymentMethod()]
+        let expectedPaymentMethods_usbankJSON = [STPFixtures.bankAccountPaymentMethodJSON()]
+
+        let apiClient = stubbedAPIClient()
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethods_cardJSON, expectedCount: 1, apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: expectedPaymentMethods_usbankJSON, expectedCount: 1, apiClient: apiClient)
+
+        let ekm = MockEphemeralKeyEndpoint(exampleKey)
+        let sut = StripeCustomerAdapter(customerEphemeralKeyProvider: ekm.getEphemeralKey,
+                                        setupIntentClientSecretProvider: { return "si_" },
+                                        apiClient: apiClient)
+        let pms = try await sut.fetchPaymentMethods()
+        XCTAssertEqual(pms.count, 2)
+        XCTAssertEqual(pms[0].stripeId, expectedPaymentMethods_card[0].stripeId)
+        XCTAssertEqual(pms[1].stripeId, expectedPaymentMethods_usbank[0].stripeId)
+        await waitForExpectations(timeout: 2)
+    }
+
     func testAttachPM() async throws {
         let expectedPaymentMethods = [STPFixtures.paymentMethod()]
         let expectedPaymentMethodsJSON = [STPFixtures.paymentMethodJSON()]
         let apiClient = stubbedAPIClient()
         // Expect 1 call per PM: cards
-        stubListPaymentMethods(key: exampleKey, paymentMethodJSONs: expectedPaymentMethodsJSON, expectedCount: 1, apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethodsJSON, expectedCount: 1, apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: [], expectedCount: 1, apiClient: apiClient)
+
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
         let sut = StripeCustomerAdapter(customerEphemeralKeyProvider: ekm.getEphemeralKey, apiClient: apiClient)
         let pms = try await sut.fetchPaymentMethods()
@@ -137,10 +167,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
     }
 
     func testAttachPaymentMethodCallsAPIClientCorrectly() async {
-        let customerKey = STPFixtures.ephemeralKey()
-        let expectedCustomerJSON = STPFixtures.customerWithSingleCardTokenSourceJSON()
         let apiClient = stubbedAPIClient()
-        let expectedPaymentMethod = STPFixtures.paymentMethod()
         let expectedPaymentMethodJSON = STPFixtures.paymentMethodJSON()
         let expectedPaymentMethods = [STPFixtures.paymentMethod()]
 
@@ -171,10 +198,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
     }
 
     func testDetachPaymentMethodCallsAPIClientCorrectly() async {
-        let customerKey = STPFixtures.ephemeralKey()
-        let expectedCustomerJSON = STPFixtures.customerWithSingleCardTokenSourceJSON()
         let apiClient = stubbedAPIClient()
-        let expectedPaymentMethod = STPFixtures.paymentMethod()
         let expectedPaymentMethodJSON = STPFixtures.paymentMethodJSON()
         let expectedPaymentMethods = [STPFixtures.paymentMethod()]
 
@@ -204,4 +228,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
         await waitForExpectations(timeout: 2, handler: nil)
     }
 
+    func configuration() -> CustomerSheet.Configuration {
+        return CustomerSheet.Configuration()
+    }
 }

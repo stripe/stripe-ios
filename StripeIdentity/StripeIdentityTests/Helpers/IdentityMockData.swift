@@ -30,6 +30,7 @@ enum VerificationPageMock: String, MockData {
     case typeDocumentRequireIdNumberAndAddress = "VerificationPage_type_doc_require_idNumber_and_address"
     case typeIdNumber = "VerificationPage_type_idNumber"
     case typeAddress = "VerificationPage_type_address"
+    case typePhone = "VerificationPage_type_phone"
 }
 
 enum VerificationPageDataMock: String, MockData {
@@ -40,6 +41,7 @@ enum VerificationPageDataMock: String, MockData {
     case noErrors = "VerificationPageData_no_errors"
     case noErrorsNeedback = "VerificationPageData_no_errors_needback"
     case submitted = "VerificationPageData_submitted"
+    case submittedNotClosed = "VerificationPageData_submitted_not_closed"
 
     static func noErrorsWithMissings(
         with missingRequirements: Set<StripeAPI.VerificationPageFieldType>
@@ -52,7 +54,8 @@ enum VerificationPageDataMock: String, MockData {
                 missing: missingRequirements
             ),
             status: noErrorsResponse.status,
-            submitted: noErrorsResponse.submitted
+            submitted: noErrorsResponse.submitted,
+            closed: noErrorsResponse.closed
         )
     }
 }
@@ -161,5 +164,17 @@ enum VerificationPageDataUpdateMock {
             ),
             idDocumentType: .drivingLicense
         )
+    )
+}
+
+enum PhoneOtpPageMock {
+    static let`default` = StripeAPI.VerificationPageStaticContentPhoneOtpPage(
+        title: "Enter verification code",
+        body: "Enter the code sent to you phone {phone_number} to continue.",
+        redactedPhoneNumber: "(***)*****35",
+        errorOtpMessage: "Error confirming verification code",
+        resendButtonText: "Resend code",
+        cannotVerifyButtonText: "I cannot verify this phone number",
+        otpLength: 6
     )
 }

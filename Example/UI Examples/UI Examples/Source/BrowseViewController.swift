@@ -18,13 +18,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 {
 
     enum Demo: Int {
-        static var count: Int {
-            if #available(iOS 13.0.0, *) {
-                return 10 + 1
-            } else {
-                return 10
-            }
-        }
+        static var count: Int = 11
 
         case STPPaymentCardTextField
         case STPAddCardViewController
@@ -196,13 +190,8 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                 rootViewController: self.themeViewController)
             present(navigationController, animated: true, completion: nil)
         case .SwiftUICardFormViewController:
-            if #available(iOS 13.0.0, *) {
-                let controller = UIHostingController(rootView: SwiftUICardFormView())
-                present(controller, animated: true, completion: nil)
-            } else {
-                // Fallback on earlier versions
-                assertionFailure()
-            }
+            let controller = UIHostingController(rootView: SwiftUICardFormView())
+            present(controller, animated: true, completion: nil)
         case .PaymentMethodMessagingView:
             let vc = PaymentMethodMessagingViewController()
             let navigationController = UINavigationController(rootViewController: vc)

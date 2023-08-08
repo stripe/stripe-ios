@@ -96,13 +96,9 @@ static const CGFloat kImageViewCornerRadius = 6;
     insetView.layer.cornerRadius = kImageViewCornerRadius;
     insetView.backgroundColor = [UIColor whiteColor]; // Issuer images always expect a white background.
     insetView.layer.masksToBounds = YES;
-    if (@available(iOS 12.0, *)) {
-        insetView.layer.borderColor = (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) ?
-        [UIColor colorWithRed:(CGFloat)0.0 green:(CGFloat)57.0/(CGFloat)255.0 blue:(CGFloat)69.0/(CGFloat)255.0 alpha:(CGFloat)0.25].CGColor :
-        [UIColor colorWithRed:(CGFloat)195.0/(CGFloat)255.0 green:(CGFloat)214.0/(CGFloat)255.0 blue:(CGFloat)218.0/(CGFloat)255.0 alpha:(CGFloat)0.25].CGColor;
-    } else {
-        insetView.layer.borderColor = [UIColor colorWithRed:(CGFloat)0.0 green:(CGFloat)57.0/(CGFloat)255.0 blue:(CGFloat)69.0/(CGFloat)255.0 alpha:(CGFloat)0.25].CGColor;
-    }
+    insetView.layer.borderColor = (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) ?
+    [UIColor colorWithRed:(CGFloat)0.0 green:(CGFloat)57.0/(CGFloat)255.0 blue:(CGFloat)69.0/(CGFloat)255.0 alpha:(CGFloat)0.25].CGColor :
+    [UIColor colorWithRed:(CGFloat)195.0/(CGFloat)255.0 green:(CGFloat)214.0/(CGFloat)255.0 blue:(CGFloat)218.0/(CGFloat)255.0 alpha:(CGFloat)0.25].CGColor;
 
     [insetView addSubview:imageView];
     [imageView _stds_pinToSuperviewBounds];
@@ -118,13 +114,11 @@ static const CGFloat kImageViewCornerRadius = 6;
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection * _Nullable)previousTraitCollection {
-    if (@available(iOS 12.0, *)) {
-        CGColorRef borderColor = (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) ?
-        [UIColor colorWithRed:(CGFloat)0.0 green:(CGFloat)57.0/(CGFloat)255.0 blue:(CGFloat)69.0/(CGFloat)255.0 alpha:(CGFloat)0.25].CGColor :
-        [UIColor colorWithRed:(CGFloat)195.0/(CGFloat)255.0 green:(CGFloat)214.0/(CGFloat)255.0 blue:(CGFloat)218.0/(CGFloat)255.0 alpha:(CGFloat)0.25].CGColor;
-        self.issuerView.layer.borderColor = borderColor;
-        self.paymentSystemView.layer.borderColor = borderColor;
-    }
+    CGColorRef borderColor = (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) ?
+    [UIColor colorWithRed:(CGFloat)0.0 green:(CGFloat)57.0/(CGFloat)255.0 blue:(CGFloat)69.0/(CGFloat)255.0 alpha:(CGFloat)0.25].CGColor :
+    [UIColor colorWithRed:(CGFloat)195.0/(CGFloat)255.0 green:(CGFloat)214.0/(CGFloat)255.0 blue:(CGFloat)218.0/(CGFloat)255.0 alpha:(CGFloat)0.25].CGColor;
+    self.issuerView.layer.borderColor = borderColor;
+    self.paymentSystemView.layer.borderColor = borderColor;
 }
 
 @end

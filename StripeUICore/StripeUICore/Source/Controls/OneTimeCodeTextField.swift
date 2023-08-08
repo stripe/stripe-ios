@@ -56,6 +56,13 @@ import UIKit
 
     private let feedbackGenerator = UINotificationFeedbackGenerator()
 
+    // MARK: - UIControl properties
+    override public var isEnabled: Bool {
+        didSet {
+            update()
+        }
+    }
+
     // MARK: - UIKeyInput properties
 
     public var keyboardType: UIKeyboardType = .asciiCapableNumberPad
@@ -202,6 +209,7 @@ private extension OneTimeCodeTextField {
         for (index, digitView) in digitViews.enumerated() {
             digitView.character = index < digits.count ? digits[index] : nil
             digitView.isActive = isFirstResponder && (selectedRange?.contains(index) ?? false)
+            digitView.isEnabled = isEnabled
         }
     }
 
@@ -620,6 +628,12 @@ private extension OneTimeCodeTextField {
             }
         }
 
+        var isEnabled: Bool = true {
+            didSet {
+                updateColors()
+            }
+        }
+
         private let font: UIFont = .systemFont(ofSize: 20)
 
         private let theme: ElementsUITheme
@@ -731,7 +745,7 @@ private extension OneTimeCodeTextField {
         }
 
         private func updateColors() {
-            borderLayer.backgroundColor = theme.colors.background.cgColor
+            borderLayer.backgroundColor = isEnabled ? theme.colors.background.cgColor : theme.colors.disabledBackground.cgColor
             borderLayer.borderColor = theme.colors.border.cgColor
             dot.backgroundColor = Constants.dotColor.cgColor
             caret.backgroundColor = tintColor.cgColor

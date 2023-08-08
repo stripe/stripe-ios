@@ -144,7 +144,6 @@ private func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMeth
 
 // MARK: - CardSectionWithScannerViewDelegate
 
-@available(iOS 13, macCatalyst 14, *)
 extension CardSection: CardSectionWithScannerViewDelegate {
     func didScanCard(cardParams: STPPaymentMethodCardParams) {
         let expiryString: String = {

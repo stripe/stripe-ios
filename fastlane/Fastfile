@@ -46,7 +46,6 @@ platform :ios do
       sh("./ci_scripts/test.rb --build-only --scheme 'UI Examples'")
       sh("./ci_scripts/test.rb --build-only --scheme 'Non-Card Payment Examples'")
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
-      sh("./ci_scripts/test.rb --build-only --scheme 'LocalizationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'PaymentSheet Example'")
       sh("./ci_scripts/test.rb --build-only --scheme 'AppClipExample'")
     end

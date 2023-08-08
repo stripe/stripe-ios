@@ -285,34 +285,10 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
     
-    if (@available(iOS 12.0, *)) {
-        CFErrorRef error = NULL;
+    CFErrorRef error = NULL;
 
-        bool verified = SecTrustEvaluateWithError(trust, &error);
-        return (BOOL)verified;
-    } else {
-#if TARGET_OS_MACCATALYST
-        return NO;
-#else
-        // Fallback on earlier versions
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-        __block BOOL verified = NO;
-        dispatch_group_t group = dispatch_group_create();
-        dispatch_group_enter(group);
-        dispatch_async(queue, ^{
-            // SecTrustEvaluateAsyncWithError must be called from the same queue that is passed as an arg
-            SecTrustEvaluateAsyncWithError(trust, queue, ^(SecTrustRef  _Nonnull trustRef, bool result, CFErrorRef  _Nullable error) {
-                if (result) {
-                    verified = YES;
-                }
-                dispatch_group_leave(group);
-            });
-        });
-        dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC))); // timeout after 200 ms
-        
-        return verified;
-#endif
-    }
+    bool verified = SecTrustEvaluateWithError(trust, &error);
+    return (BOOL)verified;
 }
 
 + (BOOL)verifyJSONWebSignature:(STDSJSONWebSignature *)jws withRootCertificates:(NSArray<NSString *> *)rootCertificates {
