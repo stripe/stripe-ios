@@ -13,17 +13,17 @@ import Foundation
 import UIKit
 
 class PollingViewModel {
-  
+
     let paymentMethodType: STPPaymentMethodType
     var CTA: String
     var deadline: Date?
-  
+
     init(paymentMethodType: STPPaymentMethodType) {
         self.paymentMethodType = paymentMethodType
         self.CTA = PollingViewModel.computeCallToAction(paymentMethodType: paymentMethodType)
         self.deadline = PollingViewModel.computeDeadline(paymentMethodType: paymentMethodType)
     }
-  
+
     private static func computeCallToAction(paymentMethodType: STPPaymentMethodType) -> String {
         switch paymentMethodType {
         case .UPI:
@@ -33,7 +33,7 @@ class PollingViewModel {
             return "%@"
         }
     }
-  
+
     private static func computeDeadline(paymentMethodType: STPPaymentMethodType) -> Date? {
         switch paymentMethodType {
         case .UPI:
