@@ -16,7 +16,7 @@ class PollingViewModel {
 
     let paymentMethodType: STPPaymentMethodType
     var CTA: String
-    var deadline: Date?
+    var deadline: Date
 
     init(paymentMethodType: STPPaymentMethodType) {
         self.paymentMethodType = paymentMethodType
@@ -34,7 +34,7 @@ class PollingViewModel {
         }
     }
 
-    private static func computeDeadline(paymentMethodType: STPPaymentMethodType) -> Date? {
+    private static func computeDeadline(paymentMethodType: STPPaymentMethodType) -> Date {
         switch paymentMethodType {
         case .UPI:
             return Date().addingTimeInterval(60 * 5) // 5 minutes
