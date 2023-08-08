@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 public class STPWeirdStuff {
-    public static var weirdStuffEnabled: Bool = true {
+    public static var weirdStuffEnabled: Bool = false {
         didSet {
             UIApplication.shared.windows.first?.layer.speed = weirdStuffEnabled ? 0.2 : 1.0
         }
@@ -34,7 +34,7 @@ extension URLSession {
             }
 
             if fakeConnectionReset {
-                let connectionResetError = NSError(domain: NSURLErrorDomain, code: NSURLErrorNetworkConnectionLost)
+                let connectionResetError = NSError(domain: NSURLErrorDomain, code: NSURLErrorNetworkConnectionLost, userInfo: [NSLocalizedDescriptionKey: "The network connection was lost."])
                 completionHandler(nil, nil, connectionResetError)
                 return
             }

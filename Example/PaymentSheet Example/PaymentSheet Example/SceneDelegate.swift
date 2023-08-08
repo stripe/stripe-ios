@@ -78,7 +78,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         DispatchQueue.main.async {
             // Open URL contexts on app launch if available
             self.scene(scene, openURLContexts: connectionOptions.urlContexts)
-            UIApplication.shared.windows.first?.layer.speed = 0.2
+            STPWeirdStuff.weirdStuffEnabled = true
 
         }
 
