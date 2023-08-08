@@ -303,7 +303,7 @@ import Foundation
     static var incomplete_blik_code: String {
         STPLocalizedString("Your BLIK code is incomplete.", "Error message when BLIK code is incomplete")
     }
-    
+
     static var invalid_blik_code: String {
         STPLocalizedString("Your BLIK code is invalid.", "Error message when BLIK code is invalid")
     }
