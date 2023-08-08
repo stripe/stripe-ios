@@ -9,7 +9,48 @@
 import StripePaymentSheet
 import SwiftUI
 
+@available(iOS 14.0, *)
 struct ExampleSwiftUIPaymentSheet: View {
+    @State private var averageUserSimulation = true
+    @State private var selectedScenario = Scenario.PaymentSheet
+    @State var isConfirmingPayment = false
+
+    enum Scenario: String, CaseIterable, Identifiable {
+        var id: Self { self }
+        
+        case PaymentSheet
+        case FlowController
+    }
+    var body: some View {
+        VStack {
+            List {
+                Toggle(isOn: $averageUserSimulation) {
+                    Text("Average user simulation mode")
+                }.onChange(of: averageUserSimulation) { newValue in
+//                    averageUserSimulation = newValue
+                    STPWeirdStuff.weirdStuffEnabled = newValue
+                }
+                Picker("Scenario", selection: $selectedScenario) {
+                    ForEach(Scenario.allCases) { scenario in
+                        Text(scenario.rawValue)
+                    }
+                }.pickerStyle(.inline)
+            }
+            switch selectedScenario {
+            case .PaymentSheet:
+                ExampleSwiftPaymentSheet()
+            case .FlowController:
+                ExampleSwiftUICustomPaymentFlow()
+            }
+
+
+        }
+    }
+
+}
+
+
+struct ExampleSwiftPaymentSheet: View {
     @ObservedObject var model = MyBackendModel()
 
     var body: some View {
@@ -31,6 +72,7 @@ struct ExampleSwiftUIPaymentSheet: View {
     }
 
 }
+
 
 class MyBackendModel: ObservableObject {
     let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
@@ -62,7 +104,7 @@ class MyBackendModel: ObservableObject {
                 var configuration = PaymentSheet.Configuration()
                 configuration.merchantDisplayName = "Example, Inc."
                 configuration.applePay = .init(
-                    merchantId: "com.foo.example", merchantCountryCode: "US")
+                    merchantId: "merchant.stripetest.banana", merchantCountryCode: "US")
                 configuration.customer = .init(
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
@@ -89,6 +131,7 @@ class MyBackendModel: ObservableObject {
     }
 }
 
+@available(iOS 14.0, *)
 struct ExampleSwiftUIPaymentSheet_Preview: PreviewProvider {
     static var previews: some View {
         ExampleSwiftUIPaymentSheet()

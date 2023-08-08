@@ -52,12 +52,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let navController = UINavigationController(rootViewController: hvc)
         self.window!.rootViewController = navController
     }
+    
+    @available(iOS 15.0, *)
+    func launchExampleSwiftUI() {
+        let hvc = UIHostingController(rootView: ExampleSwiftUIPaymentSheet())
+        let navController = UINavigationController(rootViewController: hvc)
+        self.window!.rootViewController = navController
+    }
 
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
+        
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
@@ -70,6 +78,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         DispatchQueue.main.async {
             // Open URL contexts on app launch if available
             self.scene(scene, openURLContexts: connectionOptions.urlContexts)
+            UIApplication.shared.windows.first?.layer.speed = 0.2
+
         }
 
         if let playgroundData = ProcessInfo.processInfo.environment["STP_PLAYGROUND_DATA"] {
@@ -86,6 +96,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         }
 
+        if #available(iOS 15.0, *) {
+            launchExampleSwiftUI()
+        } else {
+            // Fallback on earlier versions
+        }
         guard (scene as? UIWindowScene) != nil else { return }
     }
 
