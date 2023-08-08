@@ -438,7 +438,7 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         configuration: CustomerSheet.Configuration,
         customerAdapter: CustomerAdapter = StubCustomerAdapter()
     ) {
-        StripeAPI.defaultPublishableKey = "pk_test_123456789"
+        STPAPIClient.shared.publishableKey = "pk_test_123456789"
         self.cs = CustomerSheet(configuration: configuration, customer: customerAdapter)
     }
 

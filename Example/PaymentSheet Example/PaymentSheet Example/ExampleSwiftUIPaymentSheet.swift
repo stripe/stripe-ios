@@ -9,17 +9,19 @@
 import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 14.0, *)
+@available(iOS 15.0, *)
 struct ExampleSwiftUIPaymentSheet: View {
     @State private var averageUserSimulation = true
-    @State private var selectedScenario = Scenario.PaymentSheet
+    @State private var selectedScenario = Scenario.PaymentSheetNewUser
     @State var isConfirmingPayment = false
 
     enum Scenario: String, CaseIterable, Identifiable {
         var id: Self { self }
         
-        case PaymentSheet
-        case FlowController
+        case PaymentSheetNewUser
+        case PaymentSheetReturningUser
+        case FlowControllerNewUser
+        case FlowControllerReturningUser
     }
     var body: some View {
         VStack {
@@ -37,10 +39,27 @@ struct ExampleSwiftUIPaymentSheet: View {
                 }.pickerStyle(.inline)
             }
             switch selectedScenario {
-            case .PaymentSheet:
+            case .PaymentSheetNewUser:
                 ExampleSwiftPaymentSheet()
-            case .FlowController:
-                ExampleSwiftUICustomPaymentFlow()
+            case .FlowControllerReturningUser:
+                var pSettings: PaymentSheetTestPlaygroundSettings = { var pSettings = PaymentSheetTestPlaygroundSettings.defaultValues()
+                    pSettings.customerMode = .returning
+                    pSettings.merchantCountryCode = .FR
+                    pSettings.uiStyle = .flowController
+                    pSettings.currency = .eur
+                    return pSettings
+                }()
+                PaymentSheetTestPlayground(settings: pSettings)
+            case .PaymentSheetReturningUser:
+                var pSettings: PaymentSheetTestPlaygroundSettings = { var pSettings = PaymentSheetTestPlaygroundSettings.defaultValues()
+                    pSettings.customerMode = .returning
+                    pSettings.merchantCountryCode = .FR
+                    pSettings.currency = .eur
+                    return pSettings
+                }()
+                PaymentSheetTestPlayground(settings: pSettings)
+            case .FlowControllerNewUser:
+                ExampleSwiftPaymentSheet()
             }
 
 
@@ -131,7 +150,7 @@ class MyBackendModel: ObservableObject {
     }
 }
 
-@available(iOS 14.0, *)
+@available(iOS 15.0, *)
 struct ExampleSwiftUIPaymentSheet_Preview: PreviewProvider {
     static var previews: some View {
         ExampleSwiftUIPaymentSheet()

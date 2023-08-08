@@ -1004,7 +1004,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
                 return
             }
 
-            StripeAPI.defaultPublishableKey = publishableKey
+            STPAPIClient.shared.publishableKey = publishableKey
 
             var config = self.configuration
             if customer != "guest" {
@@ -1041,7 +1041,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         if !applePayEnabled {
             config.applePay = nil
         }
-        StripeAPI.defaultPublishableKey = "pk_test_123456789"
+        STPAPIClient.shared.publishableKey = "pk_test_123456789"
 
         var mode: PaymentSheet.InitializationMode = .paymentIntentClientSecret("pi_111111_secret_000000")
         if let intentConfig = intentConfig {

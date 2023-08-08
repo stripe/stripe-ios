@@ -389,7 +389,7 @@ extension PlaygroundController {
             self.customerID = json["customerId"]
             self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
             self.amount = Int(json["amount"] ?? "")
-            StripeAPI.defaultPublishableKey = json["publishableKey"]
+            STPAPIClient.shared.publishableKey = json["publishableKey"]
 
             DispatchQueue.main.async {
                 if self.settings.customerMode == .new && self.newCustomerID == nil {
