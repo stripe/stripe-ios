@@ -966,14 +966,14 @@ class PaymentSheetAPITest: XCTestCase {
 
     func testMakeIntentParams_always_sets_paymentMethodType() {
         let examplePaymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
-        let options = STPConfirmPaymentMethodOptions()
+        let paymentOptions = STPConfirmPaymentMethodOptions()
         let examplePaymentMethod = STPFixtures.paymentMethod()
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
 
         let confirmTypes: [PaymentSheet.ConfirmPaymentMethodType] = [
-            .new(params: examplePaymentMethodParams, options: options, shouldSave: false),
-            .new(params: examplePaymentMethodParams, options: options, paymentMethod: examplePaymentMethod, shouldSave: false),
+            .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, shouldSave: false),
+            .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: examplePaymentMethod, shouldSave: false),
             .saved(examplePaymentMethod),
         ]
         for confirmType in confirmTypes {
@@ -1003,13 +1003,13 @@ class PaymentSheetAPITest: XCTestCase {
     func testMakeIntentParams_paypal_sets_mandate() {
         let paypalPaymentMethodParams = STPPaymentMethodParams(payPal: .init(), billingDetails: nil, metadata: nil)
         let paypalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: ["id": "pm_123", "type": "paypal"])!
-        let options = STPConfirmPaymentMethodOptions()
+        let paymentOptions = STPConfirmPaymentMethodOptions()
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
         // Confirming w/ a new Paypal PM...
         let confirmTypes: [PaymentSheet.ConfirmPaymentMethodType] = [
-            .new(params: paypalPaymentMethodParams, options: options, shouldSave: false),
-            .new(params: paypalPaymentMethodParams, options: options, paymentMethod: paypalPaymentMethod, shouldSave: false),
+            .new(params: paypalPaymentMethodParams, paymentOptions: paymentOptions, shouldSave: false),
+            .new(params: paypalPaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: paypalPaymentMethod, shouldSave: false),
         ]
 
         for confirmType in confirmTypes {

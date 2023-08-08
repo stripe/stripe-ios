@@ -31,10 +31,10 @@ extension PaymentSheet {
                 switch confirmType {
                 case let .saved(savedPaymentMethod):
                     paymentMethod = savedPaymentMethod
-                case let .new(params, options, newPaymentMethod, shouldSave):
+                case let .new(params, paymentOptions, newPaymentMethod, shouldSave):
                     assert(newPaymentMethod == nil)
                     paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params)
-                    confirmType = .new(params: params, options: options, paymentMethod: paymentMethod, shouldSave: shouldSave)
+                    confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave)
                 }
 
                 // 2. Get Intent client secret from merchant

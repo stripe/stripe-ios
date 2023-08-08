@@ -82,7 +82,7 @@ extension PaymentSheet {
                     let params = makePaymentIntentParams(
                         confirmPaymentMethodType: .new(
                             params: confirmParams.paymentMethodParams,
-                            options: confirmParams.ConfirmPaymentMethodOptions,
+                            paymentOptions: confirmParams.confirmPaymentMethodOptions,
                             shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
                         ),
                         paymentIntent: paymentIntent,
@@ -101,7 +101,7 @@ extension PaymentSheet {
                 let setupIntentParams = makeSetupIntentParams(
                     confirmPaymentMethodType: .new(
                         params: confirmParams.paymentMethodParams,
-                        options: confirmParams.ConfirmPaymentMethodOptions,
+                        paymentOptions: confirmParams.confirmPaymentMethodOptions,
                         shouldSave: false
                     ),
                     setupIntent: setupIntent,
@@ -119,7 +119,7 @@ extension PaymentSheet {
                 handleDeferredIntentConfirmation(
                     confirmType: .new(
                         params: confirmParams.paymentMethodParams,
-                        options: confirmParams.ConfirmPaymentMethodOptions,
+                        paymentOptions: confirmParams.confirmPaymentMethodOptions,
                         shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
                     ),
                     configuration: configuration,
@@ -207,7 +207,7 @@ extension PaymentSheet {
                     handleDeferredIntentConfirmation(
                         confirmType: .new(
                             params: paymentMethodParams,
-                            options: STPConfirmPaymentMethodOptions(),
+                            paymentOptions: STPConfirmPaymentMethodOptions(),
                             shouldSave: false
                         ),
                         configuration: configuration,
@@ -367,7 +367,7 @@ extension PaymentSheet {
     enum ConfirmPaymentMethodType {
         case saved(STPPaymentMethod)
         /// - paymentMethod: Pass this if you created a PaymentMethod already (e.g. for the deferred flow).
-        case new(params: STPPaymentMethodParams, options: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, shouldSave: Bool)
+        case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, shouldSave: Bool)
         var shouldSave: Bool {
             switch self {
             case .saved:
@@ -415,12 +415,12 @@ extension PaymentSheet {
             }
         }
 
-        let options = params.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-        options.setSetupFutureUsageIfNecessary(shouldSave, paymentMethodType: paymentMethodType, customer: configuration.customer)
+        let paymentOptions = params.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
+        paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, paymentMethodType: paymentMethodType, customer: configuration.customer)
         if let mandateData = mandateData {
             params.mandateData = mandateData
         }
-        params.paymentMethodOptions = options
+        params.paymentMethodOptions = paymentOptions
         params.returnURL = configuration.returnURL
         params.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
         return params
