@@ -23,11 +23,10 @@ class PollingViewController: UIViewController {
 
     // MARK: State
 
-    private let deadline: Date
-    private let paymentMethodType: STPPaymentMethodType
     private var oneSecondTimer: Timer?
     private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
+    private let viewModel: PollingViewModel
 
     private lazy var intentPoller: IntentStatusPoller = {
         guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
@@ -41,7 +40,12 @@ class PollingViewController: UIViewController {
     }()
 
     private var timeRemaining: TimeInterval {
-        return Date().compatibleDistance(to: deadline)
+
+        if let deadline = viewModel.deadline {
+            return Date().compatibleDistance(to: deadline)
+        } else {
+            return .infinity
+        }
     }
 
     private var dateFormatter: DateComponentsFormatter {
@@ -56,19 +60,14 @@ class PollingViewController: UIViewController {
     }
 
     private var instructionLabelAttributedText: NSAttributedString {
-        switch paymentMethodType {
-        case .UPI:
                let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
                let attrText = NSMutableAttributedString(string: String(
-                   format: .Localized.open_upi_app,
+                format: viewModel.CTA,
                    timeRemaining
                ))
                attrText.addAttributes([.foregroundColor: appearance.colors.primary],
                                       range: NSString(string: attrText.string).range(of: timeRemaining))
                return attrText
-        default:
-               fatalError("No instructionLabelAttributedText for PaymentMethodType")
-        }
     }
 
     private var pollingState: PollingState = .polling {
@@ -166,17 +165,10 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerActionParams, type: STPPaymentMethodType, appearance: PaymentSheet.Appearance) {
+    init(currentAction: STPPaymentHandlerActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance) {
         self.currentAction = currentAction
-        self.paymentMethodType = type
         self.appearance = appearance
-
-        switch paymentMethodType {
-        case .UPI:
-            deadline = Date().addingTimeInterval(60 * 5)
-        default:
-            fatalError("No Deadline for PaymentMethodType")
-        }
+        self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -292,9 +284,9 @@ class PollingViewController: UIViewController {
         }
     }
 
-    // Called after the 5 minute timer expires to wrap up polling
+    // Called after the timer expires to wrap up polling
     private func finishPolling() {
-        // Do one last force poll after 5 min
+        // Do one last force poll after deadline
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self = self else { return }
             self.intentPoller.forcePoll()
