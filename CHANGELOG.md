@@ -1,4 +1,21 @@
-## x.x.x
+## 23.13.0 2023-08-07
+### All
+* [Fixed] Fixed compatibility with Xcode 15 beta 3. visionOS is now supported in iPadOS compatibility mode.
+### PaymentSheet
+* [Added] Enable bancontact and sofort for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.
+### CustomerSheet
+* [Added] `us_bank_account` PaymentMethod is now available in CustomerSheet
+
+## 23.12.0 2023-07-31
+### PaymentSheet
+* [Added] Enable SEPA Debit and iDEAL for SetupIntents and PaymentIntents with setup_future_usage. Note: PaymentSheet doesn't display saved SEPA Debit payment methods yet.
+* [Added] Add removeSavedPaymentMethodMessage to PaymentSheet.Configuration and CustomerSheet.Configuration. 
+
+### Identity
+* [Added] Supports [phone verification](https://stripe.com/docs/identity/phone) in Identity mobile SDK.
+
+
+## 23.11.2 2023-07-24
 ### PaymentSheet
 * [Fixed] Update stp_icon_add@3x.png to 8bit color depth (Thanks @jszumski)
 

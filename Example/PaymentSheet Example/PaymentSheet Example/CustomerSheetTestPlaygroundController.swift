@@ -17,6 +17,13 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
 
     private var subscribers: Set<AnyCancellable> = []
     init(settings: CustomerSheetTestPlaygroundSettings) {
+        // Hack to ensure we don't force the native flow unless we're in a UI test
+        if ProcessInfo.processInfo.environment["UITesting"] == nil {
+            UserDefaults.standard.removeObject(forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
+        } else {
+            // This makes the Financial Connections SDK use the native UI instead of webview. Native is much easier to test.
+            UserDefaults.standard.set(true, forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
+        }
         self.settings = settings
         self.currentlyRenderedSettings = .defaultValues()
         $settings
@@ -49,6 +56,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
 
     func didTapResetConfig() {
         self.settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        self.appearance = PaymentSheet.Appearance.default
     }
 
     func appearanceButtonTapped() {
@@ -116,10 +124,11 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
+
         return configuration
     }
 
-    func customerAdapter(customerId: String, ephemeralKey: String) -> StripeCustomerAdapter {
+    func customerAdapter(customerId: String, ephemeralKey: String, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter {
         let customerAdapter: StripeCustomerAdapter
         switch settings.paymentMethodMode {
         case .setupIntent:
@@ -133,7 +142,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
                 // This should be a block that fetches this from your server
                 .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
-            })
+            }, setupIntentClientSecretProvider: nil)
         }
         return customerAdapter
     }
@@ -188,8 +197,10 @@ extension CustomerSheetTestPlaygroundController {
                   let ephemeralKey = json["customerEphemeralKeySecret"], !ephemeralKey.isEmpty,
                   let customerId = json["customerId"], !customerId.isEmpty,
                   let publishableKey = json["publishableKey"] else {
-                self.isLoading = false
-                self.currentlyRenderedSettings = self.settings
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
+                }
                 return
             }
 
@@ -199,7 +210,7 @@ extension CustomerSheetTestPlaygroundController {
                 // Create Customer Sheet
                 var configuration = self.customerSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
                 configuration.applePayEnabled = self.applePayEnabled()
-                let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey)
+                let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey, configuration: configuration)
                 self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
 
                 // Retrieve selected PM

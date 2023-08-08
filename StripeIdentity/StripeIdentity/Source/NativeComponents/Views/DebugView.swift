@@ -9,13 +9,11 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol DebugViewDelegate: AnyObject {
     func debugOptionsDidChange()
 }
 
 // A view to list debug options for a VS in test mode.
-@available(iOSApplicationExtension, unavailable)
 class DebugView: UIView {
     enum DebugButton {
         case submit(completeOption: CompleteOptionView.CompleteOption)
@@ -228,7 +226,6 @@ class DebugView: UIView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension DebugView {
     fileprivate func configureButton(button: Button, title: String, action: Selector) {
         button.title = title
@@ -237,7 +234,6 @@ extension DebugView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension DebugView {
     @objc fileprivate func didTapSubmit(button: StripeUICore.Button) {
         submitButton.isLoading = true
@@ -272,7 +268,6 @@ extension DebugView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension DebugView {
     fileprivate var sectionTitleFont: UIFont {
         IdentityUI.preferredFont(forTextStyle: .headline, weight: .medium)
@@ -283,7 +278,6 @@ extension DebugView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension DebugView: CompleteOptionViewDelegate {
     func didTapOption(completeOption: CompleteOptionView.CompleteOption) {
         self.selectedOption = completeOption
@@ -313,7 +307,6 @@ extension DebugView: CompleteOptionViewDelegate {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension DebugView {
     // Debug strings, not translatable.
     static let testModeTitle: String = "You're currently in testmode"

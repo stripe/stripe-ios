@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol NetworkingLinkSignupBodyFormViewDelegate: AnyObject {
     func networkingLinkSignupBodyFormView(
         _ view: NetworkingLinkSignupBodyFormView,
@@ -21,7 +20,6 @@ protocol NetworkingLinkSignupBodyFormViewDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkSignupBodyFormView: UIView {
 
     private let accountholderPhoneNumber: String?
@@ -128,7 +126,6 @@ final class NetworkingLinkSignupBodyFormView: UIView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension NetworkingLinkSignupBodyFormView: ElementDelegate {
     func didUpdate(element: StripeUICore.Element) {
         delegate?.networkingLinkSignupBodyFormViewDidUpdateFields(self)
@@ -175,7 +172,6 @@ extension NetworkingLinkSignupBodyFormView: ElementDelegate {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct NetworkingLinkSignupBodyFormViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> NetworkingLinkSignupBodyFormView {
@@ -185,7 +181,6 @@ private struct NetworkingLinkSignupBodyFormViewUIViewRepresentable: UIViewRepres
     func updateUIView(_ uiView: NetworkingLinkSignupBodyFormView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct NetworkingLinkSignupBodyFormView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .leading) {

@@ -11,43 +11,23 @@
 @implementation UIColor (STDSThirteenSupport)
 
 + (UIColor *)_stds_colorWithDynamicProvider:(UIColor * _Nonnull (^)(UITraitCollection *traitCollection))dynamicProvider {
-    if (@available(iOS 13.0, *)) {
-      return [UIColor colorWithDynamicProvider:dynamicProvider];
-    } else {
-      return dynamicProvider([[UITraitCollection alloc] init]);
-    }
+    return [UIColor colorWithDynamicProvider:dynamicProvider];
 }
 
 + (UIColor *)_stds_systemGray5Color {
-    if (@available(iOS 13.0, *)) {
-      return [UIColor systemGray5Color];
-    } else {
-      return [UIColor colorWithRed:(CGFloat)229.0/(CGFloat)255.0 green:(CGFloat)229.0/(CGFloat)255.0 blue:(CGFloat)234.0/(CGFloat)255.0 alpha:1.0];
-    }
+    return [UIColor systemGray5Color];
 }
 
 + (UIColor *)_stds_systemGray2Color {
-    if (@available(iOS 13.0, *)) {
-      return [UIColor systemGray2Color];
-    } else {
-      return [UIColor colorWithRed:(CGFloat)174.0/(CGFloat)255.0 green:(CGFloat)174.0/(CGFloat)255.0 blue:(CGFloat)178.0/(CGFloat)255.0 alpha:1.0];
-    }
+    return [UIColor systemGray2Color];
 }
 
 + (UIColor *)_stds_systemBackgroundColor {
-    if (@available(iOS 13.0, *)) {
-      return [UIColor systemBackgroundColor];
-    } else {
-      return [UIColor whiteColor];
-    }
+    return [UIColor systemBackgroundColor];
 }
 
 + (UIColor *)_stds_labelColor {
-    if (@available(iOS 13.0, *)) {
-      return [UIColor labelColor];
-    } else {
-      return [UIColor blackColor];
-    }
+    return [UIColor labelColor];
 }
 
 @end

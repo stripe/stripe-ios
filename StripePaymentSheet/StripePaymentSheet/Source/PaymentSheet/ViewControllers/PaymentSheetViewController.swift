@@ -85,7 +85,8 @@ class PaymentSheetViewController: UIViewController {
             configuration: .init(
                 customerID: configuration.customer?.id,
                 showApplePay: showApplePay,
-                showLink: showLink
+                showLink: showLink,
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage
             ),
             appearance: configuration.appearance,
             delegate: self
@@ -414,6 +415,7 @@ class PaymentSheetViewController: UIViewController {
 
     @objc
     private func didTapBuyButton() {
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped)
         switch mode {
         case .addingNew:
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
@@ -459,7 +461,8 @@ class PaymentSheetViewController: UIViewController {
                     linkSessionType: self.intent.linkPopupWebviewOption,
                     currency: self.intent.currency,
                     intentConfig: self.intent.intentConfig,
-                    deferredIntentConfirmationType: deferredIntentConfirmationType
+                    deferredIntentConfirmationType: deferredIntentConfirmationType,
+                    paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue
                 )
 
                 self.isPaymentInFlight = false

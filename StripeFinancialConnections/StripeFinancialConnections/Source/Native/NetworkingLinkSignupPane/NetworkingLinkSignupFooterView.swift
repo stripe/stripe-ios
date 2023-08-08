@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 class NetworkingLinkSignupFooterView: HitTestView {
 
     private let aboveCtaText: String
@@ -127,7 +126,6 @@ class NetworkingLinkSignupFooterView: HitTestView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct NetworkingLinkSignupFooterViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> NetworkingLinkSignupFooterView {
@@ -147,7 +145,6 @@ private struct NetworkingLinkSignupFooterViewUIViewRepresentable: UIViewRepresen
 }
 
 @available(iOS 14.0, *)
-@available(iOSApplicationExtension, unavailable)
 struct NetworkingLinkSignupFooterView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

@@ -40,12 +40,7 @@ class PollingViewController: UIViewController {
     }()
 
     private var timeRemaining: TimeInterval {
-
-        if let deadline = viewModel.deadline {
-            return Date().compatibleDistance(to: deadline)
-        } else {
-            return .infinity
-        }
+        return Date().distance(to: deadline)
     }
 
     private var dateFormatter: DateComponentsFormatter {

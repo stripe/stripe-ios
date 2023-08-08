@@ -11,7 +11,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol PartnerAuthViewControllerDelegate: AnyObject {
     func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController)
@@ -23,7 +22,6 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class PartnerAuthViewController: UIViewController {
 
     /**
@@ -146,6 +144,7 @@ final class PartnerAuthViewController: UIViewController {
         // PartnerAuth to try again
         navigationItem.hidesBackButton = true
 
+        let allowManualEntryInErrors = (dataSource.manifest.allowManualEntry && !dataSource.reduceManualEntryProminenceInErrors)
         let errorView: UIView?
         if let error = error as? StripeError,
             case .apiError(let apiError) = error,
@@ -203,7 +202,7 @@ final class PartnerAuthViewController: UIViewController {
                             }
                         }()
                         let endOfSubtitle: String = {
-                            if dataSource.manifest.allowManualEntry {
+                            if allowManualEntryInErrors {
                                 return STPLocalizedString(
                                     "Please enter your bank details manually or select another bank.",
                                     "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
@@ -218,7 +217,7 @@ final class PartnerAuthViewController: UIViewController {
                         return beginningOfSubtitle + " " + endOfSubtitle
                     }(),
                     primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: dataSource.manifest.allowManualEntry
+                    secondaryButtonConfiguration: allowManualEntryInErrors
                         ? ReusableInformationView.ButtonConfiguration(
                             title: String.Localized.enter_bank_details_manually,
                             action: { [weak self] in
@@ -243,7 +242,7 @@ final class PartnerAuthViewController: UIViewController {
                         institution.name
                     ),
                     subtitle: {
-                        if dataSource.manifest.allowManualEntry {
+                        if allowManualEntryInErrors {
                             return STPLocalizedString(
                                 "Please enter your bank details manually or select another bank.",
                                 "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
@@ -256,7 +255,7 @@ final class PartnerAuthViewController: UIViewController {
                         }
                     }(),
                     primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: dataSource.manifest.allowManualEntry
+                    secondaryButtonConfiguration: allowManualEntryInErrors
                         ? ReusableInformationView.ButtonConfiguration(
                             title: String.Localized.enter_bank_details_manually,
                             action: { [weak self] in
@@ -477,16 +476,34 @@ final class PartnerAuthViewController: UIViewController {
                     return
                 }
                 self.lastHandledAuthenticationSessionReturnUrl = returnUrl
+
+                let logUrlReceived: (_ status: String?) -> Void = { [weak self] status in
+                    guard let self = self else { return }
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "auth_session.url_received",
+                            parameters: [
+                                "status": status ?? "null",
+                                "url": returnUrl?.absoluteString ?? "null",
+                                "auth_session_id": authSession.id,
+                            ],
+                            pane: .partnerAuth
+                        )
+                }
+
                 if let returnUrl = returnUrl,
                     returnUrl.scheme == "stripe",
                     let urlComponsents = URLComponents(url: returnUrl, resolvingAgainstBaseURL: true),
                     let status = urlComponsents.queryItems?.first(where: { $0.name == "status" })?.value
                 {
+                    logUrlReceived(status)
                     self.handleAuthSessionCompletionWithStatus(status, authSession)
                 }
                 // we did NOT get a `status` back from the backend,
                 // so assume a "cancel"
                 else {
+                    logUrlReceived(nil)
                     self.handleAuthSessionCompletionWithNoStatus(authSession, error)
                 }
 
@@ -614,7 +631,6 @@ final class PartnerAuthViewController: UIViewController {
 
 // MARK: - STPURLCallbackListener
 
-@available(iOSApplicationExtension, unavailable)
 extension PartnerAuthViewController: STPURLCallbackListener {
 
     private func handleAuthSessionCompletionFromNativeRedirect(_ url: URL) {
@@ -647,7 +663,6 @@ extension PartnerAuthViewController: STPURLCallbackListener {
 
 // MARK: - Authentication restart helpers
 
-@available(iOSApplicationExtension, unavailable)
 private extension PartnerAuthViewController {
 
     private func subscribeToURLAndAppActiveNotifications() {
@@ -728,8 +743,6 @@ private extension PartnerAuthViewController {
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
 /// :nodoc:
-@available(iOS 13, *)
-@available(iOSApplicationExtension, unavailable)
 extension PartnerAuthViewController: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {

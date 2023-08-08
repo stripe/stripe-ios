@@ -106,6 +106,42 @@ extension XCTestCase {
         }
     }
 
+    func fillUSBankData(_ app: XCUIApplication,
+                        container: XCUIElement? = nil) throws {
+        let context = container ?? app
+        let nameField = context.textFields["Full name"]
+        nameField.forceTapWhenHittableInTestCase(self)
+        app.typeText("John Doe")
+
+        let emailField = context.textFields["Email"]
+        emailField.forceTapWhenHittableInTestCase(self)
+        app.typeText("test@example.com")
+    }
+    func fillUSBankData_microdeposits(_ app: XCUIApplication,
+                                      container: XCUIElement? = nil) throws {
+        let context = container ?? app
+        let routingField = context.textFields["manual_entry_routing_number_text_field"]
+        routingField.forceTapWhenHittableInTestCase(self)
+        app.typeText("110000000")
+
+        let acctField = context.textFields["manual_entry_account_number_text_field"]
+        acctField.forceTapWhenHittableInTestCase(self)
+        app.typeText("000123456789")
+
+        // Dismiss keyboard, otherwise we can not see the next field
+        // This is only an artifact in the (test) native version of the flow
+        let hackDismissKeyboardText = context.textViews["Your bank information will be verified with micro-deposits to your account"].firstMatch
+        hackDismissKeyboardText.tap()
+
+        let acctConfirmField = context.textFields["manual_entry_account_number_confirmation_text_field"]
+        acctConfirmField.forceTapWhenHittableInTestCase(self)
+        app.typeText("000123456789")
+
+        // Dismiss keyboard again otherwise we can not see the continue button
+        // This is only an artifact in the (test) native version of the flow
+        hackDismissKeyboardText.tap()
+    }
+
     func waitToDisappear(_ target: Any?) {
         let exists = NSPredicate(format: "exists == 0")
         expectation(for: exists, evaluatedWith: target, handler: nil)

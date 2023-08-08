@@ -36,6 +36,10 @@ protocol IdentityAPIClient: AnyObject {
     func unverifyTestVerificationSession(
         simulateDelay: Bool
     ) -> Promise<StripeAPI.VerificationPageData>
+
+    func generatePhoneOtp() -> Promise<StripeAPI.VerificationPageData>
+
+    func cannotPhoneVerifyOtp() -> Promise<StripeAPI.VerificationPageData>
 }
 
 final class IdentityAPIClientImpl: IdentityAPIClient {
@@ -43,7 +47,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     /// SDK is capable of using.
     ///
     /// - Note: Update this value when a new API version is ready for use in production.
-    static let productionApiVersion: Int = 3
+    static let productionApiVersion: Int = 4
 
     var betas: Set<String> {
         return ["identity_client_api=v\(apiVersion)"]
@@ -132,6 +136,20 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
             parameters: ["simulate_delay": simulateDelay]
         )
     }
+
+    func generatePhoneOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
+        return apiClient.post(
+            resource: APIEndpointVerificationPagePhoneOtpGenerate(id: verificationSessionId),
+            parameters: [:]
+        )
+    }
+
+    func cannotPhoneVerifyOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
+        return apiClient.post(
+            resource: APIEndpointVerificationPagePhoneOtpCannotVerify(id: verificationSessionId),
+            parameters: [:]
+        )
+    }
 }
 
 private func APIEndpointVerificationPage(id: String) -> String {
@@ -148,4 +166,10 @@ private func APIEndpointVerificationPageTestingVerify(id: String) -> String {
 }
 private func APIEndpointVerificationPageTestingUnverify(id: String) -> String {
     return "identity/verification_pages/\(id)/testing/unverify"
+}
+private func APIEndpointVerificationPagePhoneOtpGenerate(id: String) -> String {
+    return "identity/verification_pages/\(id)/phone_otp/generate"
+}
+private func APIEndpointVerificationPagePhoneOtpCannotVerify(id: String) -> String {
+    return "identity/verification_pages/\(id)/phone_otp/cannot_verify"
 }

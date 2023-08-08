@@ -66,21 +66,13 @@ static const CGFloat kTextChallengeViewBottomPadding = 11;
     self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.textField.delegate = self;
     self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    if (@available(iOS 12, *)) {
-        self.textField.textContentType = UITextContentTypeOneTimeCode;
-    } else {
-        // no-op
-    }
+    self.textField.textContentType = UITextContentTypeOneTimeCode;
     [self.textField.defaultTextAttributes setValue:@(kTextFieldKernSpacing) forKey:NSKernAttributeName];
 
     UIView *borderView = [UIView new];
-    if (@available(iOS 12.0, *)) {
-        borderView.backgroundColor = [UIColor _stds_colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
-            return [[UIColor _stds_systemGray2Color] colorWithAlphaComponent:(CGFloat)0.6];
-        }];
-    } else {
-        borderView.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:(CGFloat)0.6];
-    }
+    borderView.backgroundColor = [UIColor _stds_colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+        return [[UIColor _stds_systemGray2Color] colorWithAlphaComponent:(CGFloat)0.6];
+    }];
     
     [self.containerView addArrangedSubview:self.textField];
     [self.containerView addArrangedSubview:borderView];

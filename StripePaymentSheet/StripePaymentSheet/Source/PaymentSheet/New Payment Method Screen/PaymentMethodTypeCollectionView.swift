@@ -34,12 +34,14 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     }
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let appearance: PaymentSheet.Appearance
+    let isPaymentSheet: Bool
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
 
     init(
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         initialPaymentMethodType: PaymentSheet.PaymentMethodType? = nil,
         appearance: PaymentSheet.Appearance,
+        isPaymentSheet: Bool = false,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
         assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
@@ -55,6 +57,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         }()
         self.selected = paymentMethodTypes[selectedItemIndex]
         self.appearance = appearance
+        self.isPaymentSheet = isPaymentSheet
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
@@ -114,6 +117,12 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         selected = paymentMethodTypes[indexPath.item]
+
+        // Only log this event when this collection view is being used by PaymentSheet
+        if isPaymentSheet {
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCarouselPaymentMethodTapped,
+                                                                 paymentMethodTypeAnalyticsValue: paymentMethodTypes[indexPath.row].identifier)
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

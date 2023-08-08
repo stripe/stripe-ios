@@ -47,7 +47,6 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
     }
 
     // Tests UI elements that adapt their color based on the `PaymentSheet.Appearance`
-    @available(iOS 13.0, *)
     func testAdaptiveElements() {
         var darkMode = false
 
@@ -76,7 +75,6 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
     }
 
     // Tests UI elements that adapt their color based on the `PaymentSheet.Appearance`
-    @available(iOS 13.0, *)
     func testAdaptiveElementsWithCustomApplePayCta() {
         var darkMode = false
 

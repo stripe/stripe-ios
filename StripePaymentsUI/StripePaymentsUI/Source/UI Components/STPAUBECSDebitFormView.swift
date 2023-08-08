@@ -146,12 +146,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         mandateTextLabel.attributedText = mandateText
         // Set font and textColor after setting the attributedText so they are applied as attributes automatically
         mandateTextLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-        if #available(iOS 13.0, *) {
-            mandateTextLabel.textColor = UIColor.secondaryLabel
-        } else {
-            // Fallback on earlier versions
-            mandateTextLabel.textColor = UIColor.darkGray
-        }
+        mandateTextLabel.textColor = UIColor.secondaryLabel
 
         mandateTextLabel.translatesAutoresizingMaskIntoConstraints = false
 
@@ -248,14 +243,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
 
     /// The background color for the form text fields. Defaults to .systemBackground on iOS 13.0 and later, .white on earlier iOS versions.
-    @objc public var formBackgroundColor: UIColor = {
-        if #available(iOS 13.0, *) {
-            return .systemBackground
-        } else {
-            // Fallback on earlier versions
-            return .white
-        }
-    }()
+    @objc public var formBackgroundColor: UIColor = .systemBackground
     {
         didSet {
             labeledNameField.formBackgroundColor = formBackgroundColor
@@ -368,12 +356,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
 
     func _defaultBSBLabelTextColor() -> UIColor {
-        if #available(iOS 13.0, *) {
-            return UIColor.secondaryLabel
-        } else {
-            // Fallback on earlier versions
-            return UIColor.darkGray
-        }
+        return UIColor.secondaryLabel
     }
 
     func _updateBSBLabel() {

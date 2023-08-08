@@ -35,6 +35,13 @@ class OneTimeCodeTextFieldSnapshotTests: FBSnapshotTestCase {
         verify(field)
     }
 
+    func testDisabled() {
+        let field = OneTimeCodeTextField(numberOfDigits: 6, theme: LinkUI.appearance.asElementsTheme)
+        field.value = "123456"
+        field.isEnabled = false
+        verify(field)
+    }
+
     func verify(
         _ view: UIView,
         file: StaticString = #filePath,

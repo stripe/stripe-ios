@@ -16,7 +16,6 @@ import UIKit
 extension PaymentSheet {
 
     /// Style options for colors in PaymentSheet
-    @available(iOS 13.0, *)
     public enum UserInterfaceStyle: Int {
 
         /// (default) PaymentSheet will automatically switch between standard and dark mode compatible colors based on device settings
@@ -112,7 +111,6 @@ extension PaymentSheet {
         /// The color styling to use for PaymentSheet UI
         /// Default value is SheetStyle.automatic
         /// @see SheetStyle
-        @available(iOS 13.0, *)
         public var style: UserInterfaceStyle {  // stored properties can't be marked @available which is why this uses the styleRawValue private var
             get {
                 return UserInterfaceStyle(rawValue: styleRawValue)!
@@ -163,6 +161,9 @@ extension PaymentSheet {
         /// If `never` is used for a required field for the Payment Method used during checkout,
         /// you **must** provide an appropriate value as part of `defaultBillingDetails`.
         public var billingDetailsCollectionConfiguration = BillingDetailsCollectionConfiguration()
+
+        /// Optional configuration to display a custom message when a saved payment method is removed.
+        public var removeSavedPaymentMethodMessage: String?
     }
 
     /// Configuration related to the Stripe Customer

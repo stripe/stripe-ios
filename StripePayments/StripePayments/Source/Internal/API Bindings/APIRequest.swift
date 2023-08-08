@@ -128,7 +128,7 @@ let JSONKeyObject = "object"
         )
     }
 
-    class func parseResponse<ResponseType: STPAPIResponseDecodable>(
+    class func parseResponse(
         _ response: URLResponse?,
         body: Data?,
         error: Error?,

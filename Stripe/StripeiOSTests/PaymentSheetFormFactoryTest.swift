@@ -14,7 +14,6 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
-@testable@_spi(STP) import StripeUICore
 
 class MockElement: Element {
     var paramsUpdater: (IntentConfirmParams) -> IntentConfirmParams?
@@ -1882,26 +1881,5 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             return nil
         }
         return wrapper.element
-    }
-}
-
-extension Element {
-    /// A convenience method that overwrites the one defined in Element.swift that unwraps any Elements wrapped in `PaymentMethodElementWrapper`
-    /// and returns all Elements underneath this Element, including this Element.
-    public func getAllUnwrappedSubElements() -> [Element] {
-        switch self {
-        case let container as ContainerElement:
-            return [container] + container.elements.flatMap { $0.getAllUnwrappedSubElements() }
-        case let wrappedElement as PaymentMethodElementWrapper<FormElement>:
-            return wrappedElement.element.getAllUnwrappedSubElements()
-        case let wrappedElement as PaymentMethodElementWrapper<CheckboxElement>:
-            return wrappedElement.element.getAllUnwrappedSubElements()
-        case let wrappedElement as PaymentMethodElementWrapper<TextFieldElement>:
-            return wrappedElement.element.getAllUnwrappedSubElements()
-        case let wrappedElement as PaymentMethodElementWrapper<AddressSectionElement>:
-            return wrappedElement.element.getAllUnwrappedSubElements()
-        default:
-            return [self]
-        }
     }
 }

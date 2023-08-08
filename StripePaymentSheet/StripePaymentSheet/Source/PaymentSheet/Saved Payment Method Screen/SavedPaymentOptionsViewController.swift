@@ -54,6 +54,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let customerID: String?
         let showApplePay: Bool
         let showLink: Bool
+        let removeSavedPaymentMethodMessage: String?
     }
 
     var hasRemovablePaymentMethods: Bool {
@@ -69,7 +70,12 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
         set {
             collectionView.isRemovingPaymentMethods = newValue
-            collectionView.reloadSections([0])
+            UIView.transition(with: collectionView,
+                              duration: 0.3,
+                              options: .transitionCrossDissolve,
+                              animations: {
+                self.collectionView.reloadData()
+            })
             if !collectionView.isRemovingPaymentMethods {
                 // re-select
                 collectionView.selectItem(
@@ -366,7 +372,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
 
         let alertController = UIAlertController(
             title: paymentMethod.removalMessage.title,
-            message: paymentMethod.removalMessage.message,
+            message: configuration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
             preferredStyle: .alert
         )
 

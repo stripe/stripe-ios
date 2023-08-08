@@ -29,8 +29,6 @@ class BottomSheetTransitioningDelegate: NSObject {
 
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension BottomSheetTransitioningDelegate: UIViewControllerTransitioningDelegate {
 
     /**

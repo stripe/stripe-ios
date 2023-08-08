@@ -56,6 +56,9 @@ extension CustomerSheet {
         /// you **must** provide an appropriate value as part of `defaultBillingDetails`.
         public var billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration()
 
+        /// Optional configuration to display a custom message when a saved payment method is removed.
+        public var removeSavedPaymentMethodMessage: String?
+
         public init () {
         }
     }

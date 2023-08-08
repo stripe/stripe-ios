@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkSignupBodyView: UIView {
 
     init(
@@ -38,7 +37,6 @@ final class NetworkingLinkSignupBodyView: UIView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateMultipleBulletPointView(
     bulletPoints: [FinancialConnectionsBulletPoint],
     didSelectURL: @escaping (URL) -> Void
@@ -58,7 +56,6 @@ private func CreateMultipleBulletPointView(
     return verticalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateBulletPointView(
     title: String?,
     content: String?,
@@ -110,7 +107,6 @@ private func CreateBulletPointView(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct NetworkingLinkSignupBodyViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> NetworkingLinkSignupBodyView {
@@ -140,7 +136,6 @@ private struct NetworkingLinkSignupBodyViewUIViewRepresentable: UIViewRepresenta
     func updateUIView(_ uiView: NetworkingLinkSignupBodyView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct NetworkingLinkSignupBodyView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .leading) {

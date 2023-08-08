@@ -191,13 +191,11 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
                 return nil
             }
             let attributedString = NSMutableAttributedString(string: text)
-            if #available(iOS 13.0, *) {
-                attributedString.addAttribute(
-                    .accessibilitySpeechSpellOut,
-                    value: NSNumber(value: true),
-                    range: attributedString.extent
-                )
-            }
+            attributedString.addAttribute(
+                .accessibilitySpeechSpellOut,
+                value: NSNumber(value: true),
+                range: attributedString.extent
+            )
             return attributedString
         }
         set {
