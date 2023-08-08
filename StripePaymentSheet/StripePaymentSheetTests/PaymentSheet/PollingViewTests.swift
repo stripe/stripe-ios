@@ -14,7 +14,7 @@ import Foundation
 import XCTest
 
 class PollingViewTests: XCTestCase {
-    
+
     func testPollingViewModelUPI(){
         let pollingViewModel = PollingViewModel(paymentMethodType: .UPI)
         let deadlineInterval = pollingViewModel.deadline.timeIntervalSinceNow
