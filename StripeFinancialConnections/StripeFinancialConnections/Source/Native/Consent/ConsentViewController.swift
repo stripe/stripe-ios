@@ -11,7 +11,6 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol ConsentViewControllerDelegate: AnyObject {
     func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController)
     func consentViewController(
@@ -20,7 +19,6 @@ protocol ConsentViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 class ConsentViewController: UIViewController {
 
     private let dataSource: ConsentDataSource

@@ -73,13 +73,9 @@ class CheckoutRowView: UIView {
 
         self.detailLabel.textColor = .gray
         self.activityIndicator.style = .medium
-        #if canImport(CryptoKit)
-            if #available(iOS 13.0, *) {
-                self.backgroundColor = .systemBackground
-                self.detailLabel.textColor = .secondaryLabel
-                self.activityIndicator.style = .medium
-            }
-        #endif
+        self.backgroundColor = .systemBackground
+        self.detailLabel.textColor = .secondaryLabel
+        self.activityIndicator.style = .medium
 
         self.addSubview(self.detailLabel)
         self.addSubview(self.activityIndicator)
@@ -89,12 +85,7 @@ class CheckoutRowView: UIView {
             self.backgroundView.isUserInteractionEnabled = false
             self.titleLabel.font = .systemFont(ofSize: 22, weight: .medium)
             self.detailLabel.font = .systemFont(ofSize: 22, weight: .bold)
-            self.detailLabel.textColor = .black
-            #if canImport(CryptoKit)
-                if #available(iOS 13.0, *) {
-                    self.detailLabel.textColor = .label
-                }
-            #endif
+            self.detailLabel.textColor = .label
         }
 
         isAccessibilityElement = true

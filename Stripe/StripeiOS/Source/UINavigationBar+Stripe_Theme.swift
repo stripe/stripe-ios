@@ -67,46 +67,44 @@ extension UINavigationBar {
                 NSAttributedString.Key.foregroundColor: theme.primaryForegroundColor
             ]
 
-            if #available(iOS 13.0, *) {
-                standardAppearance.backgroundColor = theme.secondaryBackgroundColor
-                if let titleTextAttributes = titleTextAttributes {
-                    standardAppearance.titleTextAttributes = titleTextAttributes
-                }
-                if let largeTitleTextAttributes = largeTitleTextAttributes {
-                    standardAppearance.largeTitleTextAttributes = largeTitleTextAttributes
-                }
-                standardAppearance.buttonAppearance.normal.titleTextAttributes = [
-                    NSAttributedString.Key.font: theme.font,
-                    NSAttributedString.Key.foregroundColor: theme.accentColor,
-                ]
-
-                standardAppearance.buttonAppearance.highlighted.titleTextAttributes = [
-                    NSAttributedString.Key.font: theme.font,
-                    NSAttributedString.Key.foregroundColor: theme.accentColor,
-                ]
-
-                standardAppearance.buttonAppearance.disabled.titleTextAttributes = [
-                    NSAttributedString.Key.font: theme.font,
-                    NSAttributedString.Key.foregroundColor: theme.secondaryForegroundColor,
-                ]
-
-                standardAppearance.doneButtonAppearance.normal.titleTextAttributes = [
-                    NSAttributedString.Key.font: theme.emphasisFont,
-                    NSAttributedString.Key.foregroundColor: theme.accentColor,
-                ]
-
-                standardAppearance.doneButtonAppearance.highlighted.titleTextAttributes = [
-                    NSAttributedString.Key.font: theme.emphasisFont,
-                    NSAttributedString.Key.foregroundColor: theme.accentColor,
-                ]
-
-                standardAppearance.doneButtonAppearance.disabled.titleTextAttributes = [
-                    NSAttributedString.Key.font: theme.emphasisFont,
-                    NSAttributedString.Key.foregroundColor: theme.secondaryForegroundColor,
-                ]
-                scrollEdgeAppearance = standardAppearance
-                compactAppearance = standardAppearance
+            standardAppearance.backgroundColor = theme.secondaryBackgroundColor
+            if let titleTextAttributes = titleTextAttributes {
+                standardAppearance.titleTextAttributes = titleTextAttributes
             }
+            if let largeTitleTextAttributes = largeTitleTextAttributes {
+                standardAppearance.largeTitleTextAttributes = largeTitleTextAttributes
+            }
+            standardAppearance.buttonAppearance.normal.titleTextAttributes = [
+                NSAttributedString.Key.font: theme.font,
+                NSAttributedString.Key.foregroundColor: theme.accentColor,
+            ]
+
+            standardAppearance.buttonAppearance.highlighted.titleTextAttributes = [
+                NSAttributedString.Key.font: theme.font,
+                NSAttributedString.Key.foregroundColor: theme.accentColor,
+            ]
+
+            standardAppearance.buttonAppearance.disabled.titleTextAttributes = [
+                NSAttributedString.Key.font: theme.font,
+                NSAttributedString.Key.foregroundColor: theme.secondaryForegroundColor,
+            ]
+
+            standardAppearance.doneButtonAppearance.normal.titleTextAttributes = [
+                NSAttributedString.Key.font: theme.emphasisFont,
+                NSAttributedString.Key.foregroundColor: theme.accentColor,
+            ]
+
+            standardAppearance.doneButtonAppearance.highlighted.titleTextAttributes = [
+                NSAttributedString.Key.font: theme.emphasisFont,
+                NSAttributedString.Key.foregroundColor: theme.accentColor,
+            ]
+
+            standardAppearance.doneButtonAppearance.disabled.titleTextAttributes = [
+                NSAttributedString.Key.font: theme.emphasisFont,
+                NSAttributedString.Key.foregroundColor: theme.secondaryForegroundColor,
+            ]
+            scrollEdgeAppearance = standardAppearance
+            compactAppearance = standardAppearance
         }
     }
 

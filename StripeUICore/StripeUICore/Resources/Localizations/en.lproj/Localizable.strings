@@ -63,6 +63,9 @@ Label of an address field */
 /* Label of an address field */
 "Do Si" = "Do Si";
 
+/* Used as the title for prompting the user if they want to close the sheet */
+"Do you want to close this form?" = "Do you want to close this form?";
+
 /* Done button title */
 "Done" = "Done";
 
@@ -185,6 +188,9 @@ Label of an address field */
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Your email is invalid.";
+
+/* Used as the title for prompting the user if they want to close the sheet */
+"Your payment information will not be saved." = "Your payment information will not be saved.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Your postal code is incomplete.";

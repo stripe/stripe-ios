@@ -10,12 +10,10 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol SuccessViewControllerDelegate: AnyObject {
     func successViewControllerDidSelectDone(_ viewController: SuccessViewController)
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class SuccessViewController: UIViewController {
 
     private let dataSource: SuccessDataSource

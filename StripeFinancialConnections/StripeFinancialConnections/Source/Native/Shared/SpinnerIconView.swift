@@ -62,7 +62,6 @@ final class SpinnerIconView: UIView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct SpinnerIconViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> SpinnerIconView {
@@ -72,7 +71,6 @@ private struct SpinnerIconViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: SpinnerIconView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct SpinnerIconView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

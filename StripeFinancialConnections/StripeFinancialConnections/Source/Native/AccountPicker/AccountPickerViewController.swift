@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
@@ -29,7 +28,6 @@ enum AccountPickerType {
     case radioButton
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class AccountPickerViewController: UIViewController {
 
     private let dataSource: AccountPickerDataSource
@@ -355,7 +353,6 @@ final class AccountPickerViewController: UIViewController {
 
 // MARK: - AccountPickerSelectionViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
 
     func accountPickerSelectionView(
@@ -368,7 +365,6 @@ extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
 
 // MARK: - AccountPickerDataSourceDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension AccountPickerViewController: AccountPickerDataSourceDelegate {
     func accountPickerDataSource(
         _ dataSource: AccountPickerDataSource,

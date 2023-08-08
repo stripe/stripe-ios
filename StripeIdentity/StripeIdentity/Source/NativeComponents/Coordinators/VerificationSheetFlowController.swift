@@ -60,8 +60,6 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var analyticsLastScreen: IdentityFlowViewController? { get }
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 @objc(STP_Internal_VerificationSheetFlowController)
 final class VerificationSheetFlowController: NSObject {
 
@@ -86,7 +84,6 @@ final class VerificationSheetFlowController: NSObject {
     }()
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
     /// Transitions to the next view controller in the flow with a 'push' animation.
     /// - Note: This may replace the navigation stack or push an additional view
@@ -679,7 +676,6 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
 // MARK: - IdentityFlowNavigationControllerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension VerificationSheetFlowController: IdentityFlowNavigationControllerDelegate {
     func identityFlowNavigationControllerDidDismiss(
         _ navigationController: IdentityFlowNavigationController
@@ -696,7 +692,6 @@ extension VerificationSheetFlowController: IdentityFlowNavigationControllerDeleg
 // MARK: - VerificationFlowWebViewControllerDelegate
 
 @available(iOS 14.3, *)
-@available(iOSApplicationExtension, unavailable)
 extension VerificationSheetFlowController: VerificationFlowWebViewControllerDelegate {
     func verificationFlowWebViewController(
         _ viewController: VerificationFlowWebViewController,
@@ -710,8 +705,6 @@ extension VerificationSheetFlowController: VerificationFlowWebViewControllerDele
 
 // MARK: - SFSafariViewControllerDelegate
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension VerificationSheetFlowController: SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         delegate?.verificationSheetFlowControllerDidDismissWebView(self)

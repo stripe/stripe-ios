@@ -15,7 +15,6 @@ public protocol AppSettingsHelperProtocol {
 }
 
 /// Helper class that opens the app's settings screen in the Settings app.
-@available(iOSApplicationExtension, unavailable)
 @_spi(STP) public class AppSettingsHelper: AppSettingsHelperProtocol {
 
     public static let shared = AppSettingsHelper()

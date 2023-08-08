@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class BulletPointLabelView: HitTestView {
 
     private(set) var topPadding: CGFloat = 0

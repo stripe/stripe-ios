@@ -61,10 +61,8 @@ extension String.Localized {
         STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
     }
 
-    static var pay_with_payment_method: String {
-        // TODO(ramont): Re-translate this string as some of the existing translations
-        // contain punctuation or don't read as a sentence.
-        STPLocalizedString("Pay with %@", "Pay with {payment method}")
+    static var pay_with_link: String {
+        STPLocalizedString("Pay with Link", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
     }
 
     static var back: String {

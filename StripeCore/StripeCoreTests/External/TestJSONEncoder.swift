@@ -1685,76 +1685,72 @@ private struct JSON: Equatable {
 
 extension TestJSONEncoder {
     static var allTests: [(String, (TestJSONEncoder) -> () throws -> Void)] {
-        if #available(iOS 13.0, *) {
-            return [
-                ("test_encodingTopLevelFragments", test_encodingTopLevelFragments),
-                ("test_encodingTopLevelEmptyStruct", test_encodingTopLevelEmptyStruct),
-                ("test_encodingTopLevelEmptyClass", test_encodingTopLevelEmptyClass),
-                ("test_encodingTopLevelSingleValueEnum", test_encodingTopLevelSingleValueEnum),
-                ("test_encodingTopLevelSingleValueStruct", test_encodingTopLevelSingleValueStruct),
-                ("test_encodingTopLevelSingleValueClass", test_encodingTopLevelSingleValueClass),
-                ("test_encodingTopLevelStructuredStruct", test_encodingTopLevelStructuredStruct),
-                ("test_encodingTopLevelStructuredClass", test_encodingTopLevelStructuredClass),
-                (
-                    "test_encodingTopLevelStructuredSingleStruct",
-                    test_encodingTopLevelStructuredSingleStruct
-                ),
-                (
-                    "test_encodingTopLevelStructuredSingleClass",
-                    test_encodingTopLevelStructuredSingleClass
-                ),
-                (
-                    "test_encodingTopLevelDeepStructuredType",
-                    test_encodingTopLevelDeepStructuredType
-                ),
-                ("test_encodingOutputFormattingDefault", test_encodingOutputFormattingDefault),
-                (
-                    "test_encodingOutputFormattingPrettyPrinted",
-                    test_encodingOutputFormattingPrettyPrinted
-                ),
-                (
-                    "test_encodingOutputFormattingSortedKeys",
-                    test_encodingOutputFormattingSortedKeys
-                ),
-                (
-                    "test_encodingOutputFormattingPrettyPrintedSortedKeys",
-                    test_encodingOutputFormattingPrettyPrintedSortedKeys
-                ),
-                ("test_encodingDate", test_encodingDate),
-                ("test_encodingDateSecondsSince1970", test_encodingDateSecondsSince1970),
-                ("test_encodingBase64Data", test_encodingBase64Data),
-                ("test_encodingNonConformingFloatStrings", test_encodingNonConformingFloatStrings),
-                //                ("test_nestedContainerCodingPaths", test_nestedContainerCodingPaths),
-                //                ("test_superEncoderCodingPaths", test_superEncoderCodingPaths),
-                ("test_codingOfBool", test_codingOfBool),
-                ("test_codingOfNil", test_codingOfNil),
-                ("test_codingOfInt8", test_codingOfInt8),
-                ("test_codingOfUInt8", test_codingOfUInt8),
-                ("test_codingOfInt16", test_codingOfInt16),
-                ("test_codingOfUInt16", test_codingOfUInt16),
-                ("test_codingOfInt32", test_codingOfInt32),
-                ("test_codingOfUInt32", test_codingOfUInt32),
-                ("test_codingOfInt64", test_codingOfInt64),
-                ("test_codingOfUInt64", test_codingOfUInt64),
-                ("test_codingOfInt", test_codingOfInt),
-                ("test_codingOfUInt", test_codingOfUInt),
-                ("test_codingOfFloat", test_codingOfFloat),
-                ("test_codingOfDouble", test_codingOfDouble),
-                ("test_codingOfDecimal", test_codingOfDecimal),
-                ("test_codingOfString", test_codingOfString),
-                ("test_codingOfURL", test_codingOfURL),
-                ("test_codingOfUIntMinMax", test_codingOfUIntMinMax),
-                ("test_numericLimits", test_numericLimits),
-                ("test_snake_case_encoding", test_snake_case_encoding),
-                ("test_dictionary_snake_case_decoding", test_dictionary_snake_case_decoding),
-                ("test_dictionary_snake_case_encoding", test_dictionary_snake_case_encoding),
-                (
-                    "test_SR17581_codingEmptyDictionaryWithNonstringKeyDoesRoundtrip",
-                    test_SR17581_codingEmptyDictionaryWithNonstringKeyDoesRoundtrip
-                ),
-            ]
-        } else {
-            return []
-        }
+        return [
+            ("test_encodingTopLevelFragments", test_encodingTopLevelFragments),
+            ("test_encodingTopLevelEmptyStruct", test_encodingTopLevelEmptyStruct),
+            ("test_encodingTopLevelEmptyClass", test_encodingTopLevelEmptyClass),
+            ("test_encodingTopLevelSingleValueEnum", test_encodingTopLevelSingleValueEnum),
+            ("test_encodingTopLevelSingleValueStruct", test_encodingTopLevelSingleValueStruct),
+            ("test_encodingTopLevelSingleValueClass", test_encodingTopLevelSingleValueClass),
+            ("test_encodingTopLevelStructuredStruct", test_encodingTopLevelStructuredStruct),
+            ("test_encodingTopLevelStructuredClass", test_encodingTopLevelStructuredClass),
+            (
+                "test_encodingTopLevelStructuredSingleStruct",
+                test_encodingTopLevelStructuredSingleStruct
+            ),
+            (
+                "test_encodingTopLevelStructuredSingleClass",
+                test_encodingTopLevelStructuredSingleClass
+            ),
+            (
+                "test_encodingTopLevelDeepStructuredType",
+                test_encodingTopLevelDeepStructuredType
+            ),
+            ("test_encodingOutputFormattingDefault", test_encodingOutputFormattingDefault),
+            (
+                "test_encodingOutputFormattingPrettyPrinted",
+                test_encodingOutputFormattingPrettyPrinted
+            ),
+            (
+                "test_encodingOutputFormattingSortedKeys",
+                test_encodingOutputFormattingSortedKeys
+            ),
+            (
+                "test_encodingOutputFormattingPrettyPrintedSortedKeys",
+                test_encodingOutputFormattingPrettyPrintedSortedKeys
+            ),
+            ("test_encodingDate", test_encodingDate),
+            ("test_encodingDateSecondsSince1970", test_encodingDateSecondsSince1970),
+            ("test_encodingBase64Data", test_encodingBase64Data),
+            ("test_encodingNonConformingFloatStrings", test_encodingNonConformingFloatStrings),
+            //                ("test_nestedContainerCodingPaths", test_nestedContainerCodingPaths),
+            //                ("test_superEncoderCodingPaths", test_superEncoderCodingPaths),
+            ("test_codingOfBool", test_codingOfBool),
+            ("test_codingOfNil", test_codingOfNil),
+            ("test_codingOfInt8", test_codingOfInt8),
+            ("test_codingOfUInt8", test_codingOfUInt8),
+            ("test_codingOfInt16", test_codingOfInt16),
+            ("test_codingOfUInt16", test_codingOfUInt16),
+            ("test_codingOfInt32", test_codingOfInt32),
+            ("test_codingOfUInt32", test_codingOfUInt32),
+            ("test_codingOfInt64", test_codingOfInt64),
+            ("test_codingOfUInt64", test_codingOfUInt64),
+            ("test_codingOfInt", test_codingOfInt),
+            ("test_codingOfUInt", test_codingOfUInt),
+            ("test_codingOfFloat", test_codingOfFloat),
+            ("test_codingOfDouble", test_codingOfDouble),
+            ("test_codingOfDecimal", test_codingOfDecimal),
+            ("test_codingOfString", test_codingOfString),
+            ("test_codingOfURL", test_codingOfURL),
+            ("test_codingOfUIntMinMax", test_codingOfUIntMinMax),
+            ("test_numericLimits", test_numericLimits),
+            ("test_snake_case_encoding", test_snake_case_encoding),
+            ("test_dictionary_snake_case_decoding", test_dictionary_snake_case_decoding),
+            ("test_dictionary_snake_case_encoding", test_dictionary_snake_case_encoding),
+            (
+                "test_SR17581_codingEmptyDictionaryWithNonstringKeyDoesRoundtrip",
+                test_SR17581_codingEmptyDictionaryWithNonstringKeyDoesRoundtrip
+            ),
+        ]
     }
 }

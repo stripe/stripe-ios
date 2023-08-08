@@ -327,8 +327,6 @@ extension STPAPIClient {
     ///   - secret:      The client secret of the source. Cannot be nil.
     ///   - timeout:     The timeout for the polling operation, in seconds. Timeouts are capped at 5 minutes.
     ///   - completion:  The callback to run with the returned Source object, or an error.
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
     @objc(startPollingSourceWithId:clientSecret:timeout:completion:)
     public func startPollingSource(
         withId identifier: String,
@@ -353,8 +351,6 @@ extension STPAPIClient {
     /// `startPolling` will not be fired when `stopPolling` is called.
     /// - Parameter identifier:  The identifier of the source to be retrieved. Cannot be nil.
     @objc(stopPollingSourceWithId:)
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
     public func stopPollingSource(withId identifier: String) {
         sourcePollersQueue?.async(execute: {
             let poller = self.sourcePollers?[identifier] as? STPSourcePoller

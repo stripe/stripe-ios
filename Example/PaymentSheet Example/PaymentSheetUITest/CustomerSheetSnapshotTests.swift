@@ -247,6 +247,12 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
+    func testUSBankAccount_only() {
+        stubSessions(paymentMethods: "\"us_bank_account\"")
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
     func testUSBankAccount_card() {
         stubSessions(paymentMethods: "\"us_bank_account\", \"card\"")
         prepareCS(configuration: configuration())
@@ -259,7 +265,90 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
+    func testUSBankAccount_only_dark() {
+        stubSessions(paymentMethods: "\"us_bank_account\"")
 
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testUSBankAccount_card_dark() {
+        stubSessions(paymentMethods: "\"us_bank_account\", \"card\"")
+
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testCard_USBankAccount_dark() {
+        stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
+
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testUSBankAccount_bdcc_0000() {
+        stubSessions(paymentMethods: "\"us_bank_account\"")
+
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .automatic)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testUSBankAccount_bdcc_0200() {
+        stubSessions(paymentMethods: "\"us_bank_account\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .always,
+                                                         email: .automatic,
+                                                         address: .automatic)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testUSBankAccount_bdcc_0002() {
+        stubSessions(paymentMethods: "\"us_bank_account\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .full)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testUSBankAccount_bdcc_0202() {
+        stubSessions(paymentMethods: "\"us_bank_account\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .always,
+                                                         email: .automatic,
+                                                         address: .full)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testUSBankAccount_bdcc_1111() {
+        stubSessions(paymentMethods: "\"us_bank_account\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .never,
+                                                         phone: .never,
+                                                         email: .never,
+                                                         address: .never,
+                                                         attachDefaultsToPaymentMethod: true)
+        let configuration = configuration(defaultBillingDetails: billingDetails(),
+                                          billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
     func stubbedPaymentMethod() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",

@@ -32,7 +32,8 @@ extension STPAnalyticsClient {
         linkSessionType: LinkSettings.PopupWebviewOption?,
         currency: String?,
         intentConfig: PaymentSheet.IntentConfiguration? = nil,
-        deferredIntentConfirmationType: DeferredIntentConfirmationType?
+        deferredIntentConfirmationType: DeferredIntentConfirmationType?,
+        paymentMethodTypeAnalyticsValue: String? = nil
     ) {
         var success = false
         switch result {
@@ -57,7 +58,8 @@ extension STPAnalyticsClient {
             linkSessionType: linkSessionType,
             currency: currency,
             intentConfig: intentConfig,
-            deferredIntentConfirmationType: deferredIntentConfirmationType
+            deferredIntentConfirmationType: deferredIntentConfirmationType,
+            paymentMethodTypeAnalyticsValue: paymentMethodTypeAnalyticsValue
         )
     }
 
@@ -241,6 +243,7 @@ extension STPAnalyticsClient {
         intentConfig: PaymentSheet.IntentConfiguration? = nil,
         error: Error? = nil,
         deferredIntentConfirmationType: DeferredIntentConfirmationType? = nil,
+        paymentMethodTypeAnalyticsValue: String? = nil,
         params: [String: Any] = [:]
     ) {
         var additionalParams = [:] as [String: Any]
@@ -260,6 +263,7 @@ extension STPAnalyticsClient {
         additionalParams["currency"] = currency
         additionalParams["is_decoupled"] = intentConfig != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
+        additionalParams["selected_lpm"] = paymentMethodTypeAnalyticsValue
         if let error = error as? PaymentSheetError {
             additionalParams["error_message"] = error.safeLoggingString
         }
@@ -349,11 +353,7 @@ extension PaymentSheet.Configuration {
         var payload = [String: Any]()
         payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
         payload["apple_pay_config"] = applePay != nil
-        if #available(iOS 13.0, *) {
-            payload["style"] = style.rawValue
-        } else {
-            payload["style"] = 0 // SheetStyle.automatic.rawValue
-        }
+        payload["style"] = style.rawValue
 
         payload["customer"] = customer != nil
         payload["return_url"] = returnURL != nil

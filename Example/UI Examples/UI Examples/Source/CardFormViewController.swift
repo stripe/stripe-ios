@@ -14,12 +14,7 @@ class CardFormViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Card Form"
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBackground
-        } else {
-            // Fallback on earlier versions
-            view.backgroundColor = .white
-        }
+        view.backgroundColor = .systemBackground
 
         let cardForm = STPCardFormView()
         cardForm.translatesAutoresizingMaskIntoConstraints = false

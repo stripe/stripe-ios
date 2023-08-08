@@ -18,7 +18,8 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_newCustomer() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        stubNewCustomerResponse()
+        stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
+        stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
         stubSessions(paymentMethods: "\"card\"")
 
         let configuration = CustomerSheet.Configuration()
@@ -44,7 +45,8 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_singleCard() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        stubReturningCustomerWithCardResponse()
+        stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
+        stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
         stubSessions(paymentMethods: "\"card\"")
 
         let configuration = CustomerSheet.Configuration()
@@ -68,31 +70,31 @@ class CustomerSheetTests: APIStubbedTestCase {
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
     }
-// TODO: Uncomment when enabling USBankAccount
-/*
+
     func testLoadPaymentMethodInfo_singleBankAccount() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        stubReturningCustomerWithUSBankAccountResponse()
+        stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
+        stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
+        stubSessions(paymentMethods: "\"us_bank_account\"")
 
-        var configuration = CustomerSheet.Configuration()
-        configuration.paymentMethodTypes = [.USBankAccount]
+        let configuration = CustomerSheet.Configuration()
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {
             return "si_789"
-        }, configuration: configuration,
-        apiClient: stubbedAPIClient)
+        }, apiClient: stubbedAPIClient)
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
-            guard case .success((let paymentMethods, let selectedPaymentMethod)) = result else {
+            guard case .success((let paymentMethods, let selectedPaymentMethod, let merchantSupportedPaymentMethodTypes)) = result else {
                 XCTFail()
                 return
             }
             XCTAssertEqual(paymentMethods.count, 1)
             XCTAssertEqual(paymentMethods[0].type, .USBankAccount)
             XCTAssert(selectedPaymentMethod == nil)
+            XCTAssertEqual(merchantSupportedPaymentMethodTypes, [.USBankAccount])
             loadPaymentMethodInfo.fulfill()
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
@@ -100,22 +102,21 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_cardAndBankAccount() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        stubReturningCustomerWithUSBankAccountResponse()
-        stubReturningCustomerWithCardResponse()
+        stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
+        stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
+        stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
 
-        var configuration = CustomerSheet.Configuration()
-        configuration.paymentMethodTypes = [.card, .USBankAccount]
+        let configuration = CustomerSheet.Configuration()
         let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
         }, setupIntentClientSecretProvider: {
             return "si_789"
-        }, configuration: configuration,
-        apiClient: stubbedAPIClient)
+        }, apiClient: stubbedAPIClient)
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
-            guard case .success((let paymentMethods, let selectedPaymentMethod)) = result else {
+            guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
                 XCTFail()
                 return
             }
@@ -127,7 +128,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
     }
- */
+
     func testLoadPaymentMethodInfo_CallToPaymentMethodsTimesOut() throws {
         let fastTimeoutIntervalForRequest: TimeInterval = 1
         let timeGreaterThanTimeoutIntervalForRequest: UInt32 = 3
@@ -164,7 +165,7 @@ class CustomerSheetTests: APIStubbedTestCase {
             }
             loadPaymentMethodInfo.fulfill()
         }
-        wait(for: [loadPaymentMethodInfo], timeout: 5.0)
+        wait(for: [loadPaymentMethodInfo], timeout: 10.0)
     }
 
     private func stubSessions(paymentMethods: String) {
@@ -198,17 +199,6 @@ class CustomerSheetTests: APIStubbedTestCase {
             let data = responseCallback?(mockResponseData) ?? mockResponseData
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
         }
-    }
-
-    private func stubNewCustomerResponse() {
-        stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
-    }
-
-    private func stubReturningCustomerWithCardResponse() {
-        stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
-    }
-    private func stubReturningCustomerWithUSBankAccountResponse() {
-        stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
     }
 
     private func stubPaymentMethods(
