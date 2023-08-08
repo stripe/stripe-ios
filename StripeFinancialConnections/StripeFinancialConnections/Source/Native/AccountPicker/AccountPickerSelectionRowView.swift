@@ -129,7 +129,6 @@ extension RadioButtonView: SelectionView {}
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresentable {
 
     let type: AccountPickerSelectionRowView.SelectionType
@@ -165,7 +164,6 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct AccountPickerSelectionRowView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {

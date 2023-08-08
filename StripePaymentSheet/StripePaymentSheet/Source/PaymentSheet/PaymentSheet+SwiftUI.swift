@@ -11,8 +11,6 @@
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension View {
     /// Presents a sheet for a customer to complete their payment.
     /// - Parameter isPresented: A binding to whether the sheet is presented.
@@ -90,8 +88,6 @@ extension View {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
     /// A button which presents a sheet for a customer to complete their payment.
     /// This is a convenience wrapper for the .paymentSheet() ViewModifier.
@@ -129,8 +125,6 @@ extension PaymentSheet {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.FlowController {
     /// A button which presents a sheet for a customer to select a payment method.
     /// This is a convenience wrapper for the .paymentOptionsSheet() ViewModifier.
@@ -207,8 +201,6 @@ extension PaymentSheet.FlowController {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
     struct PaymentSheetPresenter: UIViewRepresentable {
         @Binding var presented: Bool

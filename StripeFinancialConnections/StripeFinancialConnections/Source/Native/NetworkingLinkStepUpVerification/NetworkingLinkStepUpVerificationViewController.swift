@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol NetworkingLinkStepUpVerificationViewControllerDelegate: AnyObject {
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
@@ -25,7 +24,6 @@ protocol NetworkingLinkStepUpVerificationViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingLinkStepUpVerificationViewController: UIViewController {
 
     private let dataSource: NetworkingLinkStepUpVerificationDataSource
@@ -132,7 +130,6 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
 
 // MARK: - NetworkingOTPViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDelegate {
 
     func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {

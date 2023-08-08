@@ -12,7 +12,6 @@ final class CloseConfirmationAlertHandler {
 
     private init() {}
 
-    @available(iOSApplicationExtension, unavailable)
     static func present(
         businessName: String?,
         showNetworkingLanguageInConfirmationAlert: Bool,

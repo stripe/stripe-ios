@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class NetworkingSaveToLinkVerificationBodyView: UIView {
 
     init(email: String, otpView: UIView) {
@@ -44,7 +43,6 @@ private func CreateEmailLabel(email: String) -> UIView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct NetworkingSaveToLinkVerificationBodyViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> NetworkingSaveToLinkVerificationBodyView {
@@ -57,7 +55,6 @@ private struct NetworkingSaveToLinkVerificationBodyViewUIViewRepresentable: UIVi
     func updateUIView(_ uiView: NetworkingSaveToLinkVerificationBodyView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct NetworkingSaveToLinkVerificationBodyView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .leading) {

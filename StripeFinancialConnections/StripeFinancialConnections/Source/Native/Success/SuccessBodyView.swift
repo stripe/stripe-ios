@@ -10,7 +10,6 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class SuccessBodyView: HitTestView {
 
     init(
@@ -65,7 +64,6 @@ final class SuccessBodyView: HitTestView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateInformationBoxView(
     accountsListView: UIView,
     dataDisclosureView: UIView
@@ -90,7 +88,6 @@ private func CreateInformationBoxView(
     return informationBoxVerticalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateDataAccessDisclosureView(
     isStripeDirect: Bool,
     businessName: String?,
@@ -125,7 +122,6 @@ private func CreateDataAccessDisclosureView(
     return verticalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateDisconnectAccountLabel(
     isLinkingOneAccount: Bool,
     accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod,

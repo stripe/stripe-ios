@@ -8,7 +8,6 @@
 
 import Foundation
 
-@available(iOSApplicationExtension, unavailable)
 extension SelfieCaptureViewController {
     static var initialInstructionText: String {
         return STPLocalizedString(

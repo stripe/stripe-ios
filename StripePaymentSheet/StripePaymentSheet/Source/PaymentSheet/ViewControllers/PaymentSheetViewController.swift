@@ -461,7 +461,8 @@ class PaymentSheetViewController: UIViewController {
                     linkSessionType: self.intent.linkPopupWebviewOption,
                     currency: self.intent.currency,
                     intentConfig: self.intent.intentConfig,
-                    deferredIntentConfirmationType: deferredIntentConfirmationType
+                    deferredIntentConfirmationType: deferredIntentConfirmationType,
+                    paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue
                 )
 
                 self.isPaymentInFlight = false

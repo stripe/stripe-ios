@@ -9,7 +9,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class InstitutionSearchFooterView: UIView {
 
     private static let constantTopPadding: CGFloat = 10.0
@@ -86,7 +85,6 @@ final class InstitutionSearchFooterView: UIView {
 
 // MARK: - UITapGestureRecognizer
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionSearchFooterView: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(
@@ -104,7 +102,6 @@ extension InstitutionSearchFooterView: UIGestureRecognizerDelegate {
 
 // MARK: - Helpers
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateRowView(
     image: Image?,
     title: String,
@@ -128,7 +125,6 @@ private func CreateRowView(
     return horizontalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateRowIconView(image: Image) -> UIView {
     let iconImageView = UIImageView()
     iconImageView.contentMode = .scaleAspectFit
@@ -154,7 +150,6 @@ private func CreateRowIconView(image: Image) -> UIView {
     return iconContainerView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateRowLabelView(
     title: String,
     subtitle: String
@@ -189,7 +184,6 @@ private func CreateRowLabelView(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct InstitutionSearchFooterViewUIViewRepresentable: UIViewRepresentable {
 
     let title: String
@@ -210,7 +204,6 @@ private struct InstitutionSearchFooterViewUIViewRepresentable: UIViewRepresentab
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct InstitutionSearchFooterView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {

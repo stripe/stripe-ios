@@ -9,8 +9,6 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
     static func handleDeferredIntentConfirmation(
         confirmType: ConfirmPaymentMethodType,

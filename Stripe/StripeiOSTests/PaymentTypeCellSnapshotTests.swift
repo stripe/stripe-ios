@@ -48,7 +48,6 @@ class PaymentTypeCellSnapshotTests: FBSnapshotTestCase {
         STPSnapshotVerifyView(cell)
     }
 
-    @available(iOS 13.0, *)
     func testCardUnselected_forceDarkMode() {
         let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
         cell.overrideUserInterfaceStyle = .dark
@@ -63,7 +62,6 @@ class PaymentTypeCellSnapshotTests: FBSnapshotTestCase {
         STPSnapshotVerifyView(cell)
     }
 
-    @available(iOS 13.0, *)
     func testCardSelected_forceDarkMode() {
         let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
         cell.overrideUserInterfaceStyle = .dark

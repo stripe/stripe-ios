@@ -97,7 +97,6 @@ private func CreateHorizontalStackView(arrangedSubviews: [UIView]) -> UIStackVie
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct LinkAccountPickerNewAccountRowViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> LinkAccountPickerNewAccountRowView {
         return LinkAccountPickerNewAccountRowView(didSelect: {})
@@ -106,7 +105,6 @@ private struct LinkAccountPickerNewAccountRowViewUIViewRepresentable: UIViewRepr
     func updateUIView(_ uiView: LinkAccountPickerNewAccountRowView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct LinkAccountPickerNewAccountRowView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {

@@ -28,9 +28,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     var paymentOption: PaymentOption? {
         var params = IntentConfirmParams(type: selectedPaymentMethodType)
         params = paymentMethodFormElement.applyDefaults(params: params)
-        if let params = paymentMethodFormElement.updateParams(
-            params: IntentConfirmParams(type: selectedPaymentMethodType)
-        ) {
+        if let params = paymentMethodFormElement.updateParams(params: params) {
             return .new(confirmParams: params)
         }
         return nil
@@ -156,6 +154,14 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             paymentMethodTypesView.isHidden = false
         }
         updateUI()
+    }
+
+    func shouldPreventDismissal() -> Bool {
+        guard let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement else {
+            return false
+        }
+        let customerHasLinkedBankAccount = usBankAccountPaymentMethodElement.getLinkedBank() != nil
+        return customerHasLinkedBankAccount
     }
 
     private func updateUI() {

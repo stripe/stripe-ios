@@ -11,7 +11,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class AccountNumberRetrievalErrorView: UIView {
 
     init(
@@ -76,7 +75,6 @@ final class AccountNumberRetrievalErrorView: UIView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewRepresentable {
 
     let institutionName: String
@@ -99,7 +97,6 @@ private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewReprese
     func updateUIView(_ uiView: AccountNumberRetrievalErrorView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct AccountNumberRetrievalErrorView_Previews: PreviewProvider {
     static var previews: some View {
         AccountNumberRetrievalErrorViewUIViewRepresentable(

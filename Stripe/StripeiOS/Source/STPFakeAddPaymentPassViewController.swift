@@ -55,17 +55,9 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
             )
             let nextButton = UIButton(type: .system)
             nextButton.addTarget(self, action: #selector(next(_:)), for: .touchUpInside)
-            var indicatorView: UIActivityIndicatorView?
-            if #available(iOS 13.0, *) {
-                indicatorView = UIActivityIndicatorView(style: .medium)
-            } else {
-                indicatorView = UIActivityIndicatorView(style: .gray)
-            }
-            indicatorView?.startAnimating()
-            var loadingItem: UIBarButtonItem?
-            if let indicatorView = indicatorView {
-                loadingItem = UIBarButtonItem(customView: indicatorView)
-            }
+            let indicatorView = UIActivityIndicatorView(style: .medium)
+            indicatorView.startAnimating()
+            let loadingItem = UIBarButtonItem(customView: indicatorView)
             nextButton.setTitle(STPNonLocalizedString("Next"), for: .normal)
             let nextItem = UIBarButtonItem(customView: nextButton)
             let doneItem = UIBarButtonItem(

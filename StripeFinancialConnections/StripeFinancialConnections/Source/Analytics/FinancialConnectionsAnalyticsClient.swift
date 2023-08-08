@@ -161,8 +161,7 @@ extension FinancialConnectionsAnalyticsClient {
         additionalParameters["account_holder_id"] = manifest.accountholderToken
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    static func paneFromViewController(
+        static func paneFromViewController(
         _ viewController: UIViewController?
     ) -> FinancialConnectionsSessionManifest.NextPane {
         switch viewController {

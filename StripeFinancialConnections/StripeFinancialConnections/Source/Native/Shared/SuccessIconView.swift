@@ -51,7 +51,6 @@ final class SuccessIconView: UIView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct SuccessIconViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> SuccessIconView {
@@ -61,7 +60,6 @@ private struct SuccessIconViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: SuccessIconView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct SuccessIconView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

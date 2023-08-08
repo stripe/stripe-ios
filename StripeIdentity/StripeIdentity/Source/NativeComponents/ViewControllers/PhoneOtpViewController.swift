@@ -36,6 +36,8 @@ class PhoneOtpViewController: IdentityFlowViewController {
                             return .loading
                         case .RequestingCannotVerify:
                             return .disabled
+                        case .none:
+                            return .disabled
                         }
                     }(),
                     isPrimary: false,
@@ -57,6 +59,8 @@ class PhoneOtpViewController: IdentityFlowViewController {
                             return .disabled
                         case .RequestingCannotVerify:
                             return .loading
+                        case .none:
+                            return .disabled
                         }
                     }(),
                     isPrimary: false,

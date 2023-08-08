@@ -9,7 +9,6 @@
 import Stripe
 import SwiftUI
 
-@available(iOS 13.0.0, *)
 struct SwiftUICardFormView: View {
 
     @State private var paymentMethodParams: STPPaymentMethodParams = STPPaymentMethodParams()
@@ -30,7 +29,6 @@ struct SwiftUICardFormView: View {
     }
 }
 
-@available(iOS 13.0.0, *)
 struct SwiftUICardFormView_Previews: PreviewProvider {
     static var previews: some View {
         SwiftUICardFormView()

@@ -109,7 +109,6 @@ private func CreateHorizontalStackView(arrangedSubviews: [UIView]) -> UIStackVie
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct LinkAccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
 
     let institutionImageUrl: String?
@@ -145,7 +144,6 @@ private struct LinkAccountPickerRowViewUIViewRepresentable: UIViewRepresentable 
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct LinkAccountPickerRowView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {

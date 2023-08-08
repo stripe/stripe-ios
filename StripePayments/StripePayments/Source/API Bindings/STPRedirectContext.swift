@@ -74,8 +74,6 @@ public typealias STPRedirectContextPaymentIntentCompletionBlock = (String, Error
 /// @note You must retain this instance for the duration of the redirect flow.
 /// This class dismisses any presented view controller upon deallocation.
 /// See https://stripe.com/docs/sources/best-practices
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
     UIViewControllerTransitioningDelegate, STPSafariViewControllerDismissalDelegate
 {
@@ -96,6 +94,15 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
     @objc internal var completion: STPErrorBlock
     /// Error parameter for completion block.
     @objc internal var completionError: Error?
+    /// Hook for testing when unsubscribeFromNotifications is called
+    var _unsubscribeFromNotificationsCalled: Bool = false
+    /// Hook for testing when dismissPresentedViewController is called
+    var _dismissPresentedViewControllerCalled: Bool = false
+    /// Hook for testing when dismissPresentedViewController is called
+    var _handleRedirectCompletionWithErrorHook: ((Bool) -> Void)?
+    /// Hook for testing when startSafariAppRedirectFlowCalled is called
+    var _startSafariAppRedirectFlowCalled: Bool = false
+    var application: UIApplicationProtocol = UIApplication.shared
 
     /// Initializer for context from an `STPSource`.
     /// @note You must ensure that the returnURL set up in the created source
@@ -285,13 +292,14 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
     /// `STPRedirectContextStateNotStarted` state.
     @objc
     public func startSafariAppRedirectFlow() {
+        _startSafariAppRedirectFlowCalled = true
         guard let redirectURL = redirectURL else {
             return
         }
         if state == .notStarted {
             state = .inProgress
             subscribeToURLAndAppActiveNotifications()
-            UIApplication.shared.open(redirectURL, options: [:], completionHandler: nil)
+            application._open(redirectURL, options: [:], completionHandler: nil)
         }
     }
 
@@ -429,9 +437,8 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
             return
         }
 
-        let application = UIApplication.shared
         if let nativeURL = nativeURL {
-            application.open(
+            application._open(
                 nativeURL,
                 options: [:],
                 completionHandler: { success in
@@ -488,6 +495,7 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
         if shouldDismissViewController {
             dismissPresentedViewController()
         }
+        _handleRedirectCompletionWithErrorHook?(shouldDismissViewController)
     }
 
     func subscribeToURLNotifications() {
@@ -530,6 +538,7 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
         STPURLCallbackHandler.shared().unregisterListener(self)
         subscribedToURLNotifications = false
         subscribedToAppActiveNotifications = false
+        _unsubscribeFromNotificationsCalled = true
     }
 
     @objc dynamic func dismissPresentedViewController() {
@@ -539,6 +548,7 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
             )
             safariVC = nil
         }
+        _dismissPresentedViewControllerCalled = true
     }
 
     func isSafariVCPresented() -> Bool {
@@ -562,8 +572,6 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 /// :nodoc:
 @_spi(STP) extension STPRedirectContext: STPURLCallbackListener {
     /// :nodoc:
@@ -598,5 +606,15 @@ class STPSafariViewControllerPresentationController: UIPresentationController {
             }
         }
         return super.dismissalTransitionDidEnd(completed)
+    }
+}
+
+protocol UIApplicationProtocol {
+    func _open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey: Any], completionHandler: ((Bool) -> Void)?)
+}
+
+extension UIApplication: UIApplicationProtocol {
+    func _open(_ url: URL, options: [OpenExternalURLOptionsKey: Any], completionHandler completion: ((Bool) -> Void)?) {
+        open(url, options: options, completionHandler: completion)
     }
 }

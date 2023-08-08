@@ -22,12 +22,23 @@ extension PaymentSheet {
         case saved(paymentMethod: STPPaymentMethod)
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
+
+        var paymentMethodTypeAnalyticsValue: String? {
+            switch self {
+            case .applePay:
+                return "apple_pay"
+            case .saved(paymentMethod: let paymentMethod):
+                return paymentMethod.type.identifier
+            case .new(confirmParams: let confirmParams):
+                return confirmParams.paymentMethodType.identifier
+            case .link:
+                return PaymentSheet.PaymentMethodType.link.identifier
+            }
+        }
     }
 
     /// A class that presents the individual steps of a payment flow
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    public class FlowController {
+        public class FlowController {
         // MARK: - Public properties
         /// Contains details about a payment method that can be displayed to the customer
         public struct PaymentOptionDisplayData {
@@ -306,7 +317,8 @@ extension PaymentSheet {
                     linkSessionType: intent.linkPopupWebviewOption,
                     currency: intent.currency,
                     intentConfig: intent.intentConfig,
-                    deferredIntentConfirmationType: deferredIntentConfirmationType
+                    deferredIntentConfirmationType: deferredIntentConfirmationType,
+                    paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue
                 )
 
                 if case .completed = result, case .link = paymentOption {
@@ -384,14 +396,7 @@ extension PaymentSheet {
                 didCancelNative3DS2: didCancelNative3DS2 ?? { } // TODO(MOBILESDK-864): Refactor this out.
             )
 
-            // Workaround to silence a warning in the Catalyst target
-            #if targetEnvironment(macCatalyst)
             configuration.style.configure(sheet)
-            #else
-            if #available(iOS 13.0, *) {
-                configuration.style.configure(sheet)
-            }
-            #endif
             return sheet
         }
 
@@ -411,14 +416,7 @@ extension PaymentSheet {
                 isApplePayEnabled: isApplePayEnabled,
                 isLinkEnabled: isLinkEnabled
             )
-            // Workaround to silence a warning in the Catalyst target
-#if targetEnvironment(macCatalyst)
             configuration.style.configure(vc)
-#else
-            if #available(iOS 13.0, *) {
-                configuration.style.configure(vc)
-            }
-#endif
             return vc
         }
     }
@@ -426,8 +424,6 @@ extension PaymentSheet {
 }
 
 // MARK: - PaymentSheetFlowControllerViewControllerDelegate
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerDelegate {
     func paymentSheetFlowControllerViewControllerShouldClose(
         _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
@@ -447,8 +443,6 @@ extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerD
 
 // MARK: - STPAnalyticsProtocol
 /// :nodoc:
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 @_spi(STP) extension PaymentSheet.FlowController: STPAnalyticsProtocol {
     @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
 }
