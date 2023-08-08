@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol LinkAccountPickerViewControllerDelegate: AnyObject {
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
@@ -34,7 +33,6 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class LinkAccountPickerViewController: UIViewController {
 
     private let dataSource: LinkAccountPickerDataSource
@@ -205,7 +203,6 @@ final class LinkAccountPickerViewController: UIViewController {
 
 // MARK: - LinkAccountPickerBodyViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
     func linkAccountPickerBodyView(
         _ view: LinkAccountPickerBodyView,
@@ -227,7 +224,6 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
 
 // MARK: - LinkAccountPickerDataSourceDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension LinkAccountPickerViewController: LinkAccountPickerDataSourceDelegate {
 
     func linkAccountPickerDataSource(

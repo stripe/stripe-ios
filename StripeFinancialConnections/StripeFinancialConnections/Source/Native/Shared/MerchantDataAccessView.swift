@@ -11,7 +11,6 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class MerchantDataAccessView: HitTestView {
 
     init(
@@ -179,7 +178,6 @@ private func LocalizedStringFromPermission(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
 
     let isStripeDirect: Bool
@@ -202,7 +200,6 @@ private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: MerchantDataAccessView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct MerchantDataAccessView_Previews: PreviewProvider {
     static var previews: some View {
         ScrollView {

@@ -9,7 +9,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class DebugViewController: IdentityFlowViewController {
     private let debugView = DebugView()
 
@@ -81,7 +80,6 @@ extension StripeUICore.Button {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension DebugViewController: DebugViewDelegate {
     func debugOptionsDidChange() {
         self.updateUI()

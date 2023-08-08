@@ -44,7 +44,7 @@ final class USBankAccountPaymentMethodElement: Element {
     }
 
     private static let links: [String: URL] = [
-        "terms": URL(string: "https://stripe.com/legal/ach-payments/authorization")!
+        "terms": URL(string: "https://stripe.com/legal/ach-payments/authorization")!,
     ]
 
     static let ContinueMandateText: String = STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
@@ -149,6 +149,9 @@ final class USBankAccountPaymentMethodElement: Element {
             formElement.setElements(linkedAccountElements, hidden: false, animated: true)
         }
         self.delegate?.didUpdate(element: self)
+    }
+    func getLinkedBank() -> LinkedBank? {
+        return linkedBank
     }
 
     class func attributedMandateText(for linkedBank: LinkedBank?,

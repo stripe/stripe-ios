@@ -156,6 +156,14 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         updateUI()
     }
 
+    func shouldPreventDismissal() -> Bool {
+        guard let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement else {
+            return false
+        }
+        let customerHasLinkedBankAccount = usBankAccountPaymentMethodElement.getLinkedBank() != nil
+        return customerHasLinkedBankAccount
+    }
+
     private func updateUI() {
         // Swap out the input view if necessary
         if paymentMethodFormElement.view !== paymentMethodDetailsView {

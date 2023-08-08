@@ -11,7 +11,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol PartnerAuthViewControllerDelegate: AnyObject {
     func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController)
@@ -23,7 +22,6 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class PartnerAuthViewController: UIViewController {
 
     /**
@@ -740,7 +738,6 @@ final class PartnerAuthViewController: UIViewController {
 
 // MARK: - STPURLCallbackListener
 
-@available(iOSApplicationExtension, unavailable)
 extension PartnerAuthViewController: STPURLCallbackListener {
 
     private func handleAuthSessionCompletionFromNativeRedirect(_ url: URL) {
@@ -782,7 +779,6 @@ extension PartnerAuthViewController: STPURLCallbackListener {
 
 // MARK: - Authentication restart helpers
 
-@available(iOSApplicationExtension, unavailable)
 private extension PartnerAuthViewController {
 
     private func subscribeToURLAndAppActiveNotifications() {
@@ -882,8 +878,6 @@ private extension PartnerAuthViewController {
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
 /// :nodoc:
-@available(iOS 13, *)
-@available(iOSApplicationExtension, unavailable)
 extension PartnerAuthViewController: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {

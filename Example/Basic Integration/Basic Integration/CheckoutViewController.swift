@@ -168,14 +168,8 @@ class CheckoutViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .white
-        self.tableView.backgroundColor = .white
-        #if canImport(CryptoKit)
-            if #available(iOS 13.0, *) {
-                self.view.backgroundColor = .systemBackground
-                self.tableView.backgroundColor = .systemBackground
-            }
-        #endif
+        self.view.backgroundColor = .systemBackground
+        self.tableView.backgroundColor = .systemBackground
         self.tableView.separatorStyle = .none
         self.tableView.rowHeight = 84
         self.tableView.register(EmojiCheckoutCell.self, forCellReuseIdentifier: "Cell")
@@ -188,13 +182,7 @@ class CheckoutViewController: UIViewController {
         // Footer
         let makeSeparatorView: () -> UIView = {
             let view = UIView()
-            view.backgroundColor = UIColor(
-                red: 238 / 255, green: 238 / 255, blue: 238 / 255, alpha: 1)
-            #if canImport(CryptoKit)
-                if #available(iOS 13.0, *) {
-                    view.backgroundColor = UIColor.systemGray5
-                }
-            #endif
+            view.backgroundColor = UIColor.systemGray5
             view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 view.heightAnchor.constraint(equalToConstant: 1)

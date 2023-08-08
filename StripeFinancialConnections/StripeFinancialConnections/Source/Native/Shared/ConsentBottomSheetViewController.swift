@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class ConsentBottomSheetViewController: UIViewController {
 
     private let model: ConsentBottomSheetModel
@@ -111,7 +110,6 @@ final class ConsentBottomSheetViewController: UIViewController {
 
 // MARK: - <UIGestureRecognizerDelegate>
 
-@available(iOSApplicationExtension, unavailable)
 extension ConsentBottomSheetViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -122,7 +120,6 @@ extension ConsentBottomSheetViewController: UIGestureRecognizerDelegate {
 
 // MARK: - Presenting
 
-@available(iOSApplicationExtension, unavailable)
 extension ConsentBottomSheetViewController {
 
     static func present(

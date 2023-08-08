@@ -6,3 +6,4 @@
 #import "STPTestingAPIClient.h"
 #import "STPTestUtils.h"
 #import "STPFixtures.h"
+#import "STPMocks.h"

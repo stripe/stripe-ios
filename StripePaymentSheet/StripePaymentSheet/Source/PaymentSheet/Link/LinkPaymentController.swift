@@ -14,8 +14,6 @@ import UIKit
 
 /// `LinkPaymentController` encapsulates the Link payment flow, allowing you to let your customers pay with their Link account.
 /// This feature is currently invite-only. To accept payments, [use the Mobile Payment Element.](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet)
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 @_spi(LinkOnly) public class LinkPaymentController: NSObject {
     private let mode: PaymentSheet.InitializationMode
     private let configuration: PaymentSheet.Configuration
@@ -355,8 +353,6 @@ import UIKit
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 @_spi(LinkOnly)
 extension LinkPaymentController: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {

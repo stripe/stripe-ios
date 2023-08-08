@@ -78,7 +78,6 @@ class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
         verify(vc.view)
     }
 
-    @available(iOS 13.0, *)
     func testAutoCompleteViewController_darkMode() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false

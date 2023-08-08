@@ -61,12 +61,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     /// The text color to be used when entering valid text. Default is `.label`.
-    @objc open var textColor: UIColor = {
-        if #available(iOS 13.0, *) {
-            return .label
-        }
-        return .black
-    }()
+    @objc open var textColor: UIColor = .label
     {
         didSet {
             for field in allFields {
@@ -78,12 +73,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// The text color to be used when the user has entered invalid information,
     /// such as an invalid card number.
     /// Default is `.red`.
-    @objc open var textErrorColor: UIColor = {
-        if #available(iOS 13.0, *) {
-            return .systemRed
-        }
-        return .red
-    }()
+    @objc open var textErrorColor: UIColor = .systemRed
     {
         didSet {
             for field in allFields {
@@ -863,12 +853,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         numberToWidthCache = [:]
     }
 
-    static let placeholderGrayColor: UIColor = {
-        if #available(iOS 13.0, *) {
-            return .systemGray2
-        }
-        return .lightGray
-    }()
+    static let placeholderGrayColor: UIColor = .systemGray2
 
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -883,10 +868,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// :nodoc:
     @objc open override var backgroundColor: UIColor? {
         get {
-            var defaultColor = UIColor.white
-            if #available(iOS 13.0, *) {
-                defaultColor = UIColor.systemBackground
-            }
+            let defaultColor = UIColor.systemBackground
 
             return super.backgroundColor ?? defaultColor
         }
@@ -1387,10 +1369,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                         height: fieldsHeight
                     )
                 )
-                maskView.backgroundColor = UIColor.black
-                if #available(iOS 13.0, *) {
-                    maskView.backgroundColor = UIColor.label
-                }
+                maskView.backgroundColor = UIColor.label
                 maskView.isOpaque = true
                 maskView.isUserInteractionEnabled = false
                 UIView.performWithoutAnimation({

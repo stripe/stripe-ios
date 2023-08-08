@@ -9,7 +9,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 class ContinueStateView: UIView {
 
     // MARK: - Properties
@@ -63,7 +62,6 @@ class ContinueStateView: UIView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateFooterView(
     view: ContinueStateView
 ) -> UIView {

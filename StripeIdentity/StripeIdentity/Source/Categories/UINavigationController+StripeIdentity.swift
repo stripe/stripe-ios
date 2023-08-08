@@ -11,29 +11,19 @@ import UIKit
 
 extension UINavigationController {
     func configureBorderlessNavigationBar() {
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.copyButtonAppearance(from: UINavigationBar.appearance().standardAppearance)
-            appearance.configureWithTransparentBackground()
+        let appearance = UINavigationBarAppearance()
+        appearance.copyButtonAppearance(from: UINavigationBar.appearance().standardAppearance)
+        appearance.configureWithTransparentBackground()
 
-            navigationBar.standardAppearance = appearance
-            navigationBar.scrollEdgeAppearance = appearance
-        } else {
-            navigationBar.setBackgroundImage(UIImage(), for: .default)
-            navigationBar.shadowImage = UIImage()
-            navigationBar.backgroundColor = .clear
-        }
+        navigationBar.standardAppearance = appearance
+        navigationBar.scrollEdgeAppearance = appearance
     }
 
     func setNavigationBarBackgroundColor(with backgroundColor: UIColor?) {
         let bgColor = backgroundColor ?? .systemBackground
 
-        if #available(iOS 13.0, *) {
-            navigationBar.standardAppearance.backgroundColor = bgColor
-            navigationBar.scrollEdgeAppearance?.backgroundColor = bgColor
-        } else {
-            navigationBar.backgroundColor = bgColor
-        }
+        navigationBar.standardAppearance.backgroundColor = bgColor
+        navigationBar.scrollEdgeAppearance?.backgroundColor = bgColor
     }
 }
 

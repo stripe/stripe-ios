@@ -19,7 +19,7 @@ enum STPCardScannerError: Int {
     case cameraNotAvailable
 }
 
-@available(iOS 13, macCatalyst 14, *)
+@available(macCatalyst 14.0, *)
 @objc protocol STPCardScannerDelegate: NSObjectProtocol {
     @objc(cardScanner:didFinishWithCardParams:error:) func cardScanner(
         _ scanner: STPCardScanner,
@@ -28,7 +28,7 @@ enum STPCardScannerError: Int {
     )
 }
 
-@available(iOS 13, macCatalyst 14, *)
+@available(macCatalyst 14.0, *)
 @objc(STPCardScanner_legacy)
 class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
     STPCardScanningProtocol
@@ -511,8 +511,8 @@ private let kSTPCardScanningMaxValidScans = 3
 private let kSTPCardScanningTimeout: TimeInterval = 1.0
 let STPCardScannerErrorDomain = "STPCardScannerErrorDomain"
 
-@available(iOS 13, macCatalyst 14, *)
 /// :nodoc:
+@available(macCatalyst 14.0, *)
 extension STPCardScanner: STPAnalyticsProtocol {
     static var stp_analyticsIdentifier = "STPCardScanner"
 }

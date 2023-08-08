@@ -12,8 +12,6 @@
 import UIKit
 
 /// Standalone Link controller
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 final class PayWithLinkController {
 
     typealias CompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
@@ -61,8 +59,6 @@ final class PayWithLinkController {
 
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension PayWithLinkController: PayWithLinkWebControllerDelegate {
 
     func payWithLinkWebControllerDidComplete(
