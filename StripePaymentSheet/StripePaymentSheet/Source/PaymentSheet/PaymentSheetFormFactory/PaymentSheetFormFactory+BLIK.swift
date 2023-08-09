@@ -40,7 +40,8 @@ extension PaymentSheetFormFactory {
 
     private func makeCodeField() -> PaymentMethodElementWrapper<TextFieldElement> {
         return PaymentMethodElementWrapper(TextFieldElement.makeBlikCode(theme: theme)) { textField, params in
-            _ = STPConfirmBLIKOptions(code: textField.text)
+            let blikOptions = STPConfirmBLIKOptions(code: textField.text)
+            params.confirmPaymentMethodOptions.blikOptions = blikOptions
             return params
         }
     }
