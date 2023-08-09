@@ -40,7 +40,7 @@ struct LinkURLParams: Encodable {
 }
 
 class LinkURLGenerator {
-    static func linkParams(configuration: PaymentSheet.Configuration, intent: Intent) async throws -> LinkURLParams {
+    static func linkParams(configuration: PaymentSheet.Configuration, intent: Intent) throws -> LinkURLParams {
         guard let publishableKey = configuration.apiClient.publishableKey ?? STPAPIClient.shared.publishableKey else {
             throw LinkURLGeneratorError.noPublishableKey
         }
@@ -56,14 +56,6 @@ class LinkURLGenerator {
         if customerEmail == nil,
            let defaultBillingEmail = configuration.defaultBillingDetails.email {
             customerEmail = defaultBillingEmail
-        }
-
-        if customerEmail == nil,
-           let customerID = configuration.customer?.id,
-           let ephemeralKey = configuration.customer?.ephemeralKeySecret,
-           let customer = try? await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
-        {
-            customerEmail = customer.email
         }
 
         let merchantInfo = LinkURLParams.MerchantInfo(businessName: configuration.merchantDisplayName, country: merchantCountryCode)
@@ -96,7 +88,7 @@ class LinkURLGenerator {
     }
 
     static func url(configuration: PaymentSheet.Configuration, intent: Intent) async throws -> URL {
-        let params = try await Self.linkParams(configuration: configuration, intent: intent)
+        let params = try Self.linkParams(configuration: configuration, intent: intent)
         return try url(params: params)
     }
 }
