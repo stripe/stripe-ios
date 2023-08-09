@@ -29,8 +29,7 @@ class PollingViewModel {
         case .UPI:
             return .Localized.open_upi_app
         default:
-            // just show polling countdown
-            return "%@"
+            fatalError("Polling CTA has not been implemented for \(paymentMethodType)")
         }
     }
 
@@ -39,8 +38,7 @@ class PollingViewModel {
         case .UPI:
             return Date().addingTimeInterval(60 * 5) // 5 minutes
         default:
-            // some arbitrarily long deadline
-            return Date().addingTimeInterval(60 * 5 * 3) // 15 minutes
+            fatalError("Polling deadline has not been implemented for \(paymentMethodType)")
         }
     }
 }
