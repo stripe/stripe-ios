@@ -1271,12 +1271,14 @@ public class STPPaymentHandler: NSObject {
             // The customer must authorize the transaction in their banking app within 1 minute
             // The merchant integration should spin and poll their backend or Stripe to determine success
             guard
-                let currentAction = self.currentAction
-                    as? STPPaymentHandlerPaymentIntentActionParams
+                let presentingVC = currentAction.authenticationContext
+                    as? PaymentSheetAuthenticationContext
             else {
-                fatalError()
+                return
             }
-            currentAction.complete(with: .succeeded, error: nil)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .blik)
+            
+//            currentAction.complete(with: .succeeded, error: nil)
 
         case .verifyWithMicrodeposits:
             // The customer must authorize after the microdeposits appear in their bank account
