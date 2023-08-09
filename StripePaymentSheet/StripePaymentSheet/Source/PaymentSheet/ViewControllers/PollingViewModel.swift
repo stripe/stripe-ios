@@ -15,6 +15,7 @@ import UIKit
 class PollingViewModel {
 
     let paymentMethodType: STPPaymentMethodType
+    let supportedPaymentMethods: [STPPaymentMethodType] = [.UPI]
     lazy var CTA: String = {
         switch paymentMethodType {
         case .UPI:
@@ -33,6 +34,9 @@ class PollingViewModel {
     }()
 
     init(paymentMethodType: STPPaymentMethodType) {
+        guard supportedPaymentMethods.contains(paymentMethodType) else {
+               fatalError("Unsupported payment type \(paymentMethodType) in PollingViewModel")
+        }
         self.paymentMethodType = paymentMethodType
     }
 }
