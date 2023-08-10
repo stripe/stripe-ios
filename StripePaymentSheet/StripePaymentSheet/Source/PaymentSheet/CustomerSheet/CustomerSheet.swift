@@ -60,6 +60,7 @@ internal enum InternalCustomerSheetResult {
     /// Use a StripeCustomerAdapter, or build your own.
     public init(configuration: CustomerSheet.Configuration,
                 customer: CustomerAdapter) {
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: CustomerSheet.self)
         self.configuration = configuration
         self.customerAdapter = customer
     }
@@ -213,6 +214,10 @@ extension CustomerSheet: LoadingViewControllerDelegate {
             self.completion?()
         }
     }
+}
+
+@_spi(PrivateBetaCustomerSheet) extension CustomerSheet: STPAnalyticsProtocol {
+    @_spi(PrivateBetaCustomerSheet) public static var stp_analyticsIdentifier = "CustomerSheet"
 }
 
 @_spi(PrivateBetaCustomerSheet) extension StripeCustomerAdapter {

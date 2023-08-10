@@ -56,7 +56,7 @@ class LinkURLGeneratorTests: XCTestCase {
         }
         config.apiClient.publishableKey = "pk_123"
         let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
-        let params = try! await LinkURLGenerator.linkParams(configuration: config, intent: intent)
+        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent)
 
         let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
                                            publishableKey: config.apiClient.publishableKey!,

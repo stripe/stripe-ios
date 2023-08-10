@@ -23,10 +23,10 @@ class PollingViewController: UIViewController {
 
     // MARK: State
 
-    private let deadline = Date().addingTimeInterval(60 * 5) // in 5 minutes
     private var oneSecondTimer: Timer?
     private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
+    private let viewModel: PollingViewModel
 
     private lazy var intentPoller: IntentStatusPoller = {
         guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
@@ -40,7 +40,7 @@ class PollingViewController: UIViewController {
     }()
 
     private var timeRemaining: TimeInterval {
-        return Date().distance(to: deadline)
+        return Date().distance(to: viewModel.deadline)
     }
 
     private var dateFormatter: DateComponentsFormatter {
@@ -55,16 +55,14 @@ class PollingViewController: UIViewController {
     }
 
     private var instructionLabelAttributedText: NSAttributedString {
-        let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
-        let attrText = NSMutableAttributedString(string: String(
-            format: .Localized.open_upi_app,
-            timeRemaining
-        ))
-
-        attrText.addAttributes([.foregroundColor: appearance.colors.primary],
-                               range: NSString(string: attrText.string).range(of: timeRemaining))
-
-        return attrText
+               let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
+               let attrText = NSMutableAttributedString(string: String(
+                format: viewModel.CTA,
+                   timeRemaining
+               ))
+               attrText.addAttributes([.foregroundColor: appearance.colors.primary],
+                                      range: NSString(string: attrText.string).range(of: timeRemaining))
+               return attrText
     }
 
     private var pollingState: PollingState = .polling {
@@ -162,9 +160,11 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerActionParams, appearance: PaymentSheet.Appearance) {
+    init(currentAction: STPPaymentHandlerActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance) {
         self.currentAction = currentAction
         self.appearance = appearance
+        self.viewModel = viewModel
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -279,9 +279,9 @@ class PollingViewController: UIViewController {
         }
     }
 
-    // Called after the 5 minute timer expires to wrap up polling
+    // Called after the timer expires to wrap up polling
     private func finishPolling() {
-        // Do one last force poll after 5 min
+        // Do one last force poll after deadline
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self = self else { return }
             self.intentPoller.forcePoll()
