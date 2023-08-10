@@ -32,6 +32,6 @@ class STPBlikCodeValidatorTest: XCTestCase {
     func testBlikCode_nonNumeric() {
         XCTAssertFalse(STPBlikCodeValidator.stringIsValidBlikCode("12a456"))
         XCTAssertFalse(STPBlikCodeValidator.stringIsValidBlikCode("abcdef"))
-        XCTAssertFalse(STPBlikCodeValidator.stringIsValidBlikCode("stripe.comÓ"))
+        XCTAssertFalse(STPBlikCodeValidator.stringIsValidBlikCode("stripe.com"))
     }
 }
