@@ -87,6 +87,10 @@ import UIKit
         return publishableKey?.hasPrefix("uk_") ?? false
     }
 
+    /// Determines the `Stripe-Livemode` header value when the publishable key is a user key
+    /// :nodoc:
+    @_spi(StripeAppsOnly) public var userKeyLiveMode = true
+
     // MARK: Initializers
     override public init() {
         sourcePollers = [:]
@@ -214,8 +218,7 @@ import UIKit
         var headers = ["Authorization": "Bearer " + authorizationBearer]
 
         if publishableKeyIsUserKey {
-            let liveMode = ProcessInfo.processInfo.environment["Stripe-Livemode"] != "false"
-            headers["Stripe-Livemode"] = liveMode ? "true" : "false"
+            headers["Stripe-Livemode"] = userKeyLiveMode ? "true" : "false"
         }
         return headers
     }
@@ -224,7 +227,7 @@ import UIKit
         guard let publishableKey = publishableKey, !publishableKey.isEmpty else {
             return false
         }
-        return publishableKey.lowercased().hasPrefix("pk_test")
+        return publishableKey.lowercased().hasPrefix("pk_test") || (publishableKeyIsUserKey && !userKeyLiveMode)
     }
 }
 
