@@ -50,9 +50,8 @@ final class LinkAccountPickerBodyView: UIView {
         verticalStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         accountTuples.forEach { accountTuple in
-            let accountNeedsRepair = false // (accountTuple.accountPickerAccount.nextPaneOnSelection == .bankAuthRepair)
             let accountRowView = LinkAccountPickerRowView(
-                isDisabled: !accountTuple.accountPickerAccount.allowSelection || accountNeedsRepair,
+                isDisabled: !accountTuple.accountPickerAccount.allowSelection,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.linkAccountPickerBodyView(
@@ -61,15 +60,16 @@ final class LinkAccountPickerBodyView: UIView {
                     )
                 }
             )
-            let rowTitles = AccountPickerHelpers.rowTitles(forAccount: accountTuple.partnerAccount)
+            let rowTitles = AccountPickerHelpers.rowTitles(
+                forAccount: accountTuple.partnerAccount,
+                captionWillHideAccountNumbers: accountTuple.accountPickerAccount.caption != nil
+            )
             accountRowView.configure(
                 institutionImageUrl: accountTuple.partnerAccount.institution?.icon?.default,
                 leadingTitle: rowTitles.leadingTitle,
                 trailingTitle: rowTitles.trailingTitle,
                 subtitle: {
-                    if accountNeedsRepair {
-                        return STPLocalizedString("Disconnected", "A subtitle on a button that represents a bank account. It explains to the user that this bank account is disconnected and needs to be re-added.")
-                    } else if let caption = accountTuple.accountPickerAccount.caption {
+                    if let caption = accountTuple.accountPickerAccount.caption {
                         return caption
                     } else {
                         return AccountPickerHelpers.rowSubtitle(

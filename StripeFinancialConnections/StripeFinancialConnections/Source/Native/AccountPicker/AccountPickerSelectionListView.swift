@@ -101,7 +101,7 @@ final class AccountPickerSelectionListView: UIView {
                     self.delegate?.accountPickerSelectionListView(self, didSelectAccounts: selectedAccounts)
                 }
             )
-            let rowTitles = AccountPickerHelpers.rowTitles(forAccount: account)
+            let rowTitles = AccountPickerHelpers.rowTitles(forAccount: account, captionWillHideAccountNumbers: false)
             accountCellView.setLeadingTitle(
                 rowTitles.leadingTitle,
                 trailingTitle: rowTitles.trailingTitle,
@@ -121,7 +121,7 @@ final class AccountPickerSelectionListView: UIView {
                 }
             )
             accountCellView.setLeadingTitle(
-                AccountPickerHelpers.rowTitles(forAccount: disabledAccount).leadingTitle,
+                AccountPickerHelpers.rowTitles(forAccount: disabledAccount, captionWillHideAccountNumbers: false).leadingTitle,
                 trailingTitle: "••••\(disabledAccount.displayableAccountNumbers ?? "")",
                 subtitle: disabledAccount.allowSelectionMessage,
                 isSelected: false
