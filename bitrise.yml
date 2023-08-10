@@ -253,10 +253,6 @@ workflows:
         inputs:
         - lane: preflight
         title: fastlane preflight
-    - fastlane@3:
-        inputs:
-        - lane: threeds2_tests
-        title: fastlane threeds2_tests
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -329,6 +325,10 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: StripeLinkCore
+    - fastlane@3:
+        inputs:
+        - lane: threeds2_tests
+        title: fastlane threeds2_tests
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
@@ -382,6 +382,9 @@ workflows:
         machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
+    - xcode-start-simulator@0:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
     - fastlane@3:
         inputs:
         - lane: installation_cocoapods_without_frameworks_objc
