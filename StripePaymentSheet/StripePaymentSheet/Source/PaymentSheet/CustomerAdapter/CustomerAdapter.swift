@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 
@@ -104,6 +105,7 @@ import UIKit
     public init(customerEphemeralKeyProvider: @escaping () async throws -> CustomerEphemeralKey,
                 setupIntentClientSecretProvider: (() async throws -> String)? = nil,
                 apiClient: STPAPIClient = .shared) {
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: StripeCustomerAdapter.self)
         self.customerEphemeralKeyProvider = customerEphemeralKeyProvider
         self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
         self.apiClient = apiClient
@@ -195,6 +197,10 @@ import UIKit
         }
         return try await setupIntentClientSecretProvider()
     }
+}
+
+@_spi(PrivateBetaCustomerSheet) extension StripeCustomerAdapter: STPAnalyticsProtocol {
+    @_spi(PrivateBetaCustomerSheet) public static var stp_analyticsIdentifier = "StripeCustomerAdapter"
 }
 
 /// Stores the key we use in NSUserDefaults to save a dictionary of Customer id to their last selected payment method ID
