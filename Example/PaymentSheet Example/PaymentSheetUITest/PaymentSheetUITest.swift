@@ -676,7 +676,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay SGD 50.99"]
 
-        // Select Cash App
+        // Select GrabPay
         guard let grabPay = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "GrabPay")
         else {
             XCTFail()
