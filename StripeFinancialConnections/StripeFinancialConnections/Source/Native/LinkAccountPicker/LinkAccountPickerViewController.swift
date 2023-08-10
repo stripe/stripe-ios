@@ -166,7 +166,7 @@ final class LinkAccountPickerViewController: UIViewController {
         }
 
         let nextPane = selectedAccountTuple
-            .accountPickerAccount
+            .partnerAccount
             .nextPaneOnSelection
 
         // update data model with selected account
@@ -283,17 +283,17 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
         dataSource.updateSelectedAccount(selectedAccountTuple)
     }
 
-    func linkAccountPickerBodyView(
-        _ view: LinkAccountPickerBodyView,
-        selectedNewBankAccountAndRequestedNextPane nextPane: FinancialConnectionsSessionManifest.NextPane?
-    ) {
+    func linkAccountPickerBodyViewSelectedNewBankAccount(_ view: LinkAccountPickerBodyView) {
         dataSource
             .analyticsClient
             .log(
                 eventName: "click.new_account",
                 pane: .linkAccountPicker
             )
-        delegate?.linkAccountPickerViewController(self, didRequestNextPane: nextPane ?? .institutionPicker)
+        delegate?.linkAccountPickerViewController(
+            self,
+            didRequestNextPane: dataSource.nextPaneOnAddAccount ?? .institutionPicker
+        )
     }
 }
 

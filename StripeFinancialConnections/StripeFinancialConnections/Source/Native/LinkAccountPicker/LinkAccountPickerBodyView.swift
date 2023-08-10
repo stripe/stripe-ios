@@ -15,10 +15,7 @@ protocol LinkAccountPickerBodyViewDelegate: AnyObject {
         _ view: LinkAccountPickerBodyView,
         didSelectAccount selectedAccountTuple: FinancialConnectionsAccountTuple
     )
-    func linkAccountPickerBodyView(
-        _ view: LinkAccountPickerBodyView,
-        selectedNewBankAccountAndRequestedNextPane: FinancialConnectionsSessionManifest.NextPane?
-    )
+    func linkAccountPickerBodyViewSelectedNewBankAccount(_ view: LinkAccountPickerBodyView)
 }
 
 final class LinkAccountPickerBodyView: UIView {
@@ -92,10 +89,7 @@ final class LinkAccountPickerBodyView: UIView {
             imageUrl: addNewAccount.icon?.default,
             didSelect: { [weak self] in
                 guard let self = self else { return }
-                self.delegate?.linkAccountPickerBodyView(
-                    self,
-                    selectedNewBankAccountAndRequestedNextPane: self.addNewAccount.nextPane
-                )
+                self.delegate?.linkAccountPickerBodyViewSelectedNewBankAccount(self)
             }
         )
         verticalStackView.addArrangedSubview(newAccountRowView)
@@ -118,8 +112,7 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         caption: nil,
                         selectionCta: nil,
                         icon: nil,
-                        selectionCtaIcon: nil,
-                        nextPaneOnSelection: nil
+                        selectionCtaIcon: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
@@ -140,7 +133,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                                 default: "https://b.stripecdn.com/connections-statics-srv/assets/BrandIcon--stripe-4x.png"
                             ),
                             logo: nil
-                        )
+                        ),
+                        nextPaneOnSelection: .success
                     )
                 ),
                 (
@@ -152,8 +146,7 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         icon: FinancialConnectionsImage(
                             default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--warning-orange-3x.png"
                         ),
-                        selectionCtaIcon: nil,
-                        nextPaneOnSelection: nil
+                        selectionCtaIcon: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
@@ -166,7 +159,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         allowSelection: true,
                         allowSelectionMessage: nil,
                         status: "disabled",
-                        institution: nil
+                        institution: nil,
+                        nextPaneOnSelection: .success
                     )
                 ),
                 (
@@ -176,8 +170,7 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         caption: nil,
                         selectionCta: nil,
                         icon: nil,
-                        selectionCtaIcon: nil,
-                        nextPaneOnSelection: nil
+                        selectionCtaIcon: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
@@ -190,7 +183,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         allowSelection: true,
                         allowSelectionMessage: nil,
                         status: "disabled",
-                        institution: nil
+                        institution: nil,
+                        nextPaneOnSelection: .success
                     )
                 ),
             ],
@@ -198,8 +192,7 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                 body: "New bank account",
                 icon: FinancialConnectionsImage(
                     default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png"
-                ),
-                nextPane: .success
+                )
             )
         )
     }
