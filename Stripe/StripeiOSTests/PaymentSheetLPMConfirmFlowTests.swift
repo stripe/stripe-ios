@@ -100,6 +100,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             XCTAssertNotNil(form.getMandateElement())
         }
     }
+
+    func testGrabPayConfirmFlows() async throws {
+        // GrabPay has no input fields
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "SGD", paymentMethodType: .grabPay) { _ in
+
+        }
+    }
 }
 
 // MARK: - Helper methods
