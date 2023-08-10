@@ -15,7 +15,7 @@ import UIKit
 class PollingViewModel {
 
     let paymentMethodType: STPPaymentMethodType
-    let supportedPaymentMethods: [STPPaymentMethodType] = [.UPI]
+    let supportedPaymentMethods: [STPPaymentMethodType] = [.UPI, .blik]
     lazy var CTA: String = {
         switch paymentMethodType {
         case .UPI:
