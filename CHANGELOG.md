@@ -1,3 +1,7 @@
+## x.x.x 2023-xx-xx
+### All
+* Improved redirect UX when using Cash App Pay.
+
 ## 23.13.0 2023-08-07
 ### All
 * [Fixed] Fixed compatibility with Xcode 15 beta 3. visionOS is now supported in iPadOS compatibility mode.
