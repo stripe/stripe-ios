@@ -12,10 +12,6 @@
 
 "Approve payment" = "Ödemeyi onaylayın";
 
-"Are you sure you want to remove this card?" = "Bu kartı kaldırmak istediğinizden emin misiniz?";
-
-"Are you sure you want to remove this linked account?" = "Bu bağlı hesabı kaldırmak istediğinizden emin misiniz?";
-
 "Back" = "Geri";
 
 "Bank account" = "Banka hesabı";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Devam ettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Devam ettiğinizde, bu <terms>koşullar</terms>a uygun olarak ödemelere izin vermeyi kabul etmiş olursunuz.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Devam ederek %1$@ şirketinin bu ödeme ve gelecekteki ödemeler için Cash Uygulaması hesabınızı %2$@ şirketinin şartlarına uygun olarak borçlandırmasına izin vermiş olursunuz. Bu durum, izin iptal edilene kadar geçerli olur. İstediğiniz zaman Cash Uygulamasının Ayarlarından bu izni değiştirebilirsiniz.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link'e katılarak <terms>Hükümleri</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "İptal edip başka bir yöntemle ödeyin";
 
-"Change email" = "E-posta adresini değiştir";
-
 "Choose a payment method" = "Yeni bir ödeme yöntemi seçin";
 
 "Close card scanner" = "Kart tarayıcısını kapat";
 
-"Code sent" = "Kod gönderildi";
+"Confirm" = "Onayla";
 
 "Contact information" = "İletişim bilgileri";
-
-"Default" = "Varsayılan";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Adresi manuel olarak girin";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Ödemenizde varsayılan olarak Link'i kullanmak için %@ numaralı telefona gönderilen kodu girin";
-
-"Enter your verification code" = "Doğrulama kodunuzu girin";
-
-"For security, please re-enter your card’s security code." = "Güvenliğinizin sağlanması için lütfen kartınızın güvenlik kodunu tekrar girin.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Link'e katıl";
-
-"Log out of Link" = "Link'ten çıkış yap";
+"Manage your payment methods" = "Ödeme yöntemlerinizi yönetin";
 
 "Name on card" = "Karttaki isim";
-
-"Not %@?" = "%@ doğru değil mi?";
 
 "Open your UPI app to approve your payment within %@" = "Ödemenizi onaylamak için %@ içinde UPI uygulamanızı açın";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "%@ ile zaman içinde ödeyin";
 
-"Pay using" = "Ödeme seçeneği";
-
-"Pay with %@" = "%@ ile öde";
-
 "Pay with your bank account in just a few steps." = "Sadece birkaç adımda banka hesabınız ile ödeyin.";
 
-"Payment" = "Ödeme";
-
 "Payment failed" = "Ödeme başarısız oldu";
-
-"Payment methods" = "Ödeme yöntemleri";
 
 "Please go back and select another payment method" = "Lütfen geri gidip başka bir ödeme yöntemi seçin";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Kartı Kaldır";
 
-"Remove card" = "Kartı kaldır";
+"Save" = "Kaydet";
 
-"Remove linked account" = "Bağlı hesabı kaldır";
-
-"Resend code" = "Kodu tekrar gönder";
+"Save a new payment method" = "Yeni bir ödeme yöntemi kaydedin";
 
 "Save address" = "Adresi kaydet";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Bu kartı gelecekteki %@ ödemeleri için kaydedin";
 
-"Secure 1⁠-⁠click checkout" = "Tek tıklamayla güvenli ödeme";
-
 "Select your payment method" = "Ödeme yönteminizi seçin";
-
-"Set as default" = "Varsayılan olarak ayarla";
-
-"Set as default payment method" = "Varsayılan ödeme yöntemi olarak ayarla";
 
 "Set up" = "Ayarla";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Menüyü göster";
 
-"Sign in to your Link account" = "Link hesabınızda oturum açın";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe, 1-2 iş günü içinde hesabınıza 0,01 ABD doları yatıracaktır. Ardından, %@ ödemesini tamamlama talimatlarını içeren bir e-posta alacaksınız.";
-
-"Tap to close" = "Kapatmak için dokunun";
-
-"Tap to expand" = "Genişletmek için dokunun";
 
 "The IBAN you entered is incomplete." = "Girdiğiniz IBAN eksik.";
 
-"The provided verification code has expired." = "Sağlanan doğrulama kodunun süresi dolmuş.";
-
-"The provided verification code is incorrect." = "Sağlanan doğrulama kodu yanlış.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Bu kartın süresi dolmuş. Kart bilgileirnizi güncelleyin veya farklı bir ödeme yöntemi seçin.";
-
-"This is your default" = "Bu varsayılan ödeme yönteminizdir";
-
-"Too many attempts. Please try again in a few minutes." = "Çok fazla deneme yapıldı. Lütfen birkaç dakika içinde tekrar deneyin.";
-
-"Unavailable for this purchase" = "Bu satın alım için kullanılamaz";
-
 "Update card" = "Kartı güncelle";
-
-"Use your saved info to check out faster" = "Kayıtlı bilgilerinizi kullanarak daha hızlı ödeme yapabilirsiniz";
 
 "Your IBAN should start with a two-letter country code." = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
 

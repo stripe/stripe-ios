@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Tarikh lahir tampaknya tidak sah";
 
-"File Upload" = "Muat Naik Fail";
-
-"File upload" = "Muat naik fail";
-
 "Flip your driver's license over to the other side" = "Terbalikkan lesen memandu anda ke sebelah satu lagi";
 
 "Flip your identity card over to the other side" = "Terbalikkan kad pengenalan anda ke sebelah satu lagi";
@@ -127,6 +123,8 @@
 "Upload" = "Muat Naik";
 
 "Upload a Photo" = "Muat Naik Foto";
+
+"Upload your photo ID" = "Muat naik ID berfoto anda";
 
 "Uploading back driver's license photo" = "Foto bahagian belakang lesen memandu sedang dimuat naik";
 

@@ -12,10 +12,6 @@
 
 "Approve payment" = "Approve payment";
 
-"Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
-
-"Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
-
 "Back" = "Back";
 
 "Bank account" = "Bank account";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "By continuing, you agree to authorise payments pursuant to these <terms>terms</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Cancel and pay another way";
 
-"Change email" = "Change email";
-
 "Choose a payment method" = "Choose a payment method";
 
 "Close card scanner" = "Close card scanner";
 
-"Code sent" = "Code sent";
+"Confirm" = "Confirm";
 
 "Contact information" = "Contact information";
-
-"Default" = "Default";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Enter address manually";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Enter the code sent to %@ to use Link to pay by default.";
-
-"Enter your verification code" = "Enter your verification code";
-
-"For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Join Link";
-
-"Log out of Link" = "Log out of Link";
+"Manage your payment methods" = "Manage your payment methods";
 
 "Name on card" = "Name on card";
-
-"Not %@?" = "Not %@?";
 
 "Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Pay over time with %@";
 
-"Pay using" = "Pay using";
-
-"Pay with %@" = "Pay with %@";
-
 "Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
 
-"Payment" = "Payment";
-
 "Payment failed" = "Payment failed";
-
-"Payment methods" = "Payment methods";
 
 "Please go back and select another payment method" = "Please go back and select another payment method";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Remove Card";
 
-"Remove card" = "Remove card";
+"Save" = "Save";
 
-"Remove linked account" = "Remove linked account";
-
-"Resend code" = "Resend code";
+"Save a new payment method" = "Save a new payment method";
 
 "Save address" = "Save address";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
 
-"Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
-
 "Select your payment method" = "Select your payment method";
-
-"Set as default" = "Set as default";
-
-"Set as default payment method" = "Set as default payment method";
 
 "Set up" = "Set up";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Show menu";
 
-"Sign in to your Link account" = "Sign in to your Link account";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
-
-"Tap to close" = "Tap to close";
-
-"Tap to expand" = "Tap to expand";
 
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 
-"The provided verification code has expired." = "The provided verification code has expired.";
-
-"The provided verification code is incorrect." = "The provided verification code is incorrect.";
-
-"This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";
-
-"This is your default" = "This is your default";
-
-"Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
-
-"Unavailable for this purchase" = "Unavailable for this purchase";
-
 "Update card" = "Update card";
-
-"Use your saved info to check out faster" = "Use your saved info to check out faster";
 
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
 

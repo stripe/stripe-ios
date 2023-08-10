@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Mukhang hindi balido ang petsa ng kapanganakan";
 
-"File Upload" = "Pag-upload ng file";
-
-"File upload" = "Pag-upload ng file";
-
 "Flip your driver's license over to the other side" = "Baliktarin ang iyong lisensya sa pagmamaneho";
 
 "Flip your identity card over to the other side" = "Baliktarin ang iyong kard ng pagkakakilanlan";
@@ -127,6 +123,8 @@
 "Upload" = "I-upload";
 
 "Upload a Photo" = "Mag-upload ng Larawan";
+
+"Upload your photo ID" = "I-upload ang iyong photo ID";
 
 "Uploading back driver's license photo" = "Ina-upload ang larawan ng likod ng lisensya sa pagmamaneho";
 
