@@ -1300,7 +1300,7 @@ public class STPPaymentHandler: NSObject {
             }
 
             if let mobileAuthURL = authenticationAction.cashAppRedirectToApp?.mobileAuthURL {
-                _handleRedirect(to: mobileAuthURL, fallbackURL: nil, return: returnURL)
+                _handleRedirect(to: mobileAuthURL, fallbackURL: mobileAuthURL, return: returnURL)
             } else {
                 currentAction.complete(
                     with: STPPaymentHandlerActionStatus.failed,
