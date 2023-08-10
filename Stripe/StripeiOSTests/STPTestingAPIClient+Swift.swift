@@ -14,6 +14,7 @@ extension STPTestingAPIClient {
     func fetchPaymentIntent(
         types: [String],
         currency: String = "eur",
+        merchantCountry: String? = nil,
         paymentMethodID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:],
@@ -24,6 +25,7 @@ extension STPTestingAPIClient {
         params["currency"] = currency
         params["payment_method_types"] = types
         params["confirm"] = confirm
+        params["account"] = merchantCountry
         if let paymentMethodID = paymentMethodID {
             params["payment_method"] = paymentMethodID
         }
@@ -46,6 +48,7 @@ extension STPTestingAPIClient {
     func fetchPaymentIntent(
         types: [String],
         currency: String = "eur",
+        merchantCountry: String? = nil,
         paymentMethodID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:]
@@ -54,6 +57,7 @@ extension STPTestingAPIClient {
             fetchPaymentIntent(
                 types: types,
                 currency: currency,
+                merchantCountry: merchantCountry,
                 paymentMethodID: paymentMethodID,
                 confirm: confirm,
                 otherParams: otherParams
