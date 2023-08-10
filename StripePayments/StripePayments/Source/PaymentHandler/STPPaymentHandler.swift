@@ -1290,7 +1290,8 @@ public class STPPaymentHandler: NSObject {
             else {
                 return
             }
-            presentingVC.presentPollingVCForAction(currentAction)
+
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI)
         case .cashAppRedirectToApp:
             guard
                 let returnURL = URL(string: currentAction.returnURLString ?? "")
@@ -2278,7 +2279,7 @@ extension STPPaymentHandler {
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController)
-    func presentPollingVCForAction(_ action: STPPaymentHandlerActionParams)
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType)
 }
 
 @_spi(STP) public protocol FormSpecPaymentHandler {
