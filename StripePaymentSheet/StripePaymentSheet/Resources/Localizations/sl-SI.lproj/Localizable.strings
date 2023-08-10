@@ -12,10 +12,6 @@
 
 "Approve payment" = "Odobrite plačilo";
 
-"Are you sure you want to remove this card?" = "Ali res želite odstraniti to kartico?";
-
-"Are you sure you want to remove this linked account?" = "Ali res želite odstraniti ta povezan račun?";
-
 "Back" = "Nazaj";
 
 "Bank account" = "Bančni račun";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če nadaljujete postopek, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Če nadaljujete postopek, se strinjate z odobritvijo plačil v skladu s temi <terms>pogoji</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Če nadaljujete, pooblaščate podjetje %1$@, da bremeni vaš račun za Cash App s tem plačilom in prihodnjimi plačili v skladu s pogoji podjetja %2$@ do preklica tega pooblastila. To lahko kadar koli spremenite v nastavitvah aplikacije Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če se pridružite storitvi Link, se strinjate s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Prekliči ali plačaj na drugačen način";
 
-"Change email" = "Spremeni e-poštni naslov";
-
 "Choose a payment method" = "Izberite način plačila";
 
 "Close card scanner" = "Zapri optični bralnik kartic";
 
-"Code sent" = "Koda je bila poslana";
+"Confirm" = "Potrdi";
 
 "Contact information" = "Podatki za stik";
-
-"Default" = "Privzeto";
 
 "EPS Bank" = "Banka EPS";
 
 "Enter address manually" = "Naslov vnesite ročno";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Vnesite kodo, ki ste jo prejeli na številko %@, če želite uporabljati Link kot privzeti način plačila.";
-
-"Enter your verification code" = "Vnesite svojo potrditveno kodo";
-
-"For security, please re-enter your card’s security code." = "Iz varnostnih razlogov morate znova vnesti varnostno kodo svoje kartice.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Pridružite se storitvi Link";
-
-"Log out of Link" = "Odjava iz storitve Link";
+"Manage your payment methods" = "Upravljajte svoje načine plačila";
 
 "Name on card" = "Ime na kartici";
-
-"Not %@?" = "Niste %@?";
 
 "Open your UPI app to approve your payment within %@" = "Odprite aplikacijo UPI in odobrite plačilo v %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Uporabite %@ za poznejše plačilo";
 
-"Pay using" = "Za plačilo uporabite";
-
-"Pay with %@" = "Za plačilo uporabi %@";
-
 "Pay with your bank account in just a few steps." = "Z bančnim računom lahko plačate v le nekaj korakih.";
 
-"Payment" = "Plačilo";
-
 "Payment failed" = "Plačilo ni uspelo";
-
-"Payment methods" = "Načini plačila";
 
 "Please go back and select another payment method" = "Vrnite se in izberite drug način plačila";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Odstranite kartico";
 
-"Remove card" = "Odstrani kartico";
+"Save" = "Shrani";
 
-"Remove linked account" = "Odstrani povezan račun";
-
-"Resend code" = "Znova pošlji kodo";
+"Save a new payment method" = "Shranite nov način plačila";
 
 "Save address" = "Shrani naslov";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Shrani to kartico za prihodnja plačila trgovcu %@";
 
-"Secure 1⁠-⁠click checkout" = "Varna izvedba plačila z enim klikom";
-
 "Select your payment method" = "Izberite način plačila";
-
-"Set as default" = "Nastavi kot privzeti";
-
-"Set as default payment method" = "Nastavi kot privzeti način plačila";
 
 "Set up" = "Nastavi";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Pokaži meni";
 
-"Sign in to your Link account" = "Vpišite se v svoj račun za Link";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe bo v 1–2 delovnih dneh na vaš račun nakazal znesek v višini 0,01 USD. Nato boste prejeli e-poštno sporočilo z navodili za dokončanje plačila podjetju %@.";
-
-"Tap to close" = "Tapnite, da zaprete";
-
-"Tap to expand" = "Tapnite, da razširite";
 
 "The IBAN you entered is incomplete." = "Vnesena koda IBAN ni popolna.";
 
-"The provided verification code has expired." = "Navedena potrditvena koda je potekla.";
-
-"The provided verification code is incorrect." = "Navedena potrditvena koda ni pravilna.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Ta kartica je potekla. Posodobite podatke o kartici ali izberite drug način plačila.";
-
-"This is your default" = "To je vaš privzeti način plačila";
-
-"Too many attempts. Please try again in a few minutes." = "Preveč poskusov. Poskusite znova čez nekaj minut.";
-
-"Unavailable for this purchase" = "Ni na voljo za ta nakup";
-
 "Update card" = "Posodobi kartico";
-
-"Use your saved info to check out faster" = "Uporabite svoje shranjene podatke za hitrejšo izvedbo plačila";
 
 "Your IBAN should start with a two-letter country code." = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
 

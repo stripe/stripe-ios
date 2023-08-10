@@ -12,10 +12,6 @@
 
 "Approve payment" = "Έγκριση πληρωμής";
 
-"Are you sure you want to remove this card?" = "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε αυτήν την κάρτα;";
-
-"Are you sure you want to remove this linked account?" = "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε αυτόν τον συνδεδεμένο λογαριασμό;";
-
 "Back" = "Πίσω";
 
 "Bank account" = "Τραπεζικός λογαριασμός";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση <terms>αυτούς τους όρους</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση αυτούς τους <terms>όρους</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Συνεχίζοντας, εξουσιοδοτείτε την %1$@ να χρεώσει τον λογαριασμό σας Cash App για αυτήν την πληρωμή και μελλοντικές πληρωμές σύμφωνα με τους όρους της %2$@, μέχρι να ανακληθεί αυτή η εξουσιοδότηση. Μπορείτε να αλλάξετε αυτήν την επιλογή οποιαδήποτε στιγμή στις ρυθμίσεις Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την εγγραφή σας στο Link, συμφωνείτε με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Ακύρωση και πληρωμή με άλλον τρόπο";
 
-"Change email" = "Αλλαγή email";
-
 "Choose a payment method" = "Επιλέξτε μέθοδο πληρωμής";
 
 "Close card scanner" = "Κλείσιμο σαρωτή κάρτας";
 
-"Code sent" = "Ο κωδικός εστάλη";
+"Confirm" = "Επιβεβαίωση";
 
 "Contact information" = "Στοιχεία επικοινωνίας";
-
-"Default" = "Προεπιλογή";
 
 "EPS Bank" = "Τράπεζα με EPS";
 
 "Enter address manually" = "Πληκτρολογήστε τη διεύθυνση";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Εισαγάγετε τον κωδικό που εστάλη στο %@ για να χρησιμοποιήσετε το Link ως προεπιλεγμένη μέθοδο πληρωμής.";
-
-"Enter your verification code" = "Εισαγάγετε τον κωδικό επαλήθευσης";
-
-"For security, please re-enter your card’s security code." = "Για λόγους ασφάλειας, εισαγάγετε πάλι τον κωδικό ασφαλείας της κάρτας σας.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Σύνδεση στο Link";
-
-"Log out of Link" = "Αποσύνδεση από το Link";
+"Manage your payment methods" = "Διαχειριστείτε τις μεθόδους πληρωμής σας";
 
 "Name on card" = "Όνομα στην κάρτα";
-
-"Not %@?" = "Δεν είναι το %@;";
 
 "Open your UPI app to approve your payment within %@" = "Ανοίξτε την εφαρμογή UPI για να εγκρίνετε την πληρωμή σας σε %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Πληρωμή σταδιακά με %@";
 
-"Pay using" = "Πληρωμή μέσω";
-
-"Pay with %@" = "Πληρωμή με %@";
-
 "Pay with your bank account in just a few steps." = "Πληρώστε με τον τραπεζικό λογαριασμό σας με λίγα μόνο βήματα.";
 
-"Payment" = "Πληρωμή";
-
 "Payment failed" = "Η πληρωμή απέτυχε";
-
-"Payment methods" = "Μέθοδοι πληρωμής";
 
 "Please go back and select another payment method" = "Πηγαίνετε πίσω και επιλέξτε μια άλλη μέθοδο πληρωμής";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Αφαίρεση κάρτας";
 
-"Remove card" = "Αφαίρεση κάρτας";
+"Save" = "Αποθήκευση";
 
-"Remove linked account" = "Αφαίρεση συνδεδεμένου λογαριασμού";
-
-"Resend code" = "Επανάληψη αποστολής κωδικού";
+"Save a new payment method" = "Αποθήκευση νέας μεθόδου πληρωμής";
 
 "Save address" = "Αποθήκευση διεύθυνσης";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Αποθηκεύστε αυτή την κάρτα για μελλοντικές %@ πληρωμές";
 
-"Secure 1⁠-⁠click checkout" = "Ασφαλής ολοκλήρωση αγοράς με 1 κλικ";
-
 "Select your payment method" = "Επιλέξτε τη μέθοδο πληρωμής σας";
-
-"Set as default" = "Ορισμός ως προεπιλογή";
-
-"Set as default payment method" = "Ορισμός ως προεπιλεγμένη μέθοδος πληρωμής";
 
 "Set up" = "Διαμόρφωση";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Εμφάνιση μενού";
 
-"Sign in to your Link account" = "Σύνδεση στον λογαριασμό σας Link";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Η Stripe θα καταθέσει 0,01 $ στον λογαριασμό σας σε 1-2 εργάσιμες ημέρες. Στη συνέχεια, θα λάβετε email με οδηγίες για να ολοκληρώσετε την πληρωμή στην %@.";
-
-"Tap to close" = "Πατήστε για κλείσιμο";
-
-"Tap to expand" = "Πατήστε για ανάπτυξη";
 
 "The IBAN you entered is incomplete." = "Ο κωδικός IBAN που εισαγάγατε είναι ελλιπής.";
 
-"The provided verification code has expired." = "Ο κωδικός επαλήθευσης που παρασχέθηκε έχει λήξει.";
-
-"The provided verification code is incorrect." = "Ο κωδικός επαλήθευσης που παρασχέθηκε είναι λανθασμένος.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Αυτή η κάρτα έχει λήξει. Ενημερώστε τα στοιχεία της κάρτας σας ή επιλέξτε διαφορετική μέθοδο πληρωμής.";
-
-"This is your default" = "Αυτή είναι η προεπιλογή σας";
-
-"Too many attempts. Please try again in a few minutes." = "Πραγματοποιήθηκαν πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγα λεπτά.";
-
-"Unavailable for this purchase" = "Δεν είναι διαθέσιμο για αυτήν την αγορά";
-
 "Update card" = "Ενημέρωση κάρτας";
-
-"Use your saved info to check out faster" = "Χρησιμοποιήστε τα αποθηκευμένα στοιχεία σας για τη συντομότερη ολοκλήρωση της αγοράς";
 
 "Your IBAN should start with a two-letter country code." = "Ο κωδικός IBAN σας πρέπει να αρχίζει με έναν διψήφιο κωδικό χώρας.";
 

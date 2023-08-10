@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Datum rođenja ne izgleda ispravno";
 
-"File Upload" = "Učitavanje datoteke";
-
-"File upload" = "Postavljanje datoteke";
-
 "Flip your driver's license over to the other side" = "Okrenite svoju vozačku dozvolu na drugu stranu";
 
 "Flip your identity card over to the other side" = "Okrenite svoju osobnu iskaznicu na drugu stranu";
@@ -127,6 +123,8 @@
 "Upload" = "Učitaj";
 
 "Upload a Photo" = "Učitaj fotografiju";
+
+"Upload your photo ID" = "Učitajte svoj identifikacijski dokument s fotografijom";
 
 "Uploading back driver's license photo" = "Učitavanje fotografije stražnje strane vozačke dozvole";
 

@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "出生日期看似無效";
 
-"File Upload" = "檔案上傳";
-
-"File upload" = "檔案上傳";
-
 "Flip your driver's license over to the other side" = "將駕駛執照翻到另一面";
 
 "Flip your identity card over to the other side" = "將身份證翻到另一面";
@@ -127,6 +123,8 @@
 "Upload" = "上傳";
 
 "Upload a Photo" = "上傳一張照片";
+
+"Upload your photo ID" = "上傳您帶照片的身分證件";
 
 "Uploading back driver's license photo" = "正在上傳駕駛執照背面照片";
 

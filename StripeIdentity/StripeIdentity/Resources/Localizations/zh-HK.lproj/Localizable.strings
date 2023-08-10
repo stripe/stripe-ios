@@ -2,11 +2,11 @@
 
 "App Settings" = "應用設定";
 
-"Back driver's license photo successfully uploaded" = "駕駛證背面照片已成功上載";
+"Back driver's license photo successfully uploaded" = "駕駛執照背面照片已成功上載";
 
 "Back identity card photo successfully uploaded" = "身份證背面照片已成功上載";
 
-"Back of driver's license" = "駕駛證背面";
+"Back of driver's license" = "駕駛執照背面";
 
 "Back of identity card" = "身份證背面";
 
@@ -26,19 +26,15 @@
 
 "Date of birth does not look valid" = "出生日期看似無效";
 
-"File Upload" = "文件上載";
-
-"File upload" = "文件上載";
-
-"Flip your driver's license over to the other side" = "將駕駛證翻到另一面";
+"Flip your driver's license over to the other side" = "將駕駛執照翻到另一面";
 
 "Flip your identity card over to the other side" = "將身份證翻到另一面";
 
-"Front driver's license photo successfully uploaded" = "駕駛證正面照片已成功上載";
+"Front driver's license photo successfully uploaded" = "駕駛執照正面照片已成功上載";
 
 "Front identity card photo successfully uploaded" = "身份證正面照片已成功上載";
 
-"Front of driver's license" = "駕駛證正面";
+"Front of driver's license" = "駕駛執照正面";
 
 "Front of identity card" = "身份證正面";
 
@@ -72,11 +68,11 @@
 
 "Please upload an image of your passport" = "請上載您的護照的照片";
 
-"Please upload images of the front and back of your driver's license" = "請上載您的駕駛證正反面的照片";
+"Please upload images of the front and back of your driver's license" = "請上載您的駕駛執照正反面的照片";
 
 "Please upload images of the front and back of your identity card" = "請上載您的身份證正反面的照片";
 
-"Position your driver's license in the center of the frame" = "將駕駛證放在畫面正中間";
+"Position your driver's license in the center of the frame" = "將駕駛執照放在畫面正中間";
 
 "Position your face in the center of the frame." = "將臉放在畫面正中間。";
 
@@ -96,11 +92,11 @@
 
 "Select a location to upload the front of your identity document from" = "選擇一個位置，從那裡您上載您的身份證的正面";
 
-"Select back driver's license photo" = "選擇駕駛證背面照片";
+"Select back driver's license photo" = "選擇駕駛執照背面照片";
 
 "Select back identity card photo" = "選擇身份證背面照片";
 
-"Select front driver's license photo" = "選擇駕駛證正面照片";
+"Select front driver's license photo" = "選擇駕駛執照正面照片";
 
 "Select front identity card photo" = "選擇身份證正面照片";
 
@@ -128,11 +124,13 @@
 
 "Upload a Photo" = "上載一張照片";
 
-"Uploading back driver's license photo" = "正在上載駕駛證背面照片";
+"Upload your photo ID" = "上載您帶照片的身份證件";
+
+"Uploading back driver's license photo" = "正在上載駕駛執照背面照片";
 
 "Uploading back identity card photo" = "正在上載身份證背面照片";
 
-"Uploading front driver's license photo" = "正在上載駕駛證正面照片";
+"Uploading front driver's license photo" = "正在上載駕駛執照正面照片";
 
 "Uploading front identity card photo" = "正在上載身份證正面照片";
 
