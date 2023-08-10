@@ -874,7 +874,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         // Just check the button is enabled, confirming a payment with Klarna is flaky.
         XCTAssertTrue(payButton.isEnabled)
     }
-    
+
     func testBlik_AutomaticFields() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()

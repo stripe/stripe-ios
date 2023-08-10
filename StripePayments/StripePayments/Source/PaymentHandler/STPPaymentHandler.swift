@@ -1277,7 +1277,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             presentingVC.presentPollingVCForAction(action: currentAction, type: .blik)
-            
+
 //            currentAction.complete(with: .succeeded, error: nil)
 
         case .verifyWithMicrodeposits:
