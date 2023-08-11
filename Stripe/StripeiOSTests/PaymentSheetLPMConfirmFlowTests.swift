@@ -26,16 +26,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case US = "us"
         case SG = "sg"
     }
-    
-    var apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-    lazy var configuration: PaymentSheet.Configuration = {
-        var config = PaymentSheet.Configuration()
-        config.apiClient = apiClient
-        config.allowsDelayedPaymentMethods = true
-        config.returnURL = "https://foo.com"
-        config.allowsPaymentMethodsRequiringShippingAddress = true
-        return config
-    }()
 
     override func setUp() async throws {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
@@ -181,6 +171,15 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             apiClient = STPAPIClient(publishableKey: STPTestingSGPublishableKey)
         }
         
+        var configuration: PaymentSheet.Configuration = {
+            var config = PaymentSheet.Configuration()
+            config.apiClient = apiClient
+            config.allowsDelayedPaymentMethods = true
+            config.returnURL = "https://foo.com"
+            config.allowsPaymentMethodsRequiringShippingAddress = true
+            return config
+        }()
+        
         switch intentKind {
         case .paymentIntent:
             let paymentIntent: STPPaymentIntent = try await {
@@ -266,14 +265,6 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 print("✅ \(description): Successfully confirmed the intent and saw a redirect attempt.")
                 paymentHandler._handleWillForegroundNotification()
                 redirectShimCalled = true
-            }
-            
-            // Update the API client on the PaymentSheet.Configuration object
-            switch merchantCountry {
-            case .US:
-                configuration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-            case .SG:
-                configuration.apiClient = STPAPIClient(publishableKey: STPTestingSGPublishableKey)
             }
             
             // Confirm the intent with the form details
