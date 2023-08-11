@@ -1278,8 +1278,6 @@ public class STPPaymentHandler: NSObject {
             }
             presentingVC.presentPollingVCForAction(action: currentAction, type: .blik)
 
-//            currentAction.complete(with: .succeeded, error: nil)
-
         case .verifyWithMicrodeposits:
             // The customer must authorize after the microdeposits appear in their bank account
             // which may take 1-2 business days
