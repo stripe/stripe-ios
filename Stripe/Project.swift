@@ -88,6 +88,7 @@ let project = Project(
                 .package(product: "OCMock"),
                 .package(product: "iOSSnapshotTestCase"),
                 .project(target: "StripeCoreTestUtils", path: "//StripeCore"),
+                .project(target: "StripePaymentsObjcTestUtils", path: "//StripePayments"),
                 .project(target: "StripePaymentsTestUtils", path: "//StripePayments"),
                 .project(target: "StripePayments", path: "//StripePayments"),
                 .project(target: "StripePaymentsUI", path: "//StripePaymentsUI"),
