@@ -364,7 +364,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // UPI Specific CTA
         let predicate = NSPredicate(format: "label BEGINSWITH 'Open your UPI app to approve your payment within'")
         let upiCTAText = XCUIApplication().staticTexts.element(matching: predicate)
-        XCTAssertTrue(approvePaymentText.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(upiCTAText.waitForExistence(timeout: 10.0))
     }
 }
 
