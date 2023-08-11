@@ -1,6 +1,6 @@
 ## x.x.x x-x-x
 ### PaymentSheet
-* [Added] Support for GrabPay with PaymentIntent's.
+* [Added] Support for GrabPay with PaymentIntents.
 
 ## 23.13.0 2023-08-07
 ### All
