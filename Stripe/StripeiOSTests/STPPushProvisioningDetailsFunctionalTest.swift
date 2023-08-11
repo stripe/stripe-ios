@@ -12,8 +12,8 @@ import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
 @testable import StripePaymentsTestUtils
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPPushProvisioningDetailsFunctionalTest: STPNetworkStubbingTestCase {
     override func setUp() {

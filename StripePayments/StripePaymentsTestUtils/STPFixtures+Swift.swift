@@ -8,7 +8,6 @@
 import Foundation
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 public extension STPFixtures {
@@ -53,18 +52,6 @@ public extension STPFixtures {
     }
 }
 
-public extension PaymentSheet.Configuration {
-    /// Provides a Configuration that allows all pm types available
-    static func _testValue_MostPermissive() -> Self {
-        var configuration = PaymentSheet.Configuration()
-        configuration.returnURL = "https://foo.com"
-        configuration.allowsDelayedPaymentMethods = true
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
-        configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
-        return configuration
-    }
-}
-
 public extension STPPaymentMethodParams {
     static func _testValidCardValue() -> STPPaymentMethodParams {
         return _testCardValue()
@@ -77,13 +64,5 @@ public extension STPPaymentMethodParams {
         cardParams.expYear = (Calendar.current.dateComponents([.year], from: Date()).year! + 1) as NSNumber
         cardParams.expMonth = 01
         return STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
-    }
-}
-
-public extension STPElementsSession {
-    static func _testCardValue() -> STPElementsSession {
-        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        return elementsSession
     }
 }

@@ -11,10 +11,10 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+@testable import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
-@testable import StripeCoreTestUtils
 
 class STPCardValidatorTest: XCTestCase {
     static let cardData: [(STPCardBrand, String, STPCardValidationState)] = {
