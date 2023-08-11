@@ -915,7 +915,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         blik_code.typeText(XCUIKeyboardKey.return.rawValue)
 
         payButton.tap()
-        
+
         // in test mode polling is auto approved in 10 seconds
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
@@ -993,7 +993,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         blik_code.typeText("123456")
 
         payButton.tap()
-        
+
         // in test mode polling is auto approved in 10 seconds
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
@@ -1039,8 +1039,8 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         blik_code.typeText("123456")
 
         payButton.tap()
-        
-        //in test mode polling is auto approved in 10 seconds
+
+        // in test mode polling is auto approved in 10 seconds
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
@@ -1085,7 +1085,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         blik_code.typeText("123456")
 
         payButton.tap()
-        
+
         // in test mode polling is auto approved in 10 seconds
         XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
