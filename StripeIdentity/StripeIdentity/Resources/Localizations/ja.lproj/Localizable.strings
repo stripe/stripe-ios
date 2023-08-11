@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "生年月日が無効のようです";
 
-"File Upload" = "ファイルをアップロード";
-
-"File upload" = "ファイルのアップロード";
-
 "Flip your driver's license over to the other side" = "運転免許証を裏返してください";
 
 "Flip your identity card over to the other side" = "身分証明書を裏返してください";
@@ -127,6 +123,8 @@
 "Upload" = "アップロード";
 
 "Upload a Photo" = "写真をアップロード";
+
+"Upload your photo ID" = "写真付き身分証明書をアップロードする";
 
 "Uploading back driver's license photo" = "運転免許証の裏面をアップロードしています";
 

@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Syntymäaika ei näytä kelvolliselta";
 
-"File Upload" = "Tiedoston lataus";
-
-"File upload" = "Tiedoston lataus";
-
 "Flip your driver's license over to the other side" = "Käännä ajokortti toisinpäin";
 
 "Flip your identity card over to the other side" = "Käännä henkilökortti toisinpäin";
@@ -127,6 +123,8 @@
 "Upload" = "Lataa";
 
 "Upload a Photo" = "Lataa kuva";
+
+"Upload your photo ID" = "Lataa kuvallinen henkilöllisyystodistus";
 
 "Uploading back driver's license photo" = "Ladataan ajokortin takapuolen kuvaa";
 

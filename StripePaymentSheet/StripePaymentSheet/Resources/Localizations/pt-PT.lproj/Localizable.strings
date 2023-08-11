@@ -12,10 +12,6 @@
 
 "Approve payment" = "Aprovar pagamento";
 
-"Are you sure you want to remove this card?" = "Tem a certeza de que quer remover este cartão?";
-
-"Are you sure you want to remove this linked account?" = "Tem a certeza de que quer remover esta conta associada?";
-
 "Back" = "Voltar";
 
 "Bank account" = "Conta bancária";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao continuar, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ao continuar, concorda em autorizar pagamentos de acordo com estes <terms>termos</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ao continuar, autoriza %1$@ a debitar a sua conta Cash App para este pagamento e pagamentos futuros de acordo com as condições de %2$@, até que esta autorização seja revogada. Pode alterar isto a qualquer altura nas definições da sua Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao juntar-se ao Link, concorda com as <terms>Condições</terms> e com a <privacy>Política de Privacidade</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Cancelar e pagar de outra forma";
 
-"Change email" = "Alterar email";
-
 "Choose a payment method" = "Selecione um método de pagamento";
 
 "Close card scanner" = "Fechar leitor de cartões";
 
-"Code sent" = "Código enviado";
+"Confirm" = "Confirmar";
 
 "Contact information" = "Informações de contacto";
-
-"Default" = "Predefinido";
 
 "EPS Bank" = "Banco EPS";
 
 "Enter address manually" = "Introduzir endereço manualmente";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Introduza o código enviado para %@ para utilizar o Link como método de pagamento predefinido.";
-
-"Enter your verification code" = "Introduza o seu código de verificação";
-
-"For security, please re-enter your card’s security code." = "Por motivos de segurança, volte a introduzir o código de segurança do seu cartão.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Aderir ao Link";
-
-"Log out of Link" = "Terminar sessão no Link";
+"Manage your payment methods" = "Gerir os seus métodos de pagamento";
 
 "Name on card" = "Nome no cartão";
-
-"Not %@?" = "Não é %@?";
 
 "Open your UPI app to approve your payment within %@" = "Abra a sua aplicação UPI para aprovar o seu pagamento com %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Pagar ao longo do tempo com %@";
 
-"Pay using" = "Pagar com";
-
-"Pay with %@" = "Pagar com %@";
-
 "Pay with your bank account in just a few steps." = "Pague com a sua conta bancária em apenas alguns passos.";
 
-"Payment" = "Pagamento";
-
 "Payment failed" = "Falha no pagamento";
-
-"Payment methods" = "Métodos de pagamento";
 
 "Please go back and select another payment method" = "Volte atrás e selecione outro método de pagamento";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Remover cartão";
 
-"Remove card" = "Eliminar cartão";
+"Save" = "Guardar";
 
-"Remove linked account" = "Remover conta associada";
-
-"Resend code" = "Enviar novamente o código";
+"Save a new payment method" = "Guardar um novo método de pagamento";
 
 "Save address" = "Guardar endereço";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Guardar este cartão para pagamentos futuros %@";
 
-"Secure 1⁠-⁠click checkout" = "Finalização de compra segura de 1 clique";
-
 "Select your payment method" = "Selecione o seu método de pagamento";
-
-"Set as default" = "Tornar predefinido";
-
-"Set as default payment method" = "Definir como método de pagamento predefinido";
 
 "Set up" = "Configurar";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Mostrar menu";
 
-"Sign in to your Link account" = "Inicie sessão na sua conta Link";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "A Stripe efetuará um depósito de 0,01 USD na sua conta dentro de 1 a 2 dias úteis. Receberá posteriormente um email com instruções para concluir o pagamento a %@.";
-
-"Tap to close" = "Toque para fechar";
-
-"Tap to expand" = "Toque para expandir";
 
 "The IBAN you entered is incomplete." = "O IBAN que introduziu está incompleto.";
 
-"The provided verification code has expired." = "O código de verificação fornecido expirou.";
-
-"The provided verification code is incorrect." = "O código de verificação fornecido está incorreto.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Este cartão expirou. Atualize as informações do seu cartão ou utilize um método de pagamento diferente.";
-
-"This is your default" = "Este é o seu método predefinido";
-
-"Too many attempts. Please try again in a few minutes." = "Demasiadas tentativas. Tente novamente dentro de alguns minutos.";
-
-"Unavailable for this purchase" = "Indisponível para esta compra";
-
 "Update card" = "Atualizar cartão";
-
-"Use your saved info to check out faster" = "Utilizar as suas informações guardadas para finalizar compras mais rapidamente";
 
 "Your IBAN should start with a two-letter country code." = "O seu IBAN deve começar por um código de duas letras correspondente ao país.";
 

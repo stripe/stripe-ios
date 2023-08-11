@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Dzimšanas datums neizskatās derīgs";
 
-"File Upload" = "Faila augšupielāde";
-
-"File upload" = "Faila augšupielāde";
-
 "Flip your driver's license over to the other side" = "Apgrieziet autovadītāja apliecību uz otru pusi";
 
 "Flip your identity card over to the other side" = "Apgrieziet identifikācijas karti uz otru pusi";
@@ -127,6 +123,8 @@
 "Upload" = "Augšupielādēt";
 
 "Upload a Photo" = "Augšupielādēt fotoattēlu";
+
+"Upload your photo ID" = "Augšupielādējiet savu ID dokumentu ar fotogrāfiju";
 
 "Uploading back driver's license photo" = "Augšupielādē autovadītāja apliecības aizmugurējo fotoattēlu";
 

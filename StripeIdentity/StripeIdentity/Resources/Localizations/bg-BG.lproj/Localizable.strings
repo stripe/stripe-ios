@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Датата на раждане не изглежда валидна";
 
-"File Upload" = "Качване на файл";
-
-"File upload" = "Качване на файл";
-
 "Flip your driver's license over to the other side" = "Обърнете шофьорската си книжка от другата страна";
 
 "Flip your identity card over to the other side" = "Обърнете личната си карта от другата страна.";
@@ -127,6 +123,8 @@
 "Upload" = "Качване";
 
 "Upload a Photo" = "Качете снимка";
+
+"Upload your photo ID" = "Качете документ за самоличност със снимка";
 
 "Uploading back driver's license photo" = "Качване на снимка на задната страна на шофьорска книжка";
 

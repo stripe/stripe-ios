@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "생년월일이 유효하지 않습니다.";
 
-"File Upload" = "파일 업로드";
-
-"File upload" = "파일 업로드";
-
 "Flip your driver's license over to the other side" = "운전 면허증 반대쪽 면이 보이게 뒤집으십시오.";
 
 "Flip your identity card over to the other side" = "신분증 반대쪽 면이 보이게 뒤집으십시오.";
@@ -127,6 +123,8 @@
 "Upload" = "업로드";
 
 "Upload a Photo" = "사진 업로드";
+
+"Upload your photo ID" = "사진 ID 업로드";
 
 "Uploading back driver's license photo" = "운전 면허증 뒷면 사진 업로드하는 중";
 

@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Tanggal lahir sepertinya tidak valid";
 
-"File Upload" = "Pengunggahan File";
-
-"File upload" = "Pengunggahan file";
-
 "Flip your driver's license over to the other side" = "Balikkan surat izin mengemudi Anda ke sisi yang lain";
 
 "Flip your identity card over to the other side" = "Balikkan kartu identitas Anda ke sisi yang lain";
@@ -127,6 +123,8 @@
 "Upload" = "Unggah";
 
 "Upload a Photo" = "Unggah Foto";
+
+"Upload your photo ID" = "Unggah ID berfoto Anda";
 
 "Uploading back driver's license photo" = "Mengunggah foto bagian belakang surat izin mengemudi";
 
