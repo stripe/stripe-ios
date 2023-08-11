@@ -29,9 +29,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         var publishableKey: String {
             switch self {
             case .US:
-                apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+                return STPTestingDefaultPublishableKey
             case .SG:
-                apiClient = STPAPIClient(publishableKey: STPTestingSGPublishableKey)
+                return STPTestingSGPublishableKey
             }
         }
     }
@@ -125,10 +125,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         case setupIntent
     }
 
-    func _testConfirm(intentKinds: [IntentKind], currency: String,
-                      paymentMethodType: PaymentSheet.PaymentMethodType,
-                      merchantCountry: MerchantCountry = .US,
-                      formCompleter: (PaymentMethodElement) -> Void) async throws {
+    func _testConfirm(intentKinds: [IntentKind], currency: String, paymentMethodType: PaymentSheet.PaymentMethodType, merchantCountry: MerchantCountry = .US, formCompleter: (PaymentMethodElement) -> Void) async throws {
         for intentKind in intentKinds {
             try await _testConfirm(intentKind: intentKind,
                                    currency: currency,
@@ -173,7 +170,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        var configuration: PaymentSheet.Configuration = {
+        let configuration: PaymentSheet.Configuration = {
             var config = PaymentSheet.Configuration()
             config.apiClient = apiClient
             config.allowsDelayedPaymentMethods = true
