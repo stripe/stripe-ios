@@ -11,6 +11,7 @@
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+import UIKit
 
 class PaymentSheetTestUtils {
     // Copy and pasted from PaymentSheetSnapshotTests

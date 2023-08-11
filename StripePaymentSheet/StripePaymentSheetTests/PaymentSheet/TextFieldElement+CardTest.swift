@@ -14,6 +14,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
+@testable@_spi(STP) import StripePaymentsTestUtils
 
 class TextFieldElementCardTest: XCTestCase {
     func testPANValidation() throws {

@@ -29,7 +29,7 @@ class STPPaymentMethodOptionsTest: XCTestCase {
         for verificationMethod in verificationMethods {
             var clientSecret: String?
             let createPIExpectation = expectation(description: "Create PaymentIntent")
-            STPTestingAPIClient.shared().createPaymentIntent(
+            STPTestingAPIClient.shared.createPaymentIntent(
                 withParams: [
                     "payment_method_types": ["us_bank_account"],
                     "payment_method_options": [
@@ -86,7 +86,7 @@ class STPPaymentMethodOptionsTest: XCTestCase {
         for verificationMethod in verificationMethods {
             var clientSecret: String?
             let createPIExpectation = expectation(description: "Create SetupIntent")
-            STPTestingAPIClient.shared().createSetupIntent(
+            STPTestingAPIClient.shared.createSetupIntent(
                 withParams: [
                     "payment_method_types": ["us_bank_account"],
                     "payment_method_options": [

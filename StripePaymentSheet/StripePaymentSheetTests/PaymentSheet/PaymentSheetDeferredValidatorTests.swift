@@ -6,6 +6,7 @@
 //
 
 @testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
 final class PaymentSheetDeferredValidatorTests: XCTestCase {

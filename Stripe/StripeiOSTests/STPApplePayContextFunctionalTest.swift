@@ -55,7 +55,7 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         delegate?.didCreatePaymentMethodDelegateMethod = { paymentMethod, paymentInformation, completion in
             XCTAssertNotNil(paymentInformation)
             if let stripeId = paymentMethod?.stripeId {
-                STPTestingAPIClient.shared().createPaymentIntent(withParams: [
+                STPTestingAPIClient.shared.createPaymentIntent(withParams: [
                     "confirmation_method": "manual",
                     "payment_method": stripeId,
                     "confirm": NSNumber(value: true),
@@ -94,7 +94,7 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         // An automatic confirmation PI with the PaymentMethod attached...
         let delegate = self.delegate
         delegate?.didCreatePaymentMethodDelegateMethod = { _, _, completion in
-            STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) { newClientSecret, _ in
+            STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) { newClientSecret, _ in
                 clientSecret = newClientSecret
                 completion(newClientSecret, nil)
             }
@@ -127,7 +127,7 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         // An automatic confirmation PI with the PaymentMethod attached...
         let delegate = self.delegate
         delegate?.didCreatePaymentMethodDelegateMethod = { _, _, completion in
-            STPTestingAPIClient.shared().createPaymentIntent(withParams: ["capture_method": "manual"]) { newClientSecret, _ in
+            STPTestingAPIClient.shared.createPaymentIntent(withParams: ["capture_method": "manual"]) { newClientSecret, _ in
                 clientSecret = newClientSecret
                 completion(newClientSecret, nil)
             }
@@ -158,7 +158,7 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         // An automatic confirmation SI...
         let delegate = self.delegate
         delegate?.didCreatePaymentMethodDelegateMethod = { _, _, completion in
-            STPTestingAPIClient.shared().createSetupIntent(withParams: nil) { newClientSecret, _ in
+            STPTestingAPIClient.shared.createSetupIntent(withParams: nil) { newClientSecret, _ in
                 clientSecret = newClientSecret
                 completion(newClientSecret, nil)
             }
@@ -272,7 +272,7 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         var clientSecret: String?
         let delegate = self.delegate
         delegate?.didCreatePaymentMethodDelegateMethod = { _, _, completion in
-            STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) { newClientSecret, _ in
+            STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) { newClientSecret, _ in
                 clientSecret = newClientSecret
                 completion(newClientSecret, nil)
             }
@@ -304,7 +304,7 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         var clientSecret: String?
         let delegate = self.delegate
         delegate?.didCreatePaymentMethodDelegateMethod = { _, _, completion in
-            STPTestingAPIClient.shared().createSetupIntent(withParams: nil) { newClientSecret, _ in
+            STPTestingAPIClient.shared.createSetupIntent(withParams: nil) { newClientSecret, _ in
                 clientSecret = newClientSecret
                 completion(newClientSecret, nil)
             }

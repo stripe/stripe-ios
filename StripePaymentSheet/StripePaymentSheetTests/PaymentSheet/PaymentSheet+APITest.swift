@@ -11,7 +11,9 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
@@ -273,7 +275,7 @@ class PaymentSheetAPITest: XCTestCase {
             description: "Load PaymentIntent with an attached payment method"
         )
         // 0. Create a PI on our test backend with an already attached pm
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: [
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: [
             "amount": 1050,
             "payment_method": "pm_card_visa",
         ]) { clientSecret, error in
@@ -563,13 +565,13 @@ class PaymentSheetAPITest: XCTestCase {
                 ] : [
                     "amount": 1050,
                 ]
-                STPTestingAPIClient.shared().createPaymentIntent(withParams: params, completion: createIntentCompletion)
+                STPTestingAPIClient.shared.createPaymentIntent(withParams: params, completion: createIntentCompletion)
             } else {
                 let params: [String: Any] = isServerSideConfirm ? [
                     "confirm": "true",
                     "payment_method": paymentMethod.stripeId,
                 ] : [:]
-                STPTestingAPIClient.shared().createSetupIntent(withParams: params, completion: createIntentCompletion)
+                STPTestingAPIClient.shared.createSetupIntent(withParams: params, completion: createIntentCompletion)
             }
         }
         let intentConfigMode: PaymentSheet.IntentConfiguration.Mode = {
@@ -639,7 +641,7 @@ class PaymentSheetAPITest: XCTestCase {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we perform validation in the paymentintent confirm flow
         let e = expectation(description: "confirm completes")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD")) { _, _, intentCreationCallback in
-            STPTestingAPIClient.shared().createPaymentIntent(withParams: [
+            STPTestingAPIClient.shared.createPaymentIntent(withParams: [
                 "amount": 1050,
                 "currency": "GBP", // Different currency than IntentConfiguration
             ]) { pi, _ in
@@ -667,7 +669,7 @@ class PaymentSheetAPITest: XCTestCase {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we **don't** perform validation in the paymentintent server-side confirm flow
         let e = expectation(description: "confirm completes")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1080, currency: "USD")) { paymentMethod, _, intentCreationCallback in
-            STPTestingAPIClient.shared().createPaymentIntent(withParams: [
+            STPTestingAPIClient.shared.createPaymentIntent(withParams: [
                 "amount": 1050,
                 "confirm": true,
                 "payment_method": paymentMethod.stripeId,
@@ -696,7 +698,7 @@ class PaymentSheetAPITest: XCTestCase {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we perform validation in the setupintent confirm flow
         let e = expectation(description: "confirm completes")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD")) { _, _, intentCreationCallback in
-            STPTestingAPIClient.shared().createSetupIntent(withParams: [
+            STPTestingAPIClient.shared.createSetupIntent(withParams: [
                 "usage": "on_session",
             ]) { si, _ in
                 intentCreationCallback(.success(si ?? ""))
@@ -723,7 +725,7 @@ class PaymentSheetAPITest: XCTestCase {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we **don't** perform validation in the SetupIntent server-side confirm flow
         let e = expectation(description: "confirm completes")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD")) { paymentMethod, _, intentCreationCallback in
-            STPTestingAPIClient.shared().createSetupIntent(withParams: [
+            STPTestingAPIClient.shared.createSetupIntent(withParams: [
                 "usage": "on_session",
                 "payment_method": paymentMethod.stripeId,
                 "confirm": true,

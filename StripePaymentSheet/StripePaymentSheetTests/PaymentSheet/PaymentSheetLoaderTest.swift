@@ -6,6 +6,8 @@
 //
 
 @testable @_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripeCoreTestUtils
+@testable@_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
 final class PaymentSheetLoaderTest: XCTestCase {
@@ -43,7 +45,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
         let expectation = XCTestExpectation(
             description: "Load SetupIntent with an attached payment method"
         )
-        STPTestingAPIClient.shared().createSetupIntent(withParams: [
+        STPTestingAPIClient.shared.createSetupIntent(withParams: [
             "payment_method": "pm_card_visa",
         ]) { clientSecret, error in
             guard let clientSecret = clientSecret, error == nil else {

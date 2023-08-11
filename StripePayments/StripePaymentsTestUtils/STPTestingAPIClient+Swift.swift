@@ -6,6 +6,8 @@
 //
 
 import Foundation
+@_exported import StripePaymentsObjcTestUtils
+
 extension STPTestingAPIClient {
     static var shared: STPTestingAPIClient {
         return .shared()

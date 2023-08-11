@@ -9,6 +9,7 @@
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentsUI
+@_spi(STP)@testable import StripePaymentsTestUtils
 import UIKit
 
 @MainActor

@@ -83,7 +83,7 @@ extension STPPaymentMethodParams {
 
 extension STPElementsSession {
     static func _testCardValue() -> STPElementsSession {
-        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
         return elementsSession
     }

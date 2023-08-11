@@ -9,5 +9,13 @@ let project = Project.stripeFramework(
         .project(target: "Stripe3DS2", path: "//Stripe3DS2"),
         .project(target: "StripeUICore", path: "//StripeUICore"),
     ],
+    testUtilsOptions: .testOptions(
+        includesSnapshots: true,
+        usesStubs: true
+    ),
+    objcTestUtilsOptions: .testOptions(
+        includesSnapshots: false,
+        usesStubs: false
+    ),
     unitTestOptions: .testOptions()
 )
