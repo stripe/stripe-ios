@@ -915,7 +915,9 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         blik_code.typeText(XCUIKeyboardKey.return.rawValue)
 
         payButton.tap()
-//        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        
+        // in test mode polling is auto approved in 10 seconds
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testBlik_AllFields_NoDefaults() throws {
@@ -991,7 +993,9 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         blik_code.typeText("123456")
 
         payButton.tap()
-//        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        
+        // in test mode polling is auto approved in 10 seconds
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testBlik_AllFields_WithDefaults() throws {
@@ -1035,7 +1039,9 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         blik_code.typeText("123456")
 
         payButton.tap()
-//        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        
+        //in test mode polling is auto approved in 10 seconds
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testBlik_SomeFields_WithDefaults() throws {
@@ -1079,7 +1085,9 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         blik_code.typeText("123456")
 
         payButton.tap()
-//        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        
+        // in test mode polling is auto approved in 10 seconds
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
 }
