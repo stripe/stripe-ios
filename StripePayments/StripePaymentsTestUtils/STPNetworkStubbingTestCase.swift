@@ -8,17 +8,15 @@
 
 import OHHTTPStubs
 import XCTest
-@_spi(STP) import StripeCore
-@testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 
 /// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run with `recordingMode = YES` and save it to disk. When run with `recordingMode = NO`, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
 /// ⚠️ Warning: `STPAPIClient`s created before `setUp` is called are not recorded!
-class STPNetworkStubbingTestCase: XCTestCase {
+@objc(STPNetworkStubbingTestCase) public class STPNetworkStubbingTestCase: XCTestCase {
     /// Set this to YES to record all traffic during this test. The test will then fail, to remind you to set this back to NO before pushing.
     var recordingMode = false
 
-    override func setUp() {
+    public override func setUp() {
         super.setUp()
 
         // Set the STPTestingAPIClient to use the sharedURLSessionConfig so that we can intercept requests from it too
@@ -67,7 +65,7 @@ class STPNetworkStubbingTestCase: XCTestCase {
 
             // The goal is for `basePath` to be e.g. `~/stripe-ios/Stripe/StripeiOSTests`
             // A little gross/hardcoded (but it works fine); feel free to improve this...
-            let testDirectoryName = "stripe-ios/Stripe/StripeiOSTests"
+            let testDirectoryName = "stripe-ios/StripePayments/StripePaymentsTestUtils"
             var basePath = "\(#file)"
             while !basePath.hasSuffix(testDirectoryName) {
                 assert(
@@ -133,7 +131,7 @@ class STPNetworkStubbingTestCase: XCTestCase {
         }
     }
 
-    override func tearDown() {
+    public override func tearDown() {
         super.tearDown()
         // Additional calls to `setFileNamingBlock` will be ignored if you don't do this
         SWHttpTrafficRecorder.shared().stopRecording()

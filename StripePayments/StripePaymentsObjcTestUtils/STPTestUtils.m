@@ -42,10 +42,11 @@
 
 + (NSData *)dataFromJSONFile:(NSString *)name {
     NSBundle *bundle = [self testBundle];
-    NSString *path = [bundle pathForResource:name ofType:@"json"];
+    NSString *path = [bundle pathForResource:name ofType:@"json" inDirectory:@"Mock Files"];
 
     if (!path) {
         // Missing JSON file
+        NSLog(@"Missing file: %@ in bundle: %@", name, bundle);
         return nil;
     }
 

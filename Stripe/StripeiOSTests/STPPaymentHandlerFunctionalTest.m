@@ -12,7 +12,7 @@
 #import <SafariServices/SafariServices.h>
 
 #import "STPTestingAPIClient.h"
-#import "STPFixtures.h"
+@import StripePaymentsObjcTestUtils;
 
 @interface STPPaymentHandlerFunctionalTest : XCTestCase <STPAuthenticationContext>
 @property (nonatomic) id presentingViewController;

@@ -8,10 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
-@import Stripe;
 @import StripeCore;
 @import StripePayments;
-@import StripePaymentsUI;
 
 NS_ASSUME_NONNULL_BEGIN
 extern NSString *const STPTestJSONCustomer;
@@ -172,13 +170,6 @@ extern NSString *const STPTestJSONSourceSofort;
  A SetupIntent object
  */
 + (STPSetupIntent *)setupIntent;
-
-/**
- A PaymentConfiguration object with a fake publishable key. Use this to avoid
- triggering our asserts when publishable key is nil or invalid. All other values
- are at their original defaults.
- */
-+ (STPPaymentConfiguration *)paymentConfiguration;
 
 /**
  A PaymentMethod object

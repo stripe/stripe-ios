@@ -235,11 +235,6 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
     return [STPSetupIntent decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"SetupIntent"]];
 }
 
-+ (STPPaymentConfiguration *)paymentConfiguration {
-    STPPaymentConfiguration *config = [STPPaymentConfiguration new];
-    return config;
-}
-
 + (PKPaymentRequest *)applePayRequest {
     PKPaymentRequest *paymentRequest = [StripeAPI paymentRequestWithMerchantIdentifier:@"foo" country:@"US" currency:@"USD"];
     paymentRequest.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"10.00"]]];

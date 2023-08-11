@@ -7,10 +7,10 @@
 //
 
 import iOSSnapshotTestCase
-@_spi(STP)@testable import Stripe
 @_spi(STP)@testable import StripeCore
 @_spi(STP)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
+@testable import StripePaymentsTestUtils
 
 class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
     private let addressSpecProvider: AddressSpecProvider = {

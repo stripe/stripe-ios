@@ -10,8 +10,7 @@
 @import XCTest;
 @import OCMock;
 @import StripeCoreTestUtils;
-
-#import "STPFixtures.h"
+@import StripePaymentsObjcTestUtils;
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentCardTextField (Testing)

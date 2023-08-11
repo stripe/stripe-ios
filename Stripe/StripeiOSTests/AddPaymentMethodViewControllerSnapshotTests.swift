@@ -10,6 +10,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripeUICore
 import XCTest
+@testable import StripePaymentsTestUtils
 
 final class AddPaymentMethodViewControllerSnapshotTests: FBSnapshotTestCase {
     override func setUp() {

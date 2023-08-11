@@ -14,6 +14,7 @@ import XCTest
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+@testable import StripePaymentsTestUtils
 
 class TestEphemeralKeyProvider: NSObject, STPIssuingCardEphemeralKeyProvider {
     func createIssuingCardKey(

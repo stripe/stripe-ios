@@ -6,13 +6,12 @@
 //
 
 import Foundation
-@testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-extension STPFixtures {
+public extension STPFixtures {
     static func paymentMethodBillingDetails() -> STPPaymentMethodBillingDetails {
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Jane Doe"
@@ -54,7 +53,7 @@ extension STPFixtures {
     }
 }
 
-extension PaymentSheet.Configuration {
+public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
     static func _testValue_MostPermissive() -> Self {
         var configuration = PaymentSheet.Configuration()
@@ -66,7 +65,7 @@ extension PaymentSheet.Configuration {
     }
 }
 
-extension STPPaymentMethodParams {
+public extension STPPaymentMethodParams {
     static func _testValidCardValue() -> STPPaymentMethodParams {
         return _testCardValue()
     }
@@ -81,7 +80,7 @@ extension STPPaymentMethodParams {
     }
 }
 
-extension STPElementsSession {
+public extension STPElementsSession {
     static func _testCardValue() -> STPElementsSession {
         let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
