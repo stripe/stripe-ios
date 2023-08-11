@@ -4,5 +4,4 @@
 
 @import StripePaymentsObjcTestUtils;
 
-#import "STPTestingAPIClient.h"
 #import "STPMocks.h"
