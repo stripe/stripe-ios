@@ -12,10 +12,6 @@
 
 "Approve payment" = "Kinnitage makse";
 
-"Are you sure you want to remove this card?" = "Kas olete kindel, et soovite selle kaardi eemaldada?";
-
-"Are you sure you want to remove this linked account?" = "Kas olete kindel, et soovite selle lingitud konto eemaldada?";
-
 "Back" = "Tagasi";
 
 "Bank account" = "Pangakonto";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jätkates nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Jätkates nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Jätkamisel volitate %1$@ debiteerima teie Cash Appi kontot selle makse ja tulevaste maksete eest vastavalt ettevõtte %2$@ tingimustele, kuni see volitus tühistatakse. Saate seda igal ajal oma Cash rakenduse seadetes muuta.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Tühista ja maksa muul viisil";
 
-"Change email" = "Muuda e-posti aadressi";
-
 "Choose a payment method" = "Valige makseviis";
 
 "Close card scanner" = "Kaardiskanneri sulgemine";
 
-"Code sent" = "Kood saadetud";
+"Confirm" = "Kinnita";
 
 "Contact information" = "Kontaktandmed";
-
-"Default" = "Vaikimisi";
 
 "EPS Bank" = "EPS pank";
 
 "Enter address manually" = "Sisestage aadress käsitsi";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Vaikimisi Linkiga maksmiseks sisestage numbrile %@ saadetud kood.";
-
-"Enter your verification code" = "Sisestage oma kinnituskood";
-
-"For security, please re-enter your card’s security code." = "Turvalisuse huvides sisestage palun uuesti oma kaardi turvakood.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Liitu Linkiga";
-
-"Log out of Link" = "Logi Link välja";
+"Manage your payment methods" = "Makseviiside haldamine";
 
 "Name on card" = "Nimi kaardil";
-
-"Not %@?" = "Pole %@?";
 
 "Open your UPI app to approve your payment within %@" = "Makse kinnitamiseks avage oma UPI rakendus %@ jooksul";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Maksa aja jooksul makseviisiga %@";
 
-"Pay using" = "Kasuta makseviisi";
-
-"Pay with %@" = "Maksa %@-ga";
-
 "Pay with your bank account in just a few steps." = "Pangakontoga maksmine vaid mõne sammuga.";
 
-"Payment" = "Makse";
-
 "Payment failed" = "Makse ebaõnnestus";
-
-"Payment methods" = "Makseviisid";
 
 "Please go back and select another payment method" = "Minge tagasi ja valige mõni muu makseviis";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Kaardi eemaldamine";
 
-"Remove card" = "Eemalda kaart";
+"Save" = "Salvesta";
 
-"Remove linked account" = "Eemalda lingitud konto";
-
-"Resend code" = "Saada kood uuesti";
+"Save a new payment method" = "Uue makseviisi salvestamine";
 
 "Save address" = "Salvesta aadress";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Salvestage see kaart tulevasteks makseteks teenuses %@";
 
-"Secure 1⁠-⁠click checkout" = "Turvaline ühe klõpsuga makse lõpuleviimine";
-
 "Select your payment method" = "Valige makseviis";
-
-"Set as default" = "Muuda vaikimisi makseviisiks";
-
-"Set as default payment method" = "Määra vaikimisi makseviisiks";
 
 "Set up" = "Seadista";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Kuva menüü";
 
-"Sign in to your Link account" = "Logi oma Linki kontole sisse";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega makse sooritamiseks ettevõttele %@.";
-
-"Tap to close" = "Puudutage sulgemiseks";
-
-"Tap to expand" = "Puudutage laiendamiseks";
 
 "The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
 
-"The provided verification code has expired." = "Esitatud tuvastuskood on aegunud.";
-
-"The provided verification code is incorrect." = "Esitatud tuvastuskood on vale.";
-
-"This card has expired. Update your card info or choose a different payment method." = "See kaart on aegunud. Ajakohastage oma kaarditeavet või kasutage muud makseviisi.";
-
-"This is your default" = "See on teie vaikimisi makseviis";
-
-"Too many attempts. Please try again in a few minutes." = "Liiga palju katseid. Proovige paari minuti pärast uuesti.";
-
-"Unavailable for this purchase" = "Pole selle ostu puhul saadaval";
-
 "Update card" = "Uuenda kaarti";
-
-"Use your saved info to check out faster" = "Kasutage oma salvestatud teavet kiiremaks makse lõpuleviimiseks";
 
 "Your IBAN should start with a two-letter country code." = "Teie IBAN peab algama kahetähelise riigikoodiga.";
 

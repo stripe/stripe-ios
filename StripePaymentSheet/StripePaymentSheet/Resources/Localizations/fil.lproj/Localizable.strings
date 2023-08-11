@@ -12,10 +12,6 @@
 
 "Approve payment" = "Aprubahan ang pagbabayad";
 
-"Are you sure you want to remove this card?" = "Sigurado ka bang nais mong alisin ang kard na ito?";
-
-"Are you sure you want to remove this linked account?" = "Sigurado ka bang nais mong alisin ang naka-link na account na ito?";
-
 "Back" = "Bumalik";
 
 "Bank account" = "Account sa bangko";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntunin</terms> na ito.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Sa pagpapatuloy, binibigyan mo ng awtorisasyon ang %1$@ na i-debit ang iyong Cash App account para sa pagbabayad na ito at sa mga pagbabayad sa hinaharap alinsunod sa mga tuntunin ng  %2$@, hanggang bawiin mo ang awtorisasyong ito. Maaari mong palitan ito sa anumang oras sa iyong Cash App Settings.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagsali sa Link, sumasang-ayon ka sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Kanselahin at magbayad sa ibang paraan";
 
-"Change email" = "Palitan ang email";
-
 "Choose a payment method" = "Pumili ng pamamaraan ng pagbabayad";
 
 "Close card scanner" = "Isara ang scanner ng kard";
 
-"Code sent" = "Naipadala na ang code";
+"Confirm" = "Kumpirmahin";
 
 "Contact information" = "Impormasyon sa pakikipag-ugnayan";
-
-"Default" = "Default";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Manwal na ilagay ang address";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Ilagay ang code na ipinadala sa %@ para gamitin ang Link sa pagbabayad bilang default.";
-
-"Enter your verification code" = "Ilagay ang iyong verification code.";
-
-"For security, please re-enter your card’s security code." = "Para sa seguridad, pakilagay muli ang security code ng iyong kard.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Sumali sa Link";
-
-"Log out of Link" = "Mag-log out sa Link";
+"Manage your payment methods" = "Pangasiwaan ang iyong mga paraan ng pagbabayad";
 
 "Name on card" = "Pangalan sa kard";
-
-"Not %@?" = "Hindi %@?";
 
 "Open your UPI app to approve your payment within %@" = "Buksan ang iyong UPI app para aprubahan ang iyong pagbabayad sa loob ng  %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Magbayad ng over time gamit ang %@";
 
-"Pay using" = "Magbayad gamit ang";
-
-"Pay with %@" = "Magbayad gamit ang %@";
-
 "Pay with your bank account in just a few steps." = "Magbayad gamit ang iyong account sa bangko sa ilang hakbang lamang.";
 
-"Payment" = "Pagbabayad";
-
 "Payment failed" = "Nabigo ang pagbabayad";
-
-"Payment methods" = "Mga pamamaraan sa pagbabayad";
 
 "Please go back and select another payment method" = "Mangyaring bumalik at pumili ng ibang paraan ng pagbabayad.";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Alisin ang Kard";
 
-"Remove card" = "Alisin ang kard";
+"Save" = "i-save";
 
-"Remove linked account" = "Alisin ang naka-link na account";
-
-"Resend code" = "Ipadala muli ang code";
+"Save a new payment method" = "I-save ang bagong paraan ng pagbabayad";
 
 "Save address" = "I-save ang address";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "I-save ang kard na ito para sa mga hinaharap na pagbabayad sa %@";
 
-"Secure 1⁠-⁠click checkout" = "Tiyakin ang 1-click na pag-checkout";
-
 "Select your payment method" = "Piliin ang iyong paraan ng pagbabayad";
-
-"Set as default" = "I-set bilang default";
-
-"Set as default payment method" = "I-set bilang default na paraan ng pagbabayad";
 
 "Set up" = "I-set up";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Ipakita ang menu";
 
-"Sign in to your Link account" = "Mag-sign in sa iyong Link account";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Idedeposito ng Stripe ang $0.01 sa iyong account sa loob ng 1-2 araw ng trabaho. Pagkatapos ay makakatanggap ka ng email na may mga tagubilin para kumpletuhin ang pagbabayad sa %@.";
-
-"Tap to close" = "I-tap para isara";
-
-"Tap to expand" = "I-tap para i-expand";
 
 "The IBAN you entered is incomplete." = "Ang IBAN na iniligay mo ay di kumpleto.";
 
-"The provided verification code has expired." = "Paso na ang ibinigay na verification code.";
-
-"The provided verification code is incorrect." = "Mali ang ibinigay na verification code.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Ang kard na ito ay paso na. I-update ang impormayon ng iyong kard o pumili ng ibang paraan ng pagbabayad.";
-
-"This is your default" = "Ito ang iyong default";
-
-"Too many attempts. Please try again in a few minutes." = "Masyado nang marami ang pagtatangka. Pakisubukan muli sa loob ng ilang minuto.";
-
-"Unavailable for this purchase" = "Hindi magamit sa pagbiling ito";
-
 "Update card" = "I-update ang kard";
-
-"Use your saved info to check out faster" = "Gamitin ang iyong naka-save na impormayon para mas mabilis na mag-check out";
 
 "Your IBAN should start with a two-letter country code." = "Ang iyong IBAN ay dapat magsimula sa dalawang letra na code ng bansa.";
 

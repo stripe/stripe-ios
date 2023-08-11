@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Data urodzenia wygląda na nieprawidłową";
 
-"File Upload" = "Przesyłanie pliku";
-
-"File upload" = "Przesyłanie pliku";
-
 "Flip your driver's license over to the other side" = "Obróć prawo jazdy na drugą stronę";
 
 "Flip your identity card over to the other side" = "Obróć dowód tożsamości na drugą stronę";
@@ -127,6 +123,8 @@
 "Upload" = "Prześlij";
 
 "Upload a Photo" = "Prześlij zdjęcie";
+
+"Upload your photo ID" = "Prześlij dokument tożsamości ze zdjęciem";
 
 "Uploading back driver's license photo" = "Przesyłanie zdjęcia tyłu prawa jazdy";
 

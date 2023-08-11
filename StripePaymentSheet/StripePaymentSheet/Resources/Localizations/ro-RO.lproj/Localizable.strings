@@ -12,10 +12,6 @@
 
 "Approve payment" = "Aprobare plată";
 
-"Are you sure you want to remove this card?" = "Sigur doriți să eliminați acest card?";
-
-"Are you sure you want to remove this linked account?" = "Sigur doriți să eliminați acest cont asociat?";
-
 "Back" = "Înapoi";
 
 "Bank account" = "Cont bancar";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Continuând, sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Continuând, sunteți de acord să autorizați plățile în conformitate cu acești <terms>termeni</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Continuând, autorizați %1$@ să debiteze contul dvs. Cash App pentru această plată și pentru plățile viitoare în conformitate cu termenii %2$@, până când această autorizație este revocată. Puteți schimba acest lucru oricând în setările Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prin accesarea link-ului de asociere, sunteți de acord cu <terms>Termenii</terms> și <privacy>Politica de confidențialitate</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Anulați și folosiți altă metodă de plată";
 
-"Change email" = "Schimbați adresa de e-mail";
-
 "Choose a payment method" = "Alegeți o metodă de plată";
 
 "Close card scanner" = "Închidere scaner card";
 
-"Code sent" = "Codul a fost trimis";
+"Confirm" = "Confirmare";
 
 "Contact information" = "Informații de contact";
-
-"Default" = "Implicit";
 
 "EPS Bank" = "Banca EPS";
 
 "Enter address manually" = "Introduceți adresa manual";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Introduceți codul trimis la %@ pentru a utiliza Link ca metodă de plată implicită";
-
-"Enter your verification code" = "Introduceți codul de verificare";
-
-"For security, please re-enter your card’s security code." = "Din motive de securitate, vă rugăm să introduceți din nou codul de securitate al cardului dvs.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Înscrieți-vă în Link";
-
-"Log out of Link" = "Deconectare de la Link";
+"Manage your payment methods" = "Gestionați metodele de plată";
 
 "Name on card" = "Numele titularului";
-
-"Not %@?" = "Nu este %@?";
 
 "Open your UPI app to approve your payment within %@" = "Deschideți aplicația UPI pentru a aproba plata în termen de %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Folosiți ca metodă de plată de-a lungul timpului %@";
 
-"Pay using" = "Plătiți folosind";
-
-"Pay with %@" = "Folosiți ca metodă de plată %@";
-
 "Pay with your bank account in just a few steps." = "Plătiți cu contul dvs. bancar în doar câțiva pași.";
 
-"Payment" = "Plată";
-
 "Payment failed" = "Plata nu a reușit";
-
-"Payment methods" = "Metode de plată";
 
 "Please go back and select another payment method" = "Vă rugăm să reveniți și să selectați o altă metodă de plată";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Eliminare card";
 
-"Remove card" = "Eliminare card";
+"Save" = "Salvare";
 
-"Remove linked account" = "Eliminare cont asociat";
-
-"Resend code" = "Retrimitere cod";
+"Save a new payment method" = "Salvați o metodă de plată nouă";
 
 "Save address" = "Salvare adresă";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Salvați acest card pentru plăți viitoare către %@";
 
-"Secure 1⁠-⁠click checkout" = "Finalizare securizată a comenzii cu un singur clic";
-
 "Select your payment method" = "Selectați metoda de plată";
-
-"Set as default" = "Setați ca implicită";
-
-"Set as default payment method" = "Setați ca metodă de plată implicită";
 
 "Set up" = "Configurare";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Afișare meniu";
 
-"Sign in to your Link account" = "Conectați-vă la contul dvs. Link";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe va depune 0,01 USD în contul dvs. în decurs de 1-2 zile lucrătoare. Apoi veți primi un e-mail cu instrucțiuni pentru a finaliza plata către %@.";
-
-"Tap to close" = "Atingeți pentru a închide";
-
-"Tap to expand" = "Atingeți pentru a extinde";
 
 "The IBAN you entered is incomplete." = "Codul IBAN pe care l-ați introdus nu este complet.";
 
-"The provided verification code has expired." = "Codul de verificare furnizat a expirat.";
-
-"The provided verification code is incorrect." = "Codul de verificare furnizat este incorect.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Acest card a expirat. Actualizați datele cardului sau alegeți o altă metodă de plată.";
-
-"This is your default" = "Aceasta este setarea dvs. implicită";
-
-"Too many attempts. Please try again in a few minutes." = "Prea multe încercări. Vă rugăm să încercați din nou în câteva minute.";
-
-"Unavailable for this purchase" = "Nu este disponibilă pentru această achiziție";
-
 "Update card" = "Actualizare card";
-
-"Use your saved info to check out faster" = "Folosiți informațiile dvs. salvate pentru a finaliza comanda mai rapid";
 
 "Your IBAN should start with a two-letter country code." = "Codul dvs. IBAN trebuie să înceapă cu un cod de țară format din două litere.";
 

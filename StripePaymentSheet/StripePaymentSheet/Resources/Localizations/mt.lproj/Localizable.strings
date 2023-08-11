@@ -12,10 +12,6 @@
 
 "Approve payment" = "Approva l-pagament";
 
-"Are you sure you want to remove this card?" = "Żgur li tixtieq tneħħi dil-karta?";
-
-"Are you sure you want to remove this linked account?" = "Żgur li tixtieq tneħħi dal-kont marbut?";
-
 "Back" = "Lura";
 
 "Bank account" = "Kont tal-bank";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tkompli tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Meta tkompli, inti taqbel li tawtorizza l-pagamenti skont dawn <terms>it-termini</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Meta tkompli tkun qed tagħti permess lil %1$@ biex, sakemm dal-permess jitneħħa, tkun tista' tiġbor il-flus mill-kont Cash App tiegħek għal dal-pagament u għall-pagamenti tal-ġejjieni skont ir-regoli ta' %2$@. Tista' tibdel dil-ħaġa meta trid mill-Għażliet ta' Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tingħaqad ma' Link tkun qed taqbel mat-<terms>Termini</terms> u l-<privacy>Politika tal-Privatezza</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Ikkanċella u ħallas mod ieħor";
 
-"Change email" = "Ibdel l-indirizz tal-email";
-
 "Choose a payment method" = "Agħżel metodu tal-ħlas";
 
 "Close card scanner" = "Agħlaq l-iskenner tal-kard";
 
-"Code sent" = "Il-kodiċi ntbagħat";
+"Confirm" = "Ikkonferma";
 
 "Contact information" = "Id-dettalji tal-kuntatt";
-
-"Default" = "Standard";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ikteb l-indirizz int stess";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Daħħal il-kodiċi li bgħatna fuq %@ biex tuża Link u tħallas bil-metodu tal-pagament standard.";
-
-"Enter your verification code" = "Daħħal il-kodiċi ta' verifika tiegħek";
-
-"For security, please re-enter your card’s security code." = "Għal raġunijiet ta' sigurtà, jekk jogħġbok erġa' daħħal il-kodiċi tas-sigurtà tal-karta tiegħek.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Ingħaqad ma' Link";
-
-"Log out of Link" = "Oħroġ minn Link";
+"Manage your payment methods" = "Ħu ħsieb il-metodi tal-pagament tiegħek";
 
 "Name on card" = "L-isem fuq il-karta";
-
-"Not %@?" = "M'intix %@?";
 
 "Open your UPI app to approve your payment within %@" = "Iftaħ l-app ta' UPI biex tapprova l-pagamenti tiegħek fi żmien %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Ħallas bin-nifs grazzi għal %@";
 
-"Pay using" = "Ħallas b'dal-metodu tal-pagament:";
-
-"Pay with %@" = "Ħallas b' %@";
-
 "Pay with your bank account in just a few steps." = "Ħallas bil-kont tal-bank tiegħek fi ftit passi.";
 
-"Payment" = "Pagament";
-
 "Payment failed" = "Il-pagament ma rnexxiex";
-
-"Payment methods" = "Metodi tal-pagament";
 
 "Please go back and select another payment method" = "Jekk jogħġbok mur lura u agħżel metodu tal-pagament ieħor";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Neħħi Kard";
 
-"Remove card" = "Neħħi l-karta";
+"Save" = "Erfa'";
 
-"Remove linked account" = "Neħħi l-kont marbut";
-
-"Resend code" = "Erġa' ibgħat il-kodiċi";
+"Save a new payment method" = "Erfa' metodu tal-pagament ġdid";
 
 "Save address" = "Erfa' l-indirizz";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Erfa' din il-kard għal pagamenti futuri %@";
 
-"Secure 1⁠-⁠click checkout" = "Ħlas sigur b'mossa waħda";
-
 "Select your payment method" = "Agħżel il-metodu tal-ħlas tiegħek";
-
-"Set as default" = "Qiegħed bħala standard";
-
-"Set as default payment method" = "Qiegħed bħala l-metodu tal-pagament standard";
 
 "Set up" = "Stabilixxi";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Uri l-menù";
 
-"Sign in to your Link account" = "Idħol fil-kont Link tiegħek";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe se tiddepożita $0.01 fil-kont tiegħek fi żmien jum/jumejn tax-xogħol. Imbagħad se tirċievi email bl-istruzzjonijiet biex tagħmel il-pagament lil %@.";
-
-"Tap to close" = "Agħfas biex tagħlaq";
-
-"Tap to expand" = "Agħfas biex tkabbar";
 
 "The IBAN you entered is incomplete." = "L-IBAN li daħħalt mhux komplut.";
 
-"The provided verification code has expired." = "Il-kodiċi tal-verifika mogħti skada.";
-
-"The provided verification code is incorrect." = "Il-kodiċi tal-verifika mogħti mhuwiex tajjeb.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Dil-karta skadiet. Aġġorna d-dettalji tal-karta tiegħek jew agħżel metodu tal-pagament ieħor.";
-
-"This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
-
-"Too many attempts. Please try again in a few minutes." = "Ippruvajt wisq drabi. Jekk jogħġbok erġa' pprova wara ftit minuti.";
-
-"Unavailable for this purchase" = "Mhux disponibbli għal dix-xirja";
-
 "Update card" = "Aġġorna l-karta";
-
-"Use your saved info to check out faster" = "Uża l-informazzjoni li għandek merfugħa biex tħallas iktar malajr";
 
 "Your IBAN should start with a two-letter country code." = "L-IBAN tiegħek għandu jibda b'kodiċi tal-pajjiż magħmul minn żewġ ittri.";
 

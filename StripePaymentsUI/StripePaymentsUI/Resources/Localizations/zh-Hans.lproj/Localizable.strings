@@ -14,7 +14,7 @@
 
 "Billing address" = "账单地址";
 
-"CVC" = "CVC";
+"CVC" = "安全码";
 
 "CVV" = "CVV";
 
@@ -44,9 +44,9 @@
 
 "Your card number is invalid." = "您的卡号无效。";
 
-"Your card's expiration date is incomplete." = "您的银行卡的不完整。";
+"Your card's expiration date is incomplete." = "您的银行卡的有效期不完整。";
 
-"Your card's expiration date is invalid." = "您银行卡的有效期无效。";
+"Your card's expiration date is invalid." = "您的银行卡的有效期无效。";
 
 "Your card's expiration month is invalid." = "您的银行卡的到期月份无效。";
 

@@ -12,10 +12,6 @@
 
 "Approve payment" = "Luluskan pembayaran";
 
-"Are you sure you want to remove this card?" = "Anda pasti ingin mengalih keluar kad ini?";
-
-"Are you sure you want to remove this linked account?" = "Anda pasti ingin mengalih keluar akaun yang dipautkan ini?";
-
 "Back" = "Undur";
 
 "Bank account" = "Akaun bank";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma</terms> ini.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan meneruskan langkah, anda mengizinkan %1$@ untuk mendebitkan akaun Cash App anda bagi pembayaran ini dan pembayaran masa hadapan menurut terma %2$@, sehinggalah keizinan ini dibatalkan. Anda boleh mengubah keizinan ini pada bila-bila masa dalam Tetapan Cash App anda.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan menyertai Link, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
 
-"Change email" = "Ubah e-mel";
-
 "Choose a payment method" = "Pilih kaedah pembayaran";
 
 "Close card scanner" = "Tutup pengimbas kad";
 
-"Code sent" = "Kod dihantar";
+"Confirm" = "Sahkan";
 
 "Contact information" = "Maklumat hubungan";
-
-"Default" = "Tetapan Asal";
 
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Masukkan kod yang dihantar ke %@ untuk menggunakan Link sebagai kaedah pembayaran tetapan asal.";
-
-"Enter your verification code" = "Masukkan kod penentusahan anda";
-
-"For security, please re-enter your card’s security code." = "Bagi tujuan keselamatan, sila masukkan semula kod keselamatan kad anda.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Sertai Link";
-
-"Log out of Link" = "Log keluar dari Link";
+"Manage your payment methods" = "Urus kaedah pembayaran anda";
 
 "Name on card" = "Nama pada kad";
-
-"Not %@?" = "Bukan %@?";
 
 "Open your UPI app to approve your payment within %@" = "Buka aplikasi UPI untuk meluluskan pembayaran anda dalam masa %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Bayar dari semasa ke semasa dengan %@";
 
-"Pay using" = "Bayar menggunakan";
-
-"Pay with %@" = "Bayar dengan %@";
-
 "Pay with your bank account in just a few steps." = "Bayar dengan akaun bank anda dengan hanya beberapa langkah.";
 
-"Payment" = "Pembayaran";
-
 "Payment failed" = "Pembayaran tidak berjaya";
-
-"Payment methods" = "Kaedah pembayaran";
 
 "Please go back and select another payment method" = "Sila undur dan pilih kaedah pembayaran yang lain";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Alih Keluar Kad";
 
-"Remove card" = "Alih keluar kad";
+"Save" = "Simpan";
 
-"Remove linked account" = "Alih keluar akaun yang dipautkan";
-
-"Resend code" = "Hantar semula kod";
+"Save a new payment method" = "Simpan kaedah pembayaran baharu";
 
 "Save address" = "Simpan alamat";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Simpan kad ini untuk pembayaran %@ masa hadapan";
 
-"Secure 1⁠-⁠click checkout" = "Proses bayar dan keluar yang selamat dengan satu klik";
-
 "Select your payment method" = "Pilih kaedah pembayaran anda";
-
-"Set as default" = "Tetapkan sebagai tetapan asal";
-
-"Set as default payment method" = "Tetapkan sebagai kaedah pembayaran tetapan asal";
 
 "Set up" = "Sediakan";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Paparkan menu";
 
-"Sign in to your Link account" = "Daftar masuk ke akaun Link anda";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan pembayaran kepada %@.";
-
-"Tap to close" = "Ketik untuk tutup";
-
-"Tap to expand" = "Ketik untuk kembangkan";
 
 "The IBAN you entered is incomplete." = "IBAN yang anda masukkan tidak lengkap.";
 
-"The provided verification code has expired." = "Kod penentusahan yang diberikan telah tamat tempoh.";
-
-"The provided verification code is incorrect." = "Kod penentusahan yang diberikan tidak betul.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Kad ini telah tamat tempoh. Kemas kinikan maklumat kad anda atau pilih kaedah pembayaran yang lain.";
-
-"This is your default" = "Ini tetapan asal anda";
-
-"Too many attempts. Please try again in a few minutes." = "Terlalu banyak percubaan. Sila cuba lagi dalam beberapa minit.";
-
-"Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
-
 "Update card" = "Kemas kinikan kad";
-
-"Use your saved info to check out faster" = "Gunakan maklumat anda yang tersimpan untuk keluar dan bayar dengan lebih cepat";
 
 "Your IBAN should start with a two-letter country code." = "IBAN anda harus bermula dengan kod negara dua huruf.";
 

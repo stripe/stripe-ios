@@ -16,6 +16,7 @@ extension STPTestingAPIClient {
     func fetchPaymentIntent(
         types: [String],
         currency: String = "eur",
+        merchantCountry: String? = "us",
         paymentMethodID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:],
@@ -32,7 +33,8 @@ extension STPTestingAPIClient {
         params.merge(otherParams) { _, b in b }
 
         createPaymentIntent(
-            withParams: params
+            withParams: params,
+            account: merchantCountry
         ) { clientSecret, error in
             guard let clientSecret = clientSecret,
                   error == nil
@@ -48,6 +50,7 @@ extension STPTestingAPIClient {
     func fetchPaymentIntent(
         types: [String],
         currency: String = "eur",
+        merchantCountry: String? = "us",
         paymentMethodID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:]
@@ -56,6 +59,7 @@ extension STPTestingAPIClient {
             fetchPaymentIntent(
                 types: types,
                 currency: currency,
+                merchantCountry: merchantCountry,
                 paymentMethodID: paymentMethodID,
                 confirm: confirm,
                 otherParams: otherParams

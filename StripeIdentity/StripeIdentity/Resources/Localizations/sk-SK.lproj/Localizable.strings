@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Zdá sa, že dátum narodenia je neplatný";
 
-"File Upload" = "Nahratie súboru";
-
-"File upload" = "Nahratie súboru";
-
 "Flip your driver's license over to the other side" = "Otočte svoj vodičský preukaz na druhú stranu";
 
 "Flip your identity card over to the other side" = "Otočte svoj preukaz totožnosti na druhú stranu";
@@ -127,6 +123,8 @@
 "Upload" = "Nahrať";
 
 "Upload a Photo" = "Nahrať fotografiu";
+
+"Upload your photo ID" = "Nahrajte doklad totožnosti s fotografiou";
 
 "Uploading back driver's license photo" = "Nahrávanie fotografie zo zadnej strany vodičského preukazu";
 
