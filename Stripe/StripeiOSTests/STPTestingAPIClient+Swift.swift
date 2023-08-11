@@ -25,14 +25,14 @@ extension STPTestingAPIClient {
         params["currency"] = currency
         params["payment_method_types"] = types
         params["confirm"] = confirm
-        params["account"] = merchantCountry
         if let paymentMethodID = paymentMethodID {
             params["payment_method"] = paymentMethodID
         }
         params.merge(otherParams) { _, b in b }
 
         createPaymentIntent(
-            withParams: params
+            withParams: params,
+            account: merchantCountry
         ) { clientSecret, error in
             guard let clientSecret = clientSecret,
                   error == nil
