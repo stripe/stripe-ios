@@ -878,7 +878,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
     func testBlik_AutomaticFields() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
+        settings.customerMode = .guest
         settings.merchantCountryCode = .FR
         settings.currency = .pln
         settings.defaultBillingAddress = .off
@@ -923,7 +923,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
     func testBlik_AllFields_NoDefaults() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
+        settings.customerMode = .guest
         settings.merchantCountryCode = .FR
         settings.currency = .pln
         settings.defaultBillingAddress = .off
@@ -1001,7 +1001,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
     func testBlik_AllFields_WithDefaults() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
+        settings.customerMode = .guest
         settings.merchantCountryCode = .FR
         settings.currency = .pln
         settings.defaultBillingAddress = .on
@@ -1047,7 +1047,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
     func testBlik_SomeFields_WithDefaults() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
+        settings.customerMode = .guest
         settings.merchantCountryCode = .FR
         settings.currency = .pln
         settings.defaultBillingAddress = .on
