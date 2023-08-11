@@ -6,8 +6,10 @@
 //
 
 import Foundation
-import StripePaymentSheet
-    
+import StripePayments
+@_spi(STP) @testable import StripePaymentSheet
+import StripePaymentsTestUtils
+
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
     static func _testValue_MostPermissive() -> Self {
