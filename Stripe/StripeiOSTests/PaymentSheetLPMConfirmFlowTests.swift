@@ -25,6 +25,15 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
+
+        var publishableKey: String {
+            switch self {
+            case .US:
+                apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+            case .SG:
+                apiClient = STPAPIClient(publishableKey: STPTestingSGPublishableKey)
+            }
+        }
     }
 
     override func setUp() async throws {
@@ -163,14 +172,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         ]
 
         // Update the API client based on the merchant country
-        var apiClient = STPAPIClient(publishableKey: STPTestingSGPublishableKey)
-        switch merchantCountry {
-        case .US:
-            apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        case .SG:
-            apiClient = STPAPIClient(publishableKey: STPTestingSGPublishableKey)
-        }
-
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
         var configuration: PaymentSheet.Configuration = {
             var config = PaymentSheet.Configuration()
             config.apiClient = apiClient
