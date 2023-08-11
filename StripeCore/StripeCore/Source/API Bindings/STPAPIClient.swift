@@ -88,8 +88,7 @@ import UIKit
     }
 
     /// Determines the `Stripe-Livemode` header value when the publishable key is a user key
-    /// :nodoc:
-    @_spi(StripeAppsOnly) public var userKeyLiveMode = true
+    @_spi(DashboardOnly) public var userKeyLiveMode = true
 
     // MARK: Initializers
     override public init() {
