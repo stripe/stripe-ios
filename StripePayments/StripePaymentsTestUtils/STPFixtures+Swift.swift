@@ -8,7 +8,6 @@
 import Foundation
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentsUI
 
 public extension STPFixtures {
     static func paymentMethodBillingDetails() -> STPPaymentMethodBillingDetails {
