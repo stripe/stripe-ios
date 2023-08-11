@@ -1284,14 +1284,14 @@ public class STPPaymentHandler: NSObject {
             currentAction.complete(with: .succeeded, error: nil)
 
         case .upiAwaitNotification:
-guard
-    let presentingVC = currentAction.authenticationContext
-        as? PaymentSheetAuthenticationContext
-else {
-    return
-}
+            guard
+                let presentingVC = currentAction.authenticationContext
+                    as? PaymentSheetAuthenticationContext
+            else {
+                return
+            }
 
-presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI)
         case .cashAppRedirectToApp:
             guard
                 let returnURL = URL(string: currentAction.returnURLString ?? "")
