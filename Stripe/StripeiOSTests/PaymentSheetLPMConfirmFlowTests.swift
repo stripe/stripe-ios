@@ -21,7 +21,7 @@ import XCTest
 /// 👀  See `testIdealConfirmFlows` for an example with comments.
 @MainActor
 final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
-    
+
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
@@ -161,7 +161,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 ] as [String: Any],
             ],
         ]
-        
+
         // Update the API client based on the merchant country
         var apiClient = STPAPIClient(publishableKey: STPTestingSGPublishableKey)
         switch merchantCountry {
@@ -170,7 +170,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         case .SG:
             apiClient = STPAPIClient(publishableKey: STPTestingSGPublishableKey)
         }
-        
+
         var configuration: PaymentSheet.Configuration = {
             var config = PaymentSheet.Configuration()
             config.apiClient = apiClient
@@ -179,7 +179,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             config.allowsPaymentMethodsRequiringShippingAddress = true
             return config
         }()
-        
+
         switch intentKind {
         case .paymentIntent:
             let paymentIntent: STPPaymentIntent = try await {
@@ -266,7 +266,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 paymentHandler._handleWillForegroundNotification()
                 redirectShimCalled = true
             }
-            
+
             // Confirm the intent with the form details
             PaymentSheet.confirm(
                 configuration: configuration,
