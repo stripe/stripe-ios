@@ -9,7 +9,6 @@
 @import Stripe;
 @import XCTest;
 @import PassKit;
-#import "STPTestingAPIClient.h"
 @import StripePaymentsObjcTestUtils;
 
 @interface STPErrorBridgeTest : XCTestCase

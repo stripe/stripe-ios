@@ -11,7 +11,6 @@
 #import <OCMock/OCMock.h>
 #import <SafariServices/SafariServices.h>
 
-#import "STPTestingAPIClient.h"
 @import StripePaymentsObjcTestUtils;
 
 @interface STPPaymentHandlerFunctionalTest : XCTestCase <STPAuthenticationContext>
