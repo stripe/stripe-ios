@@ -156,7 +156,7 @@ class PaymentSheetFormFactory {
         } else if paymentMethod.stpPaymentMethodType == .bancontact {
             return makeBancontact()
         } else if paymentMethod.stpPaymentMethodType == .grabPay {
-            return FormElement(elements: [], theme: theme)
+            return makeNoInputElements()
         }  else if paymentMethod.stpPaymentMethodType == .FPX {
             return makeFPX()
         }
@@ -682,6 +682,22 @@ extension PaymentSheetFormFactory {
             paramsUpdater: { element, params in
                 return element.updateParams(params: params)
             })
+    }
+    
+    // DRY helper for LPMs that require no input to ensure we respect the billing address configuration API
+    func makeNoInputElements() -> PaymentMethodElement {
+        let contactSection: Element? = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
+
+        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let elements: [Element?] = [contactSection, addressSection]
+        return FormElement(
+            autoSectioningElements: elements.compactMap { $0 },
+            theme: theme
+        )
     }
 
     func connectBillingDetailsFields(

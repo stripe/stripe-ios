@@ -82,7 +82,7 @@ extension PaymentSheet {
             case .UPI:
                 return STPPaymentMethod.string(from: .UPI)
             case .cashApp:
-                return STPPaymentMethod.string(from: .cash
+                return STPPaymentMethod.string(from: .cashApp)
             case .grabPay:
                 return STPPaymentMethod.string(from: .grabPay)
             case .fpx:
