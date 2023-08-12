@@ -81,6 +81,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case gbp
         case inr
         case pln
+        case sgd
         case myr
     }
 
@@ -92,6 +93,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case AU
         case FR
         case IN
+        case SG
         case MY
     }
 

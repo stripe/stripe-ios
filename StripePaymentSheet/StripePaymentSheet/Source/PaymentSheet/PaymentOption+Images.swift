@@ -158,6 +158,8 @@ extension STPPaymentMethodType {
                     return .pm_type_upi
                 case .cashApp:
                     return .pm_type_cashapp
+                case .grabPay:
+                    return .pm_type_grabpay
                 case .FPX:
                     return .pm_type_fpx
                 default:

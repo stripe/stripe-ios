@@ -92,7 +92,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
     /// method, STPAddCardViewController should be shown.
     func testInitWithNoSourcesAndConfigWithUseSourcesOffAndCardAvailable() {
         let customer = STPFixtures.customerWithNoSources()
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.applePayEnabled = false
         let delegate = MockSTPPaymentOptionsViewControllerDelegate()
         let sut = buildViewController(
@@ -109,7 +109,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
     func testInitWithSingleCardTokenSourceAndCardAvailable() {
         let customer = STPFixtures.customerWithSingleCardTokenSource()
         let paymentMethods = [STPFixtures.paymentMethod()]
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         let delegate = MockSTPPaymentOptionsViewControllerDelegate()
         let sut = buildViewController(
             with: customer,
@@ -125,7 +125,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
     func testInitWithSingleCardSourceSourceAndCardAvailable() {
         let customer = STPFixtures.customerWithSingleCardSourceSource()
         let paymentMethods = [STPFixtures.paymentMethod()]
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.applePayEnabled = false
         let delegate = MockSTPPaymentOptionsViewControllerDelegate()
         let sut = buildViewController(
@@ -141,7 +141,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
     /// didCancel:
     func testAddCardCancelForwardsToDelegate() {
         let customer = STPFixtures.customerWithNoSources()
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         let delegate = MockSTPPaymentOptionsViewControllerDelegate()
         let sut = buildViewController(
             with: customer,
@@ -161,7 +161,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
     func testInternalCancelForwardsToDelegate() {
         let customer = STPFixtures.customerWithSingleCardTokenSource()
         let paymentMethods = [STPFixtures.paymentMethod()]
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         let delegate = MockSTPPaymentOptionsViewControllerDelegate()
         let sut = buildViewController(
             with: customer,
@@ -179,7 +179,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
     /// When an AddCard view controller creates a card payment method, it should be attached to the
     /// customer and the correct delegate methods should be called.
     func testAddCardAttachesToCustomerAndFinishes() {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         let customer = STPFixtures.customerWithNoSources()
         let mockCustomerContext = Testing_StaticCustomerContext(
             customer: customer,
@@ -220,7 +220,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
     // is set directly after init, while internalViewController is `STPAddCardViewController`
     func testSetAfterInit_addCardViewControllerFooterView_STPAddCardViewController() {
         let customer = STPFixtures.customerWithNoSources()
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.applePayEnabled = false
         let delegate = MockSTPPaymentOptionsViewControllerDelegate()
         let sut = buildViewController(
@@ -243,7 +243,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
     func testSetAfterInit_paymentOptionsViewControllerFooterView_STPPaymentOptionsInternalViewController() {
         let customer = STPFixtures.customerWithSingleCardTokenSource()
         let paymentMethods = [STPFixtures.paymentMethod()]
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         let delegate = MockSTPPaymentOptionsViewControllerDelegate()
         let sut = buildViewController(
             with: customer,
@@ -267,7 +267,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
     func testSetAfterInit_addCardViewControllerFooterView_STPPaymentOptionsInternalViewController() {
         let customer = STPFixtures.customerWithSingleCardTokenSource()
         let paymentMethods = [STPFixtures.paymentMethod()]
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         let delegate = MockSTPPaymentOptionsViewControllerDelegate()
         let sut = buildViewController(
             with: customer,
@@ -291,7 +291,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
     func testSetAfterInit_prefilledInformation_STPPaymentOptionsInternalViewController() {
         let customer = STPFixtures.customerWithSingleCardTokenSource()
         let paymentMethods = [STPFixtures.paymentMethod()]
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         let delegate = MockSTPPaymentOptionsViewControllerDelegate()
         let sut = buildViewController(
             with: customer,
@@ -323,7 +323,7 @@ class STPPaymentOptionsViewControllerTest: XCTestCase {
     // is set directly after init, while internalViewController is `STPAddCardViewController`
     func testSetAfterInit_prefilledInformation_STPAddCardViewController() {
         let customer = STPFixtures.customerWithNoSources()
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.applePayEnabled = false
         let delegate = MockSTPPaymentOptionsViewControllerDelegate()
         let sut = buildViewController(

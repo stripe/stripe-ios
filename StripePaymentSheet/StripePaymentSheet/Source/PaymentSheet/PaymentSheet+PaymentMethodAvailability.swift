@@ -26,6 +26,7 @@ extension PaymentSheet {
         .AUBECSDebit,
         .UPI,
         .cashApp,
+        .grabPay,
         .FPX
     ]
 
