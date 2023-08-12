@@ -119,11 +119,11 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         }
     }
 
-    func testFPXPayConfirmFlows() async throws {
+    func testFPXConfirmFlows() async throws {
         // GrabPay has no input fields
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "MYR",
-                               paymentMethodType: .fpx,
+                               paymentMethodType: .FPX,
                                merchantCountry: .MY) { form in
             XCTAssertNotNil(form.getDropdownFieldElement("FPX Bank"))
         }
