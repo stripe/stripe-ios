@@ -1,6 +1,6 @@
 ## x.x.x x-x-x
 ### PaymentSheet
-* [Added] Support for GrabPay with PaymentIntent's.
+* [Added] Support for GrabPay with PaymentIntents.
 
 ### Payments
 * [Added] You can now create an STPConnectAccountParams without specifying a business type.
