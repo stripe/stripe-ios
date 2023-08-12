@@ -155,6 +155,8 @@ class PaymentSheetFormFactory {
             additionalElements = [makePaypalMandate()]
         } else if paymentMethod.stpPaymentMethodType == .bancontact {
             return makeBancontact()
+        } else if paymentMethod.stpPaymentMethodType == .FPX {
+            return makeFPX()
         }
 
         guard let spec = specFromJSONProvider() else {
