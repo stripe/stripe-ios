@@ -155,7 +155,7 @@ class STPCardFormViewTests: XCTestCase {
             description: "createPaymentIntentExpectation"
         )
         var retrievedClientSecret: String?
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) {
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) {
             (createdPIClientSecret, _) in
             if let createdPIClientSecret = createdPIClientSecret {
                 retrievedClientSecret = createdPIClientSecret

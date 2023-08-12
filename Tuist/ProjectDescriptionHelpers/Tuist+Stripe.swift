@@ -55,6 +55,7 @@ extension Project {
     /// The `Project` will include:
     /// - A framework `Target` with same name as the project.
     /// - A framework `Target` if `testUtilsOptions` is included, named (`name`)TestUtils.
+    /// - A framework `Target` if `objcTestUtilsOptions` is included, named (`name`)ObjcTestUtils.
     /// - A unit tests `Target` if `unitTestOptions` is included, named (`name`)Tests.
     /// - A ui tests `Target` if `uiTestOptions` is included, named (`name`)UITests.
     ///
@@ -69,6 +70,8 @@ extension Project {
     /// main target in the build action and the test targets in the test action.
     /// If `testUtilsOptions` is included, a second `Scheme` will be included, with only the
     /// test utils target in the build action.
+    /// If `objcTestUtilsOptions` is included, another `Scheme` will be included, with only the
+    /// Objective-C test utils target in the build action.
     ///
     /// - Parameters:
     ///   - name: The name that will be used for the `Project`, main `Target` and `Scheme`.
@@ -84,6 +87,7 @@ extension Project {
     ///   - resources: Any resources needed by the framework.
     ///   - dependencies: Any dependencies required by the main target.
     ///   - testUtilsOptions: Options for the test utils target if one is needed.
+    ///   - objcTestUtilsOptions: Options for the test utils target if one is needed.
     ///   - unitTestOptions: Options for the unit tests target if one is needed.
     ///   - uiTestOptions: Options for the ui tests target if one is needed.
     /// - Returns: A `Project` configured for a Stripe framework.
@@ -109,6 +113,7 @@ extension Project {
         resources: ResourceFileElements? = nil,
         dependencies: [TargetDependency] = [],
         testUtilsOptions: TestOptions? = nil,
+        objcTestUtilsOptions: TestOptions? = nil,
         unitTestOptions: TestOptions? = nil,
         uiTestOptions: TestOptions? = nil
     ) -> Project {
@@ -121,6 +126,7 @@ extension Project {
             ),
             packages: makePackages(
                 testUtilsOptions: testUtilsOptions,
+                objcTestUtilsOptions: objcTestUtilsOptions,
                 unitTestOptions: unitTestOptions,
                 uiTestOptions: uiTestOptions
             ) + packages,
@@ -131,12 +137,14 @@ extension Project {
                 dependencies: dependencies,
                 resources: resources,
                 testUtilsOptions: testUtilsOptions,
+                objcTestUtilsOptions: objcTestUtilsOptions,
                 unitTestOptions: unitTestOptions,
                 uiTestOptions: uiTestOptions
             ),
             schemes: makeSchemes(
                 name: name,
                 testUtilsOptions: testUtilsOptions,
+                objcTestUtilsOptions: objcTestUtilsOptions,
                 unitTestOptions: unitTestOptions,
                 uiTestOptions: uiTestOptions
             )
@@ -145,11 +153,13 @@ extension Project {
 
     private static func makePackages(
         testUtilsOptions: TestOptions?,
+        objcTestUtilsOptions: TestOptions?,
         unitTestOptions: TestOptions?,
         uiTestOptions: TestOptions?
     ) -> [Package] {
         var packages = [Package]()
         if testUtilsOptions?.includesSnapshots ?? false
+            || objcTestUtilsOptions?.includesSnapshots ?? false
             || unitTestOptions?.includesSnapshots ?? false
             || uiTestOptions?.includesSnapshots ?? false
         {
@@ -161,6 +171,7 @@ extension Project {
             )
         }
         if testUtilsOptions?.usesMocks ?? false
+            || objcTestUtilsOptions?.usesMocks ?? false
             || unitTestOptions?.usesMocks ?? false
             || uiTestOptions?.usesMocks ?? false
         {
@@ -169,6 +180,7 @@ extension Project {
             )
         }
         if testUtilsOptions?.usesStubs ?? false
+            || objcTestUtilsOptions?.usesStubs ?? false
             || unitTestOptions?.usesStubs ?? false
             || uiTestOptions?.usesStubs ?? false
         {
@@ -188,6 +200,7 @@ extension Project {
         dependencies: [TargetDependency],
         resources: ResourceFileElements?,
         testUtilsOptions: TestOptions?,
+        objcTestUtilsOptions: TestOptions?,
         unitTestOptions: TestOptions?,
         uiTestOptions: TestOptions?
     ) -> [Target] {
@@ -224,8 +237,26 @@ extension Project {
                     headers: .headers(
                         public: "\(name)TestUtils/\(name)TestUtils.h"
                     ),
-                    dependencies: makeTestDependencies(name: name, testOptions: testUtilsOptions),
+                    dependencies: makeTestDependencies(name: name, usesObjcTestUtils: (objcTestUtilsOptions != nil), testOptions: testUtilsOptions),
                     settings: testUtilsOptions.settings
+                )
+            )
+        }
+        if let objcTestUtilsOptions = objcTestUtilsOptions {
+            targets.append(
+                Target(
+                    name: "\(name)ObjcTestUtils",
+                    platform: .iOS,
+                    product: .framework,
+                    bundleId: "com.stripe.\(name)ObjcTestUtils",
+                    infoPlist: "\(name)ObjcTestUtils/Info.plist",
+                    sources: "\(name)ObjcTestUtils/**/*.m",
+                    resources: objcTestUtilsOptions.resources,
+                    headers: .headers(
+                        public: "\(name)ObjcTestUtils/**/*.h"
+                    ),
+                    dependencies: makeTestDependencies(name: name, testOptions: objcTestUtilsOptions),
+                    settings: objcTestUtilsOptions.settings
                 )
             )
         }
@@ -279,6 +310,7 @@ extension Project {
     private static func makeTestDependencies(
         name: String,
         includeUtils: Bool = false,
+        usesObjcTestUtils: Bool = false,
         testOptions: TestOptions
     ) -> [TargetDependency] {
         var dependencies: [TargetDependency] = [
@@ -291,6 +323,9 @@ extension Project {
         }
         if testOptions.includesSnapshots {
             dependencies.append(.package(product: "iOSSnapshotTestCase"))
+        }
+        if usesObjcTestUtils {
+            dependencies.append(.target(name: "\(name)ObjcTestUtils"))
         }
         if testOptions.usesMocks {
             dependencies.append(.package(product: "OCMock"))
@@ -307,6 +342,7 @@ extension Project {
     private static func makeSchemes(
         name: String,
         testUtilsOptions: TestOptions?,
+        objcTestUtilsOptions: TestOptions?,
         unitTestOptions: TestOptions?,
         uiTestOptions: TestOptions?
     ) -> [Scheme] {

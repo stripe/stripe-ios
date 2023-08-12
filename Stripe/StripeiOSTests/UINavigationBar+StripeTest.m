@@ -9,8 +9,8 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 @import Stripe;
-#import "STPFixtures.h"
 #import "STPMocks.h"
+@import StripePaymentsObjcTestUtils;
 
 @interface UINavigationBar_StripeTest : XCTestCase
 
@@ -20,7 +20,7 @@
 
 - (STPPaymentOptionsViewController *)buildPaymentOptionsViewController {
     id customerContext = [STPMocks staticCustomerContext];
-    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    STPPaymentConfiguration *config = [STPPaymentConfiguration new];
     STPTheme *theme = [STPTheme defaultTheme];
     id delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     STPPaymentOptionsViewController *paymentOptionsVC = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config

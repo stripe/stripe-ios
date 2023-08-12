@@ -8,7 +8,7 @@
 
 #import "STPMocks.h"
 
-#import "STPFixtures.h"
+@import StripePaymentsObjcTestUtils;
 #import "StripeiOS_Tests-Swift.h"
 
 @interface STPPaymentConfiguration (STPMocks)
@@ -36,7 +36,7 @@
 }
 
 + (STPPaymentConfiguration *)paymentConfigurationWithApplePaySupportingDevice {
-    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    STPPaymentConfiguration *config = [STPPaymentConfiguration new];
     config.appleMerchantIdentifier = @"fake_apple_merchant_id";
     id partialMock = OCMPartialMock(config);
     OCMStub([partialMock applePayEnabled]).andCall(partialMock, @selector(stpmock_applePayEnabled));

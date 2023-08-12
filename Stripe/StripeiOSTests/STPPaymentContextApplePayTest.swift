@@ -17,7 +17,7 @@
 /// - determining paymentSummaryItems
 class STPPaymentContextApplePayTest: XCTestCase {
     func buildPaymentContext() -> STPPaymentContext {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.appleMerchantIdentifier = "fake_merchant_id"
         let theme = STPTheme.defaultTheme
         let customerContext = Testing_StaticCustomerContext()
