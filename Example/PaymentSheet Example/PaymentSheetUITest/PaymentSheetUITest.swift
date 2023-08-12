@@ -786,6 +786,38 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
+
+    func testFPXPaymentMethodHasDropdown() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.currency = .myr
+        settings.merchantCountryCode = .MY
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay MYR 50.99"]
+
+        guard let fpx = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "FPX") else {
+            XCTFail()
+            return
+        }
+        fpx.tap()
+
+        let bank = app.textFields["FPX Bank"]
+        bank.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Affin Bank")
+        app.toolbars.buttons["Done"].tap()
+
+        payButton.tap()
+
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
 }
 
 class PaymentSheetDeferredUITests: PaymentSheetUITestCase {

@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 
 extension PaymentSheetFormFactory {
-    
+
     func makeFPX() -> PaymentMethodElement {
         let apiPath = "fpx[bank]"
         let dropdownItems: [DropdownFieldElement.DropdownItem] = STPFPXBankBrand.allCases.map {
@@ -27,16 +27,15 @@ extension PaymentSheetFormFactory {
         let dropdownElement = DropdownFieldElement(
             items: dropdownItems,
             defaultIndex: previousCustomerInputIndex ?? 0,
-            label: STPLocalizedString("Bank", "Select a bank dropdown for FPX"),
+            label: STPLocalizedString("FPX Bank", "Select a bank dropdown for FPX"),
             theme: theme
         )
-        let bankDropdown = PaymentMethodElementWrapper(dropdownElement) { dropdown, params in
+        let bankDropdown = PaymentMethodElementWrapper(dropdownElement) { _, params in
             let selectedValue = dropdownElement.selectedItem.rawData
             params.paymentMethodParams.additionalAPIParameters[apiPath] = selectedValue
             return params
         }
-        
-        
+
         let contactSection: Element? = makeContactInformationSection(
             nameRequiredByPaymentMethod: false,
             emailRequiredByPaymentMethod: false,

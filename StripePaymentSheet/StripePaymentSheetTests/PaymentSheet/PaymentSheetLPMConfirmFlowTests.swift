@@ -11,8 +11,8 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripeUICore
 @testable@_spi(STP) import StripePaymentsTestUtils
+@testable@_spi(STP) import StripeUICore
 
 /// These tests exercise 9 different confirm flows based on the combination of:
 /// - The Stripe Intent: PaymentIntent or PaymentIntent+SFU or SetupIntent
@@ -25,6 +25,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
+        case MY = "my"
 
         var publishableKey: String {
             switch self {
@@ -32,6 +33,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingDefaultPublishableKey
             case .SG:
                 return STPTestingSGPublishableKey
+            case .MY:
+                return STPTestingMYPublishableKey
             }
         }
     }
@@ -113,6 +116,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                                paymentMethodType: .grabPay,
                                merchantCountry: .SG) { _ in
 
+        }
+    }
+
+    func testFPXPayConfirmFlows() async throws {
+        // GrabPay has no input fields
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "MYR",
+                               paymentMethodType: .fpx,
+                               merchantCountry: .MY) { form in
+            XCTAssertNotNil(form.getDropdownFieldElement("FPX Bank"))
         }
     }
 }

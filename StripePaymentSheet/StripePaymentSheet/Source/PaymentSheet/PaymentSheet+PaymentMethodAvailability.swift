@@ -27,7 +27,7 @@ extension PaymentSheet {
         .UPI,
         .cashApp,
         .grabPay,
-        .FPX
+        .FPX,
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet

@@ -44,7 +44,7 @@ extension PaymentSheet {
         case cashApp
         case grabPay
         case fpx
-        
+
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
 
