@@ -32,7 +32,7 @@ static NSString * const STPTestingINPublishableKey = @"pk_test_51H7wmsBte6TMTRd4
 static NSString * const STPTestingBRPublishableKey = @"pk_test_51JYFFjJQVROkWvqT6Hy9pW7uPb6UzxT3aACZ0W3olY8KunzDE9mm6OxE5W2EHcdZk7LxN6xk9zumFbZL8zvNwixR0056FVxQmt";
 // Test account in Great Britain
 static NSString * const STPTestingGBPublishableKey = @"pk_test_51KmkHbGoesj9fw9QAZJlz1qY4dns8nFmLKc7rXiWKAIj8QU7NPFPwSY1h8mqRaFRKQ9njs9pVJoo2jhN6ZKSDA4h00mjcbGF7b";
-// Test account in Maylasia
+// Test account in Malaysia
 static NSString * const STPTestingMYPublishableKey =
     @"pk_test_vGCjSmT6Idy5zwfGBKnlq5rd00JT2vbrHb";
 
