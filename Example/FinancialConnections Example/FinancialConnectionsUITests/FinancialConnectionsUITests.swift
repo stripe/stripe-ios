@@ -34,9 +34,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundNativeButton.tap()
 
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        if (enableTestModeSwitch.value as? String) == "0" {
-            enableTestModeSwitch.tap()
-        }
+        enableTestModeSwitch.turnSwitch(on: true)
 
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
@@ -65,9 +63,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundNativeButton.tap()
 
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        if (enableTestModeSwitch.value as? String) == "0" {
-            enableTestModeSwitch.tap()
-        }
+        enableTestModeSwitch.turnSwitch(on: true)
 
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
@@ -99,9 +95,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundNativeButton.tap()
 
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        if (enableTestModeSwitch.value as? String) == "0" {
-            enableTestModeSwitch.tap()
-        }
+        enableTestModeSwitch.turnSwitch(on: true)
 
         app.fc_playgroundShowAuthFlowButton.tap()
 
@@ -152,9 +146,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundNativeButton.tap()
 
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        if (enableTestModeSwitch.value as? String) == "1" {
-            enableTestModeSwitch.tap()
-        }
+        enableTestModeSwitch.turnSwitch(on: false)
 
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
@@ -190,6 +182,8 @@ final class FinancialConnectionsUITests: XCTestCase {
         institutionButton.tap()
 
         app.fc_nativePrepaneContinueButton.tap()
+
+        // At this point, the bank could be down for maintenance, and that's OK.
 
         // check that the WebView loaded
         let institutionWebViewText = app.webViews
@@ -231,9 +225,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         webSegmentPickerButton.tap()
 
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        if (enableTestModeSwitch.value as? String) == "1" {
-            enableTestModeSwitch.tap()
-        }
+        enableTestModeSwitch.turnSwitch(on: false)
 
         app.fc_playgroundShowAuthFlowButton.tap()
 
@@ -305,9 +297,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundNativeButton.tap()
 
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        if (enableTestModeSwitch.value as? String) == "1" {
-            enableTestModeSwitch.tap()
-        }
+        enableTestModeSwitch.turnSwitch(on: false)
 
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
@@ -343,22 +333,5 @@ final class FinancialConnectionsUITests: XCTestCase {
 extension XCTestCase {
     func wait(timeout: TimeInterval) {
         _ = XCTWaiter.wait(for: [XCTestExpectation(description: "")], timeout: timeout)
-    }
-}
-
-extension XCUIElement {
-
-    fileprivate func wait(
-        until expression: @escaping (XCUIElement) -> Bool,
-        timeout: TimeInterval
-    ) -> Bool {
-        let expectation = XCTNSPredicateExpectation(
-            predicate: NSPredicate { _, _ in
-                expression(self)
-            },
-            object: nil
-        )
-        let result = XCTWaiter().wait(for: [expectation], timeout: timeout)
-        return (result == .completed)
     }
 }
