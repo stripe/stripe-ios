@@ -42,7 +42,7 @@ class STPPaymentOptionsViewControllerLocalizationTests: FBSnapshotTestCase {
     }
 
     func performSnapshotTest(forLanguage language: String?) {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.companyName = "Test Company"
         config.requiredBillingAddressFields = .full
         let theme = STPTheme.defaultTheme

@@ -160,6 +160,8 @@ extension STPPaymentMethodType {
                     return .pm_type_cashapp
                 case .blik:
                     return .pm_type_blik
+                case .grabPay:
+                    return .pm_type_grabpay
                 default:
                     return nil
                 }

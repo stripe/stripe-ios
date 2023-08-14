@@ -90,7 +90,7 @@ class STPAPIClientTest: XCTestCase {
     }
 
     func testInitWithConfiguration() {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         // #pragma clang diagnostic push
         // #pragma clang diagnostic ignored "-Wdeprecated"
         config.publishableKey = "pk_123"

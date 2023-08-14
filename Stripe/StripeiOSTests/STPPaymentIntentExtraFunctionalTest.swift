@@ -13,7 +13,7 @@ import StripeCoreTestUtils
 class STPPaymentIntentFunctionalTest: XCTestCase {
     func testCreatePaymentIntentWithTestingServer() {
         let expectation = self.expectation(description: "PaymentIntent create.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: nil) { clientSecret, error in
             XCTAssertNotNil(clientSecret)
             XCTAssertNil(error)
@@ -24,7 +24,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
 
     func testCreatePaymentIntentWithInvalidCurrency() {
         let expectation = self.expectation(description: "PaymentIntent create.")
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: [
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: [
             "payment_method_types": ["bancontact"]
         ]) { clientSecret, error in
             XCTAssertNil(clientSecret)
@@ -137,7 +137,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
 
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
             XCTAssertNil(creationError)
             createExpectation.fulfill()
@@ -189,7 +189,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
 
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
             XCTAssertNil(creationError)
             createExpectation.fulfill()
@@ -248,7 +248,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmPaymentIntentWithShippingDetailsSucceeds() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
             XCTAssertNil(creationError)
             createExpectation.fulfill()
@@ -314,7 +314,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmCardWithoutNetworkParam() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
             XCTAssertNil(creationError)
             createExpectation.fulfill()
@@ -359,7 +359,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmCardWithNetworkParam() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
             XCTAssertNil(creationError)
             createExpectation.fulfill()
@@ -410,7 +410,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmCardWithInvalidNetworkParam() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
             XCTAssertNil(creationError)
             createExpectation.fulfill()
@@ -458,7 +458,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmPaymentIntentWithGiropay() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["giropay"],
                 "currency": "eur",
@@ -517,7 +517,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
 
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "currency": "aud",
                 "amount": NSNumber(value: 2000),
@@ -575,7 +575,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmPaymentIntentWithPrzelewy24() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["p24"],
                 "currency": "eur",
@@ -631,7 +631,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmPaymentIntentWithBancontact() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["bancontact"],
                 "currency": "eur",
@@ -687,7 +687,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmPaymentIntentWithOXXO() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["oxxo"],
                 "amount": NSNumber(value: 2000),
@@ -743,7 +743,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmPaymentIntentWithEPS() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["eps"],
                 "currency": "eur",
@@ -801,7 +801,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmAlipayPaymentIntent() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "currency": "usd",
                 "amount": NSNumber(value: 2000),
@@ -848,7 +848,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmPaymentIntentWithGrabPay() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["grabpay"],
                 "currency": "sgd",
@@ -905,7 +905,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmPaymentIntentWithPayPal() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["paypal"],
                 "currency": "eur",
@@ -962,7 +962,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmPaymentIntentWithBLIK() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["blik"],
                 "currency": "pln",
@@ -1020,7 +1020,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testConfirmPaymentIntentWithAffirm() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["affirm"],
                 "currency": "usd",
