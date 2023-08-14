@@ -610,6 +610,38 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         webviewCloseButton.tap()
     }
 
+    func testBLIKPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new // new customer
+        settings.apmsEnabled = .on
+        settings.currency = .pln
+        settings.merchantCountryCode = .FR
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay PLN 50.99"]
+
+        // Select BLIK
+        guard let blik = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "BLIK")
+        else {
+            XCTFail()
+            return
+        }
+        blik.tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+
+        let blik_code = app.textFields["BLIK code"]
+        blik_code.tap()
+        blik_code.typeText("123456")
+        blik_code.typeText(XCUIKeyboardKey.return.rawValue)
+
+        payButton.tap()
+    }
+
     func testCashAppPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
