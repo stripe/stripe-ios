@@ -118,6 +118,11 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
 
         }
     }
+    func testBLIKConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "PLN", paymentMethodType: .dynamic("blik"), merchantCountry: .BE) { form in
+            form.getTextFieldElement("BLIK code")?.setText("123456")
+        }
+    }
 }
 
 // MARK: - Helper methods
