@@ -25,6 +25,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
+        case BE = "be"
 
         var publishableKey: String {
             switch self {
@@ -32,6 +33,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingDefaultPublishableKey
             case .SG:
                 return STPTestingSGPublishableKey
+            case .BE:
+                return STPTestingBEPublishableKey
             }
         }
     }
