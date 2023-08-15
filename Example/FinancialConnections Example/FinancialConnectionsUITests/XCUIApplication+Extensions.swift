@@ -62,8 +62,13 @@ extension XCUIApplication {
         return consentAgreeButton
     }
 
-    var fc_nativePrepaneContinueButton: XCUIElement {
+    var fc_nativePrepaneContinueButton_noWait: XCUIElement {
         let prepaneContinueButton = buttons["prepane_continue_button"]
+        return prepaneContinueButton
+    }
+
+    var fc_nativePrepaneContinueButton: XCUIElement {
+        let prepaneContinueButton = fc_nativePrepaneContinueButton_noWait
         XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0), "\(#function) waiting failed")
         return prepaneContinueButton
     }

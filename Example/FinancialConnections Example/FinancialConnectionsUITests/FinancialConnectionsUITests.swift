@@ -154,47 +154,61 @@ final class FinancialConnectionsUITests: XCTestCase {
         // find + tap an institution; we add extra institutions in case
         // they don't get featured
         let institutionButton: XCUIElement?
-        let institutionTextInWebView: String?
+        let institutionName: String?
         let chaseInstitutionButton = app.cells["Chase"]
         if chaseInstitutionButton.waitForExistence(timeout: 10) {
             institutionButton = chaseInstitutionButton
-            institutionTextInWebView = "Chase"
+            institutionName = "Chase"
         } else {
             let bankOfAmericaInstitutionButton = app.cells["Bank of America"]
             if bankOfAmericaInstitutionButton.waitForExistence(timeout: 10) {
                 institutionButton = bankOfAmericaInstitutionButton
-                institutionTextInWebView = "Bank of America"
+                institutionName = "Bank of America"
             } else {
                 let wellsFargoInstitutionButton = app.cells["Wells Fargo"]
                 if wellsFargoInstitutionButton.waitForExistence(timeout: 10) {
                     institutionButton = wellsFargoInstitutionButton
-                    institutionTextInWebView = "Wells Fargo"
+                    institutionName = "Wells Fargo"
                 } else {
                     institutionButton = nil
-                    institutionTextInWebView = nil
+                    institutionName = nil
                 }
             }
         }
-        guard let institutionButton = institutionButton, let institutionTextInWebView = institutionTextInWebView else {
+        guard let institutionButton = institutionButton, let institutionName = institutionName else {
             XCTFail("Couldn't find a Live Mode institution.")
             return
         }
         institutionButton.tap()
 
-        app.fc_nativePrepaneContinueButton.tap()
+        // ...at this point the bank is either:
+        // 1. active, which means prepane is visible
+        // 2. under maintenance, which means an 'error' screen is visible
 
-        // At this point, the bank could be down for maintenance, and that's OK.
+        // (1) bank is NOT under maintenance
+        if app.fc_nativePrepaneContinueButton_noWait.waitForExistence(timeout: 60) {
+            app.fc_nativePrepaneContinueButton.tap()
 
-        // check that the WebView loaded
-        let institutionWebViewText = app.webViews
-            .staticTexts
-            .containing(NSPredicate(format: "label CONTAINS '\(institutionTextInWebView)'"))
-            .firstMatch
-        XCTAssertTrue(institutionWebViewText.waitForExistence(timeout: 120.0))
+            // check that the WebView loaded
+            let institutionWebViewText = app.webViews
+                .staticTexts
+                .containing(NSPredicate(format: "label CONTAINS '\(institutionName)'"))
+                .firstMatch
+            XCTAssertTrue(institutionWebViewText.waitForExistence(timeout: 120.0))
 
-        let secureWebViewCancelButton = app.buttons["Cancel"]
-        XCTAssertTrue(secureWebViewCancelButton.waitForExistence(timeout: 60.0))
-        secureWebViewCancelButton.tap()
+            let secureWebViewCancelButton = app.buttons["Cancel"]
+            XCTAssertTrue(secureWebViewCancelButton.waitForExistence(timeout: 60.0))
+            secureWebViewCancelButton.tap()
+        }
+        // (2) bank IS under maintenance
+        else {
+            // check that we see a maintenance error
+            let errorViewText = app
+                .textViews
+                .containing(NSPredicate(format: "label CONTAINS 'unavailable' OR label CONTAINS 'maintenance' OR label CONTAINS 'scheduled'"))
+                .firstMatch
+            XCTAssertTrue(errorViewText.waitForExistence(timeout: 10))
+        }
 
         let navigationBarCloseButton = app.navigationBars.buttons["close"]
         XCTAssertTrue(navigationBarCloseButton.waitForExistence(timeout: 60.0))
@@ -239,46 +253,62 @@ final class FinancialConnectionsUITests: XCTestCase {
         // find + tap an institution; we add extra institutions in case
         // they don't get featured
         let institutionButton: XCUIElement?
-        let institutionTextInWebView: String?
+        let institutionName: String?
         let chaseInstitutionButton = app.webViews.buttons["Chase"]
         if chaseInstitutionButton.waitForExistence(timeout: 10) {
             institutionButton = chaseInstitutionButton
-            institutionTextInWebView = "Chase"
+            institutionName = "Chase"
         } else {
             let bankOfAmericaInstitutionButton = app.webViews.buttons["Bank of America"]
             if bankOfAmericaInstitutionButton.waitForExistence(timeout: 10) {
                 institutionButton = bankOfAmericaInstitutionButton
-                institutionTextInWebView = "Bank of America"
+                institutionName = "Bank of America"
             } else {
                 let wellsFargoInstitutionButton = app.webViews.buttons["Wells Fargo"]
                 if wellsFargoInstitutionButton.waitForExistence(timeout: 10) {
                     institutionButton = wellsFargoInstitutionButton
-                    institutionTextInWebView = "Wells Fargo"
+                    institutionName = "Wells Fargo"
                 } else {
                     institutionButton = nil
-                    institutionTextInWebView = nil
+                    institutionName = nil
                 }
             }
         }
-        guard let institutionButton = institutionButton, let institutionTextInWebView = institutionTextInWebView else {
+        guard let institutionButton = institutionButton, let institutionName = institutionName else {
             XCTFail("Couldn't find a Live Mode institution.")
             return
         }
         institutionButton.tap()
 
+        // ...at this point the bank is either:
+        // 1. active, which means prepane is visible
+        // 2. under maintenance, which means an 'error' screen is visible
+
         let prepaneContinueButton = app.webViews
             .buttons
             .containing(NSPredicate(format: "label CONTAINS 'Continue'"))
             .firstMatch
-        XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0))
-        prepaneContinueButton.tap()
 
-        // check that the WebView loaded
-        let institutionWebViewText = app.webViews
-            .staticTexts
-            .containing(NSPredicate(format: "label CONTAINS '\(institutionTextInWebView)'"))
-            .firstMatch
-        XCTAssertTrue(institutionWebViewText.waitForExistence(timeout: 120.0))
+        // (1) bank is NOT under maintenance
+        if prepaneContinueButton.waitForExistence(timeout: 60.0) {
+            prepaneContinueButton.tap()
+
+            // check that the WebView loaded
+            let institutionWebViewText = app.webViews
+                .staticTexts
+                .containing(NSPredicate(format: "label CONTAINS '\(institutionName)'"))
+                .firstMatch
+            XCTAssertTrue(institutionWebViewText.waitForExistence(timeout: 120.0))
+        }
+        // (2) bank IS under maintenance
+        else {
+            // check that we see a maintenance error
+            let errorViewText = app.webViews
+                .staticTexts
+                .containing(NSPredicate(format: "label CONTAINS 'unavailable' OR label CONTAINS 'maintenance' OR label CONTAINS 'scheduled'"))
+                .firstMatch
+            XCTAssertTrue(errorViewText.waitForExistence(timeout: 10))
+        }
 
         let secureWebViewCancelButton = app.buttons["Cancel"]
         XCTAssertTrue(secureWebViewCancelButton.waitForExistence(timeout: 60.0))
