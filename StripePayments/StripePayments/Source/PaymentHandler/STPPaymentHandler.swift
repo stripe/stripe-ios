@@ -1300,9 +1300,7 @@ public class STPPaymentHandler: NSObject {
             }
 
             if let mobileAuthURL = authenticationAction.cashAppRedirectToApp?.mobileAuthURL {
-                let resultingRedirectURL = self.followRedirects(to: mobileAuthURL, urlSession: URLSession.shared)
-                _handleRedirect(to: resultingRedirectURL, fallbackURL: mobileAuthURL, return: returnURL)
-
+                _handleRedirect(to: mobileAuthURL, fallbackURL: mobileAuthURL, return: returnURL)
             } else {
                 currentAction.complete(
                     with: STPPaymentHandlerActionStatus.failed,
@@ -1327,13 +1325,6 @@ public class STPPaymentHandler: NSObject {
         let task = urlSession.dataTask(with: urlRequest) { _, response, error in
             defer {
                 blockingDataTaskSemaphore.signal()
-            }
-
-            // Check if the request failed due to attempting to redirect to a custom Scheme URL for Cash App
-            if let errorUrl = (error as NSError?)?.userInfo[NSURLErrorFailingURLStringErrorKey] as? String {
-                if errorUrl.contains("cashme://cash.app"), let customSchemeAppURL = URL(string: errorUrl) {
-                    resultingUrl = customSchemeAppURL
-                }
             }
 
             guard error == nil,
