@@ -67,6 +67,13 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
         // no-op
     }
 
+    func transitionToSelfieCaptureScreen(
+        staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol
+    ) {
+        // no-op
+    }
+
     func replaceCurrentScreen(with viewController: UIViewController) {
         replacedWithViewController = viewController
     }

@@ -46,6 +46,11 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         missingType: IndividualFormElement.MissingType
     )
 
+    func transitionToSelfieCaptureScreen(
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol
+    )
+
     func replaceCurrentScreen(
         with viewController: UIViewController
     )
@@ -165,6 +170,39 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 shouldAnimate: true,
                 completion: {}
             )
+        }
+    }
+
+    func transitionToSelfieCaptureScreen(
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol
+    ) {
+        return sheetController.mlModelLoader.faceModelsFuture.observe(on: .main) {
+            [weak self] result in
+            guard let self = self else { return }
+
+            let staticContent: StripeAPI.VerificationPage
+            do {
+                staticContent = try staticContentResult.get()
+                self.transition(
+                    to: makeSelfieCaptureViewController(
+                        faceScannerResult: result,
+                        staticContent: staticContent,
+                        sheetController: sheetController
+                    ),
+                    shouldAnimate: true,
+                    completion: {}
+                )
+            } catch {
+                self.transition(
+                    to: ErrorViewController(
+                        sheetController: sheetController,
+                        error: .error(error)
+                    ),
+                    shouldAnimate: true,
+                    completion: {}
+                )
+            }
         }
     }
 
@@ -366,17 +404,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             }
         case .selfieCaptureDestination:
-            return sheetController.mlModelLoader.faceModelsFuture.observe(on: .main) {
-                [weak self] result in
-                guard let self = self else { return }
-                completion(
-                    self.makeSelfieCaptureViewController(
-                        faceScannerResult: result,
-                        staticContent: staticContent,
-                        sheetController: sheetController
-                    )
-                )
-            }
+            completion(makeSelfieWarmupViewController(sheetController: sheetController))
         case .individualWelcomeDestination:
             // if missing .name or .dob, then verification type is not document.
             // Transition to IndividualWelcomeViewController.
@@ -433,6 +461,21 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 welcomeContent: staticContent.individualWelcome,
                 sheetController: sheetController
             )
+        } catch {
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(
+                    VerificationSheetFlowControllerError.unknown(error)
+                )
+            )
+        }
+    }
+
+    func makeSelfieWarmupViewController(
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        do {
+            return try  SelfieWarmupViewController(sheetController: sheetController)
         } catch {
             return ErrorViewController(
                 sheetController: sheetController,
