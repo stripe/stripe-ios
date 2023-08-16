@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Data nașterii pare a nu fi validă";
 
-"File Upload" = "Încărcare fișier";
-
-"File upload" = "Încărcare fișier";
-
 "Flip your driver's license over to the other side" = "Întoarceți permisul de conducere pe partea cealaltă";
 
 "Flip your identity card over to the other side" = "Întoarceți cartea de identitate pe partea cealaltă";
@@ -127,6 +123,8 @@
 "Upload" = "Încărcare";
 
 "Upload a Photo" = "Încărcați o fotografie";
+
+"Upload your photo ID" = "Încărcați documentul de identitate cu fotografie";
 
 "Uploading back driver's license photo" = "Se încarcă fotografia verso-ului permisului de conducere";
 

@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Fødselsdato ser ikkje gyldig ut";
 
-"File Upload" = "Filopplasting";
-
-"File upload" = "Filopplasting";
-
 "Flip your driver's license over to the other side" = "Snu førarkortet ditt";
 
 "Flip your identity card over to the other side" = "Snu ID-kortet ditt";
@@ -127,6 +123,8 @@
 "Upload" = "Last opp";
 
 "Upload a Photo" = "Last opp eit bilete";
+
+"Upload your photo ID" = "Last opp legitimasjon med foto";
 
 "Uploading back driver's license photo" = "Lastar opp baksida av førarkort";
 

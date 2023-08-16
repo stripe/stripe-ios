@@ -10,6 +10,8 @@
 
 "Area" = "Område";
 
+"BLIK code" = "BLIK-kode";
+
 "BSB number" = "BSB-nummer";
 
 "Billing address is same as shipping" = "Fakturaadressa er den same som leveringsadressa";
@@ -111,6 +113,8 @@
 "Unable to parse phone number" = "Kan ikkje analysere telefonnummer";
 
 "Use rotor to access links" = "Bruk rotor for å opne koplingar";
+
+"Your BLIK code is incomplete." = "BLIK-koden er ufullstendig.";
 
 "Your ZIP is incomplete." = "ZIP-koden er ufullstendig.";
 

@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Videti je, da datum rojstva ni veljaven";
 
-"File Upload" = "Naloži datoteko";
-
-"File upload" = "Nalaganje datotek";
-
 "Flip your driver's license over to the other side" = "Obrnite vozniško dovoljenje na drugo stran";
 
 "Flip your identity card over to the other side" = "Obrnite osebno izkaznico na drugo stran";
@@ -127,6 +123,8 @@
 "Upload" = "Naloži";
 
 "Upload a Photo" = "Naloži fotografijo";
+
+"Upload your photo ID" = "Naložite osebni dokument s svojo fotografijo";
 
 "Uploading back driver's license photo" = "Nalaganje fotografije hrbtne strani vozniškega dovoljenja";
 

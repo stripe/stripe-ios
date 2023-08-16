@@ -17,6 +17,7 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+@testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
@@ -30,7 +31,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             description: "createPaymentIntentExpectation"
         )
         var retrievedClientSecret: String?
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) {
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) {
             (createdPIClientSecret, _) in
             if let createdPIClientSecret = createdPIClientSecret {
                 retrievedClientSecret = createdPIClientSecret

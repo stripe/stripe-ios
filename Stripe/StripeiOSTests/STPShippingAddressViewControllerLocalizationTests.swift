@@ -26,7 +26,7 @@ class STPShippingAddressViewControllerLocalizationTests: FBSnapshotTestCase {
         contact: Bool
     ) {
         var identifier = (shippingType == .shipping) ? "shipping" : "delivery"
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.companyName = "Test Company"
         config.requiredShippingAddressFields = Set<STPContactField>([
             .postalAddress,

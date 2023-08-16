@@ -12,10 +12,6 @@
 
 "Approve payment" = "Schválit platbu";
 
-"Are you sure you want to remove this card?" = "Opravdu chcete tuto kartu odebrat?";
-
-"Are you sure you want to remove this linked account?" = "Opravdu chcete tento propojený účet odebrat?";
-
 "Back" = "Zpět";
 
 "Bank account" = "Bankovní účet";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Pokračováním souhlasíte s autorizací plateb v souladu s těmito <terms>podmínkami</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračováním povolujete, %1$@ aby odepisovala z vašeho účtu Cash App tuto platbu a budoucí platby v souladu s podmínkami společnosti %2$@, dokud toto oprávnění neodvoláte. Toto oprávnění můžete kdykoli změnit v nastavení aplikace Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Připojením se ke službám Link vyjadřujete zároveň svůj souhlas s <terms>Podmínkami</terms> a <privacy>Zásadami ochrany osobních údajů</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Zrušit a zaplatit jiným způsobem";
 
-"Change email" = "Změnit e-mail";
-
 "Choose a payment method" = "Zvolte platební metodu";
 
 "Close card scanner" = "Zavřít skener karty";
 
-"Code sent" = "Kód odeslán";
+"Confirm" = "Potvrdit";
 
 "Contact information" = "Kontaktní údaje";
-
-"Default" = "Výchozí";
 
 "EPS Bank" = "Banka EPS";
 
 "Enter address manually" = "Zadejte adresu ručně";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Zadejte kód zaslaný na %@, abyste mohli používat Link k výchozí platbě.";
-
-"Enter your verification code" = "Zadejte svůj ověřovací kód";
-
-"For security, please re-enter your card’s security code." = "Z bezpečnostních důvodů zadejte znovu bezpečnostní kód své karty.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Připojit se k Link";
-
-"Log out of Link" = "Odhlásit ze služby Link";
+"Manage your payment methods" = "Spravujte své platební metody";
 
 "Name on card" = "Jméno na kartě";
-
-"Not %@?" = "Ne %@?";
 
 "Open your UPI app to approve your payment within %@" = "Otevřete aplikaci UPI, abyste mohli platbu schválit do %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Platit průběžně pomocí %@";
 
-"Pay using" = "Zaplatit pomocí";
-
-"Pay with %@" = "Zaplatit metodou %@";
-
 "Pay with your bank account in just a few steps." = "Zaplaťte pomocí bankovního účtu v několika málo krocích.";
 
-"Payment" = "Platba";
-
 "Payment failed" = "Platba se nezdařila.";
-
-"Payment methods" = "Způsoby platby";
 
 "Please go back and select another payment method" = "Vraťte se prosím zpět a vyberte jiný způsob platby";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Odebrat kartu";
 
-"Remove card" = "Odebrat kartu";
+"Save" = "Uložit";
 
-"Remove linked account" = "Odebrat propojený účet";
-
-"Resend code" = "Znovu zaslat kód";
+"Save a new payment method" = "Uložte novou platební metodu";
 
 "Save address" = "Uložit adresu";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Uložit tuto kartu pro budoucí platby %@";
 
-"Secure 1⁠-⁠click checkout" = "Bezpečné odbavení 1 kliknutím";
-
 "Select your payment method" = "Vyberte svou platební metodu";
-
-"Set as default" = "Nastavit jako výchozí";
-
-"Set as default payment method" = "Nastavit jako výchozí způsob platby";
 
 "Set up" = "Nastavit";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Zobrazit nabídku";
 
-"Sign in to your Link account" = "Přihlaste se ke svému účtu Link";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "V průběhu 1 až 2 pracovních dnů vloží Stripe na váš účet vklad ve výšce 0,01 USD. Potom dostanete e-mail s instrukcemi k dokončení platby společnosti %@.";
-
-"Tap to close" = "Klepnutím zavřete";
-
-"Tap to expand" = "Klepnutím rozbalte";
 
 "The IBAN you entered is incomplete." = "Číslo IBAN, které jste zadali, je neúplné.";
 
-"The provided verification code has expired." = "Platnost zadaného ověřovacího kódu vypršela.";
-
-"The provided verification code is incorrect." = "Zadaný ověřovací kód není správný.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Platnost této karty vypršela. Aktualizujte údaje o kartě nebo zvolte jiný způsob platby.";
-
-"This is your default" = "Toto je výchozí nastavení";
-
-"Too many attempts. Please try again in a few minutes." = "Příliš mnoho pokusů. Zkuste to prosím za pár minut znovu.";
-
-"Unavailable for this purchase" = "Není k dispozici pro tento nákup";
-
 "Update card" = "Aktualizovat kartu";
-
-"Use your saved info to check out faster" = "Použijte uložené informace k rychlejšímu odbavení";
 
 "Your IBAN should start with a two-letter country code." = "Číslo IBAN by mělo začínat dvěma písmeny kódu země.";
 

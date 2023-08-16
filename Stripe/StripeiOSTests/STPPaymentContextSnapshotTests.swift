@@ -17,7 +17,7 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.companyName = "Test Company"
         config.requiredBillingAddressFields = .full
         config.shippingType = .shipping

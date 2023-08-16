@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "La date de naissance ne semble pas valide";
 
-"File Upload" = "Chargement de fichier";
-
-"File upload" = "Chargement de fichier";
-
 "Flip your driver's license over to the other side" = "Retournez votre permis de conduire";
 
 "Flip your identity card over to the other side" = "Retournez votre carte d'identité";
@@ -127,6 +123,8 @@
 "Upload" = "Charger";
 
 "Upload a Photo" = "Charger une photo";
+
+"Upload your photo ID" = "Charger votre document d'identité avec photo";
 
 "Uploading back driver's license photo" = "Chargement de la photo du verso du permis de conduire";
 

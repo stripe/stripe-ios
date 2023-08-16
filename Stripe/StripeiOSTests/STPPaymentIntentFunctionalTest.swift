@@ -26,7 +26,7 @@ class STPPaymentIntentFunctionalTestSwift: XCTestCase {
 
         var clientSecret: String?
         let createPIExpectation = expectation(description: "Create PaymentIntent")
-        STPTestingAPIClient.shared().createPaymentIntent(
+        STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["us_bank_account"],
                 "currency": "usd",

@@ -14,6 +14,8 @@ import Foundation
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
+@_exported @testable import StripePaymentsObjcTestUtils
+
 extension STPFixtures {
     /// A customer-scoped ephemeral key that expires in 100 seconds.
     class func ephemeralKey() -> STPEphemeralKey {

@@ -12,10 +12,6 @@
 
 "Approve payment" = "Chấp nhận thanh toán";
 
-"Are you sure you want to remove this card?" = "Bạn có chắc chắn muốn gỡ bỏ thẻ này không?";
-
-"Are you sure you want to remove this linked account?" = "Bạn có chắc chắn muốn gỡ bỏ tài khoản liên kết này không?";
-
 "Back" = "Quay lại";
 
 "Bank account" = "Tài khoản ngân hàng";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc tiếp tục, bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Bằng việc tiếp tục, quý vị đồng ý xác thực thanh toán tuân theo các <terms>điều khoản</terms> sau.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Bằng cách tiếp tục, quý vị ủy quyền cho %1$@ ghi nợ tài khoản Cash App của quý vị cho khoản thanh toán này và các khoản thanh toán trong tương lai theo các điều khoản của %2$@, cho đến khi ủy quyền này bị thu hồi. Quý vị có thể thay đổi điều này bất cứ lúc nào trong mục Cài đặt của Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Hủy và thanh toán theo cách khác";
 
-"Change email" = "Đổi email";
-
 "Choose a payment method" = "Chọn phương thức thanh toán";
 
 "Close card scanner" = "Đóng máy quét thẻ";
 
-"Code sent" = "Mã đã được gửi";
+"Confirm" = "Xác nhận";
 
 "Contact information" = "Thông tin liên lạc";
-
-"Default" = "Mặc định";
 
 "EPS Bank" = "Ngân hàng EPS";
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Nhập mã được gửi tới %@ để dùng Link làm phương thức thanh toán mặc định.";
-
-"Enter your verification code" = "Nhập mã xác minh của bạn";
-
-"For security, please re-enter your card’s security code." = "Vì lý do bảo mật, vui lòng nhập lại mã bảo mật của thẻ của bạn.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Tham gia Link";
-
-"Log out of Link" = "Đăng xuất khỏi Link";
+"Manage your payment methods" = "Quản lý các phương thức thanh toán của bạn";
 
 "Name on card" = "Tên trên thẻ";
-
-"Not %@?" = "Không phải %@?";
 
 "Open your UPI app to approve your payment within %@" = "Mở ứng dụng UPI của quý vị để phê duyệt khoản thanh toán của quý vị trong vòng%@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Trả dần bằng %@";
 
-"Pay using" = "Thanh toán bằng";
-
-"Pay with %@" = "Thanh toán bằng %@";
-
 "Pay with your bank account in just a few steps." = "Thanh toán bằng tài khoản ngân hàng của bạn chỉ trong vài bước.";
 
-"Payment" = "Thanh toán";
-
 "Payment failed" = "Thanh toán không thành công";
-
-"Payment methods" = "Phương thức thanh toán";
 
 "Please go back and select another payment method" = "Vui lòng quay lại và chọn phương thức thanh toán khác";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Xóa thẻ";
 
-"Remove card" = "Xóa thẻ";
+"Save" = "Lưu";
 
-"Remove linked account" = "Xóa tài khoản liên kết";
-
-"Resend code" = "Gửi lại mã";
+"Save a new payment method" = "Lưu một phương thức thanh toán mới";
 
 "Save address" = "Lưu địa chỉ";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Lưu thẻ này để thanh toán nhanh %@ sau này";
 
-"Secure 1⁠-⁠click checkout" = "Thanh toán bảo mật bằng một cú nhấp chuột";
-
 "Select your payment method" = "Chọn phương thức thanh toán của bạn";
-
-"Set as default" = "Đặt làm mặc định";
-
-"Set as default payment method" = "Đặt làm phương thức thanh toán mặc định";
 
 "Set up" = "Cài đặt";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Hiển thị trình đơn";
 
-"Sign in to your Link account" = "Đăng nhập vào tài khoản Link của bạn";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sẽ gửi $0.01 vào tài khoản của bạn trong 1-2 ngày làm việc. Khi đó bạn sẽ nhận được một email chứa hướng dẫn để hoàn tất thanh toán cho %@.";
-
-"Tap to close" = "Nhấp chạm vào để đóng";
-
-"Tap to expand" = "Nhấp chạm vào để mở rộng";
 
 "The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
 
-"The provided verification code has expired." = "Mã xác minh được cung cấp đã hết hạn.";
-
-"The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Thẻ này đã hết hạn. Hãy cập nhật thông tin thẻ của bạn hoặc chọn một phương thức thanh toán khác.";
-
-"This is your default" = "Đây là thông tin mặc định của bạn";
-
-"Too many attempts. Please try again in a few minutes." = "Đã thử quá nhiều lần. Vui lòng thử lại sau vài phút.";
-
-"Unavailable for this purchase" = "Không khả dụng cho giao dịch mua hàng này";
-
 "Update card" = "Cập nhật thẻ";
-
-"Use your saved info to check out faster" = "Sử dụng thông tin đã lưu của bạn để thanh toán nhanh hơn";
 
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
 

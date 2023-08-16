@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Sünnikuupäev ei näi olevat õige";
 
-"File Upload" = "Faili üleslaadimine";
-
-"File upload" = "Faili üleslaadimine";
-
 "Flip your driver's license over to the other side" = "Pöörake juhiluba ümber";
 
 "Flip your identity card over to the other side" = "Pöörake ID-kaart ümber";
@@ -127,6 +123,8 @@
 "Upload" = "Üleslaadimine";
 
 "Upload a Photo" = "Laadi foto üles";
+
+"Upload your photo ID" = "Laadige üles fotoga isikut tõendav dokument";
 
 "Uploading back driver's license photo" = "Juhiloa tagakülje foto üleslaadimine";
 

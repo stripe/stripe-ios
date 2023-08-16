@@ -1,6 +1,13 @@
-## x.x.x 2023-xx-xx
+## x.x.x x-x-x
+
 ### All
 * Improved redirect UX when using Cash App Pay.
+
+### PaymentSheet
+* [Added] Support for GrabPay with PaymentIntents.
+
+### Payments
+* [Added] You can now create an STPConnectAccountParams without specifying a business type.
 
 ## 23.13.0 2023-08-07
 ### All

@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "La data de naixement no és vàlida";
 
-"File Upload" = "Carrega fitxers";
-
-"File upload" = "Càrrega de fitxer";
-
 "Flip your driver's license over to the other side" = "Gireu el permís de conduir perquè se'n vegi l'altra cara";
 
 "Flip your identity card over to the other side" = "Gireu el document d'identitat perquè se'n vegi l'altra cara";
@@ -127,6 +123,8 @@
 "Upload" = "Carrega";
 
 "Upload a Photo" = "Carrega una foto";
+
+"Upload your photo ID" = "Carregueu la vostra ID amb foto";
 
 "Uploading back driver's license photo" = "S'està carregant la foto del revers del permís de conduir";
 
