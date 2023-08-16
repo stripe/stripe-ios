@@ -185,7 +185,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             do {
                 staticContent = try staticContentResult.get()
                 self.transition(
-                    to: makeSelfieCaptureViewController(
+                    to: self.makeSelfieCaptureViewController(
                         faceScannerResult: result,
                         staticContent: staticContent,
                         sheetController: sheetController
@@ -475,7 +475,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         do {
-            return try  SelfieWarmupViewController(sheetController: sheetController)
+            return try SelfieWarmupViewController(sheetController: sheetController)
         } catch {
             return ErrorViewController(
                 sheetController: sheetController,
