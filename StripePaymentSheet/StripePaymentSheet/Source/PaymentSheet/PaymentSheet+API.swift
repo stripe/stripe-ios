@@ -122,6 +122,7 @@ extension PaymentSheet {
                         paymentOptions: confirmParams.confirmPaymentMethodOptions,
                         shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
                     ),
+                    confirmPaymentMethodOptions: confirmParams.confirmPaymentMethodOptions,
                     configuration: configuration,
                     intentConfig: intentConfig,
                     authenticationContext: authenticationContext,
