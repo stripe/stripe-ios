@@ -161,7 +161,7 @@ class PlaygroundController: ObservableObject {
             paymentMethodTypes = self.paymentMethodTypes
         }
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
-            self?.confirmHandler($0, $1, $2)
+            self?.confirmHandler($0, $1, $2, $3)
         }
         switch settings.mode {
         case .payment:
@@ -476,6 +476,7 @@ extension PlaygroundController {
 
     // Deferred confirmation handler
     func confirmHandler(_ paymentMethod: STPPaymentMethod,
+                        _ confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
                         _ shouldSavePaymentMethod: Bool,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
         switch settings.integrationType {
