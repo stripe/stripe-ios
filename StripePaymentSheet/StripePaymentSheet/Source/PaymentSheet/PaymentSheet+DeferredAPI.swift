@@ -12,6 +12,7 @@ import Foundation
 extension PaymentSheet {
     static func handleDeferredIntentConfirmation(
         confirmType: ConfirmPaymentMethodType,
+        confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         configuration: PaymentSheet.Configuration,
         intentConfig: PaymentSheet.IntentConfiguration,
         authenticationContext: STPAuthenticationContext,
@@ -40,6 +41,7 @@ extension PaymentSheet {
                 // 2. Get Intent client secret from merchant
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
                                                                                  paymentMethod: paymentMethod,
+                                                                                 confirmPaymentMethodOptions: confirmPaymentMethodOptions,
                                                                                  shouldSavePaymentMethod: confirmType.shouldSave)
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
@@ -131,11 +133,12 @@ extension PaymentSheet {
     static func fetchIntentClientSecretFromMerchant(
         intentConfig: IntentConfiguration,
         paymentMethod: STPPaymentMethod,
+        confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         shouldSavePaymentMethod: Bool
     ) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.main.async {
-                intentConfig.confirmHandler(paymentMethod, nil, shouldSavePaymentMethod) { result in
+                intentConfig.confirmHandler(paymentMethod, confirmPaymentMethodOptions, shouldSavePaymentMethod) { result in
                     continuation.resume(with: result)
                 }
             }
