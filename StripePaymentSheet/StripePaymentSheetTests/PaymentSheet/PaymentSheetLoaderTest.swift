@@ -5,8 +5,8 @@
 //  Created by Yuki Tokuhiro on 6/24/23.
 //
 
-@testable @_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeCoreTestUtils
+@testable @_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
@@ -71,7 +71,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
     func testPaymentSheetLoadDeferredIntentSucceeds() {
         let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
         // Test PaymentSheetLoader.load can load various IntentConfigurations
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _, _ in
             XCTFail("Confirm handler shouldn't be called.")
         }
         let intentConfigTestcases: [PaymentSheet.IntentConfiguration] = [
@@ -108,7 +108,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
     func testPaymentSheetLoadDeferredIntentFails() {
         let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
         // Test PaymentSheetLoader.load can load various IntentConfigurations
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _, _ in
             XCTFail("Confirm handler shouldn't be called.")
         }
         let intentConfigTestcases: [PaymentSheet.IntentConfiguration] = [
@@ -137,7 +137,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
     }
 
     func testLoadPerformance() {
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in }
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _, _  in }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD"),
                                                             confirmHandler: confirmHandler)
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()

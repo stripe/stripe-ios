@@ -10,7 +10,7 @@
 import XCTest
 
 final class PaymentSheetDeferredValidatorTests: XCTestCase {
-    let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in }
+    let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _, _ in }
 
     func testMismatchedIntentAndIntentConfiguration() throws {
         let pi = STPFixtures.makePaymentIntent()
