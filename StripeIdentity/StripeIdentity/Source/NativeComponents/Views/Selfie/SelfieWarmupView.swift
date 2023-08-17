@@ -79,9 +79,4 @@ extension SelfieWarmupView {
         stackView.setCustomSpacing(Styling.warmupIconImageSpacing, after: selfieWarmupIconImageView)
         stackView.setCustomSpacing(Styling.warmupTitleSpacing, after: selfieWarmupTitleLabel)
     }
-
-    fileprivate func installConstraints() {
-        selfieWarmupIconImageView.setContentHuggingPriority(.required, for: .vertical)
-        selfieWarmupIconImageView.setContentCompressionResistancePriority(.required, for: .vertical)
-    }
 }
