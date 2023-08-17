@@ -43,7 +43,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                     let intentConfiguration = PaymentSheet
                         .IntentConfiguration(
                             mode: .payment(amount: 100, currency: "usd"),
-                            paymentMethodTypes: ["link"]) { [weak self] _, _, intentCreationCallback in
+                            paymentMethodTypes: ["link"]) { [weak self] _, _, _, intentCreationCallback in
                                 self?.handleDeferredIntent(intentCreationCallback: intentCreationCallback)
                             }
 
