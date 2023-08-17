@@ -50,11 +50,6 @@ extension STPTestingAPIClient {
                 return
             }
 
-            if let range = clientSecret.range(of: "_secret") {
-                    let paymentIntentIdentifier = String(clientSecret[..<range.lowerBound])
-                    print("Payment Intent Id: \(paymentIntentIdentifier)")
-            }
-
             completion(.success(clientSecret))
         }
     }
@@ -88,11 +83,6 @@ extension STPTestingAPIClient {
             else {
                 completion(.failure(error!))
                 return
-            }
-
-            if let range = clientSecret.range(of: "_secret") {
-                    let paymentIntentIdentifier = String(clientSecret[..<range.lowerBound])
-                    print("Payment Intent Id: \(paymentIntentIdentifier)")
             }
 
             completion(.success(clientSecret))
@@ -165,11 +155,6 @@ extension STPTestingAPIClient {
                 else {
                     continuation.resume(throwing: error!)
                     return
-                }
-
-                if let range = clientSecret.range(of: "_secret") {
-                        let paymentIntentIdentifier = String(clientSecret[..<range.lowerBound])
-                        print("Payment Intent Id: \(paymentIntentIdentifier)")
                 }
 
                 continuation.resume(returning: clientSecret)
