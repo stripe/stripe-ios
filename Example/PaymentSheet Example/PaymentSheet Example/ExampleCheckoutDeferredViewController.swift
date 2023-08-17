@@ -48,7 +48,7 @@ class ExampleDeferredCheckoutViewController: UIViewController {
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
         ) { [weak self] paymentMethod, _, shouldSavePaymentMethod, intentCreationCallback  in
-            self?.serverSideConfirmHandler(paymentMethod.stripeId,shouldSavePaymentMethod, intentCreationCallback)
+            self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
         }
     }
 
