@@ -14,7 +14,7 @@ final class LinkAccountPickerNewAccountRowView: UIView {
     private let didSelect: () -> Void
 
     init(
-        title: String?,
+        title: String,
         imageUrl: String?,
         didSelect: @escaping () -> Void
     ) {
@@ -27,13 +27,11 @@ final class LinkAccountPickerNewAccountRowView: UIView {
                 CreateIconView(imageUrl: imageUrl)
             )
         }
-        if let title = title {
-            horizontalStackView.addArrangedSubview(
-                CreateTitleLabelView(
-                    title: title
-                )
+        horizontalStackView.addArrangedSubview(
+            CreateTitleLabelView(
+                title: title
             )
-        }
+        )
         addAndPinSubviewToSafeArea(horizontalStackView)
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
@@ -53,7 +51,7 @@ final class LinkAccountPickerNewAccountRowView: UIView {
     }
 }
 
-private func CreateIconView(imageUrl: String?) -> UIView {
+private func CreateIconView(imageUrl: String) -> UIView {
     let diameter: CGFloat = 24
     let iconImageView = UIImageView()
     iconImageView.contentMode = .scaleAspectFit
@@ -106,7 +104,7 @@ import SwiftUI
 
 private struct LinkAccountPickerNewAccountRowViewUIViewRepresentable: UIViewRepresentable {
 
-    let title: String?
+    let title: String
     let imageUrl: String?
 
     func makeUIView(context: Context) -> LinkAccountPickerNewAccountRowView {
@@ -133,12 +131,6 @@ struct LinkAccountPickerNewAccountRowView_Previews: PreviewProvider {
 
                     LinkAccountPickerNewAccountRowViewUIViewRepresentable(
                         title: "New bank account",
-                        imageUrl: nil
-                    )
-                        .frame(height: 48)
-
-                    LinkAccountPickerNewAccountRowViewUIViewRepresentable(
-                        title: nil,
                         imageUrl: nil
                     )
                         .frame(height: 48)

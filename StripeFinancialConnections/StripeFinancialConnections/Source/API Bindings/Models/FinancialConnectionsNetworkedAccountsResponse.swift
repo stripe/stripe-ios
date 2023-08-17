@@ -28,7 +28,7 @@ struct FinancialConnectionsNetworkingAccountPicker: Decodable {
     let accounts: [FinancialConnectionsNetworkingAccountPicker.Account]
 
     struct AddNewAccount: Decodable {
-        let body: String?
+        let body: String
         let icon: FinancialConnectionsImage?
     }
 
