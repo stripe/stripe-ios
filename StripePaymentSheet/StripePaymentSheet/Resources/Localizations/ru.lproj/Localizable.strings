@@ -12,10 +12,6 @@
 
 "Approve payment" = "Подтвердить платеж";
 
-"Are you sure you want to remove this card?" = "Вы уверены, что хотите удалить эту карту?";
-
-"Are you sure you want to remove this linked account?" = "Вы уверены, что хотите удалить этот привязанный счет?";
-
 "Back" = "Назад";
 
 "Bank account" = "Банковский счет";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продолжая, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Продолжая использование, вы тем самым соглашаетесь авторизовать платежи согласно данным <terms>условиям</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы уполномочиваете компанию %1$@ списывать с вашего счета Cash App суммы в соответствии с этим, а также будущими платежами согласно условиям компании %2$@, пока это разрешение не будет отозвано. Отозвать разрешение можно в любой момент в настройках приложения Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Отменить платеж и оплатить другим способом";
 
-"Change email" = "Изменить адрес электронной почты";
-
 "Choose a payment method" = "Выберите метод оплаты";
 
 "Close card scanner" = "Закрыть сканер карт";
 
-"Code sent" = "Код отправлен";
+"Confirm" = "Подтвердить";
 
 "Contact information" = "Контактные данные";
-
-"Default" = "По умолчанию";
 
 "EPS Bank" = "Банк EPS";
 
 "Enter address manually" = "Введите адрес вручную";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Введите код, отправленный на адрес %@, для оплаты с помощью Link по умолчанию.";
-
-"Enter your verification code" = "Введите проверочный код";
-
-"For security, please re-enter your card’s security code." = "В целях безопасности введите заново код CVV/CVC карты.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Подключиться к Link";
-
-"Log out of Link" = "Выйти из Link";
+"Manage your payment methods" = "Управление способами оплаты";
 
 "Name on card" = "Имя и фамилия, указанные на карте";
-
-"Not %@?" = "Не %@?";
 
 "Open your UPI app to approve your payment within %@" = "Откройте приложение UPI, чтобы подтвердить платеж, не позднее чем через %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
 
-"Pay using" = "Оплатить с помощью";
-
-"Pay with %@" = "Оплатить с помощью %@";
-
 "Pay with your bank account in just a few steps." = "Платите с использованием своего банковского счета в несколько простых действий.";
 
-"Payment" = "Платеж";
-
 "Payment failed" = "Выполнить платеж не удалось";
-
-"Payment methods" = "Способы оплаты";
 
 "Please go back and select another payment method" = "Вернитесь назад и выберите другой способ оплаты";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Удалить карту";
 
-"Remove card" = "Удалить карту";
+"Save" = "Сохранить";
 
-"Remove linked account" = "Удалить привязанный счет";
-
-"Resend code" = "Послать код вторично";
+"Save a new payment method" = "Сохраните новый способ оплаты";
 
 "Save address" = "Сохранить адрес";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Сохранить данные этой карты для будущих платежей %@";
 
-"Secure 1⁠-⁠click checkout" = "Безопасное оформление и оплата заказа одним щелчком";
-
 "Select your payment method" = "Выберите способ оплаты";
-
-"Set as default" = "Назначить способом по умолчанию";
-
-"Set as default payment method" = "Назначить способом оплаты по умолчанию";
 
 "Set up" = "Настроить";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Показать меню";
 
-"Sign in to your Link account" = "Войти в учетную запись Link";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Через 1-2 рабочих дня Stripe положит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями по завершению платежа в адрес %@.";
-
-"Tap to close" = "Коснитесь, чтобы закрыть";
-
-"Tap to expand" = "Коснитесь, чтобы развернуть";
 
 "The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
 
-"The provided verification code has expired." = "Указанный код подтверждения уже недействителен.";
-
-"The provided verification code is incorrect." = "Указанный код подтверждения недействителен.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Срок действия этой карты истек. Обновите данные карты или выберите другой способ оплаты.";
-
-"This is your default" = "Это ваше значение по умолчанию";
-
-"Too many attempts. Please try again in a few minutes." = "Превышено разрешенное число попыток. Попробуйте еще раз через несколько минут.";
-
-"Unavailable for this purchase" = "Не предусмотрено для этой покупки";
-
 "Update card" = "Обновить реквизиты карты";
-
-"Use your saved info to check out faster" = "Используйте сохраненные данные для ускоренного оформления покупок";
 
 "Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
 

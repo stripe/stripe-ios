@@ -12,10 +12,6 @@
 
 "Approve payment" = "支払いを承認する";
 
-"Are you sure you want to remove this card?" = "このカードを削除しますか？";
-
-"Are you sure you want to remove this linked account?" = "この関連付けられた口座を削除しますか？";
-
 "Back" = "戻る";
 
 "Bank account" = "銀行口座";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "続行すると、これらの<terms>規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "続行すると、%2$@ の利用規約に従って、この許可が取り消されない限り、お客様は今回の支払いおよび今後の支払いを、Cash App のアカウントから引き落とすことを %1$@ に許可したものとみなされます。これは、Cash App の設定でいつでも変更することができます。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "キャンセルして別の方法で支払う";
 
-"Change email" = "メールアドレスを変更";
-
 "Choose a payment method" = "支払い方法を選択";
 
 "Close card scanner" = "カードスキャナを閉じる";
 
-"Code sent" = "コードが送信されました";
+"Confirm" = "確定する";
 
 "Contact information" = "連絡先情報";
-
-"Default" = "デフォルト";
 
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "住所を手動で入力";
 
-"Enter the code sent to %@ to use Link to pay by default." = "デフォルトで Link を使用して支払うには %@ に送信されたコードを入力してください。";
-
-"Enter your verification code" = "確認コードを入力してください";
-
-"For security, please re-enter your card’s security code." = "セキュリティー保持のため、お客様のクレジットカードのセキュリティーコードをもう一度入力してください。";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Link に申し込む";
-
-"Log out of Link" = "Link からログアウト";
+"Manage your payment methods" = "決済手段を管理する";
 
 "Name on card" = "カード名義人";
-
-"Not %@?" = "%@ ではありませんか？";
 
 "Open your UPI app to approve your payment within %@" = "UPI アプリを開いて %@ 以内に支払いを承認してください";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "%@ で時間をかけて支払う";
 
-"Pay using" = "下記の方法で支払う";
-
-"Pay with %@" = "%@ で支払う";
-
 "Pay with your bank account in just a few steps." = "銀行口座を使用して簡単に支払えます。";
 
-"Payment" = "決済";
-
 "Payment failed" = "支払いに失敗しました";
-
-"Payment methods" = "決済手段";
 
 "Please go back and select another payment method" = "前に戻って別の決済手段を選択してください";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "カードを削除";
 
-"Remove card" = "カードを削除";
+"Save" = "保存";
 
-"Remove linked account" = "関連付けられた口座を削除";
-
-"Resend code" = "コードを再送信";
+"Save a new payment method" = "新しい決済手段を保存する";
 
 "Save address" = "住所を保存する";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "今後の %@ の支払いのためにこのカードを保存する";
 
-"Secure 1⁠-⁠click checkout" = "安全なワンクリックでの購入";
-
 "Select your payment method" = "支払い方法を選択してください";
-
-"Set as default" = "デフォルトとして設定";
-
-"Set as default payment method" = "デフォルトの決済手段として設定する";
 
 "Set up" = "設定";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "メニューを表示";
 
-"Sign in to your Link account" = "Link アカウントにサインイン";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "1 ～ 2 営業日以内に Stripe は口座に $0.01 を入金します。その後、%@ への支払いを完了するための手順が記載されたメールが送信されます。";
-
-"Tap to close" = "タップして閉じます";
-
-"Tap to expand" = "タップして展開します";
 
 "The IBAN you entered is incomplete." = "入力した IBAN に不備があります。";
 
-"The provided verification code has expired." = "入力された確認コードは期限が切れています。";
-
-"The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
-
-"This card has expired. Update your card info or choose a different payment method." = "このカードは有効期限が切れています。カード情報を更新するか、別の決済手段を選択してください。";
-
-"This is your default" = "これはデフォルトです";
-
-"Too many attempts. Please try again in a few minutes." = "試行回数が多すぎます。数分後に再度お試しください。";
-
-"Unavailable for this purchase" = "この購入には利用できません";
-
 "Update card" = "カードを更新";
-
-"Use your saved info to check out faster" = "保存された情報を使用して迅速に決済";
 
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 

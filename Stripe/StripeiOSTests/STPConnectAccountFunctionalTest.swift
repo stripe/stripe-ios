@@ -56,6 +56,11 @@ class STPConnectAccountFunctionalTest: XCTestCase {
             shouldSucceed: true)
     }
 
+    func testTokenCreation_empty_init() {
+        createToken(STPConnectAccountParams(), shouldSucceed: true)
+
+    }
+
     // MARK: -
 
     func createToken(_ params: STPConnectAccountParams?, shouldSucceed: Bool) {

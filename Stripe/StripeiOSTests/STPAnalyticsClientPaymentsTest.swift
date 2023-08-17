@@ -161,7 +161,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
     }
 
     func testShippingVCAddsUsage() {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.requiredShippingAddressFields = [STPContactField.postalAddress]
         _ = STPShippingAddressViewController(
             configuration: config,

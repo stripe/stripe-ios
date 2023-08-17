@@ -30,6 +30,7 @@ class STPConnectAccountParamsTest: XCTestCase {
     func testBusinessTypeString() {
         XCTAssertEqual("individual", STPConnectAccountParams.string(from: .individual))
         XCTAssertEqual("company", STPConnectAccountParams.string(from: .company))
+        XCTAssertEqual(nil, STPConnectAccountParams.string(from: .none))
     }
 
     func testPropertyNamesToFormFieldNamesMapping() {
@@ -39,18 +40,11 @@ class STPConnectAccountParamsTest: XCTestCase {
         let mapping = STPConnectAccountParams.propertyNamesToFormFieldNamesMapping()
 
         for propertyName in mapping.keys {
-            guard let propertyName = propertyName as? String else {
-                continue
-            }
             XCTAssertFalse(propertyName.contains(":"))
             XCTAssert(accountParams.responds(to: NSSelectorFromString(propertyName)))
         }
 
         for formFieldName in mapping.values {
-            guard let formFieldName = formFieldName as? String else {
-                continue
-            }
-            XCTAssert((formFieldName is NSString))
             XCTAssert(formFieldName.count > 0)
         }
 

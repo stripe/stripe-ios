@@ -1,3 +1,10 @@
+## x.x.x x-x-x
+### PaymentSheet
+* [Added] Support for GrabPay with PaymentIntents.
+
+### Payments
+* [Added] You can now create an STPConnectAccountParams without specifying a business type.
+
 ## 23.13.0 2023-08-07
 ### All
 * [Fixed] Fixed compatibility with Xcode 15 beta 3. visionOS is now supported in iPadOS compatibility mode.

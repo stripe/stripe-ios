@@ -14,6 +14,9 @@ import Foundation
     case individual
     /// This Connect account represents a company.
     case company
+    /// No value was provided.
+    /// - Note: This value is used instead of `nil` for Obj-C compatibility.
+    case none
 }
 
 /// Parameters for creating a Connect Account token.
@@ -110,6 +113,14 @@ public class STPConnectAccountParams: NSObject {
         super.init()
     }
 
+    @objc public override init() {
+        tosShownAndAccepted = false
+        businessType = .none
+        individual = nil
+        company = nil
+        super.init()
+    }
+
     // MARK: - description
     /// :nodoc:
     @objc public override var description: String {
@@ -119,19 +130,20 @@ public class STPConnectAccountParams: NSObject {
             "tosShownAndAccepted = \(String(describing: tosShownAndAccepted))",
             "individual = \(String(describing: individual))",
             "company = \(String(describing: company))",
-            "business_type = \(STPConnectAccountParams.string(from: businessType))",
+            "business_type = \(STPConnectAccountParams.string(from: businessType) ?? "nil")",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
 
     // MARK: - STPConnectAccountBusinessType
-    @objc(stringFromBusinessType:)
-    class func string(from businessType: STPConnectAccountBusinessType) -> String {
+    class func string(from businessType: STPConnectAccountBusinessType) -> String? {
         switch businessType {
         case .individual:
             return "individual"
         case .company:
             return "company"
+        case .none:
+            return nil
         }
     }
 
@@ -140,7 +152,7 @@ public class STPConnectAccountParams: NSObject {
 // MARK: - STPFormEncodable
 extension STPConnectAccountParams: STPFormEncodable {
 
-    @objc internal var businessTypeString: String {
+    @objc var businessTypeString: String? {
         return STPConnectAccountParams.string(from: businessType)
     }
 

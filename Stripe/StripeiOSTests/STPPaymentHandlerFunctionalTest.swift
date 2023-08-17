@@ -7,6 +7,7 @@
 
 @testable import Stripe
 @_spi(STP) @testable import StripePayments
+@_spi(STP) @testable import StripePaymentsTestUtils
 import XCTest
 
 // You can add tests in here for payment methods that don't require customer actions (i.e. don't open webviews for customer authentication).

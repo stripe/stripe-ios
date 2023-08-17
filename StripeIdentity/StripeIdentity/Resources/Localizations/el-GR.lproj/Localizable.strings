@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Η ημερομηνία γέννησης δεν φαίνεται έγκυρη";
 
-"File Upload" = "Αποστολή αρχείου";
-
-"File upload" = "Αποστολή αρχείου";
-
 "Flip your driver's license over to the other side" = "Γυρίστε το δίπλωμα οδήγησής σας από την άλλη πλευρά";
 
 "Flip your identity card over to the other side" = "Γυρίστε την ταυτότητά σας από την άλλη πλευρά";
@@ -127,6 +123,8 @@
 "Upload" = "Αποστολή";
 
 "Upload a Photo" = "Αποστολή φωτογραφίας";
+
+"Upload your photo ID" = "Αποστείλετε την ταυτότητα με φωτογραφία";
 
 "Uploading back driver's license photo" = "Αποστολή φωτογραφίας πίσω πλευράς διπλώματος οδήγησης";
 

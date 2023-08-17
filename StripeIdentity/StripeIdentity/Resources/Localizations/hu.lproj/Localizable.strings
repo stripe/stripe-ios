@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "A születési idő megadása kötelező";
 
-"File Upload" = "Fájlfeltöltés";
-
-"File upload" = "Fájlfeltöltés";
-
 "Flip your driver's license over to the other side" = "Fordítsa vezetői engedélyét a másik oldalára";
 
 "Flip your identity card over to the other side" = "Fordítsa személyazonosító igazolványát a másik oldalára";
@@ -127,6 +123,8 @@
 "Upload" = "Feltöltés";
 
 "Upload a Photo" = "Fotó feltöltése";
+
+"Upload your photo ID" = "Fényképes azonosító igazolvány feltöltése";
 
 "Uploading back driver's license photo" = "Vezetői engedély hátlapfotójának feltöltése";
 

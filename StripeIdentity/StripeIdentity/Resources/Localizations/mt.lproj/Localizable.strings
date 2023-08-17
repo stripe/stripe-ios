@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Id-data tat-twelid ma tidhirx li hija tajba";
 
-"File Upload" = "Tlugħ tal-Fajl";
-
-"File upload" = "Tella' fajl";
-
 "Flip your driver's license over to the other side" = "Dawwar il-liċenzja tas-sewqan tiegħek";
 
 "Flip your identity card over to the other side" = "Aqleb il-kard tal-identità tiegħek għan-naħa l-oħra";
@@ -127,6 +123,8 @@
 "Upload" = "Tella'";
 
 "Upload a Photo" = "Tella' Ritratt";
+
+"Upload your photo ID" = "Tella' d-dokument tal-identità b'ritratt tiegħek";
 
 "Uploading back driver's license photo" = "Qed ittella' r-ritratt tan-naħa ta' wara tal-liċenzja tas-sewqan";
 

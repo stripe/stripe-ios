@@ -364,7 +364,43 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // UPI Specific CTA
         let predicate = NSPredicate(format: "label BEGINSWITH 'Open your UPI app to approve your payment within'")
         let upiCTAText = XCUIApplication().staticTexts.element(matching: predicate)
-        XCTAssertTrue(approvePaymentText.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(upiCTAText.waitForExistence(timeout: 10.0))
+    }
+
+    func testBLIKPaymentMethodPolling() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+                settings.merchantCountryCode = .FR
+        settings.currency = .pln
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        let payButton = app.buttons["Pay PLN 50.99"]
+        guard let blik = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "BLIK") else {
+            XCTFail()
+            return
+        }
+        blik.tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+        let blik_code = app.textFields["BLIK code"]
+        blik_code.tap()
+        blik_code.typeText("123456")
+        blik_code.typeText(XCUIKeyboardKey.return.rawValue)
+
+        payButton.tap()
+
+        let approvePaymentText = app.staticTexts["Approve payment"]
+        XCTAssertTrue(approvePaymentText.waitForExistence(timeout: 15.0))
+
+        // BLIK Specific CTA
+        let predicate = NSPredicate(format: "label BEGINSWITH 'Confirm the payment in your bank\\'s app within'")
+        let blikCTAText = XCUIApplication().staticTexts.element(matching: predicate)
+        XCTAssertTrue(blikCTAText.waitForExistence(timeout: 10.0))
     }
 }
 
@@ -540,7 +576,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         // Attempt payment, should fail
         payButton.tap()
-
     }
 
     func testZipPaymentMethod() throws {
@@ -557,7 +592,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay A$50.99"]
 
-        // Select Cash App
+        // Select Zip
         guard let zip = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Zip")
         else {
             XCTFail()
@@ -572,6 +607,38 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
+    }
+
+    func testBLIKPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new // new customer
+        settings.apmsEnabled = .on
+        settings.currency = .pln
+        settings.merchantCountryCode = .FR
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay PLN 50.99"]
+
+        // Select BLIK
+        guard let blik = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "BLIK")
+        else {
+            XCTFail()
+            return
+        }
+        blik.tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+
+        let blik_code = app.textFields["BLIK code"]
+        blik_code.tap()
+        blik_code.typeText("123456")
+        blik_code.typeText(XCUIKeyboardKey.return.rawValue)
+
+        payButton.tap()
     }
 
     func testCashAppPaymentMethod() throws {
@@ -661,6 +728,37 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         )
 
         // no pay button tap because linked account is stubbed/fake in UI test
+    }
+
+    func testGrabPayPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new // new customer
+        settings.apmsEnabled = .on
+        settings.currency = .sgd
+        settings.merchantCountryCode = .SG
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay SGD 50.99"]
+
+        // Select GrabPay
+        guard let grabPay = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "GrabPay")
+        else {
+            XCTFail()
+            return
+        }
+        grabPay.tap()
+
+        // Attempt payment
+        payButton.tap()
+
+        // Close the webview, no need to see the successful pay
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
     }
 
     func testPaymentIntent_USBankAccount() {

@@ -26,6 +26,8 @@ extension PaymentSheet {
         .AUBECSDebit,
         .UPI,
         .cashApp,
+        .blik,
+        .grabPay,
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet

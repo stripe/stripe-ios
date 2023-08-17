@@ -30,6 +30,7 @@ public extension PaymentSheet {
         ///   - intentCreationCallback: Call this with the `client_secret` of the PaymentIntent or SetupIntent created by your server or the error that occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
         public typealias ConfirmHandler = (
             _ paymentMethod: STPPaymentMethod,
+            _ confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions?,
             _ shouldSavePaymentMethod: Bool,
             _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
@@ -118,6 +119,7 @@ public extension PaymentSheet {
         /// An async version of `ConfirmHandler`.
         typealias AsyncConfirmHandler = (
             _ paymentMethod: STPPaymentMethod,
+            _ confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions?,
             _ shouldSavePaymentMethod: Bool
         ) async throws -> String
 
@@ -131,10 +133,10 @@ public extension PaymentSheet {
             self.mode = mode
             self.paymentMethodTypes = paymentMethodTypes
             self.onBehalfOf = onBehalfOf
-            self.confirmHandler = { paymentMethod, shouldSavePaymentMethod, callback in
+            self.confirmHandler = { paymentMethod, confirmPaymentMethodOptions, shouldSavePaymentMethod, callback in
                 Task {
                     do {
-                        let clientSecret = try await confirmHandler2(paymentMethod, shouldSavePaymentMethod)
+                        let clientSecret = try await confirmHandler2(paymentMethod, confirmPaymentMethodOptions, shouldSavePaymentMethod)
                         callback(.success(clientSecret))
                     } catch {
                         callback(.failure(error))
