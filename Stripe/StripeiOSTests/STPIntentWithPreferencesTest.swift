@@ -91,7 +91,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                                            currency: "USD",
                                                                            setupFutureUsage: .onSession),
                                                             paymentMethodTypes: ["card", "cashapp"],
-                                                            confirmHandler: { _, _, _ in })
+                                                            confirmHandler: { _, _, _, _ in })
 
         do {
             let elementsSession = try await client.retrieveElementsSession(withIntentConfig: intentConfig)
@@ -115,7 +115,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
                                                                            setupFutureUsage: .offSession),
                                                             paymentMethodTypes: ["card", "cashapp"],
-                                                            confirmHandler: { _, _, _ in })
+                                                            confirmHandler: { _, _, _, _ in })
 
         do {
             let elementsSession = try await client.retrieveElementsSession(withIntentConfig: intentConfig)
@@ -142,7 +142,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                                            captureMethod: .automaticAsync),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
-                                                            confirmHandler: { _, _, _ in })
+                                                            confirmHandler: { _, _, _, _ in })
 
         let payload = intentConfig.elementsSessionParameters(publishableKey: "pk_test")
         XCTAssertEqual(payload["key"] as? String, "pk_test")
@@ -163,7 +163,7 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                                            setupFutureUsage: .offSession),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
-                                                            confirmHandler: { _, _, _ in })
+                                                            confirmHandler: { _, _, _, _ in })
 
         let payload = intentConfig.elementsSessionParameters(publishableKey: "pk_test")
         XCTAssertEqual(payload["key"] as? String, "pk_test")
