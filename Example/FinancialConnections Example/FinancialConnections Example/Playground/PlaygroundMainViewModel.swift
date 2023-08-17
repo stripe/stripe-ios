@@ -166,9 +166,16 @@ final class PlaygroundMainViewModel: ObservableObject {
                     case .completed(let session):
                         let accounts = session.accounts.data.filter { $0.last4 != nil }
                         let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
+                        let sessionInfo =
+"""
+session_id=\(session.id)
+account_names=\(session.accounts.data.map({ $0.displayName ?? "N/A"}))
+account_ids=\(session.accounts.data.map({ $0.id }))
+"""
+    
                         UIAlertController.showAlert(
                             title: "Success",
-                            message: "\(accountInfos)"
+                            message: "\(accountInfos)\n\n\(sessionInfo)"
                         )
                     case .canceled:
                         UIAlertController.showAlert(
