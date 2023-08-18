@@ -23,4 +23,5 @@ import Foundation
     case iconWarning2 = "icon_warning2"
     case iconWarning92 = "icon_warning_92"
     case iconCamera = "icon_camera"
+    case iconSelfieWarmup = "icon_selfie_warmup"
 }
