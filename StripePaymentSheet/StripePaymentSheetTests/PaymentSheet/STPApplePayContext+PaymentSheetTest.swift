@@ -5,7 +5,9 @@
 //  Created by Yuki Tokuhiro on 8/2/23.
 //
 
+@testable import StripeApplePay
 @testable import StripePaymentSheet
+@testable import StripePaymentsTestUtils
 import XCTest
 
 final class STPApplePayContext_PaymentSheetTest: XCTestCase {
