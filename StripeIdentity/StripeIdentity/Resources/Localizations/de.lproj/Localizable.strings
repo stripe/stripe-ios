@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Das Geburtsdatum scheint ungültig zu sein";
 
-"File Upload" = "Datei hochladen";
-
-"File upload" = "Datei-Upload";
-
 "Flip your driver's license over to the other side" = "Drehen Sie Ihren Führerschein um";
 
 "Flip your identity card over to the other side" = "Drehen Sie Ihr Ausweisdokument um";
@@ -127,6 +123,8 @@
 "Upload" = "Hochladen";
 
 "Upload a Photo" = "Foto hochladen";
+
+"Upload your photo ID" = "Lichtbildausweis hochladen";
 
 "Uploading back driver's license photo" = "Foto der Rückseite des Führerscheins wird hochgeladen";
 

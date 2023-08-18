@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Geboortedatum lijkt ongeldig te zijn";
 
-"File Upload" = "Bestand uploaden";
-
-"File upload" = "Bestand uploaden";
-
 "Flip your driver's license over to the other side" = "Draai je rijbewijs om, zodat de andere kant zichtbaar is";
 
 "Flip your identity card over to the other side" = "Draai je identiteitskaart om, zodat de andere kant zichtbaar is";
@@ -127,6 +123,8 @@
 "Upload" = "Uploaden";
 
 "Upload a Photo" = "Een foto uploaden";
+
+"Upload your photo ID" = "Je identiteitsbewijs uploaden";
 
 "Uploading back driver's license photo" = "Foto van achterkant van rijbewijs uploaden";
 

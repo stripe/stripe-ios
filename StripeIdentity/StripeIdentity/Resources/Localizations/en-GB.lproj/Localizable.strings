@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Date of birth does not look valid";
 
-"File Upload" = "File Upload";
-
-"File upload" = "File upload";
-
 "Flip your driver's license over to the other side" = "Flip your driving licence over to the other side";
 
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
@@ -127,6 +123,8 @@
 "Upload" = "Upload";
 
 "Upload a Photo" = "Upload a Photo";
+
+"Upload your photo ID" = "Upload your photo ID";
 
 "Uploading back driver's license photo" = "Uploading back driving licence photo";
 

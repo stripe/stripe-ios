@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Ngày sinh có vẻ không hợp lệ";
 
-"File Upload" = "Tải lên tệp";
-
-"File upload" = "Tải lên tệp";
-
 "Flip your driver's license over to the other side" = "Lật bằng lái xe của bạn sang mặt khác";
 
 "Flip your identity card over to the other side" = "Lật thẻ căn cước của bạn sang mặt khác";
@@ -127,6 +123,8 @@
 "Upload" = "Tải lên";
 
 "Upload a Photo" = "Tải lên ảnh";
+
+"Upload your photo ID" = "Tải lên ID có ảnh của bạn";
 
 "Uploading back driver's license photo" = "Đang tải lên ảnh mặt sau bằng lái xe";
 

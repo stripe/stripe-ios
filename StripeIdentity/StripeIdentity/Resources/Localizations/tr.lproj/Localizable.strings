@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Doğum tarihi geçerli görünmüyor";
 
-"File Upload" = "Dosya Yükle";
-
-"File upload" = "Dosya yükle";
-
 "Flip your driver's license over to the other side" = "Sürücü belgenizin diğer yüzünü çevirin";
 
 "Flip your identity card over to the other side" = "Kimliğinizin diğer yüzünü çevirin";
@@ -127,6 +123,8 @@
 "Upload" = "Yükle";
 
 "Upload a Photo" = "Fotoğraf Yükle";
+
+"Upload your photo ID" = "Fotoğraflı kimliğinizi yükleyin";
 
 "Uploading back driver's license photo" = "Sürücü belgesinin arka yüz fotoğrafı yükleniyor";
 

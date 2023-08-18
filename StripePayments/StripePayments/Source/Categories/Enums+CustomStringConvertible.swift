@@ -100,6 +100,8 @@ extension STPConnectAccountBusinessType: CustomStringConvertible {
             return "company"
         case .individual:
             return "individual"
+        case .none:
+            return "nil"
         }
     }
 }

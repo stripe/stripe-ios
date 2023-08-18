@@ -124,6 +124,34 @@ import UIKit
         return TextFieldElement(configuration: VPAConfiguration(), theme: theme)
     }
 
+    // MARK: - Blik code
+    struct BlikCodeConfiguration: TextFieldElementConfiguration {
+        public let label = String.Localized.blik_code
+        public let disallowedCharacters: CharacterSet = .decimalDigits.inverted
+        let invalidError = Error.invalid(
+            localizedDescription: .Localized.invalid_blik_code
+        )
+
+        public func validate(text: String, isOptional: Bool) -> ValidationState {
+            guard !text.isEmpty else {
+                return isOptional ? .valid : .invalid(Error.empty)
+            }
+            return STPBlikCodeValidator.stringIsValidBlikCode(text) ?.valid: .invalid(invalidError)
+        }
+
+        public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
+            return .init(type: .numberPad, textContentType: .none, autocapitalization: .none)
+        }
+
+        public func maxLength(for text: String) -> Int {
+            return 6
+        }
+    }
+
+    static func makeBlikCode(theme: ElementsUITheme = .default) -> TextFieldElement {
+        return TextFieldElement(configuration: BlikCodeConfiguration(), theme: theme)
+    }
+
     // MARK: - Phone number
     struct PhoneNumberConfiguration: TextFieldElementConfiguration {
         static let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)

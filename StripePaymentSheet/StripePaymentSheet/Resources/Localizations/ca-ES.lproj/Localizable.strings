@@ -12,10 +12,6 @@
 
 "Approve payment" = "Aprova el pagament";
 
-"Are you sure you want to remove this card?" = "Segur que vols eliminar aquesta targeta?";
-
-"Are you sure you want to remove this linked account?" = "Segur que vols eliminar aquest compte vinculat?";
-
 "Back" = "Tornar";
 
 "Bank account" = "Compte bancari";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuar, accepteu autoritzar aquests pagaments segons <terms>aquests termes</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "En continuar, accepteu autoritzar aquests pagaments segons aquests <terms>termes</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "En continuar, autoritzeu %1$@ a carregar aquest pagament i els pagaments futurs al compte de Cash App segons les condicions de %2$@ fins que es revoqui l'autorització. Podeu canviar això en qualsevol moment a la configuració de Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Quan t'incorpores a Link, acceptes els <terms>Termes</terms> i la <privacy>Política de privacitat</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Cancel·la i paga d'una altra manera";
 
-"Change email" = "Canvia el correu";
-
 "Choose a payment method" = "Escull un mètode de pagament";
 
 "Close card scanner" = "Tancar l'escàner de la targeta";
 
-"Code sent" = "Codi enviat";
+"Confirm" = "Confirma";
 
 "Contact information" = "Informació de contacte";
-
-"Default" = "Per defecte";
 
 "EPS Bank" = "Banc EPS";
 
 "Enter address manually" = "Introduir l'adreça manualment";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Introdueix el codi enviat a %@ per utilitzar Link per pagar per defecte.";
-
-"Enter your verification code" = "Introdueix el codi de verificació";
-
-"For security, please re-enter your card’s security code." = "Per raons de seguretat, torna a introduir el codi de seguretat de la targeta.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Uneix-te a Link";
-
-"Log out of Link" = "Tanca la sessió a Link";
+"Manage your payment methods" = "Administreu els vostres mètodes de pagament";
 
 "Name on card" = "Nom a la targeta";
-
-"Not %@?" = "No ets %@?";
 
 "Open your UPI app to approve your payment within %@" = "Obriu l'aplicació UPI per aprovar el pagament en un termini de %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Pagueu a terminis amb %@";
 
-"Pay using" = "Paga amb";
-
-"Pay with %@" = "Pagar amb %@";
-
 "Pay with your bank account in just a few steps." = "Pagueu amb el compte bancari en uns pocs passos.";
 
-"Payment" = "Pagament";
-
 "Payment failed" = "S'ha produït un error en el pagament";
-
-"Payment methods" = "Mètodes de pagament";
 
 "Please go back and select another payment method" = "Torneu enrere i seleccioneu un altre mètode de pagament";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "ELiminar targeta";
 
-"Remove card" = "Elimina la targeta";
+"Save" = "Desa";
 
-"Remove linked account" = "Elimina el compte vinculat";
-
-"Resend code" = "Reenvia'm el codi";
+"Save a new payment method" = "Deseu un nou mètode de pagament";
 
 "Save address" = "Desar adreça";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Desar aquesta tarjeta per futurs %@ pagaments";
 
-"Secure 1⁠-⁠click checkout" = "Pagament segur amb 1 clic";
-
 "Select your payment method" = "Selecciona el teu mètode de pagament";
-
-"Set as default" = "Targeta per defecte";
-
-"Set as default payment method" = "Configura com a mètode de pagament per defecte";
 
 "Set up" = "Configuració";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Mostra el menú";
 
-"Sign in to your Link account" = "Inicia la sessió al compte de Link";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per completar el pagament a %@.";
-
-"Tap to close" = "Toca per tancar";
-
-"Tap to expand" = "Toca per ampliar";
 
 "The IBAN you entered is incomplete." = "L'BAN és incomplet.";
 
-"The provided verification code has expired." = "El codi de verificació proporcionat ha caducat.";
-
-"The provided verification code is incorrect." = "El codi de verificació proporcionat no és correcte.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Aquesta targeta ha caducat. Actualitzeu-ne la informació o trieu un altre mètode de pagament.";
-
-"This is your default" = "Aquesta és l'opció per defecte";
-
-"Too many attempts. Please try again in a few minutes." = "Massa intents. Torneu-ho a provar d'aquí uns minuts.";
-
-"Unavailable for this purchase" = "No disponible per a aquesta compra";
-
 "Update card" = "Actualitza la targeta";
-
-"Use your saved info to check out faster" = "Utilitza la informació desada per pagar més ràpidament";
 
 "Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
 

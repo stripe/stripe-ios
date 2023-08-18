@@ -10,9 +10,7 @@
 @import XCTest;
 @import OCMock;
 @import StripeCoreTestUtils;
-
-#import "STPFixtures.h"
-#import "STPTestingAPIClient.h"
+@import StripePaymentsObjcTestUtils;
 
 @interface STPPaymentCardTextField (Testing)
 @property (nonatomic, readwrite, weak) UIImageView *brandImageView;

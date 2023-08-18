@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Похоже, дата рождения недействительна";
 
-"File Upload" = "Отправка файла";
-
-"File upload" = "Файл отправлен";
-
 "Flip your driver's license over to the other side" = "Переверните водительские права другой стороной";
 
 "Flip your identity card over to the other side" = "Переверните удостоверение личности другой стороной";
@@ -127,6 +123,8 @@
 "Upload" = "Отправить";
 
 "Upload a Photo" = "Отправьте фотографию";
+
+"Upload your photo ID" = "Отправьте удостоверение личности с фото";
 
 "Uploading back driver's license photo" = "Отправляется фотография оборотной стороны водительских прав";
 

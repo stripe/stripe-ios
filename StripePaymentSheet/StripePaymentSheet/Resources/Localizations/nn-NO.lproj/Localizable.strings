@@ -12,10 +12,6 @@
 
 "Approve payment" = "Godkjenn betaling";
 
-"Are you sure you want to remove this card?" = "Er du sikker på at du vil slette dette kortet?";
-
-"Are you sure you want to remove this linked account?" = "Er du sikker på at du vil slette kontoen som er tilknytt?";
-
 "Back" = "Tilbake";
 
 "Bank account" = "Bankkonto";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å halde fram godtek du å autorisere betalingar i samsvar med desse <terms>vilkåra</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ved å halde fram godtek du å autorisere betalingar i samsvar med desse <terms>vilkåra</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ved å gå vidare gir du %1$@ tillating til å debitere Cash App-kontoen din for denne betalinga og framtidige betalingar i samsvar med %2$@ sine vilkår, fram til denne autoriseringa blir trekt tilbake. Du kan endre dette når som helst i Cash App-innstillingane.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å bli med i Link godtek du <terms>Vilkåra</terms> og <privacy>Personvernerklæringa</privacy>.";
@@ -42,37 +36,25 @@
 
 "Cancel and pay another way" = "Avbryt og betal på ei anna måte";
 
-"Change email" = "Endre e-post";
-
 "Choose a payment method" = "Vel ein betalingsmåte";
 
 "Close card scanner" = "Lukk kortskannar";
 
-"Code sent" = "Kode send";
+"Confirm" = "Stadfest";
+
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Stadfest betalinga i bankappen innan %@ for å fullføre kjøpet.";
 
 "Contact information" = "Kontaktopplysningar";
-
-"Default" = "Standard";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Skriv inn adresse manuelt";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Legg inn koden som blei send til %@ Link for å betale med standard.";
-
-"Enter your verification code" = "Legg inn verifiseringskoden din";
-
-"For security, please re-enter your card’s security code." = "For sikkerhet, vær venleg å leggje inn sikkerhetskoden til kortet ditt.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Kople på lenka";
-
-"Log out of Link" = "Logg ut av Link";
+"Manage your payment methods" = "Handsam betalingsmåtane dine";
 
 "Name on card" = "Namn på kort";
-
-"Not %@?" = "Ikkje %@?";
 
 "Open your UPI app to approve your payment within %@" = "Opne UPI-appen for å godkjenne betalinga di innan %@";
 
@@ -94,17 +76,9 @@
 
 "Pay over time with %@" = "Betal over tid med %@";
 
-"Pay using" = "Betal gjennom";
-
-"Pay with %@" = "Betal med %@";
-
 "Pay with your bank account in just a few steps." = "Betal med bankkontoen din med berre eit par trinn.";
 
-"Payment" = "Betaling";
-
 "Payment failed" = "Betaling mislukka";
-
-"Payment methods" = "Betalingsmetodar";
 
 "Please go back and select another payment method" = "Gå tilbake og vel ei anna betalingsmåte";
 
@@ -118,11 +92,9 @@
 
 "Remove Card" = "Fjern kort";
 
-"Remove card" = "Fjern kort";
+"Save" = "Lagre";
 
-"Remove linked account" = "Fjern tilknytt konto";
-
-"Resend code" = "Send kode på nytt";
+"Save a new payment method" = "Lagre ein ny betalingsmåte";
 
 "Save address" = "Lagre adressa";
 
@@ -134,13 +106,7 @@
 
 "Save this card for future %@ payments" = "Lagre dette kortet for framtidige %@ betalingar";
 
-"Secure 1⁠-⁠click checkout" = "Sikker 1-klikk betaling";
-
 "Select your payment method" = "Vel betalingsmåte";
-
-"Set as default" = "Angi som standard";
-
-"Set as default payment method" = "Angi som standard betalingsmåte";
 
 "Set up" = "Opprett";
 
@@ -148,31 +114,11 @@
 
 "Show menu" = "Vis meny";
 
-"Sign in to your Link account" = "Logg inn på Link-kontoen din";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sett inn 0,01 USD på kontoen din om 1–2 verkedagar. Så får du ei e-postmelding med instruksjonar om å fullføre betaling til %@.";
-
-"Tap to close" = "Tæpp for å lukke";
-
-"Tap to expand" = "Tæpp for å utvide";
 
 "The IBAN you entered is incomplete." = "Du skreiv inn eit ufullstendig IBAN-nummer.";
 
-"The provided verification code has expired." = "Den oppgjevne verifiseringskoden er utløpt.";
-
-"The provided verification code is incorrect." = "Den oppgjevne verifiseringskoden er feil.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Dette kortet er utløpt. Oppdater kortinformasjonen eller vel ein annan betalingsmetode.";
-
-"This is your default" = "Dette er di standardinnstilling";
-
-"Too many attempts. Please try again in a few minutes." = "For mange forsøk. Prøv på nytt om eit par minutt.";
-
-"Unavailable for this purchase" = "Ikkje tilgjengeleg for dette kjøpet";
-
 "Update card" = "Oppdater kort";
-
-"Use your saved info to check out faster" = "Bruk din lagra info for å betale raskare";
 
 "Your IBAN should start with a two-letter country code." = "IBAN-nummeret bør starte med ei landskode med to bokstavar.";
 

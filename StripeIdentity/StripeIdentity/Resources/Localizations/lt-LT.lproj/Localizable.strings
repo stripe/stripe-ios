@@ -26,10 +26,6 @@
 
 "Date of birth does not look valid" = "Gimimo data neatrodo tinkama";
 
-"File Upload" = "Failo įkėlimas";
-
-"File upload" = "Failo įkėlimas";
-
 "Flip your driver's license over to the other side" = "Apverskite vairuotojo pažymėjimą kita puse";
 
 "Flip your identity card over to the other side" = "Apverskite asmens tapatybės kortelę kita puse";
@@ -127,6 +123,8 @@
 "Upload" = "Įkelti";
 
 "Upload a Photo" = "Įkelti nuotrauką";
+
+"Upload your photo ID" = "Įkelkite savo asmens dokumento nuotrauką";
 
 "Uploading back driver's license photo" = "Įkeliama vairuotojo pažymėjimo galinės pusės nuotrauka";
 
