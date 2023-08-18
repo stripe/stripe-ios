@@ -133,6 +133,7 @@ final class AccountPickerViewController: UIViewController {
                     let accounts = accountsPayload.data
                     let shouldSkipAccountSelection = accountsPayload.skipAccountSelection ?? self.dataSource.authSession.skipAccountSelection ?? false
                     if !accounts.isEmpty {
+                        // the API is expected to never return 0 accounts
                         self.dataSource
                             .analyticsClient
                             .log(
@@ -349,6 +350,66 @@ final class AccountPickerViewController: UIViewController {
                 }
             }
     }
+
+    private func logAccountSelectOrDeselect(selectedAccounts: [FinancialConnectionsPartnerAccount]) {
+        let isSelect: Bool? // false when deselected, and nil when event shouldn't be sent
+        let accountId: String?
+        switch accountPickerType {
+        case .radioButton:
+            // user deselected an account by selecting the same row
+            if selectedAccounts.isEmpty {
+                isSelect = false
+                accountId = dataSource.selectedAccounts.first?.id
+            }
+            // user selected a new account
+            else {
+                isSelect = true
+                accountId = selectedAccounts.first?.id
+            }
+        case .checkbox:
+            // if user selects or deselects more than two accounts at the same time, we assume user pressed
+            // "All accounts" which we have decided to exclude due to V3 changes
+            let pressedAllAccountsButton = (abs(selectedAccounts.count - dataSource.selectedAccounts.count) >= 2)
+            if !pressedAllAccountsButton {
+                if selectedAccounts.count > dataSource.selectedAccounts.count {
+                    // selected a new, additional account
+                    isSelect = true
+                    accountId = selectedAccounts
+                        .filter({ newSelectedAccount in
+                            return !dataSource.selectedAccounts.contains(where: { $0.id == newSelectedAccount.id })
+                        })
+                        .first?
+                        .id
+                }
+                // selectedAccounts.count < dataSource.selectedAccounts.count
+                else {
+                    // deselected an account
+                    isSelect = false
+                    accountId = dataSource.selectedAccounts
+                        .filter({ oldSelectedAccount in
+                            return !selectedAccounts.contains(where: { $0.id == oldSelectedAccount.id })
+                        })
+                        .first?
+                        .id
+                }
+            } else {
+                isSelect = nil
+                accountId = nil
+            }
+        }
+        if let isSelect = isSelect, let accountId = accountId {
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: isSelect ? "click.account_picker.account_selected" : "click.account_picker.account_unselected",
+                    parameters: [
+                        "account": accountId,
+                        "is_single_account": dataSource.manifest.singleAccount,
+                    ],
+                    pane: .accountPicker
+                )
+        }
+    }
 }
 
 // MARK: - AccountPickerSelectionViewDelegate
@@ -359,6 +420,7 @@ extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
         _ view: AccountPickerSelectionView,
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     ) {
+        logAccountSelectOrDeselect(selectedAccounts: selectedAccounts)
         dataSource.updateSelectedAccounts(selectedAccounts)
     }
 }

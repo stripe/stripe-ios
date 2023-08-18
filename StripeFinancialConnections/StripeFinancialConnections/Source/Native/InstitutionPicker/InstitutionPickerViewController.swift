@@ -144,12 +144,24 @@ extension InstitutionPickerViewController {
 
     private func fetchFeaturedInstitutions(completionHandler: @escaping () -> Void) {
         assertMainQueue()
+        let fetchStartDate = Date()
         dataSource
             .fetchFeaturedInstitutions()
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let institutions):
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "search.feature_institutions_loaded",
+                            parameters: [
+                                "institutions": institutions.map({ $0.id }),
+                                "result_count": institutions.count,
+                                "duration": Date().timeIntervalSince(fetchStartDate).milliseconds,
+                            ],
+                            pane: .institutionPicker
+                        )
                     self.featuredInstitutionGridView.loadInstitutions(institutions)
                     self.dataSource
                         .analyticsClient
@@ -289,8 +301,35 @@ extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
         didSelectInstitution(institution)
     }
 
-    func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView) {
+    func institutionSearchTableView(
+        _ tableView: InstitutionSearchTableView,
+        didSelectManuallyAddYourAccountWithInstitutions institutions: [FinancialConnectionsInstitution]
+    ) {
+        dataSource
+            .analyticsClient
+            .log(
+                eventName: "click.manual_entry",
+                parameters: [
+                    "institution_ids": institutions.map({ $0.id }),
+                ],
+                pane: .institutionPicker
+            )
         delegate?.institutionPickerViewControllerDidSelectManuallyAddYourAccount(self)
+    }
+
+    func institutionSearchTableView(
+        _ tableView: InstitutionSearchTableView,
+        didScrollInstitutions institutions: [FinancialConnectionsInstitution]
+    ) {
+        dataSource
+            .analyticsClient
+            .log(
+                eventName: "search.scroll",
+                parameters: [
+                    "institution_ids": institutions.map({ $0.id })
+                ],
+                pane: .institutionPicker
+            )
     }
 }
 
