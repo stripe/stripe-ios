@@ -155,20 +155,23 @@ final class FinancialConnectionsUITests: XCTestCase {
         // they don't get featured
         let institutionButton: XCUIElement?
         let institutionName: String?
-        let chaseInstitutionButton = app.cells["Chase"]
+        let chaseBankName = "Chase"
+        let chaseInstitutionButton = app.cells[chaseBankName]
         if chaseInstitutionButton.waitForExistence(timeout: 10) {
             institutionButton = chaseInstitutionButton
-            institutionName = "Chase"
+            institutionName = chaseBankName
         } else {
-            let bankOfAmericaInstitutionButton = app.cells["Bank of America"]
+            let bankOfAmericaBankName = "Bank of America"
+            let bankOfAmericaInstitutionButton = app.cells[bankOfAmericaBankName]
             if bankOfAmericaInstitutionButton.waitForExistence(timeout: 10) {
                 institutionButton = bankOfAmericaInstitutionButton
-                institutionName = "Bank of America"
+                institutionName = bankOfAmericaBankName
             } else {
-                let wellsFargoInstitutionButton = app.cells["Wells Fargo"]
+                let wellsFargoBankName = "Wells Fargo"
+                let wellsFargoInstitutionButton = app.cells[wellsFargoBankName]
                 if wellsFargoInstitutionButton.waitForExistence(timeout: 10) {
                     institutionButton = wellsFargoInstitutionButton
-                    institutionName = "Wells Fargo"
+                    institutionName = wellsFargoBankName
                 } else {
                     institutionButton = nil
                     institutionName = nil
@@ -254,20 +257,23 @@ final class FinancialConnectionsUITests: XCTestCase {
         // they don't get featured
         let institutionButton: XCUIElement?
         let institutionName: String?
-        let chaseInstitutionButton = app.webViews.buttons["Chase"]
+        let chaseBankName = "Chase"
+        let chaseInstitutionButton = app.webViews.buttons[chaseBankName]
         if chaseInstitutionButton.waitForExistence(timeout: 10) {
             institutionButton = chaseInstitutionButton
-            institutionName = "Chase"
+            institutionName = chaseBankName
         } else {
-            let bankOfAmericaInstitutionButton = app.webViews.buttons["Bank of America"]
+            let bankOfAmericaBankName = "Bank of America"
+            let bankOfAmericaInstitutionButton = app.webViews.buttons[bankOfAmericaBankName]
             if bankOfAmericaInstitutionButton.waitForExistence(timeout: 10) {
                 institutionButton = bankOfAmericaInstitutionButton
-                institutionName = "Bank of America"
+                institutionName = bankOfAmericaBankName
             } else {
-                let wellsFargoInstitutionButton = app.webViews.buttons["Wells Fargo"]
+                let wellsFargoBankName = "Wells Fargo"
+                let wellsFargoInstitutionButton = app.webViews.buttons[wellsFargoBankName]
                 if wellsFargoInstitutionButton.waitForExistence(timeout: 10) {
                     institutionButton = wellsFargoInstitutionButton
-                    institutionName = "Wells Fargo"
+                    institutionName = wellsFargoBankName
                 } else {
                     institutionButton = nil
                     institutionName = nil
