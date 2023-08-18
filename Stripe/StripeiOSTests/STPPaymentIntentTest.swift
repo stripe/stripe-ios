@@ -63,22 +63,7 @@ class STPPaymentIntentTest: XCTestCase {
 
     func testDecodedObjectFromAPIResponseMapping() {
         let paymentIntentJson = STPTestUtils.jsonNamed("PaymentIntent")!
-        let orderedPaymentJson = ["card", "ideal", "sepa_debit"]
-        let paymentIntentResponse =
-            [
-                "payment_intent": paymentIntentJson,
-                "ordered_payment_method_types": orderedPaymentJson,
-            ] as [String: Any]
-        let unactivatedPaymentMethodTypes = ["sepa_debit"]
-        let cardBrandChoice = ["eligible": true]
-        let response =
-            [
-                "payment_method_preference": paymentIntentResponse,
-                "unactivated_payment_method_types": unactivatedPaymentMethodTypes,
-                "card_brand_choice": cardBrandChoice,
-            ] as [String: Any]
-
-        let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: response)!
+        let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntentJson)!
 
         XCTAssertEqual(paymentIntent.stripeId, "pi_1Cl15wIl4IdHmuTbCWrpJXN6")
         XCTAssertEqual(
@@ -169,28 +154,9 @@ class STPPaymentIntentTest: XCTestCase {
         XCTAssertEqual(paymentIntent.shipping!.address!.postalCode, "94107")
         XCTAssertEqual(paymentIntent.shipping!.address!.state, "CA")
 
-        // Ordered Payment Method Types
-        XCTAssertEqual(
-            paymentIntent.orderedPaymentMethodTypes.map({ $0.displayName }),
-            ["Card", "iDEAL", "SEPA Debit"]
-        )
-
-        // Unactivated Payment Method Types
-        XCTAssertEqual(
-            paymentIntent.unactivatedPaymentMethodTypes.map({ $0.displayName }),
-            ["SEPA Debit"]
-        )
-
-        // Card brand choice
-        XCTAssertEqual(paymentIntent.cardBrandChoice?.eligible, true)
-
-        var allResponseFields = paymentIntentJson
-        allResponseFields["ordered_payment_method_types"] = orderedPaymentJson
-        allResponseFields["unactivated_payment_method_types"] = unactivatedPaymentMethodTypes
-        allResponseFields["card_brand_choice"] = cardBrandChoice
         XCTAssertEqual(
             paymentIntent.allResponseFields as NSDictionary,
-            allResponseFields as NSDictionary
+            paymentIntentJson as NSDictionary
         )
     }
 }

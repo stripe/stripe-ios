@@ -25,15 +25,16 @@ final class PaymentSheetLoader {
     static func load(
         mode: PaymentSheet.InitializationMode,
         configuration: PaymentSheet.Configuration,
+        analyticsClient: STPAnalyticsClient = .sharedClient,
         completion: @escaping (LoadingResult) -> Void
     ) {
         let loadingStartDate = Date()
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadStarted)
+        analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadStarted)
 
         Task { @MainActor in
             do {
                 // Fetch PaymentIntent, SetupIntent, or ElementsSession
-                async let _intent = fetchIntent(mode: mode, configuration: configuration)
+                async let _intent = fetchIntent(mode: mode, configuration: configuration, analyticsClient: analyticsClient)
 
                 // List the Customer's saved PaymentMethods
                 // TODO: Use v1/elements/sessions to fetch saved PMS https://jira.corp.stripe.com/browse/MOBILESDK-964
@@ -45,8 +46,8 @@ final class PaymentSheetLoader {
                 let intent = try await _intent
                 // Overwrite the form specs that were already loaded from disk
                 switch intent {
-                case .paymentIntent(let paymentIntent):
-                    _ = FormSpecProvider.shared.loadFrom(paymentIntent.allResponseFields["payment_method_specs"] ?? [String: Any]())
+                case .paymentIntent(let elementsSession, _):
+                    _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
                 case .setupIntent:
                     break // Not supported
                 case .deferredIntent(elementsSession: let elementsSession, intentConfig: _):
@@ -67,7 +68,7 @@ final class PaymentSheetLoader {
                         )
                     }
 
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadSucceeded,
+                analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadSucceeded,
                                                                      duration: Date().timeIntervalSince(loadingStartDate))
                 completion(
                     .success(
@@ -77,7 +78,7 @@ final class PaymentSheetLoader {
                     )
                 )
             } catch {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed,
+                analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadFailed,
                                                                      duration: Date().timeIntervalSince(loadingStartDate),
                                                                      error: error)
                 completion(.failure(error))
@@ -138,22 +139,25 @@ final class PaymentSheetLoader {
         }
     }
 
-    static func fetchIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration) async throws -> Intent {
+    static func fetchIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration, analyticsClient: STPAnalyticsClient) async throws -> Intent {
         let intent: Intent
         switch mode {
         case .paymentIntentClientSecret(let clientSecret):
             let paymentIntent: STPPaymentIntent
+            let elementsSession: STPElementsSession
             do {
-                paymentIntent = try await configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret)
-            } catch {
+                (paymentIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(paymentIntentClientSecret: clientSecret)
+            } catch let error {
+                analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 // Fallback to regular retrieve PI when retrieve PI with preferences fails
                 paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+                elementsSession = .makeBackupElementsSession(with: paymentIntent)
             }
             guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
                 // Error if the PaymentIntent is in a terminal state
                 throw PaymentSheetError.paymentIntentInTerminalState(status: paymentIntent.status)
             }
-            intent = .paymentIntent(paymentIntent)
+            intent = .paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
         case .setupIntentClientSecret(let clientSecret):
             let setupIntent: STPSetupIntent
             do {

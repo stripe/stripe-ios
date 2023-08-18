@@ -44,7 +44,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         completion: @escaping STPIntentClientSecretCompletionBlock
     ) {
         switch intent {
-        case .paymentIntent(let paymentIntent):
+        case .paymentIntent(_, let paymentIntent):
             completion(paymentIntent.clientSecret, nil)
         case .setupIntent(let setupIntent):
             completion(setupIntent.clientSecret, nil)

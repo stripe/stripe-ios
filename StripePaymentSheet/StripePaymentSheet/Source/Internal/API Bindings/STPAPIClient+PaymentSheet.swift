@@ -13,24 +13,28 @@ import Foundation
 extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
 
-    func retrievePaymentIntentWithPreferences(
-        withClientSecret secret: String
-    ) async throws -> STPPaymentIntent {
-        guard STPPaymentIntentParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
-            throw NSError.stp_clientSecretError()
-        }
-
-        var parameters: [String: Any] = [:]
-        parameters["client_secret"] = secret
-        parameters["type"] = "payment_intent"
-        parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
-        parameters["locale"] = Locale.current.toLanguageTag()
-
-        return try await APIRequest<STPPaymentIntent>.getWith(
+    func retrieveElementsSession(
+        paymentIntentClientSecret: String
+    ) async throws -> (STPPaymentIntent, STPElementsSession) {
+        let parameters: [String: Any] = [
+            "client_secret": paymentIntentClientSecret,
+            "type": "payment_intent",
+            "expand": ["payment_method_preference.payment_intent.payment_method"],
+            "locale": Locale.current.toLanguageTag(),
+        ]
+        let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointIntentWithPreferences,
             parameters: parameters
         )
+        // The v1/elements/sessions response contains a PaymentIntent hash that we parse out into a PaymentIntent
+        guard
+            let paymentIntentJSON = elementsSession.allResponseFields[jsonDict: "payment_method_preference"]?[jsonDict: "payment_intent"],
+            let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntentJSON)
+        else {
+            throw PaymentSheetError.unknown(debugDescription: "PaymentIntent missing from v1/elements/sessions response")
+        }
+        return (paymentIntent, elementsSession)
     }
 
     func retrieveElementsSession(

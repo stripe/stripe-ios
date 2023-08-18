@@ -89,7 +89,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .card,
                 configuration: PaymentSheet.Configuration(),
-                intent: .paymentIntent(STPFixtures.paymentIntent()),
+                intent: ._testValue(),
                 supportedPaymentMethods: []
             )
             , .notSupported
@@ -102,9 +102,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .card,
                 configuration: PaymentSheet.Configuration(),
-                intent: .paymentIntent(
-                    STPFixtures.makePaymentIntent(setupFutureUsage: .offSession)
-                ),
+                intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession),
                 supportedPaymentMethods: [.card]
             ),
             .supported
@@ -117,7 +115,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .card,
                 configuration: makeConfiguration(hasReturnURL: true),
-                intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                intent: ._testValue(),
                 supportedPaymentMethods: [.card]
             ),
             .supported
@@ -132,7 +130,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .iDEAL,
                 configuration: makeConfiguration(hasReturnURL: true),
-                intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                intent: ._testValue(),
                 supportedPaymentMethods: [.iDEAL]
             ),
             .supported
@@ -145,7 +143,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .iDEAL,
                 configuration: makeConfiguration(),
-                intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                intent: ._testValue(),
                 supportedPaymentMethods: [.iDEAL]
             ),
             .missingRequirements([.returnURL])
@@ -160,7 +158,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .afterpayClearpay,
                 configuration: makeConfiguration(hasReturnURL: true),
-                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
+                intent: .paymentIntent(elementsSession: .emptyElementsSession, paymentIntent: STPFixtures.makePaymentIntent(shippingProvided: false)),
                 supportedPaymentMethods: [.afterpayClearpay]
             ),
             .missingRequirements([.shippingAddress])
@@ -173,7 +171,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .afterpayClearpay,
                 configuration: makeConfiguration(hasReturnURL: false),
-                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
+                intent: .paymentIntent(elementsSession: .emptyElementsSession, paymentIntent: STPFixtures.makePaymentIntent(shippingProvided: false)),
                 supportedPaymentMethods: [.afterpayClearpay]
             ),
             .missingRequirements([.shippingAddress, .returnURL])
@@ -187,7 +185,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .afterpayClearpay,
                 configuration: makeConfiguration(hasReturnURL: true),
-                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: true)),
+                intent: .paymentIntent(elementsSession: .emptyElementsSession, paymentIntent: STPFixtures.makePaymentIntent(shippingProvided: true)),
                 supportedPaymentMethods: [.afterpayClearpay]
             ),
             .supported
@@ -199,7 +197,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .afterpayClearpay,
                 configuration: config,
-                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
+                intent: .paymentIntent(elementsSession: .emptyElementsSession, paymentIntent: STPFixtures.makePaymentIntent(shippingProvided: false)),
                 supportedPaymentMethods: [.afterpayClearpay]
             ),
             .supported
@@ -218,7 +216,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: pm,
                     configuration: makeConfiguration(hasReturnURL: true),
-                    intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                    intent: ._testValue(),
                     supportedPaymentMethods: sepaFamily.map { $0 }
                 ),
                 .supported
@@ -233,7 +231,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: pm,
                     configuration: config,
-                    intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                    intent: ._testValue(),
                     supportedPaymentMethods: sepaFamily.map { $0 }
                 ),
                 .missingRequirements([.userSupportsDelayedPaymentMethods])
@@ -243,7 +241,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: pm,
                     configuration: config,
-                    intent: .paymentIntent(STPFixtures.makePaymentIntent()),
+                    intent: ._testValue(),
                     supportedPaymentMethods: sepaFamily.map { $0 }
                 ),
                 .supported
@@ -277,7 +275,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                     PaymentSheet.PaymentMethodType.supportsAdding(
                         paymentMethod: .USBankAccount,
                         configuration: configuration,
-                        intent: .paymentIntent(pi),
+                        intent: .paymentIntent(elementsSession: .makeBackupElementsSession(with: pi), paymentIntent: pi),
                         supportedPaymentMethods: [.USBankAccount]
                     ),
                     .supported
@@ -288,7 +286,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                     PaymentSheet.PaymentMethodType.supportsAdding(
                         paymentMethod: .USBankAccount,
                         configuration: configuration,
-                        intent: .paymentIntent(pi),
+                        intent: .paymentIntent(elementsSession: .makeBackupElementsSession(with: pi), paymentIntent: pi),
                         supportedPaymentMethods: [.USBankAccount]
                     ),
                     .missingRequirements([.validUSBankVerificationMethod])
@@ -302,24 +300,14 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testPaymentIntentRecommendedPaymentMethodTypes() {
-        let paymentIntent = constructPI(
-            paymentMethodTypes: ["card", "us_bank_account", "klarna", "futurePaymentMethod"],
-            orderedPaymentMethodTypes: ["card", "klarna", "us_bank_account", "futurePaymentMethod"]
-        )!
-        let intent = Intent.paymentIntent(paymentIntent)
-        let types = intent.recommendedPaymentMethodTypes
-
-        XCTAssertEqual(types[0], .card)
-        XCTAssertEqual(types[1], .klarna)
-        XCTAssertEqual(types[2], .USBankAccount)
-        XCTAssertEqual(types[3], .unknown)
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card, .USBankAccount, .klarna, .unknown])
+        // Note PaymentIntent and ElementsSession pm types have different ordering
+        let intent = Intent.paymentIntent(elementsSession: ._testValue(paymentMethodTypes: ["card", "klarna", "us_bank_account", "futurePaymentMethod"]), paymentIntent: paymentIntent)
+        XCTAssertEqual(intent.recommendedPaymentMethodTypes, [.card, .klarna, .USBankAccount, .unknown])
     }
 
     func testPaymentIntentRecommendedPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {
-        let paymentIntent = constructPI(paymentMethodTypes: [
-            "card", "us_bank_account", "klarna", "futurePaymentMethod",
-        ])!
-        let intent = Intent.paymentIntent(paymentIntent)
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .USBankAccount, .klarna, .unknown])
         let types = intent.recommendedPaymentMethodTypes
 
         XCTAssertEqual(types[0], .card)
@@ -356,11 +344,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testPaymentIntentFilteredPaymentMethodTypes() {
-        let paymentIntent = constructPI(
-            paymentMethodTypes: ["card", "klarna", "p24"],
-            orderedPaymentMethodTypes: ["card", "klarna", "p24"]
-        )!
-        let intent = Intent.paymentIntent(paymentIntent)
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .klarna, .przelewy24])
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
         configuration.allowsDelayedPaymentMethods = true
@@ -373,11 +357,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testPaymentIntentFilteredPaymentMethodTypes_withUnfulfilledRequirements() {
-        let paymentIntent = constructPI(
-            paymentMethodTypes: ["card", "klarna", "p24"],
-            orderedPaymentMethodTypes: ["card", "klarna", "p24"]
-        )!
-        let intent = Intent.paymentIntent(paymentIntent)
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .klarna, .przelewy24])
         let configuration = PaymentSheet.Configuration()
         let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: intent,
@@ -388,12 +368,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testPaymentIntentFilteredPaymentMethodTypes_withSetupFutureUsage() {
-        let paymentIntent = constructPI(
-            paymentMethodTypes: ["card", "cashapp"],
-            orderedPaymentMethodTypes: ["card", "cashapp", "mobilepay"],
-            setupFutureUsage: .onSession
-        )!
-        let intent = Intent.paymentIntent(paymentIntent)
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .mobilePay], setupFutureUsage: .onSession)
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
         configuration.allowsDelayedPaymentMethods = true
@@ -431,7 +406,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testUnknownPMTypeIsUnsupported() {
-        let paymentIntent = constructPI(paymentMethodTypes: ["luxe_bucks"])!
         let setupIntent = constructSI(paymentMethodTypes: ["luxe_bucks"])!
         let paymentMethod = STPPaymentMethod.type(from: "luxe_bucks")
         var configuration = PaymentSheet.Configuration()
@@ -450,15 +424,14 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: paymentMethod,
                 configuration: configuration,
-                intent: Intent.paymentIntent(paymentIntent)
+                intent: ._testPaymentIntent(paymentMethodTypes: [.unknown])
             ),
             .notSupported
         )
     }
 
     func testSupport() {
-        let paymentIntent = constructPI(paymentMethodTypes: ["luxe_bucks"])!
-        let intent = Intent.paymentIntent(paymentIntent)
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.unknown])
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
 
@@ -564,35 +537,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
     }
 
-    private func constructPI(
-        paymentMethodTypes: [String],
-        orderedPaymentMethodTypes: [String]? = nil,
-        setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
-    ) -> STPPaymentIntent? {
-        var apiResponse: [AnyHashable: Any?] = [
-            "id": "123",
-            "client_secret": "sec",
-            "amount": 10,
-            "currency": "usd",
-            "status": "requires_payment_method",
-            "livemode": false,
-            "created": 1652736692.0,
-            "payment_method_types": paymentMethodTypes,
-            "setup_future_usage": setupFutureUsage.stringValue,
-        ]
-        if let orderedPaymentMethodTypes = orderedPaymentMethodTypes {
-            apiResponse["ordered_payment_method_types"] = orderedPaymentMethodTypes
-        }
-        guard
-            let stpPaymentIntent = STPPaymentIntent.decodeSTPPaymentIntentObject(
-                fromAPIResponse: apiResponse as [AnyHashable: Any]
-            )
-        else {
-            XCTFail("Failed to decode")
-            return nil
-        }
-        return stpPaymentIntent
-    }
     private func constructSI(
         paymentMethodTypes: [String],
         orderedPaymentMethodTypes: [String]? = nil
@@ -642,7 +586,7 @@ extension STPFixtures {
         json["confirmation_method"] = confirmationMethod
         if let paymentMethodTypes = paymentMethodTypes {
             json["payment_method_types"] = paymentMethodTypes.map {
-                STPPaymentMethod.string(from: $0)
+                STPPaymentMethod.string(from: $0) ?? "unknown"
             }
         }
         if !shippingProvided {
