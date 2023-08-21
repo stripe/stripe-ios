@@ -53,7 +53,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
     }
 
     func buildAddCardViewController() -> STPAddCardViewController? {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         let theme = STPTheme.defaultTheme
         let vc = STPAddCardViewController(
             configuration: config,
@@ -64,7 +64,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
     }
 
     func testPrefilledBillingAddress_removeAddress() {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.requiredBillingAddressFields = .postalCode
         let sut = STPAddCardViewController(
             configuration: config,
@@ -92,7 +92,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
     }
 
     func testPrefilledBillingAddress_viewDidLoadHappensBeforeSettingAddress() {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.requiredBillingAddressFields = .full
         let sut = STPAddCardViewController(
             configuration: config,
@@ -130,7 +130,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
             // Sanity checks
             XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
             XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
-            let config = STPFixtures.paymentConfiguration()
+            let config = STPPaymentConfiguration()
             config.requiredBillingAddressFields = .postalCode
             let sut = STPAddCardViewController(
                 configuration: config,

@@ -29,6 +29,11 @@ protocol FinancialConnectionsAPIClient {
 
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession>
 
+    func retrieveAuthSession(
+        clientSecret: String,
+        authSessionId: String
+    ) -> Future<FinancialConnectionsAuthSession>
+
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
         FinancialConnectionsMixedOAuthParams
     >
@@ -226,6 +231,17 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "id": authSessionId,
         ]
         return self.post(resource: APIEndpointAuthSessionsCancel, object: body)
+    }
+
+    func retrieveAuthSession(
+        clientSecret: String,
+        authSessionId: String
+    ) -> Future<FinancialConnectionsAuthSession> {
+        let body = [
+            "client_secret": clientSecret,
+            "id": authSessionId,
+        ]
+        return self.post(resource: APIEndpointAuthSessionsRetrieve, object: body)
     }
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
@@ -601,6 +617,7 @@ private let APIEndpointFeaturedInstitutions = "connections/featured_institutions
 private let APIEndpointSearchInstitutions = "connections/institutions"
 private let APIEndpointAuthSessions = "connections/auth_sessions"
 private let APIEndpointAuthSessionsCancel = "connections/auth_sessions/cancel"
+private let APIEndpointAuthSessionsRetrieve = "connections/auth_sessions/retrieve"
 private let APIEndpointAuthSessionsOAuthResults = "connections/auth_sessions/oauth_results"
 private let APIEndpointAuthSessionsAuthorized = "connections/auth_sessions/authorized"
 private let APIEndpointAuthSessionsAccounts = "connections/auth_sessions/accounts"

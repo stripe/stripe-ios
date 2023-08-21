@@ -24,7 +24,7 @@ class STPSetupIntentFunctionalTestSwift: XCTestCase {
 
         var clientSecret: String?
         let createSIExpectation = expectation(description: "Create SetupIntent")
-        STPTestingAPIClient.shared().createSetupIntent(
+        STPTestingAPIClient.shared.createSetupIntent(
             withParams: ["payment_method_types": ["us_bank_account"]],
             account: nil
         ) { intentClientSecret, error in
@@ -128,7 +128,7 @@ class STPSetupIntentFunctionalTestSwift: XCTestCase {
 extension STPSetupIntentFunctionalTestSwift {
     func testCreateSetupIntentWithTestingServer() {
         let expectation = self.expectation(description: "SetupIntent create.")
-        STPTestingAPIClient.shared().createSetupIntent(
+        STPTestingAPIClient.shared.createSetupIntent(
             withParams: nil) { clientSecret, error in
             XCTAssertNotNil(clientSecret)
             XCTAssertNil(error)
@@ -168,7 +168,7 @@ extension STPSetupIntentFunctionalTestSwift {
 
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create SetupIntent.")
-        STPTestingAPIClient.shared().createSetupIntent(withParams: nil) { createdClientSecret, creationError in
+        STPTestingAPIClient.shared.createSetupIntent(withParams: nil) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
             XCTAssertNil(creationError)
             createExpectation.fulfill()
@@ -209,7 +209,7 @@ extension STPSetupIntentFunctionalTestSwift {
 
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
-        STPTestingAPIClient.shared().createSetupIntent(
+        STPTestingAPIClient.shared.createSetupIntent(
             withParams: [
                 "payment_method_types": ["au_becs_debit"],
             ],

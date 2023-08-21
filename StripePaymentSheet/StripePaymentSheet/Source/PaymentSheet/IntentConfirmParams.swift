@@ -26,6 +26,7 @@ class IntentConfirmParams {
 
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: PaymentSheet.PaymentMethodType
+    let confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions
 
     /// True if the customer opts to save their payment method for future payments.
     var saveForFutureUseCheckboxState: SaveForFutureUseCheckboxState = .hidden
@@ -68,6 +69,7 @@ class IntentConfirmParams {
     init(params: STPPaymentMethodParams, type: PaymentSheet.PaymentMethodType) {
         self.paymentMethodType = type
         self.paymentMethodParams = params
+        self.confirmPaymentMethodOptions = STPConfirmPaymentMethodOptions()
     }
 
     func makeDashboardParams(

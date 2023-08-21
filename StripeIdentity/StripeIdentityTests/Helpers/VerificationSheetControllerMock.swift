@@ -56,6 +56,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     var missingType: StripeIdentity.IndividualFormElement.MissingType?
     var transitionedToIndividual: Bool = false
+    var transitionedToSelfieCapture: Bool = false
 
     var completeOption: CompleteOptionView.CompleteOption?
 
@@ -173,6 +174,10 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     func transitionToIndividual() {
         self.transitionedToIndividual = true
+    }
+
+    func transitionToSelfieCapture() {
+        self.transitionedToSelfieCapture = true
     }
 
 }

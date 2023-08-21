@@ -12,10 +12,6 @@
 
 "Approve payment" = "Godkänn betalning";
 
-"Are you sure you want to remove this card?" = "Är du säker på att du vill ta bort kortet?";
-
-"Are you sure you want to remove this linked account?" = "Är du säker på att du vill ta bort det länkade kontot?";
-
 "Back" = "Tillbaka";
 
 "Bank account" = "Bankkonto";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att fortsätta samtycker du till att godkänna betalningar i enlighet med dessa <terms>villkor</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Genom att fortsätta samtycker du till att godkänna betalningar i enlighet med dessa <terms>villkor</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Genom att fortsätta godkänner du att %1$@ debiterar ditt Cash App-konto för den här betalningen och framtida betalningar i enlighet med %2$@s villkor, tills detta godkännande återkallas. Du kan när som helst ändra detta i dina Cash App-inställningar.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att registrera dig på Link, godkänner du våra <terms>villkor</terms> och vår <privacy>integritetspolicy</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Avbryt och betala på ett annat sätt";
 
-"Change email" = "Ändra e-postadress";
-
 "Choose a payment method" = "Välj en betalmetod";
 
 "Close card scanner" = "Stäng kortskanner";
 
-"Code sent" = "Koden har skickats";
+"Confirm" = "Bekräfta";
 
 "Contact information" = "Kontaktinformation";
-
-"Default" = "Standard";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ange adress manuellt";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Ange koden som skickades till %@ för att använda Link för att betala som standard.";
-
-"Enter your verification code" = "Ange din verifieringskod";
-
-"For security, please re-enter your card’s security code." = "Ange säkerhetskoden för ditt kort igen av säkerhetsskäl.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Börja använda Link";
-
-"Log out of Link" = "Logga ut från Link";
+"Manage your payment methods" = "Hantera dina betalningsmetoder";
 
 "Name on card" = "Namn på kortet";
-
-"Not %@?" = "Inte %@?";
 
 "Open your UPI app to approve your payment within %@" = "Öppna UPI-appen för att godkänna din betalning inom %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Sprid ut betalningarna med %@";
 
-"Pay using" = "Betala med";
-
-"Pay with %@" = "Betala med %@";
-
 "Pay with your bank account in just a few steps." = "Betala med ditt bankkonto på några få steg.";
 
-"Payment" = "Betalning";
-
 "Payment failed" = "Betalningen misslyckades";
-
-"Payment methods" = "Betalningsmetoder";
 
 "Please go back and select another payment method" = "Gå tillbaka och välj en annan betalningsmetod";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Ta bort kort";
 
-"Remove card" = "Ta bort kort";
+"Save" = "Spara";
 
-"Remove linked account" = "Ta bort länkat konto";
-
-"Resend code" = "Skicka koden igen";
+"Save a new payment method" = "Spara en ny betalningsmetod";
 
 "Save address" = "Spara adress";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Spara detta kort för framtida betalningar hos %@";
 
-"Secure 1⁠-⁠click checkout" = "Betala säkert med ett klick";
-
 "Select your payment method" = "Välj din betalningsmetod";
-
-"Set as default" = "Ställ in som standard";
-
-"Set as default payment method" = "Ställ in som standardbetalningsmetod";
 
 "Set up" = "Konfigurera";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Visa meny";
 
-"Sign in to your Link account" = "Logga in på ditt Link-konto";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sätter in 0,01 USD på ditt konto inom 1–2 arbetsdagar. Sedan får du ett e-postmeddelande med instruktioner för att slutföra betalningen till %@.";
-
-"Tap to close" = "Klicka för att stänga";
-
-"Tap to expand" = "Klicka för att utvidga";
 
 "The IBAN you entered is incomplete." = "Angivet IBAN är ofullständigt.";
 
-"The provided verification code has expired." = "Den angivna verifieringskoden har förfallit.";
-
-"The provided verification code is incorrect." = "Den angivna verifieringskoden är felaktig.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Detta kort har löpt ut. Uppdatera kortinformationen eller använd en annan betalningsmetod.";
-
-"This is your default" = "Detta är din standardbetalningsmetod";
-
-"Too many attempts. Please try again in a few minutes." = "För många försök. Försök igen om några minuter.";
-
-"Unavailable for this purchase" = "Otillgängligt för detta köp";
-
 "Update card" = "Uppdatera kort";
-
-"Use your saved info to check out faster" = "Använd din sparade information för att betala snabbare";
 
 "Your IBAN should start with a two-letter country code." = "Ditt IBAN ska börja med en landskod (två bokstäver).";
 

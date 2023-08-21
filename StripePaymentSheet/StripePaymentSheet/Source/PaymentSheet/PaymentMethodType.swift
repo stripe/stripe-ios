@@ -42,6 +42,7 @@ extension PaymentSheet {
         case dynamic(String)
         case UPI
         case cashApp
+        case grabPay
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
 
@@ -57,6 +58,8 @@ extension PaymentSheet {
                 self = .UPI
             case STPPaymentMethod.string(from: .cashApp):
                 self = .cashApp
+            case STPPaymentMethod.string(from: .grabPay):
+                self = .grabPay
             default:
                 self = .dynamic(str)
             }
@@ -76,6 +79,8 @@ extension PaymentSheet {
                 return STPPaymentMethod.string(from: .UPI)
             case .cashApp:
                 return STPPaymentMethod.string(from: .cashApp)
+            case .grabPay:
+                return STPPaymentMethod.string(from: .grabPay)
             case .dynamic(let str):
                 return str
             }

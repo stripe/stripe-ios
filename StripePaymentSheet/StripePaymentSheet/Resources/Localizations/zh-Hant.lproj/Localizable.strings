@@ -12,10 +12,6 @@
 
 "Approve payment" = "批准付款";
 
-"Are you sure you want to remove this card?" = "您確定要移除此卡嗎？";
-
-"Are you sure you want to remove this linked account?" = "您確定要移除這個關聯的帳戶嗎？";
-
 "Back" = "上一步";
 
 "Bank account" = "銀行帳戶";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "繼續操作即表示您同意按照<terms>這些條款</terms>授權付款。";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "點擊「繼續」，即表示您同意按照這些<terms>條款</terms>授權付款。";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "繼續操作，即表示您授權 %1$@ 按照 %2$@ 的條款從您的 Cash App 帳戶中扣取該款項及未來的款項，直至撤銷授權。您可以隨時在 Cash App 設定中進行修改。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>條款</terms>和<privacy>隱私政策</privacy>。";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "取消並用另一方式支付";
 
-"Change email" = "更改電郵地址";
-
 "Choose a payment method" = "選擇一個支付方式";
 
 "Close card scanner" = "關閉金融卡掃描器";
 
-"Code sent" = "驗證碼已發送";
+"Confirm" = "確定";
 
 "Contact information" = "聯絡資訊";
-
-"Default" = "預設";
 
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "手動輸入地址";
 
-"Enter the code sent to %@ to use Link to pay by default." = "輸入發送到 %@ 的驗證碼，以預設用 Link 支付。";
-
-"Enter your verification code" = "輸入您的驗證碼";
-
-"For security, please re-enter your card’s security code." = "出於安全原因，請重新輸入您金融卡的安全碼。";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "加入 Link";
+"Manage your payment methods" = "管理您的支付方式";
 
-"Log out of Link" = "退出 Link";
-
-"Name on card" = "卡上的姓名";
-
-"Not %@?" = "不是 %@？";
+"Name on card" = "持卡人姓名";
 
 "Open your UPI app to approve your payment within %@" = "請在 %@內打開您的 UPI 應用程式來批准付款";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "用 %@ 慢慢支付";
 
-"Pay using" = "支付方式";
-
-"Pay with %@" = "以 %@ 支付";
-
 "Pay with your bank account in just a few steps." = "只需少許幾步，即可用您的銀行帳戶付款。";
 
-"Payment" = "支付方式";
-
 "Payment failed" = "付款失敗";
-
-"Payment methods" = "支付方式";
 
 "Please go back and select another payment method" = "請返回並選擇另一個支付方式。";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "移除卡";
 
-"Remove card" = "解除綁定";
+"Save" = "保存";
 
-"Remove linked account" = "移除關聯帳戶";
-
-"Resend code" = "重新發送驗證碼";
+"Save a new payment method" = "保存新的支付方式";
 
 "Save address" = "保存地址";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "保存該卡，用於未來在 %@ 付款。";
 
-"Secure 1⁠-⁠click checkout" = "安全地一鍵結帳";
-
 "Select your payment method" = "選擇您的支付方式";
-
-"Set as default" = "設定為預設支付方式";
-
-"Set as default payment method" = "設定為預設支付方式";
 
 "Set up" = "設定";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "顯示選單";
 
-"Sign in to your Link account" = "登錄您的 Link 帳戶";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe 會在 1-2 個工作日向您的帳戶存入 0.01 美元。然後您會收到一封郵件，指導您完成向 %@ 的付款。";
-
-"Tap to close" = "點擊以關閉";
-
-"Tap to expand" = "點擊以展開";
 
 "The IBAN you entered is incomplete." = "您輸入的 IBAN 不完整。";
 
-"The provided verification code has expired." = "提供的驗證碼已過期。";
-
-"The provided verification code is incorrect." = "提供的驗證碼不正確。";
-
-"This card has expired. Update your card info or choose a different payment method." = "該卡已過期。更新您的金融卡資訊或選擇另一支付方式。";
-
-"This is your default" = "這是您的預設支付方式";
-
-"Too many attempts. Please try again in a few minutes." = "嘗試次數過多。請幾分鐘後重試。";
-
-"Unavailable for this purchase" = "無法完成這筆訂單";
-
 "Update card" = "更新金融卡";
-
-"Use your saved info to check out faster" = "用您保存的資訊，更快結帳";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 應以一個兩字母國家代碼開頭。";
 

@@ -12,10 +12,6 @@
 
 "Approve payment" = "Apstiprināt maksājumu";
 
-"Are you sure you want to remove this card?" = "Vai tiešām vēlaties noņemt šo karti?";
-
-"Are you sure you want to remove this linked account?" = "Vai tiešām vēlaties noņemt šo saistīto kontu?";
-
 "Back" = "Atpakaļ";
 
 "Bank account" = "Bankas konts";
@@ -30,8 +26,6 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar šiem<terms>noteikumiem</terms>.";
-
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Turpinot, jūs atļaujat %1$@ iekasēt no jūsu Cash App konta par šo un turpmākiem maksājumiem saskaņā ar %2$@ noteikumiem, līdz šī atļauja netiek atsaukta. To varat mainīt jebkurā laikā Cash App iestatījumos.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties Link, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
@@ -42,37 +36,23 @@
 
 "Cancel and pay another way" = "Atcelt vai maksāt citā veidā";
 
-"Change email" = "Mainīt e-pastu";
-
 "Choose a payment method" = "Izvēlēties maksājuma veidu";
 
 "Close card scanner" = "Aizvērt kartes skeneri";
 
-"Code sent" = "Kods nosūtīts";
+"Confirm" = "Apstiprināt";
 
 "Contact information" = "Kontaktinformācija";
-
-"Default" = "Noklusējuma";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ievadīt adresi manuāli";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Ievadiet kodu, kas nosūtīts %@, lai izmantotu Link maksāšanai pēc noklusējuma.";
-
-"Enter your verification code" = "Ievadiet savu verifikācijas kodu";
-
-"For security, please re-enter your card’s security code." = "Drošības nolūkos atkārtoti ievadiet kartes drošības kodu.";
-
 "IBAN" = "IBAN";
 
-"Join Link" = "Pievienoties Link";
-
-"Log out of Link" = "Izrakstīties no Link";
+"Manage your payment methods" = "Pārvaldīt savus maksājuma veidus";
 
 "Name on card" = "Uz kartes norādītais vārds";
-
-"Not %@?" = "Ne %@?";
 
 "Open your UPI app to approve your payment within %@" = "Atveriet UPI lietotni, lai apstiprinātu savu maksājumu %@";
 
@@ -94,17 +74,9 @@
 
 "Pay over time with %@" = "Maksāt pakāpeniski ar %@";
 
-"Pay using" = "Maksāt, izmantojot";
-
-"Pay with %@" = "Maksāt ar %@";
-
 "Pay with your bank account in just a few steps." = "Maksājiet ar savu bankas kontu, izpildot tikai dažus soļus";
 
-"Payment" = "Maksājums";
-
 "Payment failed" = "Maksājums neizdevās";
-
-"Payment methods" = "Maksājuma veidi";
 
 "Please go back and select another payment method" = "Lūdzu, atgriezieties un atlasiet citu maksājuma veidu.";
 
@@ -118,11 +90,9 @@
 
 "Remove Card" = "Noņemt karti";
 
-"Remove card" = "Noņemt karti";
+"Save" = "Saglabāt";
 
-"Remove linked account" = "Noņemt piesaistītu kontu";
-
-"Resend code" = "Nosūtīt kodu vēlreiz";
+"Save a new payment method" = "Saglabāt jaunu maksājuma veidu";
 
 "Save address" = "saglabāt adresi";
 
@@ -134,13 +104,7 @@
 
 "Save this card for future %@ payments" = "Saglabāt šo karti %@ maksājumiem nākotnē";
 
-"Secure 1⁠-⁠click checkout" = "Droša 1 klikšķa norēķināšanās";
-
 "Select your payment method" = "Izvēlēties savu maksājuma veidu";
-
-"Set as default" = "Iestatīt kā noklusējumu";
-
-"Set as default payment method" = "Iestatīt kā noklusējuma maksājuma veidu";
 
 "Set up" = "Iestatīt";
 
@@ -148,31 +112,11 @@
 
 "Show menu" = "Rādīt izvēlni";
 
-"Sign in to your Link account" = "Pierakstīties Link kontā";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe uz jūsu kontu 1-2 darbadienu laikā nosūtīs 0,01 $. Pēc tam saņemsiet e-pastu ar norādījumiem, kā pabeigt maksājumu ar %@.";
-
-"Tap to close" = "Pieskarieties, lai aizvērtu";
-
-"Tap to expand" = "Pieskarieties, lai izvērstu";
 
 "The IBAN you entered is incomplete." = "Ievadītais IBAN nav pilnīgs.";
 
-"The provided verification code has expired." = "Norādītajam verifikācijas kodam ir beidzies derīguma termiņš.";
-
-"The provided verification code is incorrect." = "Norādītais verifikācijas kods nav pareizs.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Šai kartei ir beidzies derīguma termiņš. Atjauniniet savu kartes informāciju vai izmantojiet citu maksājuma veidu.";
-
-"This is your default" = "Tas ir jūsu noklusējums";
-
-"Too many attempts. Please try again in a few minutes." = "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc dažām minūtēm.";
-
-"Unavailable for this purchase" = "Nav pieejams šim pirkumam";
-
 "Update card" = "Atjaunināt karti";
-
-"Use your saved info to check out faster" = "Izmantojiet saglabāto informāciju, lai norēķinātos ātrāk";
 
 "Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
 

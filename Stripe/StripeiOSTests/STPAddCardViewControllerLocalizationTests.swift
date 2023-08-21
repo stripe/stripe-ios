@@ -22,7 +22,7 @@ class STPAddCardViewControllerLocalizationTests: FBSnapshotTestCase {
     }
 
     func performSnapshotTest(forLanguage language: String?, delivery: Bool) {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.companyName = "Test Company"
         config.requiredBillingAddressFields = .full
         config.shippingType = delivery ? .delivery : .shipping

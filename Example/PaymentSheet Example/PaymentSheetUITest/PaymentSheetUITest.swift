@@ -330,6 +330,42 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
     }
+
+    func testUPIPaymentMethodPolling() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+                settings.merchantCountryCode = .IN
+        settings.currency = .inr
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        let payButton = app.buttons["Pay ₹50.99"]
+        guard let upi = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI") else {
+            XCTFail()
+            return
+        }
+        upi.tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+        let upi_id = app.textFields["UPI ID"]
+        upi_id.tap()
+        upi_id.typeText("payment.pending@stripeupi")
+        upi_id.typeText(XCUIKeyboardKey.return.rawValue)
+
+        payButton.tap()
+
+        let approvePaymentText = app.staticTexts["Approve payment"]
+        XCTAssertTrue(approvePaymentText.waitForExistence(timeout: 10.0))
+
+        // UPI Specific CTA
+        let predicate = NSPredicate(format: "label BEGINSWITH 'Open your UPI app to approve your payment within'")
+        let upiCTAText = XCUIApplication().staticTexts.element(matching: predicate)
+        XCTAssertTrue(approvePaymentText.waitForExistence(timeout: 10.0))
+    }
 }
 
 class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
@@ -504,7 +540,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         // Attempt payment, should fail
         payButton.tap()
-
     }
 
     func testZipPaymentMethod() throws {
@@ -521,7 +556,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay A$50.99"]
 
-        // Select Cash App
+        // Select Zip
         guard let zip = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Zip")
         else {
             XCTFail()
@@ -625,6 +660,37 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         )
 
         // no pay button tap because linked account is stubbed/fake in UI test
+    }
+
+    func testGrabPayPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new // new customer
+        settings.apmsEnabled = .on
+        settings.currency = .sgd
+        settings.merchantCountryCode = .SG
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay SGD 50.99"]
+
+        // Select GrabPay
+        guard let grabPay = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "GrabPay")
+        else {
+            XCTFail()
+            return
+        }
+        grabPay.tap()
+
+        // Attempt payment
+        payButton.tap()
+
+        // Close the webview, no need to see the successful pay
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
     }
 
     func testPaymentIntent_USBankAccount() {
