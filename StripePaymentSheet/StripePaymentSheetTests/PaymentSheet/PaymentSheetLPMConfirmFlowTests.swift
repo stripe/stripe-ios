@@ -11,8 +11,8 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
+@testable@_spi(STP) import StripePaymentsTestUtils
 
 /// These tests exercise 9 different confirm flows based on the combination of:
 /// - The Stripe Intent: PaymentIntent or PaymentIntent+SFU or SetupIntent
@@ -44,7 +44,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     }
 
     func testSEPADebitConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent, .deferredPaymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .dynamic("sepa_debit")) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .dynamic("sepa_debit")) { form in
             form.getTextFieldElement("Full name")?.setText("Foo")
             form.getTextFieldElement("Email")?.setText("f@z.c")
             form.getTextFieldElement("IBAN")?.setText("DE89370400440532013000")
@@ -56,7 +56,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     }
 
     func testBancontactConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent, .deferredPaymentIntent], currency: "EUR", paymentMethodType: .dynamic("bancontact")) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .dynamic("bancontact")) { form in
             form.getTextFieldElement("Full name")?.setText("Foo")
             XCTAssertNil(form.getMandateElement())
             XCTAssertNil(form.getTextFieldElement("Email"))
@@ -70,7 +70,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     }
 
     func testSofortConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent, .deferredPaymentIntent], currency: "EUR", paymentMethodType: .dynamic("sofort")) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .dynamic("sofort")) { form in
             XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
             XCTAssertNil(form.getTextFieldElement("Full name"))
             XCTAssertNil(form.getTextFieldElement("Email"))
@@ -87,7 +87,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
 
     /// 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
     func testiDEALConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent, .deferredPaymentIntent], currency: "EUR", paymentMethodType: .dynamic("ideal")) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .dynamic("ideal")) { form in
             // Fill out your payment method form in here.
             // Note: Each required field you fill out implicitly tests that the field exists; if the field doesn't exist, the test will fail because the form is incomplete.
             form.getTextFieldElement("Full name")?.setText("Foo")
@@ -111,7 +111,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
 
     func testGrabPayConfirmFlows() async throws {
         // GrabPay has no input fields
-        try await _testConfirm(intentKinds: [.paymentIntent, .deferredPaymentIntent],
+        try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "SGD",
                                paymentMethodType: .grabPay,
                                merchantCountry: .SG) { _ in
@@ -129,7 +129,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
 extension PaymentSheet_LPM_ConfirmFlowTests {
     enum IntentKind: CaseIterable {
         case paymentIntent
-        case deferredPaymentIntent
         case paymentIntentWithSetupFutureUsage
         case setupIntent
     }
@@ -196,11 +195,6 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                                                                                            merchantCountry: merchantCountry.rawValue)
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
-            intents = [
-                ("PaymentIntent", .paymentIntent(paymentIntent)),
-            ]
-
-        case .deferredPaymentIntent:
             let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { _, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString],
                                                                                currency: currency,
@@ -214,6 +208,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                                                                                otherParams: paramsForServerSideConfirmation)
             }
             intents = [
+                ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred PaymentIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
