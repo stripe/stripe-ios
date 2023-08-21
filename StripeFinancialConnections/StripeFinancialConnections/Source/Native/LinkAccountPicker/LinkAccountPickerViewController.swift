@@ -208,6 +208,16 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
         _ view: LinkAccountPickerBodyView,
         didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
     ) {
+        dataSource
+            .analyticsClient
+            .log(
+                eventName: "click.account_picker.account_selected",
+                parameters: [
+                    "account": selectedAccount.id,
+                    "is_single_account": true,
+                ],
+                pane: .linkAccountPicker
+            )
         dataSource.updateSelectedAccount(selectedAccount)
     }
 

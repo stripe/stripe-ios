@@ -176,39 +176,39 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
     func testNoSelfieConfigError() throws {
         let exp = expectation(description: "testNoSelfieConfigError")
-        try nextViewController(
-            missingRequirements: [.face],
-            staticContentResult: .success(try VerificationPageMock.noSelfie.make()),
-            completion: { nextVC in
-                XCTAssertIs(nextVC, ErrorViewController.self)
-                XCTAssertEqual(
-                    (nextVC as? ErrorViewController)?.model,
-                    .error(VerificationSheetFlowControllerError.missingSelfieConfig)
-                )
-                exp.fulfill()
-            }
+
+        let nextVC = flowController.makeSelfieCaptureViewController(
+            faceScannerResult: .failure(IdentityMLModelLoaderError.mlModelNeverLoaded),
+            staticContent: try VerificationPageMock.noSelfie.make(),
+            sheetController: mockSheetController
         )
+        XCTAssertIs(nextVC, ErrorViewController.self)
+        XCTAssertEqual(
+            (nextVC as? ErrorViewController)?.model,
+            .error(VerificationSheetFlowControllerError.missingSelfieConfig)
+        )
+        exp.fulfill()
         wait(for: [exp], timeout: 1)
     }
 
     func testMLModelsNeverLoadedError() throws {
         let exp = expectation(description: "testMLModelsNeverLoadedError")
 
-        try nextViewController(
-            missingRequirements: [.face],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, ErrorViewController.self)
-                XCTAssertEqual(
-                    (nextVC as? ErrorViewController)?.model,
-                    .error(
-                        VerificationSheetFlowControllerError.unknown(
-                            IdentityMLModelLoaderError.mlModelNeverLoaded
-                        )
-                    )
-                )
-                exp.fulfill()
-            }
+        let nextVC = flowController.makeSelfieCaptureViewController(
+            faceScannerResult: .failure(IdentityMLModelLoaderError.mlModelNeverLoaded),
+            staticContent: try VerificationPageMock.response200.make(),
+            sheetController: mockSheetController
         )
+        XCTAssertIs(nextVC, ErrorViewController.self)
+        XCTAssertEqual(
+            (nextVC as? ErrorViewController)?.model,
+            .error(
+                VerificationSheetFlowControllerError.unknown(
+                    IdentityMLModelLoaderError.mlModelNeverLoaded
+                )
+            )
+        )
+        exp.fulfill()
         wait(for: [exp], timeout: 1)
     }
 
@@ -412,7 +412,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         try nextViewController(
             missingRequirements: [.face],
             completion: { nextVC in
-                XCTAssertIs(nextVC, SelfieCaptureViewController.self)
+                XCTAssertIs(nextVC, SelfieWarmupViewController.self)
                 exp.fulfill()
             }
         )
