@@ -1,4 +1,6 @@
 ## x.x.x x-x-x
+### StripeApplePay
+* Fixed a compile-time issue with using StripeApplePay in an App Extension. ([#2853](https://github.com/stripe/stripe-ios/issues/2853))
 
 ### All
 * Improved redirect UX when using Cash App Pay.

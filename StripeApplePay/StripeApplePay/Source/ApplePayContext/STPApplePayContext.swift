@@ -161,7 +161,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             self,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
-        
+
         applePayController.present { (_) in
             DispatchQueue.main.async {
                 completion?()
