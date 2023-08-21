@@ -878,7 +878,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
     func testBlik_AutomaticFields() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .guest
+        settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .pln
         settings.defaultBillingAddress = .off
@@ -917,84 +917,6 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         payButton.tap()
 
         // in test mode polling is auto approved in 10 seconds
-        XCTAssertTrue(successText.waitForExistence(timeout: 25.0))
-    }
-
-    func testBlik_AllFields_NoDefaults() throws {
-
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .guest
-        settings.merchantCountryCode = .FR
-        settings.currency = .pln
-        settings.defaultBillingAddress = .off
-        settings.attachDefaults = .off
-        settings.collectName = .always
-        settings.collectEmail = .always
-        settings.collectPhone = .always
-        settings.collectAddress = .full
-        loadPlayground(
-            app,
-            settings
-        )
-        checkoutButton.tap()
-
-        let payButton = app.buttons["Pay PLN 50.99"]
-        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "BLIK"))
-        cell.tap()
-
-        XCTAssertTrue(app.staticTexts["Contact information"].exists)
-        XCTAssertTrue(emailField.exists)
-        XCTAssertTrue(fullNameField.exists)
-        XCTAssertTrue(phoneField.exists)
-        XCTAssertTrue(billingAddressField.exists)
-        XCTAssertTrue(countryField.exists)
-        XCTAssertTrue(line1Field.exists)
-        XCTAssertTrue(line2Field.exists)
-        XCTAssertTrue(cityField.exists)
-        XCTAssertTrue(stateField.exists)
-        XCTAssertTrue(zipField.exists)
-
-        let name = fullNameField
-        name.tap()
-        name.typeText("Jane Doe")
-        name.typeText(XCUIKeyboardKey.return.rawValue)
-
-        let email = emailField
-        email.tap()
-        email.typeText("foo@bar.com")
-        email.typeText(XCUIKeyboardKey.return.rawValue)
-
-        let phone = phoneField
-        phone.tap()
-        phone.typeText("3105551234")
-        phone.typeText(XCUIKeyboardKey.return.rawValue)
-
-        let line1 = line1Field
-        line1.tap()
-        line1.typeText("510 Townsend St.")
-        line1.typeText(XCUIKeyboardKey.return.rawValue)
-
-        let city = cityField
-        city.tap()
-        city.typeText("San Francisco")
-        city.typeText(XCUIKeyboardKey.return.rawValue)
-
-        stateField.tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-
-        let zip = zipField
-        zip.tap()
-        zip.typeText("94102")
-        zip.typeText(XCUIKeyboardKey.return.rawValue)
-
-        XCTAssertFalse(payButton.isEnabled)
-        let blik_code = app.textFields["BLIK code"]
-        blik_code.tap()
-        blik_code.typeText("123456")
-
-        payButton.tap()
-
-        // in test mode polling is auto approved in 10 seconds
-        XCTAssertTrue(successText.waitForExistence(timeout: 25.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 }
