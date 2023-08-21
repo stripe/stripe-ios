@@ -9,6 +9,10 @@
 ### Payments
 * [Added] You can now create an STPConnectAccountParams without specifying a business type.
 
+### Basic Integration
+* [Added] Adds `applePayLaterAvailability` to `STPPaymentContext`, a property that mirrors `PKPaymentRequest.applePayLaterAvailability`. This is useful if you need to disable Apple Pay Later. Note: iOS 17+.
+
+
 ## 23.13.0 2023-08-07
 ### All
 * [Fixed] Fixed compatibility with Xcode 15 beta 3. visionOS is now supported in iPadOS compatibility mode.
