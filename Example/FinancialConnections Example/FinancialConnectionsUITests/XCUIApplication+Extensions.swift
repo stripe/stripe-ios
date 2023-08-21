@@ -14,43 +14,43 @@ extension XCUIApplication {
 
     var fc_playgroundCell: XCUIElement {
         let playgroundCell = tables.staticTexts["Playground"]
-        XCTAssertTrue(playgroundCell.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(playgroundCell.waitForExistence(timeout: 10.0), "\(#function) waiting failed")
         return playgroundCell
     }
 
     var fc_playgroundDataFlowButton: XCUIElement {
         let playgroundDataFlowButton = segmentedControls.buttons["Data"]
-        XCTAssertTrue(playgroundDataFlowButton.waitForExistence(timeout: 60.0))
+        XCTAssertTrue(playgroundDataFlowButton.waitForExistence(timeout: 60.0), "\(#function) waiting failed")
         return playgroundDataFlowButton
     }
 
     var fc_playgroundPaymentFlowButton: XCUIElement {
         let playgroundPaymentFlowButton = segmentedControls.buttons["Payments"]
-        XCTAssertTrue(playgroundPaymentFlowButton.waitForExistence(timeout: 60.0))
+        XCTAssertTrue(playgroundPaymentFlowButton.waitForExistence(timeout: 60.0), "\(#function) waiting failed")
         return playgroundPaymentFlowButton
     }
 
     var fc_playgroundNativeButton: XCUIElement {
         let playgroundNativeButton = segmentedControls.buttons["Native"]
-        XCTAssertTrue(playgroundNativeButton.waitForExistence(timeout: 60.0))
+        XCTAssertTrue(playgroundNativeButton.waitForExistence(timeout: 60.0), "\(#function) waiting failed")
         return playgroundNativeButton
     }
 
     var fc_playgroundEnableTestModeSwitch: XCUIElement {
         let enableTestModeSwitch = switches["Enable Test Mode"].firstMatch
-        XCTAssertTrue(enableTestModeSwitch.waitForExistence(timeout: 60.0))
+        XCTAssertTrue(enableTestModeSwitch.waitForExistence(timeout: 60.0), "\(#function) waiting failed")
         return enableTestModeSwitch
     }
 
     var fc_playgroundShowAuthFlowButton: XCUIElement {
         let showAuthFlowButton = buttons["Show Auth Flow"]
-        XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0))
+        XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0), "\(#function) waiting failed")
         return showAuthFlowButton
     }
 
     var fc_playgroundSuccessAlertView: XCUIElement {
         let playgroundSuccessAlertView = alerts["Success"]
-        XCTAssertTrue(playgroundSuccessAlertView.waitForExistence(timeout: 60.0))
+        XCTAssertTrue(playgroundSuccessAlertView.waitForExistence(timeout: 60.0), "\(#function) waiting failed")
         return playgroundSuccessAlertView
     }
 
@@ -58,25 +58,30 @@ extension XCUIApplication {
 
     var fc_nativeConsentAgreeButton: XCUIElement {
         let consentAgreeButton = buttons["consent_agree_button"]
-        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
+        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0), "\(#function) waiting failed")  // glitch app can take time to lload
         return consentAgreeButton
     }
 
-    var fc_nativePrepaneContinueButton: XCUIElement {
+    var fc_nativePrepaneContinueButton_noWait: XCUIElement {
         let prepaneContinueButton = buttons["prepane_continue_button"]
-        XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0))
+        return prepaneContinueButton
+    }
+
+    var fc_nativePrepaneContinueButton: XCUIElement {
+        let prepaneContinueButton = fc_nativePrepaneContinueButton_noWait
+        XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0), "\(#function) waiting failed")
         return prepaneContinueButton
     }
 
     var fc_nativeAccountPickerLinkAccountsButton: XCUIElement {
         let accountPickerLinkAccountsButton = buttons["account_picker_link_accounts_button"]
-        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0))  // wait for accounts to fetch
+        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "\(#function) waiting failed")  // wait for accounts to fetch
         return accountPickerLinkAccountsButton
     }
 
     var fc_nativeSuccessDoneButton: XCUIElement {
         let successDoneButton = buttons["success_done_button"]
-        XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0))  // wait for accounts to link
+        XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "\(#function) waiting failed")  // wait for accounts to link
         return successDoneButton
     }
 
