@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.14.0 2023-08-21
 
 ### All
 * Improved redirect UX when using Cash App Pay.
