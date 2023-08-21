@@ -132,8 +132,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                         : SelfieCaptureViewController.capturingInstructionText
                 )
             )
-        case .scanned(_, let faceCaptureData),
-            .saving(_, let faceCaptureData):
+        case .scanned(_, let faceCaptureData):
             return .scan(
                 .init(
                     state: .scanned(
@@ -148,6 +147,16 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                         retakeSelfieHandler: { [weak self] in
                             self?.imageScanningSession.startScanning()
                         }
+                    ),
+                    instructionalText: SelfieCaptureViewController.scannedInstructionText
+                )
+            )
+        case .saving(_, let faceCaptureData):
+            return .saving(
+                .init(
+                    state: .saving(
+                        faceCaptureData.toArray.map { UIImage(cgImage: $0.image) },
+                        consentHTMLText: apiConfig.trainingConsentText
                     ),
                     instructionalText: SelfieCaptureViewController.scannedInstructionText
                 )
