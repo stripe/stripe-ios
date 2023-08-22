@@ -31,7 +31,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.countryCode, "GB")
 #if compiler(>=5.9)
             if #available(macOS 14.0, iOS 17.0, *) {
-                paymentRequest.applePayLaterAvailability = .available
+                XCTAssertEqual(sut.applePayLaterAvailability, .available)
             }
 #endif
         }
@@ -39,7 +39,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_PaymentIntentWithSetupFutureUsage() {
         let intent = Intent.paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["card"], setupFutureUsage: .offSession))
-        let deferredIntent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .payment(amount: 10, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
+        let deferredIntent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .payment(amount: 10, currency: "USD", setupFutureUsage: .offSession), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 0.1)
@@ -49,7 +49,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.countryCode, "GB")
 #if compiler(>=5.9)
             if #available(macOS 14.0, iOS 17.0, *) {
-                paymentRequest.applePayLaterAvailability = .unavailable(.recurringTransaction)
+                XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
             }
 #endif
         }
@@ -67,9 +67,27 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.countryCode, "GB")
 #if compiler(>=5.9)
             if #available(macOS 14.0, iOS 17.0, *) {
-                paymentRequest.applePayLaterAvailability = .unavailable(.recurringTransaction)
+                XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
             }
 #endif
         }
     }
 }
+
+#if compiler(>=5.9)
+@available(macOS 14.0, iOS 17.0, *)
+extension PKPaymentRequest.ApplePayLaterAvailability: Equatable {
+    public static func == (lhs: PKPaymentRequest.ApplePayLaterAvailability, rhs: PKPaymentRequest.ApplePayLaterAvailability) -> Bool {
+        switch (lhs, rhs) {
+        case (.available, .available):
+            return true
+        case (.unavailable(.itemIneligible), .unavailable(.itemIneligible)):
+            return true
+        case (.unavailable(.recurringTransaction), .unavailable(.recurringTransaction)):
+            return true
+        default:
+            return false
+        }
+    }
+}
+#endif
