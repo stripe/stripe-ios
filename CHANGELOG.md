@@ -4,6 +4,8 @@
 * Improved redirect UX when using Cash App Pay.
 
 ### PaymentSheet
+* [Added] Support for BLIK with PaymentIntents. 
+### PaymentSheet
 * [Added] Support for GrabPay with PaymentIntents.
 
 ### Payments
