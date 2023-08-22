@@ -159,8 +159,6 @@ To lint your code before pushing you can run `ci_scripts/lint_modified_files.sh`
 
 You can also add this script as a pre-push hook by running `ln -s "$(pwd)/ci_scripts/lint_modified_files.sh" .git/hooks/pre-push && chmod +x .git/hooks/pre-push`
 
-Note that a substantial amount of files don't fully conform to the code style enforced by our lint rules we want to progressively improve the code style of our existing code, so if you modify a file that contains lint violations you should fix them.
-
 To format modified files automatically, you can use `ci_scripts/format_modified_files.sh` and you can add it as a pre-commit hook using `ln -s "$(pwd)/ci_scripts/format_modified_files.sh" .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit`
 
 ## Licenses
