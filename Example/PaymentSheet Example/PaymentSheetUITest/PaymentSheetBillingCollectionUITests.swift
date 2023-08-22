@@ -917,6 +917,6 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         payButton.tap()
 
         // in test mode polling is auto approved in 10 seconds
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 25.0))
     }
 }
