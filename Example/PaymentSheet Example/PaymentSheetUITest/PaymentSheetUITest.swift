@@ -598,7 +598,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(payButton.isEnabled)
 
-        // Attempt payment, should fail
+        // Attempt payment, should succeed
         payButton.tap()
     }
 
