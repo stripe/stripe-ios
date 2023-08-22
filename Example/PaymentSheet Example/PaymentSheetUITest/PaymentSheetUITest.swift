@@ -366,6 +366,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let upiCTAText = XCUIApplication().staticTexts.element(matching: predicate)
         XCTAssertTrue(upiCTAText.waitForExistence(timeout: 10.0))
     }
+}
 
 class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     func testEPSPaymentMethodHasTextFieldsAndDropdown() throws {
