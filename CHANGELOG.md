@@ -5,6 +5,10 @@
 ### StripeApplePay
 * Fixed a compile-time issue with using StripeApplePay in an App Extension. ([#2853](https://github.com/stripe/stripe-ios/issues/2853))
 
+## 23.15.0 2023-08-22
+### PaymentSheet
+* [Added] Support for AmazonPay with PaymentIntents.
+
 ## 23.14.0 2023-08-21
 ### All
 * Improved redirect UX when using Cash App Pay.
