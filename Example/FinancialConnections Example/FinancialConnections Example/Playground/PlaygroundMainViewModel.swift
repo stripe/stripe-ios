@@ -169,10 +169,10 @@ final class PlaygroundMainViewModel: ObservableObject {
                         let sessionInfo =
 """
 session_id=\(session.id)
-account_names=\(session.accounts.data.map({ $0.displayName ?? "N/A"}))
+account_names=\(session.accounts.data.map({ $0.displayName ?? "N/A" }))
 account_ids=\(session.accounts.data.map({ $0.id }))
 """
-    
+
                         UIAlertController.showAlert(
                             title: "Success",
                             message: "\(accountInfos)\n\n\(sessionInfo)"
