@@ -368,6 +368,43 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
     }
 }
 
+    func testBLIKPaymentMethodPolling() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+                settings.merchantCountryCode = .FR
+        settings.currency = .pln
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        let payButton = app.buttons["Pay PLN 50.99"]
+        guard let blik = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "BLIK") else {
+            XCTFail()
+            return
+        }
+        blik.tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+        let blik_code = app.textFields["BLIK code"]
+        blik_code.tap()
+        blik_code.typeText("123456")
+        blik_code.typeText(XCUIKeyboardKey.return.rawValue)
+
+        payButton.tap()
+
+        let approvePaymentText = app.staticTexts["Approve payment"]
+        XCTAssertTrue(approvePaymentText.waitForExistence(timeout: 15.0))
+
+        // BLIK Specific CTA
+        let predicate = NSPredicate(format: "label BEGINSWITH 'Confirm the payment in your bank\\'s app within'")
+        let blikCTAText = XCUIApplication().staticTexts.element(matching: predicate)
+        XCTAssertTrue(blikCTAText.waitForExistence(timeout: 10.0))
+    }
+}
+
 class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     func testEPSPaymentMethodHasTextFieldsAndDropdown() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
