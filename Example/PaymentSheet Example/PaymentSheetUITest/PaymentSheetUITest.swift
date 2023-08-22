@@ -577,7 +577,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Attempt payment, should fail
         payButton.tap()
     }
-    
+
     func testAmazonPayPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
