@@ -28,6 +28,7 @@ Table of contents
    * [Card scanning](#card-scanning)
    * [Contributing](#contributing)
    * [Migrating](#migrating-from-older-versions)
+   * [Code Stye](#code-style)
    * [Licenses](#licenses)
 
 <!--te-->
@@ -148,6 +149,21 @@ We welcome contributions of any kind including new features, bug fixes, and docu
 ## Migrating from older versions
 
 See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md)
+
+## Code style
+We use swiftlint to enforce code style.
+
+To install it, run brew install swiftlint
+
+To lint your code before pushing you can run ci_scripts/lint_modified_files.sh
+
+You can also add this script as a pre-push hook by running ln -s "$(pwd)/ci_scripts/lint_modified_files.sh" .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+
+Note that a substantial amount of files don't fully conform to the code style enforced by our lint rules we want to progressively improve the code style of our existing code, so if you modify a file that contains lint violations you should fix them.
+
+To format modified files automatically, you can use ci_scripts/format_modified_files.sh and you can add it as a pre-commit hook using ln -s "$(pwd)/ci_scripts/format_modified_files.sh" .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+
+This script attempts to use swift-format and swift-lint --fix on the modified files, we use both because swiftlint --fix doesn't fix issues line line length, parameter alignment, among others, but swift-format doesn't fix other issues that swiftlint does, to get the best of both worlds we try to format using both, but we enforce using swiftlint.
 
 ## Licenses
 
