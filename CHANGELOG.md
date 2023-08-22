@@ -1,5 +1,8 @@
 ## x.x.x x-x-x
+### StripeApplePay
+* Fixed a compile-time issue with using StripeApplePay in an App Extension. ([#2853](https://github.com/stripe/stripe-ios/issues/2853))
 
+## 23.14.0 2023-08-21
 ### All
 * Improved redirect UX when using Cash App Pay.
 
@@ -10,6 +13,10 @@
 
 ### Payments
 * [Added] You can now create an STPConnectAccountParams without specifying a business type.
+
+### Basic Integration
+* [Added] Adds `applePayLaterAvailability` to `STPPaymentContext`, a property that mirrors `PKPaymentRequest.applePayLaterAvailability`. This is useful if you need to disable Apple Pay Later. Note: iOS 17+.
+
 
 ## 23.13.0 2023-08-07
 ### All

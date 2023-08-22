@@ -29,6 +29,15 @@ import UIKit
     /// The attempt failed.
     /// - Parameter error: The error encountered by the customer. You can display its `localizedDescription` to the customer.
     case failed(error: Error)
+
+    internal var error: Error? {
+        switch self {
+        case .failed(error: let error):
+            return error
+        default:
+            return nil
+        }
+    }
 }
 
 /// A drop-in class that presents a sheet for a customer to complete their payment

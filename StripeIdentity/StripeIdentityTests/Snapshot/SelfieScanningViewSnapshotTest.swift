@@ -80,6 +80,18 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
         )
     }
 
+    func testSaving() {
+        verifyView(
+            with: .init(
+                state: .saving(
+                    Array(repeating: SelfieScanningViewSnapshotTest.mockImage, count: 3),
+                    consentHTMLText: SelfieScanningViewSnapshotTest.consentText
+                ),
+                instructionalText: SelfieScanningViewSnapshotTest.mockText
+            )
+        )
+    }
+
     func testCustomTintColor() {
         // Set custom tint color
         view.tintColor = .systemPink
