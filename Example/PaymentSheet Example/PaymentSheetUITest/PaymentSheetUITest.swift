@@ -589,7 +589,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].tap()
         let payButton = app.buttons["Pay $50.99"]
 
-        // Select affirm
+        // Select Amazon Pay
         guard let affirm = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Amazon Pay") else {
             XCTFail()
             return
