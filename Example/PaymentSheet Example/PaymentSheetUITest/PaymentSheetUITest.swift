@@ -590,11 +590,11 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let payButton = app.buttons["Pay $50.99"]
 
         // Select Amazon Pay
-        guard let affirm = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Amazon Pay") else {
+        guard let amazonPay = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Amazon Pay") else {
             XCTFail()
             return
         }
-        affirm.tap()
+        amazonPay.tap()
 
         XCTAssertTrue(payButton.isEnabled)
 
