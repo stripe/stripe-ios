@@ -1270,13 +1270,20 @@ public class STPPaymentHandler: NSObject {
         case .BLIKAuthorize:
             // The customer must authorize the transaction in their banking app within 1 minute
             // The merchant integration should spin and poll their backend or Stripe to determine success
+            // If we are using PaymentSheet we want to use the PollingViewController, otherwise we should use the logic for API bindings users
             guard
-                let currentAction = self.currentAction
-                    as? STPPaymentHandlerPaymentIntentActionParams
+                let presentingVC = currentAction.authenticationContext
+                    as? PaymentSheetAuthenticationContext
             else {
-                fatalError()
+                guard let currentAction = self.currentAction
+                                    as? STPPaymentHandlerPaymentIntentActionParams
+                else {
+                    fatalError()
+                }
+                currentAction.complete(with: .succeeded, error: nil)
+                return
             }
-            currentAction.complete(with: .succeeded, error: nil)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .blik)
 
         case .verifyWithMicrodeposits:
             // The customer must authorize after the microdeposits appear in their bank account

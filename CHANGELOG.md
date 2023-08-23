@@ -1,4 +1,7 @@
 ## x.x.x x-x-x
+### PaymentSheet
+* [Added] Support for BLIK with PaymentIntents. 
+
 ### StripeApplePay
 * Fixed a compile-time issue with using StripeApplePay in an App Extension. ([#2853](https://github.com/stripe/stripe-ios/issues/2853))
 
