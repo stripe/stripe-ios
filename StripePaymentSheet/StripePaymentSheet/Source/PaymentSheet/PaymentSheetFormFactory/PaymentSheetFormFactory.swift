@@ -680,22 +680,6 @@ extension PaymentSheetFormFactory {
             })
     }
 
-    // DRY helper for LPMs that require no input to ensure we respect the billing address configuration API
-    func makeEmptyForm() -> PaymentMethodElement {
-        let contactSection: Element? = makeContactInformationSection(
-            nameRequiredByPaymentMethod: false,
-            emailRequiredByPaymentMethod: false,
-            phoneRequiredByPaymentMethod: false
-        )
-
-        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        let elements: [Element?] = [contactSection, addressSection]
-        return FormElement(
-            autoSectioningElements: elements.compactMap { $0 },
-            theme: theme
-        )
-    }
-
     func connectBillingDetailsFields(
         countryElement: PaymentMethodElementWrapper<DropdownFieldElement>?,
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,

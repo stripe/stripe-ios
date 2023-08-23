@@ -9,7 +9,7 @@
 import Foundation
 
 /// The various bank brands available for FPX payments.
-@objc public enum STPFPXBankBrand: Int, CaseIterable {
+@objc public enum STPFPXBankBrand: Int {
     /// Maybank2U
     case maybank2U
     /// CIMB Clicks
