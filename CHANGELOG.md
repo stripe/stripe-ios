@@ -1,7 +1,7 @@
 ## x.x.x x-x-x
 ### PaymentSheet
 * [Added] Support for BLIK with PaymentIntents. 
-* [Fixed] A bug where payment amounts were not displayed currently for LAK currency.
+* [Fixed] A bug where payment amounts were not displayed correctly for LAK currency.
 
 ### StripeApplePay
 * Fixed a compile-time issue with using StripeApplePay in an App Extension. ([#2853](https://github.com/stripe/stripe-ios/issues/2853))
