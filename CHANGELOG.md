@@ -2,6 +2,7 @@
 ### PaymentSheet
 * [Added] Support for BLIK with PaymentIntents.
 * [Added] Support for AmazonPay (private beta) with PaymentIntents.
+* [Added] Support for FPX with PaymentIntents.
 * [Fixed] A bug where payment amounts were not displayed correctly for LAK currency.
 
 ### StripeApplePay
