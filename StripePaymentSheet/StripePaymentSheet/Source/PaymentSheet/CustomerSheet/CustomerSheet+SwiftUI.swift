@@ -24,45 +24,9 @@ import SwiftUI
             )
         )
     }
-
 }
 
 @_spi(PrivateBetaCustomerSheet) extension CustomerSheet {
-    /// A button which presents a sheet for a customer to complete their payment.
-    /// This is a convenience wrapper for the .customerSheet() ViewModifier.
-    /// - Parameter customerSheet: A CustomerSheet to present.
-    /// - Parameter onCompletion: Called with the result of the selectedPaymentMethod after the customer sheet is dismissed.
-    /// - Parameter content: The content of the view.
-    public struct CustomerSheetButton<Content: View>: View {
-        private let customerSheet: CustomerSheet
-        private let onCompletion: (CustomerSheet.CustomerSheetResult) -> Void
-        private let content: Content
-
-        @State private var showingCustomerSheet = false
-
-        /// Initialize a `CustomerSheetButton` with required parameters.
-        public init(
-            customerSheet: CustomerSheet,
-            onCompletion: @escaping (CustomerSheet.CustomerSheetResult) -> Void,
-            @ViewBuilder content: () -> Content
-        ) {
-            self.customerSheet = customerSheet
-            self.onCompletion = onCompletion
-            self.content = content()
-        }
-
-        public var body: some View {
-            Button(action: {
-                showingCustomerSheet = true
-            }) {
-                content
-            }.customerSheet(
-                isPresented: $showingCustomerSheet,
-                customerSheet: customerSheet,
-                onCompletion: onCompletion)
-        }
-    }
-
     struct CustomerSheetPresentationModifier: ViewModifier {
         @Binding var isPresented: Bool
         let customerSheet: CustomerSheet

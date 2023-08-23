@@ -6,6 +6,7 @@
 @_spi(PrivateBetaCustomerSheet) import StripePaymentSheet
 import SwiftUI
 struct ExampleSwiftUICustomerSheet: View {
+    @State private var showingCustomerSheet = false
     @ObservedObject var model = MyBackendCustomerSheetModel()
 
     var body: some View {
@@ -23,12 +24,14 @@ struct ExampleSwiftUICustomerSheet: View {
             Spacer().frame(height: 50)
 
             if let customerSheet = model.customerSheet {
-                CustomerSheet.CustomerSheetButton(
-                    customerSheet: customerSheet,
-                    onCompletion: model.onCompletion
-                ) {
+                Button(action: {
+                    showingCustomerSheet = true
+                }) {
                     ExampleCustomerSheetButtonView()
-                }
+                }.customerSheet(
+                    isPresented: $showingCustomerSheet,
+                    customerSheet: customerSheet,
+                    onCompletion: model.onCompletion)
             } else {
                 ExampleLoadingView()
             }
@@ -36,7 +39,7 @@ struct ExampleSwiftUICustomerSheet: View {
                 ExampleCustomerSheetPaymentMethodView(customerSheetStatusViewModel: customerSheetStatusViewModel)
             }
         }.onAppear {
-            model.prepareCustomerSheet()            
+            model.prepareCustomerSheet()
         }
     }
 }
@@ -129,7 +132,6 @@ class MyBackendCustomerSheetModel: ObservableObject {
         DispatchQueue.main.async {
             self.customerSheet = CustomerSheet(configuration: configuration,
                                                customer: self.customerAdapter!)
-
         }
         Task {
             do {
