@@ -806,5 +806,124 @@
             "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp@3x-a89c5d8d0651cae2a511bb49a6be1cfc.png",
             "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp-981164a833e417d28a8ac2684fda2324.svg"
         }
+    },
+    {
+      "type": "grabpay",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay-97ee78fdbbf1890bdf19986e997e685d.svg"
+      },
+      "fields": []
+    },
+    {
+      "type": "fpx",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx@3x.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx.svg"
+      },
+      "fields": [
+        {
+          "type": "selector",
+          "translation_id": "upe.labels.fpx.bank",
+        "items": [
+          {
+            "display_text": "Affin Bank",
+            "api_value": "affin_bank"
+          },
+          {
+            "display_text": "Alliance Bank",
+            "api_value": "alliance_bank"
+          },
+          {
+            "display_text": "AmBank",
+            "api_value": "ambank"
+          },
+          {
+            "display_text": "Bank Islam",
+            "api_value": "bank_islam"
+          },
+          {
+            "display_text": "Bank Muamalat",
+            "api_value": "bank_muamalat"
+          },
+          {
+            "display_text": "Bank Rakyat",
+            "api_value": "bank_rakyat"
+          },
+          {
+            "display_text": "BSN",
+            "api_value": "bsn"
+          },
+          {
+            "display_text": "CIMB Clicks",
+            "api_value": "cimb"
+          },
+          {
+            "display_text": "Hong Leong Bank",
+            "api_value": "hong_leong_bank"
+          },
+          {
+            "display_text": "HSBC BANK",
+            "api_value": "hsbc"
+          },
+          {
+            "display_text": "KFH",
+            "api_value": "kfh"
+          },
+          {
+            "display_text": "Maybank2E",
+            "api_value": "maybank2e"
+          },
+          {
+            "display_text": "Maybank2U",
+            "api_value": "maybank2u"
+          },
+          {
+            "display_text": "OCBC Bank",
+            "api_value": "ocbc"
+          },
+          {
+            "display_text": "Public Bank",
+            "api_value": "public_bank"
+          },
+          {
+            "display_text": "RHB Bank",
+            "api_value": "rhb"
+          },
+          {
+            "display_text": "Standard Chartered",
+            "api_value": "standard_chartered"
+          },
+          {
+            "display_text": "UOB Bank",
+            "api_value": "uob"
+          }
+        ],
+          "api_path": {
+            "v1": "fpx[bank]"
+          }
+        },
+        {
+          "type": "placeholder",
+          "for": "billing_address"
+        }
+      ],
+      "next_action_spec": {
+        "confirm_response_status_specs": {
+          "requires_action": {
+            "type": "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs": {
+          "succeeded": {
+            "type": "finished"
+          },
+          "requires_action": {
+            "type": "canceled"
+          }
+        }
+      }
     }
 ]

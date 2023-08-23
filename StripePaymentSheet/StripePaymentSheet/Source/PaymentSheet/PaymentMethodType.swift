@@ -23,6 +23,10 @@ extension PaymentSheet {
                 return [.returnURL]
             case .dynamic("zip"):
                 return [.returnURL]
+            case .dynamic("grabpay"):
+                return [.returnURL]
+            case .dynamic("fpx"):
+                return [.returnURL]
             default:
                 return [.unsupported]
             }
@@ -42,8 +46,6 @@ extension PaymentSheet {
         case dynamic(String)
         case UPI
         case cashApp
-        case grabPay
-        case FPX
 
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
@@ -60,10 +62,6 @@ extension PaymentSheet {
                 self = .UPI
             case STPPaymentMethod.string(from: .cashApp):
                 self = .cashApp
-            case STPPaymentMethod.string(from: .grabPay):
-                self = .grabPay
-            case STPPaymentMethod.string(from: .FPX):
-                self = .FPX
             default:
                 self = .dynamic(str)
             }
@@ -83,10 +81,6 @@ extension PaymentSheet {
                 return STPPaymentMethod.string(from: .UPI)
             case .cashApp:
                 return STPPaymentMethod.string(from: .cashApp)
-            case .grabPay:
-                return STPPaymentMethod.string(from: .grabPay)
-            case .FPX:
-                return STPPaymentMethod.string(from: .FPX)
             case .dynamic(let str):
                 return str
             }
@@ -100,6 +94,10 @@ extension PaymentSheet {
                 return "MobilePay"
             } else if case .dynamic("zip") = self {
                 return "Zip"
+            } else if case .dynamic("grabpay") = self {
+                return "GrabPay"
+            } else if case .dynamic("fpx") = self {
+               return "FPX"
             } else if case .dynamic(let name) = self {
                 // TODO: We should introduce a display name in our model rather than presenting the payment method type
                 return name
