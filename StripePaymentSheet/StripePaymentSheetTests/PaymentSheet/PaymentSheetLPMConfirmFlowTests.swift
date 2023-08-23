@@ -124,7 +124,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             form.getTextFieldElement("BLIK code")?.setText("123456")
         }
     }
-    
 
     func testAmazonPayConfirmFlows() async throws {
         // AmazonPay has no input fields
