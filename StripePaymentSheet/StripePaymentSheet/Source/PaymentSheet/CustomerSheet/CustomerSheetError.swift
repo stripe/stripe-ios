@@ -7,7 +7,7 @@ import Foundation
 @_spi(STP) import StripeCore
 import StripePayments
 
-@_spi(PrivateBetaCustomerSheet) public enum CustomerSheetError: Error {
+public enum CustomerSheetError: Error {
     /// Error while fetching saved payment methods attached to a customer
     case errorFetchingSavedPaymentMethods(Error)
     /// An unknown error.

@@ -4,13 +4,13 @@
 //
 //  ⚠️🏗 This is a playground for internal Stripe engineers to help us test things, and isn't
 //  an example of what you should do in a real app!
-//  Note: Do not import Stripe using `@_spi(STP)` or @_spi(PrivateBetaCustomerSheet) in production.
+//  Note: Do not import Stripe using `@_spi(STP)` in production.
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 
 import Contacts
 import Foundation
 import PassKit
-@_spi(PrivateBetaCustomerSheet) import StripePaymentSheet
+import StripePaymentSheet
 import SwiftUI
 import UIKit
 
