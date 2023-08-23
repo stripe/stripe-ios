@@ -7,10 +7,10 @@
 import SwiftUI
 
 @_spi(PrivateBetaCustomerSheet) extension View {
-    /// Presents a sheet for a customer to complete their payment.
+    /// Presents the customer sheet to select saved payment methods
     /// - Parameter isPresented: A binding to whether the sheet is presented.
-    /// - Parameter paymentSheet: A PaymentSheet to present.
-    /// - Parameter onCompletion: Called with the result of the payment after the payment sheet is dismissed.
+    /// - Parameter customerSheet: A CustomerSheet to present.
+    /// - Parameter onCompletion: Called with the result of the payment after the CustomerSheet is dismissed.
     public func customerSheet(
         isPresented: Binding<Bool>,
         customerSheet: CustomerSheet,
@@ -75,13 +75,13 @@ import SwiftUI
                             parent.presented = false
                             return
                         }
-                        presentPaymentSheet(on: viewController)
+                        presentSheet(on: viewController)
                     case (true, false):
                         guard let viewController = findViewController(for: view) else {
                             parent.presented = true
                             return
                         }
-                        forciblyDismissPaymentSheet(from: viewController)
+                        forciblyDismissSheet(from: viewController)
                     case (true, true):
                         break
                     }
@@ -93,7 +93,7 @@ import SwiftUI
                 self.presented = parent.presented
             }
 
-            func presentPaymentSheet(on controller: UIViewController) {
+            func presentSheet(on controller: UIViewController) {
                 let presenter = findViewControllerPresenter(from: controller)
 
                 parent.customerSheet?.present(from: presenter) { (result: CustomerSheet.CustomerSheetResult) in
@@ -102,7 +102,7 @@ import SwiftUI
                 }
             }
 
-            func forciblyDismissPaymentSheet(from controller: UIViewController) {
+            func forciblyDismissSheet(from controller: UIViewController) {
                 if let bsvc = controller.presentedViewController as? BottomSheetViewController {
                     bsvc.didTapOrSwipeToDismiss()
                 }
