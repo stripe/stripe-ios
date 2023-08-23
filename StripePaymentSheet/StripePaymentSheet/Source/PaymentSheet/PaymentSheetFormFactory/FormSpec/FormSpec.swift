@@ -263,7 +263,7 @@ extension FormSpec {
         case eps_bank =  "upe.labels.eps.bank"
         case p24_bank = "upe.labels.p24.bank"
         case fpx_bank = "upe.labels.fpx.bank"
-        
+
         case nameLabel_given = "upe.labels.name.given"
         case nameLabel_family = "upe.labels.name.family"
         case nameLabel_full = "upe.labels.name.full"

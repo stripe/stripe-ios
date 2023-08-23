@@ -116,18 +116,20 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         // GrabPay has no input fields
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "SGD",
-                               paymentMethodType: .grabPay,
+                               paymentMethodType: .dynamic("grabpay"),
                                merchantCountry: .SG) { _ in
-
         }
     }
 
     func testFPXConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "MYR",
-                               paymentMethodType: .FPX,
+                               paymentMethodType: .dynamic("fpx"),
                                merchantCountry: .MY) { form in
             XCTAssertNotNil(form.getDropdownFieldElement("FPX Bank"))
+        }
+    }
+
     func testBLIKConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "PLN", paymentMethodType: .dynamic("blik"), merchantCountry: .BE) { form in
             form.getTextFieldElement("BLIK code")?.setText("123456")
