@@ -2,6 +2,7 @@
 ### PaymentSheet
 * [Added] Support for BLIK with PaymentIntents.
 * [Added] Support for AmazonPay (private beta) with PaymentIntents.
+* [Fixed] A bug where payment amounts were not displayed correctly for LAK currency.
 
 ### StripeApplePay
 * Fixed a compile-time issue with using StripeApplePay in an App Extension. ([#2853](https://github.com/stripe/stripe-ios/issues/2853))
