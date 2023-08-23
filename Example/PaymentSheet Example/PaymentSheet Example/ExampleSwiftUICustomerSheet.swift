@@ -39,7 +39,7 @@ struct ExampleSwiftUICustomerSheet: View {
                 Button(action: {
                     showingCustomerSheet = true
                 }) {
-                    ExampleCustomerSheetButtonView()
+                    Text("Present Customer Sheet")
                 }.customerSheet(
                     isPresented: $showingCustomerSheet,
                     customerSheet: customerSheet,

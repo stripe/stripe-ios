@@ -23,20 +23,6 @@ struct ExamplePaymentButtonView: View {
     }
 }
 
-struct ExampleCustomerSheetButtonView: View {
-    var body: some View {
-        HStack {
-            Text("Present Customer Sheet").fontWeight(.bold)
-        }
-        .frame(minWidth: 200)
-        .padding()
-        .foregroundColor(.white)
-        .background(Color.blue)
-        .cornerRadius(6)
-        .accessibility(identifier: "Present Customer Sheet button")
-    }
-}
-
 struct ExampleLoadingView: View {
     var body: some View {
         if #available(iOS 14.0, *) {
