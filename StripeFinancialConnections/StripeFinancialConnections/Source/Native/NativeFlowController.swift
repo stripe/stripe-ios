@@ -42,6 +42,18 @@ class NativeFlowController {
         self.dataManager = dataManager
         self.navigationController = navigationController
         navigationController.analyticsClient = dataManager.analyticsClient
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationDidEnterBackground),
+            name: UIApplication.didEnterBackgroundNotification,
+            object: nil
+        )
     }
 
     func startFlow() {
@@ -83,6 +95,26 @@ class NativeFlowController {
             showNetworkingLanguageInConfirmationAlert: (dataManager.manifest.isNetworkingUserFlow == true && navigationController.topViewController is NetworkingLinkSignupViewController),
             error: nil
         )
+    }
+
+    @objc private func applicationWillEnterForeground() {
+        dataManager
+            .analyticsClient
+            .log(
+                eventName: "mobile.app_entered_foreground",
+                pane: FinancialConnectionsAnalyticsClient
+                    .paneFromViewController(navigationController.topViewController)
+            )
+    }
+
+    @objc private func applicationDidEnterBackground() {
+        dataManager
+            .analyticsClient
+            .log(
+                eventName: "mobile.app_entered_background",
+                pane: FinancialConnectionsAnalyticsClient
+                    .paneFromViewController(navigationController.topViewController)
+            )
     }
 }
 
