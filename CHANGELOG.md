@@ -1,9 +1,25 @@
 ## x.x.x x-x-x
 ### PaymentSheet
+* [Added] Support for BLIK with PaymentIntents.
+* [Added] Support for AmazonPay (private beta) with PaymentIntents.
+* [Fixed] A bug where payment amounts were not displayed correctly for LAK currency.
+
+### StripeApplePay
+* Fixed a compile-time issue with using StripeApplePay in an App Extension. ([#2853](https://github.com/stripe/stripe-ios/issues/2853))
+
+## 23.14.0 2023-08-21
+### All
+* Improved redirect UX when using Cash App Pay.
+
+### PaymentSheet
 * [Added] Support for GrabPay with PaymentIntents.
 
 ### Payments
 * [Added] You can now create an STPConnectAccountParams without specifying a business type.
+
+### Basic Integration
+* [Added] Adds `applePayLaterAvailability` to `STPPaymentContext`, a property that mirrors `PKPaymentRequest.applePayLaterAvailability`. This is useful if you need to disable Apple Pay Later. Note: iOS 17+.
+
 
 ## 23.13.0 2023-08-07
 ### All

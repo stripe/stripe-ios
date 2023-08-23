@@ -26,6 +26,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case US = "us"
         case SG = "sg"
         case MY = "my"
+        case BE = "be"
 
         var publishableKey: String {
             switch self {
@@ -35,6 +36,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingSGPublishableKey
             case .MY:
                 return STPTestingMYPublishableKey
+            case .BE:
+                return STPTestingBEPublishableKey
             }
         }
     }
@@ -125,6 +128,19 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                                paymentMethodType: .FPX,
                                merchantCountry: .MY) { form in
             XCTAssertNotNil(form.getDropdownFieldElement("FPX Bank"))
+    func testBLIKConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "PLN", paymentMethodType: .dynamic("blik"), merchantCountry: .BE) { form in
+            form.getTextFieldElement("BLIK code")?.setText("123456")
+        }
+    }
+
+    func testAmazonPayConfirmFlows() async throws {
+        // AmazonPay has no input fields
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "USD",
+                               paymentMethodType: .dynamic("amazon_pay"),
+                               merchantCountry: .US) { _ in
+
         }
     }
 }
@@ -166,7 +182,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             return .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig)
         }
         let paymentMethodString = PaymentSheet.PaymentMethodType.string(from: paymentMethodType)!
-        let intents: [(String, Intent)]
+        var intents: [(String, Intent)]
         let paramsForServerSideConfirmation: [String: Any] = [ // We require merchants to set some extra parameters themselves for server-side confirmation
             "return_url": "foo://bar",
             "mandate_data": [
@@ -194,16 +210,25 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         switch intentKind {
         case .paymentIntent:
             let paymentIntent: STPPaymentIntent = try await {
-                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString],
-                                                                                           currency: currency,
-                                                                                           merchantCountry: merchantCountry.rawValue)
-                return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
-            }()
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { _, _ in
-                return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString],
-                                                                               currency: currency,
-                                                                               merchantCountry: merchantCountry.rawValue)
-            }
+            let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString],
+                                                                                       currency: currency,
+                                                                                       merchantCountry: merchantCountry.rawValue)
+            return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+        }()
+
+        let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { _, _ in
+            return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString],
+                                                                           currency: currency,
+                                                                           merchantCountry: merchantCountry.rawValue)
+        }
+
+        intents = [
+            ("PaymentIntent", .paymentIntent(paymentIntent)),
+            ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
+        ]
+
+        if paymentMethodType != .dynamic("blik"){
+
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { paymentMethod, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString], currency: currency,
                                                                                merchantCountry: merchantCountry.rawValue,
@@ -211,11 +236,12 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                                                                                confirm: true,
                                                                                otherParams: paramsForServerSideConfirmation)
             }
-            intents = [
-                ("PaymentIntent", .paymentIntent(paymentIntent)),
-                ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
+
+            intents += [
                 ("Deferred PaymentIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
+        }
+
         case .paymentIntentWithSetupFutureUsage:
             let paymentIntent: STPPaymentIntent = try await {
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: [paymentMethodString], merchantCountry: merchantCountry.rawValue, otherParams: ["setup_future_usage": "off_session"])

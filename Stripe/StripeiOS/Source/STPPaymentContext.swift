@@ -327,6 +327,29 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             )
         }
     }
+
+    /// A value that indicates whether Apple Pay Later is available for a transaction.
+    /// Defaults to enabled.
+    /// - Seealso: This property is mirrors `PKPaymentRequest.applePayLaterAvailability`
+#if compiler(>=5.9)
+    @available(macOS 14.0, iOS 17.0, *)
+    @objc public var applePayLaterAvailability: PKApplePayLaterAvailability {
+        // Stored properties cannot be marked potentially unavailable with '@available', so do this workaround instead
+        get {
+            return _applePayLaterAvailability as! PKApplePayLaterAvailability
+        }
+        set {
+            _applePayLaterAvailability = newValue
+
+        }
+    }
+    private lazy var _applePayLaterAvailability: Any? = {
+        if #available(macOS 14.0, iOS 17.0, *) {
+            return PKApplePayLaterAvailability.available
+        }
+        return nil
+    }()
+#endif
     /// The presentation style used for all view controllers presented modally by the context.
     /// Since custom transition styles are not supported, you should set this to either
     /// `UIModalPresentationFullScreen`, `UIModalPresentationPageSheet`, or `UIModalPresentationFormSheet`.
@@ -1050,6 +1073,12 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             currency: paymentCurrency
         )
 
+#if compiler(>=5.9)
+        if #available(macOS 14.0, iOS 17.0, *) {
+            paymentRequest.applePayLaterAvailability = applePayLaterAvailability._convertedToSwiftValue()
+        }
+#endif
+
         let summaryItems = paymentSummaryItems
         paymentRequest.paymentSummaryItems = summaryItems
 
@@ -1204,3 +1233,21 @@ private var kSTPPaymentCoordinatorAssociatedObjectKey = 0
 @_spi(STP) extension STPPaymentContext: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier = "STPPaymentContext"
 }
+
+#if compiler(>=5.9)
+@available(macOS 14.0, iOS 17.0, *)
+extension PKApplePayLaterAvailability {
+    func _convertedToSwiftValue() -> PKPaymentRequest.ApplePayLaterAvailability {
+        switch self {
+        case .available:
+            return .available
+        case .unavailableItemIneligible:
+            return .unavailable(.itemIneligible)
+        case .unavailableRecurringTransaction:
+            return .unavailable(.recurringTransaction)
+        @unknown default:
+            fatalError()
+        }
+    }
+}
+#endif

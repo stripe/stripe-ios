@@ -44,9 +44,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         app.fc_playgroundNativeButton.tap()
 
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        if (enableTestModeSwitch.value as? String) == "0" {
-            enableTestModeSwitch.tap()
-        }
+        enableTestModeSwitch.turnSwitch(on: true)
 
         app.swipeUp() // scroll to see email field
 
@@ -58,9 +56,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         let playgroundTransactionsPermissionsSwitch = app.switches["playground-transactions-permission"]
         XCTAssertTrue(playgroundTransactionsPermissionsSwitch.waitForExistence(timeout: 60.0))
-        if (playgroundTransactionsPermissionsSwitch.value as? String) == "0" {
-            playgroundTransactionsPermissionsSwitch.tap() // turn ON transactions
-        }
+        playgroundTransactionsPermissionsSwitch.turnSwitch(on: true)
 
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
@@ -122,9 +118,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         app.fc_playgroundNativeButton.tap()
 
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
-        if (enableTestModeSwitch.value as? String) == "0" {
-            enableTestModeSwitch.tap()
-        }
+        enableTestModeSwitch.turnSwitch(on: true)
 
         app.swipeUp() // scroll to see email field
 
@@ -137,9 +131,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         let playgroundTransactionsPermissionsSwitch = app.switches["playground-transactions-permission"]
         XCTAssertTrue(playgroundTransactionsPermissionsSwitch.waitForExistence(timeout: 60.0))
-        if (playgroundTransactionsPermissionsSwitch.value as? String) == "0" {
-            playgroundTransactionsPermissionsSwitch.tap() // turn ON transactions
-        }
+        playgroundTransactionsPermissionsSwitch.turnSwitch(on: true)
 
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()

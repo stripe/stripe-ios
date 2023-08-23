@@ -19,7 +19,14 @@ protocol InstitutionSearchTableViewDelegate: AnyObject {
         _ tableView: InstitutionSearchTableView,
         didSelectInstitution institution: FinancialConnectionsInstitution
     )
-    func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView)
+    func institutionSearchTableView(
+        _ tableView: InstitutionSearchTableView,
+        didSelectManuallyAddYourAccountWithInstitutions institutions: [FinancialConnectionsInstitution]
+    )
+    func institutionSearchTableView(
+        _ tableView: InstitutionSearchTableView,
+        didScrollInstitutions institutions: [FinancialConnectionsInstitution]
+    )
 }
 
 final class InstitutionSearchTableView: UIView {
@@ -31,10 +38,15 @@ final class InstitutionSearchTableView: UIView {
         return allowManualEntry
             ? { [weak self] in
                 guard let self = self else { return }
-                self.delegate?.institutionSearchTableViewDidSelectManuallyAddYourAccount(self)
+                self.delegate?.institutionSearchTableView(
+                    self,
+                    didSelectManuallyAddYourAccountWithInstitutions: self.institutions
+                )
             } : nil
     }()
     weak var delegate: InstitutionSearchTableViewDelegate?
+    private var institutions: [FinancialConnectionsInstitution] = []
+    private var shouldLogScroll = true
 
     private lazy var tableFooterView: InstitutionSearchFooterView = {
         let title: String
@@ -176,6 +188,8 @@ final class InstitutionSearchTableView: UIView {
         showManualEntry: Bool? = nil
     ) {
         assertMainQueue()
+        self.institutions = institutions
+        shouldLogScroll = true
 
         var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
         snapshot.appendSections([Section.main])
@@ -230,6 +244,18 @@ extension InstitutionSearchTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let institution = dataSource.itemIdentifier(for: indexPath) {
             delegate?.institutionSearchTableView(self, didSelectInstitution: institution)
+        }
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        // Every time the institutions change, we are open to sending the event again
+        if shouldLogScroll {
+            shouldLogScroll = false
+
+            delegate?.institutionSearchTableView(
+                self,
+                didScrollInstitutions: institutions
+            )
         }
     }
 }

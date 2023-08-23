@@ -86,6 +86,10 @@ final class SelfieScanningView: UIView {
                 openURLHandler: (URL) -> Void,
                 retakeSelfieHandler: () -> Void
             )
+            case saving(
+                [UIImage],
+                consentHTMLText: String
+            )
         }
 
         let state: State
@@ -147,7 +151,7 @@ final class SelfieScanningView: UIView {
     }()
 
     // MARK: Consent
-    private(set) lazy var retakeSelfieStack: UIStackView = {
+    private(set) lazy var retakeSelfieButton: Button = {
         var retakeSelfieButtonConfiguration = Button.Configuration.plain()
         retakeSelfieButtonConfiguration.font = IdentityUI.instructionsFont
         let retakeSelfieButton = Button(configuration: retakeSelfieButtonConfiguration, title: STPLocalizedString(
@@ -155,12 +159,18 @@ final class SelfieScanningView: UIView {
             "Button text displayed to the user to retake photo"
         ))
         retakeSelfieButton.addTarget(self, action: #selector(didTapRetakeSelfie), for: .touchUpInside)
+        return retakeSelfieButton
+    }()
 
+    private(set) lazy var retakeSelfieIcon: UIImageView = {
         let icon = UIImageView(image: Image.iconCamera.makeImage(template: true).withTintColor(IdentityUI.iconColor))
         icon.contentMode = .scaleAspectFit
+        return icon
+    }()
 
+    private(set) lazy var retakeSelfieStack: UIStackView = {
         let stack = UIStackView(
-            arrangedSubviews: [icon, retakeSelfieButton]
+            arrangedSubviews: [retakeSelfieIcon, retakeSelfieButton]
         )
         stack.axis = .horizontal
         stack.spacing = 8
@@ -247,12 +257,35 @@ final class SelfieScanningView: UIView {
                         style: Styling.consentHTMLStyle
                     )
                 )
-
+                consentCheckboxButton.isEnabled = true
+                retakeSelfieIcon.tintColor = tintColor
                 retakeSelfieStack.isHidden = false
+                retakeSelfieButton.isEnabled = true
                 consentCheckboxButton.isHidden = false
                 self.consentHandler = consentHandler
                 self.openURLHandler = openURLHandler
                 self.retakeSelfieHandler = retakeSelfieHandler
+            } catch {
+                // Keep the consent checkbox hidden and treat this case the same
+                // as if the user did not give consent.
+                analyticsClient?.logGenericError(error: error)
+            }
+        case .saving(let images, consentHTMLText: let consentText):
+            scannedImageScrollView.isHidden = false
+            rebuildImageHStack(with: images)
+
+            do {
+                consentCheckboxButton.setAttributedText(
+                    try NSAttributedString(
+                        htmlText: consentText,
+                        style: Styling.consentHTMLStyle
+                    )
+                )
+                consentCheckboxButton.isEnabled = false
+                retakeSelfieIcon.tintColor = IdentityUI.iconColor
+                retakeSelfieStack.isHidden = false
+                retakeSelfieButton.isEnabled = false
+                consentCheckboxButton.isHidden = false
             } catch {
                 // Keep the consent checkbox hidden and treat this case the same
                 // as if the user did not give consent.

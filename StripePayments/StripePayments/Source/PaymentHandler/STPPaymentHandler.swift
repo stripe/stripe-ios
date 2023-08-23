@@ -1270,13 +1270,20 @@ public class STPPaymentHandler: NSObject {
         case .BLIKAuthorize:
             // The customer must authorize the transaction in their banking app within 1 minute
             // The merchant integration should spin and poll their backend or Stripe to determine success
+            // If we are using PaymentSheet we want to use the PollingViewController, otherwise we should use the logic for API bindings users
             guard
-                let currentAction = self.currentAction
-                    as? STPPaymentHandlerPaymentIntentActionParams
+                let presentingVC = currentAction.authenticationContext
+                    as? PaymentSheetAuthenticationContext
             else {
-                fatalError()
+                guard let currentAction = self.currentAction
+                                    as? STPPaymentHandlerPaymentIntentActionParams
+                else {
+                    fatalError()
+                }
+                currentAction.complete(with: .succeeded, error: nil)
+                return
             }
-            currentAction.complete(with: .succeeded, error: nil)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .blik)
 
         case .verifyWithMicrodeposits:
             // The customer must authorize after the microdeposits appear in their bank account
@@ -1300,9 +1307,7 @@ public class STPPaymentHandler: NSObject {
             }
 
             if let mobileAuthURL = authenticationAction.cashAppRedirectToApp?.mobileAuthURL {
-                let resultingRedirectURL = self.followRedirects(to: mobileAuthURL, urlSession: URLSession.shared)
-                _handleRedirect(to: resultingRedirectURL, fallbackURL: mobileAuthURL, return: returnURL)
-
+                _handleRedirect(to: mobileAuthURL, fallbackURL: mobileAuthURL, return: returnURL)
             } else {
                 currentAction.complete(
                     with: STPPaymentHandlerActionStatus.failed,
@@ -1327,13 +1332,6 @@ public class STPPaymentHandler: NSObject {
         let task = urlSession.dataTask(with: urlRequest) { _, response, error in
             defer {
                 blockingDataTaskSemaphore.signal()
-            }
-
-            // Check if the request failed due to attempting to redirect to a custom Scheme URL for Cash App
-            if let errorUrl = (error as NSError?)?.userInfo[NSURLErrorFailingURLStringErrorKey] as? String {
-                if errorUrl.contains("cashme://cash.app"), let customSchemeAppURL = URL(string: errorUrl) {
-                    resultingUrl = customSchemeAppURL
-                }
             }
 
             guard error == nil,

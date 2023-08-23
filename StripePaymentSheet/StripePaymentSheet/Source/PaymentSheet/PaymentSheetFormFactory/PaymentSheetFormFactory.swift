@@ -155,6 +155,8 @@ class PaymentSheetFormFactory {
             additionalElements = [makePaypalMandate()]
         } else if paymentMethod.stpPaymentMethodType == .bancontact {
             return makeBancontact()
+        } else if paymentMethod.stpPaymentMethodType == .blik {
+            return makeDefaultsApplierWrapper(for: makeBLIK())
         }
 
         guard let spec = specFromJSONProvider() else {

@@ -462,7 +462,8 @@ class PaymentSheetViewController: UIViewController {
                     currency: self.intent.currency,
                     intentConfig: self.intent.intentConfig,
                     deferredIntentConfirmationType: deferredIntentConfirmationType,
-                    paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue
+                    paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
+                    error: result.error
                 )
 
                 self.isPaymentInFlight = false
