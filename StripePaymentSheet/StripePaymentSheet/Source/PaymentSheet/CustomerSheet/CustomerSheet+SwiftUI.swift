@@ -10,7 +10,7 @@ import SwiftUI
     /// Presents the customer sheet to select saved payment methods
     /// - Parameter isPresented: A binding to whether the sheet is presented.
     /// - Parameter customerSheet: A CustomerSheet to present.
-    /// - Parameter onCompletion: Called with the result of the payment after the CustomerSheet is dismissed.
+    /// - Parameter onCompletion: Called with the result after the CustomerSheet is dismissed.
     public func customerSheet(
         isPresented: Binding<Bool>,
         customerSheet: CustomerSheet,
