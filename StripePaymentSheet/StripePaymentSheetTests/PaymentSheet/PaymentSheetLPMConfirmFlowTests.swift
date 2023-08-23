@@ -118,9 +118,20 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
 
         }
     }
+
     func testBLIKConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "PLN", paymentMethodType: .dynamic("blik"), merchantCountry: .BE) { form in
             form.getTextFieldElement("BLIK code")?.setText("123456")
+        }
+    }
+
+    func testAmazonPayConfirmFlows() async throws {
+        // AmazonPay has no input fields
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "USD",
+                               paymentMethodType: .dynamic("amazon_pay"),
+                               merchantCountry: .US) { _ in
+
         }
     }
 }
