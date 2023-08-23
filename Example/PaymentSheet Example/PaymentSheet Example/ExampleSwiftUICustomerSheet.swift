@@ -22,6 +22,18 @@ struct ExampleSwiftUICustomerSheet: View {
                 }
 
             Spacer().frame(height: 50)
+            if model.shouldUseNewCustomer {
+                Button("Using New Customer (Tap to Switch)") {
+                    model.toggleUseNewCustomer()
+                    model.prepareCustomerSheet()
+                }
+            } else {
+                Button("Using Returning Customer (Tap to Switch)") {
+                    model.toggleUseNewCustomer()
+                    model.prepareCustomerSheet()
+                }
+            }
+            Spacer().frame(height: 50)
 
             if let customerSheet = model.customerSheet {
                 Button(action: {
@@ -51,9 +63,12 @@ class MyBackendCustomerSheetModel: ObservableObject {
     @Published var customerSheet: CustomerSheet?
     @Published var customerSheetStatusViewModel: CustomerSheetStatusViewModel?
     var customerAdapter: StripeCustomerAdapter?
+    var shouldUseNewCustomer = false
 
     func prepareCustomerSheet() {
-        let body = [ "customer_type": "returning"
+        let customer_type = shouldUseNewCustomer ? "new" : "returning"
+        let body = [
+            "customer_type": customer_type
         ] as [String: Any]
 
         let url = URL(string: "\(backendCheckoutUrl)/customer_ephemeral_key")!
@@ -76,6 +91,10 @@ class MyBackendCustomerSheetModel: ObservableObject {
             self.configureCustomerSheet(response: json)
         }
         task.resume()
+    }
+
+    func toggleUseNewCustomer() {
+        shouldUseNewCustomer = !shouldUseNewCustomer
     }
 
     func onCompletion(result: CustomerSheet.CustomerSheetResult) {
