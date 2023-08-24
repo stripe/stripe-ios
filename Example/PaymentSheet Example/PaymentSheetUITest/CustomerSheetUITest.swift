@@ -630,6 +630,37 @@ class CustomerSheetUITest: XCTestCase {
 
         dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
+    func testCustomerSheetSwiftUI() throws {
+        app.launch()
+
+        app.staticTexts["CustomerSheet (SwiftUI)"].tap()
+
+        app.buttons["Using Returning Customer (Tap to Switch)"].tap()
+        let newCustomerText = app.buttons["Using New Customer (Tap to Switch)"]
+        XCTAssertTrue(newCustomerText.waitForExistence(timeout: 10.0))
+
+        let button = app.buttons["Present Customer Sheet"]
+        XCTAssertTrue(button.waitForExistence(timeout: 60.0))
+        button.forceTapElement()
+
+        app.staticTexts["+ Add"].tap()
+
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Save"].tap()
+
+        let cardPresence = app.staticTexts["••••4242"]
+        XCTAssertTrue(cardPresence.waitForExistence(timeout: 60.0))
+
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        confirmButton.tap()
+
+        let last4Label = app.staticTexts["••••4242"]
+        XCTAssertTrue(last4Label.waitForExistence(timeout: 10.0))
+        let last4Selectedlabel = app.staticTexts["(Selected)"]
+        XCTAssertTrue(last4Selectedlabel.waitForExistence(timeout: 10.0))
+    }
+
     func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
         let selectButton = app.staticTexts[buttonLabel]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
