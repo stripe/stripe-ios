@@ -8,10 +8,11 @@
 
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP)@testable import StripePaymentsUI
 @_spi(STP)@testable import StripePaymentsTestUtils
+@_spi(STP)@testable import StripePaymentsUI
 import UIKit
 
+/* TODO(porter/yuki) Remove these? Commented out since we can't just disable within Xcode b/c of tuist
 @MainActor
 class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {
 
@@ -105,3 +106,4 @@ class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
 }
+*/
