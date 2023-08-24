@@ -11,15 +11,13 @@ import UIKit
 
 final class LinkAccountPickerFooterView: UIView {
 
+    private let defaultCta: String
     private let singleAccount: Bool
     private let didSelectConnectAccount: () -> Void
 
     private lazy var connectAccountButton: Button = {
         let connectAccountButton = Button(configuration: .financialConnectionsPrimary)
-        connectAccountButton.title = STPLocalizedString(
-            "Connect account",
-            "A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."
-        )
+        connectAccountButton.title = defaultCta
         connectAccountButton.isEnabled = false // disable by default
         connectAccountButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
         connectAccountButton.translatesAutoresizingMaskIntoConstraints = false
@@ -30,6 +28,7 @@ final class LinkAccountPickerFooterView: UIView {
     }()
 
     init(
+        defaultCta: String,
         isStripeDirect: Bool,
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
@@ -37,6 +36,7 @@ final class LinkAccountPickerFooterView: UIView {
         didSelectConnectAccount: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping () -> Void
     ) {
+        self.defaultCta = defaultCta
         self.singleAccount = singleAccount
         self.didSelectConnectAccount = didSelectConnectAccount
         super.init(frame: .zero)
@@ -69,7 +69,13 @@ final class LinkAccountPickerFooterView: UIView {
         didSelectConnectAccount()
     }
 
-    func enableButton(_ enableButton: Bool) {
-        connectAccountButton.isEnabled = enableButton
+    func didSelectedAccount(_ selectedAccountTuple: FinancialConnectionsAccountTuple?) {
+        if let selectionCta = selectedAccountTuple?.accountPickerAccount.selectionCta {
+            connectAccountButton.title = selectionCta
+        } else {
+            connectAccountButton.title = defaultCta
+        }
+
+        connectAccountButton.isEnabled = selectedAccountTuple != nil
     }
 }

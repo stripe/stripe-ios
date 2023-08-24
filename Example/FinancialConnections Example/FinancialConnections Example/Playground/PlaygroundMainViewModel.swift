@@ -75,6 +75,12 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
+    @Published var enableBalancesPermission: Bool = PlaygroundUserDefaults.enableBalancesPermission {
+        didSet {
+            PlaygroundUserDefaults.enableBalancesPermission = enableBalancesPermission
+        }
+    }
+
     enum CustomScenario: String, CaseIterable, Identifiable {
         case none = "none"
         case customKeys = "custom_keys"
@@ -147,6 +153,7 @@ final class PlaygroundMainViewModel: ObservableObject {
             flow: flow.rawValue,
             email: email,
             enableTransactionsPermission: enableTransactionsPermission,
+            enableBalancesPermission: enableBalancesPermission,
             customScenario: customScenario.rawValue,
             customPublicKey: customPublicKey,
             customSecretKey: customSecretKey
@@ -159,9 +166,16 @@ final class PlaygroundMainViewModel: ObservableObject {
                     case .completed(let session):
                         let accounts = session.accounts.data.filter { $0.last4 != nil }
                         let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
+                        let sessionInfo =
+"""
+session_id=\(session.id)
+account_names=\(session.accounts.data.map({ $0.displayName ?? "N/A" }))
+account_ids=\(session.accounts.data.map({ $0.id }))
+"""
+
                         UIAlertController.showAlert(
                             title: "Success",
-                            message: "\(accountInfos)"
+                            message: "\(accountInfos)\n\n\(sessionInfo)"
                         )
                     case .canceled:
                         UIAlertController.showAlert(
@@ -200,6 +214,7 @@ private func SetupPlayground(
     flow: String,
     email: String,
     enableTransactionsPermission: Bool,
+    enableBalancesPermission: Bool,
     customScenario: String,
     customPublicKey: String,
     customSecretKey: String,
@@ -221,6 +236,7 @@ private func SetupPlayground(
         requestBody["flow"] = flow
         requestBody["email"] = email
         requestBody["enable_transactions_permission"] = enableTransactionsPermission
+        requestBody["enable_balances_permission"] = enableBalancesPermission
         requestBody["custom_scenario"] = customScenario
         requestBody["custom_public_key"] = customPublicKey
         requestBody["custom_secret_key"] = customSecretKey

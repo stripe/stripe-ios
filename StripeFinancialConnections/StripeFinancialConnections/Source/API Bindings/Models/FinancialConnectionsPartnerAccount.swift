@@ -20,6 +20,7 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let allowSelectionMessage: String?
     let status: String?
     let institution: FinancialConnectionsInstitution?
+    let nextPaneOnSelection: FinancialConnectionsSessionManifest.NextPane?
 
     var allowSelectionNonOptional: Bool {
         return allowSelection ?? true
@@ -37,8 +38,4 @@ struct FinancialConnectionsAuthSessionAccounts: Decodable {
     let data: [FinancialConnectionsPartnerAccount]
     let nextPane: FinancialConnectionsSessionManifest.NextPane
     let skipAccountSelection: Bool?
-}
-
-struct FinancialConnectionsNetworkedAccountsResponse: Decodable {
-    let data: [FinancialConnectionsPartnerAccount]
 }
