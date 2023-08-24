@@ -10,12 +10,12 @@ import UIKit
 final class AccountPickerHelpers {
     static func rowTitles(
         forAccount account: FinancialConnectionsPartnerAccount,
-        // caption, for networked accounts, _will_ hide account numbers, so we should show account numbers in the title
+        // caption, for networked accounts, will hide account numbers, so we should show account numbers in the title
         captionWillHideAccountNumbers: Bool
     ) -> (
         leadingTitle: String, trailingTitle: String?
     ) {
-        // balance info in subtitle will _hide_ account numbers, so we should show account numbers in the title
+        // balance info in subtitle will hide account numbers, so we should show account numbers in the title
         let balanceWillHideAccountNumbersInSubtitle = account.balanceInfo != nil
         if balanceWillHideAccountNumbersInSubtitle || captionWillHideAccountNumbers {
             return (account.name, "••••\(account.displayableAccountNumbers ?? "")")

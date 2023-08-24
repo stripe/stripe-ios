@@ -70,10 +70,7 @@ final class LinkAccountPickerFooterView: UIView {
     }
 
     func didSelectedAccount(_ selectedAccountTuple: FinancialConnectionsAccountTuple?) {
-        if
-            let selectedAccountTuple = selectedAccountTuple,
-            let selectionCta = selectedAccountTuple.accountPickerAccount.selectionCta
-        {
+        if let selectionCta = selectedAccountTuple?.accountPickerAccount.selectionCta {
             connectAccountButton.title = selectionCta
         } else {
             connectAccountButton.title = defaultCta
