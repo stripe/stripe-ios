@@ -838,7 +838,7 @@
       "type": "grabpay",
       "async": false,
       "selector_icon": {
-        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay.png",
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay@3x-e54da1d788668a5909e4801d5c243198.png",
         "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay-97ee78fdbbf1890bdf19986e997e685d.svg"
       },
       "fields": []
@@ -847,7 +847,7 @@
       "type": "fpx",
       "async": false,
       "selector_icon": {
-        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx@3x.png",
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx@3x-305453711338125d9cb4f86ff866ba6a.png",
         "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx.svg"
       },
       "fields": [
