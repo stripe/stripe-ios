@@ -118,11 +118,6 @@ extension PaymentSheet {
             return ""
         }
 
-        var paymentSheetLabel: String {
-            assertionFailure()
-            return "Unknown"
-        }
-
         static func shouldLogAnalytic(paymentMethod: PaymentSheet.PaymentMethodType) -> Bool {
             analyticLogForIconSemaphore.wait()
             defer { analyticLogForIconSemaphore.signal() }
@@ -524,7 +519,7 @@ extension STPPaymentMethodParams {
         default:
             if self.type == .unknown, let rawTypeString = rawTypeString {
                 let paymentMethodType = PaymentSheet.PaymentMethodType(from: rawTypeString)
-                return paymentMethodType.paymentSheetLabel
+                return paymentMethodType.displayName
             } else {
                 return label
             }
