@@ -59,4 +59,5 @@ Example/**/*.xcodeproj
 Testers/**/*.xcodeproj
 
 # But make sure to store the Package.resolved file for Xcode Cloud
+# https://forums.swift.org/t/package-resolved-should-go-in-the-gitignore/14699/29
 !Stripe.xcworkspace/xcshareddata/swiftpm
