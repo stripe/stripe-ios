@@ -82,9 +82,3 @@ final class AUBECSLegalTermsView: UIView {
     }
 
 }
-
-private extension UIResponder {
-    var parentViewController: UIViewController? {
-        return next as? UIViewController ?? next?.parentViewController
-    }
-}

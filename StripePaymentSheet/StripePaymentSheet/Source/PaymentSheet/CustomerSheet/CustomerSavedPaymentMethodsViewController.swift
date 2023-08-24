@@ -13,7 +13,6 @@ protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent?,
                                                         with paymentOption: PaymentOption,
                                                         completion: @escaping(InternalCustomerSheetResult) -> Void)
-    func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
     func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
 }
 
@@ -40,7 +39,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private var mode: Mode
     private(set) var error: Error?
     private var processingInFlight: Bool = false
-    private(set) var intent: Intent?
     private lazy var addPaymentMethodViewController: CustomerAddPaymentMethodViewController = {
         return CustomerAddPaymentMethodViewController(
             configuration: configuration,
@@ -54,17 +52,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         return paymentMethodTypes.toPaymentSheetPaymentMethodTypes()
     }
 
-    var selectedPaymentOption: PaymentOption? {
-        switch mode {
-        case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
-            if let paymentOption = addPaymentMethodViewController.paymentOption {
-                return paymentOption
-            }
-            return nil
-        case .selectingSaved:
-            return savedPaymentOptionsViewController.selectedPaymentOption
-        }
-    }
     let merchantSupportedPaymentMethodTypes: [STPPaymentMethodType]
 
     // MARK: - Views
@@ -81,7 +68,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             savedPaymentMethods: savedPaymentMethods,
             selectedPaymentMethodOption: selectedPaymentMethodOption,
             savedPaymentMethodsConfiguration: self.configuration,
-            customerAdapter: self.customerAdapter,
             configuration: .init(
                 showApplePay: showApplePay
             ),
@@ -710,10 +696,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 }
 
 extension CustomerSavedPaymentMethodsViewController: BottomSheetContentViewController {
-    var allowsDragToDismiss: Bool {
-        return isDismissable
-    }
-
     func didTapOrSwipeToDismiss() {
         if isDismissable {
             handleDismissSheet()
@@ -728,7 +710,7 @@ extension CustomerSavedPaymentMethodsViewController: BottomSheetContentViewContr
 // MARK: - SheetNavigationBarDelegate
 /// :nodoc:
 extension CustomerSavedPaymentMethodsViewController: SheetNavigationBarDelegate {
-    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+    func sheetNavigationBarDidClose() {
         handleDismissSheet()
 
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
@@ -738,7 +720,7 @@ extension CustomerSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
 
     }
 
-    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+    func sheetNavigationBarDidBack() {
         switch mode {
         case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
             error = nil
@@ -750,7 +732,7 @@ extension CustomerSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
     }
 }
 extension CustomerSavedPaymentMethodsViewController: CustomerAddPaymentMethodViewControllerDelegate {
-    func didUpdate(_ viewController: CustomerAddPaymentMethodViewController) {
+    func didUpdate() {
         error = nil
         updateUI()
     }
@@ -761,7 +743,6 @@ extension CustomerSavedPaymentMethodsViewController: CustomerAddPaymentMethodVie
 
 extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethodsCollectionViewControllerDelegate {
     func didUpdateSelection(
-        viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection) {
             error = nil
             switch paymentMethodSelection {
@@ -780,7 +761,6 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
         }
 
     func didSelectRemove(
-        viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         originalPaymentMethodSelection: CustomerPaymentOption?) {
             guard case .saved(let paymentMethod) = paymentMethodSelection else {

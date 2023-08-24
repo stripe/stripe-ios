@@ -15,10 +15,8 @@ import UIKit
 
 protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didUpdateSelection(
-        viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
     func didSelectRemove(
-        viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
 }
 
@@ -234,25 +232,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         // For some reason, the selected cell loses its selected appearance
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
     }
-
-    func unselectPaymentMethod() {
-        guard let selectedIndexPath = selectedIndexPath else {
-            return
-        }
-        selectedViewModelIndex = nil
-        collectionView.deselectItem(at: selectedIndexPath, animated: true)
-        collectionView.reloadItems(at: [selectedIndexPath])
-    }
-
-    func selectLink() {
-        guard configuration.showLink else {
-            return
-        }
-
-        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
-        selectedViewModelIndex = viewModels.firstIndex(where: { $0 == .link })
-        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredHorizontally)
-    }
 }
 
 // MARK: - UICollectionView
@@ -295,7 +274,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         }
         let viewModel = viewModels[indexPath.item]
         if case .add = viewModel {
-            delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+            delegate?.didUpdateSelection(paymentMethodSelection: viewModel)
             return false
         }
         return true
@@ -320,7 +299,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             )
         }
 
-        delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+        delegate?.didUpdateSelection(paymentMethodSelection: viewModel)
     }
 }
 
@@ -360,7 +339,6 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                 }
 
                 self.delegate?.didSelectRemove(
-                    viewController: self,
                     paymentMethodSelection: viewModel
                 )
             }

@@ -278,7 +278,7 @@ extension SavedPaymentMethodCollectionView {
                     }
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                    paymentMethodLogo.image = paymentMethod.makeCarouselImage(for: self)
+                    paymentMethodLogo.image = paymentMethod.makeCarouselImage()
                 case .applePay:
                     // TODO (cleanup) - get this from PaymentOptionDisplayData?
                     label.text = String.Localized.apple_pay

@@ -127,9 +127,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: -
-    private var scrollViewHeightConstraint: NSLayoutConstraint?
-
     /// :nodoc:
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -159,7 +156,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(
             equalTo: scrollView.contentLayoutGuide.heightAnchor)
         scrollViewHeightConstraint.priority = .fittingSizeLevel
-        self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(
@@ -211,7 +207,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }
 
     @objc
-    private func keyboardDidHide(notification: Notification) {
+    private func keyboardDidHide() {
         if let firstResponder = view.firstResponder() {
             let firstResponderFrame = scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
                 dx: -Constants.keyboardAvoidanceEdgePadding,
@@ -224,10 +220,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     // MARK: - BottomSheetPresentable
 
-    var panScrollable: UIScrollView? {
-        // Returning the scroll view causes contentInset issues; I'm not sure why.
-        return nil
-    }
 
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()
@@ -319,9 +311,7 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
 
 // MARK: - BottomSheet3DS2ViewControllerDelegate
 extension BottomSheetViewController: BottomSheet3DS2ViewControllerDelegate {
-    func bottomSheet3DS2ViewControllerDidCancel(
-        _ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController
-    ) {
+    func bottomSheet3DS2ViewControllerDidCancel() {
         didCancelNative3DS2()
     }
 }

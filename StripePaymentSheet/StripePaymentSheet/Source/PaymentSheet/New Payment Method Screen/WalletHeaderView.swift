@@ -14,13 +14,9 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol WalletHeaderViewDelegate: AnyObject {
-    func walletHeaderViewApplePayButtonTapped(
-        _ header: PaymentSheetViewController.WalletHeaderView
-    )
+    func walletHeaderViewApplePayButtonTapped()
 
-    func walletHeaderViewPayWithLinkTapped(
-        _ header: PaymentSheetViewController.WalletHeaderView
-    )
+    func walletHeaderViewPayWithLinkTapped()
 }
 
 extension PaymentSheetViewController {
@@ -97,11 +93,11 @@ extension PaymentSheetViewController {
         }
 
         @objc func handleTapApplePay() {
-            delegate?.walletHeaderViewApplePayButtonTapped(self)
+            delegate?.walletHeaderViewApplePayButtonTapped()
         }
 
         @objc func handleTapPayWithLink() {
-            delegate?.walletHeaderViewPayWithLinkTapped(self)
+            delegate?.walletHeaderViewPayWithLinkTapped()
         }
 
         private func buildAndPinStackView() {

@@ -28,10 +28,6 @@ protocol LinkAccountServiceProtocol {
         withEmail email: String?,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
-
-    /// Checks if we have seen this email log out before
-    /// - Parameter email: true if this email has logged out before, false otherwise
-    func hasEmailLoggedOut(email: String) -> Bool
 }
 
 final class LinkAccountService: LinkAccountServiceProtocol {
@@ -48,11 +44,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     ) {
         self.apiClient = apiClient
         self.cookieStore = cookieStore
-    }
-
-    /// Returns true if we have a session cookie stored on device
-    var hasSessionCookie: Bool {
-        return cookieStore.formattedSessionCookies() != nil
     }
 
     func lookupAccount(

@@ -15,7 +15,6 @@ import UIKit
 extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
     func makeIcon(
-        for traitCollection: UITraitCollection? = nil,
         updateImageHandler: DownloadManager.UpdateImageHandler?
     ) -> UIImage {
         switch self {
@@ -34,11 +33,11 @@ extension PaymentOption {
     func makeCarouselImage(for view: UIView) -> UIImage {
         switch self {
         case .applePay:
-            return makeIcon(for: view.traitCollection, updateImageHandler: nil)
+            return makeIcon(updateImageHandler: nil)
         case .saved(let paymentMethod):
-            return paymentMethod.makeCarouselImage(for: view)
+            return paymentMethod.makeCarouselImage()
         case .new(let confirmParams):
-            return confirmParams.paymentMethodParams.makeCarouselImage(for: view)
+            return confirmParams.paymentMethodParams.makeCarouselImage()
         case .link:
             return Image.link_carousel_logo.makeImage(template: true)
         }
@@ -66,7 +65,7 @@ extension STPPaymentMethod {
         }
     }
 
-    func makeCarouselImage(for view: UIView) -> UIImage {
+    func makeCarouselImage() -> UIImage {
         if type == .card, let cardBrand = card?.brand {
             return cardBrand.makeCarouselImage()
         } else if type == .USBankAccount {
@@ -94,25 +93,12 @@ extension STPPaymentMethodParams {
         }
     }
 
-    func makeCarouselImage(for view: UIView) -> UIImage {
+    func makeCarouselImage() -> UIImage {
         if type == .card, let card = card, let number = card.number {
             let cardBrand = STPCardValidator.brand(forNumber: number)
             return cardBrand.makeCarouselImage()
         }
         return makeIcon(updateHandler: nil)
-    }
-}
-
-extension ConsumerPaymentDetails {
-    func makeIcon() -> UIImage {
-        switch details {
-        case .card(let card):
-            return STPImageLibrary.cardBrandImage(for: card.stpBrand)
-        case .bankAccount(let bankAccount):
-            return PaymentSheetImageLibrary.bankIcon(for: bankAccount.iconCode)
-        case .unparsable:
-            return UIImage()
-        }
     }
 }
 

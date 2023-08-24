@@ -22,50 +22,6 @@ enum LinkUI {
     }
 
     static let accountLookupDebounceTime: DispatchTimeInterval = .milliseconds(900)
-
-    // MARK: - Corner radii
-
-    static let cornerRadius: CGFloat = 12
-
-    static let mediumCornerRadius: CGFloat = 8
-
-    static let smallCornerRadius: CGFloat = 4
-
-    // MARK: - Margins
-
-    static let buttonMargins: NSDirectionalEdgeInsets = .insets(amount: 16)
-
-    static let compactButtonMargins: NSDirectionalEdgeInsets = .insets(top: 12, leading: 16, bottom: 12, trailing: 16)
-
-    static let contentMargins: NSDirectionalEdgeInsets = .insets(top: 22, leading: 20, bottom: 20, trailing: 20)
-
-    static let contentMarginsWithLargeNav: NSDirectionalEdgeInsets = .insets(top: 32, leading: 20, bottom: 20, trailing: 20)
-
-    // MARK: - Content spacing
-
-    static let extraLargeContentSpacing: CGFloat = 32
-
-    static let largeContentSpacing: CGFloat = 24
-
-    static let contentSpacing: CGFloat = 16
-
-    static let smallContentSpacing: CGFloat = 8
-
-    static let tinyContentSpacing: CGFloat = 4
-
-}
-
-// MARK: Development flags
-
-extension LinkUI {
-
-    /// Whether or not the UI can show features that are under development.
-    ///
-    /// - Note: This flag is meant to be controlled by launch arg.
-    static var featurePreview: Bool {
-        UserDefaults.standard.bool(forKey: "STPLinkFeaturePreview")
-    }
-
 }
 
 // MARK: - Typography
@@ -142,38 +98,5 @@ extension LinkUI {
         let font = self.font(forTextStyle: textStyle)
         return (font.pointSize * lineHeight) - font.pointSize
     }
-
-}
-
-// MARK: - Appearance
-
-extension LinkUI {
-
-    static let appearance: PaymentSheet.Appearance = {
-        var appearance = PaymentSheet.Appearance.default
-        appearance.cornerRadius = LinkUI.mediumCornerRadius
-        appearance.colors.primary = .linkBrandDark
-        appearance.colors.background = .linkBackground
-
-        // Text
-        appearance.colors.text = .linkPrimaryText
-        appearance.colors.textSecondary = .linkSecondaryText
-
-        // Components
-        appearance.colors.componentText = .linkPrimaryText
-        appearance.colors.componentPlaceholderText = .linkSecondaryText
-        appearance.colors.componentBackground = .linkControlBackground
-        appearance.colors.componentBorder = .linkControlBorder
-        appearance.colors.componentDivider = .linkSeparator
-
-        // Primary button
-        appearance.primaryButton.textColor = .linkPrimaryButtonForeground
-        appearance.primaryButton.backgroundColor = .linkBrand
-        appearance.primaryButton.borderWidth = 0
-        appearance.primaryButton.cornerRadius = LinkUI.cornerRadius
-        appearance.primaryButton.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-
-        return appearance
-    }()
 
 }

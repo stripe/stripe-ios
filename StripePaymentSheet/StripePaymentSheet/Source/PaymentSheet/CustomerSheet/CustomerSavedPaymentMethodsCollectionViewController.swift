@@ -12,10 +12,8 @@ import UIKit
 
 protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
     func didUpdateSelection(
-        viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection)
     func didSelectRemove(
-        viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         originalPaymentMethodSelection: CustomerPaymentOption?)
 }
@@ -112,7 +110,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     // MARK: - Internal Properties
     let configuration: Configuration
     let savedPaymentMethodsConfiguration: CustomerSheet.Configuration
-    let customerAdapter: CustomerAdapter
 
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex else {
@@ -144,16 +141,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         }
     }
 
-    /// Whether or not there are any payment options we can show
-    /// i.e. Are there any cells besides the Add cell?
-    var hasPaymentOptions: Bool {
-        return viewModels.contains {
-            if case .add = $0 {
-                return false
-            }
-            return true
-        }
-    }
     weak var delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate?
     let originalSelectedSavedPaymentMethod: CustomerPaymentOption?
     var originalSelectedViewModelIndex: Int? {
@@ -193,7 +180,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         savedPaymentMethods: [STPPaymentMethod],
         selectedPaymentMethodOption: CustomerPaymentOption?,
         savedPaymentMethodsConfiguration: CustomerSheet.Configuration,
-        customerAdapter: CustomerAdapter,
         configuration: Configuration,
         appearance: PaymentSheet.Appearance,
         delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate? = nil
@@ -202,7 +188,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         self.originalSelectedSavedPaymentMethod = selectedPaymentMethodOption
         self.savedPaymentMethodsConfiguration = savedPaymentMethodsConfiguration
         self.configuration = configuration
-        self.customerAdapter = customerAdapter
         self.appearance = appearance
         self.delegate = delegate
         self.unsyncedSavedPaymentMethods = []
@@ -288,14 +273,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
     }
 
-    func unselectPaymentMethod() {
-        guard let selectedIndexPath = selectedIndexPath else {
-            return
-        }
-        selectedViewModelIndex = nil
-        collectionView.deselectItem(at: selectedIndexPath, animated: true)
-        collectionView.reloadItems(at: [selectedIndexPath])
-    }
     func didSelectDifferentPaymentMethod() -> Bool {
         if let selectedViewModelIndex = self.selectedViewModelIndex {
             let selectedViewModel = self.viewModels[selectedViewModelIndex]
@@ -355,7 +332,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
         }
         let viewModel = viewModels[indexPath.item]
         if case .add = viewModel {
-            delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+            delegate?.didUpdateSelection(paymentMethodSelection: viewModel)
             return false
         }
         return true
@@ -365,7 +342,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
         selectedViewModelIndex = indexPath.item
         let viewModel = viewModels[indexPath.item]
 
-        delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+        delegate?.didUpdateSelection(paymentMethodSelection: viewModel)
     }
 }
 
@@ -408,7 +385,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                 }
 
                 self.delegate?.didSelectRemove(
-                    viewController: self,
                     paymentMethodSelection: viewModel,
                     originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod
                 )

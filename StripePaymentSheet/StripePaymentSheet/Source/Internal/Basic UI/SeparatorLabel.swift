@@ -44,15 +44,6 @@ final class SeparatorLabel: UIView {
         }
     }
 
-    var adjustsFontForContentSizeCategory: Bool {
-        get {
-            return label.adjustsFontForContentSizeCategory
-        }
-        set {
-            label.adjustsFontForContentSizeCategory = newValue
-        }
-    }
-
     var separatorColor: UIColor? {
         get {
             return leftLineView.backgroundColor
@@ -85,11 +76,6 @@ final class SeparatorLabel: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
-    convenience init(text: String) {
-        self.init(frame: .zero)
-        self.text = text
-    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)

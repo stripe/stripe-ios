@@ -843,13 +843,6 @@ extension PaymentSheet.Appearance.Shadow {
     var asElementThemeShadow: ElementsUITheme.Shadow? {
         return ElementsUITheme.Shadow(color: color, opacity: opacity, offset: offset, radius: radius)
     }
-
-    init(elementShadow: ElementsUITheme.Shadow) {
-        self.color = elementShadow.color
-        self.opacity = elementShadow.opacity
-        self.offset = elementShadow.offset
-        self.radius = elementShadow.radius
-    }
 }
 
 extension STPPaymentMethodAddress {

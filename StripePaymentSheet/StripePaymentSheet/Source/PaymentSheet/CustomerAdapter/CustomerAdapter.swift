@@ -203,7 +203,4 @@ import UIKit
     @_spi(PrivateBetaCustomerSheet) public static var stp_analyticsIdentifier = "StripeCustomerAdapter"
 }
 
-/// Stores the key we use in NSUserDefaults to save a dictionary of Customer id to their last selected payment method ID
-private let kLastSelectedPaymentMethodDefaultsKey =
-    UserDefaults.StripePaymentSheetKeys.customerToLastSelectedPaymentMethod.rawValue
 private let CachedCustomerMaxAge: TimeInterval = 60 * 30 // 30 minutes, server-side timeout is 60

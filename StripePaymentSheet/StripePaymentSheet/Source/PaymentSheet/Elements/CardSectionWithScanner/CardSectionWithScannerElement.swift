@@ -46,7 +46,6 @@ final class CardSection: ContainerElement {
     }
 
     // References to the underlying TextFieldElements
-    let nameElement: TextFieldElement?
     let panElement: TextFieldElement
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
@@ -111,7 +110,6 @@ final class CardSection: ContainerElement {
             theme: theme
         )
 
-        self.nameElement = nameElement?.element
         self.panElement = panElement.element
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element

@@ -99,17 +99,6 @@ class CircularButton: UIControl {
         return newArea.contains(point)
     }
 
-    func handleEvent(_ event: STPEvent) {
-        switch event {
-        case .shouldEnableUserInteraction:
-            backgroundColor = .systemGray2
-        case .shouldDisableUserInteraction:
-            backgroundColor = .systemIndigo
-        default:
-            break
-        }
-    }
-
     func updateShadow() {
         // Turn off shadows in dark mode
         if traitCollection.userInterfaceStyle == .dark {

@@ -27,12 +27,6 @@ protocol LinkCookieStore {
     func delete(key: LinkCookieKey)
 }
 
-extension LinkCookieStore {
-    func write(key: LinkCookieKey, value: String) {
-        self.write(key: key, value: value, allowSync: false)
-    }
-}
-
 // MARK: - Helpers
 
 extension LinkCookieStore {

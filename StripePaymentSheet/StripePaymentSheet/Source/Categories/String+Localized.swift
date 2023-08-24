@@ -19,13 +19,6 @@ extension String.Localized {
         )
     }
 
-    static var pay_another_way: String {
-        STPLocalizedString(
-            "Pay another way",
-            "Label of a button that when tapped allows the user to select a different form of payment."
-        )
-    }
-
     static func pay_faster_at_$merchant_and_thousands_of_merchants(merchantDisplayName: String) -> String {
         String(
             format: STPLocalizedString(
@@ -69,23 +62,6 @@ extension String.Localized {
         STPLocalizedString("Back", "Text for back button")
     }
 
-    static var update_card: String {
-        STPLocalizedString(
-            "Update card",
-            """
-            Title for a button that when tapped, presents a screen for updating a card. Also
-            the heading the screen itself.
-            """
-        )
-    }
-
-    static var show_menu: String {
-        STPLocalizedString(
-            "Show menu",
-            "Accessibility label for an action or a button that shows a menu."
-        )
-    }
-
     static var enter_address_manually: String {
         STPLocalizedString("Enter address manually", "Text for a button that allows manual entry of an address")
     }
@@ -101,20 +77,6 @@ extension String.Localized {
                 """
             ),
             countryDisplayName
-        )
-    }
-
-    static var or: String {
-        STPLocalizedString(
-            "Or",
-            "Separator label between two options"
-        )
-    }
-
-    static var add_a_payment_method: String {
-        STPLocalizedString(
-            "Add a payment method",
-            "Text for a button that, when tapped, displays another screen where the customer can add a new payment method"
         )
     }
 

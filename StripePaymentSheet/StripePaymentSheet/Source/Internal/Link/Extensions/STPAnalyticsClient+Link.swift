@@ -18,10 +18,6 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .linkSignupCheckboxChecked)
     }
 
-    func logLinkSignupFlowPresented() {
-        self.logPaymentSheetEvent(event: .linkSignupFlowPresented)
-    }
-
     func logLinkSignupStart() {
         AnalyticsHelper.shared.startTimeMeasurement(.linkSignup)
         self.logPaymentSheetEvent(event: .linkSignupStart)

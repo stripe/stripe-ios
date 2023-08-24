@@ -79,3 +79,19 @@ extension LinkInMemoryCookieStoreTests {
     }
 
 }
+
+final class LinkInMemoryCookieStore: LinkCookieStore {
+    private var data: [LinkCookieKey: String] = [:]
+
+    func write(key: LinkCookieKey, value: String, allowSync: Bool) {
+        data[key] = value
+    }
+
+    func read(key: LinkCookieKey) -> String? {
+        return data[key]
+    }
+
+    func delete(key: LinkCookieKey) {
+        data.removeValue(forKey: key)
+    }
+}

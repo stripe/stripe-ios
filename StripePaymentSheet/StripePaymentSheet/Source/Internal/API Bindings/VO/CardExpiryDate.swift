@@ -15,11 +15,6 @@ struct CardExpiryDate {
     let month: Int
     let year: Int
 
-    /// A string value to be entered into a date text field.
-    var displayString: String {
-        return String(format: "%02d%02d", month, year % 100)
-    }
-
     /// Creates a `CardExpiryDate` struct from a 4 digit string in `MMyy` format.
     init?(_ string: String?) {
         guard

@@ -13,14 +13,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-private class CardScanningEasilyTappableButton: UIButton {
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        let newArea = bounds.insetBy(
-            dx: -(PaymentSheetUI.minimumTapSize.width - bounds.width) / 2,
-            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2)
-        return newArea.contains(point)
-    }
-}
 
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
@@ -36,12 +28,6 @@ class CardScanningView: UIView, STPCardScannerDelegate {
     private(set) weak var cameraView: STPCameraView?
 
     weak var delegate: STP_Internal_CardScanningViewDelegate?
-
-    var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation {
-        didSet {
-            cardScanner?.deviceOrientation = deviceOrientation
-        }
-    }
 
     private var isDisplayingError = false {
         didSet {
@@ -67,7 +53,6 @@ class CardScanningView: UIView, STPCardScannerDelegate {
     private static let cardCornerRadius: CGFloat = 0.125 / 3.370  // radius / ID-1 card width
     private static let cornerRadius: CGFloat = 4
     private static let cardInset: CGFloat = 32
-    private static let textInset: CGFloat = 14
 
     private lazy var cardOutlineView: UIView = {
         let view = UIView()

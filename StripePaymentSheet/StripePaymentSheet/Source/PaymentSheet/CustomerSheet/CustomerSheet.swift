@@ -112,8 +112,7 @@ internal enum InternalCustomerSheetResult {
         loadPaymentMethodInfo { result in
             switch result {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let merchantSupportedPaymentMethodTypes)):
-                self.present(from: presentingViewController,
-                             savedPaymentMethods: savedPaymentMethods,
+                self.present(savedPaymentMethods: savedPaymentMethods,
                              selectedPaymentMethodOption: selectedPaymentMethodOption,
                              merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes)
             case .failure(let error):
@@ -127,8 +126,7 @@ internal enum InternalCustomerSheetResult {
                                                       appearance: configuration.appearance)
     }
 
-    func present(from presentingViewController: UIViewController,
-                 savedPaymentMethods: [STPPaymentMethod],
+    func present(savedPaymentMethods: [STPPaymentMethod],
                  selectedPaymentMethodOption: CustomerPaymentOption?,
                  merchantSupportedPaymentMethodTypes: [STPPaymentMethodType]) {
         let loadSpecsPromise = Promise<Void>()
@@ -153,7 +151,6 @@ internal enum InternalCustomerSheetResult {
     }
     // MARK: - Internal Properties
     var completion: (() -> Void)?
-    var userCompletion: ((Result<PaymentOptionSelection?, Error>) -> Void)?
 }
 
 extension CustomerSheet {
@@ -190,13 +187,6 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
         }
         self.confirmIntent(intent: intent, paymentOption: paymentOption) { result in
             completion(result)
-        }
-    }
-
-    func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion _completion: @escaping () -> Void) {
-        savedPaymentMethodsViewController.dismiss(animated: true) {
-            _completion()
-            self.completion?()
         }
     }
 

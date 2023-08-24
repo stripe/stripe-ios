@@ -166,13 +166,7 @@ public class PaymentSheet {
                             from: self.bottomSheetViewController,
                             intent: intent,
                             shouldOfferApplePay: justVerifiedLinkOTP,
-                            shouldFinishOnClose: true,
-                            completion: {
-                                // Update the bottom sheet after presenting the Link controller
-                                // to avoid briefly flashing the PaymentSheet in the middle of
-                                // the View Controller transition.
-                                updateBottomSheet()
-                            }
+                            shouldFinishOnClose: true
                         )
                     } else {
                         updateBottomSheet()
@@ -323,9 +317,8 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 }
 
 extension PaymentSheet: PayWithLinkWebControllerDelegate {
-
     func payWithLinkWebControllerDidComplete(
-        _ PayWithLinkWebController: PayWithLinkWebController,
+        _ payWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
         with paymentOption: PaymentOption
     ) {
@@ -333,7 +326,7 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
         psvc?.pay(with: paymentOption)
     }
 
-    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
+    func payWithLinkWebControllerDidCancel() {
     }
 
     private func findPaymentSheetViewController() -> PaymentSheetViewController? {
@@ -355,14 +348,11 @@ private extension PaymentSheet {
         from presentingController: UIViewController,
         intent: Intent,
         shouldOfferApplePay: Bool = false,
-        shouldFinishOnClose: Bool = false,
-        completion: (() -> Void)? = nil
+        shouldFinishOnClose: Bool = false
     ) {
         let payWithLinkVC = PayWithLinkWebController(
             intent: intent,
-            configuration: configuration,
-            shouldOfferApplePay: shouldOfferApplePay,
-            shouldFinishOnClose: shouldFinishOnClose
+            configuration: configuration
         )
 
         payWithLinkVC.payWithLinkDelegate = self

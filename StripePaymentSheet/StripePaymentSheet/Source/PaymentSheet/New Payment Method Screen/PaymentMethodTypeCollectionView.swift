@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 
 protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
-    func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView)
+    func didUpdateSelection()
 }
 
 /// A carousel of Payment Method types e.g. [Card, Alipay, SEPA Debit]
@@ -24,11 +24,10 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     internal static let cellHeight: CGFloat = 52
     internal static let minInteritemSpacing: CGFloat = 12
 
-    let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"
     private(set) var selected: PaymentSheet.PaymentMethodType {
         didSet(old) {
             if old != selected {
-                _delegate?.didUpdateSelection(self)
+                _delegate?.didUpdateSelection()
             }
         }
     }

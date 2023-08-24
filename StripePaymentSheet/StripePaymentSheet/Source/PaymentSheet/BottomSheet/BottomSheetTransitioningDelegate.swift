@@ -17,9 +17,6 @@ import UIKit
 /// ```
 @objc(STPBottomSheetTransitioningDelegate)
 class BottomSheetTransitioningDelegate: NSObject {
-
-    static var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
-
     /**
      Returns an instance of the delegate, retained for the duration of presentation
      */
