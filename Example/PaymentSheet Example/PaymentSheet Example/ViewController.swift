@@ -36,4 +36,8 @@ class ViewController: UIViewController {
             fatalError(">= iOS 15.0 required")
         }
     }
+    @IBSegueAction func showSwiftUICusotmerSheetSwiftUI(_ coder: NSCoder) -> UIViewController? {
+        return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomerSheet())
+    }
+
 }
