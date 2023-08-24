@@ -6,7 +6,7 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-import StripePaymentSheet
+@_spi(PrivateBetaCustomerSheet) import StripePaymentSheet
 import SwiftUI
 
 struct ExamplePaymentButtonView: View {

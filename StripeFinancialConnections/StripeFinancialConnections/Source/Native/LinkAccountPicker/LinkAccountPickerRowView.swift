@@ -25,6 +25,14 @@ final class LinkAccountPickerRowView: UIView {
         }
     }
 
+    private lazy var horizontalStackView: UIStackView = {
+        return CreateHorizontalStackView(
+            arrangedSubviews: [
+                institutionIconView,
+                labelRowView,
+            ]
+        )
+    }()
     private lazy var institutionIconView: InstitutionIconView = {
         let institutionIconView = InstitutionIconView(size: .small)
         return institutionIconView
@@ -32,6 +40,7 @@ final class LinkAccountPickerRowView: UIView {
     private lazy var labelRowView: AccountPickerLabelRowView = {
         return AccountPickerLabelRowView()
     }()
+    private var trailingIconImageView: UIImageView?
 
     init(
         isDisabled: Bool,
@@ -40,12 +49,6 @@ final class LinkAccountPickerRowView: UIView {
         self.didSelect = didSelect
         super.init(frame: .zero)
 
-        let horizontalStackView = CreateHorizontalStackView(
-            arrangedSubviews: [
-                institutionIconView,
-                labelRowView,
-            ]
-        )
         if isDisabled {
             horizontalStackView.alpha = 0.25
         }
@@ -68,6 +71,7 @@ final class LinkAccountPickerRowView: UIView {
         leadingTitle: String,
         trailingTitle: String?,
         subtitle: String?,
+        trailingIconImageUrl: String?,
         isSelected: Bool
     ) {
         institutionIconView.setImageUrl(institutionImageUrl)
@@ -77,6 +81,20 @@ final class LinkAccountPickerRowView: UIView {
             subtitle: subtitle
         )
         self.isSelected = isSelected
+
+        trailingIconImageView?.removeFromSuperview()
+        trailingIconImageView = nil
+        if let trailingIconImageUrl = trailingIconImageUrl {
+            let trailingIconImageView = UIImageView()
+            trailingIconImageView.contentMode = .scaleAspectFit
+            NSLayoutConstraint.activate([
+                trailingIconImageView.widthAnchor.constraint(equalToConstant: 16),
+                trailingIconImageView.heightAnchor.constraint(equalToConstant: 16),
+            ])
+            trailingIconImageView.setImage(with: trailingIconImageUrl)
+            self.trailingIconImageView = trailingIconImageView
+            horizontalStackView.addArrangedSubview(trailingIconImageView)
+        }
     }
 
     @objc private func didTapView() {
@@ -115,6 +133,7 @@ private struct LinkAccountPickerRowViewUIViewRepresentable: UIViewRepresentable 
     let leadingTitle: String
     let trailingTitle: String?
     let subtitle: String?
+    let trailingIconImageUrl: String?
     let isSelected: Bool
     let isDisabled: Bool
 
@@ -128,6 +147,7 @@ private struct LinkAccountPickerRowViewUIViewRepresentable: UIViewRepresentable 
             leadingTitle: leadingTitle,
             trailingTitle: trailingTitle,
             subtitle: subtitle,
+            trailingIconImageUrl: trailingIconImageUrl,
             isSelected: isSelected
         )
         return view
@@ -139,6 +159,7 @@ private struct LinkAccountPickerRowViewUIViewRepresentable: UIViewRepresentable 
             leadingTitle: leadingTitle,
             trailingTitle: trailingTitle,
             subtitle: subtitle,
+            trailingIconImageUrl: trailingIconImageUrl,
             isSelected: isSelected
         )
     }
@@ -156,6 +177,7 @@ struct LinkAccountPickerRowView_Previews: PreviewProvider {
                             leadingTitle: "Joint Checking Very Long Name To Truncate",
                             trailingTitle: "••••6789",
                             subtitle: "$2,000",
+                            trailingIconImageUrl: nil,
                             isSelected: true,
                             isDisabled: false
                         ).frame(height: 60)
@@ -164,6 +186,16 @@ struct LinkAccountPickerRowView_Previews: PreviewProvider {
                             leadingTitle: "Joint Checking",
                             trailingTitle: nil,
                             subtitle: nil,
+                            trailingIconImageUrl: nil,
+                            isSelected: false,
+                            isDisabled: false
+                        ).frame(height: 60)
+                        LinkAccountPickerRowViewUIViewRepresentable(
+                            institutionImageUrl: nil,
+                            leadingTitle: "Joint Checking Very Long Name To Truncate",
+                            trailingTitle: "••••6789",
+                            subtitle: "Select to repair and connect",
+                            trailingIconImageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--warning-orange-3x.png",
                             isSelected: false,
                             isDisabled: false
                         ).frame(height: 60)
@@ -172,6 +204,7 @@ struct LinkAccountPickerRowView_Previews: PreviewProvider {
                             leadingTitle: "Joint Checking",
                             trailingTitle: nil,
                             subtitle: "Must be US checking account",
+                            trailingIconImageUrl: nil,
                             isSelected: false,
                             isDisabled: true
                         ).frame(height: 60)

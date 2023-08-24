@@ -17,7 +17,6 @@ struct ExampleSwiftUICustomerSheet: View {
                 .frame(width: 44, height: 44)
                 .onTapGesture {
                     model.customerSheet = nil
-                    model.customerAdapter = nil
                     model.prepareCustomerSheet()
                 }
 
@@ -62,7 +61,6 @@ class MyBackendCustomerSheetModel: ObservableObject {
 
     @Published var customerSheet: CustomerSheet?
     @Published var customerSheetStatusViewModel: CustomerSheetStatusViewModel?
-    var customerAdapter: StripeCustomerAdapter?
     var shouldUseNewCustomer = false
 
     func prepareCustomerSheet() {
@@ -142,7 +140,7 @@ class MyBackendCustomerSheetModel: ObservableObject {
         configuration.applePayEnabled = true
         configuration.returnURL = "payments-example://stripe-redirect"
 
-        self.customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+        let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
             // This should be a block that fetches this from your server
             .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
         }, setupIntentClientSecretProvider: {
@@ -150,11 +148,12 @@ class MyBackendCustomerSheetModel: ObservableObject {
         })
         DispatchQueue.main.async {
             self.customerSheet = CustomerSheet(configuration: configuration,
-                                               customer: self.customerAdapter!)
+                                               customer: customerAdapter)
         }
+
         Task {
             do {
-                let selection = try await self.customerAdapter?.retrievePaymentOptionSelection()
+                let selection = try await customerAdapter.retrievePaymentOptionSelection()
                 DispatchQueue.main.async {
                     self.customerSheetStatusViewModel = .loaded(selection)
                 }

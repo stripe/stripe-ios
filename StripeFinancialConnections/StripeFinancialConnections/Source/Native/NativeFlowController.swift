@@ -671,27 +671,33 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
     ) {
-        pushPane(nextPane, animated: true)
+        dataManager.linkedAccounts = [selectedAccount]
     }
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount,
-        institution: FinancialConnectionsInstitution
+        didRequestSuccessPaneWithInstitution institution: FinancialConnectionsInstitution
     ) {
+        assert(dataManager.linkedAccounts?.count == 1, "expected a selected account to be set")
         dataManager.institution = institution
-        dataManager.linkedAccounts = [selectedAccount]
         pushPane(.success, animated: true)
     }
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        requestedStepUpVerificationWithSelectedAccount selectedAccount: FinancialConnectionsPartnerAccount
+        requestedPartnerAuthWithInstitution institution: FinancialConnectionsInstitution
     ) {
-        dataManager.linkedAccounts = [selectedAccount]
-        pushPane(.networkingLinkStepUpVerification, animated: true)
+        dataManager.institution = institution
+        pushPane(.partnerAuth, animated: true)
+    }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    ) {
+        pushPane(nextPane, animated: true)
     }
 
     func linkAccountPickerViewController(
@@ -779,7 +785,7 @@ private func CreatePaneViewController(
         }
     case .attachLinkedPaymentAccount:
         if let institution = dataManager.institution,
-            let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId
+           let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId
         {
             let dataSource = AttachLinkedPaymentAccountDataSourceImplementation(
                 apiClient: dataManager.apiClient,
@@ -801,6 +807,9 @@ private func CreatePaneViewController(
             assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil
         }
+    case .bankAuthRepair:
+        assertionFailure("Not supported")
+        viewController = nil
     case .consent:
         let consentDataSource = ConsentDataSourceImplementation(
             manifest: dataManager.manifest,
@@ -859,7 +868,7 @@ private func CreatePaneViewController(
         viewController = manualEntryViewController
     case .manualEntrySuccess:
         if let paymentAccountResource = dataManager.paymentAccountResource,
-            let accountNumberLast4 = dataManager.accountNumberLast4
+           let accountNumberLast4 = dataManager.accountNumberLast4
         {
             let manualEntrySuccessViewController = ManualEntrySuccessViewController(
                 microdepositVerificationMethod: paymentAccountResource.microdepositVerificationMethod,
