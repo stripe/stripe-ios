@@ -25,6 +25,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
+        case MY = "my"
         case BE = "be"
 
         var publishableKey: String {
@@ -33,6 +34,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingDefaultPublishableKey
             case .SG:
                 return STPTestingSGPublishableKey
+            case .MY:
+                return STPTestingMYPublishableKey
             case .BE:
                 return STPTestingBEPublishableKey
             }
@@ -113,9 +116,17 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         // GrabPay has no input fields
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "SGD",
-                               paymentMethodType: .grabPay,
+                               paymentMethodType: .dynamic("grabpay"),
                                merchantCountry: .SG) { _ in
+        }
+    }
 
+    func testFPXConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "MYR",
+                               paymentMethodType: .dynamic("fpx"),
+                               merchantCountry: .MY) { form in
+            XCTAssertNotNil(form.getDropdownFieldElement("FPX Bank"))
         }
     }
 

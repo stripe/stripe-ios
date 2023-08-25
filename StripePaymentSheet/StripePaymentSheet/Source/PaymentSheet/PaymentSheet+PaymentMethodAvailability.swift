@@ -28,6 +28,7 @@ extension PaymentSheet {
         .cashApp,
         .blik,
         .grabPay,
+        .FPX,
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet

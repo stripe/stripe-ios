@@ -82,6 +82,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case inr
         case pln
         case sgd
+        case myr
     }
 
     enum MerchantCountry: String, PickerEnum {
@@ -93,6 +94,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case FR
         case IN
         case SG
+        case MY
     }
 
     enum APMSEnabled: String, PickerEnum {

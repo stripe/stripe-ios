@@ -79,6 +79,9 @@
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
 
+/* Select a bank dropdown for FPX */
+"FPX Bank" = "FPX Bank";
+
 /* Label for an IBAN field */
 "IBAN" = "IBAN";
 
