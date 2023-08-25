@@ -561,6 +561,18 @@ final class PartnerAuthViewController: UIViewController {
             navigateBack()
         } else {
             // we successfully launched the secure web browser
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: "auth_session.opened",
+                    parameters: [
+                        "browser": "ASWebAuthenticationSession",
+                        "auth_session_id": authSession.id,
+                        "flow": authSession.flow?.rawValue ?? "null",
+                    ],
+                    pane: .partnerAuth
+                )
+
             if authSession.isOauthNonOptional {
                 dataSource.recordAuthSessionEvent(
                     eventName: "oauth-launched",
