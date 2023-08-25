@@ -25,10 +25,6 @@ extension PaymentSheet {
                 return [.returnURL]
             case .dynamic("zip"):
                 return [.returnURL]
-            case .dynamic("grabpay"):
-                return [.returnURL]
-            case .dynamic("fpx"):
-                return [.returnURL]
             default:
                 return [.unsupported]
             }
@@ -96,10 +92,6 @@ extension PaymentSheet {
                 return "MobilePay"
             } else if case .dynamic("zip") = self {
                 return "Zip"
-            } else if case .dynamic("grabpay") = self {
-                return "GrabPay"
-            } else if case .dynamic("fpx") = self {
-               return "FPX"
             } else if case .dynamic("amazon_pay") = self {
                 return "Amazon Pay"
             } else if case .dynamic(let name) = self {
