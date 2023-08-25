@@ -44,7 +44,7 @@ extension PaymentSheet {
         case dynamic(String)
         case UPI
         case cashApp
-
+        case externalPayPal // TODO(yuki): Replace this when we support more EPMs
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
 
@@ -60,11 +60,14 @@ extension PaymentSheet {
                 self = .UPI
             case STPPaymentMethod.string(from: .cashApp):
                 self = .cashApp
+            case "external_paypal":
+                self = .externalPayPal
             default:
                 self = .dynamic(str)
             }
         }
 
+        // I think this returns the Stripe PaymentMethod object type name i.e. a value in https://stripe.com/docs/api/payment_methods/object#payment_method_object-type
         static func string(from type: PaymentMethodType) -> String? {
             switch type {
             case .card:
@@ -81,6 +84,8 @@ extension PaymentSheet {
                 return STPPaymentMethod.string(from: .cashApp)
             case .dynamic(let str):
                 return str
+            case .externalPayPal:
+                return nil
             }
         }
         var displayName: String {
@@ -97,17 +102,21 @@ extension PaymentSheet {
             } else if case .dynamic(let name) = self {
                 // TODO: We should introduce a display name in our model rather than presenting the payment method type
                 return name
+            } else if case .externalPayPal = self {
+               return STPLocalizedString("PayPal", "Payment Method type brand name")
             }
             assertionFailure()
             return ""
         }
 
         /// The identifier for the payment method type as it is represented on an intent
-        var identifier: String {
-            if let stpPaymentMethodType = stpPaymentMethodType {
+        var identifier: String { // this should be renamed to analyticsIdentifier
+            if let stpPaymentMethodType {
                 return stpPaymentMethodType.identifier
             } else if case .dynamic(let name) = self {
                 return name
+            } else if case .externalPayPal = self {
+                return "external_paypal"
             }
 
             assertionFailure()
@@ -148,6 +157,9 @@ extension PaymentSheet {
                     STPAnalyticsClient.sharedClient.logImageSelectorIconFromBundleIfNeeded(paymentMethod: self)
                 }
                 return stpPaymentMethodType.makeImage(forDarkBackground: forDarkBackground)
+            }
+            if case .externalPayPal = self {
+                return STPPaymentMethodType.payPal.makeImage(forDarkBackground: forDarkBackground)
             }
             if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
                 STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)

@@ -30,11 +30,16 @@ class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
     lazy var paymentMethodTypes: [PaymentSheet.PaymentMethodType] = {
-        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+        var paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: intent,
             configuration: configuration,
             logAvailability: true
         )
+        // TODO(yuki): Rewrite this when we support more EPMs
+        if let epms = configuration.externalPaymentMethodConfiguration?.externalPaymentMethods,
+           epms.contains("external_paypal") {
+            paymentMethodTypes.append(.externalPayPal)
+        }
         assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         return paymentMethodTypes
     }()
@@ -49,6 +54,10 @@ class AddPaymentMethodViewController: UIViewController {
         var params = IntentConfirmParams(type: selectedPaymentMethodType)
         params = paymentMethodFormElement.applyDefaults(params: params)
         if let params = paymentMethodFormElement.updateParams(params: params) {
+            // TODO(yuki): Hack to support external_paypal
+            if selectedPaymentMethodType == .externalPayPal {
+                return .externalPayPal(confirmParams: params)
+            }
             return .new(confirmParams: params)
         }
         return nil

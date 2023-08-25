@@ -13,6 +13,7 @@ import Combine
 import Contacts
 import PassKit
 @_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
+@_spi(STP) @_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -97,6 +98,7 @@ class PlaygroundController: ObservableObject {
 
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
+        configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
@@ -182,6 +184,29 @@ class PlaygroundController: ObservableObject {
                 paymentMethodTypes: paymentMethodTypes,
                 confirmHandler: confirmHandler
             )
+        }
+    }
+
+    var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration {
+        return .init(
+            externalPaymentMethods: ["external_paypal"]
+        ) { externalPaymentMethodType, billingDetails in
+            print(billingDetails)
+            return await withCheckedContinuation { (continuation: CheckedContinuation<PaymentSheetResult, Never>) in
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "Confirm \(externalPaymentMethodType)?", message: nil, preferredStyle: .alert)
+                    alert.addAction(.init(title: "Confirm", style: .default) {_ in
+                        continuation.resume(returning: .completed)
+                    })
+                    alert.addAction(.init(title: "Cancel", style: .default) {_ in
+                        continuation.resume(returning: .canceled)
+                    })
+                    alert.addAction(.init(title: "Fail", style: .default) {_ in
+                        continuation.resume(returning: .failed(error: ConfirmHandlerError.unknown))
+                    })
+                    self.rootViewController.presentedViewController?.present(alert, animated: true)
+                }
+            }
         }
     }
 
@@ -473,6 +498,22 @@ extension PlaygroundController: EndpointSelectorViewControllerDelegate {
 
 // MARK: Deferred intent callbacks
 extension PlaygroundController {
+    enum ConfirmHandlerError: Error, LocalizedError {
+        case clientSecretNotFound
+        case confirmError(String)
+        case unknown
+
+        public var errorDescription: String? {
+            switch self {
+            case .clientSecretNotFound:
+                return "Client secret not found in response from server."
+            case .confirmError(let errorMesssage):
+                return errorMesssage
+            case .unknown:
+                return "An unknown error occurred."
+            }
+        }
+    }
 
     // Deferred confirmation handler
     func confirmHandler(_ paymentMethod: STPPaymentMethod,
@@ -494,23 +535,6 @@ extension PlaygroundController {
             break
         case .normal:
             assertionFailure()
-        }
-
-        enum ConfirmHandlerError: Error, LocalizedError {
-            case clientSecretNotFound
-            case confirmError(String)
-            case unknown
-
-            public var errorDescription: String? {
-                switch self {
-                case .clientSecretNotFound:
-                    return "Client secret not found in response from server."
-                case .confirmError(let errorMesssage):
-                    return errorMesssage
-                case .unknown:
-                    return "An unknown error occurred."
-                }
-            }
         }
 
         let body = [

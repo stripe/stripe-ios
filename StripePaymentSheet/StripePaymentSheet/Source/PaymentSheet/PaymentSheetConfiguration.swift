@@ -164,7 +164,7 @@ extension PaymentSheet {
 
         /// Optional configuration to display a custom message when a saved payment method is removed.
         public var removeSavedPaymentMethodMessage: String?
-        
+
         /// Configuration for external payment methods.
         @_spi(ExternalPaymentMethodsPrivateBeta)
         public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
@@ -237,7 +237,7 @@ extension PaymentSheet {
             /// ```
             /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
             public let authorizationResultHandler:
-                ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+            ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
 
             /// Initializes the ApplePayConfiguration Handlers.
             public init(
@@ -374,23 +374,28 @@ extension PaymentSheet {
         /// If `false` (the default), those values will only be used to prefill the corresponding fields in the form.
         public var attachDefaultsToPaymentMethod = false
     }
-    
+
     @_spi(ExternalPaymentMethodsPrivateBeta)
     public struct ExternalPaymentMethodConfiguration {
-      /// A list of external payment methods to display in PaymentSheet.
-      /// e.g. ["external_paypal"].
-      public var externalPaymentMethods: [String] = []
+        public init(externalPaymentMethods: [String] = [], externalPaymentMethodConfirmHandler: @escaping PaymentSheet.ExternalPaymentMethodConfiguration.ExternalPaymentMethodConfirmHandler) {
+            self.externalPaymentMethods = externalPaymentMethods
+            self.externalPaymentMethodConfirmHandler = externalPaymentMethodConfirmHandler
+        }
 
-      /// - Parameter externalPaymentMethodType: The external payment method to confirm payment with.  e.g. "external_paypal"
-      /// - Parameter billingDetails: An object containing any billing details you've configured PaymentSheet to collect.
-      /// - Returns: The result of the attempt to confirm payment using the given external payment method.
-      public typealias ExternalPaymentMethodConfirmHandler = (
-        _ externalPaymentMethodType: String,
-        _ billingDetails: STPPaymentMethodBillingDetails
-      ) async -> PaymentSheetResult
+        /// A list of external payment methods to display in PaymentSheet.
+        /// e.g. ["external_paypal"].
+        public var externalPaymentMethods: [String] = []
 
-      /// This handler is called when the customer confirms the payment using an external payment method.
-      /// Your implementation should complete the payment and return the result.
-      public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
+        /// - Parameter externalPaymentMethodType: The external payment method to confirm payment with.  e.g. "external_paypal"
+        /// - Parameter billingDetails: An object containing any billing details you've configured PaymentSheet to collect.
+        /// - Returns: The result of the attempt to confirm payment using the given external payment method.
+        public typealias ExternalPaymentMethodConfirmHandler = (
+            _ externalPaymentMethodType: String,
+            _ billingDetails: STPPaymentMethodBillingDetails
+        ) async -> PaymentSheetResult
+
+        /// This handler is called when the customer confirms the payment using an external payment method.
+        /// Your implementation should complete the payment and return the result.
+        public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
     }
 }

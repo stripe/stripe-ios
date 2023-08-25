@@ -157,6 +157,8 @@ class PaymentSheetFormFactory {
             return makeBancontact()
         } else if paymentMethod.stpPaymentMethodType == .blik {
             return makeDefaultsApplierWrapper(for: makeBLIK())
+        } else if paymentMethod == .externalPayPal {
+            return makeExternalPayPal()
         }
 
         guard let spec = specFromJSONProvider() else {
@@ -169,7 +171,7 @@ class PaymentSheetFormFactory {
             return makeSofort(spec: spec)
         }
 
-        // 2. Element-based forms defined in JSON
+        // 3. Element-based forms defined in JSON
         return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
     }
 }
@@ -500,6 +502,12 @@ extension PaymentSheetFormFactory {
             merchantName: merchantName,
             theme: theme
         )
+    }
+
+    func makeExternalPayPal() -> PaymentMethodElement {
+        let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: false, emailRequiredByPaymentMethod: false, phoneRequiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
     }
 
     func makeCountry(countryCodes: [String]?, apiPath: String? = nil) -> PaymentMethodElement {
