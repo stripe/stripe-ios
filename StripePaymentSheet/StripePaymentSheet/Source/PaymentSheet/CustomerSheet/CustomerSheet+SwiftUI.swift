@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-@_spi(PrivateBetaCustomerSheet) extension View {
+extension View {
     /// Presents the customer sheet to select saved payment methods
     /// - Parameter isPresented: A binding to whether the sheet is presented.
     /// - Parameter customerSheet: A CustomerSheet to present.
@@ -26,7 +26,7 @@ import SwiftUI
     }
 }
 
-@_spi(PrivateBetaCustomerSheet) extension CustomerSheet {
+extension CustomerSheet {
     struct CustomerSheetPresentationModifier: ViewModifier {
         @Binding var isPresented: Bool
         let customerSheet: CustomerSheet

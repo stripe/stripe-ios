@@ -4,7 +4,7 @@
 //
 //
 //  ⚠️🏗 This is feature has not been released yet, and is under construction
-//  Note: Do not import Stripe using `@_spi(STP)` or @_spi(PrivateBetaCustomerSheet) in production.
+//  Note: Do not import Stripe using `@_spi(STP)` in production.
 //  Doing so exposes internal functionality which may cause unexpected behavior if used directly.
 //
 import Foundation
@@ -20,7 +20,7 @@ internal enum InternalCustomerSheetResult {
     case failed(error: Error)
 }
 
-@_spi(PrivateBetaCustomerSheet) public class CustomerSheet {
+public class CustomerSheet {
     let configuration: CustomerSheet.Configuration
 
     internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
@@ -216,11 +216,11 @@ extension CustomerSheet: LoadingViewControllerDelegate {
     }
 }
 
-@_spi(PrivateBetaCustomerSheet) extension CustomerSheet: STPAnalyticsProtocol {
-    @_spi(PrivateBetaCustomerSheet) public static var stp_analyticsIdentifier = "CustomerSheet"
+@_spi(STP) extension CustomerSheet: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "CustomerSheet"
 }
 
-@_spi(PrivateBetaCustomerSheet) extension StripeCustomerAdapter {
+extension StripeCustomerAdapter {
     /// Returns the selected Payment Option for this customer adapter.
     /// You can use this to obtain the selected payment method without loading the CustomerSheet.
     public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection?

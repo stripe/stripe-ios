@@ -4,7 +4,7 @@
 //
 
 import Combine
-@_spi(PrivateBetaCustomerSheet) import StripePaymentSheet
+import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {

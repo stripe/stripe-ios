@@ -22,7 +22,7 @@ import UIKit
 /// - Warning:
 /// When implementing your own CustomerAdapter, ensure your application complies with
 /// all applicable laws and regulations, including data privacy and consumer protection.
-@_spi(PrivateBetaCustomerSheet) public protocol CustomerAdapter {
+public protocol CustomerAdapter {
     /// Retrieves a list of Payment Methods attached to a customer.
     /// If you are implementing your own <CustomerAdapter>:
     /// Call the list method ( https://stripe.com/docs/api/payment_methods/list )
@@ -72,15 +72,15 @@ import UIKit
 }
 
 /// An ephemeral key for the Stripe Customer
-@_spi(PrivateBetaCustomerSheet) public struct CustomerEphemeralKey {
+public struct CustomerEphemeralKey {
     /// The identifier of the Stripe Customer object.
     /// See https://stripe.com/docs/api/customers/object#customer_object-id
-    @_spi(PrivateBetaCustomerSheet) public let id: String
+    public let id: String
     /// A short-lived token that allows the SDK to access a Customer's payment methods
-    @_spi(PrivateBetaCustomerSheet) public let ephemeralKeySecret: String
+    public let ephemeralKeySecret: String
 
     /// Initializes a CustomerConfiguration
-    @_spi(PrivateBetaCustomerSheet) public init(customerId: String, ephemeralKeySecret: String) {
+    public init(customerId: String, ephemeralKeySecret: String) {
         self.id = customerId
         self.ephemeralKeySecret = ephemeralKeySecret
     }
@@ -90,7 +90,7 @@ import UIKit
 /// payment methods using an ephemeral key, a short-lived API key scoped to a specific
 /// customer object. If your current user logs out of your app and a new user logs in,
 /// be sure to create a new instance of `StripeCustomerAdapter`.
-@_spi(PrivateBetaCustomerSheet) open class StripeCustomerAdapter: CustomerAdapter {
+open class StripeCustomerAdapter: CustomerAdapter {
     let customerEphemeralKeyProvider: (() async throws -> CustomerEphemeralKey)
     let setupIntentClientSecretProvider: (() async throws -> String)?
     let apiClient: STPAPIClient
@@ -199,8 +199,8 @@ import UIKit
     }
 }
 
-@_spi(PrivateBetaCustomerSheet) extension StripeCustomerAdapter: STPAnalyticsProtocol {
-    @_spi(PrivateBetaCustomerSheet) public static var stp_analyticsIdentifier = "StripeCustomerAdapter"
+@_spi(STP) extension StripeCustomerAdapter: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "StripeCustomerAdapter"
 }
 
 /// Stores the key we use in NSUserDefaults to save a dictionary of Customer id to their last selected payment method ID

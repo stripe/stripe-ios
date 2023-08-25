@@ -7,6 +7,9 @@
 ### StripeApplePay
 * Fixed a compile-time issue with using StripeApplePay in an App Extension. ([#2853](https://github.com/stripe/stripe-ios/issues/2853))
 
+### CustomerSheet
+* [Added] `CustomerSheet`(https://stripe.com/docs/elements/customer-sheet?platform=ios) API, a prebuilt UI component that lets your customers manage their saved payment methods.
+
 ## 23.14.0 2023-08-21
 ### All
 * Improved redirect UX when using Cash App Pay.

@@ -7,7 +7,7 @@ import Foundation
 
 @_spi(STP) @testable import StripeCore
 @_spi(STP) @testable import StripePayments
-@_spi(PrivateBetaCustomerSheet) @testable import StripePaymentSheet
+@testable import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
