@@ -22,6 +22,8 @@ final class DocumentScanner {
     private let idDetector: IDDetector
     private let motionBlurDetector: MotionBlurDetector
     private let barcodeDetector: BarcodeDetector?
+    private let blurDetector: LaplacianBlurDetector
+    private let highResImageCropPadding: CGFloat
 
     /// Initializes a DocumentScanner with detectors.
     ///
@@ -32,11 +34,15 @@ final class DocumentScanner {
     init(
         idDetector: IDDetector,
         motionBlurDetector: MotionBlurDetector,
-        barcodeDetector: BarcodeDetector?
+        barcodeDetector: BarcodeDetector?,
+        blurDetector: LaplacianBlurDetector,
+        highResImageCropPadding: CGFloat
     ) {
         self.idDetector = idDetector
         self.motionBlurDetector = motionBlurDetector
         self.barcodeDetector = barcodeDetector
+        self.blurDetector = blurDetector
+        self.highResImageCropPadding = highResImageCropPadding
     }
 
     convenience init(
@@ -62,7 +68,9 @@ final class DocumentScanner {
                         timeout: configuration.backIdCardBarcodeTimeout
                     )
                 )
-            }
+            },
+            blurDetector: LaplacianBlurDetector(blurThreshold: configuration.blurThreshold),
+            highResImageCropPadding: configuration.highResImageCorpPadding
         )
     }
 }
@@ -100,11 +108,22 @@ extension DocumentScanner: ImageScanner {
             )
         }
 
+        let blurResult: LaplacianBlurDetector.Output = try {
+            let originalImage = pixelBuffer.cgImage()
+            let croppedImage = try originalImage?.cropping(
+                toNormalizedRegion: idDetectorOutput.documentBounds,
+                withPadding: highResImageCropPadding,
+                computationMethod: .maxImageWidthOrHeight
+            )
+            let blurResult = blurDetector.calculateBlurOutput(inputImage: croppedImage!)
+            return blurResult
+        }()
         return DocumentScannerOutput(
             idDetectorOutput: idDetectorOutput,
             barcode: barcodeOutput,
             motionBlur: motionBlurOutput,
-            cameraProperties: cameraProperties
+            cameraProperties: cameraProperties,
+            blurResult: blurResult
         )
     }
 

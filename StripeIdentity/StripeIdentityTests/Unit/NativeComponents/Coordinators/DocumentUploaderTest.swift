@@ -72,13 +72,16 @@ final class DocumentUploaderTest: XCTestCase {
             duration: 0
         ),
         cameraProperties: .init(
-            exposureDuration: CMTime(value: 250, timescale: 1000),
-            cameraDeviceType: .builtInDualCamera,
-            isVirtualDevice: true,
-            lensPosition: 0.3,
-            exposureISO: 0.4,
-            isAdjustingFocus: false
-        )
+            .init(
+                exposureDuration: CMTime(value: 250, timescale: 1000),
+                cameraDeviceType: .builtInDualCamera,
+                isVirtualDevice: true,
+                lensPosition: 0.3,
+                exposureISO: 0.4,
+                isAdjustingFocus: false
+            )
+        ),
+        blurResult: .init(isBlurry: false, blurScore: 0.1)
     )
 
     override class func setUp() {
