@@ -828,7 +828,7 @@ extension DocumentCaptureViewControllerTest {
                 isAdjustingFocus: !isHighQuality
                 )
             ),
-            blurResult: .init(isBlurry: false, blurScore: 0.1)
+            blurResult: .init(isBlurry: false, variance: 0.1)
         )
     }
 
