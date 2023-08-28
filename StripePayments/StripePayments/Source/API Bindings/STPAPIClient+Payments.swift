@@ -726,12 +726,21 @@ extension STPAPIClient {
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
+        createPaymentMethod(with: paymentMethodParams, completion: completion)
+    }
+
+    /// - Parameter additionalPaymentUserAgentValues: A list of values to append to `payment_user_agent` e.g. `["deferred-intent", "autopm"]`
+    func createPaymentMethod(
+        with paymentMethodParams: STPPaymentMethodParams,
+        additionalPaymentUserAgentValues: [String] = [],
+        completion: @escaping STPPaymentMethodCompletionBlock
+    ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
             with: _stored_configuration,
             paymentMethodType: paymentMethodParams.rawTypeString
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
-        parameters = Self.paramsAddingPaymentUserAgent(parameters)
+        parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: APIEndpointPaymentMethods,
@@ -747,9 +756,9 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
     /// - Returns: the returned PaymentMethod object.
-    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams) async throws -> STPPaymentMethod {
+    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation({ continuation in
-            createPaymentMethod(with: paymentMethodParams) { paymentMethod, error in
+            createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
                 if let paymentMethod = paymentMethod {
                     continuation.resume(with: .success(paymentMethod))
                 } else {
