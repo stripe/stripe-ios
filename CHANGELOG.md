@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.15.0 2023-08-28
 ### PaymentSheet
 * [Added] Support for AmazonPay (private beta), BLIK, and FPX with PaymentIntents.
 * [Fixed] A bug where payment amounts were not displayed correctly for LAK currency.
