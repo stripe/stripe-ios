@@ -110,13 +110,15 @@ extension DocumentScanner: ImageScanner {
 
         let blurResult: LaplacianBlurDetector.Output = try {
             let originalImage = pixelBuffer.cgImage()
-            let croppedImage = try originalImage?.cropping(
+            guard let croppedImage = try originalImage?.cropping(
                 toNormalizedRegion: idDetectorOutput.documentBounds,
                 withPadding: highResImageCropPadding,
                 computationMethod: .maxImageWidthOrHeight
             )
-            let blurResult = blurDetector.calculateBlurOutput(inputImage: croppedImage!)
-            return blurResult
+            else {
+                return LaplacianBlurDetector.defaultOutput
+            }
+            return blurDetector.calculateBlurOutput(inputImage: croppedImage)
         }()
         return DocumentScannerOutput(
             idDetectorOutput: idDetectorOutput,
