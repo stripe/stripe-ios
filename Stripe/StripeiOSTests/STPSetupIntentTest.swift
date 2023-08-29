@@ -53,7 +53,7 @@ class STPSetupIntentTest: XCTestCase {
         ] as [String: Any]
         let unactivatedPaymentMethodTypes = ["sepa_debit"]
         let cardBrandChoice = ["eligible": true,
-                                      "preferred_networks": ["cartes_bancaires", "visa"], ] as [String: Any]
+                               "preferred_networks": ["cartes_bancaires", "visa"], ] as [String: Any]
         let response = [
             "payment_method_preference": setupIntentResponse,
             "unactivated_payment_method_types": unactivatedPaymentMethodTypes,
