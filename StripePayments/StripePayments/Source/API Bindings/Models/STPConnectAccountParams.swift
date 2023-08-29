@@ -25,16 +25,16 @@ public class STPConnectAccountParams: NSObject {
 
     /// Boolean indicating that the Terms Of Service were shown to the user &
     /// the user accepted them.
-    @objc public let tosShownAndAccepted: NSNumber?
+    @objc public var tosShownAndAccepted: NSNumber?
 
     /// The business type.
-    @objc public let businessType: STPConnectAccountBusinessType
+    @objc public var businessType: STPConnectAccountBusinessType
 
     /// Information about the individual represented by the account.
-    @objc public let individual: STPConnectAccountIndividualParams?
+    @objc public var individual: STPConnectAccountIndividualParams?
 
     /// Information about the company or business.
-    @objc public let company: STPConnectAccountCompanyParams?
+    @objc public var company: STPConnectAccountCompanyParams?
 
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
