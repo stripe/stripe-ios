@@ -114,6 +114,7 @@ class STPAPIClientTest: XCTestCase {
     }
 
     func testPaymentUserAgent() {
+        STPAnalyticsClient.sharedClient.productUsage = .init()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: MockUAUsageClass.self)
         var params: [String: Any] = [:]
         params = STPAPIClient.paramsAddingPaymentUserAgent(params)

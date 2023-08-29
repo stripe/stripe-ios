@@ -726,7 +726,7 @@ extension STPAPIClient {
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
-        createPaymentMethod(with: paymentMethodParams, completion: completion)
+        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], completion: completion)
     }
 
     /// - Parameter additionalPaymentUserAgentValues: A list of values to append to `payment_user_agent` e.g. `["deferred-intent", "autopm"]`
