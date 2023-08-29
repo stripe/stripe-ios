@@ -39,9 +39,9 @@ end
 
 def push_tag
   unless @is_dry_run
-    # Create a signed git tag and push to GitHub: git tag -s X.Y.Z -m "Version X.Y.Z" && git push origin --tags
+    # Create a signed git tag and push to GitHub: git tag -s X.Y.Z -m "Version X.Y.Z" && git push origin X.Y.Z
     run_command("git tag -s #{@version} -m \"Version #{@version}\"")
-    run_command('git push origin --tags')
+    run_command("git push origin #{@version}")
   end
 end
 
