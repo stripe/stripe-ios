@@ -52,9 +52,12 @@ class STPSetupIntentTest: XCTestCase {
             "ordered_payment_method_types": orderedPaymentJson,
         ] as [String: Any]
         let unactivatedPaymentMethodTypes = ["sepa_debit"]
+        let cardBrandChoice = ["eligible": true,
+                                      "preferred_networks": ["cartes_bancaires", "visa"], ] as [String: Any]
         let response = [
             "payment_method_preference": setupIntentResponse,
             "unactivated_payment_method_types": unactivatedPaymentMethodTypes,
+            "card_brand_choice": cardBrandChoice,
         ] as [String: Any]
 
         guard let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: response) else { XCTFail(); return }
@@ -94,5 +97,9 @@ class STPSetupIntentTest: XCTestCase {
         XCTAssertEqual(setupIntent.lastSetupError?.type, STPSetupIntentLastSetupErrorType.invalidRequest)
 
         XCTAssertEqual(setupIntent.unactivatedPaymentMethodTypes, [.SEPADebit])
+
+        // Card brand choice
+        XCTAssertEqual(setupIntent.cardBrandChoice?.eligible, true)
+        XCTAssertEqual(setupIntent.cardBrandChoice?.preferredNetworks, ["cartes_bancaires", "visa"])
     }
 }

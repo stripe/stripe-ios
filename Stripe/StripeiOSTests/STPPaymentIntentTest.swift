@@ -70,10 +70,13 @@ class STPPaymentIntentTest: XCTestCase {
                 "ordered_payment_method_types": orderedPaymentJson,
             ] as [String: Any]
         let unactivatedPaymentMethodTypes = ["sepa_debit"]
+        let cardBrandChoice = ["eligible": true,
+                              "preferred_networks": ["cartes_bancaires", "visa"], ] as [String: Any]
         let response =
             [
                 "payment_method_preference": paymentIntentResponse,
                 "unactivated_payment_method_types": unactivatedPaymentMethodTypes,
+                "card_brand_choice": cardBrandChoice,
             ] as [String: Any]
 
         let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: response)!
@@ -179,9 +182,14 @@ class STPPaymentIntentTest: XCTestCase {
             ["SEPA Debit"]
         )
 
+        // Card brand choice
+        XCTAssertEqual(paymentIntent.cardBrandChoice?.eligible, true)
+        XCTAssertEqual(paymentIntent.cardBrandChoice?.preferredNetworks, ["cartes_bancaires", "visa"])
+
         var allResponseFields = paymentIntentJson
         allResponseFields["ordered_payment_method_types"] = orderedPaymentJson
         allResponseFields["unactivated_payment_method_types"] = unactivatedPaymentMethodTypes
+        allResponseFields["card_brand_choice"] = cardBrandChoice
         XCTAssertEqual(
             paymentIntent.allResponseFields as NSDictionary,
             allResponseFields as NSDictionary
