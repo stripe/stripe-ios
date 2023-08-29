@@ -729,7 +729,7 @@ extension STPAPIClient {
         createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], completion: completion)
     }
 
-    /// - Parameter additionalPaymentUserAgentValues: A list of values to append to `payment_user_agent` e.g. `["deferred-intent", "autopm"]`
+    /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         additionalPaymentUserAgentValues: [String] = [],
@@ -755,6 +755,7 @@ extension STPAPIClient {
     /// - seealso: https://stripe.com/docs/api/payment_methods/create
     /// - Parameters:
     ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
+    ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     /// - Returns: the returned PaymentMethod object.
     public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation({ continuation in

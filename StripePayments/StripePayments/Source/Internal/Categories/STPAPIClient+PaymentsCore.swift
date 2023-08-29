@@ -10,6 +10,8 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension STPAPIClient {
+
+    /// - Parameter additionalValues: A list of values to append to the `payment_user_agent`. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     @_spi(STP) public class func paramsAddingPaymentUserAgent(
         _ params: [String: Any],
         additionalValues: [String] = []
