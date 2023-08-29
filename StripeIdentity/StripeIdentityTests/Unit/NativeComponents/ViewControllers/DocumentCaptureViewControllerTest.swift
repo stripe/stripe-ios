@@ -819,13 +819,16 @@ extension DocumentCaptureViewControllerTest {
                 duration: 0
             ),
             cameraProperties: .init(
+                .init(
                 exposureDuration: CMTime(),
                 cameraDeviceType: .builtInDualCamera,
                 isVirtualDevice: nil,
                 lensPosition: 0,
                 exposureISO: 0,
                 isAdjustingFocus: !isHighQuality
-            )
+                )
+            ),
+            blurResult: .init(isBlurry: false, variance: 0.1)
         )
     }
 

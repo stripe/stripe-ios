@@ -17,6 +17,7 @@ struct DocumentScannerOutput: Equatable {
     let barcode: BarcodeDetectorOutput?
     let motionBlur: MotionBlurDetector.Output
     let cameraProperties: CameraSession.DeviceProperties?
+    let blurResult: LaplacianBlurDetector.Output
 
     /// Determines if the document is high quality and matches the desired
     /// document type and side.
@@ -33,5 +34,6 @@ struct DocumentScannerOutput: Equatable {
         return idDetectorOutput.classification.matchesDocument(type: type, side: side)
             && cameraProperties?.isAdjustingFocus != true
             && !motionBlur.hasMotionBlur
+            && blurResult.isBlurry != true
     }
 }

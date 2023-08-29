@@ -25,6 +25,7 @@ extension StripeAPI {
         let motionBlurMinDuration: Int
         let motionBlurMinIou: Decimal
         let requireLiveCapture: Bool
+        let blurThreshold: Decimal?
     }
 
 }

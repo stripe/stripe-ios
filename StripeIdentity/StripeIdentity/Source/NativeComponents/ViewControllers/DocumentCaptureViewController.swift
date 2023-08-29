@@ -521,6 +521,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             exifMetadata: exifMetadata,
             method: .autoCapture
         )
+        sheetController?.analyticsClient.updateBlurScore(scannerOutput.blurResult.variance, for: documentSide)
 
         imageScanningSession.setStateScanned(
             expectedClassification: documentSide,
