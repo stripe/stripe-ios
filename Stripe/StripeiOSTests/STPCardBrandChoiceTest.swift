@@ -10,29 +10,12 @@ import Foundation
 import XCTest
 
 class STPCardBrandChoiceTest: XCTestCase {
+
     func testDecodingHappy() throws {
-        let responseDict = ["eligible": true,
-                            "preferred_networks": ["cartes_bancaires", "visa"], ] as [String: Any]
+        let responseDict = ["eligible": true]
 
         let cardBranceChoice = try XCTUnwrap(STPCardBrandChoice.decodedObject(fromAPIResponse: responseDict))
         XCTAssertEqual(true, cardBranceChoice.eligible)
-        XCTAssertEqual(["cartes_bancaires", "visa"], cardBranceChoice.preferredNetworks)
-    }
-
-    func testDecodingMissingNetworks() throws {
-        let responseDict = ["eligible": true] as [String: Any]
-
-        let cardBranceChoice = try XCTUnwrap(STPCardBrandChoice.decodedObject(fromAPIResponse: responseDict))
-        XCTAssertEqual(true, cardBranceChoice.eligible)
-        XCTAssertNil(cardBranceChoice.preferredNetworks)
-    }
-
-    func testDecodingMissingEligible() throws {
-        let responseDict = ["preferred_networks": ["cartes_bancaires", "visa"]] as [String: Any]
-
-        let cardBranceChoice = try XCTUnwrap(STPCardBrandChoice.decodedObject(fromAPIResponse: responseDict))
-        XCTAssertEqual(false, cardBranceChoice.eligible)
-        XCTAssertEqual(["cartes_bancaires", "visa"], cardBranceChoice.preferredNetworks)
     }
 
     func testDecodingNil() throws {
@@ -42,6 +25,5 @@ class STPCardBrandChoiceTest: XCTestCase {
     func testDecodingEmpty() throws {
         let cardBranceChoice = try XCTUnwrap(STPCardBrandChoice.decodedObject(fromAPIResponse: [:]))
         XCTAssertEqual(false, cardBranceChoice.eligible)
-        XCTAssertNil(cardBranceChoice.preferredNetworks)
     }
 }

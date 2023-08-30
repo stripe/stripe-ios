@@ -15,9 +15,6 @@ import Foundation
     /// Determines if this intent is eligible for card brand choice
     public let eligible: Bool
 
-    /// An optional array of preferred card networks
-    public let preferredNetworks: [String]?
-
     /// :nodoc:
     public let allResponseFields: [AnyHashable: Any]
 
@@ -28,7 +25,6 @@ import Foundation
             String(format: "%@: %p", NSStringFromClass(STPCardBrandChoice.self), self),
             // Properties
             "eligible = \(String(describing: eligible))",
-            "preferredNetworks = \(String(describing: preferredNetworks))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -36,11 +32,9 @@ import Foundation
 
     private init(
         eligible: Bool,
-        preferredNetworks: [String]?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.eligible = eligible
-        self.preferredNetworks = preferredNetworks
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -57,7 +51,6 @@ extension STPCardBrandChoice: STPAPIResponseDecodable {
 
         return STPCardBrandChoice(
             eligible: dict["eligible"] as? Bool ?? false,
-            preferredNetworks: dict["preferred_networks"] as? [String],
             allResponseFields: dict
         ) as? Self
     }

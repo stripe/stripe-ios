@@ -52,8 +52,7 @@ class STPSetupIntentTest: XCTestCase {
             "ordered_payment_method_types": orderedPaymentJson,
         ] as [String: Any]
         let unactivatedPaymentMethodTypes = ["sepa_debit"]
-        let cardBrandChoice = ["eligible": true,
-                               "preferred_networks": ["cartes_bancaires", "visa"], ] as [String: Any]
+        let cardBrandChoice = ["eligible": true]
         let response = [
             "payment_method_preference": setupIntentResponse,
             "unactivated_payment_method_types": unactivatedPaymentMethodTypes,
@@ -100,6 +99,5 @@ class STPSetupIntentTest: XCTestCase {
 
         // Card brand choice
         XCTAssertEqual(setupIntent.cardBrandChoice?.eligible, true)
-        XCTAssertEqual(setupIntent.cardBrandChoice?.preferredNetworks, ["cartes_bancaires", "visa"])
     }
 }
