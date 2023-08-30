@@ -218,8 +218,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             usage: .none,
             lastSetupError: nil,
             allResponseFields: [:],
-            unactivatedPaymentMethodTypes: [],
-            cardBrandChoice: nil
+            unactivatedPaymentMethodTypes: []
         )
 
         // We expect this request to retry a few times with exponential backoff before calling the completion handler.
