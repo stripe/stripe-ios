@@ -31,6 +31,12 @@ final class STPElementsSession: NSObject {
     /// A map describing payment method types form specs.
     let paymentMethodSpecs: [[AnyHashable: Any]]?
 
+    /// An object containing Customer's saved payment methods information
+    let legacy_customer: STPLegacyElementsCustomer?
+
+    /// An error associated with operations surrounding legacy_customer
+    let customer_error: STPElementsCustomerError?
+
     let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
@@ -45,6 +51,8 @@ final class STPElementsSession: NSObject {
             "countryCode = \(String(describing: countryCode))",
             "merchantCountryCode = \(String(describing: merchantCountryCode))",
             "paymentMethodSpecs = \(String(describing: paymentMethodSpecs))",
+            "legacy_customer = \(String(describing:legacy_customer))",
+            "customer_error = \(String(describing:customer_error))"
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -58,7 +66,9 @@ final class STPElementsSession: NSObject {
         countryCode: String?,
         merchantCountryCode: String?,
         linkSettings: LinkSettings?,
-        paymentMethodSpecs: [[AnyHashable: Any]]?
+        paymentMethodSpecs: [[AnyHashable: Any]]?,
+        legacy_customer: STPLegacyElementsCustomer?,
+        customer_error: STPElementsCustomerError?
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -68,6 +78,8 @@ final class STPElementsSession: NSObject {
         self.merchantCountryCode = merchantCountryCode
         self.linkSettings = linkSettings
         self.paymentMethodSpecs = paymentMethodSpecs
+        self.legacy_customer = legacy_customer
+        self.customer_error = customer_error
         super.init()
     }
 }
@@ -94,7 +106,9 @@ extension STPElementsSession: STPAPIResponseDecodable {
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]
             ),
-            paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]]
+            paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]],
+            legacy_customer: STPLegacyElementsCustomer.decodedObject(fromAPIResponse: dict),
+            customer_error: STPElementsCustomerError.decodedObject(fromAPIResponse: dict)
         ) as? Self
     }
 }

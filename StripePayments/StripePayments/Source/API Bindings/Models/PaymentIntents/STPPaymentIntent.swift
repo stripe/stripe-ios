@@ -273,6 +273,8 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             dict["link_settings"] = response["link_settings"]
             dict["payment_method_specs"] = response["payment_method_specs"]
             dict["card_brand_choice"] = response["card_brand_choice"]
+            dict["legacy_customer"] = response["legacy_customer"]
+            dict["customer_error"] = response["customer_error"]
             return decodeSTPPaymentIntentObject(fromAPIResponse: dict)
         } else {
             return decodeSTPPaymentIntentObject(fromAPIResponse: response)

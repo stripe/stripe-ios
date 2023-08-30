@@ -35,14 +35,15 @@ final class PaymentSheetLoader {
                 // Fetch PaymentIntent, SetupIntent, or ElementsSession
                 async let _intent = fetchIntent(mode: mode, configuration: configuration)
 
-                // List the Customer's saved PaymentMethods
-                // TODO: Use v1/elements/sessions to fetch saved PMS https://jira.corp.stripe.com/browse/MOBILESDK-964
-                async let savedPaymentMethods = fetchSavedPaymentMethods(configuration: configuration)
 
                 // Load misc singletons
                 await loadMiscellaneousSingletons()
 
                 let intent = try await _intent
+
+                // List the Customer's saved PaymentMethods
+                async let savedPaymentMethods = getPaymentMethodsStrategy(intent: intent, configuration: configuration)
+
                 // Overwrite the form specs that were already loaded from disk
                 switch intent {
                 case .paymentIntent(let paymentIntent):
@@ -59,7 +60,7 @@ final class PaymentSheetLoader {
 
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                 // TODO: Use v1/elements/sessions to fetch saved PMS https://jira.corp.stripe.com/browse/MOBILESDK-964
-                let filteredSavedPaymentMethods = try await savedPaymentMethods
+                let filteredSavedPaymentMethods = try await savedPaymentMethods.value
                     .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
                     .filter {
                         $0.paymentSheetPaymentMethodType().supportsSavedPaymentMethod(
@@ -145,7 +146,11 @@ final class PaymentSheetLoader {
         case .paymentIntentClientSecret(let clientSecret):
             let paymentIntent: STPPaymentIntent
             do {
-                paymentIntent = try await configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret)
+                if let ephemeralKey = configuration.customer?.ephemeralKeySecret {
+                    paymentIntent = try await configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret, additionalParams:["legacy_customer_ephemeral_key": ephemeralKey])
+                } else {
+                    paymentIntent = try await configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret)
+                }
             } catch {
                 // Fallback to regular retrieve PI when retrieve PI with preferences fails
                 paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
@@ -187,6 +192,44 @@ final class PaymentSheetLoader {
             print(message)
         }
         return intent
+    }
+
+    static func getPaymentMethodsStrategy(intent: Intent, configuration: PaymentSheet.Configuration) -> Task<[STPPaymentMethod], Error> {
+        if let saved = getPaymentMethodsFrom(intent: intent) {
+            return Task {
+                saved
+            }
+        } else {
+            return Task {
+                return try await fetchSavedPaymentMethods(configuration: configuration)
+            }
+        }
+    }
+
+    static func getPaymentMethodsFrom(intent: Intent) -> [STPPaymentMethod]? {
+        switch intent {
+        case .paymentIntent(let underlyingIntent):
+            let dict = underlyingIntent.allResponseFields
+            if let _ = STPElementsCustomerError.decodedObject(fromAPIResponse: dict) {
+                return nil
+            } else if let legacyElementsCustomer = STPLegacyElementsCustomer.decodedObject(fromAPIResponse: dict) {
+                return legacyElementsCustomer.payment_methods
+            }
+        case .setupIntent(let underlyingIntent):
+            let dict = underlyingIntent.allResponseFields
+            if let _ = STPElementsCustomerError.decodedObject(fromAPIResponse: dict) {
+                return nil
+            } else if let legacyElementsCustomer = STPLegacyElementsCustomer.decodedObject(fromAPIResponse: dict) {
+                return legacyElementsCustomer.payment_methods
+            }
+        case .deferredIntent(let elementsSession, _):
+            if let _ = elementsSession.customer_error {
+                return nil
+            } else if let payment_methods = elementsSession.legacy_customer?.payment_methods {
+                return payment_methods
+            }
+        }
+        return nil
     }
 
     static func fetchSavedPaymentMethods(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {

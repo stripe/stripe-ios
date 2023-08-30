@@ -14,7 +14,8 @@ extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
 
     func retrievePaymentIntentWithPreferences(
-        withClientSecret secret: String
+        withClientSecret secret: String,
+        additionalParams: [String: Any]? = nil
     ) async throws -> STPPaymentIntent {
         guard STPPaymentIntentParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
             throw NSError.stp_clientSecretError()
@@ -25,7 +26,9 @@ extension STPAPIClient {
         parameters["type"] = "payment_intent"
         parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
-
+        additionalParams?.forEach({(key, value) in
+            parameters[key] = value
+        })
         return try await APIRequest<STPPaymentIntent>.getWith(
             self,
             endpoint: APIEndpointIntentWithPreferences,
@@ -44,7 +47,7 @@ extension STPAPIClient {
         )
     }
 
-    func retrieveElementsSessionForCustomerSheet() async throws -> STPElementsSession {
+    func retrieveElementsSessionForCustomerSheet(additionalParams: [String: Any]? = nil) async throws -> STPElementsSession {
         var parameters: [String: Any] = [:]
         parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
@@ -52,6 +55,9 @@ extension STPAPIClient {
         var deferredIntent = [String: Any]()
         deferredIntent["mode"] = "setup"
         parameters["deferred_intent"] = deferredIntent
+        additionalParams?.forEach({(key, value) in
+            parameters[key] = value
+        })
 
         return try await APIRequest<STPElementsSession>.getWith(
             self,
