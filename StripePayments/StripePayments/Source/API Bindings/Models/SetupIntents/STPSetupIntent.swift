@@ -49,8 +49,6 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     @_spi(STP) public let countryCode: String?
     /// Country code of the merchant.
     @_spi(STP) public let merchantCountryCode: String?
-    /// Card brand choice settings for the merchant.
-    @_spi(STP) public let cardBrandChoice: STPCardBrandChoice?
     // MARK: - Deprecated
 
     /// Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
@@ -85,8 +83,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         usage: STPSetupIntentUsage,
         lastSetupError: STPSetupIntentLastSetupError?,
         allResponseFields: [AnyHashable: Any],
-        unactivatedPaymentMethodTypes: [STPPaymentMethodType],
-        cardBrandChoice: STPCardBrandChoice?
+        unactivatedPaymentMethodTypes: [STPPaymentMethodType]
     ) {
         self.stripeID = stripeID
         self.clientSecret = clientSecret
@@ -108,7 +105,6 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         self.lastSetupError = lastSetupError
         self.allResponseFields = allResponseFields
         self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
-        self.cardBrandChoice = cardBrandChoice
         super.init()
     }
 
@@ -137,7 +133,6 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             "status = \(allResponseFields.stp_string(forKey: "status") ?? "")",
             "usage = \(allResponseFields.stp_string(forKey: "usage") ?? "")",
             "unactivatedPaymentMethodTypes = \(allResponseFields.stp_array(forKey: "unactivated_payment_method_types") ?? [])",
-            "cardBrandChoice = \(String(describing: cardBrandChoice))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -200,7 +195,6 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             dict["unactivated_payment_method_types"] = response["unactivated_payment_method_types"]
             dict["merchant_country"] = response["merchant_country"]
             dict["link_settings"] = response["link_settings"]
-            dict["card_brand_choice"] = response["card_brand_choice"]
             return decodeSTPSetupIntentObject(fromAPIResponse: dict)
         } else {
             return decodeSTPSetupIntentObject(fromAPIResponse: response)
@@ -255,7 +249,6 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         let unactivatedPaymentTypes = STPPaymentMethod.paymentMethodTypes(
             from: dict["unactivated_payment_method_types"] as? [String] ?? []
         )
-        let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: dict["card_brand_choice"] as? [AnyHashable: Any])
 
         let setupIntent = self.init(
             stripeID: stripeId,
@@ -277,8 +270,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             usage: usage,
             lastSetupError: lastSetupError,
             allResponseFields: response,
-            unactivatedPaymentMethodTypes: unactivatedPaymentTypes,
-            cardBrandChoice: cardBrandChoice
+            unactivatedPaymentMethodTypes: unactivatedPaymentTypes
         )
 
         return setupIntent
