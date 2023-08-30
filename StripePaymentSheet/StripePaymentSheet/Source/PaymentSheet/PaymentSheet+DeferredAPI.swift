@@ -20,9 +20,6 @@ extension PaymentSheet {
         mandateData: STPMandateDataParams? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        // Hack: Add deferred to analytics product usage as a hack to get it into the payment_user_agent string in the request to create a PaymentMethod
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: IntentConfiguration.self)
-
         Task { @MainActor in
             do {
                 var confirmType = confirmType
@@ -33,7 +30,7 @@ extension PaymentSheet {
                     paymentMethod = savedPaymentMethod
                 case let .new(params, paymentOptions, newPaymentMethod, shouldSave):
                     assert(newPaymentMethod == nil)
-                    paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params)
+                    paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
                     confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave)
                 }
 
@@ -141,10 +138,14 @@ extension PaymentSheet {
             }
         }
     }
-}
 
-@_spi(STP) extension PaymentSheet.IntentConfiguration: STPAnalyticsProtocol {
-    public static var stp_analyticsIdentifier: String {
-        return "deferred-intent"
+    static func makeDeferredPaymentUserAgentValue(intentConfiguration: IntentConfiguration) -> [String] {
+        var paymentUserAgentValues = ["deferred-intent"]
+        if intentConfiguration.paymentMethodTypes?.isEmpty ?? true {
+            // Add "autopm" tag when using deferred intents and merchant is using automatic_payment_methods
+            // If paymentMethodTypes is empty, assume they are using automatic_payment_methods.
+            paymentUserAgentValues.append("autopm")
+        }
+        return paymentUserAgentValues
     }
 }

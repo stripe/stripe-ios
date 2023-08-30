@@ -726,12 +726,21 @@ extension STPAPIClient {
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
+        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], completion: completion)
+    }
+
+    /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    func createPaymentMethod(
+        with paymentMethodParams: STPPaymentMethodParams,
+        additionalPaymentUserAgentValues: [String] = [],
+        completion: @escaping STPPaymentMethodCompletionBlock
+    ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
             with: _stored_configuration,
             paymentMethodType: paymentMethodParams.rawTypeString
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
-        parameters = Self.paramsAddingPaymentUserAgent(parameters)
+        parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: APIEndpointPaymentMethods,
@@ -746,10 +755,11 @@ extension STPAPIClient {
     /// - seealso: https://stripe.com/docs/api/payment_methods/create
     /// - Parameters:
     ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
+    ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     /// - Returns: the returned PaymentMethod object.
-    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams) async throws -> STPPaymentMethod {
+    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation({ continuation in
-            createPaymentMethod(with: paymentMethodParams) { paymentMethod, error in
+            createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
                 if let paymentMethod = paymentMethod {
                     continuation.resume(with: .success(paymentMethod))
                 } else {

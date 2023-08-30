@@ -12,8 +12,8 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
 class PaymentSheetAPITest: XCTestCase {
@@ -1040,6 +1040,24 @@ class PaymentSheetAPITest: XCTestCase {
             // ...should have mandate data
             XCTAssertNotNil(params_for_si_with_sfu.mandateData)
         }
+    }
+
+    func testMakeDeferredPaymentUserAgent() {
+        let intentConfig_with_nil_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD"), confirmHandler: { _, _, _  in })
+        XCTAssertEqual(
+            PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig_with_nil_payment_method_types),
+            ["deferred-intent", "autopm"]
+        )
+        let intentConfig_with_empty_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD"), paymentMethodTypes: [], confirmHandler: { _, _, _  in })
+        XCTAssertEqual(
+            PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig_with_nil_payment_method_types),
+            ["deferred-intent", "autopm"]
+        )
+        let intentConfig_with_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: { _, _, _  in })
+        XCTAssertEqual(
+            PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig_with_payment_method_types),
+            ["deferred-intent"]
+        )
     }
 }
 
