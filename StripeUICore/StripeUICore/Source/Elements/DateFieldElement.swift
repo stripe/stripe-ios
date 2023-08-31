@@ -156,6 +156,10 @@ extension DateFieldElement: PickerFieldViewDelegate {
         }
         delegate?.continueToNextField(element: self)
     }
+    
+    func didCancel(_ pickerFieldView: PickerFieldView) {
+        // no-op
+    }
 }
 
 // MARK: - Private Helpers

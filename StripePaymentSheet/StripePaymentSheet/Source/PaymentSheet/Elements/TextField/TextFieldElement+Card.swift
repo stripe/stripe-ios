@@ -18,7 +18,20 @@ extension DropdownFieldElement {
         theme: ElementsUITheme
     ) -> DropdownFieldElement {
         
-        let dropDownItems: [DropdownFieldElement.DropdownItem] = STPCardBrand.allCases.map {
+        let brandImageAttachment = NSTextAttachment()
+        brandImageAttachment.image = STPImageLibrary.cardBrandImage(
+            for: .unknown
+        )
+
+        // wrap the attachment in its own attributed string so we can append it
+        let brandImageString = NSAttributedString(attachment: brandImageAttachment)
+        
+        var dropDownItems: [DropdownFieldElement.DropdownItem] = [.init(pickerDisplayName: NSAttributedString(string: "Select card brand (optional)"),
+                                                                        labelDisplayName: brandImageString,
+                                                                        accessibilityValue: "Default",
+                                                                        rawData: "-1", isPlaceholder: true)]
+        
+        dropDownItems += STPCardBrand.allCases.map {
             let brandName = STPCardBrandUtilities.stringFrom($0) ?? ""
             let brandImageAttachment = NSTextAttachment()
             brandImageAttachment.image = STPImageLibrary.cardBrandImage(

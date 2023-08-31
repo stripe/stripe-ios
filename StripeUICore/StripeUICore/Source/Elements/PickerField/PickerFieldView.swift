@@ -11,6 +11,7 @@ import UIKit
 protocol PickerFieldViewDelegate: AnyObject {
     func didBeginEditing(_ pickerFieldView: PickerFieldView)
     func didFinish(_ pickerFieldView: PickerFieldView)
+    func didCancel(_ pickerFieldView: PickerFieldView)
 }
 
 extension NSAttributedString {
@@ -37,7 +38,7 @@ extension NSAttributedString {
 @objc(STP_Internal_PickerFieldView)
 final class PickerFieldView: UIView {
     // MARK: - Views
-    private lazy var toolbar = DoneButtonToolbar(delegate: self)
+    private lazy var toolbar = DoneButtonToolbar(delegate: self, showCancelButton: true, theme: theme)
     private lazy var textField: UITextField = {
         let textField = PickerTextField()
         textField.inputView = pickerView
@@ -146,7 +147,7 @@ final class PickerFieldView: UIView {
 
     override var isUserInteractionEnabled: Bool {
         didSet {
-//            textField.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
+            textField.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
             if frame.size != .zero {
                 textField.layoutIfNeeded()  // Fixes an issue on iOS 15 where setting textField properties causes it to lay out from zero size.
             }
@@ -225,6 +226,12 @@ extension PickerFieldView: UITextFieldDelegate {
 
 extension PickerFieldView: DoneButtonToolbarDelegate {
     func didTapDone(_ toolbar: DoneButtonToolbar) {
+        _ = textField.resignFirstResponder()
+    }
+    
+    func didTapCancel(_ toolbar: DoneButtonToolbar) {
+        // reset to original input and hide
+        delegate?.didCancel(self)
         _ = textField.resignFirstResponder()
     }
 }

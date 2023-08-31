@@ -20,17 +20,19 @@ import UIKit
     public typealias DidUpdateSelectedIndex = (Int) -> Void
 
     public struct DropdownItem {
-        public init(pickerDisplayName: NSAttributedString, labelDisplayName: NSAttributedString, accessibilityValue: String, rawData: String) {
+        public init(pickerDisplayName: NSAttributedString, labelDisplayName: NSAttributedString, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false) {
             self.pickerDisplayName = pickerDisplayName
             self.labelDisplayName = labelDisplayName
             self.accessibilityValue = accessibilityValue
+            self.isPlaceholder = isPlaceholder
             self.rawData = rawData
         }
         
-        public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String) {
+        public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false) {
             self.pickerDisplayName = NSAttributedString(string: pickerDisplayName)
             self.labelDisplayName = NSAttributedString(string: labelDisplayName)
             self.accessibilityValue = accessibilityValue
+            self.isPlaceholder = isPlaceholder
             self.rawData = rawData
         }
 
@@ -47,6 +49,8 @@ import UIKit
         /// e.g., A country dropdown item might display "United States" but its `rawData` is "US".
         /// This is ignored by `DropdownFieldElement`, and is intended as a convenience to be used in conjunction with `selectedItem`
         public let rawData: String
+        
+        public let isPlaceholder: Bool
     }
 
     // MARK: - Public properties
@@ -167,7 +171,14 @@ extension DropdownFieldElement: Element {
 extension DropdownFieldElement: UIPickerViewDelegate {
     
     public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        return items[row].pickerDisplayName
+        let item = items[row]
+        if item.isPlaceholder {
+            let placerholderString = NSMutableAttributedString.init(string: item.pickerDisplayName.string)
+            placerholderString.addAttribute(NSAttributedString.Key.foregroundColor, value: theme.colors.secondaryText, range: NSRange(location: 0, length: item.pickerDisplayName.length))
+            return placerholderString
+        }
+
+        return item.pickerDisplayName
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -198,5 +209,9 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
         }
         previouslySelectedIndex = selectedIndex
         delegate?.continueToNextField(element: self)
+    }
+    
+    func didCancel(_ pickerFieldView: PickerFieldView) {
+        selectedIndex = previouslySelectedIndex
     }
 }
