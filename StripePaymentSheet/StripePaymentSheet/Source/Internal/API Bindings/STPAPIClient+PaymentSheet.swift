@@ -37,9 +37,13 @@ extension STPAPIClient {
     }
 
     func retrieveElementsSession(
-        withIntentConfig intentConfig: PaymentSheet.IntentConfiguration
+        withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
+        additionalParams: [String: Any]? = nil
     ) async throws -> STPElementsSession {
-        let parameters = intentConfig.elementsSessionParameters(publishableKey: publishableKey)
+        var parameters = intentConfig.elementsSessionParameters(publishableKey: publishableKey)
+        additionalParams?.forEach({(key, value) in
+            parameters[key] = value
+        })
         return try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointIntentWithPreferences,
@@ -67,7 +71,8 @@ extension STPAPIClient {
     }
 
     func retrieveSetupIntentWithPreferences(
-        withClientSecret secret: String
+        withClientSecret secret: String,
+        additionalParams: [String: Any]? = nil
     ) async throws -> STPSetupIntent {
         guard STPSetupIntentConfirmParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
             throw NSError.stp_clientSecretError()
@@ -78,6 +83,9 @@ extension STPAPIClient {
         parameters["type"] = "setup_intent"
         parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
+        additionalParams?.forEach({(key, value) in
+            parameters[key] = value
+        })
 
         return try await APIRequest<STPSetupIntent>.getWith(
             self,

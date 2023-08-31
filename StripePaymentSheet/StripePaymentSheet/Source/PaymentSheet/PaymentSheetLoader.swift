@@ -35,7 +35,6 @@ final class PaymentSheetLoader {
                 // Fetch PaymentIntent, SetupIntent, or ElementsSession
                 async let _intent = fetchIntent(mode: mode, configuration: configuration)
 
-
                 // Load misc singletons
                 await loadMiscellaneousSingletons()
 
@@ -142,15 +141,12 @@ final class PaymentSheetLoader {
 
     static func fetchIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration) async throws -> Intent {
         let intent: Intent
+        let additionalParams = additionalParams(configuration: configuration)
         switch mode {
         case .paymentIntentClientSecret(let clientSecret):
             let paymentIntent: STPPaymentIntent
             do {
-                if let ephemeralKey = configuration.customer?.ephemeralKeySecret {
-                    paymentIntent = try await configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret, additionalParams:["legacy_customer_ephemeral_key": ephemeralKey])
-                } else {
-                    paymentIntent = try await configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret)
-                }
+                paymentIntent = try await configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret, additionalParams: additionalParams)
             } catch {
                 // Fallback to regular retrieve PI when retrieve PI with preferences fails
                 paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
@@ -163,7 +159,7 @@ final class PaymentSheetLoader {
         case .setupIntentClientSecret(let clientSecret):
             let setupIntent: STPSetupIntent
             do {
-                setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret)
+                setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret, additionalParams: additionalParams)
             } catch {
                 // Fallback to regular retrieve SI when retrieve SI with preferences fails
                 setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
@@ -175,7 +171,7 @@ final class PaymentSheetLoader {
             intent = .setupIntent(setupIntent)
 
         case .deferredIntent(let intentConfig):
-            let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig)
+            let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig, additionalParams: additionalParams)
             intent = .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
         }
         // Ensure that there's at least 1 payment method type available for the intent and configuration.
@@ -192,6 +188,13 @@ final class PaymentSheetLoader {
             print(message)
         }
         return intent
+    }
+
+    static func additionalParams(configuration: PaymentSheet.Configuration) -> [String: Any]? {
+        if let ephemeralKey = configuration.customer?.ephemeralKeySecret {
+            return ["legacy_customer_ephemeral_key": ephemeralKey]
+        }
+        return nil
     }
 
     static func getPaymentMethodsStrategy(intent: Intent, configuration: PaymentSheet.Configuration) -> Task<[STPPaymentMethod], Error> {

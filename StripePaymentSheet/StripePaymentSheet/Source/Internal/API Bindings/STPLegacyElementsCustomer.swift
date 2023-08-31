@@ -13,7 +13,6 @@
     /// :nodoc:
     @objc public override var description: String {
         let props: [String] = [
-            // Object
             String(format: "%@: %p", NSStringFromClass(STPLegacyElementsCustomer.self), self),
             "payment_methods = \(String(describing: payment_methods))",
         ]
