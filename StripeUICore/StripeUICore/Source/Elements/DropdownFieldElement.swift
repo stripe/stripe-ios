@@ -20,18 +20,25 @@ import UIKit
     public typealias DidUpdateSelectedIndex = (Int) -> Void
 
     public struct DropdownItem {
-        public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String) {
+        public init(pickerDisplayName: NSAttributedString, labelDisplayName: NSAttributedString, accessibilityValue: String, rawData: String) {
             self.pickerDisplayName = pickerDisplayName
             self.labelDisplayName = labelDisplayName
             self.accessibilityValue = accessibilityValue
             self.rawData = rawData
         }
+        
+        public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String) {
+            self.pickerDisplayName = NSAttributedString(string: pickerDisplayName)
+            self.labelDisplayName = NSAttributedString(string: labelDisplayName)
+            self.accessibilityValue = accessibilityValue
+            self.rawData = rawData
+        }
 
         /// Item label displayed in the picker
-        public let pickerDisplayName: String
+        public let pickerDisplayName: NSAttributedString
 
         /// Item label displayed in inline label when item has been selected
-        public let labelDisplayName: String
+        public let labelDisplayName: NSAttributedString
 
         /// Accessibility value to use when this is in the inline label
         public let accessibilityValue: String
@@ -158,7 +165,8 @@ extension DropdownFieldElement: Element {
 // MARK: UIPickerViewDelegate
 
 extension DropdownFieldElement: UIPickerViewDelegate {
-    public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    
+    public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         return items[row].pickerDisplayName
     }
 

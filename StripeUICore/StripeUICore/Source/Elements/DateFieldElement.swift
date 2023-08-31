@@ -122,7 +122,8 @@ import UIKit
     }
 
     private func updateDisplayText() {
-        pickerFieldView.displayText = selectedDate.map { dateFormatter.string(from: $0) }
+        let selectedDate = selectedDate.map { dateFormatter.string(from: $0) }
+        pickerFieldView.displayText = NSAttributedString(string: selectedDate ?? "")
     }
 }
 

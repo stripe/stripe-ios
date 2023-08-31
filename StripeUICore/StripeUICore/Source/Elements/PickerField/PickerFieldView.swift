@@ -13,6 +13,21 @@ protocol PickerFieldViewDelegate: AnyObject {
     func didFinish(_ pickerFieldView: PickerFieldView)
 }
 
+extension NSAttributedString {
+    var hasTextAttachment: Bool {
+        var hasAttachment = false
+        enumerateAttribute(NSAttributedString.Key.attachment,
+                           in: NSMakeRange(0, length),
+                           options: NSAttributedString.EnumerationOptions(rawValue: 0)) { (value, range, stop) in
+            if (value as? NSTextAttachment) != nil {
+                hasAttachment = true
+            }
+        }
+        
+        return hasAttachment
+    }
+}
+
 /**
  An input field that looks like TextFieldView but whose input is another view.
 
@@ -23,7 +38,7 @@ protocol PickerFieldViewDelegate: AnyObject {
 final class PickerFieldView: UIView {
     // MARK: - Views
     private lazy var toolbar = DoneButtonToolbar(delegate: self)
-    private lazy var textField: PickerTextField = {
+    private lazy var textField: UITextField = {
         let textField = PickerTextField()
         textField.inputView = pickerView
         textField.adjustsFontForContentSizeCategory = true
@@ -66,15 +81,19 @@ final class PickerFieldView: UIView {
     private let theme: ElementsUITheme
 
     // MARK: - Public properties
-    var displayText: String? {
+    var displayText: NSAttributedString? {
         get {
-            return textField.text
+            return textField.attributedText
         }
         set {
-            if newValue != textField.text {
+            if newValue != textField.attributedPlaceholder {
                 invalidateIntrinsicContentSize()
             }
-            textField.text = newValue
+            textField.attributedText = newValue
+            // Unfortunate hack for card brand choice to show card brand logos
+            if (newValue?.hasTextAttachment ?? false) && newValue?.length == 1 {
+                textField.attributedPlaceholder = newValue
+            }
         }
     }
 
@@ -127,7 +146,7 @@ final class PickerFieldView: UIView {
 
     override var isUserInteractionEnabled: Bool {
         didSet {
-            textField.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
+//            textField.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
             if frame.size != .zero {
                 textField.layoutIfNeeded()  // Fixes an issue on iOS 15 where setting textField properties causes it to lay out from zero size.
             }

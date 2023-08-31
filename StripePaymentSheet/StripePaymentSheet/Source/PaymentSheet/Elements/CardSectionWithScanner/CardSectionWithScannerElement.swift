@@ -48,6 +48,7 @@ final class CardSection: ContainerElement {
     // References to the underlying TextFieldElements
     let nameElement: TextFieldElement?
     let panElement: TextFieldElement
+    let cardBrandDropDown: DropdownFieldElement?
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
     let theme: ElementsUITheme
@@ -70,7 +71,8 @@ final class CardSection: ContainerElement {
                 return params
             }
             : nil
-        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan), theme: theme) { field, params in
+        let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(theme: theme)
+        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan, dropDownView: cardBrandDropDown.view), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -113,6 +115,7 @@ final class CardSection: ContainerElement {
 
         self.nameElement = nameElement?.element
         self.panElement = panElement.element
+        self.cardBrandDropDown = cardBrandDropDown
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element
         cardSection.delegate = self
