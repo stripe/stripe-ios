@@ -29,11 +29,11 @@ import UIKit
         }
 
         public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false) {
-            self.pickerDisplayName = NSAttributedString(string: pickerDisplayName)
-            self.labelDisplayName = NSAttributedString(string: labelDisplayName)
-            self.accessibilityValue = accessibilityValue
-            self.isPlaceholder = isPlaceholder
-            self.rawData = rawData
+            self = .init(pickerDisplayName: NSAttributedString(string: pickerDisplayName),
+                         labelDisplayName: NSAttributedString(string: labelDisplayName),
+                         accessibilityValue: accessibilityValue,
+                         rawData: rawData,
+                         isPlaceholder: isPlaceholder)
         }
 
         /// Item label displayed in the picker
@@ -50,6 +50,7 @@ import UIKit
         /// This is ignored by `DropdownFieldElement`, and is intended as a convenience to be used in conjunction with `selectedItem`
         public let rawData: String
 
+        /// If true, this item will be styled with greyed out secondary text
         public let isPlaceholder: Bool
     }
 
@@ -172,9 +173,11 @@ extension DropdownFieldElement: UIPickerViewDelegate {
 
     public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         let item = items[row]
+
+        // If this item is marked as a placeholder, apply placeholder text color
         if item.isPlaceholder {
             let placerholderString = NSMutableAttributedString.init(string: item.pickerDisplayName.string)
-            placerholderString.addAttribute(NSAttributedString.Key.foregroundColor, value: theme.colors.secondaryText, range: NSRange(location: 0, length: item.pickerDisplayName.length))
+            placerholderString.addAttribute(NSAttributedString.Key.foregroundColor, value: theme.colors.placeholderText, range: NSRange(location: 0, length: item.pickerDisplayName.length))
             return placerholderString
         }
 
@@ -212,6 +215,7 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
     }
 
     func didCancel(_ pickerFieldView: PickerFieldView) {
+        // Reset to previously selected index
         selectedIndex = previouslySelectedIndex
     }
 }

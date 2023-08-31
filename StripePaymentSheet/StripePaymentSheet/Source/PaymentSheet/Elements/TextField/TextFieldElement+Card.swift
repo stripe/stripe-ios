@@ -15,7 +15,6 @@ import UIKit
 
 // MARK: - PAN Configuration
 extension TextFieldElement {
-
     struct PANConfiguration: TextFieldElementConfiguration {
         var label: String = String.Localized.card_number
         var binController = STPBINController.shared

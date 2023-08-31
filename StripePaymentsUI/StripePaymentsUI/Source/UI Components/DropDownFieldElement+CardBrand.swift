@@ -19,7 +19,7 @@ extension DropdownFieldElement {
                                                                         labelDisplayName: STPCardBrand.unknown.brandIconAttributedString,
                                                                         accessibilityValue: "Select card brand (optional)",
                                                                         rawData: "-1",
-                                                                        isPlaceholder: true),]
+                                                                        isPlaceholder: true), ]
 
         // TODO(porter) Get brand values from the PaymentSheet.Configuration once the API is ready
         dropDownItems += STPCardBrand.allCases.map {

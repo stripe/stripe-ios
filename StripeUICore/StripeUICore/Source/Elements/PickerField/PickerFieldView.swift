@@ -77,6 +77,9 @@ final class PickerFieldView: UIView {
             }
             textField.attributedText = newValue
             // Unfortunate hack for card brand choice to show card brand logos
+            // UITextField doesn't render attributed text with text attachments for some reason
+            // But it works when setting it's placeholder text
+            // https://stackoverflow.com/questions/54804809/cant-add-image-as-nstextattachment-to-uitextfield
             if (newValue?.hasTextAttachment ?? false) && newValue?.length == 1 {
                 textField.attributedPlaceholder = newValue
             }
@@ -215,7 +218,6 @@ extension PickerFieldView: DoneButtonToolbarDelegate {
     }
 
     func didTapCancel(_ toolbar: DoneButtonToolbar) {
-        // reset to original input and hide
         delegate?.didCancel(self)
         _ = textField.resignFirstResponder()
     }
