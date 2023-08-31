@@ -14,7 +14,6 @@ import Foundation
 /// A decodable representation that can used to construct a `FormElement`
 struct FormSpec: Decodable {
     let type: String
-    let async: Bool?
     let fields: [FieldSpec]
     let selectorIcon: DownloadableImageSpec?
     let nextActionSpec: NextActionSpec?

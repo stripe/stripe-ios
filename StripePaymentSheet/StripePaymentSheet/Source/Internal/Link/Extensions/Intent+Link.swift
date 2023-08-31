@@ -17,10 +17,6 @@ extension Intent {
         return supportsLink && (linkFundingSources?.contains(.card) ?? false)
     }
 
-    var onlySupportsLinkBank: Bool {
-        return supportsLink && (linkFundingSources == [.bankAccount])
-    }
-
     var callToAction: ConfirmButton.CallToActionType {
         switch self {
         case .paymentIntent(let paymentIntent):

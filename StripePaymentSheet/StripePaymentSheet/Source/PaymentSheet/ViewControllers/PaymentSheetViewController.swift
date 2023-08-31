@@ -337,9 +337,7 @@ class PaymentSheetViewController: UIViewController {
         // Error
         switch mode {
         case .addingNew:
-            if addPaymentMethodViewController.setErrorIfNecessary(for: error) == false {
-                errorLabel.text = error?.nonGenericDescription
-            }
+            errorLabel.text = error?.nonGenericDescription
         case .selectingSaved:
             errorLabel.text = error?.nonGenericDescription
         }
@@ -475,10 +473,6 @@ class PaymentSheetViewController: UIViewController {
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
                     // Update state
                     self.error = error
-                    // Handle error
-                    if PaymentSheetError.isUnrecoverable(error: error) {
-                        self.delegate?.paymentSheetViewControllerDidFinish(self, result: result)
-                    }
                     self.updateUI()
                     UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
                 case .completed:
@@ -503,12 +497,12 @@ class PaymentSheetViewController: UIViewController {
 
 extension PaymentSheetViewController: WalletHeaderViewDelegate {
 
-    func walletHeaderViewApplePayButtonTapped(_ header: WalletHeaderView) {
+    func walletHeaderViewApplePayButtonTapped() {
         set(error: nil)
         pay(with: .applePay)
     }
 
-    func walletHeaderViewPayWithLinkTapped(_ header: WalletHeaderView) {
+    func walletHeaderViewPayWithLinkTapped() {
         set(error: nil)
         delegate?.paymentSheetViewControllerDidSelectPayWithLink(self)
     }
@@ -518,10 +512,6 @@ extension PaymentSheetViewController: WalletHeaderViewDelegate {
 // MARK: - BottomSheetContentViewController
 /// :nodoc:
 extension PaymentSheetViewController: BottomSheetContentViewController {
-    var allowsDragToDismiss: Bool {
-        return isDismissable
-    }
-
     func didTapOrSwipeToDismiss() {
         if isDismissable {
             delegate?.paymentSheetViewControllerDidCancel(self)
@@ -537,7 +527,6 @@ extension PaymentSheetViewController: BottomSheetContentViewController {
 /// :nodoc:
 extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate {
     func didUpdateSelection(
-        viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
         STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(
@@ -553,7 +542,6 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     }
 
     func didSelectRemove(
-        viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
         guard case .saved(let paymentMethod) = paymentMethodSelection,
@@ -605,12 +593,12 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
 // MARK: - AddPaymentMethodViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
-    func didUpdate(_ viewController: AddPaymentMethodViewController) {
+    func didUpdate() {
         error = nil  // clear error
         updateUI()
     }
 
-    func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
+    func shouldOfferLinkSignup() -> Bool {
         guard isLinkEnabled else {
             return false
         }
@@ -626,7 +614,7 @@ extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
 // MARK: - SheetNavigationBarDelegate
 /// :nodoc:
 extension PaymentSheetViewController: SheetNavigationBarDelegate {
-    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+    func sheetNavigationBarDidClose() {
         delegate?.paymentSheetViewControllerDidCancel(self)
         // If the customer was editing saved payment methods, exit edit mode
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
@@ -636,7 +624,7 @@ extension PaymentSheetViewController: SheetNavigationBarDelegate {
 
     }
 
-    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+    func sheetNavigationBarDidBack() {
         // This is quite hardcoded. Could make some generic "previous state" or "previous VC" that we always go back to
         switch mode {
         case .addingNew:

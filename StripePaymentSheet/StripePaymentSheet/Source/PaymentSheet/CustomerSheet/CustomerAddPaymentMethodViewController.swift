@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
-    func didUpdate(_ viewController: CustomerAddPaymentMethodViewController)
+    func didUpdate()
     func updateErrorLabel(for: Error?)
 }
 
@@ -288,19 +288,19 @@ extension CustomerAddPaymentMethodViewController {
 }
 extension CustomerAddPaymentMethodViewController: ElementDelegate {
     func continueToNextField(element: Element) {
-        delegate?.didUpdate(self)
+        delegate?.didUpdate()
     }
 
     func didUpdate(element: Element) {
-        delegate?.didUpdate(self)
+        delegate?.didUpdate()
         animateHeightChange()
     }
 }
 
 extension CustomerAddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
-    func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
+    func didUpdateSelection() {
         updateFormElement()
-        delegate?.didUpdate(self)
+        delegate?.didUpdate()
     }
 }
 

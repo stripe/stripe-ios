@@ -31,7 +31,6 @@ extension UIViewController {
         } else {
             viewControllerToPresent.modalPresentationStyle = .custom
             viewControllerToPresent.modalPresentationCapturesStatusBarAppearance = true
-            BottomSheetTransitioningDelegate.appearance = appearance
             viewControllerToPresent.transitioningDelegate = BottomSheetTransitioningDelegate.default
         }
 

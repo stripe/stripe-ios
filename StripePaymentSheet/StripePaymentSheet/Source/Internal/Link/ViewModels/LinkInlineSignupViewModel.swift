@@ -12,7 +12,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 protocol LinkInlineSignupViewModelDelegate: AnyObject {
-    func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel)
+    func signupViewModelDidUpdate()
 }
 
 final class LinkInlineSignupViewModel {
@@ -199,7 +199,7 @@ final class LinkInlineSignupViewModel {
 private extension LinkInlineSignupViewModel {
 
     func notifyUpdate() {
-        delegate?.signupViewModelDidUpdate(self)
+        delegate?.signupViewModelDidUpdate()
     }
 
     func onEmailUpdate() {

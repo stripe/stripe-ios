@@ -12,8 +12,8 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 protocol AddPaymentMethodViewControllerDelegate: AnyObject {
-    func didUpdate(_ viewController: AddPaymentMethodViewController)
-    func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool
+    func didUpdate()
+    func shouldOfferLinkSignup() -> Bool
     func updateErrorLabel(for: Error?)
 }
 
@@ -225,16 +225,10 @@ class AddPaymentMethodViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         sendEventToSubviews(.viewDidAppear, from: view)
-        delegate?.didUpdate(self)
+        delegate?.didUpdate()
     }
 
     // MARK: - Internal
-
-    /// Returns true iff we could map the error to one of the displayed fields
-    func setErrorIfNecessary(for error: Error?) -> Bool {
-        // TODO
-        return false
-    }
 
     @objc
     func linkAccountChanged(_ notification: Notification) {
@@ -276,7 +270,7 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
-        let offerSaveToLinkWhenSupported = delegate?.shouldOfferLinkSignup(self) ?? false
+        let offerSaveToLinkWhenSupported = delegate?.shouldOfferLinkSignup() ?? false
 
         let formElement = PaymentSheetFormFactory(
             intent: intent,
@@ -392,9 +386,9 @@ class AddPaymentMethodViewController: UIViewController {
 // MARK: - PaymentMethodTypeCollectionViewDelegate
 
 extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
-    func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
+    func didUpdateSelection() {
         updateFormElement()
-        delegate?.didUpdate(self)
+        delegate?.didUpdate()
     }
 }
 
@@ -402,11 +396,11 @@ extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegat
 
 extension AddPaymentMethodViewController: ElementDelegate {
     func continueToNextField(element: Element) {
-        delegate?.didUpdate(self)
+        delegate?.didUpdate()
     }
 
     func didUpdate(element: Element) {
-        delegate?.didUpdate(self)
+        delegate?.didUpdate()
         animateHeightChange()
     }
 }

@@ -23,7 +23,6 @@ extension PaymentSheet {
         paymentOption: PaymentOption,
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool = false,
-        paymentMethodID: String? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         // Translates a STPPaymentHandler result to a PaymentResult

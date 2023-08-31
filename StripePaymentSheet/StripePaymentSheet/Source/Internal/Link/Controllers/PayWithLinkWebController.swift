@@ -21,18 +21,8 @@ protocol PayWithLinkWebControllerDelegate: AnyObject {
         with paymentOption: PaymentOption
     )
 
-    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController)
+    func payWithLinkWebControllerDidCancel()
 
-}
-
-protocol PayWithLinkCoordinating: AnyObject {
-    func confirm(
-        with linkAccount: PaymentSheetLinkAccount,
-        paymentDetails: ConsumerPaymentDetails
-    )
-    func cancel()
-    func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
-    func logout(cancel: Bool)
 }
 
 /// A view controller for paying with Link using ASWebAuthenticationSession.
@@ -70,68 +60,35 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     }
     var presentationVC: UIViewController?
 
-    enum LinkAccountError: Error {
-        case noLinkAccount
-
-        var localizedDescription: String {
-            "No Link account is set"
-        }
-    }
-
     final class Context {
         let intent: Intent
         let configuration: PaymentSheet.Configuration
-        let shouldOfferApplePay: Bool
-        let shouldFinishOnClose: Bool
-        let callToAction: ConfirmButton.CallToActionType
-        var lastAddedPaymentDetails: ConsumerPaymentDetails?
 
         /// Creates a new Context object.
         /// - Parameters:
         ///   - intent: Intent.
         ///   - configuration: PaymentSheet configuration.
-        ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
-        ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
-        ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
         init(
             intent: Intent,
-            configuration: PaymentSheet.Configuration,
-            shouldOfferApplePay: Bool,
-            shouldFinishOnClose: Bool,
-            callToAction: ConfirmButton.CallToActionType?
+            configuration: PaymentSheet.Configuration
         ) {
             self.intent = intent
             self.configuration = configuration
-            self.shouldOfferApplePay = shouldOfferApplePay
-            self.shouldFinishOnClose = shouldFinishOnClose
-            self.callToAction = callToAction ?? intent.callToAction
         }
     }
 
     private var context: Context
-    private var accountContext: LinkAccountContext = .shared
-
-    private var linkAccount: PaymentSheetLinkAccount? {
-        get { accountContext.account }
-        set { accountContext.account = newValue }
-    }
 
     weak var payWithLinkDelegate: PayWithLinkWebControllerDelegate?
 
     convenience init(
         intent: Intent,
-        configuration: PaymentSheet.Configuration,
-        shouldOfferApplePay: Bool = false,
-        shouldFinishOnClose: Bool = false,
-        callToAction: ConfirmButton.CallToActionType? = nil
+        configuration: PaymentSheet.Configuration
     ) {
         self.init(
             context: Context(
                 intent: intent,
-                configuration: configuration,
-                shouldOfferApplePay: shouldOfferApplePay,
-                shouldFinishOnClose: shouldFinishOnClose,
-                callToAction: callToAction
+                configuration: configuration
             )
         )
     }
@@ -140,11 +97,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         self.context = context
         super.init()
     }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
+    
     var webAuthSession: ASWebAuthenticationSession?
 
     func present(over viewController: UIViewController? = nil) {
@@ -180,12 +133,12 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
 //      If the user closed the popup, remove any Link account state.
 //      Otherwise, a user would have to *log in* if they wanted to log out.
         LinkAccountService.defaultCookieStore.clear()
-        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
+        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel()
     }
 
     private func canceledWithError(error: Error?) {
         STPAnalyticsClient.sharedClient.logLinkPopupError(error: error, sessionType: self.context.intent.linkPopupWebviewOption)
-        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
+        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel()
     }
 
     private func handleWebAuthenticationSessionCompletion(returnURL: URL?, error: Error?) {
@@ -216,47 +169,10 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 // Delete the account information
                 LinkAccountService.defaultCookieStore.clear()
                 STPAnalyticsClient.sharedClient.logLinkPopupLogout(sessionType: self.context.intent.linkPopupWebviewOption)
-                self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
+                self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel()
             }
         } catch {
             self.canceledWithError(error: error)
         }
     }
-}
-
-// MARK: - Coordinating
-
-extension PayWithLinkWebController: PayWithLinkCoordinating {
-
-    func confirm(
-        with linkAccount: PaymentSheetLinkAccount,
-        paymentDetails: ConsumerPaymentDetails
-    ) {
-        payWithLinkDelegate?.payWithLinkWebControllerDidComplete(
-            self,
-            intent: context.intent,
-            with: PaymentOption.link(
-                option: .withPaymentDetails(account: linkAccount, paymentDetails: paymentDetails)
-            )
-        )
-    }
-
-    func cancel() {
-        webAuthSession?.cancel()
-        payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
-    }
-
-    func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
-        self.linkAccount = linkAccount
-    }
-
-    func logout(cancel: Bool) {
-        linkAccount?.logout()
-        linkAccount = nil
-
-        if cancel {
-            self.cancel()
-        }
-    }
-
 }

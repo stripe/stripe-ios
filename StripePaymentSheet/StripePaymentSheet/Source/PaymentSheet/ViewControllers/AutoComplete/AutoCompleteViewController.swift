@@ -24,7 +24,6 @@ protocol AutoCompleteViewControllerDelegate: AnyObject {
 class AutoCompleteViewController: UIViewController {
     let configuration: AddressViewController.Configuration
     let initialLine1Text: String?
-    let addressSpecProvider: AddressSpecProvider
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
         searchCompleter.delegate = self
@@ -109,12 +108,10 @@ class AutoCompleteViewController: UIViewController {
     // MARK: - Initializers
     required init(
         configuration: AddressViewController.Configuration,
-        initialLine1Text: String?,
-        addressSpecProvider: AddressSpecProvider = .shared
+        initialLine1Text: String?
     ) {
         self.configuration = configuration
         self.initialLine1Text = initialLine1Text
-        self.addressSpecProvider = addressSpecProvider
         super.init(nibName: nil, bundle: nil)
         if let initialLine1Text = initialLine1Text {
             self.addressSearchCompleter.queryFragment = initialLine1Text

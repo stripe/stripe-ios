@@ -21,16 +21,13 @@ typealias ConsumerSessionWithPaymentDetails = (session: ConsumerSession, payment
 final class ConsumerPaymentDetails: Decodable {
     let stripeID: String
     let details: Details
-    var isDefault: Bool
 
     // TODO(csabol) : Billing address
 
     init(stripeID: String,
-         details: Details,
-         isDefault: Bool) {
+         details: Details) {
         self.stripeID = stripeID
         self.details = details
-        self.isDefault = isDefault
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -43,7 +40,6 @@ final class ConsumerPaymentDetails: Decodable {
         self.stripeID = try container.decode(String.self, forKey: .stripeID)
         // The payment details are included in the dictionary, so we pass the whole dict to Details
         self.details = try decoder.singleValueContainer().decode(Details.self)
-        self.isDefault = try container.decode(Bool.self, forKey: .isDefault)
     }
 }
 
@@ -81,17 +77,6 @@ extension ConsumerPaymentDetails {
             }
         }
     }
-
-    var type: DetailsType {
-        switch details {
-        case .card:
-            return .card
-        case .bankAccount:
-            return .bankAccount
-        case .unparsable:
-            return .unparsable
-        }
-    }
 }
 
 // MARK: - Card checks
@@ -110,10 +95,6 @@ extension ConsumerPaymentDetails.Details {
         }
 
         let cvcCheck: CVCCheck
-
-        init(cvcCheck: CVCCheck) {
-            self.cvcCheck = cvcCheck
-        }
     }
 }
 
@@ -137,18 +118,6 @@ extension ConsumerPaymentDetails.Details {
         /// A frontend convenience property, i.e. not part of the API Object
         /// As such this is deliberately omitted from CodingKeys
         var cvc: String?
-
-        init(expiryYear: Int,
-             expiryMonth: Int,
-             brand: String,
-             last4: String,
-             checks: CardChecks?) {
-            self.expiryYear = expiryYear
-            self.expiryMonth = expiryMonth
-            self.brand = brand
-            self.last4 = last4
-            self.checks = checks
-        }
     }
 }
 
@@ -190,29 +159,10 @@ extension ConsumerPaymentDetails.Details {
             case name = "bankName"
             case last4
         }
-
-        init(iconCode: String?,
-             name: String,
-             last4: String) {
-            self.iconCode = iconCode
-            self.name = name
-            self.last4 = last4
-        }
     }
 }
 
 extension ConsumerPaymentDetails {
-    var paymentSheetLabel: String {
-        switch details {
-        case .card(let card):
-            return "••••\(card.last4)"
-        case .bankAccount(let bank):
-            return "••••\(bank.last4)"
-        case .unparsable:
-            return ""
-        }
-    }
-
     var cvc: String? {
         switch details {
         case .card(let card):
@@ -221,29 +171,6 @@ extension ConsumerPaymentDetails {
             return nil
         case .unparsable:
             return nil
-        }
-    }
-
-    var accessibilityDescription: String {
-        switch details {
-        case .card(let card):
-            // TODO(ramont): investigate why this returns optional
-            let cardBrandName = STPCardBrandUtilities.stringFrom(card.stpBrand) ?? ""
-            let digits = card.last4.map({ String($0) }).joined(separator: ", ")
-            return String(
-                format: String.Localized.card_brand_ending_in_last_4,
-                cardBrandName,
-                digits
-            )
-        case .bankAccount(let bank):
-            let digits = bank.last4.map({ String($0) }).joined(separator: ", ")
-            return String(
-                format: String.Localized.bank_name_account_ending_in_last_4,
-                bank.name,
-                digits
-            )
-        case .unparsable:
-            return ""
         }
     }
 

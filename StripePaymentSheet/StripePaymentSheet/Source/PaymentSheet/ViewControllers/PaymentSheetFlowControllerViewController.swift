@@ -14,10 +14,8 @@ import Foundation
 import UIKit
 
 protocol PaymentSheetFlowControllerViewControllerDelegate: AnyObject {
-    func paymentSheetFlowControllerViewControllerShouldClose(
-        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController)
-    func paymentSheetFlowControllerViewControllerDidUpdateSelection(
-        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController)
+    func paymentSheetFlowControllerViewControllerShouldClose(_ paymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController)
+    func paymentSheetFlowControllerViewControllerDidUpdateSelection()
 }
 
 /// For internal SDK use only
@@ -26,9 +24,6 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     // MARK: - Internal Properties
     let intent: Intent
     let configuration: PaymentSheet.Configuration
-    var savedPaymentMethods: [STPPaymentMethod] {
-        return savedPaymentOptionsViewController.savedPaymentMethods
-    }
     var selectedPaymentOption: PaymentOption? {
         switch mode {
         case .addingNew:
@@ -171,10 +166,6 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         self.addPaymentMethodViewController.delegate = self
     }
 
-    func selectLink() {
-        savedPaymentOptionsViewController.selectLink()
-    }
-
     // MARK: - UIViewController Methods
 
     override func viewDidLoad() {
@@ -300,9 +291,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         // Error
         switch mode {
         case .addingNew:
-            if addPaymentMethodViewController.setErrorIfNecessary(for: error) == false {
-                errorLabel.text = error?.localizedDescription
-            }
+            errorLabel.text = error?.localizedDescription
         case .selectingSaved:
             errorLabel.text = error?.localizedDescription
         }
@@ -424,10 +413,6 @@ class PaymentSheetFlowControllerViewController: UIViewController {
 // MARK: - BottomSheetContentViewController
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: BottomSheetContentViewController {
-    var allowsDragToDismiss: Bool {
-        return isDismissable
-    }
-
     func didTapOrSwipeToDismiss() {
         if isDismissable {
             didDismiss()
@@ -443,7 +428,6 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewControllerDelegate {
     func didUpdateSelection(
-        viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
         STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(isCustom: true,
@@ -459,7 +443,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             error = nil // Clear any errors
             updateUI()
         case .applePay, .link, .saved:
-            delegate?.paymentSheetFlowControllerViewControllerDidUpdateSelection(self)
+            delegate?.paymentSheetFlowControllerViewControllerDidUpdateSelection()
             updateUI()
             if isDismissable, !selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
                 delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)
@@ -468,7 +452,6 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
     }
 
     func didSelectRemove(
-        viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
         guard case .saved(let paymentMethod) = paymentMethodSelection,
@@ -518,12 +501,12 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 // MARK: - AddPaymentMethodViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControllerDelegate {
-    func didUpdate(_ viewController: AddPaymentMethodViewController) {
+    func didUpdate() {
         error = nil  // clear error
         updateUI()
     }
 
-    func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
+    func shouldOfferLinkSignup() -> Bool {
         guard isLinkEnabled else {
             return false
         }
@@ -538,11 +521,11 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
 // MARK: - SheetNavigationBarDelegate
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: SheetNavigationBarDelegate {
-    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+    func sheetNavigationBarDidClose() {
         didDismiss()
     }
 
-    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+    func sheetNavigationBarDidBack() {
         // This is quite hardcoded. Could make some generic "previous mode" or "previous VC" that we always go back to
         switch mode {
         case .addingNew:

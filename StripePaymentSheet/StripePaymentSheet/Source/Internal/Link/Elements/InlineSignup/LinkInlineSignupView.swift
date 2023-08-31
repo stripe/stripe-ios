@@ -11,7 +11,7 @@ import SafariServices
 import UIKit
 
 protocol LinkInlineSignupViewDelegate: AnyObject {
-    func inlineSignupViewDidUpdate(_ view: LinkInlineSignupView)
+    func inlineSignupViewDidUpdate()
 }
 
 /// For internal SDK use only
@@ -203,9 +203,9 @@ extension LinkInlineSignupView: ElementDelegate {
 
 extension LinkInlineSignupView: LinkInlineSignupViewModelDelegate {
 
-    func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel) {
+    func signupViewModelDidUpdate() {
         updateUI(animated: true)
-        delegate?.inlineSignupViewDidUpdate(self)
+        delegate?.inlineSignupViewDidUpdate()
     }
 
 }

@@ -26,7 +26,6 @@ final class PayWithLinkButton: UIControl {
         static let separatorSize: CGSize = .init(width: 1, height: 22)
         static let margins: NSDirectionalEdgeInsets = .init(top: 7, leading: 16, bottom: 7, trailing: 10)
         static let cardBrandInsets: UIEdgeInsets = .init(top: 1, left: 0, bottom: 0, right: 0)
-        static let arrowInsets: UIEdgeInsets = .init(top: 1, left: 0, bottom: 0, right: 0)
     }
 
     fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
@@ -65,8 +64,6 @@ final class PayWithLinkButton: UIControl {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: Constants.defaultSize.height)
     }
-
-    private let titleBaseFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium)
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()

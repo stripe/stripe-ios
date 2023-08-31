@@ -11,8 +11,7 @@
 import UIKit
 
 protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
-    func bottomSheet3DS2ViewControllerDidCancel(
-        _ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController)
+    func bottomSheet3DS2ViewControllerDidCancel()
 }
 
 /// For internal SDK use only
@@ -76,9 +75,6 @@ class BottomSheet3DS2ViewController: UIViewController {
 // MARK: - BottomSheetContentViewController
 /// :nodoc:
 extension BottomSheet3DS2ViewController: BottomSheetContentViewController {
-    var allowsDragToDismiss: Bool {
-        return false
-    }
 
     func didTapOrSwipeToDismiss() {
         // no-op
@@ -92,11 +88,11 @@ extension BottomSheet3DS2ViewController: BottomSheetContentViewController {
 // MARK: - SheetNavigationBarDelegate
 /// :nodoc:
 extension BottomSheet3DS2ViewController: SheetNavigationBarDelegate {
-    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-        delegate?.bottomSheet3DS2ViewControllerDidCancel(self)
+    func sheetNavigationBarDidClose() {
+        delegate?.bottomSheet3DS2ViewControllerDidCancel()
     }
 
-    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
-        delegate?.bottomSheet3DS2ViewControllerDidCancel(self)
+    func sheetNavigationBarDidBack() {
+        delegate?.bottomSheet3DS2ViewControllerDidCancel()
     }
 }

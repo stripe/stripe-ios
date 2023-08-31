@@ -427,17 +427,15 @@ extension PaymentSheet {
 // MARK: - PaymentSheetFlowControllerViewControllerDelegate
 extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerDelegate {
     func paymentSheetFlowControllerViewControllerShouldClose(
-        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
+        _ paymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
     ) {
-        PaymentSheetFlowControllerViewController.dismiss(animated: true) {
+        paymentSheetFlowControllerViewController.dismiss(animated: true) {
             self.presentPaymentOptionsCompletion?()
             self.isPresented = false
         }
     }
 
-    func paymentSheetFlowControllerViewControllerDidUpdateSelection(
-        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
-    ) {
+    func paymentSheetFlowControllerViewControllerDidUpdateSelection() {
         // no-op
     }
 }

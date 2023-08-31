@@ -48,21 +48,6 @@ extension PaymentSheet {
 
 extension PaymentSheet.LinkConfirmOption {
 
-    var account: PaymentSheetLinkAccount? {
-        switch self {
-        case .wallet:
-            return nil
-        case .signUp(let account, _, _, _):
-            return account
-        case .withPaymentDetails(let account, _):
-            return account
-        case .withPaymentMethodParams(let account, _):
-            return account
-        case .withPaymentMethod:
-            return nil
-        }
-    }
-
     var paymentSheetLabel: String {
         switch self {
         case .wallet, .withPaymentDetails:

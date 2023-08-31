@@ -36,7 +36,6 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
         delegate?.shouldDismiss(self)
     }
     let loadingViewHeight: CGFloat
-    var panScrollable: UIScrollView?
     let activityIndicator = UIActivityIndicatorView(style: .medium)
     weak var delegate: LoadingViewControllerDelegate?
 
@@ -72,9 +71,9 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
 }
 
 extension LoadingViewController: SheetNavigationBarDelegate {
-    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+    func sheetNavigationBarDidClose() {
         delegate?.shouldDismiss(self)
     }
 
-    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {}
+    func sheetNavigationBarDidBack() {}
 }

@@ -12,8 +12,8 @@ import Foundation
 import UIKit
 
 protocol SheetNavigationBarDelegate: AnyObject {
-    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar)
-    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar)
+    func sheetNavigationBarDidClose()
+    func sheetNavigationBarDidBack()
 }
 
 /// For internal SDK use only
@@ -131,12 +131,12 @@ class SheetNavigationBar: UIView {
     @objc
     private func didTapCloseButton() {
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
-        delegate?.sheetNavigationBarDidClose(self)
+        delegate?.sheetNavigationBarDidClose()
     }
 
     @objc
     private func didTapBackButton() {
-        delegate?.sheetNavigationBarDidBack(self)
+        delegate?.sheetNavigationBarDidBack()
     }
 
     // MARK: -
