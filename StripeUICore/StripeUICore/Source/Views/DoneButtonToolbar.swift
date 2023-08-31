@@ -45,12 +45,12 @@ import UIKit
             action: #selector(didTapCancel)
         )
         cancelButton.tintColor = theme.colors.secondaryText
-        
+
         var items = [.flexibleSpace(), doneButton]
         if showCancelButton {
             items = [cancelButton] + items
         }
-        
+
         setItems(items, animated: false)
         sizeToFit()
         setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -66,7 +66,7 @@ import UIKit
     private func didTapDone() {
         doneButtonToolbarDelegate?.didTapDone(self)
     }
-    
+
     @objc
     private func didTapCancel() {
         doneButtonToolbarDelegate?.didTapCancel(self)

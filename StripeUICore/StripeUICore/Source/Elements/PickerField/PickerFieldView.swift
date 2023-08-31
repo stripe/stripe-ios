@@ -14,21 +14,6 @@ protocol PickerFieldViewDelegate: AnyObject {
     func didCancel(_ pickerFieldView: PickerFieldView)
 }
 
-extension NSAttributedString {
-    var hasTextAttachment: Bool {
-        var hasAttachment = false
-        enumerateAttribute(NSAttributedString.Key.attachment,
-                           in: NSMakeRange(0, length),
-                           options: NSAttributedString.EnumerationOptions(rawValue: 0)) { (value, range, stop) in
-            if (value as? NSTextAttachment) != nil {
-                hasAttachment = true
-            }
-        }
-        
-        return hasAttachment
-    }
-}
-
 /**
  An input field that looks like TextFieldView but whose input is another view.
 
@@ -228,7 +213,7 @@ extension PickerFieldView: DoneButtonToolbarDelegate {
     func didTapDone(_ toolbar: DoneButtonToolbar) {
         _ = textField.resignFirstResponder()
     }
-    
+
     func didTapCancel(_ toolbar: DoneButtonToolbar) {
         // reset to original input and hide
         delegate?.didCancel(self)

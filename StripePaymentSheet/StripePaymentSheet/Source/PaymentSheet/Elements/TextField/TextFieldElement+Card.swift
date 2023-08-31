@@ -13,57 +13,9 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-extension DropdownFieldElement {
-    static func makeCardBrandDropdown(
-        theme: ElementsUITheme
-    ) -> DropdownFieldElement {
-        
-        let brandImageAttachment = NSTextAttachment()
-        brandImageAttachment.image = STPImageLibrary.cardBrandImage(
-            for: .unknown
-        )
-
-        // wrap the attachment in its own attributed string so we can append it
-        let brandImageString = NSAttributedString(attachment: brandImageAttachment)
-        
-        var dropDownItems: [DropdownFieldElement.DropdownItem] = [.init(pickerDisplayName: NSAttributedString(string: "Select card brand (optional)"),
-                                                                        labelDisplayName: brandImageString,
-                                                                        accessibilityValue: "Default",
-                                                                        rawData: "-1", isPlaceholder: true)]
-        
-        dropDownItems += STPCardBrand.allCases.map {
-            let brandName = STPCardBrandUtilities.stringFrom($0) ?? ""
-            let brandImageAttachment = NSTextAttachment()
-            brandImageAttachment.image = STPImageLibrary.cardBrandImage(
-                for: $0
-            )
-
-            // wrap the attachment in its own attributed string so we can append it
-            let brandImageString = NSAttributedString(attachment: brandImageAttachment)
-
-            // add the NSTextAttachment wrapper to our full string, then add some more text.
-            let fullString = NSMutableAttributedString()
-            fullString.append(brandImageString)
-            fullString.append(NSAttributedString(string: " " + brandName))
-            
-            return .init(pickerDisplayName: fullString,
-                         labelDisplayName: brandImageString,
-                         accessibilityValue: brandName,
-                         rawData: $0.description)
-        }
-        
-        return DropdownFieldElement(
-            items: dropDownItems,
-            defaultIndex: 0,
-            label: nil,
-            theme: theme
-        )
-    }
-}
-
 // MARK: - PAN Configuration
 extension TextFieldElement {
-    
+
     struct PANConfiguration: TextFieldElementConfiguration {
         var label: String = String.Localized.card_number
         var binController = STPBINController.shared
@@ -71,7 +23,7 @@ extension TextFieldElement {
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
         let dropDownView: UIView?
-        
+
         init(defaultValue: String? = nil, dropDownView: UIView? = nil) {
             self.defaultValue = defaultValue
             self.dropDownView = dropDownView
@@ -82,7 +34,7 @@ extension TextFieldElement {
 
             // If CBC is enabled show the dropdown if
             return dropDownView
-            
+
 //            if cardBrand == .unknown {
 //                if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
 //                    return DynamicImageView(

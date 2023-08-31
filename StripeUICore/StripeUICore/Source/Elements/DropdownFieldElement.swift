@@ -27,7 +27,7 @@ import UIKit
             self.isPlaceholder = isPlaceholder
             self.rawData = rawData
         }
-        
+
         public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false) {
             self.pickerDisplayName = NSAttributedString(string: pickerDisplayName)
             self.labelDisplayName = NSAttributedString(string: labelDisplayName)
@@ -49,7 +49,7 @@ import UIKit
         /// e.g., A country dropdown item might display "United States" but its `rawData` is "US".
         /// This is ignored by `DropdownFieldElement`, and is intended as a convenience to be used in conjunction with `selectedItem`
         public let rawData: String
-        
+
         public let isPlaceholder: Bool
     }
 
@@ -169,7 +169,7 @@ extension DropdownFieldElement: Element {
 // MARK: UIPickerViewDelegate
 
 extension DropdownFieldElement: UIPickerViewDelegate {
-    
+
     public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         let item = items[row]
         if item.isPlaceholder {
@@ -210,7 +210,7 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
         previouslySelectedIndex = selectedIndex
         delegate?.continueToNextField(element: self)
     }
-    
+
     func didCancel(_ pickerFieldView: PickerFieldView) {
         selectedIndex = previouslySelectedIndex
     }
