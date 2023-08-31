@@ -187,7 +187,10 @@ class PlaygroundController: ObservableObject {
         }
     }
 
-    var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration {
+    var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration? {
+        guard settings.externalPayPalEnabled == .on else {
+            return nil
+        }
         return .init(
             externalPaymentMethods: ["external_paypal"]
         ) { externalPaymentMethodType, billingDetails in
