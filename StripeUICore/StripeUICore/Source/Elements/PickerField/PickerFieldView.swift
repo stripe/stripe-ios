@@ -95,6 +95,21 @@ final class PickerFieldView: UIView {
         }
     }
 
+    var isEnabled: Bool {
+        get {
+            return isUserInteractionEnabled
+        }
+
+        set {
+            isUserInteractionEnabled = newValue
+            if newValue {
+                chevronImageView?.tintColor = theme.colors.textFieldText
+            } else {
+                chevronImageView?.tintColor = theme.colors.secondaryText
+            }
+        }
+    }
+
     // MARK: - Initializers
 
     /**

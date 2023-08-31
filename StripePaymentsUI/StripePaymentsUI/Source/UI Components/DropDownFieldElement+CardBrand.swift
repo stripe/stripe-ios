@@ -15,14 +15,21 @@ extension DropdownFieldElement {
     @_spi(STP) public static func makeCardBrandDropdown(
         theme: ElementsUITheme
     ) -> DropdownFieldElement {
+        return DropdownFieldElement(
+            items: items(from: Set<STPCardBrand>()),
+            defaultIndex: 0,
+            label: nil,
+            theme: theme
+        )
+    }
+
+    @_spi(STP) public static func items(from cardBrands: Set<STPCardBrand>) -> [DropdownItem] {
         var dropDownItems: [DropdownFieldElement.DropdownItem] = [.init(pickerDisplayName: NSAttributedString(string: "Select card brand (optional)"),
                                                                         labelDisplayName: STPCardBrand.unknown.brandIconAttributedString,
                                                                         accessibilityValue: "Select card brand (optional)",
                                                                         rawData: "-1",
-                                                                        isPlaceholder: true), ]
-
-        // TODO(porter) Get brand values from the PaymentSheet.Configuration once the API is ready
-        dropDownItems += STPCardBrand.allCases.map {
+                                                                        isPlaceholder: true),]
+        dropDownItems += cardBrands.sorted().map {
             let brandName = STPCardBrandUtilities.stringFrom($0) ?? ""
 
             let displayText = NSMutableAttributedString(attributedString: ($0.brandIconAttributedString))
@@ -34,16 +41,15 @@ extension DropdownFieldElement {
                          rawData: "\($0.rawValue)")
         }
 
-        return DropdownFieldElement(
-            items: dropDownItems,
-            defaultIndex: 0,
-            label: nil,
-            theme: theme
-        )
+        return dropDownItems
     }
 }
 
-extension STPCardBrand {
+extension STPCardBrand: Comparable {
+    public static func < (lhs: StripePayments.STPCardBrand, rhs: StripePayments.STPCardBrand) -> Bool {
+        return (STPCardBrandUtilities.stringFrom(lhs) ?? "") >= (STPCardBrandUtilities.stringFrom(rhs) ?? "")
+    }
+
     var brandIconAttributedString: NSAttributedString {
         let brandImageAttachment = NSTextAttachment()
         brandImageAttachment.image = STPImageLibrary.cardBrandImage(

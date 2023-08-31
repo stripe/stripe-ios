@@ -22,41 +22,44 @@ extension TextFieldElement {
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
         let dropDownView: UIView?
+        let cardBrandChoiceEligible: Bool
 
-        init(defaultValue: String? = nil, dropDownView: UIView? = nil) {
+        init(defaultValue: String? = nil, dropDownView: UIView? = nil, cardBrandChoiceEligible: Bool = false) {
             self.defaultValue = defaultValue
             self.dropDownView = dropDownView
+            self.cardBrandChoiceEligible = cardBrandChoiceEligible
         }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-//            let cardBrand = STPCardValidator.brand(forNumber: text)
-
             // If CBC is enabled show the dropdown if
-            return dropDownView
+            if cardBrandChoiceEligible {
+                return dropDownView
+            }
 
-//            if cardBrand == .unknown {
-//                if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
-//                    return DynamicImageView(
-//                        lightImage: STPImageLibrary.safeImageNamed(
-//                            "card_unknown_updated_icon",
-//                            darkMode: true
-//                        ),
-//                        darkImage: STPImageLibrary.safeImageNamed(
-//                            "card_unknown_updated_icon",
-//                            darkMode: false
-//                        ),
-//                        pairedColor: theme.colors.textFieldText
-//                    )
-//                } else {
-//                    // display all available card brands
-//                    rotatingCardBrandsView.cardBrands =
-//                        RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases)
-//                    return rotatingCardBrandsView
-//                }
-//            } else {
-//                rotatingCardBrandsView.cardBrands = [cardBrand]
-//                return rotatingCardBrandsView
-//            }
+            let cardBrand = STPCardValidator.brand(forNumber: text)
+            if cardBrand == .unknown {
+                if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
+                    return DynamicImageView(
+                        lightImage: STPImageLibrary.safeImageNamed(
+                            "card_unknown_updated_icon",
+                            darkMode: true
+                        ),
+                        darkImage: STPImageLibrary.safeImageNamed(
+                            "card_unknown_updated_icon",
+                            darkMode: false
+                        ),
+                        pairedColor: theme.colors.textFieldText
+                    )
+                } else {
+                    // display all available card brands
+                    rotatingCardBrandsView.cardBrands =
+                        RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases)
+                    return rotatingCardBrandsView
+                }
+            } else {
+                rotatingCardBrandsView.cardBrands = [cardBrand]
+                return rotatingCardBrandsView
+            }
         }
 
         func keyboardProperties(for text: String) -> KeyboardProperties {

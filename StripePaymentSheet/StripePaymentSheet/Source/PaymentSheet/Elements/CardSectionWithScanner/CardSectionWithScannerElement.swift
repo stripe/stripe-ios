@@ -52,10 +52,12 @@ final class CardSection: ContainerElement {
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
     let theme: ElementsUITheme
+    let cardBrandEligible: Bool
 
     init(
         collectName: Bool = false,
         defaultValues: DefaultValues = .init(),
+        cardBrandChoiceEligible: Bool = false,
         theme: ElementsUITheme = .default
     ) {
         self.theme = theme
@@ -72,7 +74,10 @@ final class CardSection: ContainerElement {
             }
             : nil
         let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(theme: theme)
-        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan, dropDownView: cardBrandDropDown.view), theme: theme) { field, params in
+        cardBrandDropDown.isEnabled = false
+        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
+                                                                                       dropDownView: cardBrandDropDown.view,
+                                                                                       cardBrandChoiceEligible: cardBrandChoiceEligible), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -118,6 +123,7 @@ final class CardSection: ContainerElement {
         self.cardBrandDropDown = cardBrandDropDown
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element
+        self.cardBrandEligible = cardBrandChoiceEligible
         cardSection.delegate = self
     }
 
@@ -130,6 +136,28 @@ final class CardSection: ContainerElement {
             self.cardBrand = cardBrand
             cvcElement.setText(cvcElement.text) // A hack to get the CVC to update
         }
+
+        if cardBrandEligible {
+            if panElement.text.count < 8 {
+                cardBrandDropDown?.isEnabled = false
+                cardBrandDropDown?.selectedIndex = 0
+            } else {
+                cardBrandDropDown?.isEnabled = true
+                STPCardValidator.possibleBrands(forNumber: panElement.text) { result in
+                    // TOOD(porter) Update items in card brand drop down
+                    switch result {
+                    case .success(let brands):
+                        print(brands)
+                        DispatchQueue.main.async {
+                            self.cardBrandDropDown?.update(items: DropdownFieldElement.items(from: brands))
+                        }
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+            }
+        }
+
         delegate?.didUpdate(element: self)
     }
 }

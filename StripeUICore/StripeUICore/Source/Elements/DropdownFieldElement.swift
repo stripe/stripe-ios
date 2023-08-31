@@ -56,7 +56,7 @@ import UIKit
 
     // MARK: - Public properties
     weak public var delegate: ElementDelegate?
-    public let items: [DropdownItem]
+    public private(set) var items: [DropdownItem]
     public var selectedItem: DropdownItem {
         return items[selectedIndex]
     }
@@ -68,6 +68,16 @@ import UIKit
     public var didUpdate: DidUpdateSelectedIndex?
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
+
+    public var isEnabled: Bool {
+        get {
+            return pickerFieldView.isEnabled
+        }
+
+        set {
+            pickerFieldView.isEnabled = newValue
+        }
+    }
 
     private(set) lazy var pickerView: UIPickerView = {
         let picker = UIPickerView()
@@ -139,6 +149,14 @@ import UIKit
     public func select(index: Int) {
         selectedIndex = index
         didFinish(pickerFieldView)
+    }
+
+    public func update(items: [DropdownItem]) {
+        let newSelectedIndex = items.firstIndex(where: { $0.rawData == self.items[selectedIndex].rawData })
+
+        self.items = items
+        self.previouslySelectedIndex = newSelectedIndex ?? 0
+        self.selectedIndex = newSelectedIndex ?? 0
     }
 }
 

@@ -119,4 +119,15 @@ enum Intent {
             }
         }
     }
+
+    var cardBrandChoiceEligible: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.cardBrandChoice?.eligible ?? false
+        case .setupIntent:
+            return false
+        case .deferredIntent:
+            return false
+        }
+    }
 }
