@@ -147,6 +147,9 @@ public class STPPaymentIntent: NSObject {
     /// Country code of the merchant.
     @_spi(STP) public let merchantCountryCode: String?
 
+    /// Card brand choice settings for the merchant.
+    @_spi(STP) public let cardBrandChoice: STPCardBrandChoice?
+
     /// :nodoc:
     @objc public override var description: String {
         let props: [String] = [
@@ -179,6 +182,7 @@ public class STPPaymentIntent: NSObject {
             "sourceId = \(String(describing: sourceId))",
             "status = \(String(describing: allResponseFields["status"] as? String))",
             "unactivatedPaymentMethodTypes = \(allResponseFields.stp_array(forKey: "unactivated_payment_method_types") ?? [])",
+            "cardBrandChoice = \(String(describing: cardBrandChoice))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -211,7 +215,8 @@ public class STPPaymentIntent: NSObject {
         status: STPPaymentIntentStatus,
         stripeDescription: String?,
         stripeId: String,
-        unactivatedPaymentMethodTypes: [STPPaymentMethodType]
+        unactivatedPaymentMethodTypes: [STPPaymentMethodType],
+        cardBrandChoice: STPCardBrandChoice?
     ) {
         self.allResponseFields = allResponseFields
         self.amount = amount
@@ -240,6 +245,7 @@ public class STPPaymentIntent: NSObject {
         self.stripeDescription = stripeDescription
         self.stripeId = stripeId
         self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
+        self.cardBrandChoice = cardBrandChoice
         super.init()
     }
 }
@@ -266,6 +272,7 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             dict["unactivated_payment_method_types"] = response["unactivated_payment_method_types"]
             dict["link_settings"] = response["link_settings"]
             dict["payment_method_specs"] = response["payment_method_specs"]
+            dict["card_brand_choice"] = response["card_brand_choice"]
             return decodeSTPPaymentIntentObject(fromAPIResponse: dict)
         } else {
             return decodeSTPPaymentIntentObject(fromAPIResponse: response)
@@ -340,7 +347,8 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             status: STPPaymentIntentStatus.status(from: rawStatus),
             stripeDescription: dict["description"] as? String,
             stripeId: stripeId,
-            unactivatedPaymentMethodTypes: unactivatedPaymentTypes
+            unactivatedPaymentMethodTypes: unactivatedPaymentTypes,
+            cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: dict["card_brand_choice"] as? [AnyHashable: Any])
         ) as? Self
     }
 }
