@@ -24,7 +24,7 @@ protocol PickerFieldViewDelegate: AnyObject {
 final class PickerFieldView: UIView {
     // MARK: - Views
     private lazy var toolbar = DoneButtonToolbar(delegate: self, showCancelButton: true, theme: theme)
-    private lazy var textField: UITextField = {
+    private lazy var textField: PickerTextField = {
         let textField = PickerTextField()
         textField.inputView = pickerView
         textField.adjustsFontForContentSizeCategory = true
