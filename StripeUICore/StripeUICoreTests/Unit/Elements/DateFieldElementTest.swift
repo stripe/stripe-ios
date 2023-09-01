@@ -47,7 +47,7 @@ final class DateFieldElementTest: XCTestCase {
         element.didSelectDate()
         element.didFinish(element.pickerFieldView)
 
-        XCTAssertEqual(element.pickerFieldView.displayText, "10032021")
+        XCTAssertEqual(element.pickerFieldView.displayText, NSAttributedString(string: "10032021"))
     }
 
     func testDidUpdate() {
