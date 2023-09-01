@@ -12,6 +12,7 @@ import Foundation
 import UIKit
 
 extension DropdownFieldElement {
+
     @_spi(STP) public static func makeCardBrandDropdown(
         theme: ElementsUITheme
     ) -> DropdownFieldElement {
@@ -28,7 +29,7 @@ extension DropdownFieldElement {
                                                                         labelDisplayName: STPCardBrand.unknown.brandIconAttributedString,
                                                                         accessibilityValue: "Select card brand (optional)",
                                                                         rawData: "-1",
-                                                                        isPlaceholder: true),]
+                                                                        isPlaceholder: true), ]
         dropDownItems += cardBrands.sorted().map {
             let brandName = STPCardBrandUtilities.stringFrom($0) ?? ""
 

@@ -21,19 +21,17 @@ extension TextFieldElement {
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
-        let dropDownView: UIView?
-        let cardBrandChoiceEligible: Bool
+        let cardBrandDropDownView: UIView?
 
-        init(defaultValue: String? = nil, dropDownView: UIView? = nil, cardBrandChoiceEligible: Bool = false) {
+        init(defaultValue: String? = nil, dropDownView: UIView? = nil) {
             self.defaultValue = defaultValue
-            self.dropDownView = dropDownView
-            self.cardBrandChoiceEligible = cardBrandChoiceEligible
+            self.cardBrandDropDownView = dropDownView
         }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-            // If CBC is enabled show the dropdown if
-            if cardBrandChoiceEligible {
-                return dropDownView
+            // If CBC is not nil, show it
+            if let cardBrandDropDownView = cardBrandDropDownView {
+                return cardBrandDropDownView
             }
 
             let cardBrand = STPCardValidator.brand(forNumber: text)

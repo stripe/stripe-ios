@@ -73,11 +73,13 @@ final class CardSection: ContainerElement {
                 return params
             }
             : nil
-        let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(theme: theme)
-        cardBrandDropDown.isEnabled = false
+        var cardBrandDropDown: DropdownFieldElement?
+        if cardBrandChoiceEligible {
+            cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(theme: theme)
+            cardBrandDropDown?.isEnabled = false
+        }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
-                                                                                       dropDownView: cardBrandDropDown.view,
-                                                                                       cardBrandChoiceEligible: cardBrandChoiceEligible), theme: theme) { field, params in
+                                                                                       dropDownView: cardBrandChoiceEligible ? cardBrandDropDown?.view : nil), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -137,28 +139,41 @@ final class CardSection: ContainerElement {
             cvcElement.setText(cvcElement.text) // A hack to get the CVC to update
         }
 
-        if cardBrandEligible {
-            if panElement.text.count < 8 {
-                cardBrandDropDown?.isEnabled = false
-                cardBrandDropDown?.selectedIndex = 0
-            } else {
-                cardBrandDropDown?.isEnabled = true
-                STPCardValidator.possibleBrands(forNumber: panElement.text) { result in
-                    // TOOD(porter) Update items in card brand drop down
-                    switch result {
-                    case .success(let brands):
-                        print(brands)
-                        DispatchQueue.main.async {
-                            self.cardBrandDropDown?.update(items: DropdownFieldElement.items(from: brands))
+        updateCardBrandDropdown()
+        delegate?.didUpdate(element: self)
+    }
+
+    func updateCardBrandDropdown() {
+        guard cardBrandEligible else {
+            return
+        }
+
+        // Disable the dropdown if less than 8 digits entered for card number
+        if panElement.text.count < 8 {
+            cardBrandDropDown?.isEnabled = false
+            cardBrandDropDown?.selectedIndex = 0
+        } else {
+            // Otherwise, enable dropdown, and fetch brands
+            cardBrandDropDown?.isEnabled = true
+            // TODO(porter) Hard code test cards
+            STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
+                switch result {
+                case .success(let brands):
+                    DispatchQueue.main.async {
+                        self?.cardBrandDropDown?.update(items: DropdownFieldElement.items(from: brands))
+                        // If there is only one option select it
+                        if brands.count == 1 {
+                            self?.cardBrandDropDown?.select(index: 1)
                         }
-                    case .failure(let error):
-                        print(error)
+
+                        // Only enable the dropdown if we have more than 1 possible brand
+                        self?.cardBrandDropDown?.isEnabled = brands.count > 1
                     }
+                case .failure(let error):
+                    print(error)
                 }
             }
         }
-
-        delegate?.didUpdate(element: self)
     }
 }
 
