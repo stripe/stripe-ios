@@ -50,11 +50,11 @@ extension Element {
             .compactMap { $0 as? SimpleMandateElement }
             .first
     }
-    
+
     func getPhoneNumberElement() -> PhoneNumberElement? {
         return getElement()
     }
-    
+
     func getElement<T>() -> T? {
         return getAllUnwrappedSubElements()
             .compactMap { $0 as? T }

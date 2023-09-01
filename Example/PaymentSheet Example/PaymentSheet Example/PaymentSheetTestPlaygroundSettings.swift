@@ -193,7 +193,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
     enum ExternalPayPalEnabled: String, PickerEnum {
         static let enumName: String = "External PayPal"
-       
+
         case on
         case off
     }

@@ -119,7 +119,7 @@ enum Intent {
             }
         }
     }
-    
+
     var shouldDisableExternalPayPal: Bool {
         let allResponseFields: [AnyHashable: Any]
         switch self {

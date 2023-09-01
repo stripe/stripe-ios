@@ -30,7 +30,7 @@ final class STPElementsSession: NSObject {
 
     /// A map describing payment method types form specs.
     let paymentMethodSpecs: [[AnyHashable: Any]]?
-    
+
     let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:

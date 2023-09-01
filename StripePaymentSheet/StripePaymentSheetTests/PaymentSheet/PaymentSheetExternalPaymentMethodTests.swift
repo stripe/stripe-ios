@@ -7,36 +7,36 @@
 
 import XCTest
 
-@testable@_spi(STP) import StripeUICore
 @testable@_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
+@testable@_spi(STP) import StripeUICore
 
 @MainActor
 final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
     override func setUp() async throws {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
     }
-    
+
     func testExternalPayPal() async throws {
         let e = expectation(description: "Confirm completed")
         let e2 = expectation(description: "External PM confirm handler called")
-        
+
         var configuration = PaymentSheet.Configuration()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, billingDetails in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, _ in
             XCTAssertEqual(externalPaymentMethodType, "external_paypal")
             e2.fulfill()
             return .completed
         })
-        
+
         let intent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
         }))
-        
+
         // Make the form
         let paymentMethodForm = makeForm(intent: intent, configuration: configuration)
-        
+
         // External PMs display no fields
         XCTAssertEqual(paymentMethodForm.getAllSubElements().count, 1)
-        
+
         // Confirm the intent with the form details
         PaymentSheet.confirm(
             configuration: configuration,
@@ -54,7 +54,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         }
         await fulfillment(of: [e, e2], timeout: 5)
     }
-    
+
     func testExternalFormBillingDetails() async throws {
         let externalConfirmHandlerCalled = expectation(description: "External PM confirm handler called")
         var configuration = PaymentSheet.Configuration()
@@ -80,7 +80,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         let intent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
         }))
-        
+
         // (1) ...should result in the external payment method form showing billing detail fields...
         let paymentMethodForm = makeForm(intent: intent, configuration: configuration)
         paymentMethodForm.getTextFieldElement("Full name")?.setText("Jane Doe") ?? XCTFail()
@@ -92,8 +92,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         paymentMethodForm.getTextFieldElement("City")?.setText("South San Francisco") ?? XCTFail()
         XCTAssertNotNil(paymentMethodForm.getDropdownFieldElement("State"))
         paymentMethodForm.getTextFieldElement("ZIP")?.setText("12345") ?? XCTFail()
-        
-        
+
         // Simulate customer tapping "Buy" - generate params from the form and confirm payment
         guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: .externalPayPal)) else {
             XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
@@ -108,13 +107,13 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         ) { _, _ in }
         await fulfillment(of: [externalConfirmHandlerCalled], timeout: 5)
     }
-    
+
     func testConfirmUsesMerchantConfirmHandlerResults() {
         struct MockError: Error, Equatable { }
         func _confirm(with merchantReturnedResult: PaymentSheetResult) {
             let e = expectation(description: "External PM confirm handler called")
             var configuration = PaymentSheet.Configuration()
-            configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, billingDetails in
+            configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
                 // The merchant's returned result should be passed back in `PaymentSheet.confirm`
                 return merchantReturnedResult
             })
@@ -145,16 +144,16 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             }
             waitForExpectations(timeout: 1)
         }
-        
+
         _confirm(with: .canceled)
         _confirm(with: .completed)
         _confirm(with: .failed(error: MockError()))
     }
-    
+
     func testDontShowPayPalIfAlreadyPresent() {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "https://foo.bar"
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, billingDetails in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
             XCTFail("Shouldn't be called")
             return .canceled
         })
@@ -162,11 +161,19 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         let intent = Intent.deferredIntent(elementsSession: ._testValue(paymentMethodTypes: ["paypal"]), intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
         }))
-        
-        let addVC = AddPaymentMethodViewController(intent: intent, configuration: configuration)
-        XCTAssertEqual(addVC.paymentMethodTypes, [.dynamic("paypal")])
+
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            configuration: configuration,
+            logAvailability: false
+        )
+        XCTAssertEqual(paymentMethodTypes, [.dynamic("paypal")])
     }
-    
+
+    func testDontShowPaypalIfFlag() {
+
+    }
+
     func makeForm(intent: Intent, configuration: PaymentSheet.Configuration) -> PaymentMethodElement {
         let formFactory = PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: .externalPayPal)
         let paymentMethodForm = formFactory.make()

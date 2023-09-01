@@ -110,7 +110,7 @@ extension PaymentSheet {
         }
 
         /// The identifier for the payment method type as it is represented on an intent
-        var identifier: String { // this should be renamed to analyticsIdentifier
+        var identifier: String {
             if let stpPaymentMethodType {
                 return stpPaymentMethodType.identifier
             } else if case .dynamic(let name) = self {
@@ -230,6 +230,7 @@ extension PaymentSheet {
         static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
             var recommendedPaymentMethodTypes = Self.recommendedPaymentMethodTypes(from: intent)
+
             if configuration.linkPaymentMethodsOnly {
                 // If we're in the Link modal, manually add Link payment methods
                 // and let the support calls decide if they're allowed
@@ -238,7 +239,7 @@ extension PaymentSheet {
                     recommendedPaymentMethodTypes.append(method)
                 }
             }
-            
+
             // TODO(yuki): Rewrite this when we support more EPMs
             // Add external_paypal if...
             if
@@ -253,7 +254,7 @@ extension PaymentSheet {
                 recommendedPaymentMethodTypes.append(.externalPayPal)
             }
 
-            return recommendedPaymentMethodTypes.filter { paymentMethodType in
+            recommendedPaymentMethodTypes = recommendedPaymentMethodTypes.filter { paymentMethodType in
                 let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: paymentMethodType,
                     configuration: configuration,
@@ -270,6 +271,27 @@ extension PaymentSheet {
                 }
 
                 return availabilityStatus == .supported
+            }
+
+            if let paymentMethodOrder = configuration.paymentMethodOrder?.map({ $0.lowercased() }) {
+                // Order the payment methods
+                var orderedPaymentMethodTypes = [PaymentMethodType]()
+                var originalOrderedTypes = recommendedPaymentMethodTypes.map { $0.identifier }
+                // 1. Add each PM in paymentMethodOrder first
+                for pm in paymentMethodOrder {
+                    guard originalOrderedTypes.contains(pm) else {
+                        // Ignore the PM if it's not in originalOrderedTypes
+                        continue
+                    }
+                    orderedPaymentMethodTypes.append(.init(from: pm))
+                    // 2. Remove each PM we add from originalOrderedTypes.
+                    originalOrderedTypes.remove(pm)
+                }
+                // 3. Append the remaining PMs
+                orderedPaymentMethodTypes.append(contentsOf: originalOrderedTypes.map({ .init(from: $0) }))
+                return orderedPaymentMethodTypes
+            } else {
+                return recommendedPaymentMethodTypes
             }
         }
 

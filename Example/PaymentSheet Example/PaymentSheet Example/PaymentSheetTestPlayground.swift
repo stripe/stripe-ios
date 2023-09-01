@@ -15,7 +15,7 @@ struct PaymentSheetTestPlayground: View {
     init(settings: PaymentSheetTestPlaygroundSettings) {
         _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings))
     }
-    
+
     @ViewBuilder
     var clientSettings: some View {
         SettingView(setting: $playgroundController.settings.uiStyle)

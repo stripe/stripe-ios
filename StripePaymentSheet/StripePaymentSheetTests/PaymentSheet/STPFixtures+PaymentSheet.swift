@@ -6,10 +6,10 @@
 //
 
 import Foundation
+@_spi(STP) @testable import StripeCore
 import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
-@_spi(STP) @testable import StripeCore
 
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
@@ -29,7 +29,7 @@ extension STPElementsSession {
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
         return elementsSession
     }
-    
+
     static func _testValue(
         paymentMethodTypes: [String],
         flags: [String: String] = [:]
