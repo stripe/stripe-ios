@@ -64,16 +64,16 @@ The Stripe iOS SDK collects data to help us improve our products and prevent fra
 For help with Apple's App Privacy Details form in App Store Connect, visit [Stripe iOS SDK Privacy Details](https://support.stripe.com/questions/stripe-ios-sdk-privacy-details).
 
 ## Modules
-|Module|Description|Compressed|Uncompressed|
-|------|-----------|----------|------------|
-|StripePaymentSheet|Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet).|3.2MB|8.9MB|
-|Stripe|Contains all the below frameworks, plus [Issuing](https://stripe.com/docs/issuing/cards/digital-wallets?platform=iOS) and [Basic Integration](https://stripe.com/docs/mobile/ios/basic).|2.3MB|5.1MB|
-|[StripeApplePay](StripeApplePay)|[Apple Pay support](/docs/apple-pay), including `STPApplePayContext`.|0.5MB|1.5MB|
-|[StripeCardScan](StripeCardScan)|A standalone library for card scanning.|-|-|
-|[StripeFinancialConnections](StripeFinancialConnections)|A library that lets your users securely share financial data|1.5MB|4.0MB|
-|[StripeIdentity](StripeIdentity)|A library to verify your user's identity.|1.4MB|3.9MB|
-|[StripePayments](StripePayments)|Bindings for the Stripe Payments API.|1.2MB|3.7MB|
-|[StripePaymentsUI](StripePaymentsUI)|Bindings for the Stripe Payments API, [STPPaymentCardTextField](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), STPCardFormView, and other UI elements.|2.0MB|6.0MB|
+|Module|Description|
+|------|-----------|
+|StripePaymentSheet|Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet).|
+|Stripe|Contains all the below frameworks, plus [Issuing](https://stripe.com/docs/issuing/cards/digital-wallets?platform=iOS) and [Basic Integration](https://stripe.com/docs/mobile/ios/basic).|
+|[StripeApplePay](StripeApplePay)|[Apple Pay support](/docs/apple-pay), including `STPApplePayContext`.|
+|[StripeCardScan](StripeCardScan)|A standalone library for card scanning.|
+|[StripeFinancialConnections](StripeFinancialConnections)|A library that lets your users securely share financial data|
+|[StripeIdentity](StripeIdentity)|A library to verify your user's identity.|
+|[StripePayments](StripePayments)|Bindings for the Stripe Payments API.|
+|[StripePaymentsUI](StripePaymentsUI)|Bindings for the Stripe Payments API, [STPPaymentCardTextField](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), STPCardFormView, and other UI elements.|
 
 ## Releases
 
