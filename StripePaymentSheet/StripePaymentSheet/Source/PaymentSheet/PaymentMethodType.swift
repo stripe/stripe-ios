@@ -238,6 +238,20 @@ extension PaymentSheet {
                     recommendedPaymentMethodTypes.append(method)
                 }
             }
+            
+            // TODO(yuki): Rewrite this when we support more EPMs
+            // Add external_paypal if...
+            if
+                // ...the merchant configured external_paypal...
+                let epms = configuration.externalPaymentMethodConfiguration?.externalPaymentMethods,
+                epms.contains("external_paypal"),
+                // ...the intent doesn't already have "paypal"...
+                !recommendedPaymentMethodTypes.contains(.dynamic("paypal")),
+                // ...and external_paypal isn't disabled.
+                !intent.shouldDisableExternalPayPal
+            {
+                recommendedPaymentMethodTypes.append(.externalPayPal)
+            }
 
             return recommendedPaymentMethodTypes.filter { paymentMethodType in
                 let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
@@ -285,6 +299,8 @@ extension PaymentSheet {
                         configuration: configuration,
                         intent: intent
                     )
+                } else if case .externalPayPal = paymentMethod {
+                    return .supported
                 }
 
                 return .notSupported

@@ -119,4 +119,21 @@ enum Intent {
             }
         }
     }
+    
+    var shouldDisableExternalPayPal: Bool {
+        let allResponseFields: [AnyHashable: Any]
+        switch self {
+        case .deferredIntent(elementsSession: let session, intentConfig: _):
+            allResponseFields = session.allResponseFields
+        case .paymentIntent(let intent):
+            allResponseFields = intent.allResponseFields
+        case .setupIntent(let intent):
+            allResponseFields = intent.allResponseFields
+        }
+        // Only disable external_paypal iff this flag is present and false
+        guard let flag = allResponseFields[jsonDict: "flags"]?["elements_enable_external_payment_method_paypal"] as? Bool else {
+            return false
+        }
+        return flag == false
+    }
 }

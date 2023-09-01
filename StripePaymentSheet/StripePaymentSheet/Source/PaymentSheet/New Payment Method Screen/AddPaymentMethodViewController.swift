@@ -35,11 +35,6 @@ class AddPaymentMethodViewController: UIViewController {
             configuration: configuration,
             logAvailability: true
         )
-        // TODO(yuki): Rewrite this when we support more EPMs
-        if let epms = configuration.externalPaymentMethodConfiguration?.externalPaymentMethods,
-           epms.contains("external_paypal") {
-            paymentMethodTypes.append(.externalPayPal)
-        }
         assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         return paymentMethodTypes
     }()

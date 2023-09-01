@@ -9,6 +9,7 @@ import Foundation
 import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
+@_spi(STP) @testable import StripeCore
 
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
@@ -22,10 +23,21 @@ public extension PaymentSheet.Configuration {
     }
 }
 
-public extension STPElementsSession {
+extension STPElementsSession {
     static func _testCardValue() -> STPElementsSession {
         let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        return elementsSession
+    }
+    
+    static func _testValue(
+        paymentMethodTypes: [String],
+        flags: [String: String] = [:]
+    ) -> STPElementsSession {
+        var json = STPTestUtils.jsonNamed("ElementsSession")!
+        json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
+        json["flags"] = flags
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
     }
 }

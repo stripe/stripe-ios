@@ -9,29 +9,29 @@ import Foundation
 @_spi(STP) import StripePayments
 
 /// The response returned by v1/elements/sessions
-@_spi(STP) public final class STPElementsSession: NSObject {
+final class STPElementsSession: NSObject {
     /// Elements Session ID for analytics purposes, looks like "elements_session_1234"
-    public let sessionID: String
+    let sessionID: String
 
     /// The ordered payment method preference for this ElementsSession.
-    public let orderedPaymentMethodTypes: [STPPaymentMethodType]
+    let orderedPaymentMethodTypes: [STPPaymentMethodType]
 
     /// A list of payment method types that are not activated in live mode, but activated in test mode.
-    public let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
+    let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
 
     /// Link-specific settings for this ElementsSession.
-    public let linkSettings: LinkSettings?
+    let linkSettings: LinkSettings?
 
     /// Country code of the user.
-    public let countryCode: String?
+    let countryCode: String?
 
     /// Country code of the merchant.
-    public let merchantCountryCode: String?
+    let merchantCountryCode: String?
 
     /// A map describing payment method types form specs.
-    public let paymentMethodSpecs: [[AnyHashable: Any]]?
-
-    public let allResponseFields: [AnyHashable: Any]
+    let paymentMethodSpecs: [[AnyHashable: Any]]?
+    
+    let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
     @objc public override var description: String {
@@ -76,9 +76,9 @@ import Foundation
 extension STPElementsSession: STPAPIResponseDecodable {
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
-            let paymentMethodPrefDict = dict["payment_method_preference"] as? [AnyHashable: Any],
-            let paymentMethodTypeStrings = paymentMethodPrefDict["ordered_payment_method_types"] as? [String],
-            let sessionID = dict["session_id"] as? String
+              let paymentMethodPrefDict = dict["payment_method_preference"] as? [AnyHashable: Any],
+              let paymentMethodTypeStrings = paymentMethodPrefDict["ordered_payment_method_types"] as? [String],
+              let sessionID = dict["session_id"] as? String
         else {
             return nil
         }
@@ -97,5 +97,4 @@ extension STPElementsSession: STPAPIResponseDecodable {
             paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]]
         ) as? Self
     }
-
 }

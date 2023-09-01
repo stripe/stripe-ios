@@ -377,7 +377,7 @@ extension PaymentSheet {
 
     @_spi(ExternalPaymentMethodsPrivateBeta)
     public struct ExternalPaymentMethodConfiguration {
-        public init(externalPaymentMethods: [String] = [], externalPaymentMethodConfirmHandler: @escaping PaymentSheet.ExternalPaymentMethodConfiguration.ExternalPaymentMethodConfirmHandler) {
+        public init(externalPaymentMethods: [String], externalPaymentMethodConfirmHandler: @escaping PaymentSheet.ExternalPaymentMethodConfiguration.ExternalPaymentMethodConfirmHandler) {
             self.externalPaymentMethods = externalPaymentMethods
             self.externalPaymentMethodConfirmHandler = externalPaymentMethodConfirmHandler
         }
