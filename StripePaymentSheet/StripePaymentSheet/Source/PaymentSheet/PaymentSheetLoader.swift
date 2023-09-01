@@ -213,20 +213,20 @@ final class PaymentSheetLoader {
         switch intent {
         case .paymentIntent(let underlyingIntent):
             let dict = underlyingIntent.allResponseFields
-            if let _ = STPElementsCustomerError.decodedObject(fromAPIResponse: dict) {
+            if STPElementsCustomerError.decodedObject(fromAPIResponse: dict) != nil {
                 return nil
             } else if let legacyElementsCustomer = STPLegacyElementsCustomer.decodedObject(fromAPIResponse: dict) {
                 return legacyElementsCustomer.payment_methods
             }
         case .setupIntent(let underlyingIntent):
             let dict = underlyingIntent.allResponseFields
-            if let _ = STPElementsCustomerError.decodedObject(fromAPIResponse: dict) {
+            if STPElementsCustomerError.decodedObject(fromAPIResponse: dict) != nil{
                 return nil
             } else if let legacyElementsCustomer = STPLegacyElementsCustomer.decodedObject(fromAPIResponse: dict) {
                 return legacyElementsCustomer.payment_methods
             }
         case .deferredIntent(let elementsSession, _):
-            if let _ = elementsSession.customer_error {
+            if elementsSession.customer_error != nil{
                 return nil
             } else if let payment_methods = elementsSession.legacy_customer?.payment_methods {
                 return payment_methods

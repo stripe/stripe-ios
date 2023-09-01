@@ -31,7 +31,6 @@
     }
 }
 
-
 // MARK: - STPAPIResponseDecodable
 extension STPElementsCustomerError: STPAPIResponseDecodable {
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {

@@ -51,8 +51,8 @@ final class STPElementsSession: NSObject {
             "countryCode = \(String(describing: countryCode))",
             "merchantCountryCode = \(String(describing: merchantCountryCode))",
             "paymentMethodSpecs = \(String(describing: paymentMethodSpecs))",
-            "legacy_customer = \(String(describing:legacy_customer))",
-            "customer_error = \(String(describing:customer_error))"
+            "legacy_customer = \(String(describing: legacy_customer))",
+            "customer_error = \(String(describing: customer_error))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
