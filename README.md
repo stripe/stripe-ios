@@ -66,11 +66,14 @@ For help with Apple's App Privacy Details form in App Store Connect, visit [Stri
 ## Modules
 |Module|Description|Compressed|Uncompressed|
 |------|-----------|----------|------------|
-|StripePaymentSheet|Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet).|2.7MB|6.3MB|
+|StripePaymentSheet|Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet).|3.2MB|8.9MB|
 |Stripe|Contains all the below frameworks, plus [Issuing](https://stripe.com/docs/issuing/cards/digital-wallets?platform=iOS) and [Basic Integration](https://stripe.com/docs/mobile/ios/basic).|2.3MB|5.1MB|
-|StripeApplePay|[Apple Pay support](/docs/apple-pay), including `STPApplePayContext`.|0.4MB|1.0MB|
-|StripePayments|Bindings for the Stripe Payments API.|1.0MB|2.6MB|
-|StripePaymentsUI|Bindings for the Stripe Payments API, [STPPaymentCardTextField](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), STPCardFormView, and other UI elements.|1.7MB|3.9MB|
+|[StripeApplePay](StripeApplePay)|[Apple Pay support](/docs/apple-pay), including `STPApplePayContext`.|0.5MB|1.5MB|
+|[StripeCardScan](StripeCardScan)|A standalone library for card scanning.|-|-|
+|[StripeFinancialConnections](StripeFinancialConnections)|A library that lets your users securely share financial data|1.5MB|4.0MB|
+|[StripeIdentity](StripeIdentity)|A library to verify your user's identity.|1.4MB|3.9MB|
+|[StripePayments](StripePayments)|Bindings for the Stripe Payments API.|1.2MB|3.7MB|
+|[StripePaymentsUI](StripePaymentsUI)|Bindings for the Stripe Payments API, [STPPaymentCardTextField](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), STPCardFormView, and other UI elements.|2.0MB|6.0MB|
 
 ## Releases
 
@@ -116,6 +119,16 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 - [Non-Card Payment Examples](Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to manually accept various payment methods using the Stripe API.
 
+## Card scanning
+
+[PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) offers built-in card scanning. To enable card scanning, you'll need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
+
+You can demo this feature in our [PaymentSheet example app](Example/PaymentSheet%20Example). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+
+## Contributing
+
+We welcome contributions of any kind including new features, bug fixes, and documentation improvements. Please first open an issue describing what you want to build if it is a major change so that we can discuss how to move forward. Otherwise, go ahead and open a pull request for minor changes such as typo fixes and one liners.
+
 ### Building from source
 
 We use [Tuist](https://tuist.io) to generate Xcode projects, and all Xcode related files have been removed from the master branch of the repository. Note that project files are still available on tagged releases.
@@ -129,16 +142,6 @@ If you want to build from the master branch you need to follow these steps:
 You can build any of the generated targets as you normally would.
 
 For more information about Tuist, visit https://tuist.io.
-
-## Card scanning
-
-[PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) offers built-in card scanning. To enable card scanning, you'll need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
-
-You can demo this feature in our [PaymentSheet example app](Example/PaymentSheet%20Example). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
-
-## Contributing
-
-We welcome contributions of any kind including new features, bug fixes, and documentation improvements. Please first open an issue describing what you want to build if it is a major change so that we can discuss how to move forward. Otherwise, go ahead and open a pull request for minor changes such as typo fixes and one liners.
 
 ### Running tests
 
