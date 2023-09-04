@@ -365,7 +365,8 @@ extension Project {
                                     "$(SRCROOT)/../Tests/ReferenceImages",
                             ]
                         ) : nil,
-                    expandVariableFromTarget: "\(name)"
+                    expandVariableFromTarget: "\(name)",
+                    options: .options(coverage: true)
                 )
             )
         )

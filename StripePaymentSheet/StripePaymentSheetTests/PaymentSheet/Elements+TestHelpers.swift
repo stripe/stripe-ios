@@ -28,6 +28,10 @@ extension Element {
             return wrappedElement.element.getAllUnwrappedSubElements()
         case let wrappedElement as PaymentMethodElementWrapper<PhoneNumberElement>:
             return [wrappedElement.element]
+        case let linkEnabledPaymentElement as LinkEnabledPaymentMethodElement:
+            return [linkEnabledPaymentElement] + linkEnabledPaymentElement.paymentMethodElement.getAllUnwrappedSubElements()
+        case let usBankAccountFormElement as USBankAccountPaymentMethodElement:
+            return [usBankAccountFormElement] + usBankAccountFormElement.formElement.getAllUnwrappedSubElements()
         default:
             return [self]
         }

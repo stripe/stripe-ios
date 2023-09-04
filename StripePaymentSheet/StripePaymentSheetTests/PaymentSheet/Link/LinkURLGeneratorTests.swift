@@ -77,7 +77,7 @@ extension STPElementsSession {
     // Should use the one from StripeiOSTests, but we don't have good infrastructure to share these
     // and we're not using any details from it.
     static var emptyElementsSession: STPElementsSession {
-        let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
+        let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["card"],
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
         ]

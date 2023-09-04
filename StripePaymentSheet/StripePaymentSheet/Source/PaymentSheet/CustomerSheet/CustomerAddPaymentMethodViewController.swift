@@ -23,7 +23,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?
 
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
-        return paymentMethodTypesView.selected
+        return paymentMethodTypesView.viewModel.selected
     }
     var paymentOption: PaymentOption? {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
@@ -95,10 +95,17 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     private lazy var paymentMethodDetailsView: UIView = {
         return paymentMethodFormElement.view
     }()
+    private lazy var paymentMethodTypeSelectorViewModel: PaymentMethodTypeSelectorViewModel = {
+        let viewModel = PaymentMethodTypeSelectorViewModel(paymentMethodTypes: paymentMethodTypes)
+        viewModel.addObserver(self) { [weak self] in
+            guard let self = self else { return }
+            self.updateFormElement()
+            self.delegate?.didUpdate(self)
+        }
+        return viewModel
+    }()
     private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
-        let view = PaymentMethodTypeCollectionView(
-            paymentMethodTypes: paymentMethodTypes, appearance: configuration.appearance, delegate: self)
-        return view
+        return PaymentMethodTypeCollectionView(viewModel: paymentMethodTypeSelectorViewModel, appearance: configuration.appearance)
     }()
     private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .bottom)
@@ -295,13 +302,6 @@ extension CustomerAddPaymentMethodViewController: ElementDelegate {
     func didUpdate(element: Element) {
         delegate?.didUpdate(self)
         animateHeightChange()
-    }
-}
-
-extension CustomerAddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
-    func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
-        updateFormElement()
-        delegate?.didUpdate(self)
     }
 }
 

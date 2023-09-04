@@ -11,10 +11,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
-    func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView)
-}
-
 /// A carousel of Payment Method types e.g. [Card, Alipay, SEPA Debit]
 /// For internal SDK use only
 @objc(STP_Internal_PaymentMethodTypeCollectionView)
@@ -25,39 +21,18 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     internal static let minInteritemSpacing: CGFloat = 12
 
     let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"
-    private(set) var selected: PaymentSheet.PaymentMethodType {
-        didSet(old) {
-            if old != selected {
-                _delegate?.didUpdateSelection(self)
-            }
-        }
-    }
-    let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+
+    let viewModel: PaymentMethodTypeSelectorViewModel
     let appearance: PaymentSheet.Appearance
-    let isPaymentSheet: Bool
-    weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
 
     init(
-        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-        initialPaymentMethodType: PaymentSheet.PaymentMethodType? = nil,
-        appearance: PaymentSheet.Appearance,
-        isPaymentSheet: Bool = false,
-        delegate: PaymentMethodTypeCollectionViewDelegate
+        viewModel: PaymentMethodTypeSelectorViewModel,
+        appearance: PaymentSheet.Appearance
     ) {
-        assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
+        assert(!viewModel.paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
 
-        self.paymentMethodTypes = paymentMethodTypes
-        self._delegate = delegate
-        let selectedItemIndex: Int = {
-            if let initialPaymentMethodType = initialPaymentMethodType {
-                return paymentMethodTypes.firstIndex(of: initialPaymentMethodType) ?? 0
-            } else {
-                return 0
-            }
-        }()
-        self.selected = paymentMethodTypes[selectedItemIndex]
+        self.viewModel = viewModel
         self.appearance = appearance
-        self.isPaymentSheet = isPaymentSheet
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
@@ -67,7 +42,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         super.init(frame: .zero, collectionViewLayout: layout)
         self.dataSource = self
         self.delegate = self
-        selectItem(at: IndexPath(item: selectedItemIndex, section: 0), animated: false, scrollPosition: [])
+        selectItem(at: IndexPath(item: viewModel.selectedItemIndex, section: 0), animated: false, scrollPosition: [])
 
         showsHorizontalScrollIndicator = false
         backgroundColor = appearance.colors.background
@@ -93,7 +68,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
         -> Int
     {
-        return paymentMethodTypes.count
+        return viewModel.paymentMethodTypes.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
@@ -109,20 +84,14 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
             assertionFailure()
             return UICollectionViewCell()
         }
-        cell.paymentMethodType = paymentMethodTypes[indexPath.item]
+        cell.paymentMethodType = viewModel.paymentMethodTypes[indexPath.item]
         cell.appearance = appearance
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        selected = paymentMethodTypes[indexPath.item]
-
-        // Only log this event when this collection view is being used by PaymentSheet
-        if isPaymentSheet {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCarouselPaymentMethodTapped,
-                                                                 paymentMethodTypeAnalyticsValue: paymentMethodTypes[indexPath.row].identifier)
-        }
+        viewModel.selectItem(at: indexPath.item)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -140,10 +109,14 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         } else {
             // When there are 2 PMs, make them span the width of the collection view
             // When there are not 2 PMs, show 3 full cells plus 30% of the next if present
-            let numberOfCellsToShow = paymentMethodTypes.count == 2 ? CGFloat(2) : CGFloat(3.3)
+            let numberOfCellsToShow = viewModel.paymentMethodTypes.count == 2 ? CGFloat(2) : CGFloat(3.3)
 
             let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (PaymentMethodTypeCollectionView.minInteritemSpacing * 3.0))) / numberOfCellsToShow
-            return CGSize(width: max(cellWidth, PaymentTypeCell.minWidth(for: paymentMethodTypes[indexPath.item], appearance: appearance)), height: PaymentMethodTypeCollectionView.cellHeight)
+            let paymentMethodType = viewModel.paymentMethodTypes[indexPath.item]
+            return CGSize(
+                width: max(cellWidth, PaymentTypeCell.minWidth(for: paymentMethodType, appearance: appearance)),
+                height: PaymentMethodTypeCollectionView.cellHeight
+            )
         }
     }
 }

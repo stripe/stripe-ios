@@ -32,7 +32,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     var selectedPaymentOption: PaymentOption? {
         switch mode {
         case .addingNew:
-            if let paymentOption = addPaymentMethodViewController.paymentOption {
+            if let paymentOption = addPaymentMethodViewModel.paymentOption {
                 return paymentOption
             } else if isApplePayEnabled {
                 return .applePay
@@ -56,7 +56,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 return .dynamic("")
             }
         case .addingNew:
-            return addPaymentMethodViewController.selectedPaymentMethodType
+            return addPaymentMethodViewModel.paymentMethodTypeSelectorViewModel.selected
         }
     }
     weak var delegate: PaymentSheetFlowControllerViewControllerDelegate?
@@ -81,6 +81,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     private let isLinkEnabled: Bool
 
     // MARK: - Views
+    private let addPaymentMethodViewModel: AddPaymentMethodViewModel
     private let addPaymentMethodViewController: AddPaymentMethodViewController
     private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     private lazy var headerLabel: UILabel = {
@@ -161,11 +162,12 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             ),
             appearance: configuration.appearance
         )
-        self.addPaymentMethodViewController = AddPaymentMethodViewController(
+        addPaymentMethodViewModel = AddPaymentMethodViewModel(
             intent: intent,
             configuration: configuration,
-            previousCustomerInput: previousNewPaymentMethodParams // Restore the customer's previous new payment method input
+            previousCustomerInput: previousNewPaymentMethodParams
         )
+        self.addPaymentMethodViewController = AddPaymentMethodViewController(viewModel: addPaymentMethodViewModel)
         super.init(nibName: nil, bundle: nil)
         self.savedPaymentOptionsViewController.delegate = self
         self.addPaymentMethodViewController.delegate = self
@@ -277,7 +279,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 "Select your payment method",
                 "Title shown above a carousel containing the customer's payment methods")
         case .addingNew:
-            if addPaymentMethodViewController.paymentMethodTypes == [.card] {
+            if addPaymentMethodViewModel.paymentMethodTypeSelectorViewModel.paymentMethodTypes == [.card] {
                 headerLabel.text = STPLocalizedString("Add a card", "Title shown above a card entry form")
             } else {
                 headerLabel.text = STPLocalizedString("Choose a payment method", "TODO")
@@ -299,14 +301,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         )
 
         // Error
-        switch mode {
-        case .addingNew:
-            if addPaymentMethodViewController.setErrorIfNecessary(for: error) == false {
-                errorLabel.text = error?.localizedDescription
-            }
-        case .selectingSaved:
-            errorLabel.text = error?.localizedDescription
-        }
+        errorLabel.text = error?.localizedDescription
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
@@ -357,7 +352,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 if isSavingInProgress || isVerificationInProgress {
                     // We're in the middle of adding the PM
                     return .processing
-                } else if addPaymentMethodViewController.paymentOption == nil {
+                } else if addPaymentMethodViewModel.paymentOption == nil {
                     // We don't have valid payment method params yet
                     return .disabled
                 } else {
@@ -366,9 +361,9 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             }()
 
             var callToAction: ConfirmButton.CallToActionType = .add(paymentMethodType: selectedPaymentMethodType)
-            if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
+            if let overrideCallToAction = addPaymentMethodViewModel.overrideCallToAction {
                 callToAction = overrideCallToAction
-                confirmButtonState = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
+                confirmButtonState = addPaymentMethodViewModel.overrideCallToActionShouldEnable ? .enabled : .disabled
             }
 
             confirmButton.update(
@@ -388,7 +383,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 self.bottomNoticeTextField.attributedText = nil
             }
         case .addingNew:
-            self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
+            self.bottomNoticeTextField.attributedText = addPaymentMethodViewModel.bottomNoticeAttributedString
         }
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
@@ -402,7 +397,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         case .selectingSaved:
             self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: false)
         case .addingNew:
-            if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
+            if let buyButtonOverrideBehavior = addPaymentMethodViewModel.overrideBuyButtonBehavior {
                 addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
             } else {
                 self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: false)

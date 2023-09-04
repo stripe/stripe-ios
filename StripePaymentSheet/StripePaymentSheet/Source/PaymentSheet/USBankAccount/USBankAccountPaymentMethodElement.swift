@@ -23,7 +23,7 @@ final class USBankAccountPaymentMethodElement: Element {
 
     private let configuration: PaymentSheetFormFactoryConfig
     private let merchantName: String
-    private let formElement: FormElement
+    let formElement: FormElement
     private let bankInfoSectionElement: SectionElement
     private let bankInfoView: BankAccountInfoView
     private let checkboxElement: PaymentMethodElement?

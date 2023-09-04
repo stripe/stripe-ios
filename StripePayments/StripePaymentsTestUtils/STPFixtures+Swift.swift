@@ -30,7 +30,9 @@ public extension STPFixtures {
         orderedPaymentMethodTypes: [String]? = nil,
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
         currency: String = "usd",
-        status: STPPaymentIntentStatus = .requiresPaymentMethod
+        status: STPPaymentIntentStatus = .requiresPaymentMethod,
+        linkSettings: [AnyHashable: Any]? = nil,
+        paymentMethodOptions: [AnyHashable: Any]? = nil
     ) -> STPPaymentIntent {
         var apiResponse: [AnyHashable: Any?] = [
             "id": "123",
@@ -45,6 +47,12 @@ public extension STPFixtures {
         ]
         if let orderedPaymentMethodTypes = orderedPaymentMethodTypes {
             apiResponse["ordered_payment_method_types"] = orderedPaymentMethodTypes
+        }
+        if let linkSettings = linkSettings {
+            apiResponse["link_settings"] = linkSettings
+        }
+        if let paymentMethodOptions = paymentMethodOptions {
+            apiResponse["payment_method_options"] = paymentMethodOptions
         }
         return STPPaymentIntent.decodeSTPPaymentIntentObject(
             fromAPIResponse: apiResponse as [AnyHashable: Any]

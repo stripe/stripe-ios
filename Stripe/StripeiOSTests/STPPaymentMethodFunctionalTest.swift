@@ -11,9 +11,6 @@ import Stripe
 import StripeCoreTestUtils
 
 class STPPaymentMethodFunctionalTest: XCTestCase {
-    override func setUp() {
-        super.setUp()
-    }
 
     func testCreateCardPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)

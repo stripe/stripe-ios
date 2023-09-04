@@ -79,7 +79,7 @@ public extension Element {
 /**
   An Element uses this delegate to present a view controller
  */
-@_spi(STP) public protocol PresentingViewControllerDelegate: ElementDelegate {
+@_spi(STP) public protocol PresentingViewControllerDelegate: AnyObject {
     /**
      Elements will call this function to delegate presentation of a view controller
      */

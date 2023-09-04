@@ -15,6 +15,9 @@ import StripeCoreTestUtils
 import XCTest
 
 class FlowControllerStateTests: XCTestCase {
+    override func setUp() async throws {
+        await PaymentSheetLoader.loadMiscellaneousSingletons()
+    }
 
     func testAddPaymentMethodViewControllerDelegate() {
         let exp = expectation(description: "No delegate methods should be called during init but before viewDidLoad")
@@ -26,7 +29,8 @@ class FlowControllerStateTests: XCTestCase {
         config.apiClient.publishableKey = "pk_123"
         let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
         let apmvcDelegate = StubAPMVCDelegate(expectation: exp)
-        _ = AddPaymentMethodViewController(intent: intent, configuration: config, delegate: apmvcDelegate)
+        let viewModel = AddPaymentMethodViewModel(intent: intent, configuration: config)
+        _ = AddPaymentMethodViewController(viewModel: viewModel, delegate: apmvcDelegate)
         waitForExpectations(timeout: 0.1)
     }
 }

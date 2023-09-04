@@ -69,13 +69,17 @@ class PaymentSheetViewController: UIViewController {
 
     // MARK: - Views
 
+    private lazy var addPaymentMethodViewModel: AddPaymentMethodViewModel = {
+        return AddPaymentMethodViewModel(intent: intent, configuration: configuration, isLinkEnabled: isLinkEnabled)
+    }()
+
     private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
         return AddPaymentMethodViewController(
-            intent: intent,
-            configuration: configuration,
+            viewModel: addPaymentMethodViewModel,
             delegate: self
         )
     }()
+
     private lazy var savedPaymentOptionsViewController: SavedPaymentOptionsViewController = {
         let showApplePay = !shouldShowWalletHeader && isApplePayEnabled
         let showLink = !shouldShowWalletHeader && isLinkEnabled
@@ -192,8 +196,6 @@ class PaymentSheetViewController: UIViewController {
         }
 
         super.init(nibName: nil, bundle: nil)
-
-        self.view.backgroundColor = configuration.appearance.colors.background
     }
 
     deinit {
@@ -204,6 +206,8 @@ class PaymentSheetViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.view.backgroundColor = configuration.appearance.colors.background
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
@@ -311,7 +315,7 @@ class PaymentSheetViewController: UIViewController {
 
         // Content header
         walletHeader.isHidden = !shouldShowWalletHeader
-        walletHeader.showsCardPaymentMessage = (addPaymentMethodViewController.paymentMethodTypes == [.card])
+        walletHeader.showsCardPaymentMessage = (addPaymentMethodViewModel.paymentMethodTypeSelectorViewModel.paymentMethodTypes == [.card])
 
         switch mode {
         case .addingNew:
@@ -336,14 +340,7 @@ class PaymentSheetViewController: UIViewController {
         )
 
         // Error
-        switch mode {
-        case .addingNew:
-            if addPaymentMethodViewController.setErrorIfNecessary(for: error) == false {
-                errorLabel.text = error?.nonGenericDescription
-            }
-        case .selectingSaved:
-            errorLabel.text = error?.nonGenericDescription
-        }
+        errorLabel.text = error?.nonGenericDescription
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
@@ -368,12 +365,12 @@ class PaymentSheetViewController: UIViewController {
             showBuyButton = savedPaymentOptionsViewController.selectedPaymentOption != nil
         case .addingNew:
             buyButtonStyle = .stripe
-            if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
+            if let overrideCallToAction = addPaymentMethodViewModel.overrideCallToAction {
                 callToAction = overrideCallToAction
-                buyButtonStatus = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
+                buyButtonStatus = addPaymentMethodViewModel.overrideCallToActionShouldEnable ? .enabled : .disabled
             } else {
                 buyButtonStatus =
-                    addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
+                    addPaymentMethodViewModel.paymentOption == nil ? .disabled : .enabled
             }
         }
 
@@ -407,7 +404,7 @@ class PaymentSheetViewController: UIViewController {
         case .selectingSaved:
             self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
         case .addingNew:
-            self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
+            self.bottomNoticeTextField.attributedText = addPaymentMethodViewModel.bottomNoticeAttributedString
         }
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
@@ -419,10 +416,10 @@ class PaymentSheetViewController: UIViewController {
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped)
         switch mode {
         case .addingNew:
-            if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
+            if let buyButtonOverrideBehavior = addPaymentMethodViewModel.overrideBuyButtonBehavior {
                 addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
             } else {
-                guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
+                guard let newPaymentOption = addPaymentMethodViewModel.paymentOption else {
                     assertionFailure()
                     return
                 }

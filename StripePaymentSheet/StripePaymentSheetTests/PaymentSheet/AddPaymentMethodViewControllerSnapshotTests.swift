@@ -8,9 +8,9 @@
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
+@testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
-@testable import StripePaymentsTestUtils
 
 final class AddPaymentMethodViewControllerSnapshotTests: FBSnapshotTestCase {
     override func setUp() {
@@ -38,7 +38,8 @@ final class AddPaymentMethodViewControllerSnapshotTests: FBSnapshotTestCase {
         // ...and a "Save this card" checkbox...
         config.customer = .init(id: "id", ephemeralKeySecret: "ek")
         // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
-        let sut = AddPaymentMethodViewController(intent: intent, configuration: config, previousCustomerInput: previousCustomerInput)
+        let viewModel = AddPaymentMethodViewModel(intent: intent, configuration: config, previousCustomerInput: previousCustomerInput)
+        let sut = AddPaymentMethodViewController(viewModel: viewModel)
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
