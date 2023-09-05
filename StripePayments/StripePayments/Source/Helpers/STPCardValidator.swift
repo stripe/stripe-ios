@@ -438,7 +438,7 @@ public class STPCardValidator: NSObject {
     }
 
     public class func possibleBrands(forNumber cardNumber: String,
-                              completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
+                                     completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
         // Hardcoded test cards that are in our docs but not supported by the card metadata service
         // https://stripe.com/docs/card-brand-choice#testing
         let testCards: [String: [STPCardBrand]] = ["4000002500001001": [.cartesBancaires, .visa],
