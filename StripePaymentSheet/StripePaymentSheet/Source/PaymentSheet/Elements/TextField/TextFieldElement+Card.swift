@@ -29,8 +29,8 @@ extension TextFieldElement {
         }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-            // If CBC is not nil, show it
-            if let cardBrandDropDownView = cardBrandDropDownView {
+            // If CBC is available and not nil, show it
+            if let cardBrandDropDownView = cardBrandDropDownView, CardBrandChoiceAvailability.isCardBrandChoiceAvailable {
                 return cardBrandDropDownView
             }
 

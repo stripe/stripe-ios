@@ -155,7 +155,7 @@ final class CardSection: ContainerElement {
         } else {
             // Otherwise, enable dropdown, and fetch brands
             cardBrandDropDown?.isEnabled = true
-            // TODO(porter) Hard code test cards
+            // TODO(porter) Hard code test cards for card brand choice
             STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
                 switch result {
                 case .success(let brands):
@@ -170,6 +170,7 @@ final class CardSection: ContainerElement {
                         self?.cardBrandDropDown?.isEnabled = brands.count > 1
                     }
                 case .failure(let error):
+                    // TODO(porter) Handle error
                     print(error)
                 }
             }
