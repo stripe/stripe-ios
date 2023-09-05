@@ -846,6 +846,35 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
+
+    func testAlipayPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .US
+        settings.currency = .usd
+        settings.apmsEnabled = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        let payButton = app.buttons["Pay $50.99"]
+        guard let alipay = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Alipay") else {
+            XCTFail()
+            return
+        }
+        alipay.tap()
+
+        XCTAssertTrue(payButton.isEnabled)
+        payButton.tap()
+
+        let approvePaymentText = app.buttons["AUTHORIZE TEST PAYMENT"]
+        approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
 }
 
 class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
