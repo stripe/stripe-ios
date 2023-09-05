@@ -1,0 +1,9 @@
+# PaymentSheet Example App
+## Features
+### To run the app
+### UIKit
+[one-ste integration]
+[multi-step integration]
+### SwiftUI
+[one-step integration]
+ExampleSwiftUICustomPaymentFlow.swift: [multi-step integration]
