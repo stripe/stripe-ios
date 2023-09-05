@@ -32,7 +32,7 @@ extension STPElementsSession {
 
     static func _testValue(
         paymentMethodTypes: [String],
-        flags: [String: String] = [:]
+        flags: [String: Bool] = [:]
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes

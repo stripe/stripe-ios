@@ -627,6 +627,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     func testPaymentMethodOrder() {
         func callFilteredPaymentMethodTypes(withIntentTypes paymentMethodTypes: [String]) -> [PaymentSheet.PaymentMethodType] {
             let intent = Intent.deferredIntent(elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes, flags: [:]), intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in }))
+            // Note: 👇 `filteredPaymentMethodTypes` is the function we are testing
             return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
         }
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
@@ -675,6 +676,43 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
             ["ideal", "card", "bancontact", "external_paypal"].map({ .init(from: $0 ) })
+        )
+    }
+
+    func testRepectsExternalPayPalFlag() {
+        func callFilteredPaymentMethodTypes(with flags: [String: Bool]) -> [PaymentSheet.PaymentMethodType] {
+            let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"], flags: flags)
+            let intent = Intent.deferredIntent(
+                elementsSession: elementsSession,
+                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in })
+            )
+            // Note: 👇 `filteredPaymentMethodTypes` is the function we are testing
+            return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
+        }
+
+        // Given a configuration w/ external_paypal...
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
+            XCTFail()
+            return .canceled
+        })
+
+        // If `elements_enable_external_payment_method_paypal` is false, we should hide external_paypal
+        XCTAssertFalse(
+            callFilteredPaymentMethodTypes(with: ["elements_enable_external_payment_method_paypal": false])
+                .contains(PaymentSheet.PaymentMethodType.externalPayPal)
+        )
+
+        // If `elements_enable_external_payment_method_paypal` is true, we should show external_paypal
+        XCTAssertTrue(
+            callFilteredPaymentMethodTypes(with: ["elements_enable_external_payment_method_paypal": true])
+                .contains(PaymentSheet.PaymentMethodType.externalPayPal)
+        )
+
+        // If `elements_enable_external_payment_method_paypal` is not present, we should show external_paypal
+        XCTAssertTrue(
+            callFilteredPaymentMethodTypes(with: [:])
+                .contains(PaymentSheet.PaymentMethodType.externalPayPal)
         )
     }
 
