@@ -29,7 +29,7 @@ extension DropdownFieldElement {
                                                                         labelDisplayName: STPCardBrand.unknown.brandIconAttributedString,
                                                                         accessibilityValue: "Select card brand (optional)",
                                                                         rawData: "-1",
-                                                                        isPlaceholder: true)]
+                                                                        isPlaceholder: true), ]
         dropDownItems += cardBrands.sorted().map {
             let brandName = STPCardBrandUtilities.stringFrom($0) ?? ""
 
@@ -48,7 +48,7 @@ extension DropdownFieldElement {
 
 extension STPCardBrand: Comparable {
     public static func < (lhs: StripePayments.STPCardBrand, rhs: StripePayments.STPCardBrand) -> Bool {
-        return (STPCardBrandUtilities.stringFrom(lhs) ?? "") >= (STPCardBrandUtilities.stringFrom(rhs) ?? "")
+        return (STPCardBrandUtilities.stringFrom(lhs) ?? "") <= (STPCardBrandUtilities.stringFrom(rhs) ?? "")
     }
 
     var brandIconAttributedString: NSAttributedString {

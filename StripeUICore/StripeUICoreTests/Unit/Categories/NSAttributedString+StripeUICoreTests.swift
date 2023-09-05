@@ -9,7 +9,7 @@
 import XCTest
 
 final class NSAttributedStringStripeUICoreTests: XCTestCase {
-    
+
     func hasTextAttachment_shouldReturnTrue() {
         let brandImageAttachment = NSTextAttachment()
         brandImageAttachment.image = UIImage()
@@ -17,7 +17,7 @@ final class NSAttributedStringStripeUICoreTests: XCTestCase {
         let attrString = NSAttributedString(attachment: brandImageAttachment)
         XCTAssertTrue(attrString.hasTextAttachment)
     }
-    
+
     func hasTextAttachment_shouldReturnFalse() {
         let attrString = NSAttributedString(string: "no text attachments")
         XCTAssertFalse(attrString.hasTextAttachment)
