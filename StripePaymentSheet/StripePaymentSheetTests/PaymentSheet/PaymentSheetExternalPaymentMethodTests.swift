@@ -21,10 +21,11 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         let e2 = expectation(description: "External PM confirm handler called")
 
         var configuration = PaymentSheet.Configuration()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, _ in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, _, completion in
             XCTAssertEqual(externalPaymentMethodType, "external_paypal")
             e2.fulfill()
-            return .completed
+            XCTAssertTrue(Thread.isMainThread)
+            completion(.completed)
         })
 
         let intent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
@@ -58,7 +59,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
     func testExternalFormBillingDetails() async throws {
         let externalConfirmHandlerCalled = expectation(description: "External PM confirm handler called")
         var configuration = PaymentSheet.Configuration()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, billingDetails in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, billingDetails, completion in
             XCTAssertEqual(externalPaymentMethodType, "external_paypal")
             // (2) ...and billing details collected in the form should be passed to the merchant's confirm handler
             XCTAssertEqual(billingDetails.name, "Jane Doe")
@@ -70,7 +71,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             XCTAssertEqual(billingDetails.address?.postalCode, "12345")
             XCTAssertEqual(billingDetails.address?.country, "US")
             externalConfirmHandlerCalled.fulfill()
-            return .completed
+            completion(.completed)
         })
         // Configuring PaymentSheet to collect full billing details...
         configuration.billingDetailsCollectionConfiguration.name = .always
@@ -113,9 +114,9 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         func _confirm(with merchantReturnedResult: PaymentSheetResult) {
             let e = expectation(description: "External PM confirm handler called")
             var configuration = PaymentSheet.Configuration()
-            configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
+            configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _, completion in
                 // The merchant's returned result should be passed back in `PaymentSheet.confirm`
-                return merchantReturnedResult
+                completion(merchantReturnedResult)
             })
             let intent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
                 XCTFail("Intent confirm handler shouldn't be called")
@@ -153,9 +154,9 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
     func testDontShowPayPalIfAlreadyPresent() {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "https://foo.bar"
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _, completion in
             XCTFail("Shouldn't be called")
-            return .canceled
+            completion(.canceled)
         })
         // If the intent already has paypal...
         let intent = Intent.deferredIntent(elementsSession: ._testValue(paymentMethodTypes: ["paypal"]), intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in

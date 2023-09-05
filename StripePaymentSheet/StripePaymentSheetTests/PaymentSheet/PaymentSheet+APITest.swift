@@ -1050,7 +1050,7 @@ class PaymentSheetAPITest: XCTestCase {
         )
         let intentConfig_with_empty_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD"), paymentMethodTypes: [], confirmHandler: { _, _, _  in })
         XCTAssertEqual(
-            PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig_with_nil_payment_method_types),
+            PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig_with_empty_payment_method_types),
             ["deferred-intent", "autopm"]
         )
         let intentConfig_with_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: { _, _, _  in })

@@ -30,7 +30,7 @@ class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
     lazy var paymentMethodTypes: [PaymentSheet.PaymentMethodType] = {
-        var paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: intent,
             configuration: configuration,
             logAvailability: true

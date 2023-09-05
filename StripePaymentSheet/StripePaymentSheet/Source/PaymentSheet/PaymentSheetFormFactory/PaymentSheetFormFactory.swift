@@ -171,7 +171,7 @@ class PaymentSheetFormFactory {
             return makeSofort(spec: spec)
         }
 
-        // 3. Element-based forms defined in JSON
+        // 2. Element-based forms defined in JSON
         return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
     }
 }

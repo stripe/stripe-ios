@@ -353,10 +353,10 @@ extension PaymentSheet {
                 completion(.canceled, nil)
                 return
             }
-            Task { @MainActor in
-                do {
-                    // Call confirmHandler so that the merchant completes the payment
-                    let result = await confirmHandler("external_paypal", confirmParams.paymentMethodParams.nonnil_billingDetails)
+            DispatchQueue.main.async {
+                // Call confirmHandler so that the merchant completes the payment
+                confirmHandler("external_paypal", confirmParams.paymentMethodParams.nonnil_billingDetails) { result in
+                    // This closure is invoked by the merchant when payment is finished
                     completion(result, nil)
                 }
             }

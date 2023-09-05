@@ -99,6 +99,7 @@ class PlaygroundController: ObservableObject {
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
+        configuration.paymentMethodOrder = ["card", "external_paypal"]
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
@@ -193,22 +194,22 @@ class PlaygroundController: ObservableObject {
         }
         return .init(
             externalPaymentMethods: ["external_paypal"]
-        ) { externalPaymentMethodType, billingDetails in
+        ) { externalPaymentMethodType, billingDetails, completion in
             print(billingDetails)
-            return await withCheckedContinuation { (continuation: CheckedContinuation<PaymentSheetResult, Never>) in
-                DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Confirm \(externalPaymentMethodType)?", message: nil, preferredStyle: .alert)
-                    alert.addAction(.init(title: "Confirm", style: .default) {_ in
-                        continuation.resume(returning: .completed)
-                    })
-                    alert.addAction(.init(title: "Cancel", style: .default) {_ in
-                        continuation.resume(returning: .canceled)
-                    })
-                    alert.addAction(.init(title: "Fail", style: .default) {_ in
-                        continuation.resume(returning: .failed(error: ConfirmHandlerError.unknown))
-                    })
-                    self.rootViewController.presentedViewController?.present(alert, animated: true)
-                }
+            let alert = UIAlertController(title: "Confirm \(externalPaymentMethodType)?", message: nil, preferredStyle: .alert)
+            alert.addAction(.init(title: "Confirm", style: .default) {_ in
+                completion(.completed)
+            })
+            alert.addAction(.init(title: "Cancel", style: .default) {_ in
+                completion(.canceled)
+            })
+            alert.addAction(.init(title: "Fail", style: .default) {_ in
+                completion(.failed(error: ConfirmHandlerError.unknown))
+            })
+            if self.settings.uiStyle == .paymentSheet {
+                self.rootViewController.presentedViewController?.present(alert, animated: true)
+            } else {
+                self.rootViewController.present(alert, animated: true)
             }
         }
     }

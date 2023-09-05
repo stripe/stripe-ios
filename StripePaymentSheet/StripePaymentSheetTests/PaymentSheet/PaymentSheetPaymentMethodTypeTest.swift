@@ -631,9 +631,9 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
         }
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _, completion in
             XCTFail()
-            return .canceled
+            completion(.canceled)
         })
 
         // Ordering is respected
@@ -692,9 +692,9 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
         // Given a configuration w/ external_paypal...
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _, completion in
             XCTFail()
-            return .canceled
+            completion(.canceled)
         })
 
         // If `elements_enable_external_payment_method_paypal` is false, we should hide external_paypal

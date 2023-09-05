@@ -274,7 +274,7 @@ extension PaymentSheet {
             }
 
             if let paymentMethodOrder = configuration.paymentMethodOrder?.map({ $0.lowercased() }) {
-                // Order the payment methods
+                // Order the payment methods according to the merchant's `paymentMethodOrder` configuration:
                 var orderedPaymentMethodTypes = [PaymentMethodType]()
                 var originalOrderedTypes = recommendedPaymentMethodTypes.map { $0.identifier }
                 // 1. Add each PM in paymentMethodOrder first
@@ -287,7 +287,7 @@ extension PaymentSheet {
                     // 2. Remove each PM we add from originalOrderedTypes.
                     originalOrderedTypes.remove(pm)
                 }
-                // 3. Append the remaining PMs
+                // 3. Append the remaining PMs in originalOrderedTypes
                 orderedPaymentMethodTypes.append(contentsOf: originalOrderedTypes.map({ .init(from: $0) }))
                 return orderedPaymentMethodTypes
             } else {
