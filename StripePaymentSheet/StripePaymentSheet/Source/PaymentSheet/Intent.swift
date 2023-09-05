@@ -124,9 +124,7 @@ enum Intent {
         switch self {
         case .paymentIntent(let paymentIntent):
             return paymentIntent.cardBrandChoice?.eligible ?? false
-        case .setupIntent:
-            return false
-        case .deferredIntent:
+        case .setupIntent, .deferredIntent: // TODO(porter) We will support SI and DI's later.
             return false
         }
     }

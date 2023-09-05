@@ -1,6 +1,6 @@
 //
 //  CardBrandChoiceAvailability.swift
-//  
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 9/5/23.
 //

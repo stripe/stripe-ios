@@ -23,9 +23,9 @@ extension TextFieldElement {
         let defaultValue: String?
         let cardBrandDropDownView: UIView?
 
-        init(defaultValue: String? = nil, dropDownView: UIView? = nil) {
+        init(defaultValue: String? = nil, cardBrandDropDownView: UIView? = nil) {
             self.defaultValue = defaultValue
-            self.cardBrandDropDownView = dropDownView
+            self.cardBrandDropDownView = cardBrandDropDownView
         }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {

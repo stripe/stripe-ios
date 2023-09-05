@@ -13,7 +13,7 @@ import StripePayments
 import UIKit
 
 extension PaymentSheetFormFactory {
-    func makeCard(cardBrandChoiceEligible: Bool) -> PaymentMethodElement {
+    func makeCard(cardBrandChoiceEligible: Bool = false) -> PaymentMethodElement {
         let isLinkEnabled = offerSaveToLinkWhenSupported && canSaveToLink
         let saveCheckbox = makeSaveCheckbox(
             label: String.Localized.save_this_card_for_future_$merchant_payments(
