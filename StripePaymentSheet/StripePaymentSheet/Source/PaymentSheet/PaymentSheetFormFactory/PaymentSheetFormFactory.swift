@@ -157,6 +157,8 @@ class PaymentSheetFormFactory {
             return makeBancontact()
         } else if paymentMethod.stpPaymentMethodType == .blik {
             return makeDefaultsApplierWrapper(for: makeBLIK())
+        } else if paymentMethod.stpPaymentMethodType == .OXXO {
+            return makeDefaultsApplierWrapper(for: makeOXXO())
         }
 
         guard let spec = specFromJSONProvider() else {

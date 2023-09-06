@@ -41,8 +41,8 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.mode)
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
                         SettingView(setting: $playgroundController.settings.customerMode)
-                        SettingView(setting: $playgroundController.settings.currency)
-                        SettingView(setting: $playgroundController.settings.merchantCountryCode)
+                        SettingPickerView(setting: $playgroundController.settings.currency)
+                        SettingPickerView(setting: $playgroundController.settings.merchantCountryCode)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
                     }
                     Divider()

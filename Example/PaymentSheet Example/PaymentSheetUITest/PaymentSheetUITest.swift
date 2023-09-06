@@ -875,6 +875,48 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
+
+    func testOXXOPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .MX
+        settings.currency = .mxn
+        settings.apmsEnabled = .off
+        settings.allowsDelayedPMs = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        guard let oxxo = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "OXXO") else {
+            XCTFail()
+            return
+        }
+        oxxo.tap()
+
+        let name = app.textFields["Full name"]
+        name.tap()
+        name.typeText("Jane Doe")
+        name.typeText(XCUIKeyboardKey.return.rawValue)
+
+        let email = app.textFields["Email"]
+        email.tap()
+        email.typeText("foo@bar.com")
+        email.typeText(XCUIKeyboardKey.return.rawValue)
+
+        let payButton = app.buttons["Pay MX$50.99"]
+        XCTAssertTrue(payButton.isEnabled)
+        payButton.tap()
+
+        // Just check that a web view exists after tapping buy.
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
 }
 
 class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
