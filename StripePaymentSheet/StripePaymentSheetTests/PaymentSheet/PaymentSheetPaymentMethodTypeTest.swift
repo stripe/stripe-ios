@@ -10,8 +10,8 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripePaymentsTestUtils
+@testable@_spi(STP) import StripePaymentsUI
 
 class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
@@ -548,9 +548,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types.count, 1)
-        XCTAssertEqual(types[0], .card)
-        // Cash App is not enabled for saving or reuse so it should be filtered out
+        XCTAssertEqual(types.count, 2)
+        XCTAssertEqual(types, [.card, .cashApp])
     }
 
     func testSetupIntentFilteredPaymentMethodTypes() {
@@ -563,9 +562,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types.count, 1)
-        XCTAssertEqual(types[0], .card)
-        // Cash App is not enabled for saving or reuse so it should be filtered out
+        XCTAssertEqual(types.count, 2)
+        XCTAssertEqual(types, [.card, .cashApp])
     }
 
     func testSetupIntentFilteredPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {
