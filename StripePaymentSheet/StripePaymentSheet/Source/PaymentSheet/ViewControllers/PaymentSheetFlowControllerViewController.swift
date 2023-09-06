@@ -157,7 +157,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 customerID: configuration.customer?.id,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
-                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                merchantDisplayName: configuration.merchantDisplayName
             ),
             appearance: configuration.appearance
         )

@@ -55,6 +55,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let showApplePay: Bool
         let showLink: Bool
         let removeSavedPaymentMethodMessage: String?
+        let merchantDisplayName: String
     }
 
     var hasRemovablePaymentMethods: Bool {
@@ -155,6 +156,30 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.dataSource = self
         return collectionView
     }()
+    
+    /// This contains views to display below the saved PM collectionView
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [sepaMandateView])
+        stackView.axis = .vertical
+        return stackView
+    }()
+    
+    private lazy var sepaMandateView: UIView = {
+        let view = UIView()
+        let mandateView = sepaMandateElement.view
+        var margins = NSDirectionalEdgeInsets.insets(
+            top: 8,
+            leading: PaymentSheetUI.defaultMargins.leading,
+            bottom: 0,
+            trailing: PaymentSheetUI.defaultMargins.trailing
+        )
+        view.addAndPinSubview(sepaMandateElement.view, directionalLayoutMargins: margins)
+        return view
+    }()
+    private lazy var sepaMandateElement: SimpleMandateElement = {
+        let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
+        return SimpleMandateElement(mandateText: mandateText)
+    }()
 
     // MARK: - Inits
     required init(
@@ -168,7 +193,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.appearance = appearance
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-        updateUI()
     }
 
     required init?(coder: NSCoder) {
@@ -178,17 +202,19 @@ class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        [collectionView].forEach({
-            view.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        })
-
+        
+        for subview in [collectionView, stackView] {
+            subview.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(subview)
+        }
         NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: stackView.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         updateUI()
     }
@@ -224,6 +250,23 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
+        updateMandateView()
+    }
+    
+    private func updateMandateView() {
+        guard let selectedViewModelIndex else {
+            return
+        }
+        let viewModel = viewModels[selectedViewModelIndex]
+        let shouldHideSEPA: Bool
+        if case .saved(paymentMethod: let paymentMethod) = viewModel, paymentMethod.type == .SEPADebit {
+            shouldHideSEPA = false
+        } else {
+            shouldHideSEPA = true
+        }
+        if sepaMandateView.isHidden != shouldHideSEPA {
+            stackView.toggleArrangedSubview(sepaMandateView, shouldShow: !shouldHideSEPA, animated: true)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -319,7 +362,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                 forCustomer: configuration.customerID
             )
         }
-
+        updateMandateView()
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }
 }
