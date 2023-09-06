@@ -44,7 +44,7 @@ extension PaymentSheet {
         case dynamic(String)
         case UPI
         case cashApp
-
+        case externalPayPal // TODO(yuki): Replace this when we support more EPMs
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
 
@@ -60,11 +60,14 @@ extension PaymentSheet {
                 self = .UPI
             case STPPaymentMethod.string(from: .cashApp):
                 self = .cashApp
+            case "external_paypal":
+                self = .externalPayPal
             default:
                 self = .dynamic(str)
             }
         }
 
+        // I think this returns the Stripe PaymentMethod object type name i.e. a value in https://stripe.com/docs/api/payment_methods/object#payment_method_object-type
         static func string(from type: PaymentMethodType) -> String? {
             switch type {
             case .card:
@@ -81,6 +84,8 @@ extension PaymentSheet {
                 return STPPaymentMethod.string(from: .cashApp)
             case .dynamic(let str):
                 return str
+            case .externalPayPal:
+                return nil
             }
         }
         var displayName: String {
@@ -97,6 +102,8 @@ extension PaymentSheet {
             } else if case .dynamic(let name) = self {
                 // TODO: We should introduce a display name in our model rather than presenting the payment method type
                 return name
+            } else if case .externalPayPal = self {
+               return STPPaymentMethodType.payPal.displayName
             }
             assertionFailure()
             return ""
@@ -104,10 +111,12 @@ extension PaymentSheet {
 
         /// The identifier for the payment method type as it is represented on an intent
         var identifier: String {
-            if let stpPaymentMethodType = stpPaymentMethodType {
+            if let stpPaymentMethodType {
                 return stpPaymentMethodType.identifier
             } else if case .dynamic(let name) = self {
                 return name
+            } else if case .externalPayPal = self {
+                return "external_paypal"
             }
 
             assertionFailure()
@@ -148,6 +157,9 @@ extension PaymentSheet {
                     STPAnalyticsClient.sharedClient.logImageSelectorIconFromBundleIfNeeded(paymentMethod: self)
                 }
                 return stpPaymentMethodType.makeImage(forDarkBackground: forDarkBackground)
+            }
+            if case .externalPayPal = self {
+                return STPPaymentMethodType.payPal.makeImage(forDarkBackground: forDarkBackground)
             }
             if PaymentSheet.PaymentMethodType.shouldLogAnalytic(paymentMethod: self) {
                 STPAnalyticsClient.sharedClient.logImageSelectorIconNotFoundIfNeeded(paymentMethod: self)
@@ -218,6 +230,7 @@ extension PaymentSheet {
         static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
             var recommendedPaymentMethodTypes = Self.recommendedPaymentMethodTypes(from: intent)
+
             if configuration.linkPaymentMethodsOnly {
                 // If we're in the Link modal, manually add Link payment methods
                 // and let the support calls decide if they're allowed
@@ -227,7 +240,21 @@ extension PaymentSheet {
                 }
             }
 
-            return recommendedPaymentMethodTypes.filter { paymentMethodType in
+            // TODO(yuki): Rewrite this when we support more EPMs
+            // Add external_paypal if...
+            if
+                // ...the merchant configured external_paypal...
+                let epms = configuration.externalPaymentMethodConfiguration?.externalPaymentMethods,
+                epms.contains("external_paypal"),
+                // ...the intent doesn't already have "paypal"...
+                !recommendedPaymentMethodTypes.contains(.dynamic("paypal")),
+                // ...and external_paypal isn't disabled.
+                !intent.shouldDisableExternalPayPal
+            {
+                recommendedPaymentMethodTypes.append(.externalPayPal)
+            }
+
+            recommendedPaymentMethodTypes = recommendedPaymentMethodTypes.filter { paymentMethodType in
                 let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: paymentMethodType,
                     configuration: configuration,
@@ -244,6 +271,27 @@ extension PaymentSheet {
                 }
 
                 return availabilityStatus == .supported
+            }
+
+            if let paymentMethodOrder = configuration.paymentMethodOrder?.map({ $0.lowercased() }) {
+                // Order the payment methods according to the merchant's `paymentMethodOrder` configuration:
+                var orderedPaymentMethodTypes = [PaymentMethodType]()
+                var originalOrderedTypes = recommendedPaymentMethodTypes.map { $0.identifier }
+                // 1. Add each PM in paymentMethodOrder first
+                for pm in paymentMethodOrder {
+                    guard originalOrderedTypes.contains(pm) else {
+                        // Ignore the PM if it's not in originalOrderedTypes
+                        continue
+                    }
+                    orderedPaymentMethodTypes.append(.init(from: pm))
+                    // 2. Remove each PM we add from originalOrderedTypes.
+                    originalOrderedTypes.remove(pm)
+                }
+                // 3. Append the remaining PMs in originalOrderedTypes
+                orderedPaymentMethodTypes.append(contentsOf: originalOrderedTypes.map({ .init(from: $0) }))
+                return orderedPaymentMethodTypes
+            } else {
+                return recommendedPaymentMethodTypes
             }
         }
 
@@ -273,6 +321,8 @@ extension PaymentSheet {
                         configuration: configuration,
                         intent: intent
                     )
+                } else if case .externalPayPal = paymentMethod {
+                    return .supported
                 }
 
                 return .notSupported

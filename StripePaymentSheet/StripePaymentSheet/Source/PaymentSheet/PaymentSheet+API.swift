@@ -347,6 +347,19 @@ extension PaymentSheet {
             case .withPaymentMethod(let paymentMethod):
                 confirmWithPaymentMethod(paymentMethod)
             }
+        case .externalPayPal(let confirmParams):
+            guard let confirmHandler = configuration.externalPaymentMethodConfiguration?.externalPaymentMethodConfirmHandler else {
+                assertionFailure("Attempting to confirm an external payment method, but externalPaymentMethodConfirmhandler isn't set!")
+                completion(.canceled, nil)
+                return
+            }
+            DispatchQueue.main.async {
+                // Call confirmHandler so that the merchant completes the payment
+                confirmHandler("external_paypal", confirmParams.paymentMethodParams.nonnil_billingDetails) { result in
+                    // This closure is invoked by the merchant when payment is finished
+                    completion(result, nil)
+                }
+            }
         }
     }
 
