@@ -18,6 +18,7 @@ extension STPTestingAPIClient {
         currency: String = "eur",
         merchantCountry: String? = "us",
         paymentMethodID: String? = nil,
+        customerID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:],
         completion: @escaping (Result<(String), Error>) -> Void
@@ -27,8 +28,11 @@ extension STPTestingAPIClient {
         params["currency"] = currency
         params["payment_method_types"] = types
         params["confirm"] = confirm
-        if let paymentMethodID = paymentMethodID {
+        if let paymentMethodID {
             params["payment_method"] = paymentMethodID
+        }
+        if let customerID {
+            params["customer"] = customerID
         }
         params.merge(otherParams) { _, b in b }
 
@@ -52,6 +56,7 @@ extension STPTestingAPIClient {
         currency: String = "eur",
         merchantCountry: String? = "us",
         paymentMethodID: String? = nil,
+        customerID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:]
     ) async throws -> String {
@@ -61,6 +66,7 @@ extension STPTestingAPIClient {
                 currency: currency,
                 merchantCountry: merchantCountry,
                 paymentMethodID: paymentMethodID,
+                customerID: customerID,
                 confirm: confirm,
                 otherParams: otherParams
             ) { result in
@@ -73,14 +79,18 @@ extension STPTestingAPIClient {
         types: [String],
         merchantCountry: String? = "us",
         paymentMethodID: String? = nil,
+        customerID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:]
     ) async throws -> String {
         var params = [String: Any]()
         params["payment_method_types"] = types
         params["confirm"] = confirm
-        if let paymentMethodID = paymentMethodID {
+        if let paymentMethodID {
             params["payment_method"] = paymentMethodID
+        }
+        if let customerID {
+            params["customer"] = customerID
         }
         params.merge(otherParams) { _, b in b }
         return try await withCheckedThrowingContinuation { continuation in

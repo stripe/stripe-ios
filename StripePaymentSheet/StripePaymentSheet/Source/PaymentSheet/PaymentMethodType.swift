@@ -410,7 +410,7 @@ extension PaymentSheet {
                 switch stpPaymentMethodType {
                 case .card:
                     return []
-                case .USBankAccount:
+                case .USBankAccount, .SEPADebit:
                     return [.userSupportsDelayedPaymentMethods]
                 default:
                     return [.unsupportedForReuse]
