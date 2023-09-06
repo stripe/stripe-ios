@@ -62,7 +62,7 @@ extension PaymentSheet {
                 case .link(let option):
                     label = option.paymentSheetLabel
                 case .externalPayPal:
-                    label = STPLocalizedString("PayPal", "Payment Method type brand name")
+                    label = STPPaymentMethodType.payPal.displayName
                 }
             }
         }

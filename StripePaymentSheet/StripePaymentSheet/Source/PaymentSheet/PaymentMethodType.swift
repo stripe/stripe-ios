@@ -103,7 +103,7 @@ extension PaymentSheet {
                 // TODO: We should introduce a display name in our model rather than presenting the payment method type
                 return name
             } else if case .externalPayPal = self {
-               return STPLocalizedString("PayPal", "Payment Method type brand name")
+               return STPPaymentMethodType.payPal.displayName
             }
             assertionFailure()
             return ""
