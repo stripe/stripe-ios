@@ -407,8 +407,8 @@ extension PaymentSheet {
                 paymentMethodType = paymentMethodParams.type
             }
 
-            // Paypal requires mandate_data if setting up
-            if params.paymentMethodType == .payPal
+            // Paypal and Cash App Pay require mandate_data if setting up
+            if (params.paymentMethodType == .payPal || params.paymentMethodType == .cashApp)
                 && paymentIntent.setupFutureUsage == .offSession
             {
                 params.mandateData = .makeWithInferredValues()
