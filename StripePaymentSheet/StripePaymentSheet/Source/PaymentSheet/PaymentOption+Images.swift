@@ -164,6 +164,8 @@ extension STPPaymentMethodType {
                     return .pm_type_cashapp
                 case .blik:
                     return .pm_type_blik
+                case .bacsDebit:
+                    return .pm_type_us_bank
                 default:
                     return nil
                 }

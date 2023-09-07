@@ -29,6 +29,7 @@ extension PaymentSheet {
         .blik,
         .grabPay,
         .FPX,
+        .bacsDebit
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet

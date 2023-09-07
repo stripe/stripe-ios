@@ -239,6 +239,16 @@ import Foundation
             "The BSB you entered is incomplete.",
             "Error string displayed to user when they have entered an incomplete BSB number.")
     }
+    
+    static var invalidSortCodeEntered: String {
+        STPLocalizedString(
+            "The sort code you entered is invalid.",
+            "Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland)")
+    }
+    
+    static var incompleteAccountNumber: String {
+        STPLocalizedString("The account number you entered is incomplete.", "Error description for incomplete account number")
+    }
 
     static var removeBankAccountEndingIn: String {
         STPLocalizedString(

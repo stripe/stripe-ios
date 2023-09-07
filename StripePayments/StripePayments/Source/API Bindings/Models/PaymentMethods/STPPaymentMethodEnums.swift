@@ -131,8 +131,9 @@ import Foundation
             )
         case .cashApp:
             return STPLocalizedString("Cash App Pay", "Payment Method type brand name")
-        case .bacsDebit,
-            .cardPresent,
+        case .bacsDebit:
+            return STPLocalizedString("Bacs Direct Debit", "Payment Method type brand name")
+        case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
         @unknown default:

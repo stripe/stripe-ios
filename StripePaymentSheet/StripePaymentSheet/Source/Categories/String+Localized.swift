@@ -164,6 +164,13 @@ extension String.Localized {
         )
     }
 
+    static var bacs_mandate_text: String {
+        STPLocalizedString(
+            "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.",
+            "Bacs Debit mandate text"
+        )
+    }
+
     static var cash_app_mandate_text: String {
         STPLocalizedString(
             "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.",
