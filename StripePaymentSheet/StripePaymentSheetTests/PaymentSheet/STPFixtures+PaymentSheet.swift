@@ -41,3 +41,53 @@ extension STPElementsSession {
         return elementsSession
     }
 }
+
+extension Intent {
+    static func _testValue() -> Intent {
+        return .paymentIntent(STPFixtures.paymentIntent())
+    }
+}
+
+extension STPPaymentMethod {
+    static func _testCard() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123card",
+            "type": "card",
+            "card": [
+                "last4": "4242",
+                "brand": "visa",
+            ],
+        ])!
+    }
+
+    static func _testUSBankAccount() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123",
+            "type": "us_bank_account",
+            "us_bank_account": [
+                "account_holder_type": "individual",
+                "account_type": "checking",
+                "bank_name": "STRIPE TEST BANK",
+                "fingerprint": "ickfX9sbxIyAlbuh",
+                "last4": "6789",
+                "networks": [
+                  "preferred": "ach",
+                  "supported": [
+                    "ach",
+                  ],
+                ] as [String: Any],
+                "routing_number": "110000000",
+            ] as [String: Any],
+        ])!
+    }
+
+    static func _testSEPA() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123",
+            "type": "sepa_debit",
+            "sepa_debit": [
+                "last4": "1234",
+            ],
+        ])!
+    }
+}

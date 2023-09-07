@@ -1140,6 +1140,13 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             },
             fileMock: .saved_payment_methods_200
         )
+        stubPaymentMethods(
+            stubRequestCallback: { urlRequest in
+                return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+                    && urlRequest.url?.absoluteString.contains("type=sepa_debit") ?? false
+            },
+            fileMock: .saved_payment_methods_200
+        )
         stubCustomers()
     }
 

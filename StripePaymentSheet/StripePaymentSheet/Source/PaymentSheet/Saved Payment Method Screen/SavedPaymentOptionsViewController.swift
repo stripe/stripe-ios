@@ -91,6 +91,16 @@ class SavedPaymentOptionsViewController: UIViewController {
         if case .saved(let paymentMethod) = selectedPaymentOption {
             if paymentMethod.usBankAccount != nil {
                 return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(theme: appearance.asElementsTheme)
+//            } else if paymentMethod.type == .SEPADebit {
+//                let string = NSMutableAttributedString(string: String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
+//                let style = NSMutableParagraphStyle()
+//                style.alignment = .left
+//                string.addAttributes([.paragraphStyle: style,
+//                                      .font: UIFont.preferredFont(forTextStyle: .footnote),
+//                                      .foregroundColor: appearance.asElementsTheme.colors.secondaryText,
+//                                              ],
+//                                              range: NSRange(location: 0, length: string.length))
+//                return string
             }
         }
         return nil
@@ -156,14 +166,14 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.dataSource = self
         return collectionView
     }()
-    
+
     /// This contains views to display below the saved PM collectionView
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [sepaMandateView])
         stackView.axis = .vertical
         return stackView
     }()
-    
+
     private lazy var sepaMandateView: UIView = {
         let view = UIView()
         let mandateView = sepaMandateElement.view
@@ -193,6 +203,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.appearance = appearance
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
+        updateUI() // Unfortunately this call is needed
     }
 
     required init?(coder: NSCoder) {
@@ -202,7 +213,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         for subview in [collectionView, stackView] {
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
@@ -214,7 +225,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: stackView.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
         updateUI()
     }
@@ -252,15 +263,15 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
         updateMandateView()
     }
-    
+
     private func updateMandateView() {
-        guard let selectedViewModelIndex else {
+        guard let selectedViewModelIndex, let viewModel = viewModels.stp_boundSafeObject(at: selectedViewModelIndex) else {
             return
         }
-        let viewModel = viewModels[selectedViewModelIndex]
         let shouldHideSEPA: Bool
         if case .saved(paymentMethod: let paymentMethod) = viewModel, paymentMethod.type == .SEPADebit {
             shouldHideSEPA = false
+//            shouldHideSEPA = true // TODO Is this better?
         } else {
             shouldHideSEPA = true
         }

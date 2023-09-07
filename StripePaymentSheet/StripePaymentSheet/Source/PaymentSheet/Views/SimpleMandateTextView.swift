@@ -27,6 +27,7 @@ class SimpleMandateTextView: UIView {
         super.init(frame: .zero)
         label.text = mandateText
         installConstraints()
+        self.accessibilityIdentifier = "mandatetextview"
     }
 
     required init?(coder: NSCoder) {

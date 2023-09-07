@@ -78,7 +78,6 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     private var isSavingInProgress: Bool = false
     private var isVerificationInProgress: Bool = false
     private let isApplePayEnabled: Bool
-
     private let isLinkEnabled: Bool
 
     // MARK: - Views
@@ -180,6 +179,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = configuration.appearance.colors.background
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
@@ -559,6 +559,6 @@ extension PaymentSheetFlowControllerViewController: SheetNavigationBarDelegate {
 // MARK: - PaymentSheetPaymentMethodType Helpers
 extension PaymentSheet.PaymentMethodType {
     var requiresMandateDisplayForSavedSelection: Bool {
-        return self == .USBankAccount
+        return self == .USBankAccount || self == .dynamic("sepa_debit")
     }
 }
