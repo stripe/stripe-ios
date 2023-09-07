@@ -57,7 +57,7 @@ import Foundation
 
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
     case cashAppRedirectToApp
-    
+
     /// Contains details for displaying the QR code required for PayNow.
     case payNowDisplayQrCode
 
@@ -162,7 +162,7 @@ public class STPIntentAction: NSObject {
 
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
     @objc public let cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
-    
+
     /// Contains details for displaying the QR code required for PayNow.
     @objc public let payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
 

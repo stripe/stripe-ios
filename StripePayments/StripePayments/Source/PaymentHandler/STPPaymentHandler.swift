@@ -1283,7 +1283,7 @@ public class STPPaymentHandler: NSObject {
                 currentAction.complete(with: .succeeded, error: nil)
                 return
             }
-            presentingVC.presentPollingVCForAction(action: currentAction, type: .blik)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: STPPaymentMethodType.blik.identifier)
 
         case .verifyWithMicrodeposits:
             // The customer must authorize after the microdeposits appear in their bank account
@@ -1298,7 +1298,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
 
-            presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: STPPaymentMethodType.UPI.identifier)
         case .cashAppRedirectToApp:
             guard
                 let returnURL = URL(string: currentAction.returnURLString ?? "")
@@ -1321,13 +1321,17 @@ public class STPPaymentHandler: NSObject {
             }
         case .payNowDisplayQrCode:
             guard
-                let returnURL = URL(string: currentAction.returnURLString ?? "")
+                let returnURL = URL(string: currentAction.returnURLString ?? ""),
+                let presentingVC = currentAction.authenticationContext
+                    as? PaymentSheetAuthenticationContext
             else {
                 fatalError()
             }
-            
+
             if let hostedInstructionsURL = authenticationAction.payNowDisplayQrCode?.hostedInstructionsURL {
-                _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL)
+                _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) {
+                    presentingVC.presentPollingVCForAction(action: currentAction, type: "paynow")
+                }
             } else {
                 currentAction.complete(
                     with: STPPaymentHandlerActionStatus.failed,
@@ -1606,8 +1610,8 @@ public class STPPaymentHandler: NSObject {
     /// This method:
     /// 1. Redirects to an app using url
     /// 2. Open fallbackURL in a webview if 1) fails
-            ///
-    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?) {
+
+    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, completion: (() -> Void)? = nil) {
         var url = nativeURL
         guard let currentAction = currentAction else {
             assert(false, "Calling _handleRedirect without a currentAction")
@@ -1650,7 +1654,7 @@ public class STPPaymentHandler: NSObject {
                     }
                     safariViewController.delegate = self
                     self.safariViewController = safariViewController
-                    presentingViewController.present(safariViewController, animated: true)
+                    presentingViewController.present(safariViewController, animated: true, completion: completion)
                 } else {
                     currentAction.complete(
                         with: STPPaymentHandlerActionStatus.failed,
@@ -1697,6 +1701,7 @@ public class STPPaymentHandler: NSObject {
                         // no app installed, launch safari view controller
                         presentSFViewControllerBlock()
                     } else {
+                        completion?()
                         NotificationCenter.default.addObserver(
                             self,
                             selector: #selector(self._handleWillForegroundNotification),
@@ -1769,14 +1774,14 @@ public class STPPaymentHandler: NSObject {
                 .useStripeSDK,
                 .alipayHandleRedirect,
                 .weChatPayRedirectToApp,
-                .cashAppRedirectToApp:
+                .cashAppRedirectToApp,
+                .payNowDisplayQrCode:
                 return false
             case .OXXODisplayDetails,
                 .boletoDisplayDetails,
                 .verifyWithMicrodeposits,
                 .BLIKAuthorize,
-                .upiAwaitNotification,
-                .payNowDisplayQrCode:
+                .upiAwaitNotification:
                 return true
             }
         }
@@ -2298,7 +2303,7 @@ extension STPPaymentHandler {
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController)
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType)
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: String)
 }
 
 @_spi(STP) public protocol FormSpecPaymentHandler {
