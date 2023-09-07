@@ -335,7 +335,7 @@ extension PaymentSheet.PaymentOption {
         switch self {
         case .applePay:
             return .applePay
-        case .new:
+        case .new, .externalPayPal:
             return .newPM
         case .saved:
             return .savedPM
