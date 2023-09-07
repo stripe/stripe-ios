@@ -57,6 +57,9 @@ import Foundation
 
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
     case cashAppRedirectToApp
+    
+    /// Contains details for displaying the QR code required for PayNow.
+    case payNowDisplayQrCode
 
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
@@ -85,6 +88,8 @@ import Foundation
             self = .upiAwaitNotification
         case "cashapp_handle_redirect_or_display_qr_code":
             self = .cashAppRedirectToApp
+        case "paynow_display_qr_code":
+            self = .payNowDisplayQrCode
         default:
             self = .unknown
         }
@@ -117,6 +122,8 @@ import Foundation
             return "cashapp_handle_redirect_or_display_qr_code"
         case .unknown:
             break
+        case .payNowDisplayQrCode:
+            return "paynow_display_qr_code"
         }
 
         // catch any unknown values here
@@ -155,6 +162,9 @@ public class STPIntentAction: NSObject {
 
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
     @objc public let cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
+    
+    /// Contains details for displaying the QR code required for PayNow.
+    @objc public let payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
@@ -208,6 +218,10 @@ public class STPIntentAction: NSObject {
             if let cashAppRedirectToApp = cashAppRedirectToApp {
                 props.append("cashAppRedirectToApp = \(cashAppRedirectToApp)")
             }
+        case .payNowDisplayQrCode:
+            if let payNowDisplayQrCode = payNowDisplayQrCode {
+                props.append("payNowDisplayQrCode = \(payNowDisplayQrCode)")
+            }
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
             props.append("allResponseFields = \(allResponseFields)")
@@ -226,6 +240,7 @@ public class STPIntentAction: NSObject {
         boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?,
         verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?,
         cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?,
+        payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -237,6 +252,7 @@ public class STPIntentAction: NSObject {
         self.boletoDisplayDetails = boletoDisplayDetails
         self.verifyWithMicrodeposits = verifyWithMicrodeposits
         self.cashAppRedirectToApp = cashAppRedirectToApp
+        self.payNowDisplayQrCode = payNowDisplayQrCode
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -265,6 +281,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
         var weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?
         var verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
         var cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
+        var payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
 
         switch type {
         case .unknown:
@@ -329,6 +346,13 @@ extension STPIntentAction: STPAPIResponseDecodable {
             if cashAppRedirectToApp == nil {
                 type = .unknown
             }
+        case .payNowDisplayQrCode:
+            payNowDisplayQrCode = STPIntentActionPayNowDisplayQrCode.decodedObject(
+                fromAPIResponse: dict["paynow_display_qr_code"] as? [AnyHashable: Any]
+            )
+            if payNowDisplayQrCode == nil {
+                type = .unknown
+            }
         }
 
         return STPIntentAction(
@@ -341,6 +365,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             boletoDisplayDetails: boletoDisplayDetails,
             verifyWithMicrodeposits: verifyWithMicrodeposits,
             cashAppRedirectToApp: cashAppRedirectToApp,
+            payNowDisplayQrCode: payNowDisplayQrCode,
             allResponseFields: dict
         ) as? Self
     }

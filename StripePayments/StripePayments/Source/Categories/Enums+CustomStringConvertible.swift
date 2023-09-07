@@ -192,6 +192,8 @@ extension STPIntentActionType: CustomStringConvertible {
             return "weChatPayRedirectToApp"
         case .cashAppRedirectToApp:
             return "cashAppRedirectToApp"
+        case .payNowDisplayQrCode:
+            return "payNowDisplayQrCode"
         }
     }
 }

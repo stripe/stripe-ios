@@ -1319,6 +1319,26 @@ public class STPPaymentHandler: NSObject {
                     )
                 )
             }
+        case .payNowDisplayQrCode:
+            guard
+                let returnURL = URL(string: currentAction.returnURLString ?? "")
+            else {
+                fatalError()
+            }
+            
+            if let hostedInstructionsURL = authenticationAction.payNowDisplayQrCode?.hostedInstructionsURL {
+                _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL)
+            } else {
+                currentAction.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: _error(
+                        for: .unsupportedAuthenticationErrorCode,
+                        userInfo: [
+                            "STPIntentAction": authenticationAction.description,
+                        ]
+                    )
+                )
+            }
         @unknown default:
             fatalError()
         }
@@ -1755,7 +1775,8 @@ public class STPPaymentHandler: NSObject {
                 .boletoDisplayDetails,
                 .verifyWithMicrodeposits,
                 .BLIKAuthorize,
-                .upiAwaitNotification:
+                .upiAwaitNotification,
+                .payNowDisplayQrCode:
                 return true
             }
         }
@@ -1780,7 +1801,7 @@ public class STPPaymentHandler: NSObject {
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
-            .upiAwaitNotification, .cashAppRedirectToApp:
+            .upiAwaitNotification, .cashAppRedirectToApp, .payNowDisplayQrCode:
             break
         @unknown default:
             fatalError()
