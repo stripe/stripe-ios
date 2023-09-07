@@ -1539,9 +1539,6 @@ public class STPPaymentHandler: NSObject {
     }
 
             @_spi(STP) public func _handleRedirect(to url: URL, withReturn returnURL: URL?) {
-        if let redirectShim = _redirectShim {
-            redirectShim(url, returnURL, true)
-        }
         _handleRedirect(to: url, fallbackURL: url, return: returnURL)
     }
 
@@ -1588,6 +1585,10 @@ public class STPPaymentHandler: NSObject {
     /// 2. Open fallbackURL in a webview if 1) fails
             ///
     func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?) {
+        if let redirectShim = _redirectShim, let url = nativeURL ?? fallbackURL {
+            redirectShim(url, returnURL, true)
+        }
+
         var url = nativeURL
         guard let currentAction = currentAction else {
             assert(false, "Calling _handleRedirect without a currentAction")
