@@ -66,7 +66,7 @@ extension PaymentSheetError: CustomDebugStringConvertible {
         return false
     }
 
-    /// A string that can safley be logged to our analytics service that does not contain any PII
+    /// A string that can safely be logged to our analytics service that does not contain any PII
     public var safeLoggingString: String {
         switch self {
         case .unknown:
