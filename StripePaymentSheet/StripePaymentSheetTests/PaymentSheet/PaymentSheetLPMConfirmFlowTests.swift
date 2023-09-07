@@ -28,6 +28,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case SG = "sg"
         case MY = "my"
         case BE = "be"
+        case MX = "mex"  // The CI Backend uses "mex" instead of "mx"
 
         var publishableKey: String {
             switch self {
@@ -39,6 +40,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingMYPublishableKey
             case .BE:
                 return STPTestingBEPublishableKey
+            case .MX:
+                return STPTestingMEXPublishableKey
             }
         }
     }
@@ -144,6 +147,26 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                                merchantCountry: .US) { form in
             // AmazonPay has no input fields
             XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
+
+    func testAlipayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "USD",
+                               paymentMethodType: .dynamic("alipay"),
+                               merchantCountry: .US) { form in
+            // Alipay has no input fields
+            XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
+
+    func testOXXOConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "MXN",
+                               paymentMethodType: .dynamic("oxxo"),
+                               merchantCountry: .MX) { form in
+            form.getTextFieldElement("Full name")?.setText("Jane Doe")
+            form.getTextFieldElement("Email")?.setText("foo@bar.com")
         }
     }
 }
