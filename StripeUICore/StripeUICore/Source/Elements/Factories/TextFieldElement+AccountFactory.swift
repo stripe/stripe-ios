@@ -78,7 +78,7 @@ import UIKit
         public static func makeAUBECSAccountNumber(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
             return TextFieldElement(configuration: AUBECSAccountNumberConfiguration(defaultValue: defaultValue), theme: theme)
         }
-        
+
         // MARK: - Bacs Sort Code
         struct SortCodeConfiguration: TextFieldElementConfiguration {
             static let invalidError = Error.incomplete(localizedDescription: String.Localized.invalidSortCodeEntered)

@@ -287,7 +287,7 @@ extension PaymentSheetFormFactory {
     func makeAUBECSMandate() -> StaticElement {
         return StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
     }
-    
+
     func makeSortCode() -> PaymentMethodElementWrapper<TextFieldElement> {
         let defaultValue = previousCustomerInput?.paymentMethodParams.bacsDebit?.sortCode
         let element = TextFieldElement.Account.makeSortCode(defaultValue: defaultValue, theme: theme)
@@ -306,7 +306,7 @@ extension PaymentSheetFormFactory {
             return params
         }
     }
-    
+
     func makeBacsMandate() -> PaymentMethodElementWrapper<CheckboxElement> {
         let mandateWasConfirmed = BoolReference()
         let mandateText = String(format: String.Localized.bacs_mandate_text, configuration.merchantDisplayName)
@@ -318,7 +318,7 @@ extension PaymentSheetFormFactory {
                 mandateWasConfirmed.value = value
             }
         )
-        return PaymentMethodElementWrapper(element) { checkbox, params in
+        return PaymentMethodElementWrapper(element) { _, params in
             // TODO: Do something with the params? Maybe? Or just enforce that the box is checked?
             return params
         }
@@ -476,7 +476,7 @@ extension PaymentSheetFormFactory {
             theme: theme
         )
     }
-    
+
     func makeBacsDebit() -> PaymentMethodElement {
         let contactSection: Element? = makeContactInformationSection(
             nameRequiredByPaymentMethod: true,

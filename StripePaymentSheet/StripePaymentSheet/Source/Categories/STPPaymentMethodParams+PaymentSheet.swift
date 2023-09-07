@@ -27,7 +27,7 @@ extension STPPaymentMethodParams {
         }
         return auBECSDebit
     }
-    
+
     var nonnil_bacsDebit: STPPaymentMethodBacsDebitParams {
         guard let bacsDebit = bacsDebit else {
             let bacsDebit = STPPaymentMethodBacsDebitParams()
