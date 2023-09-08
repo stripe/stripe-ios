@@ -74,21 +74,20 @@ support@stripe.com
                     ButtonView(text: "Modify Details",
                                foregroundColor: Color.black,
                                backgroundColor: Color.white,
-                               overlayView: RoundedRectangle(cornerRadius: 5)
-                                                .stroke(borderColor, lineWidth: 1)
+                               strokeWidth: 1
                     )
                 })
                 Button(action: confirmAction, label: {
                     ButtonView(text: "Confirm",
                                foregroundColor: Color.white,
                                backgroundColor: Color.blue,
-                               overlayView: EmptyView()
+                               strokeWidth: 0
                     )
                 })
             }
         }
         .foregroundColor(secondaryTextColor)
-        .padding()
+        .padding(18)
 
     }
 }
@@ -97,7 +96,7 @@ private struct ButtonView: View {
     let text: String
     let foregroundColor: Color
     let backgroundColor: Color
-    let overlayView: any View
+    let strokeWidth: CGFloat
 
     var body: some View {
         Text(text)
@@ -110,7 +109,7 @@ private struct ButtonView: View {
             .cornerRadius(5)
             .overlay(
                 RoundedRectangle(cornerRadius: 5)
-                .stroke(borderColor, lineWidth: 1)
+                                 .stroke(borderColor, lineWidth: strokeWidth)
             )
             .shadow(color: shadow1Color, radius: 6, x: 0, y: 3)
             .shadow(color: shadow2Color, radius: 3, x: 0, y: 1)
