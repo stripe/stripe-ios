@@ -234,3 +234,5 @@ import Foundation
         }
     }
 }
+
+extension STPPaymentMethodType: CaseIterable { }
