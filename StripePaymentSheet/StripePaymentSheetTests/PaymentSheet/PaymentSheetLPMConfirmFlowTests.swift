@@ -28,6 +28,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case SG = "sg"
         case MY = "my"
         case BE = "be"
+        case GB = "gb"
 
         var publishableKey: String {
             switch self {
@@ -39,6 +40,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingMYPublishableKey
             case .BE:
                 return STPTestingBEPublishableKey
+            case .GB:
+                return STPTestingGBPublishableKey
             }
         }
     }
@@ -136,6 +139,19 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             form.getTextFieldElement("BLIK code")?.setText("123456")
         }
     }
+    
+    func testBacsDDConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "GBP", paymentMethodType: .dynamic("bacs_debit"), merchantCountry: .GB) { form in
+            form.getTextFieldElement("Full name")?.setText("Foo")
+            form.getTextFieldElement("Email")?.setText("f@z.c")
+            form.getTextFieldElement("Sort code")?.setText("108800")
+            form.getTextFieldElement("Account number")?.setText("00012345")
+            form.getTextFieldElement("Address line 1")?.setText("asdf")
+            form.getTextFieldElement("City")?.setText("asdf")
+            form.getTextFieldElement("ZIP")?.setText("12345")
+            form.getCheckboxElement()?.isSelected = true
+        }
+    }
 
     func testAmazonPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
@@ -181,6 +197,10 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                       paymentMethodType: PaymentSheet.PaymentMethodType,
                       merchantCountry: MerchantCountry = .US,
                       formCompleter: (PaymentMethodElement) -> Void) async throws {
+        // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
+        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: {paymentMethod,shouldSavePaymentMethod,intentCreationCallback in })
+        let _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
+        
         func makeDeferredIntent(_ intentConfig: PaymentSheet.IntentConfiguration) -> Intent {
             return .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig)
         }
@@ -249,17 +269,17 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
         case .paymentIntentWithSetupFutureUsage:
             let paymentIntent: STPPaymentIntent = try await {
-                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, otherParams: ["setup_future_usage": "off_session"])
+                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: paymentMethodTypes, currency: currency, merchantCountry: merchantCountry.rawValue, otherParams: ["setup_future_usage": "off_session"])
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
             let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { _, _ in
-                return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, otherParams: ["setup_future_usage": "off_session"])
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: paymentMethodTypes, currency: currency, merchantCountry: merchantCountry.rawValue, otherParams: ["setup_future_usage": "off_session"])
             }
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, _ in
                 let otherParams = [
                     "setup_future_usage": "off_session",
                 ].merging(paramsForServerSideConfirmation) { _, b in b }
-                return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: otherParams)
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(types: paymentMethodTypes, currency: currency, merchantCountry: merchantCountry.rawValue, paymentMethodID: paymentMethod.stripeId, confirm: true, otherParams: otherParams)
             }
             intents = [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
@@ -308,7 +328,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 paymentHandler._handleWillForegroundNotification()
                 redirectShimCalled = true
             }
-
+            
             // Confirm the intent with the form details
             PaymentSheet.confirm(
                 configuration: configuration,
@@ -317,7 +337,6 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 paymentOption: .new(confirmParams: intentConfirmParams),
                 paymentHandler: paymentHandler
             ) { result, _  in
-                e.fulfill()
                 switch result {
                 case .failed(error: let error):
                     XCTFail("❌ \(description): PaymentSheet.confirm failed - \(error)")
@@ -326,6 +345,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 case .completed:
                     print("✅ \(description): PaymentSheet.confirm completed")
                 }
+                e.fulfill()
             }
             await fulfillment(of: [e], timeout: 5)
         }

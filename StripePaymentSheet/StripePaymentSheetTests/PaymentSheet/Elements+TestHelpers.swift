@@ -54,6 +54,10 @@ extension Element {
     func getPhoneNumberElement() -> PhoneNumberElement? {
         return getElement()
     }
+    
+    func getCheckboxElement() -> CheckboxElement? {
+        return getElement()
+    }
 
     func getElement<T>() -> T? {
         return getAllUnwrappedSubElements()
