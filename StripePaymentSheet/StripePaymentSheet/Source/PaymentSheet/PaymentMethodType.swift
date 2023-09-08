@@ -341,16 +341,15 @@ extension PaymentSheet {
                     case .USBankAccount:
                         return [.userSupportsDelayedPaymentMethods]
                     case .sofort, .iDEAL, .bancontact:
-                        // n.b. While sofort, iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
+                        // n.b. While sofort, iDEAL, and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                        // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                     case .SEPADebit:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
-                        .affirm, .unknown:
+                        .affirm, .unknown, .paynow:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -359,7 +358,7 @@ extension PaymentSheet {
             } else {
                 requirements = {
                     switch stpPaymentMethodType {
-                    case .blik, .card, .cardPresent, .UPI, .weChatPay:
+                    case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow:
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .linkInstantDebit, .bancontact, .iDEAL, .cashApp, .affirm:

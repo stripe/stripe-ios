@@ -636,7 +636,8 @@ public class STPPaymentHandler: NSObject {
             .klarna,
             .affirm,
             .linkInstantDebit,
-            .cashApp:
+            .cashApp,
+            .paynow:
             return false
 
         case .unknown:

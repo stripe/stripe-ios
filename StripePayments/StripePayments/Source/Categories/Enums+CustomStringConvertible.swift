@@ -538,6 +538,8 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "weChatPay"
         case .cashApp:
             return "cashApp"
+        case .paynow:
+            return "PayNow"
         }
     }
 }
