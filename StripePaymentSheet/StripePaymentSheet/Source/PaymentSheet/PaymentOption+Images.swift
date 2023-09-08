@@ -27,6 +27,8 @@ extension PaymentOption {
             return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
         case .link:
             return Image.pm_type_link.makeImage()
+        case .externalPayPal:
+            return Image.pm_type_paypal.makeImage()
         }
     }
 
@@ -41,6 +43,8 @@ extension PaymentOption {
             return confirmParams.paymentMethodParams.makeCarouselImage(for: view)
         case .link:
             return Image.link_carousel_logo.makeImage(template: true)
+        case .externalPayPal:
+            return Image.pm_type_paypal.makeImage()
         }
     }
 }
@@ -160,6 +164,10 @@ extension STPPaymentMethodType {
                     return .pm_type_cashapp
                 case .blik:
                     return .pm_type_blik
+                case .alipay:
+                    return .pm_type_alipay
+                case .OXXO:
+                    return .pm_type_oxxo
                 default:
                     return nil
                 }
