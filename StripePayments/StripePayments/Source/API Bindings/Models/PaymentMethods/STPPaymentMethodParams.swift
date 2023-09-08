@@ -572,7 +572,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         case .alipay:
             self.alipay = STPPaymentMethodAlipayParams()
             // Careful! In the future, when we add recurring Alipay, we'll need to look at this!
-            break
         case .sofort:
             let sofort = STPPaymentMethodSofortParams()
             self.sofort = sofort
@@ -593,7 +592,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             self.klarna = STPPaymentMethodKlarnaParams()
         case .affirm:
             self.affirm = STPPaymentMethodAffirmParams()
-        case .paynow, .zip:
+        case .paynow, .zip, .amazonPay, .mobilePay:
             // No parameters
             break
         // All reusable PaymentMethods go below:
@@ -609,6 +608,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             .linkInstantDebit,
             .USBankAccount,
             .cashApp,
+            .revolutPay,
             .unknown:
             return nil
         }
@@ -1102,7 +1102,7 @@ extension STPPaymentMethodParams {
             usBankAccount = STPPaymentMethodUSBankAccountParams()
         case .cashApp:
             cashApp = STPPaymentMethodCashAppParams()
-        case .cardPresent, .linkInstantDebit, .paynow, .zip:
+        case .cardPresent, .linkInstantDebit, .paynow, .zip, .revolutPay, .amazonPay, .mobilePay:
             // These payment methods don't have any params
             break
         case .unknown:
@@ -1180,10 +1180,9 @@ extension STPPaymentMethodParams {
             return "Cash App Pay"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
-        case .paynow:
-            return "PayNow"
-        case .zip:
-            return "Zip"
+        case .paynow, .zip, .revolutPay, .amazonPay, .mobilePay:
+            // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
+            return type.displayName
         @unknown default:
             return STPLocalizedString("Unknown", "Default missing source type label")
         }

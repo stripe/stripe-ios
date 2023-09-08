@@ -638,7 +638,10 @@ public class STPPaymentHandler: NSObject {
             .linkInstantDebit,
             .cashApp,
             .paynow,
-            .zip:
+            .zip,
+            .revolutPay,
+            .mobilePay,
+            .amazonPay:
             return false
 
         case .unknown:
