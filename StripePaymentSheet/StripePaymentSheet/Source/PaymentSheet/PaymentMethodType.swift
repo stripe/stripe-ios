@@ -23,8 +23,6 @@ extension PaymentSheet {
                 return [.returnURL]
             case .dynamic("mobilepay"):
                 return [.returnURL]
-            case .dynamic("zip"):
-                return [.returnURL]
             default:
                 return [.unsupported]
             }
@@ -95,8 +93,6 @@ extension PaymentSheet {
                 return "Revolut Pay"
             } else if case .dynamic("mobilepay") = self {
                 return "MobilePay"
-            } else if case .dynamic("zip") = self {
-                return "Zip"
             } else if case .dynamic("amazon_pay") = self {
                 return "Amazon Pay"
             } else if case .dynamic(let name) = self {
