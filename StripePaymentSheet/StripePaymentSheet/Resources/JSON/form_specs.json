@@ -961,7 +961,11 @@
         "dark_theme_png": "https://i.ibb.co/8s8Hr49/icon-pm-paynow-dark.png",
         "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow-b25acf96aac928b13e6206afb8982444.svg",
         "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark-d700c844535c608fd5fd4048f6a21146.svg"
-      },
+       }
+    },
+    {
+      "type": "alipay",
+      "async": false,
       "fields": []
     }
 ]

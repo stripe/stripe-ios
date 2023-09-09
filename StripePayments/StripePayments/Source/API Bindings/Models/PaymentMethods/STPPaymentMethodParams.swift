@@ -620,6 +620,9 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             self.type = .affirm
             self.affirm = STPPaymentMethodAffirmParams()
             self.billingDetails = paymentMethod.billingDetails
+        case .paynow:
+            self.type = .paynow
+            self.billingDetails = paymentMethod.billingDetails
         // All reusable PaymentMethods go below:
         case .SEPADebit,
             .bacsDebit,
@@ -1084,8 +1087,6 @@ extension STPPaymentMethodParams {
             iDEAL = STPPaymentMethodiDEALParams()
         case .FPX:
             fpx = STPPaymentMethodFPXParams()
-        case .cardPresent:
-            break
         case .SEPADebit:
             sepaDebit = STPPaymentMethodSEPADebitParams()
         case .AUBECSDebit:
@@ -1124,12 +1125,13 @@ extension STPPaymentMethodParams {
             klarna = STPPaymentMethodKlarnaParams()
         case .affirm:
             affirm = STPPaymentMethodAffirmParams()
-        case .linkInstantDebit:
-            break
         case .USBankAccount:
             usBankAccount = STPPaymentMethodUSBankAccountParams()
         case .cashApp:
             cashApp = STPPaymentMethodCashAppParams()
+        case .cardPresent, .linkInstantDebit, .paynow:
+            // These payment methods don't have any params
+            break
         case .unknown:
             break
         }
@@ -1205,6 +1207,8 @@ extension STPPaymentMethodParams {
             return "Cash App Pay"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
+        case .paynow:
+            return "PayNow"
         @unknown default:
             return STPLocalizedString("Unknown", "Default missing source type label")
         }

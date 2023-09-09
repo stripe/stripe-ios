@@ -67,6 +67,8 @@ import Foundation
     case USBankAccount
     /// A CashApp payment method
     case cashApp
+    /// A PayNow payment method
+    case paynow
     /// An unknown type.
     case unknown
 
@@ -135,6 +137,8 @@ import Foundation
             .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
+        case .paynow:
+            return "PayNow"
         @unknown default:
             return STPLocalizedString("Unknown", "Default missing source type label")
         }
@@ -201,6 +205,8 @@ import Foundation
             return "cashapp"
         case .unknown:
             return "unknown"
+        case .paynow:
+            return "paynow"
         }
     }
 }

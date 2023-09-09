@@ -29,6 +29,8 @@ extension PaymentSheet {
         .blik,
         .grabPay,
         .FPX,
+        .alipay,
+        .OXXO,
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet

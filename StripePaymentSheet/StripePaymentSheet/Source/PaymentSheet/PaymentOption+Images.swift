@@ -164,6 +164,10 @@ extension STPPaymentMethodType {
                     return .pm_type_cashapp
                 case .blik:
                     return .pm_type_blik
+                case .alipay:
+                    return .pm_type_alipay
+                case .OXXO:
+                    return .pm_type_oxxo
                 default:
                     return nil
                 }

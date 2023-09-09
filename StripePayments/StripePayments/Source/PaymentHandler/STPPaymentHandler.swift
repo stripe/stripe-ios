@@ -636,7 +636,8 @@ public class STPPaymentHandler: NSObject {
             .klarna,
             .affirm,
             .linkInstantDebit,
-            .cashApp:
+            .cashApp,
+            .paynow:
             return false
 
         case .unknown:
@@ -1563,9 +1564,6 @@ public class STPPaymentHandler: NSObject {
     }
 
             @_spi(STP) public func _handleRedirect(to url: URL, withReturn returnURL: URL?) {
-        if let redirectShim = _redirectShim {
-            redirectShim(url, returnURL, true)
-        }
         _handleRedirect(to: url, fallbackURL: url, return: returnURL)
     }
 
@@ -1610,8 +1608,12 @@ public class STPPaymentHandler: NSObject {
     /// This method:
     /// 1. Redirects to an app using url
     /// 2. Open fallbackURL in a webview if 1) fails
+            ///
+    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?) {
+        if let redirectShim = _redirectShim, let url = nativeURL ?? fallbackURL {
+            redirectShim(url, returnURL, true)
+        }
 
-    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, completion: (() -> Void)? = nil) {
         var url = nativeURL
         guard let currentAction = currentAction else {
             assert(false, "Calling _handleRedirect without a currentAction")
