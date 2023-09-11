@@ -144,56 +144,19 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     }
 
     // MARK: - STPPaymentMethodType
-    class func stringToTypeMapping() -> [String: NSNumber] {
-        return [
-            "card": NSNumber(value: STPPaymentMethodType.card.rawValue),
-            "ideal": NSNumber(value: STPPaymentMethodType.iDEAL.rawValue),
-            "fpx": NSNumber(value: STPPaymentMethodType.FPX.rawValue),
-            "card_present": NSNumber(value: STPPaymentMethodType.cardPresent.rawValue),
-            "sepa_debit": NSNumber(value: STPPaymentMethodType.SEPADebit.rawValue),
-            "bacs_debit": NSNumber(value: STPPaymentMethodType.bacsDebit.rawValue),
-            "au_becs_debit": NSNumber(value: STPPaymentMethodType.AUBECSDebit.rawValue),
-            "grabpay": NSNumber(value: STPPaymentMethodType.grabPay.rawValue),
-            "giropay": NSNumber(value: STPPaymentMethodType.giropay.rawValue),
-            "p24": NSNumber(value: STPPaymentMethodType.przelewy24.rawValue),
-            "eps": NSNumber(value: STPPaymentMethodType.EPS.rawValue),
-            "bancontact": NSNumber(value: STPPaymentMethodType.bancontact.rawValue),
-            "netbanking": NSNumber(value: STPPaymentMethodType.netBanking.rawValue),
-            "oxxo": NSNumber(value: STPPaymentMethodType.OXXO.rawValue),
-            "sofort": NSNumber(value: STPPaymentMethodType.sofort.rawValue),
-            "upi": NSNumber(value: STPPaymentMethodType.UPI.rawValue),
-            "alipay": NSNumber(value: STPPaymentMethodType.alipay.rawValue),
-            "paypal": NSNumber(value: STPPaymentMethodType.payPal.rawValue),
-            "afterpay_clearpay": NSNumber(value: STPPaymentMethodType.afterpayClearpay.rawValue),
-            "blik": NSNumber(value: STPPaymentMethodType.blik.rawValue),
-            "link": NSNumber(value: STPPaymentMethodType.link.rawValue),
-            "wechat_pay": NSNumber(value: STPPaymentMethodType.weChatPay.rawValue),
-            "boleto": NSNumber(value: STPPaymentMethodType.boleto.rawValue),
-            "klarna": NSNumber(value: STPPaymentMethodType.klarna.rawValue),
-            "affirm": NSNumber(value: STPPaymentMethodType.affirm.rawValue),
-            "us_bank_account": NSNumber(value: STPPaymentMethodType.USBankAccount.rawValue),
-            "cashapp": NSNumber(value: STPPaymentMethodType.cashApp.rawValue),
-            "paynow": NSNumber(value: STPPaymentMethodType.paynow.rawValue),
-        ]
-    }
 
     @_spi(STP) public class func string(from type: STPPaymentMethodType) -> String? {
-        return
-            (self.stringToTypeMapping() as NSDictionary).allKeys(
-                for: NSNumber(value: type.rawValue)
-            )
-            .first as? String
+        guard type != .unknown else {
+            return nil
+        }
+        return type.identifier
     }
 
     @_spi(STP) public class func type(from string: String) -> STPPaymentMethodType {
         let key = string.lowercased()
-        let typeNumber = self.stringToTypeMapping()[key]
-
-        if let typeNumber = typeNumber {
-            return STPPaymentMethodType(rawValue: Int(truncating: typeNumber)) ?? .unknown
-        }
-
-        return .unknown
+        return STPPaymentMethodType.allCases.first(where: { type in
+            type.identifier == key
+        }) ?? .unknown
     }
 
     class func types(from strings: [String]) -> [NSNumber] {
