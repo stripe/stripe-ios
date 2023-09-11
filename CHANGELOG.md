@@ -4,7 +4,7 @@
 
 ### PaymentSheet
 * [Added] Support for Alipay, OXXO, and PayNow with PaymentIntents.
-* [Added] Support for Cash App Pay with SetupIntents and PaymentIntents with `setup_future_usage` = `off_session`.
+* [Added] Support for Cash App Pay with SetupIntents and PaymentIntents with `setup_future_usage`.
 
 ## 23.15.0 2023-08-28
 ### PaymentSheet
