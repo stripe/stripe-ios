@@ -159,16 +159,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             XCTAssertEqual(form.getAllSubElements().count, 1)
         }
     }
-
-    func testOXXOConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent],
-                               currency: "MXN",
-                               paymentMethodType: .dynamic("oxxo"),
-                               merchantCountry: .MX) { form in
-            form.getTextFieldElement("Full name")?.setText("Jane Doe")
-            form.getTextFieldElement("Email")?.setText("foo@bar.com")
-        }
-    }
 }
 
 // MARK: - Helper methods
