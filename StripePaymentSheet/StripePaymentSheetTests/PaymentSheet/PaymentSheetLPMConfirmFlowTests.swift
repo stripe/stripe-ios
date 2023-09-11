@@ -169,6 +169,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             form.getTextFieldElement("Email")?.setText("foo@bar.com")
         }
     }
+
+    func testPayNowConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "SGD",
+                               paymentMethodType: .dynamic("paynow"),
+                               merchantCountry: .SG) { form in
+            // PayNow has no input fields
+            XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
 }
 
 // MARK: - Helper methods
