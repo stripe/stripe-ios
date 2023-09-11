@@ -605,7 +605,7 @@ public class STPPaymentHandler: NSObject {
     /// because the funds can take up to 14 days to transfer from the customer's bank.
     class func _isProcessingIntentSuccess(for type: STPPaymentMethodType) -> Bool {
         switch type {
-        // Asynchronous
+        // Asynchronous payment methods whose intent.status is 'processing' after handling the next action
         case .SEPADebit,
             .bacsDebit,  // Bacs Debit takes 2-3 business days
             .AUBECSDebit,
@@ -641,7 +641,8 @@ public class STPPaymentHandler: NSObject {
             .zip,
             .revolutPay,
             .mobilePay,
-            .amazonPay:
+            .amazonPay,
+            .konbini:
             return false
 
         case .unknown:

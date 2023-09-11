@@ -77,6 +77,8 @@ import Foundation
     case amazonPay
     /// A MobilePay payment method
     case mobilePay
+    /// A Konbini payment method
+    case konbini
     /// An unknown type.
     case unknown
 
@@ -151,6 +153,8 @@ import Foundation
             return "Amazon Pay"
         case .mobilePay:
             return "MobilePay"
+        case .konbini:
+            return STPLocalizedString("Konbini", "Payment Method type brand name")
         case .bacsDebit,
             .cardPresent,
             .unknown:
@@ -231,6 +235,8 @@ import Foundation
             return "amazon_pay"
         case .mobilePay:
             return "mobilepay"
+        case .konbini:
+            return "konbini"
         }
     }
 }
