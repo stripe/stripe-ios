@@ -45,7 +45,7 @@ class PollingViewModel {
         case .UPI, .blik:
             return 12
         case .paynow:
-            return Int.max // PayNow has a very long expiration, don't set a max retry count
+            return 1000 // PayNow has a very long expiration
         default:
             fatalError("Polling deadline has not been implemented for \(paymentMethodType)")
         }
