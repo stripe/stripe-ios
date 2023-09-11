@@ -365,8 +365,20 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     }
 }
 
-extension PaymentSheet_LPM_ConfirmFlowTests: STPAuthenticationContext {
+extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
+    }
+    
+    func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
+        // no-op
+    }
+    
+    func dismiss(_ authenticationViewController: UIViewController) {
+        // no-op
+    }
+    
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType) {
+        // no-op
     }
 }
