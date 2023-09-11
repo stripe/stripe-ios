@@ -69,6 +69,14 @@ import Foundation
     case cashApp
     /// A PayNow payment method
     case paynow
+    /// A Zip payment method
+    case zip
+    /// A RevolutPay payment method
+    case revolutPay
+    /// An AmazonPay payment method
+    case amazonPay
+    /// A MobilePay payment method
+    case mobilePay
     /// An unknown type.
     case unknown
 
@@ -133,12 +141,20 @@ import Foundation
             )
         case .cashApp:
             return STPLocalizedString("Cash App Pay", "Payment Method type brand name")
+        case .paynow:
+            return "PayNow"
+        case .zip:
+            return "Zip"
+        case .revolutPay:
+            return "Revolut Pay"
+        case .amazonPay:
+            return "Amazon Pay"
+        case .mobilePay:
+            return "MobilePay"
         case .bacsDebit,
             .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
-        case .paynow:
-            return "PayNow"
         @unknown default:
             return STPLocalizedString("Unknown", "Default missing source type label")
         }
@@ -203,10 +219,20 @@ import Foundation
             return "us_bank_account"
         case .cashApp:
             return "cashapp"
+        case .zip:
+            return "zip"
         case .unknown:
             return "unknown"
         case .paynow:
             return "paynow"
+        case .revolutPay:
+            return "revolut_pay"
+        case .amazonPay:
+            return "amazon_pay"
+        case .mobilePay:
+            return "mobilepay"
         }
     }
 }
+
+extension STPPaymentMethodType: CaseIterable { }

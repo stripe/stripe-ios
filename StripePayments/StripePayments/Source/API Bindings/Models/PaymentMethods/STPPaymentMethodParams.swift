@@ -541,88 +541,60 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         singleUsePaymentMethod paymentMethod: STPPaymentMethod
     ) {
         self.init()
+        self.type = paymentMethod.type
+        self.billingDetails = paymentMethod.billingDetails
         switch paymentMethod.type {
         case .EPS:
-            self.type = .EPS
-            let eps = STPPaymentMethodEPSParams()
-            self.eps = eps
-            self.billingDetails = paymentMethod.billingDetails
+            self.eps = STPPaymentMethodEPSParams()
         case .FPX:
-            self.type = .FPX
             let fpx = STPPaymentMethodFPXParams()
             fpx.rawBankString = paymentMethod.fpx?.bankIdentifierCode
             self.fpx = fpx
-            self.billingDetails = paymentMethod.billingDetails
         case .iDEAL:
-            self.type = .iDEAL
             let iDEAL = STPPaymentMethodiDEALParams()
             self.iDEAL = iDEAL
             self.iDEAL?.bankName = paymentMethod.iDEAL?.bankName
-            self.billingDetails = paymentMethod.billingDetails
         case .giropay:
-            self.type = .giropay
             let giropay = STPPaymentMethodGiropayParams()
             self.giropay = giropay
-            self.billingDetails = paymentMethod.billingDetails
         case .przelewy24:
-            self.type = .przelewy24
             let przelewy24 = STPPaymentMethodPrzelewy24Params()
             self.przelewy24 = przelewy24
-            self.billingDetails = paymentMethod.billingDetails
         case .bancontact:
-            self.type = .bancontact
             let bancontact = STPPaymentMethodBancontactParams()
             self.bancontact = bancontact
-            self.billingDetails = paymentMethod.billingDetails
         case .netBanking:
-            self.type = .netBanking
             let netBanking = STPPaymentMethodNetBankingParams()
             self.netBanking = netBanking
-            self.billingDetails = paymentMethod.billingDetails
         case .OXXO:
-            self.type = .OXXO
             let oxxo = STPPaymentMethodOXXOParams()
             self.oxxo = oxxo
-            self.billingDetails = paymentMethod.billingDetails
         case .alipay:
+            self.alipay = STPPaymentMethodAlipayParams()
             // Careful! In the future, when we add recurring Alipay, we'll need to look at this!
-            self.type = .alipay
-            self.billingDetails = paymentMethod.billingDetails
         case .sofort:
-            self.type = .sofort
             let sofort = STPPaymentMethodSofortParams()
             self.sofort = sofort
-            self.billingDetails = paymentMethod.billingDetails
         case .UPI:
-            self.type = .UPI
             let upi = STPPaymentMethodUPIParams()
             self.upi = upi
             self.billingDetails = paymentMethod.billingDetails
         case .grabPay:
-            self.type = .grabPay
             let grabpay = STPPaymentMethodGrabPayParams()
             self.grabPay = grabpay
             self.billingDetails = paymentMethod.billingDetails
         case .afterpayClearpay:
-            self.type = .afterpayClearpay
             self.afterpayClearpay = STPPaymentMethodAfterpayClearpayParams()
-            self.billingDetails = paymentMethod.billingDetails
         case .boleto:
-            self.type = .boleto
             let boleto = STPPaymentMethodBoletoParams()
             self.boleto = boleto
-            self.billingDetails = paymentMethod.billingDetails
         case .klarna:
-            self.type = .klarna
             self.klarna = STPPaymentMethodKlarnaParams()
-            self.billingDetails = paymentMethod.billingDetails
         case .affirm:
-            self.type = .affirm
             self.affirm = STPPaymentMethodAffirmParams()
-            self.billingDetails = paymentMethod.billingDetails
-        case .paynow:
-            self.type = .paynow
-            self.billingDetails = paymentMethod.billingDetails
+        case .paynow, .zip, .amazonPay, .mobilePay:
+            // No parameters
+            break
         // All reusable PaymentMethods go below:
         case .SEPADebit,
             .bacsDebit,
@@ -636,6 +608,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             .linkInstantDebit,
             .USBankAccount,
             .cashApp,
+            .revolutPay,
             .unknown:
             return nil
         }
@@ -1129,7 +1102,7 @@ extension STPPaymentMethodParams {
             usBankAccount = STPPaymentMethodUSBankAccountParams()
         case .cashApp:
             cashApp = STPPaymentMethodCashAppParams()
-        case .cardPresent, .linkInstantDebit, .paynow:
+        case .cardPresent, .linkInstantDebit, .paynow, .zip, .revolutPay, .amazonPay, .mobilePay:
             // These payment methods don't have any params
             break
         case .unknown:
@@ -1207,8 +1180,9 @@ extension STPPaymentMethodParams {
             return "Cash App Pay"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
-        case .paynow:
-            return "PayNow"
+        case .paynow, .zip, .revolutPay, .amazonPay, .mobilePay:
+            // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
+            return type.displayName
         @unknown default:
             return STPLocalizedString("Unknown", "Default missing source type label")
         }
