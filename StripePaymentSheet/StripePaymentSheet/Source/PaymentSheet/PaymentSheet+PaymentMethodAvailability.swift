@@ -30,7 +30,7 @@ extension PaymentSheet {
         .grabPay,
         .FPX,
         .alipay,
-        .OXXO, .zip, .revolutPay, .amazonPay, .mobilePay, .payNow,
+        .OXXO, .zip, .revolutPay, .amazonPay, .mobilePay, .paynow,
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
