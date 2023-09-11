@@ -139,7 +139,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
     private var videoDataOutputQueue: DispatchQueue?
     private var textRequest: VNRecognizeTextRequest?
     private var isScanning = false
-    
+
     private var timeoutTime: Date?
     private var didTimeout: Bool {
         if let timeoutTime = timeoutTime {
@@ -147,7 +147,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
         }
         return false
     }
-    
+
     private var stp_deviceOrientation: UIDeviceOrientation!
     private var videoOrientation: AVCaptureVideoOrientation!
     private var textOrientation: CGImagePropertyOrientation!

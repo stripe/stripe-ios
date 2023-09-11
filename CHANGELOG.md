@@ -5,6 +5,7 @@
 ### PaymentSheet
 * [Added] Support for Alipay with PaymentIntents.
 * [Added] Support for OXXO with PaymentIntents.
+* [Fixed] Fixed an issue with scanning card expiration dates.
 
 ## 23.15.0 2023-08-28
 ### PaymentSheet
