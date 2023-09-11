@@ -34,7 +34,7 @@ class PollingViewController: UIViewController {
 
         let intentPoller = IntentStatusPoller(apiClient: currentAction.apiClient,
                                               clientSecret: clientSecret,
-                                              maxRetries: 12)
+                                              maxRetries: viewModel.maxRetries)
         intentPoller.delegate = self
         return intentPoller
     }()
