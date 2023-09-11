@@ -143,6 +143,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     // MARK: - STPPaymentMethodType
 
     @_spi(STP) public class func string(from type: STPPaymentMethodType) -> String? {
+        guard type != .unknown else {
+            return nil
+        }
         return type.identifier
     }
 
