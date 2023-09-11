@@ -1284,7 +1284,7 @@ public class STPPaymentHandler: NSObject {
                 currentAction.complete(with: .succeeded, error: nil)
                 return
             }
-            presentingVC.presentPollingVCForAction(action: currentAction, type: STPPaymentMethodType.blik.identifier)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .blik)
 
         case .verifyWithMicrodeposits:
             // The customer must authorize after the microdeposits appear in their bank account
@@ -1299,7 +1299,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
 
-            presentingVC.presentPollingVCForAction(action: currentAction, type: STPPaymentMethodType.UPI.identifier)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI)
         case .cashAppRedirectToApp:
             guard
                 let returnURL = URL(string: currentAction.returnURLString ?? "")
@@ -1324,25 +1324,15 @@ public class STPPaymentHandler: NSObject {
             guard
                 let returnURL = URL(string: currentAction.returnURLString ?? ""),
                 let presentingVC = currentAction.authenticationContext
-                    as? PaymentSheetAuthenticationContext
+                    as? PaymentSheetAuthenticationContext,
+                let hostedInstructionsURL = authenticationAction.payNowDisplayQrCode?.hostedInstructionsURL
+
             else {
                 fatalError()
             }
 
-            if let hostedInstructionsURL = authenticationAction.payNowDisplayQrCode?.hostedInstructionsURL {
-                _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) {
-                    presentingVC.presentPollingVCForAction(action: currentAction, type: "paynow")
-                }
-            } else {
-                currentAction.complete(
-                    with: STPPaymentHandlerActionStatus.failed,
-                    error: _error(
-                        for: .unsupportedAuthenticationErrorCode,
-                        userInfo: [
-                            "STPIntentAction": authenticationAction.description,
-                        ]
-                    )
-                )
+            _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) {
+                presentingVC.presentPollingVCForAction(action: currentAction, type: .paynow)
             }
         @unknown default:
             fatalError()
@@ -1468,7 +1458,9 @@ public class STPPaymentHandler: NSObject {
                                                     retryCount: retryCount - 1
                                                 )
                                             }
-                                        } else {
+                                        } else if retrievedPaymentIntent?.paymentMethod?.type != .paynow {
+                                            // For PayNow, we don't want to mark as canceled when the web view dismisses
+                                            // Instead we rely on the presented PollingViewController to complete the currentAction
                                             self._markChallengeCanceled(withCompletion: { _, _ in
                                                 // We don't forward cancelation errors
                                                 currentAction.complete(
@@ -1609,7 +1601,7 @@ public class STPPaymentHandler: NSObject {
     /// 1. Redirects to an app using url
     /// 2. Open fallbackURL in a webview if 1) fails
             ///
-    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?) {
+    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, completion: (() -> Void)? = nil) {
         if let redirectShim = _redirectShim, let url = nativeURL ?? fallbackURL {
             redirectShim(url, returnURL, true)
         }
@@ -2305,7 +2297,7 @@ extension STPPaymentHandler {
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController)
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: String)
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType)
 }
 
 @_spi(STP) public protocol FormSpecPaymentHandler {

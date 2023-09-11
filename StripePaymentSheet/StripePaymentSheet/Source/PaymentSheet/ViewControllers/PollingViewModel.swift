@@ -14,15 +14,15 @@ import UIKit
 
 class PollingViewModel {
 
-    let paymentMethodType: PaymentSheet.PaymentMethodType
-    let supportedPaymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.UPI, .dynamic("blik"), .dynamic("paynow")]
+    let paymentMethodType: STPPaymentMethodType
+    let supportedPaymentMethods: [STPPaymentMethodType] = [.UPI, .blik, .paynow]
     lazy var CTA: String = {
         switch paymentMethodType {
         case .UPI:
             return .Localized.open_upi_app
-        case .dynamic("blik"):
+        case .blik:
             return .Localized.blik_confirm_payment
-        case .dynamic("paynow"):
+        case .paynow:
             return .Localized.paynow_confirm_payment
         default:
             fatalError("Polling CTA has not been implemented for \(paymentMethodType)")
@@ -32,18 +32,27 @@ class PollingViewModel {
         switch paymentMethodType {
         case .UPI:
             return Date().addingTimeInterval(60 * 5) // 5 minutes
-        case .dynamic("blik"):
+        case .blik:
             return Date().addingTimeInterval(60) // 60 seconds
-        case .dynamic("paynow"):
+        case .paynow:
             return Date().addingTimeInterval(60 * 60) // 1 hour
         default:
             fatalError("Polling deadline has not been implemented for \(paymentMethodType)")
         }
     }()
+    lazy var maxRetries: Int = {
+        switch paymentMethodType {
+        case .UPI, .blik:
+            return 12
+        case .paynow:
+            return Int.max // PayNow has a very long expiration, don't set a max retry count
+        default:
+            fatalError("Polling deadline has not been implemented for \(paymentMethodType)")
+        }
+    }()
 
-    init(paymentMethodType: String) {
-        let paymentMethodType: PaymentSheet.PaymentMethodType = .init(from: paymentMethodType)
-        guard supportedPaymentMethodTypes.contains(paymentMethodType) else {
+    init(paymentMethodType: STPPaymentMethodType) {
+        guard supportedPaymentMethods.contains(paymentMethodType) else {
                fatalError("Unsupported payment type \(paymentMethodType) in PollingViewModel")
         }
         self.paymentMethodType = paymentMethodType
