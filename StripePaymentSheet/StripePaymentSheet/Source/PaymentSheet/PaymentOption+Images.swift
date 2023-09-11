@@ -175,6 +175,8 @@ extension STPPaymentMethodType {
                     return .pm_type_oxxo
                 case .konbini:
                     return .pm_type_konbini
+                case .boleto:
+                    return .pm_type_boleto
                 default:
                     return nil
                 }

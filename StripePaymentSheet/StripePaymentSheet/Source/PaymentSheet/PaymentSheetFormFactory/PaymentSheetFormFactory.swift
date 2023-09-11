@@ -163,6 +163,8 @@ class PaymentSheetFormFactory {
             return  makeOXXO()
         } else if paymentMethod.stpPaymentMethodType == .konbini {
             return makeKonbini()
+        } else if paymentMethod.stpPaymentMethodType == .boleto {
+            return makeBoleto()
         }
 
         guard let spec = specFromJSONProvider() else {
