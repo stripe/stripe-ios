@@ -31,6 +31,7 @@ extension PaymentSheet {
         .FPX,
         .alipay,
         .OXXO,
+        .paynow,
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
