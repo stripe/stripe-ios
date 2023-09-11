@@ -171,6 +171,13 @@ extension String.Localized {
         )
     }
 
+    static var revolut_pay_mandate_text: String {
+        STPLocalizedString(
+            "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.",
+            "Revolut Pay mandate text"
+        )
+    }
+
     static var paypal_mandate_text_payment: String {
         STPLocalizedString(
             "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.",

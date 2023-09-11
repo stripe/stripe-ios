@@ -167,6 +167,8 @@ extension STPPaymentMethodType {
                     return .pm_type_upi
                 case .cashApp:
                     return .pm_type_cashapp
+                case .revolutPay:
+                    return .pm_type_revolutpay
                 case .blik:
                     return .pm_type_blik
                 case .alipay:
