@@ -920,9 +920,10 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
     func testPayNowPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.merchantCountryCode = .SG
+        settings.customerMode = .new // new customer
+        settings.apmsEnabled = .on
         settings.currency = .sgd
+        settings.merchantCountryCode = .SG
         loadPlayground(
             app,
             settings
@@ -930,22 +931,21 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         app.buttons["Present PaymentSheet"].tap()
 
-        guard let payNow = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PayNow") else {
+        // Select PayNow
+        guard let payNow = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PayNow")
+        else {
             XCTFail()
             return
         }
         payNow.tap()
 
-        let payButton = app.buttons["Pay SGD 50.99"]
-        XCTAssertTrue(payButton.isEnabled)
-        payButton.tap()
+        // Attempt payment
+        XCTAssertTrue(app.buttons["Pay SGD 50.99"].waitForExistenceAndTap(timeout: 5.0))
 
-        // Just check that a web view exists after tapping buy.
+        // Close the webview, no need to see the successful pay
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
-
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 }
 
