@@ -296,7 +296,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
             for recognizedText in candidates {
                 let possibleNumber = STPCardValidator.sanitizedNumericString(
                     for: recognizedText.string)
-                // TODO: Also handle sitautions like "Valid Thru 01/25 Security Code 000"
                 if possibleNumber.count < 4 {
                     continue  // This probably isn't something we're interested in, so don't bother processing it.
                 }
