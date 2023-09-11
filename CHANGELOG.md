@@ -3,8 +3,8 @@
 * [Added] Properties of STPConnectAccountParams are now mutable.
 
 ### PaymentSheet
-* [Added] Support for Alipay with PaymentIntents.
-* [Added] Support for OXXO with PaymentIntents.
+* [Added] Support for Alipay, OXXO, and PayNow with PaymentIntents.
+* [Added] Support for Cash App Pay with SetupIntents and PaymentIntents with `setup_future_usage` = `off_session`.
 
 ## 23.15.0 2023-08-28
 ### PaymentSheet
