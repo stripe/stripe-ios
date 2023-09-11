@@ -78,6 +78,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var usBankAccount: STPPaymentMethodUSBankAccount?
     /// If this is an Cash App PaymentMethod (i.e. `self.type == STPPaymentMethodTypeCashApp`), this contains additional details.
     @objc private(set) public var cashApp: STPPaymentMethodCashApp?
+    /// If this is an PayNow PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayNow`), this contains additional details.
+    @objc private(set) public var payNow: STPPaymentMethodPayNow?
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
@@ -134,6 +136,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "affirm = \(String(describing: affirm))",
             "usBankAccount = \(String(describing: usBankAccount))",
             "cashapp = \(String(describing: cashApp))",
+            "paynow = \(String(describing: payNow))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -170,6 +173,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "affirm": NSNumber(value: STPPaymentMethodType.affirm.rawValue),
             "us_bank_account": NSNumber(value: STPPaymentMethodType.USBankAccount.rawValue),
             "cashapp": NSNumber(value: STPPaymentMethodType.cashApp.rawValue),
+            "paynow": NSNumber(value: STPPaymentMethodType.paynow.rawValue),
         ]
     }
 
@@ -321,6 +325,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.cashApp = STPPaymentMethodCashApp.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "cashapp")
+        )
+        paymentMethod.payNow = STPPaymentMethodPayNow.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "paynow")
         )
 
         return paymentMethod
