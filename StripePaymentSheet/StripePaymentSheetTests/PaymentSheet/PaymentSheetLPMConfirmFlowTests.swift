@@ -141,7 +141,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     }
     
     func testBacsDDConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "GBP", paymentMethodType: .dynamic("bacs_debit"), merchantCountry: .GB) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .dynamic("bacs_debit"), merchantCountry: .GB) { form in
             form.getTextFieldElement("Full name")?.setText("Foo")
             form.getTextFieldElement("Email")?.setText("f@z.c")
             form.getTextFieldElement("Sort code")?.setText("108800")

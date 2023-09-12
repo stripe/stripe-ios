@@ -308,19 +308,15 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBacsMandate() -> PaymentMethodElementWrapper<CheckboxElement> {
-        let mandateWasConfirmed = BoolReference()
         let mandateText = String(format: String.Localized.bacs_mandate_text, configuration.merchantDisplayName)
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: mandateText,
-            isSelectedByDefault: false,
-            didToggle: { value in
-                mandateWasConfirmed.value = value
-            }
+            isSelectedByDefault: false
         )
-        return PaymentMethodElementWrapper(element) { _, params in
-            // TODO: Do something with the params? Maybe? Or just enforce that the box is checked?
-            return params
+        return PaymentMethodElementWrapper(element) { checkbox, params in
+            // Only return params if the mandate has been accepted
+            return checkbox.isSelected ? params : nil
         }
     }
 
