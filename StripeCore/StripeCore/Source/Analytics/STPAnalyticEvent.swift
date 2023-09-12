@@ -124,6 +124,8 @@ import Foundation
 
     // MARK: - LUXE
     case luxeSerializeFailure = "luxe_serialize_failure"
+    case luxeUnknownActionsFailure = "luxe_unknown_actions_failure"
+    case luxeSpecSerializeFailure = "luxe_spec_serialize_failure"
 
     case luxeImageSelectorIconDownloaded = "luxe_image_selector_icon_downloaded"
     case luxeImageSelectorIconFromBundle = "luxe_image_selector_icon_from_bundle"

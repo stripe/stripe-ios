@@ -434,7 +434,7 @@ class FormSpecProviderTest: XCTestCase {
         let decodedFormSpecs = try decoder.decode([FormSpec].self, from: formSpec)
 
         let sut = FormSpecProvider()
-        XCTAssertFalse(sut.containsUnknownNextActions(formSpecs: decodedFormSpecs))
+        XCTAssertFalse(sut.containsUnknownNextActions(formSpec: decodedFormSpecs[0]))
     }
 
     func testContainsUnknownNextAction_confirm() throws {
@@ -467,7 +467,7 @@ class FormSpecProviderTest: XCTestCase {
         let decodedFormSpecs = try decoder.decode([FormSpec].self, from: formSpec)
 
         let sut = FormSpecProvider()
-        XCTAssert(sut.containsUnknownNextActions(formSpecs: decodedFormSpecs))
+        XCTAssert(sut.containsUnknownNextActions(formSpec: decodedFormSpecs[0]))
     }
 
     func testContainsUnknownNextAction_PostConfirm() throws {
@@ -500,7 +500,7 @@ class FormSpecProviderTest: XCTestCase {
         let decodedFormSpecs = try decoder.decode([FormSpec].self, from: formSpec)
 
         let sut = FormSpecProvider()
-        XCTAssert(sut.containsUnknownNextActions(formSpecs: decodedFormSpecs))
+        XCTAssert(sut.containsUnknownNextActions(formSpec: decodedFormSpecs[0]))
     }
     func testRedirectToURLWithExternalBrowserStrategy() throws {
         let formSpec =
@@ -573,5 +573,76 @@ class FormSpecProviderTest: XCTestCase {
         XCTAssertEqual(redirectToURL.redirectStrategy, .follow_redirects)
         XCTAssertEqual(redirectToURL.urlPath, "next_action[redirect_to_url][url]")
         XCTAssertEqual(redirectToURL.returnUrlPath, "next_action[redirect_to_url][return_url]")
+    }
+
+    func testUnparsableSpecIsSkipped() throws {
+        let e = expectation(description: "Loads form specs file")
+        let sut = FormSpecProvider()
+        sut.load { loaded in
+            XCTAssertTrue(loaded)
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 2, handler: nil)
+
+        let json =
+            """
+            [
+                {
+                    "type": "eps",
+                    "async": false,
+                    "fields": [
+                    ],
+                    "next_action_spec": {
+                        "confirm_response_status_specs": {
+                            "requires_action": {
+                                "type": "redirect_to_url"
+                            }
+                        },
+                        "post_confirm_handling_pi_status_specs": {
+                            "succeeded": {
+                                "type": "finished_NotSupportedType"
+                            },
+                            "requires_action": {
+                                "type": "canceled"
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "affirm",
+                    "async": false,
+                    "fields": [
+                        {
+                            "type": "name",
+                            "translationId": "invalid.translation.id"
+                        }
+                    ]
+                },
+                {
+                    "type": "klarna",
+                    "async": false,
+                    "fields": [
+                        {
+                            "type": "klarna_header",
+                        }
+                    ]
+                }
+            ]
+            """.data(using: .utf8)!
+
+        let formSpec = try! JSONSerialization.jsonObject(with: json)
+
+        // loadFrom should return false because not all specs were parsed successfully.
+        XCTAssertFalse(sut.loadFrom(formSpec))
+
+        // Verify that the affirm spec was not overridden.
+        let affirmSpec = sut.formSpec(for: "affirm")
+        XCTAssertEqual(affirmSpec?.fields.count, 1)
+        XCTAssertEqual(affirmSpec?.fields[0], .affirm_header)
+
+        // Verify that the klarna spec is successfully replaced.
+        let klarnaSpec = sut.formSpec(for: "klarna")
+        XCTAssertEqual(klarnaSpec?.fields.count, 1)
+        XCTAssertEqual(klarnaSpec?.fields[0], .klarna_header)
     }
 }
