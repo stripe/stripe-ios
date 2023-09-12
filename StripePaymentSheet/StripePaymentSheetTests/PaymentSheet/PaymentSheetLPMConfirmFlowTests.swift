@@ -145,16 +145,14 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
 
     func testBacsDDConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .dynamic("bacs_debit"), merchantCountry: .GB) { form in
-            form.getTextFieldElement("Full name")?.setText("Foo")
-            form.getTextFieldElement("Email")?.setText("f@z.c")
-            form.getTextFieldElement("Sort code")?.setText("108800")
-            form.getTextFieldElement("Account number")?.setText("00012345")
-            form.getTextFieldElement("Address line 1")?.setText("asdf")
-            form.getTextFieldElement("City")?.setText("asdf")
-            form.getTextFieldElement("ZIP")?.setText("12345")
-            form.getCheckboxElement()?.isSelected = true
-            // Need to call this manually:
-            form.getCheckboxElement()?.didToggleCheckbox()
+            form.getTextFieldElement("Full name")!.setText("Foo")
+            form.getTextFieldElement("Email")!.setText("f@z.c")
+            form.getTextFieldElement("Sort code")!.setText("108800")
+            form.getTextFieldElement("Account number")!.setText("00012345")
+            form.getTextFieldElement("Address line 1")!.setText("asdf")
+            form.getTextFieldElement("City")!.setText("asdf")
+            form.getTextFieldElement("ZIP")!.setText("12345")
+            form.getCheckboxElement(startingWith: "I understand that Stripe will be collecting Direct Debits")!.isSelected = true
         }
     }
 
