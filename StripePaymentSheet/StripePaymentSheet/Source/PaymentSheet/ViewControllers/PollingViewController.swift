@@ -278,7 +278,7 @@ class PollingViewController: UIViewController {
             self.navigationBar.setStyle(.back)
             self.intentPoller.suspendPolling()
             self.oneSecondTimer?.invalidate()
-            
+
             // If the intent is canceled while a web view is presented, we must dismiss it before we can complete the action with .canceled so STPPaymentHandler can properly update it's state
             self.safariViewController?.dismiss(animated: true)
             self.currentAction.complete(with: .canceled, error: nil)
