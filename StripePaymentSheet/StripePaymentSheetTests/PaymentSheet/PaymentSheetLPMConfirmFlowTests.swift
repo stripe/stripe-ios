@@ -153,6 +153,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             form.getTextFieldElement("City")?.setText("asdf")
             form.getTextFieldElement("ZIP")?.setText("12345")
             form.getCheckboxElement()?.isSelected = true
+            // Need to call this manually:
+            form.getCheckboxElement()?.didToggleCheckbox()
         }
     }
 
