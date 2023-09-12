@@ -207,6 +207,9 @@ public class STPPaymentHandler: NSObject {
                             && strongSelf.isNextActionSuccessState(
                                 nextAction: paymentIntent.nextAction
                             )))
+                            || (paymentIntent.status == .requiresAction
+                                && paymentIntent.paymentMethod?.type == .paynow
+                                && self._redirectShim != nil) // only for testing, PayNow intents are not transistioned to succeeded until after a test QR code is scanned, and it's next action is not considered a success state since the web view can be dismissed while the user scans the QR code
 
                 if error == nil && successIntentState {
                     completion(.succeeded, paymentIntent, nil)
@@ -346,6 +349,9 @@ public class STPPaymentHandler: NSObject {
                 paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture || paymentIntent.status == .requiresConfirmation
                 || (paymentIntent.status == .processing && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
                 || (paymentIntent.status == .requiresAction && strongSelf.isNextActionSuccessState(nextAction: paymentIntent.nextAction))
+                || (paymentIntent.status == .requiresAction
+                                                && paymentIntent.paymentMethod?.type == .paynow
+                                                && self._redirectShim != nil) // only for testing, PayNow intents are not transistioned to succeeded until after a test QR code is scanned, and it's next action is not considered a success state since the web view can be dismissed while the user scans the QR code
 
                 if error == nil && successIntentState {
                     completion(.succeeded, paymentIntent, nil)

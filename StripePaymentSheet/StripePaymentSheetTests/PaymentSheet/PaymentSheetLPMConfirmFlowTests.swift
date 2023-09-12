@@ -379,6 +379,6 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
     }
 
     func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType) {
-        // no-op
+        action.complete(with: .succeeded, error: nil)
     }
 }
