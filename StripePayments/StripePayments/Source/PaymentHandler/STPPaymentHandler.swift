@@ -1336,6 +1336,7 @@ public class STPPaymentHandler: NSObject {
             }
 
             _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) { safariViewController in
+                // Present the polling view controller behind the web view so we can start polling right away
                 presentingVC.presentPollingVCForAction(action: currentAction, type: .paynow, safariViewController: safariViewController)
             }
         @unknown default:
@@ -1610,7 +1611,7 @@ public class STPPaymentHandler: NSObject {
             redirectShim(url, returnURL, true)
         }
 
-        // During testing the completion block is not called since the `UIApplication.open` completion block is never invoked.
+        // During testing, the completion block is not called since the `UIApplication.open` completion block is never invoked.
         // As a workaround we invoke the completion in a defer block if the _redirectShim is not nil to simulate presenting a web view
         defer {
             if _redirectShim != nil {

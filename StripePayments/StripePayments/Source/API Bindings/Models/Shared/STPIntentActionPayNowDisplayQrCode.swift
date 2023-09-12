@@ -26,7 +26,6 @@ public class STPIntentActionPayNowDisplayQrCode: NSObject {
                 NSStringFromClass(STPIntentActionPayNowDisplayQrCode.self),
                 self
             ),
-            // RedirectToURL details (alphabetical)
             "hostedInstructionsURL = \(String(describing: hostedInstructionsURL))",
         ]
 

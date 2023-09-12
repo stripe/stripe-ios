@@ -45,7 +45,7 @@ class PollingViewModel {
         case .UPI, .blik:
             return 12
         case .paynow:
-            return 1000 // PayNow has a very long expiration
+            return 1000 // PayNow has a very long expiration, allow a high number of retries
         default:
             fatalError("Polling deadline has not been implemented for \(paymentMethodType)")
         }
