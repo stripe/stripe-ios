@@ -6,6 +6,7 @@
 * [Added] Support for Alipay with PaymentIntents.
 * [Added] Support for AU BECS Debit with SetupIntents.
 * [Added] Support for OXXO with PaymentIntents.
+* [Added] Support for Konbini with PaymentIntents.
 
 ### CustomerSheet
 * [Changed] When adding a payment method, and tapping the close button, the newly added payment method was implicitly selected resulting with `.selected(PaymentOptionSelection?)`.  Now, the result will be `.canceled(PaymentOptionSelection?)`.

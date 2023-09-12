@@ -169,30 +169,7 @@ extension STPFilePurpose: CustomStringConvertible {
 /// :nodoc:
 extension STPIntentActionType: CustomStringConvertible {
     public var description: String {
-        switch self {
-        case .BLIKAuthorize:
-            return "BLIKAuthorize"
-        case .OXXODisplayDetails:
-            return "OXXODisplayDetails"
-        case .alipayHandleRedirect:
-            return "alipayHandleRedirect"
-        case .boletoDisplayDetails:
-            return "boletoDisplayDetails"
-        case .redirectToURL:
-            return "redirectToURL"
-        case .unknown:
-            return "unknown"
-        case .upiAwaitNotification:
-            return "upiAwaitNotification"
-        case .useStripeSDK:
-            return "useStripeSDK"
-        case .verifyWithMicrodeposits:
-            return "verifyWithMicrodeposits"
-        case .weChatPayRedirectToApp:
-            return "weChatPayRedirectToApp"
-        case .cashAppRedirectToApp:
-            return "cashAppRedirectToApp"
-        }
+        return self.stringValue
     }
 }
 

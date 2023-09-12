@@ -653,7 +653,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-            func _handleNextAction(
+    func _handleNextAction(
         forPayment paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL returnURLString: String?,
@@ -1325,6 +1325,20 @@ public class STPPaymentHandler: NSObject {
                     )
                 )
             }
+        case .konbiniDisplayDetails:
+            if let hostedVoucherURL = authenticationAction.konbiniDisplayDetails?.hostedVoucherURL {
+                self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
+            } else {
+                currentAction.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: _error(
+                        for: .unsupportedAuthenticationErrorCode,
+                        userInfo: [
+                            "STPIntentAction": authenticationAction.description,
+                        ]
+                    )
+                )
+            }
         @unknown default:
             fatalError()
         }
@@ -1760,6 +1774,7 @@ public class STPPaymentHandler: NSObject {
                 return false
             case .OXXODisplayDetails,
                 .boletoDisplayDetails,
+                .konbiniDisplayDetails,
                 .verifyWithMicrodeposits,
                 .BLIKAuthorize,
                 .upiAwaitNotification:
@@ -1787,7 +1802,7 @@ public class STPPaymentHandler: NSObject {
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
-            .upiAwaitNotification, .cashAppRedirectToApp:
+            .upiAwaitNotification, .cashAppRedirectToApp, .konbiniDisplayDetails:
             break
         @unknown default:
             fatalError()

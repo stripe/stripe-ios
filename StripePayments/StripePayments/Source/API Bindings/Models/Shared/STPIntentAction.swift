@@ -58,6 +58,9 @@ import Foundation
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
     case cashAppRedirectToApp
 
+    /// Contains instructions for completing Konbini payments.
+    case konbiniDisplayDetails
+
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the `next_action.type`
@@ -85,6 +88,8 @@ import Foundation
             self = .upiAwaitNotification
         case "cashapp_handle_redirect_or_display_qr_code":
             self = .cashAppRedirectToApp
+        case "konbini_display_details":
+            self = .konbiniDisplayDetails
         default:
             self = .unknown
         }
@@ -115,6 +120,8 @@ import Foundation
             return "upi_await_notification"
         case .cashAppRedirectToApp:
             return "cashapp_handle_redirect_or_display_qr_code"
+        case .konbiniDisplayDetails:
+            return "konbini_display_details"
         case .unknown:
             break
         }
@@ -155,6 +162,9 @@ public class STPIntentAction: NSObject {
 
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
     @objc public let cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
+
+    /// Contains instructions for authenticating a Konbini payment.
+    @objc public let konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
@@ -208,6 +218,10 @@ public class STPIntentAction: NSObject {
             if let cashAppRedirectToApp = cashAppRedirectToApp {
                 props.append("cashAppRedirectToApp = \(cashAppRedirectToApp)")
             }
+        case .konbiniDisplayDetails:
+            if let konbiniDisplayDetails {
+                props.append("konbini_display_details = \(konbiniDisplayDetails)")
+            }
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
             props.append("allResponseFields = \(allResponseFields)")
@@ -226,6 +240,7 @@ public class STPIntentAction: NSObject {
         boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?,
         verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?,
         cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?,
+        konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -237,6 +252,7 @@ public class STPIntentAction: NSObject {
         self.boletoDisplayDetails = boletoDisplayDetails
         self.verifyWithMicrodeposits = verifyWithMicrodeposits
         self.cashAppRedirectToApp = cashAppRedirectToApp
+        self.konbiniDisplayDetails = konbiniDisplayDetails
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -265,6 +281,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
         var weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?
         var verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
         var cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
+        var konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
 
         switch type {
         case .unknown:
@@ -329,6 +346,13 @@ extension STPIntentAction: STPAPIResponseDecodable {
             if cashAppRedirectToApp == nil {
                 type = .unknown
             }
+        case .konbiniDisplayDetails:
+            konbiniDisplayDetails = STPIntentActionKonbiniDisplayDetails.decodedObject(
+                fromAPIResponse: dict["konbini_display_details"] as? [AnyHashable: Any]
+            )
+            if konbiniDisplayDetails == nil {
+                type = .unknown
+            }
         }
 
         return STPIntentAction(
@@ -341,6 +365,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             boletoDisplayDetails: boletoDisplayDetails,
             verifyWithMicrodeposits: verifyWithMicrodeposits,
             cashAppRedirectToApp: cashAppRedirectToApp,
+            konbiniDisplayDetails: konbiniDisplayDetails,
             allResponseFields: dict
         ) as? Self
     }
