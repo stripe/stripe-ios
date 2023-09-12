@@ -451,7 +451,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             }
             self.processingInFlight = false
             if shouldDismissSheetOnConfirm(paymentMethod: paymentMethod, setupIntent: setupIntent) {
-                self.handleDismissSheet(shouldDismissImmediately: true)
+                self.handleDismissSheet(sheetCloseReason: .addedUsBankAccountViaMicrodeposits)
             } else {
                 self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
                 self.mode = .selectingSaved
@@ -639,16 +639,18 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
-    private func handleDismissSheet(shouldDismissImmediately: Bool = false) {
-        guard !shouldDismissImmediately else {
+    private func handleDismissSheet(sheetCloseReason: SheetCloseReason) {
+        if sheetCloseReason == .addedUsBankAccountViaMicrodeposits {
             self.handleDismissSheet_completion()
             return
         }
         if mode == .selectingSaved && !self.savedPaymentOptionsViewController.unsyncedSavedPaymentMethods.isEmpty {
             if let selectedPaymentOption = self.savedPaymentOptionsViewController.selectedPaymentOption,
                case .saved(let selectedPaymentMethod) = selectedPaymentOption,
-               self.savedPaymentOptionsViewController.unsyncedSavedPaymentMethods.first?.stripeId == selectedPaymentMethod.stripeId {
-                didTapActionButton()
+               self.savedPaymentOptionsViewController.unsyncedSavedPaymentMethods.first?.stripeId == selectedPaymentMethod.stripeId,
+               sheetCloseReason == .tappedOutsideSheet {
+                // Prevent dismissing if user has attempted to tap outside the sheet after adding a new payment method
+                return
             } else {
                 self.handleDismissSheet_completion()
             }
@@ -716,7 +718,7 @@ extension CustomerSavedPaymentMethodsViewController: BottomSheetContentViewContr
 
     func didTapOrSwipeToDismiss() {
         if isDismissable {
-            handleDismissSheet()
+            handleDismissSheet(sheetCloseReason: .tappedOutsideSheet)
         }
     }
 
@@ -724,12 +726,18 @@ extension CustomerSavedPaymentMethodsViewController: BottomSheetContentViewContr
         return false
     }
 }
-
+extension CustomerSavedPaymentMethodsViewController {
+    enum SheetCloseReason {
+        case tappedCloseButton
+        case tappedOutsideSheet
+        case addedUsBankAccountViaMicrodeposits
+    }
+}
 // MARK: - SheetNavigationBarDelegate
 /// :nodoc:
 extension CustomerSavedPaymentMethodsViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-        handleDismissSheet()
+        handleDismissSheet(sheetCloseReason: .tappedCloseButton)
 
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
