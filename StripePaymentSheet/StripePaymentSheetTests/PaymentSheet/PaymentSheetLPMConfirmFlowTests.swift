@@ -142,7 +142,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             form.getTextFieldElement("BLIK code")?.setText("123456")
         }
     }
-    
+
     func testBacsDDConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .dynamic("bacs_debit"), merchantCountry: .GB) { form in
             form.getTextFieldElement("Full name")?.setText("Foo")
@@ -221,9 +221,9 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                       merchantCountry: MerchantCountry = .US,
                       formCompleter: (PaymentMethodElement) -> Void) async throws {
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
-        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: {paymentMethod,shouldSavePaymentMethod,intentCreationCallback in })
-        let _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
-        
+        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _, _ in })
+        _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
+
         func makeDeferredIntent(_ intentConfig: PaymentSheet.IntentConfiguration) -> Intent {
             return .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig)
         }
@@ -351,7 +351,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 paymentHandler._handleWillForegroundNotification()
                 redirectShimCalled = true
             }
-            
+
             // Confirm the intent with the form details
             PaymentSheet.confirm(
                 configuration: configuration,

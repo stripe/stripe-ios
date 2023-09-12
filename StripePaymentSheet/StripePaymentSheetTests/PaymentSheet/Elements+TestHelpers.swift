@@ -54,7 +54,7 @@ extension Element {
     func getPhoneNumberElement() -> PhoneNumberElement? {
         return getElement()
     }
-    
+
     func getCheckboxElement() -> CheckboxElement? {
         return getElement()
     }
