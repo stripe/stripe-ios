@@ -333,7 +333,7 @@ extension PaymentSheet {
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
-                        .affirm, .paynow, .zip, .revolutPay, .amazonPay, .mobilePay, .unknown:
+                        .affirm, .paynow, .zip, .revolutPay, .amazonPay, .mobilePay, .promptPay, .unknown:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -342,7 +342,7 @@ extension PaymentSheet {
             } else {
                 requirements = {
                     switch stpPaymentMethodType {
-                    case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow:
+                    case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow, .promptPay:
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .linkInstantDebit, .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .mobilePay:

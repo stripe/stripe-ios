@@ -30,6 +30,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case MY = "my"
         case BE = "be"
         case MX = "mex"  // The CI Backend uses "mex" instead of "mx"
+        case TH = "th"
 
         var publishableKey: String {
             switch self {
@@ -43,6 +44,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingBEPublishableKey
             case .MX:
                 return STPTestingMEXPublishableKey
+            case .TH:
+                return STPTestingTHPublishableKey
             }
         }
     }
@@ -178,6 +181,15 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                                merchantCountry: .SG) { form in
             // PayNow has no input fields
             XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
+
+    func testPromptPayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "THB",
+                               paymentMethodType: .dynamic("promptpay"),
+                               merchantCountry: .TH) { form in
+            form.getTextFieldElement("Email")?.setText("foo@bar.com")
         }
     }
 }

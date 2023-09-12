@@ -194,6 +194,8 @@ extension STPIntentActionType: CustomStringConvertible {
             return "cashAppRedirectToApp"
         case .payNowDisplayQrCode:
             return "payNowDisplayQrCode"
+        case .promptpayDisplayQrCode:
+            return "promptPayDisplayQrCode"
         }
     }
 }
@@ -540,7 +542,7 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "weChatPay"
         case .cashApp:
             return "cashApp"
-        case .paynow, .zip, .revolutPay, .mobilePay, .amazonPay:
+        case .paynow, .zip, .revolutPay, .mobilePay, .amazonPay, .promptPay:
             // `description` is the value used when this type is converted to a string for debugging purposes, just use the display name.
             return displayName
         }

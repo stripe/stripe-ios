@@ -641,7 +641,8 @@ public class STPPaymentHandler: NSObject {
             .zip,
             .revolutPay,
             .mobilePay,
-            .amazonPay:
+            .amazonPay,
+            .promptPay:
             return false
 
         case .unknown:
@@ -1339,6 +1340,21 @@ public class STPPaymentHandler: NSObject {
                 // Present the polling view controller behind the web view so we can start polling right away
                 presentingVC.presentPollingVCForAction(action: currentAction, type: .paynow, safariViewController: safariViewController)
             }
+        case .promptpayDisplayQrCode:
+            guard
+                let returnURL = URL(string: currentAction.returnURLString ?? ""),
+                let presentingVC = currentAction.authenticationContext
+                    as? PaymentSheetAuthenticationContext,
+                let hostedInstructionsURL = authenticationAction.promptPayDisplayQrCode?.hostedInstructionsURL
+
+            else {
+                fatalError()
+            }
+
+            _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) { safariViewController in
+                // Present the polling view controller behind the web view so we can start polling right away
+                presentingVC.presentPollingVCForAction(action: currentAction, type: .promptPay, safariViewController: safariViewController)
+            }
         @unknown default:
             fatalError()
         }
@@ -1463,7 +1479,8 @@ public class STPPaymentHandler: NSObject {
                                                     retryCount: retryCount - 1
                                                 )
                                             }
-                                        } else if retrievedPaymentIntent?.paymentMethod?.type != .paynow {
+                                        } else if retrievedPaymentIntent?.paymentMethod?.type != .paynow
+                                                    && retrievedPaymentIntent?.paymentMethod?.type != .promptPay {
                                             // For PayNow, we don't want to mark as canceled when the web view dismisses
                                             // Instead we rely on the presented PollingViewController to complete the currentAction
                                             self._markChallengeCanceled(withCompletion: { _, _ in
@@ -1784,7 +1801,8 @@ public class STPPaymentHandler: NSObject {
                 .alipayHandleRedirect,
                 .weChatPayRedirectToApp,
                 .cashAppRedirectToApp,
-                .payNowDisplayQrCode:
+                .payNowDisplayQrCode,
+                .promptpayDisplayQrCode:
                 return false
             case .OXXODisplayDetails,
                 .boletoDisplayDetails,
@@ -1815,7 +1833,7 @@ public class STPPaymentHandler: NSObject {
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
-            .upiAwaitNotification, .cashAppRedirectToApp, .payNowDisplayQrCode:
+            .upiAwaitNotification, .cashAppRedirectToApp, .payNowDisplayQrCode, .promptpayDisplayQrCode:
             break
         @unknown default:
             fatalError()

@@ -35,6 +35,9 @@ static NSString * const STPTestingGBPublishableKey = @"pk_test_51KmkHbGoesj9fw9Q
 // Test account in Malaysia
 static NSString * const STPTestingMYPublishableKey =
     @"pk_test_vGCjSmT6Idy5zwfGBKnlq5rd00JT2vbrHb";
+// Test account in Thailand
+static NSString * const STPTestingTHPublishableKey =
+    @"pk_test_51NpEAWBgCYKNuUnnoBpaJZQYWOO6UpLtcioKggla08zpvDDy0cjfGKZdl5BsU8Gm5ilJNCqT7laCsqvyc0LndskG00pnPnJSpD";
 
 @interface STPTestingAPIClient : NSObject
 
