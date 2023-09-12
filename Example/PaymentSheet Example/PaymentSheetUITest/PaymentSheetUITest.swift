@@ -1024,6 +1024,42 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
     }
+
+    func testPromptPayPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new // new customer
+        settings.apmsEnabled = .on
+        settings.currency = .thb
+        settings.merchantCountryCode = .TH
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Select PromptPay
+        guard let promptPay = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PromptPay")
+        else {
+            XCTFail()
+            return
+        }
+        promptPay.tap()
+
+        // Fill in email
+        let email = app.textFields["Email"]
+        email.tap()
+        email.typeText("foo@bar.com")
+        email.typeText(XCUIKeyboardKey.return.rawValue)
+
+        // Attempt payment
+        XCTAssertTrue(app.buttons["Pay THB 50.99"].waitForExistenceAndTap(timeout: 5.0))
+
+        // Close the webview, no need to see the successful pay
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
 }
 
 class PaymentSheetDeferredUITests: PaymentSheetUITestCase {

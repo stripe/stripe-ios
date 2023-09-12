@@ -4,11 +4,13 @@
 * [Changed] Fixed STPConnectAccountCompanyParams.address being force unwrapped. It's now optional.
 
 ### PaymentSheet
+* [Added] Support for Alipay, OXXO, PayNow, and PromptPay with PaymentIntents.
 * [Added] Support for Cash App Pay with SetupIntents and PaymentIntents with `setup_future_usage`.
 * [Added] Support for AU BECS Debit with SetupIntents.
 * [Added] Support for OXXO with PaymentIntents.
 * [Added] Support for Konbini with PaymentIntents.
 * [Added] Support for PayNow with PaymentIntents.
+* [Added] Support for PromptPay with PaymentIntents.
 * [Added] Support for Boleto with PaymentIntents.
 * [Added] Support for External Payment Method as an invite-only private beta.
 * [Added] Support for Alma (Private Beta) with PaymentIntents.
