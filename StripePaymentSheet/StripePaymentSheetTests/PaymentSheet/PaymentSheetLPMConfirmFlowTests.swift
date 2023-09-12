@@ -29,6 +29,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case MY = "my"
         case BE = "be"
         case MX = "mex"  // The CI Backend uses "mex" instead of "mx"
+        case AU = "au"
 
         var publishableKey: String {
             switch self {
@@ -42,6 +43,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingBEPublishableKey
             case .MX:
                 return STPTestingMEXPublishableKey
+            case .AU:
+                return STPTestingAUPublishableKey
             }
         }
     }
@@ -82,6 +85,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             form.getTextFieldElement("Address line 1")?.setText("asdf")
             form.getTextFieldElement("City")?.setText("asdf")
             form.getTextFieldElement("ZIP")?.setText("12345")
+            XCTAssertNotNil(form.getMandateElement())
+        }
+    }
+    
+    func testAUBecsDebitConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "AUD", paymentMethodType: .dynamic("au_becs_debit")) { form in
+            form.getTextFieldElement("Name on account")?.setText("Tester McTesterface")
+            form.getTextFieldElement("Email")?.setText("example@link.com")
+            form.getTextFieldElement("BSB number")?.setText("000000")
+            form.getTextFieldElement("Account number")?.setText("000123456")
             XCTAssertNotNil(form.getMandateElement())
         }
     }
