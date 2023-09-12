@@ -104,8 +104,7 @@ final class USBankAccountPaymentMethodElement: Element {
 
         self.configuration = configuration
         self.bankInfoView = BankAccountInfoView(frame: .zero, theme: theme)
-        self.bankInfoSectionElement = SectionElement(title: STPLocalizedString("Bank account",
-                                                                               "Title for collected bank account information"),
+        self.bankInfoSectionElement = SectionElement(title: String.Localized.bank_account_sentence_case,
                                                      elements: [StaticElement(view: bankInfoView)], theme: theme)
         self.linkedBank = nil
         self.bankInfoSectionElement.view.isHidden = true

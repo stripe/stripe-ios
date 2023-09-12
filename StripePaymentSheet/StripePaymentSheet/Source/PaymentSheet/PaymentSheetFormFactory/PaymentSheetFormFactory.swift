@@ -486,7 +486,7 @@ extension PaymentSheetFormFactory {
         let accountNumberField = makeBacsAccountNumber()
         let mandate = makeBacsMandate()
         let bacsAccountSection = SectionElement(
-            title: String.Localized.bank_account,
+            title: String.Localized.bank_account_sentence_case,
             elements: [sortCodeField, accountNumberField],
             theme: theme
         )

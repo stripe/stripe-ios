@@ -61,6 +61,10 @@ extension String.Localized {
         STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
     }
 
+    static var bank_account_sentence_case: String {
+        STPLocalizedString("Bank account", "Title for collected bank account information")
+    }
+
     static var pay_with_link: String {
         STPLocalizedString("Pay with Link", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
     }

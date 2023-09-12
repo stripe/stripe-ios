@@ -12,7 +12,7 @@
 // We use snake case to make long names easier to read.
 extension String.Localized {
     @_spi(STP) public static var bank_account: String {
-        STPLocalizedString("Bank account", "Label for Bank Account selection or detail entry form")
+        STPLocalizedString("Bank Account", "Label for Bank Account selection or detail entry form")
     }
 
     @_spi(STP) public static var card_number: String {
