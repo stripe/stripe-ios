@@ -161,6 +161,8 @@ class PaymentSheetFormFactory {
             return makeDefaultsApplierWrapper(for: makeBLIK())
         } else if paymentMethod == .externalPayPal {
             return makeExternalPayPal()
+        } else if paymentMethod.stpPaymentMethodType == .OXXO {
+            return makeDefaultsApplierWrapper(for: makeOXXO())
         }
 
         guard let spec = specFromJSONProvider() else {

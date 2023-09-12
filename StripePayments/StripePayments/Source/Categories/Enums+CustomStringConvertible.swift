@@ -538,6 +538,9 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "weChatPay"
         case .cashApp:
             return "cashApp"
+        case .paynow, .zip, .revolutPay, .mobilePay, .amazonPay:
+            // `description` is the value used when this type is converted to a string for debugging purposes, just use the display name.
+            return displayName
         }
     }
 }

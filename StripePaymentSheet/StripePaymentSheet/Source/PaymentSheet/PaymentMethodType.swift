@@ -17,14 +17,6 @@ extension PaymentSheet {
 
         func supportsAddingRequirements() -> [PaymentMethodTypeRequirement] {
             switch self {
-            case .dynamic("revolut_pay"):
-                return [.returnURL]
-            case .dynamic("amazon_pay"):
-                return [.returnURL]
-            case .dynamic("mobilepay"):
-                return [.returnURL]
-            case .dynamic("zip"):
-                return [.returnURL]
             default:
                 return [.unsupported]
             }
@@ -96,14 +88,6 @@ extension PaymentSheet {
         var displayName: String {
             if let stpPaymentMethodType = stpPaymentMethodType {
                 return stpPaymentMethodType.displayName
-            } else if case .dynamic("revolut_pay") = self {
-                return "Revolut Pay"
-            } else if case .dynamic("mobilepay") = self {
-                return "MobilePay"
-            } else if case .dynamic("zip") = self {
-                return "Zip"
-            } else if case .dynamic("amazon_pay") = self {
-                return "Amazon Pay"
             } else if case .dynamic(let name) = self {
                 // TODO: We should introduce a display name in our model rather than presenting the payment method type
                 return name
@@ -346,16 +330,15 @@ extension PaymentSheet {
                     case .USBankAccount:
                         return [.userSupportsDelayedPaymentMethods]
                     case .sofort, .iDEAL, .bancontact:
-                        // n.b. While sofort, iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
+                        // n.b. While sofort, iDEAL, and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                        // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                     case .SEPADebit:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
-                        .affirm, .unknown:
+                        .affirm, .paynow, .zip, .revolutPay, .amazonPay, .mobilePay, .unknown:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -364,10 +347,10 @@ extension PaymentSheet {
             } else {
                 requirements = {
                     switch stpPaymentMethodType {
-                    case .blik, .card, .cardPresent, .UPI, .weChatPay:
+                    case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow:
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
-                            .linkInstantDebit, .bancontact, .iDEAL, .cashApp, .affirm:
+                            .linkInstantDebit, .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .mobilePay:
                         return [.returnURL]
                     case .USBankAccount:
                         return [

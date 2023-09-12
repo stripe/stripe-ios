@@ -952,5 +952,10 @@
           }
         }
       }
+    },
+    {
+      "type": "alipay",
+      "async": false,
+      "fields": []
     }
 ]

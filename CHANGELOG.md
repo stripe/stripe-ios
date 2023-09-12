@@ -2,6 +2,10 @@
 ### Payments
 * [Added] Properties of STPConnectAccountParams are now mutable.
 
+### PaymentSheet
+* [Added] Support for Alipay with PaymentIntents.
+* [Added] Support for OXXO with PaymentIntents.
+
 ## 23.15.0 2023-08-28
 ### PaymentSheet
 * [Added] Support for AmazonPay (private beta), BLIK, and FPX with PaymentIntents.
