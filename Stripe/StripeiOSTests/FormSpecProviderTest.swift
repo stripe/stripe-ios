@@ -635,6 +635,23 @@ class FormSpecProviderTest: XCTestCase {
         // loadFrom should return false because not all specs were parsed successfully.
         XCTAssertFalse(sut.loadFrom(formSpec))
 
+        // Verify that eps spec was not overridden.
+        let epsSpec = sut.formSpec(for: "eps")
+        XCTAssertEqual(epsSpec?.fields.count, 5)
+        guard
+            case .name = epsSpec?.fields[0],
+            case .placeholder(let emailPlaceholder) = epsSpec?.fields[1],
+            emailPlaceholder.field == .email,
+            case .placeholder(let phonePlaceholder) = epsSpec?.fields[2],
+            phonePlaceholder.field == .phone,
+            case .selector = epsSpec?.fields[3],
+            case .placeholder(let addressPlaceholder) = epsSpec?.fields[4],
+            addressPlaceholder.field == .billingAddress
+        else {
+            XCTFail("Incorrect eps spec: \(epsSpec!)")
+            return
+        }
+
         // Verify that the affirm spec was not overridden.
         let affirmSpec = sut.formSpec(for: "affirm")
         XCTAssertEqual(affirmSpec?.fields.count, 1)
