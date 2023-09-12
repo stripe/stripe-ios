@@ -207,9 +207,6 @@ public class STPPaymentHandler: NSObject {
                             && strongSelf.isNextActionSuccessState(
                                 nextAction: paymentIntent.nextAction
                             )))
-                            || (paymentIntent.status == .requiresAction
-                                && paymentIntent.paymentMethod?.type == .paynow
-                                && self._redirectShim != nil) // only for testing, PayNow intents are not transistioned to succeeded until after a test QR code is scanned, and it's next action is not considered a success state since the web view can be dismissed while the user scans the QR code
 
                 if error == nil && successIntentState {
                     completion(.succeeded, paymentIntent, nil)
@@ -349,9 +346,6 @@ public class STPPaymentHandler: NSObject {
                 paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture || paymentIntent.status == .requiresConfirmation
                 || (paymentIntent.status == .processing && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
                 || (paymentIntent.status == .requiresAction && strongSelf.isNextActionSuccessState(nextAction: paymentIntent.nextAction))
-                || (paymentIntent.status == .requiresAction
-                                                && paymentIntent.paymentMethod?.type == .paynow
-                                                && self._redirectShim != nil) // only for testing, PayNow intents are not transistioned to succeeded until after a test QR code is scanned, and it's next action is not considered a success state since the web view can be dismissed while the user scans the QR code
 
                 if error == nil && successIntentState {
                     completion(.succeeded, paymentIntent, nil)
@@ -1614,6 +1608,14 @@ public class STPPaymentHandler: NSObject {
     func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, completion: (() -> Void)? = nil) {
         if let redirectShim = _redirectShim, let url = nativeURL ?? fallbackURL {
             redirectShim(url, returnURL, true)
+        }
+        
+        // During testing the completion block is not called since the `UIApplication.open` completion block is never invoked.
+        // As a workaround we invoke the completion in a defer block if the _redirectShim is not nil to simulate presenting a web view
+        defer {
+            if _redirectShim != nil {
+                completion?()
+            }
         }
 
         var url = nativeURL
