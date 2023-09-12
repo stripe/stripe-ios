@@ -141,7 +141,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             case .applePay, .saved, .link:
                 // TODO(Link): Handle link when we re-enable it
                 return nil
-            case .new(confirmParams: let params):
+            case .new(confirmParams: let params), .externalPayPal(let params):
                 return params
             }
         }()

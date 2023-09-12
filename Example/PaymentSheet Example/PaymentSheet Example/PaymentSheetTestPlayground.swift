@@ -16,6 +16,19 @@ struct PaymentSheetTestPlayground: View {
         _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings))
     }
 
+    @ViewBuilder
+    var clientSettings: some View {
+        SettingView(setting: $playgroundController.settings.uiStyle)
+        SettingView(setting: $playgroundController.settings.shippingInfo)
+        SettingView(setting: $playgroundController.settings.applePayEnabled)
+        SettingView(setting: $playgroundController.settings.applePayButtonType)
+        SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
+        SettingView(setting: $playgroundController.settings.defaultBillingAddress)
+        SettingView(setting: $playgroundController.settings.linkEnabled)
+        SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
+        SettingView(setting: $playgroundController.settings.autoreload)
+    }
+
     var body: some View {
         VStack {
             ScrollView {
@@ -41,8 +54,8 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.mode)
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
                         SettingView(setting: $playgroundController.settings.customerMode)
-                        SettingView(setting: $playgroundController.settings.currency)
-                        SettingView(setting: $playgroundController.settings.merchantCountryCode)
+                        SettingPickerView(setting: $playgroundController.settings.currency)
+                        SettingPickerView(setting: $playgroundController.settings.merchantCountryCode)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
                     }
                     Divider()
@@ -58,14 +71,7 @@ struct PaymentSheetTestPlayground: View {
                                     .font(.callout.smallCaps())
                             }.buttonStyle(.bordered)
                         }
-                        SettingView(setting: $playgroundController.settings.uiStyle)
-                        SettingView(setting: $playgroundController.settings.shippingInfo)
-                        SettingView(setting: $playgroundController.settings.applePayEnabled)
-                        SettingView(setting: $playgroundController.settings.applePayButtonType)
-                        SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
-                        SettingView(setting: $playgroundController.settings.defaultBillingAddress)
-                        SettingView(setting: $playgroundController.settings.linkEnabled)
-                        SettingView(setting: $playgroundController.settings.autoreload)
+                        clientSettings
                         TextField("Custom CTA", text: customCTABinding)
                     }
                     Divider()

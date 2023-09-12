@@ -846,6 +846,77 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
+
+    func testAlipayPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .US
+        settings.currency = .usd
+        settings.apmsEnabled = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        let payButton = app.buttons["Pay $50.99"]
+        guard let alipay = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Alipay") else {
+            XCTFail()
+            return
+        }
+        alipay.tap()
+
+        XCTAssertTrue(payButton.isEnabled)
+        payButton.tap()
+
+        let approvePaymentText = app.buttons["AUTHORIZE TEST PAYMENT"]
+        approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
+
+    func testOXXOPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .MX
+        settings.currency = .mxn
+        settings.apmsEnabled = .off
+        settings.allowsDelayedPMs = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        guard let oxxo = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "OXXO") else {
+            XCTFail()
+            return
+        }
+        oxxo.tap()
+
+        let name = app.textFields["Full name"]
+        name.tap()
+        name.typeText("Jane Doe")
+        name.typeText(XCUIKeyboardKey.return.rawValue)
+
+        let email = app.textFields["Email"]
+        email.tap()
+        email.typeText("foo@bar.com")
+        email.typeText(XCUIKeyboardKey.return.rawValue)
+
+        let payButton = app.buttons["Pay MX$50.99"]
+        XCTAssertTrue(payButton.isEnabled)
+        payButton.tap()
+
+        // Just check that a web view exists after tapping buy.
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
 }
 
 class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
@@ -1510,6 +1581,63 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         confirmRemoval.tap()
 
         XCTAssertTrue(app.cells.count == 1)
+    }
+
+    // MARK: - External PayPal 
+    func testExternalPaypalPaymentSheet() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.externalPayPalEnabled = .on
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        let payButton = app.buttons["Pay $50.99"]
+        guard let paypal = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PayPal") else {
+            XCTFail()
+            return
+        }
+        paypal.tap()
+        payButton.tap()
+        XCTAssertNotNil(app.staticTexts["Confirm external_paypal?"])
+        app.buttons["Cancel"].tap()
+
+        payButton.tap()
+        app.buttons["Fail"].tap()
+        XCTAssertTrue(app.staticTexts["An unknown error occurred."].waitForExistence(timeout: 5.0))
+
+        payButton.tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
+    }
+
+    func testExternalPaypalPaymentSheetFlowController() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.externalPayPalEnabled = .on
+        settings.uiStyle = .flowController
+
+        loadPlayground(app, settings)
+
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+
+        scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PayPal")?.waitForExistenceAndTap()
+
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+
+        XCTAssertNotNil(app.staticTexts["Confirm external_paypal?"])
+        app.buttons["Cancel"].tap()
+        XCTAssertNotNil(app.staticTexts["Payment canceled."])
+
+        let payButton = app.buttons["Confirm"]
+        payButton.tap()
+        app.buttons["Fail"].tap()
+        XCTAssertTrue(app.staticTexts["Payment failed: PaymentSheetExample.PlaygroundController.ConfirmHandlerError.unknown"].waitForExistence(timeout: 5.0))
+
+        payButton.tap()
+        app.alerts.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
     }
     /* Disable Link test
      func testDeferredIntentLinkSignIn_SeverSideConfirmation() throws {

@@ -83,6 +83,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case pln
         case sgd
         case myr
+        case mxn
     }
 
     enum MerchantCountry: String, PickerEnum {
@@ -95,6 +96,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case IN
         case SG
         case MY
+        case MX
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -191,6 +193,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+    enum ExternalPayPalEnabled: String, PickerEnum {
+        static let enumName: String = "External PayPal"
+
+        case on
+        case off
+    }
 
     var uiStyle: UIStyle
     var mode: Mode
@@ -209,6 +217,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var customCtaLabel: String?
     var checkoutEndpoint: String?
     var autoreload: Autoreload
+    var externalPayPalEnabled: ExternalPayPalEnabled
 
     var attachDefaults: BillingDetailsAttachDefaults
     var collectName: BillingDetailsName
@@ -234,6 +243,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             customCtaLabel: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
+            externalPayPalEnabled: .off,
             attachDefaults: .off,
             collectName: .automatic,
             collectEmail: .automatic,
