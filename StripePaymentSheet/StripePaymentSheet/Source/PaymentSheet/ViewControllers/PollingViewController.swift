@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
@@ -27,6 +28,7 @@ class PollingViewController: UIViewController {
     private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
     private let viewModel: PollingViewModel
+    private let safariViewController: SFSafariViewController?
 
     private lazy var intentPoller: IntentStatusPoller = {
         guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
@@ -160,10 +162,11 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance) {
+    init(currentAction: STPPaymentHandlerActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance, safariViewController: SFSafariViewController? = nil) {
         self.currentAction = currentAction
         self.appearance = appearance
         self.viewModel = viewModel
+        self.safariViewController = safariViewController
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -275,6 +278,7 @@ class PollingViewController: UIViewController {
             self.navigationBar.setStyle(.back)
             self.intentPoller.suspendPolling()
             self.oneSecondTimer?.invalidate()
+            self.safariViewController?.dismiss(animated: true)
             self.currentAction.complete(with: .canceled, error: nil)
         }
     }

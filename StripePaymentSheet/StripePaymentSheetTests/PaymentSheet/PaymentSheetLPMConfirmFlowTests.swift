@@ -8,10 +8,11 @@
 import StripeCoreTestUtils
 import XCTest
 
+import SafariServices
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
@@ -378,7 +379,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
         // no-op
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType) {
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         guard let currentAction = action as? STPPaymentHandlerPaymentIntentActionParams else { return }
         // Simulate that the intent transitioned to succeeded
         // If we don't update the status to succeeded, completing the action with .succeeded may fail due to invalid state

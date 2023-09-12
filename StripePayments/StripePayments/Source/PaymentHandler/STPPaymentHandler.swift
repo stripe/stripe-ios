@@ -1288,7 +1288,7 @@ public class STPPaymentHandler: NSObject {
                 currentAction.complete(with: .succeeded, error: nil)
                 return
             }
-            presentingVC.presentPollingVCForAction(action: currentAction, type: .blik)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .blik, safariViewController: nil)
 
         case .verifyWithMicrodeposits:
             // The customer must authorize after the microdeposits appear in their bank account
@@ -1303,7 +1303,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
 
-            presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI, safariViewController: nil)
         case .cashAppRedirectToApp:
             guard
                 let returnURL = URL(string: currentAction.returnURLString ?? "")
@@ -1335,8 +1335,8 @@ public class STPPaymentHandler: NSObject {
                 fatalError()
             }
 
-            _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) {
-                presentingVC.presentPollingVCForAction(action: currentAction, type: .paynow)
+            _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) { safariViewController in
+                presentingVC.presentPollingVCForAction(action: currentAction, type: .paynow, safariViewController: safariViewController)
             }
         @unknown default:
             fatalError()
@@ -1605,16 +1605,16 @@ public class STPPaymentHandler: NSObject {
     /// 1. Redirects to an app using url
     /// 2. Open fallbackURL in a webview if 1) fails
             ///
-    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, completion: (() -> Void)? = nil) {
+    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, completion: ((SFSafariViewController?) -> Void)? = nil) {
         if let redirectShim = _redirectShim, let url = nativeURL ?? fallbackURL {
             redirectShim(url, returnURL, true)
         }
-        
+
         // During testing the completion block is not called since the `UIApplication.open` completion block is never invoked.
         // As a workaround we invoke the completion in a defer block if the _redirectShim is not nil to simulate presenting a web view
         defer {
             if _redirectShim != nil {
-                completion?()
+                completion?(nil)
             }
         }
 
@@ -1660,7 +1660,9 @@ public class STPPaymentHandler: NSObject {
                     }
                     safariViewController.delegate = self
                     self.safariViewController = safariViewController
-                    presentingViewController.present(safariViewController, animated: true, completion: completion)
+                    presentingViewController.present(safariViewController, animated: true, completion: {
+                      completion?(safariViewController)
+                    })
                 } else {
                     currentAction.complete(
                         with: STPPaymentHandlerActionStatus.failed,
@@ -1707,7 +1709,7 @@ public class STPPaymentHandler: NSObject {
                         // no app installed, launch safari view controller
                         presentSFViewControllerBlock()
                     } else {
-                        completion?()
+                        completion?(nil)
                         NotificationCenter.default.addObserver(
                             self,
                             selector: #selector(self._handleWillForegroundNotification),
@@ -2309,7 +2311,7 @@ extension STPPaymentHandler {
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController)
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType)
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
 }
 
 @_spi(STP) public protocol FormSpecPaymentHandler {
