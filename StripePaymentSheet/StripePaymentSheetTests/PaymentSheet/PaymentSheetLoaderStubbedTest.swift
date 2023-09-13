@@ -46,7 +46,6 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loaded], timeout: 2)
     }
 
-
     func testReturningCustomerWithSingleSavedCard() throws {
         StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_pi_withSavedCard_200,
                                     paymentMethods: "\"card\", \"us_bank_account\"")
