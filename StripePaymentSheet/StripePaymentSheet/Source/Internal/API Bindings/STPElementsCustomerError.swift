@@ -3,12 +3,13 @@
 //  StripePaymentSheet
 //
 
+import Foundation
 @_spi(STP) import StripePayments
 
-@_spi(STP) public final class STPElementsCustomerError: NSObject, Error {
-    public let error_message: String
+final class STPElementsCustomerError: NSObject, Error {
+    let error_message: String
 
-    public let allResponseFields: [AnyHashable: Any]
+    let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
     @objc public override var description: String {

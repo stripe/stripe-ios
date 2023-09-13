@@ -3,12 +3,13 @@
 //  StripePaymentSheet
 //
 
+import Foundation
 @_spi(STP) import StripePayments
 
-@_spi(STP) public final class STPLegacyElementsCustomer: NSObject {
-    public let payment_methods: [STPPaymentMethod]?
+final class STPLegacyElementsCustomer: NSObject {
+    let payment_methods: [STPPaymentMethod]?
 
-    public let allResponseFields: [AnyHashable: Any]
+    let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
     @objc public override var description: String {
