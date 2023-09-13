@@ -35,8 +35,7 @@ class PollingViewController: UIViewController {
               let clientSecret = currentAction.paymentIntent?.clientSecret else { fatalError() }
 
         let intentPoller = IntentStatusPoller(apiClient: currentAction.apiClient,
-                                              clientSecret: clientSecret,
-                                              maxRetries: viewModel.maxRetries)
+                                              clientSecret: clientSecret)
         intentPoller.delegate = self
         return intentPoller
     }()
@@ -290,7 +289,7 @@ class PollingViewController: UIViewController {
         // Do one last force poll after deadline
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self = self else { return }
-            self.intentPoller.forcePoll()
+            self.intentPoller.beginPolling()
             // If we don't get a terminal status back after 20 seconds from the previous force poll, set error state to suspend polling.
             // This could occur if network connections are unreliable
             DispatchQueue.main.asyncAfter(deadline: .now() + 20, execute: self.setErrorStateWorkItem)

@@ -40,16 +40,6 @@ class PollingViewModel {
             fatalError("Polling deadline has not been implemented for \(paymentMethodType)")
         }
     }()
-    lazy var maxRetries: Int = {
-        switch paymentMethodType {
-        case .UPI, .blik:
-            return 12
-        case .paynow:
-            return 1000 // PayNow has a very long expiration, allow a high number of retries
-        default:
-            fatalError("Polling deadline has not been implemented for \(paymentMethodType)")
-        }
-    }()
 
     init(paymentMethodType: STPPaymentMethodType) {
         guard supportedPaymentMethods.contains(paymentMethodType) else {
