@@ -49,23 +49,25 @@ class FormSpecProvider {
             return false
         }
 
+        var decodedSuccessfully = true
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        do {
-            let data = try JSONSerialization.data(withJSONObject: formSpecs)
-            let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
-            guard !containsUnknownNextActions(formSpecs: decodedFormSpecs) else {
-                STPAnalyticsClient.sharedClient.logLUXESerializeFailure()
-                return false
+        for formSpec in formSpecs {
+            do {
+                let data = try JSONSerialization.data(withJSONObject: formSpec)
+                let decodedFormSpec = try decoder.decode(FormSpec.self, from: data)
+                guard !containsUnknownNextActions(formSpec: decodedFormSpec) else {
+                    STPAnalyticsClient.sharedClient.logLUXEUnknownActionsFailure()
+                    decodedSuccessfully = false
+                    continue
+                }
+                self.formSpecs[decodedFormSpec.type] = decodedFormSpec
+            } catch {
+                STPAnalyticsClient.sharedClient.logLUXESpecSerilizeFailure(error: error)
+                decodedSuccessfully = false
             }
-            for formSpec in decodedFormSpecs {
-                self.formSpecs[formSpec.type] = formSpec
-            }
-        } catch {
-            STPAnalyticsClient.sharedClient.logLUXESerializeFailure()
-            return false
         }
-        return true
+        return decodedSuccessfully
     }
 
     func formSpec(for paymentMethodType: String) -> FormSpec? {
@@ -76,19 +78,17 @@ class FormSpecProvider {
         return formSpecs[paymentMethodType]?.nextActionSpec
     }
 
-    func containsUnknownNextActions(formSpecs: [FormSpec]) -> Bool {
-        for lpmSpec in formSpecs {
-            if let nextActionSpec = lpmSpec.nextActionSpec {
-                for (_, nextActionStatusValue) in nextActionSpec.confirmResponseStatusSpecs {
+    func containsUnknownNextActions(formSpec: FormSpec) -> Bool {
+        if let nextActionSpec = formSpec.nextActionSpec {
+            for (_, nextActionStatusValue) in nextActionSpec.confirmResponseStatusSpecs {
+                if case .unknown = nextActionStatusValue.type {
+                    return true
+                }
+            }
+            if let postConfirmSpecs = nextActionSpec.postConfirmHandlingPiStatusSpecs {
+                for (_, nextActionStatusValue) in postConfirmSpecs {
                     if case .unknown = nextActionStatusValue.type {
                         return true
-                    }
-                }
-                if let postConfirmSpecs = nextActionSpec.postConfirmHandlingPiStatusSpecs {
-                    for (_, nextActionStatusValue) in postConfirmSpecs {
-                        if case .unknown = nextActionStatusValue.type {
-                            return true
-                        }
                     }
                 }
             }
