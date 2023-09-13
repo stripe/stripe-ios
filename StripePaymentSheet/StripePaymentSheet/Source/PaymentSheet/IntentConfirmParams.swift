@@ -93,6 +93,36 @@ class IntentConfirmParams {
 
         return params
     }
+
+    /// Applies the values of `Configuration.defaultBillingDetails` to this IntentConfirmParams if `attachDefaultsToPaymentMethod` is true.
+    /// - Note: This overwrites `paymentMethodParams.billingDetails`.
+    func setDefaultBillingDetailsIfNecessary(for configuration: PaymentSheet.Configuration) {
+        _setDefaultBillingDetailsIfNecessary(defaultBillingDetails: configuration.defaultBillingDetails, billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration)
+    }
+
+    /// Applies the values of `Configuration.defaultBillingDetails` to this IntentConfirmParams if `attachDefaultsToPaymentMethod` is true.
+    /// - Note: This overwrites `paymentMethodParams.billingDetails`.
+    func setDefaultBillingDetailsIfNecessary(for configuration: CustomerSheet.Configuration) {
+        _setDefaultBillingDetailsIfNecessary(defaultBillingDetails: configuration.defaultBillingDetails, billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration)
+    }
+
+    private func _setDefaultBillingDetailsIfNecessary(defaultBillingDetails: PaymentSheet.BillingDetails, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration) {
+        guard billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
+           return
+        }
+        if let name = defaultBillingDetails.name {
+            paymentMethodParams.nonnil_billingDetails.name = name
+        }
+        if let phone = defaultBillingDetails.phone {
+            paymentMethodParams.nonnil_billingDetails.phone = phone
+        }
+        if let email = defaultBillingDetails.email {
+            paymentMethodParams.nonnil_billingDetails.email = email
+        }
+        if defaultBillingDetails.address != .init() {
+            paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
+        }
+    }
 }
 
 extension STPConfirmPaymentMethodOptions {
