@@ -52,9 +52,7 @@ class IntentStatusPoller {
         isPolling = false
     }
 
-    // MARK: Private functions
-
-    private func fetchStatus() {
+    public func fetchStatus() {
         apiClient.retrievePaymentIntent(withClientSecret: clientSecret) { [weak self] paymentIntent, _ in
             guard let isPolling = self?.isPolling else {
                 return
