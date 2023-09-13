@@ -71,6 +71,7 @@ extension STPTestingAPIClient {
 
     func fetchSetupIntent(
         types: [String],
+        merchantCountry: String? = "us",
         paymentMethodID: String? = nil,
         confirm: Bool = false,
         otherParams: [String: Any] = [:]
@@ -83,7 +84,8 @@ extension STPTestingAPIClient {
         }
         params.merge(otherParams) { _, b in b }
         return try await withCheckedThrowingContinuation { continuation in
-            createSetupIntent(withParams: params) { clientSecret, error in
+            createSetupIntent(withParams: params,
+                              account: merchantCountry) { clientSecret, error in
                 guard let clientSecret = clientSecret,
                       error == nil
                 else {
