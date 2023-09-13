@@ -97,16 +97,16 @@ class IntentConfirmParams {
     /// Applies the values of `Configuration.defaultBillingDetails` to this IntentConfirmParams if `attachDefaultsToPaymentMethod` is true.
     /// - Note: This overwrites `paymentMethodParams.billingDetails`.
     func setDefaultBillingDetailsIfNecessary(for configuration: PaymentSheet.Configuration) {
-        _setDefaultBillingDetailsIfNecessary(defaultBillingDetails: configuration.defaultBillingDetails, billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration)
+        setDefaultBillingDetailsIfNecessary(defaultBillingDetails: configuration.defaultBillingDetails, billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration)
     }
 
     /// Applies the values of `Configuration.defaultBillingDetails` to this IntentConfirmParams if `attachDefaultsToPaymentMethod` is true.
     /// - Note: This overwrites `paymentMethodParams.billingDetails`.
     func setDefaultBillingDetailsIfNecessary(for configuration: CustomerSheet.Configuration) {
-        _setDefaultBillingDetailsIfNecessary(defaultBillingDetails: configuration.defaultBillingDetails, billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration)
+        setDefaultBillingDetailsIfNecessary(defaultBillingDetails: configuration.defaultBillingDetails, billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration)
     }
 
-    private func _setDefaultBillingDetailsIfNecessary(defaultBillingDetails: PaymentSheet.BillingDetails, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration) {
+    private func setDefaultBillingDetailsIfNecessary(defaultBillingDetails: PaymentSheet.BillingDetails, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration) {
         guard billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
            return
         }
