@@ -310,7 +310,7 @@ extension PaymentSheetFormFactory {
         }()
         return makeMandate(mandateText: mandateText)
     }
-    
+
     func makeSaveCheckbox(
         label: String = String.Localized.save_for_future_payments,
         didToggle: ((Bool) -> Void)? = nil
@@ -512,8 +512,8 @@ extension PaymentSheetFormFactory {
         let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: true, emailRequiredByPaymentMethod: true, phoneRequiredByPaymentMethod: false)
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         let konbiniPhoneNumber = PaymentMethodElementWrapper(TextFieldElement.makeKonbini(theme: theme)) { textField, params in
-            params.confirmPaymentMethodOptions.konbini = .init()
-            params.confirmPaymentMethodOptions.konbini?.confirmationNumber = textField.text
+            params.confirmPaymentMethodOptions.konbiniOptions = .init()
+            params.confirmPaymentMethodOptions.konbiniOptions?.confirmationNumber = textField.text
             return params
         }
         let elements = [contactInfoSection, konbiniPhoneNumber, billingDetails].compactMap { $0 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Contains OXXO details necessary for the customer to complete the payment.
+/// Contains Konbini details necessary for the customer to complete the payment.
 public class STPIntentActionKonbiniDisplayDetails: NSObject, STPAPIResponseDecodable {
     /// The date at which the pending Konbini payment expires.
     @objc public let expiresAt: Date
