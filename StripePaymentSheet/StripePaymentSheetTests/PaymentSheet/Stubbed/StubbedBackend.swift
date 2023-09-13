@@ -13,9 +13,10 @@ import StripeCoreTestUtils
 import XCTest
 
 class StubbedBackend {
-    static func stubSessions(paymentMethods: String) {
+    static func stubSessions(paymentMethods: String, requestCallback: ((URLRequest) -> Bool)? = nil) {
         stubSessions(
             fileMock: .elementsSessionsPaymentMethod_200,
+            requestCallback: requestCallback,
             responseCallback: { data in
                 return self.updatePaymentMethodDetail(
                     data: data,
@@ -36,9 +37,13 @@ class StubbedBackend {
         }
         return template.data(using: .utf8)!
     }
-    static func stubSessions(fileMock: FileMock, responseCallback: ((Data) -> Data)? = nil) {
+    static func stubSessions(fileMock: FileMock, requestCallback: ((URLRequest) -> Bool)? = nil, responseCallback: ((Data) -> Data)? = nil) {
         stub { urlRequest in
-            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
+            if urlRequest.url?.absoluteString.contains("/v1/elements/sessions") != nil,
+                let requestCallback = requestCallback {
+                return requestCallback(urlRequest)
+            }
+            return false
         } response: { _ in
             let mockResponseData = try! fileMock.data()
             let data = responseCallback?(mockResponseData) ?? mockResponseData
@@ -70,4 +75,9 @@ public class ClassForBundle {}
     case saved_payment_methods_withUSBank_200 = "MockFiles/saved_payment_methods_withUSBank_200"
 
     case elementsSessionsPaymentMethod_200 = "MockFiles/elements_sessions_paymentMethod_200"
+    case elementsSessionsLegacyCustomer_withSavedCardUSBank_200 = "MockFiles/elements_sessions_legacyCustomer_withSavedCardUSBank_200"
+    case elementsSessionsLegacyCustomer_withSavedCard_200 = "MockFiles/elements_sessions_legacyCustomer_withSavedCard_200"
+    case elementsSessionsLegacyCustomer_withSavedUSBank_200 = "MockFiles/elements_sessions_legacyCustomer_withSavedUSBank_200"
+    case elementsSessionsLegacyCustomer_withNoSavedPM_200 = "MockFiles/elements_sessions_legacyCustomer_withNoSavedPM_200"
+
 }
