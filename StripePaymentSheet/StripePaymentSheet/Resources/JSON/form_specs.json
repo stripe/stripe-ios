@@ -779,6 +779,33 @@
         }
     },
     {
+      "type": "alma",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-9adee7a095478e23c76054e7fcb4c275.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-e4cbf3b2cec6b09cb0fd10d404fbbf44.svg",
+        "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-41fe66ba84194788e98548aa6e749c79.png",
+        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-74fb7ea51cccf2e1dd530f308bed9c60.svg"
+      },
+      "fields": [
+      ],
+      "next_action_spec": {
+        "confirm_response_status_specs": {
+            "requires_action": {
+                "type": "redirect_to_url"
+            }
+        },
+        "post_confirm_handling_pi_status_specs": {
+            "succeeded": {
+                "type": "finished"
+            },
+            "requires_action": {
+                "type": "canceled"
+            }
+        }
+      }
+    },
+    {
         "type": "mobilepay",
         "async": false,
         "fields": [],

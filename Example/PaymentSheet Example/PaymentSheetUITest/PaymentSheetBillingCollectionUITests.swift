@@ -958,4 +958,43 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         // Just check the button is enabled
         XCTAssertTrue(payButton.isEnabled)
     }
+    
+    func testLpm_Alma_AutomaticFields() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .eur
+        settings.merchantCountryCode = .FR
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.attachDefaults = .off
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
+        loadPlayground(
+            app,
+            settings
+        )
+
+        checkoutButton.tap()
+
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "alma"))
+        cell.tap()
+
+        XCTAssertFalse(emailField.exists)
+        XCTAssertFalse(fullNameField.exists)
+        XCTAssertFalse(phoneField.exists)
+        XCTAssertFalse(phoneField.exists)
+        XCTAssertFalse(billingAddressField.exists)
+        XCTAssertFalse(app.textFields["Country"].exists)
+        XCTAssertFalse(line1Field.exists)
+        XCTAssertFalse(line2Field.exists)
+        XCTAssertFalse(cityField.exists)
+        XCTAssertFalse(stateField.exists)
+        XCTAssertFalse(zipField.exists)
+
+        // Just check the button is enabled
+        XCTAssertTrue(payButton.isEnabled)
+    }
 }
