@@ -290,9 +290,9 @@ class PollingViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self = self else { return }
             self.intentPoller.beginPolling()
-            // If we don't get a terminal status back after 20 seconds from the previous force poll, set error state to suspend polling.
+            // If we don't get a terminal status back after 10 seconds from the previous force poll, set error state to suspend polling.
             // This could occur if network connections are unreliable
-            DispatchQueue.main.asyncAfter(deadline: .now() + 20, execute: self.setErrorStateWorkItem)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: self.setErrorStateWorkItem)
         }
     }
 
