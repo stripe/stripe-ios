@@ -87,18 +87,17 @@ extension PaymentSheetFormFactory {
                 shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             ],
             theme: theme)
-        let cardFormElementWrapper = makeDefaultsApplierWrapper(for: cardFormElement)
 
         if case .paymentSheet(let configuration) = configuration, isLinkEnabled {
             return LinkEnabledPaymentMethodElement(
                 type: .card,
-                paymentMethodElement: cardFormElementWrapper,
+                paymentMethodElement: cardFormElement,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 country: countryCode
             )
         } else {
-            return cardFormElementWrapper
+            return cardFormElement
         }
     }
 }
