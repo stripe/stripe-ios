@@ -32,10 +32,10 @@ final class STPElementsSession: NSObject {
     let paymentMethodSpecs: [[AnyHashable: Any]]?
 
     /// An object containing Customer's saved payment methods information
-    let legacy_customer: STPLegacyElementsCustomer?
+    let legacyCustomer: STPLegacyElementsCustomer?
 
     /// An error associated with operations surrounding legacy_customer
-    let customer_error: STPElementsCustomerError?
+    let customerError: STPElementsCustomerError?
 
     let allResponseFields: [AnyHashable: Any]
 
@@ -51,8 +51,8 @@ final class STPElementsSession: NSObject {
             "countryCode = \(String(describing: countryCode))",
             "merchantCountryCode = \(String(describing: merchantCountryCode))",
             "paymentMethodSpecs = \(String(describing: paymentMethodSpecs))",
-            "legacy_customer = \(String(describing: legacy_customer))",
-            "customer_error = \(String(describing: customer_error))",
+            "legacyCustomer = \(String(describing: legacyCustomer))",
+            "customerError = \(String(describing: customerError))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -67,8 +67,8 @@ final class STPElementsSession: NSObject {
         merchantCountryCode: String?,
         linkSettings: LinkSettings?,
         paymentMethodSpecs: [[AnyHashable: Any]]?,
-        legacy_customer: STPLegacyElementsCustomer?,
-        customer_error: STPElementsCustomerError?
+        legacyCustomer: STPLegacyElementsCustomer?,
+        customerError: STPElementsCustomerError?
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -78,8 +78,8 @@ final class STPElementsSession: NSObject {
         self.merchantCountryCode = merchantCountryCode
         self.linkSettings = linkSettings
         self.paymentMethodSpecs = paymentMethodSpecs
-        self.legacy_customer = legacy_customer
-        self.customer_error = customer_error
+        self.legacyCustomer = legacyCustomer
+        self.customerError = customerError
         super.init()
     }
 }
@@ -107,8 +107,8 @@ extension STPElementsSession: STPAPIResponseDecodable {
                 fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]
             ),
             paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]],
-            legacy_customer: STPLegacyElementsCustomer.decodedObject(fromAPIResponse: dict),
-            customer_error: STPElementsCustomerError.decodedObject(fromAPIResponse: dict)
+            legacyCustomer: STPLegacyElementsCustomer.decodedObject(fromAPIResponse: dict),
+            customerError: STPElementsCustomerError.decodedObject(fromAPIResponse: dict)
         ) as? Self
     }
 }

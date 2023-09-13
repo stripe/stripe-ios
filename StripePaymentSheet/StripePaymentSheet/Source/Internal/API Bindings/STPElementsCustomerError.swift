@@ -7,7 +7,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 final class STPElementsCustomerError: NSObject, Error {
-    let error_message: String
+    let errorMessage: String
 
     let allResponseFields: [AnyHashable: Any]
 
@@ -16,7 +16,7 @@ final class STPElementsCustomerError: NSObject, Error {
         let props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPElementsCustomerError.self), self),
-            "error_message = \(error_message)",
+            "errorMessage = \(errorMessage)",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -24,10 +24,10 @@ final class STPElementsCustomerError: NSObject, Error {
 
     private init(
         allResponseFields: [AnyHashable: Any],
-        error_message: String
+        errorMessage: String
     ) {
         self.allResponseFields = allResponseFields
-        self.error_message = error_message
+        self.errorMessage = errorMessage
         super.init()
     }
 }
@@ -42,7 +42,7 @@ extension STPElementsCustomerError: STPAPIResponseDecodable {
 
         return STPElementsCustomerError(
             allResponseFields: dict,
-            error_message: paymentMethodPrefDict["error_message"] as? String ?? ""
+            errorMessage: paymentMethodPrefDict["error_message"] as? String ?? ""
         ) as? Self
     }
 }

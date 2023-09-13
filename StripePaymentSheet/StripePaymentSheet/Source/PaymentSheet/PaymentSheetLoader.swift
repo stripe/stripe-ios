@@ -141,12 +141,12 @@ final class PaymentSheetLoader {
 
     static func fetchIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration) async throws -> Intent {
         let intent: Intent
-        let additionalParams = additionalParams(configuration: configuration)
+        let customerEphemeralKey = customerEphemeralKey(configuration: configuration)
         switch mode {
         case .paymentIntentClientSecret(let clientSecret):
             let paymentIntent: STPPaymentIntent
             do {
-                paymentIntent = try await configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret, additionalParams: additionalParams)
+                paymentIntent = try await configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret, customerEphemeralKey: customerEphemeralKey)
             } catch {
                 // Fallback to regular retrieve PI when retrieve PI with preferences fails
                 paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
@@ -159,7 +159,7 @@ final class PaymentSheetLoader {
         case .setupIntentClientSecret(let clientSecret):
             let setupIntent: STPSetupIntent
             do {
-                setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret, additionalParams: additionalParams)
+                setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret, customerEphemeralKey: customerEphemeralKey)
             } catch {
                 // Fallback to regular retrieve SI when retrieve SI with preferences fails
                 setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
@@ -171,7 +171,7 @@ final class PaymentSheetLoader {
             intent = .setupIntent(setupIntent)
 
         case .deferredIntent(let intentConfig):
-            let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig, additionalParams: additionalParams)
+            let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig, customerEphemeralKey: customerEphemeralKey)
             intent = .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
         }
         // Ensure that there's at least 1 payment method type available for the intent and configuration.
@@ -190,11 +190,11 @@ final class PaymentSheetLoader {
         return intent
     }
 
-    static func additionalParams(configuration: PaymentSheet.Configuration) -> [String: Any]? {
-        if let ephemeralKey = configuration.customer?.ephemeralKeySecret {
-            return ["legacy_customer_ephemeral_key": ephemeralKey]
+    static func customerEphemeralKey(configuration: PaymentSheet.Configuration) -> String? {
+        guard let ephemeralKey = configuration.customer?.ephemeralKeySecret else {
+            return nil
         }
-        return nil
+        return ephemeralKey
     }
 
     static func getPaymentMethodsStrategy(intent: Intent, configuration: PaymentSheet.Configuration) -> Task<[STPPaymentMethod], Error> {
@@ -216,19 +216,19 @@ final class PaymentSheetLoader {
             if STPElementsCustomerError.decodedObject(fromAPIResponse: dict) != nil {
                 return nil
             } else if let legacyElementsCustomer = STPLegacyElementsCustomer.decodedObject(fromAPIResponse: dict) {
-                return legacyElementsCustomer.payment_methods
+                return legacyElementsCustomer.paymentMethods
             }
         case .setupIntent(let underlyingIntent):
             let dict = underlyingIntent.allResponseFields
             if STPElementsCustomerError.decodedObject(fromAPIResponse: dict) != nil{
                 return nil
             } else if let legacyElementsCustomer = STPLegacyElementsCustomer.decodedObject(fromAPIResponse: dict) {
-                return legacyElementsCustomer.payment_methods
+                return legacyElementsCustomer.paymentMethods
             }
         case .deferredIntent(let elementsSession, _):
-            if elementsSession.customer_error != nil{
+            if elementsSession.customerError != nil{
                 return nil
-            } else if let payment_methods = elementsSession.legacy_customer?.payment_methods {
+            } else if let payment_methods = elementsSession.legacyCustomer?.paymentMethods {
                 return payment_methods
             }
         }

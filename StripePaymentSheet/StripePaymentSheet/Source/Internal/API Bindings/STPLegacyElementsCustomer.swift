@@ -7,7 +7,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 final class STPLegacyElementsCustomer: NSObject {
-    let payment_methods: [STPPaymentMethod]?
+    let paymentMethods: [STPPaymentMethod]?
 
     let allResponseFields: [AnyHashable: Any]
 
@@ -15,7 +15,7 @@ final class STPLegacyElementsCustomer: NSObject {
     @objc public override var description: String {
         let props: [String] = [
             String(format: "%@: %p", NSStringFromClass(STPLegacyElementsCustomer.self), self),
-            "payment_methods = \(String(describing: payment_methods))",
+            "paymentMethods = \(String(describing: paymentMethods))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -23,10 +23,10 @@ final class STPLegacyElementsCustomer: NSObject {
 
     private init(
         allResponseFields: [AnyHashable: Any],
-        payment_methods: [STPPaymentMethod]?
+        paymentMethods: [STPPaymentMethod]?
     ) {
         self.allResponseFields = allResponseFields
-        self.payment_methods = payment_methods
+        self.paymentMethods = paymentMethods
         super.init()
     }
 }
@@ -42,7 +42,7 @@ extension STPLegacyElementsCustomer: STPAPIResponseDecodable {
         let paymentMethods = savedPaymentMethods.compactMap { STPPaymentMethod.decodedObject(fromAPIResponse: $0) }
         return STPLegacyElementsCustomer(
             allResponseFields: dict,
-            payment_methods: paymentMethods
+            paymentMethods: paymentMethods
         ) as? Self
     }
 }

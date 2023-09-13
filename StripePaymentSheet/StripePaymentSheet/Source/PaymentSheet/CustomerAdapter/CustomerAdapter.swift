@@ -135,11 +135,11 @@ open class StripeCustomerAdapter: CustomerAdapter {
 
     open func fetchPaymentMethods() async throws -> [STPPaymentMethod] {
         let customerEphemeralKey = try await customerEphemeralKey
-        let elementSession = try await apiClient.retrieveElementsSessionForCustomerSheet(additionalParams: ["legacy_customer_ephemeral_key": customerEphemeralKey.ephemeralKeySecret])
-        if let customer_error = elementSession.customer_error {
+        let elementSession = try await apiClient.retrieveElementsSessionForCustomerSheet(customerEphemeralKey: customerEphemeralKey.ephemeralKeySecret)
+        if let customer_error = elementSession.customerError {
             throw CustomerSheetError.errorFetchingSavedPaymentMethods(customer_error)
         }
-        return elementSession.legacy_customer?.payment_methods ?? []
+        return elementSession.legacyCustomer?.paymentMethods ?? []
     }
 
     open func attachPaymentMethod(_ paymentMethodId: String) async throws {
