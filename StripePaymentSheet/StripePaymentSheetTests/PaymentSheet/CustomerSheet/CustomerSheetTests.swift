@@ -205,7 +205,7 @@ class CustomerSheetTests: APIStubbedTestCase {
                 return false
             }
             return requestUrl.absoluteString.contains("legacy_customer_ephemeral_key")
-        }, responseCallback: {responseCallback in
+        }, responseCallback: { _ in
             sleep(timeGreaterThanTimeoutIntervalForRequest)
             return "{}".data(using: .utf8)!
         })

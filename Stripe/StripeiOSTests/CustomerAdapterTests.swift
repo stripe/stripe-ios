@@ -85,6 +85,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
             return HTTPStubsResponse(jsonObject: pmList, statusCode: 200, headers: nil)
         }
     }
+
     func stubElementsSessions(
         key: CustomerEphemeralKey,
         paymentMethodJSONs: [[AnyHashable: Any]],
@@ -97,7 +98,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
             return urlRequest.url?.absoluteString.contains("/elements/sessions") ?? false
             && urlRequest.url?.query?.contains("legacy_customer_ephemeral_key=\(key.ephemeralKeySecret)") ?? false
             && urlRequest.httpMethod == "GET"
-        } response: { urlRequest in
+        } response: { _ in
             let paymentMethodsJSON = """
                 {
                     "session_id": "123",
@@ -119,7 +120,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
                     with: paymentMethodsJSON.data(using: .utf8)!,
                     options: []
                 ) as! [AnyHashable: Any]
-            var legacyCustomer = pmList["legacy_customer"] as! [AnyHashable:Any]
+            var legacyCustomer = pmList["legacy_customer"] as! [AnyHashable: Any]
             legacyCustomer["payment_methods"] = paymentMethodJSONs
             pmList["legacy_customer"] = legacyCustomer
             DispatchQueue.main.async {
