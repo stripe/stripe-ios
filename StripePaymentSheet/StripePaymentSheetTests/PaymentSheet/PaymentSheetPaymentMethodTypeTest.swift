@@ -297,7 +297,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
         XCTAssertEqual(
             PaymentSheet.PaymentMethodType.dynamic("au_becs_debit").displayName,
-            "AU BECS Direct Debit"
+            "AU Direct Debit"
         )
         XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("grabpay").displayName, "GrabPay")
         XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("giropay").displayName, "giropay")

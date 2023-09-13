@@ -327,11 +327,11 @@ extension PaymentSheet {
                     case .sofort, .iDEAL, .bancontact:
                         // n.b. While sofort, iDEAL, and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .SEPADebit:
+                    case .SEPADebit, .AUBECSDebit:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
+                    case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
                         .affirm, .paynow, .zip, .revolutPay, .amazonPay, .mobilePay, .unknown, .alipay:
                         return [.unsupportedForSetup]
