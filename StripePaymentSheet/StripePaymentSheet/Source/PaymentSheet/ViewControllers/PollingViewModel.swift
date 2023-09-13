@@ -40,6 +40,16 @@ class PollingViewModel {
             fatalError("Polling deadline has not been implemented for \(paymentMethodType)")
         }
     }()
+    var retryInterval: TimeInterval {
+        switch paymentMethodType {
+        case .blik, .paynow:
+            return 1
+        case .UPI:
+            return 10
+        default:
+            fatalError("Polling retry interval has not been implemented for \(paymentMethodType)")
+        }
+    }
 
     init(paymentMethodType: STPPaymentMethodType) {
         guard supportedPaymentMethods.contains(paymentMethodType) else {

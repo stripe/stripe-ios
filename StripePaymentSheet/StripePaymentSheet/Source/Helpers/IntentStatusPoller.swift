@@ -15,6 +15,7 @@ protocol IntentStatusPollerDelegate: AnyObject {
 }
 
 class IntentStatusPoller {
+    let retryInterval: TimeInterval
     let apiClient: STPAPIClient
     let clientSecret: String
 
@@ -35,7 +36,8 @@ class IntentStatusPoller {
         }
     }
 
-    init(apiClient: STPAPIClient, clientSecret: String) {
+    init(retryInterval: TimeInterval, apiClient: STPAPIClient, clientSecret: String) {
+        self.retryInterval = retryInterval
         self.apiClient = apiClient
         self.clientSecret = clientSecret
     }
@@ -66,9 +68,9 @@ class IntentStatusPoller {
                 self?.delegate?.didUpdate(paymentIntent: paymentIntent)
             }
 
-            // If we are polling, fetch again in 1 second
+            // If we are polling, fetch again after the retry interval has passed
             if isPolling {
-                self?.pollingQueue.asyncAfter(deadline: .now() + 1) { [weak self] in
+                self?.pollingQueue.asyncAfter(deadline: .now() + (self?.retryInterval ?? 0)) { [weak self] in
                     self?.fetchStatus()
                 }
             }

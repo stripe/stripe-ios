@@ -34,7 +34,8 @@ class PollingViewController: UIViewController {
         guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
               let clientSecret = currentAction.paymentIntent?.clientSecret else { fatalError() }
 
-        let intentPoller = IntentStatusPoller(apiClient: currentAction.apiClient,
+        let intentPoller = IntentStatusPoller(retryInterval: viewModel.retryInterval,
+                                              apiClient: currentAction.apiClient,
                                               clientSecret: clientSecret)
         intentPoller.delegate = self
         return intentPoller
