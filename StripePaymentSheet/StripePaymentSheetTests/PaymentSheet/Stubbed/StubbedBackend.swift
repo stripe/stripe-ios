@@ -13,20 +13,35 @@ import StripeCoreTestUtils
 import XCTest
 
 class StubbedBackend {
-    static func stubSessions(paymentMethods: String, requestCallback: ((URLRequest) -> Bool)? = nil) {
+    static func stubSessions(fileMock: FileMock,
+                             paymentMethods: String,
+                             requestCallback: ((URLRequest) -> Bool)? = nil,
+                             responseCallback: ((Data) -> Data)? = nil) {
+        let wrappedResponseCallback = wrappedResponseCaller(paymentMethods: paymentMethods,
+                                                            responseCallback: responseCallback)
         stubSessions(
-            fileMock: .elementsSessionsPaymentMethod_200,
+            fileMock: fileMock,
             requestCallback: requestCallback,
-            responseCallback: { data in
-                return self.updatePaymentMethodDetail(
-                    data: data,
-                    variables: [
-                        "<paymentMethods>": paymentMethods,
-                        "<currency>": "\"usd\"",
-                    ]
-                )
-            }
+            responseCallback: wrappedResponseCallback
         )
+    }
+    static func wrappedResponseCaller(paymentMethods: String, responseCallback: ((Data) -> Data)? = nil) -> ((Data) -> Data) {
+        let dataTransformer = { data in
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": paymentMethods,
+                    "<currency>": "\"usd\"",
+                ]
+            )
+        }
+        guard let responseCallbackUnwrapped = responseCallback else {
+            return dataTransformer
+        }
+        return { data in
+            let transformedData = dataTransformer(data)
+            return responseCallbackUnwrapped(transformedData)
+        }
     }
 
     static func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
@@ -37,7 +52,8 @@ class StubbedBackend {
         }
         return template.data(using: .utf8)!
     }
-    static func stubSessions(fileMock: FileMock, requestCallback: ((URLRequest) -> Bool)? = nil, responseCallback: ((Data) -> Data)? = nil) {
+
+    private static func stubSessions(fileMock: FileMock, requestCallback: ((URLRequest) -> Bool)? = nil, responseCallback: ((Data) -> Data)? = nil) {
         stub { urlRequest in
             if urlRequest.url?.absoluteString.contains("/v1/elements/sessions") != nil,
                 let requestCallback = requestCallback {

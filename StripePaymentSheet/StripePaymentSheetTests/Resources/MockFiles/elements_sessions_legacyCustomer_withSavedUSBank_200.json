@@ -56,33 +56,13 @@
   "meta_pay_signed_container_context": null,
   "order": null,
   "ordered_payment_method_types_and_wallets": [
-    "card",
-    "link",
-    "apple_pay",
-    "google_pay",
-    "cashapp",
-    "us_bank_account",
-    "alipay",
-    "sofort",
-    "bancontact",
-    "acss_debit",
-    "ideal",
-    "sepa_debit"
+      <paymentMethods>
   ],
   "payment_method_preference": {
     "object": "payment_method_preference",
     "country_code": "US",
     "ordered_payment_method_types": [
-      "card",
-      "link",
-      "cashapp",
-      "us_bank_account",
-      "alipay",
-      "sofort",
-      "bancontact",
-      "acss_debit",
-      "ideal",
-      "sepa_debit"
+        <paymentMethods>
     ],
     "type": "deferred_intent"
   },

@@ -18,13 +18,17 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_newCustomer() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_withNoSavedPM_200, requestCallback: { request in
+        StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_withNoSavedPM_200,
+                                    paymentMethods: "\"card\"",
+                                    requestCallback: { request in
             guard let requestUrl = request.url else {
                 return false
             }
             return requestUrl.absoluteString.contains("legacy_customer_ephemeral_key")
         })
-        StubbedBackend.stubSessions(paymentMethods: "\"card\"", requestCallback: { request in
+        StubbedBackend.stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                                    paymentMethods: "\"card\"",
+                                    requestCallback: { request in
             guard let requestUrl = request.url else {
                 return false
             }
@@ -54,13 +58,17 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_singleCard() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_withSavedCard_200, requestCallback: { request in
+        StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_withSavedCard_200,
+                                    paymentMethods: "\"card\"",
+                                    requestCallback: { request in
             guard let requestUrl = request.url else {
                 return false
             }
             return requestUrl.absoluteString.contains("legacy_customer_ephemeral_key")
         })
-        StubbedBackend.stubSessions(paymentMethods: "\"card\"", requestCallback: { request in
+        StubbedBackend.stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                                    paymentMethods: "\"card\"",
+                                    requestCallback: { request in
             guard let requestUrl = request.url else {
                 return false
             }
@@ -91,13 +99,17 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_singleBankAccount() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_withSavedUSBank_200, requestCallback: { request in
+        StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_withSavedUSBank_200,
+                                    paymentMethods: "\"us_bank_account\"",
+                                    requestCallback: { request in
             guard let requestUrl = request.url else {
                 return false
             }
             return requestUrl.absoluteString.contains("legacy_customer_ephemeral_key")
         })
-        StubbedBackend.stubSessions(paymentMethods: "\"us_bank_account\"", requestCallback: { request in
+        StubbedBackend.stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                                    paymentMethods: "\"us_bank_account\"",
+                                    requestCallback: { request in
             guard let requestUrl = request.url else {
                 return false
             }
@@ -129,14 +141,18 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_cardAndBankAccount() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"", requestCallback: { request in
+        StubbedBackend.stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                                    paymentMethods: "\"card\", \"us_bank_account\"",
+                                    requestCallback: { request in
             guard let requestUrl = request.url else {
                 return false
             }
             return !requestUrl.absoluteString.contains("legacy_customer_ephemeral_key")
         })
 
-        StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_withSavedCardUSBank_200, requestCallback: { request in
+        StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_withSavedCardUSBank_200,
+                                    paymentMethods: "\"card\", \"us_bank_account\"",
+                                    requestCallback: { request in
             guard let requestUrl = request.url else {
                 return false
             }
@@ -173,14 +189,18 @@ class CustomerSheetTests: APIStubbedTestCase {
         let stubbedURLSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
         stubbedURLSessionConfig.timeoutIntervalForRequest = fastTimeoutIntervalForRequest
         let stubbedAPIClient = stubbedAPIClient(configuration: stubbedURLSessionConfig)
-        StubbedBackend.stubSessions(paymentMethods: "\"card\"", requestCallback: { request in
+        StubbedBackend.stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                                    paymentMethods: "\"card\"",
+                                    requestCallback: { request in
             guard let requestUrl = request.url else {
                 return false
             }
             return !requestUrl.absoluteString.contains("legacy_customer_ephemeral_key")
         })
 
-        StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_withNoSavedPM_200, requestCallback: { request in
+        StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_withNoSavedPM_200,
+                                    paymentMethods: "\"card\"",
+                                    requestCallback: { request in
             guard let requestUrl = request.url else {
                 return false
             }
