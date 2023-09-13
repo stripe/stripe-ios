@@ -15,6 +15,11 @@ protocol HostControllerDelegate: AnyObject {
         viewController: UIViewController,
         didFinish result: FinancialConnectionsSheet.Result
     )
+
+    func hostController(
+        _ hostController: HostController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 class HostController {
@@ -74,9 +79,12 @@ extension HostController: HostViewControllerDelegate {
         _ viewController: HostViewController,
         didFetch synchronizePayload: FinancialConnectionsSynchronize
     ) {
+        delegate?.hostController(self, didReceiveEvent: FinancialConnectionsEvent(name: .open))
+
         guard
             let consentPaneModel = synchronizePayload.text?.consentPane
         else {
+            delegate?.hostController(self, didReceiveEvent: FinancialConnectionsEvent(name: .flowLaunchedInBrowser))
             continueWithWebFlow(synchronizePayload.manifest)
             return
         }
@@ -142,20 +150,40 @@ private extension HostController {
 // MARK: - ConnectionsWebFlowViewControllerDelegate
 
 extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
-    func financialConnectionsWebFlow(
-        viewController: FinancialConnectionsWebFlowViewController,
+
+    func webFlowViewController(
+        _ viewController: FinancialConnectionsWebFlowViewController,
         didFinish result: FinancialConnectionsSheet.Result
     ) {
         delegate?.hostController(self, viewController: viewController, didFinish: result)
     }
+
+    func webFlowViewController(
+        _ webFlowViewController: UIViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.hostController(self, didReceiveEvent: event)
+    }
 }
 
+// MARK: - NativeFlowControllerDelegate
+
 extension HostController: NativeFlowControllerDelegate {
-    func authFlow(controller: NativeFlowController, didFinish result: FinancialConnectionsSheet.Result) {
+    func nativeFlowController(
+        _ nativeFlowController: NativeFlowController,
+        didFinish result: FinancialConnectionsSheet.Result
+    ) {
         guard let viewController = navigationController.topViewController else {
             assertionFailure("Navigation stack is empty")
             return
         }
         delegate?.hostController(self, viewController: viewController, didFinish: result)
+    }
+
+    func nativeFlowController(
+        _ nativeFlowController: NativeFlowController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.hostController(self, didReceiveEvent: event)
     }
 }

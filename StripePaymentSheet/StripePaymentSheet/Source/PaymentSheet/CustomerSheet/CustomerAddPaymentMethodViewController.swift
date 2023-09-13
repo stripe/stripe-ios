@@ -280,6 +280,7 @@ extension CustomerAddPaymentMethodViewController {
         client.collectBankAccountForSetup(
             clientSecret: clientSecret,
             returnURL: configuration.returnURL,
+            onEvent: nil,
             params: params,
             from: viewController,
             financialConnectionsCompletion: financialConnectionsCompletion

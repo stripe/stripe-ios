@@ -18,6 +18,9 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
         _ viewController: InstitutionPickerViewController
     )
+    func institutionPickerViewControllerDidSearch(
+        _ viewController: InstitutionPickerViewController
+    )
 }
 
 class InstitutionPickerViewController: UIViewController {
@@ -222,6 +225,7 @@ extension InstitutionPickerViewController {
                                 ],
                                 pane: .institutionPicker
                             )
+                        self.delegate?.institutionPickerViewControllerDidSearch(self)
                     case .failure(let error):
                         self.institutionSearchTableView.loadInstitutions([])
                         self.institutionSearchTableView.showError(true)

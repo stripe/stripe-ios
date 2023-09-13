@@ -12,9 +12,14 @@ import UIKit
 
 protocol FinancialConnectionsWebFlowViewControllerDelegate: AnyObject {
 
-    func financialConnectionsWebFlow(
-        viewController: FinancialConnectionsWebFlowViewController,
+    func webFlowViewController(
+        _ viewController: FinancialConnectionsWebFlowViewController,
         didFinish result: FinancialConnectionsSheet.Result
+    )
+
+    func webFlowViewController(
+        _ webFlowViewController: UIViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
     )
 }
 
@@ -124,7 +129,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
 extension FinancialConnectionsWebFlowViewController {
 
     private func notifyDelegate(result: FinancialConnectionsSheet.Result) {
-        delegate?.financialConnectionsWebFlow(viewController: self, didFinish: result)
+        delegate?.webFlowViewController(self, didFinish: result)
         delegate = nil  // prevent the delegate from being called again
     }
 

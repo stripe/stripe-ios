@@ -303,6 +303,17 @@ private func PresentFinancialConnectionsSheet(
         financialConnectionsSessionClientSecret: clientSecret,
         returnURL: "financial-connections-example://redirect"
     )
+    financialConnectionsSheet.onEvent = { event in
+        print("Received event: \(event.name.rawValue), \(event.metadata.dictionary)")
+        //       Log.d("EVENT", "Received event: ${event.name}, ${event.metadata.toMap()}")
+//        FinancialConnectionsEvent.ErrorCode.failedBotDetection
+        switch event.name {
+        case .manualEntryInitiated:
+            break
+        default:
+            break
+        }
+    }
     financialConnectionsSheet.present(
         from: UIViewController.topMostViewController()!,
         completion: { result in

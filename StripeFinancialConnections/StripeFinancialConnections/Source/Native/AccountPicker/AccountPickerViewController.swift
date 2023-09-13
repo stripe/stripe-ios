@@ -13,7 +13,8 @@ import UIKit
 protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
+        bySkippingSelection skippedAccountSelection: Bool
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
@@ -85,7 +86,7 @@ final class AccountPickerViewController: UIViewController {
                         pane: .accountPicker
                     )
 
-                self.didSelectLinkAccounts()
+                self.didSelectLinkAccounts(bySkippingSelection: false)
             },
             didSelectMerchantDataAccessLearnMore: { [weak self] in
                 guard let self = self else { return }
@@ -160,7 +161,8 @@ final class AccountPickerViewController: UIViewController {
                     } else if shouldSkipAccountSelection {
                         self.delegate?.accountPickerViewController(
                             self,
-                            didSelectAccounts: accounts
+                            didSelectAccounts: accounts,
+                            bySkippingSelection: true
                         )
                     } else if self.dataSource.manifest.singleAccount,
                         self.dataSource.authSession.institutionSkipAccountSelection ?? false,
@@ -170,7 +172,7 @@ final class AccountPickerViewController: UIViewController {
                         // just one to send back in a single-account context. treat these as if
                         // we had done account selection, and submit.
                         self.dataSource.updateSelectedAccounts(accounts)
-                        self.didSelectLinkAccounts()
+                        self.didSelectLinkAccounts(bySkippingSelection: true)
                     } else {
                         let (enabledAccounts, disabledAccounts) =
                             accounts
@@ -320,7 +322,7 @@ final class AccountPickerViewController: UIViewController {
         self.errorView = errorView
     }
 
-    private func didSelectLinkAccounts() {
+    private func didSelectLinkAccounts(bySkippingSelection: Bool) {
         let numberOfSelectedAccounts = dataSource.selectedAccounts.count
         let linkingAccountsLoadingView = LinkingAccountsLoadingView(
             numberOfSelectedAccounts: numberOfSelectedAccounts,
@@ -336,7 +338,8 @@ final class AccountPickerViewController: UIViewController {
                 case .success(let linkedAccounts):
                     self.delegate?.accountPickerViewController(
                         self,
-                        didSelectAccounts: linkedAccounts.data
+                        didSelectAccounts: linkedAccounts.data,
+                        bySkippingSelection: bySkippingSelection
                     )
                 case .failure(let error):
                     self.dataSource

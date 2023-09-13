@@ -52,6 +52,9 @@ final public class FinancialConnectionsSheet {
     /// get back to your app after completing authentication in another app (such as bank app or Safari).
     public let returnURL: String?
 
+    // TODO: add docs
+    public var onEvent: ((FinancialConnectionsEvent) -> Void)?
+
     /// The APIClient instance used to make requests to Stripe
     public var apiClient: STPAPIClient = STPAPIClient.shared {
         didSet {
@@ -224,6 +227,10 @@ extension FinancialConnectionsSheet: HostControllerDelegate {
                 }
             }
         )
+    }
+
+    func hostController(_ hostController: HostController, didReceiveEvent event: FinancialConnectionsEvent) {
+        onEvent?(event)
     }
 }
 
