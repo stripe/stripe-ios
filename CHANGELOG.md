@@ -1,6 +1,7 @@
 ## X.Y.Z 2023-XX-YY
 ### Payments
 * [Added] Properties of STPConnectAccountParams are now mutable.
+* [Changed] Fixed STPConnectAccountCompanyParams.address being force unwrapped. It's now optional.
 
 ### PaymentSheet
 * [Added] Support for Alipay with PaymentIntents.
