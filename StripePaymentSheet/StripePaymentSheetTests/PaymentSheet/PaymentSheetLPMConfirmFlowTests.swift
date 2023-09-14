@@ -177,7 +177,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                                currency: "EUR",
                                paymentMethodType: .dynamic("alma"),
                                merchantCountry: .FR) { form in
-            // AmazonPay has no input fields
+            // Alma has no input fields
             XCTAssertEqual(form.getAllSubElements().count, 1)
         }
     }
