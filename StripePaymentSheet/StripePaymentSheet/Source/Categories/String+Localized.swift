@@ -194,6 +194,11 @@ extension String.Localized {
         STPLocalizedString("Contact information", "Title for the contact information section")
     }
 
+    static var paynow_confirm_payment: String {
+        STPLocalizedString("Confirm the payment in your bank or payment app within %@ to complete the purchase.",
+                           "Text for alert message when user needs to confirm payment in their banking app")
+    }
+
     static var cpf_cpnj: String {
         STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
     }
