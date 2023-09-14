@@ -995,6 +995,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         XCTAssertFalse(zipField.exists)
 
         // Just check the button is enabled
+        var payButton: XCUIElement { app.buttons["Pay €50.99"] }
         XCTAssertTrue(payButton.isEnabled)
     }
 }
