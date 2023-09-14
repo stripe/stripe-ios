@@ -602,6 +602,32 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         payButton.tap()
     }
 
+    func testAlmaPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .eur
+        settings.merchantCountryCode = .FR
+        settings.customerMode = .new
+        settings.apmsEnabled = .off
+        loadPlayground(
+            app,
+            settings
+        )
+        app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay €50.99"]
+
+        // Select Alma
+        guard let alma = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Alma") else {
+            XCTFail()
+            return
+        }
+        alma.tap()
+
+        XCTAssertTrue(payButton.isEnabled)
+
+        // Attempt payment, should succeed
+        payButton.tap()
+    }
+
     func testZipPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer

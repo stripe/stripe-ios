@@ -23,7 +23,7 @@ extension STPTestingAPIClient {
         completion: @escaping (Result<(String), Error>) -> Void
     ) {
         var params = [String: Any]()
-        params["amount"] = 1050
+        params["amount"] = 5050
         params["currency"] = currency
         params["payment_method_types"] = types
         params["confirm"] = confirm
