@@ -43,13 +43,11 @@ class IntentStatusPollerTest: XCTestCase {
         mockIntentRetriever.mockedStatus = .requiresPaymentMethod
 
         sut.beginPolling()
-        XCTAssertTrue(sut.isPolling)
 
         wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: 5.0)
         XCTAssertEqual(mockDelegate.latestPaymentIntent?.status, .requiresPaymentMethod)
 
         sut.suspendPolling() // We should no longer notify the delegate or call the API
-        XCTAssertFalse(sut.isPolling)
 
         // Make the API client return succeeded, then the delegate should NOT be notified, and API should NOT be called due to suspended polling
         setExpectations(apiExpectedCount: 1, delegateExpectedCount: 1)
@@ -64,7 +62,6 @@ class IntentStatusPollerTest: XCTestCase {
         // Resume polling
         setExpectations(apiExpectedCount: 1, delegateExpectedCount: 1)
         sut.beginPolling()
-        XCTAssertTrue(sut.isPolling)
 
         wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: 5.0)
         XCTAssertEqual(mockDelegate.latestPaymentIntent?.status, .succeeded)
@@ -75,7 +72,6 @@ class IntentStatusPollerTest: XCTestCase {
         mockIntentRetriever.mockedStatus = .requiresPaymentMethod
 
         sut.pollOnce()
-        XCTAssertFalse(sut.isPolling)
 
         // API client should be called and delegate should be notified of the new status since updating from .unknown`
         wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: 5.0)

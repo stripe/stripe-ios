@@ -31,7 +31,7 @@ class IntentStatusPoller {
 
     weak var delegate: IntentStatusPollerDelegate?
 
-    var isPolling: Bool = false {
+    private var isPolling: Bool = false {
         didSet {
             // Start polling if we weren't already polling
             if !oldValue && isPolling {
