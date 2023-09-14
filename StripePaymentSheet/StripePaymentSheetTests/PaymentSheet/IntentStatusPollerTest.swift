@@ -1,3 +1,10 @@
+//
+//  IntentStatusPollerTest.swift
+//  StripePaymentSheetTests
+//
+//  Created by Nick Porter on 9/14/23.
+//
+
 @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 import XCTest

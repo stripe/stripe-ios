@@ -60,6 +60,7 @@ import Foundation
 
     /// Contains details for displaying the QR code required for PayNow.
     case payNowDisplayQrCode
+
     /// Contains instructions for completing Konbini payments.
     case konbiniDisplayDetails
 
