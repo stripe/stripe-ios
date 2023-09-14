@@ -292,7 +292,13 @@ class PollingViewController: UIViewController {
         // Do one last force poll after deadline
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self = self else { return }
-            self.intentPoller.pollOnce()
+            self.intentPoller.pollOnce { [weak self] status in
+                // If the last poll doesn't show a succeeded on the intent, show the error UI
+                // In the case of a success the delegate will be notified and the UI will be updated accordingly
+                if status != .succeeded {
+                    self?.pollingState = .error
+                }
+            }
         }
     }
 

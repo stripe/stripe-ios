@@ -65,19 +65,21 @@ class IntentStatusPoller {
     /// Triggers a single poll operation to fetch the intent status right away, regardless of the
     /// retryInterval. Whether or not continuous polling in ongoing, `pollOnce()` immediately updates the
     /// status and informs the delegate if a change in status takes place.
-    public func pollOnce() {
-        fetchStatus(forceFetch: true)
+    /// - Parameter completion: Called with the current status of the payment intent when the fetch completes
+    public func pollOnce(completion: ((STPPaymentIntentStatus) -> Void)? = nil) {
+        fetchStatus(forceFetch: true, completion: completion)
     }
 
     // MARK: - Private functions
 
-    private func fetchStatus(forceFetch: Bool = false) {
+    private func fetchStatus(forceFetch: Bool = false, completion: ((STPPaymentIntentStatus) -> Void)? = nil) {
         intentRetriever.retrievePaymentIntent(withClientSecret: clientSecret) { [weak self] paymentIntent, _ in
             guard let self = self else { return }
+            guard let paymentIntent = paymentIntent else { return }
+            completion?(paymentIntent.status)
 
             // If latest status is different than last known status notify our delegate
-            if let paymentIntent = paymentIntent,
-               paymentIntent.status != self.lastStatus,
+            if paymentIntent.status != self.lastStatus,
                (self.isPolling || forceFetch) { // don't notify our delegate if polling is suspended, could happen if network request is in-flight
                 self.lastStatus = paymentIntent.status
                 self.delegate?.didUpdate(paymentIntent: paymentIntent)
