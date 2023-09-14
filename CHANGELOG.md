@@ -1,6 +1,7 @@
 ## X.Y.Z 2023-XX-YY
 ### Payments
 * [Added] Properties of STPConnectAccountParams are now mutable.
+* [Changed] Fixed STPConnectAccountCompanyParams.address being force unwrapped. It's now optional.
 
 ### PaymentSheet
 * [Added] Support for Cash App Pay with SetupIntents and PaymentIntents with `setup_future_usage`.
@@ -9,6 +10,8 @@
 * [Added] Support for Konbini with PaymentIntents.
 * [Added] Support for PayNow with PaymentIntents.
 * [Added] Support for Boleto with PaymentIntents.
+* [Added] Support for External Payment Method as an invite-only private beta.
+* [Added] Support for Alma (Private Beta) with PaymentIntents.
 
 ### CustomerSheet
 * [Changed] When adding a payment method, and tapping the close button, the newly added payment method was implicitly selected resulting with `.selected(PaymentOptionSelection?)`.  Now, the result will be `.canceled(PaymentOptionSelection?)`.
