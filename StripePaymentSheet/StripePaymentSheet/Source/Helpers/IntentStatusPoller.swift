@@ -52,26 +52,33 @@ class IntentStatusPoller {
         isPolling = false
     }
 
-    public func fetchStatus() {
+    public func fetchStatus(forceFetch: Bool = false) {
         apiClient.retrievePaymentIntent(withClientSecret: clientSecret) { [weak self] paymentIntent, _ in
-            guard let isPolling = self?.isPolling else {
-                return
-            }
+            guard let self = self else { return }
 
             // If latest status is different than last known status notify our delegate
             if let paymentIntent = paymentIntent,
-               paymentIntent.status != self?.lastStatus,
-               isPolling {
-                self?.lastStatus = paymentIntent.status
-                self?.delegate?.didUpdate(paymentIntent: paymentIntent)
+               paymentIntent.status != self.lastStatus,
+               isPolling || forceFetch { // don't notify our delegate if polling is suspended, could happen if network request is in-flight
+                self.lastStatus = paymentIntent.status
+                self.delegate?.didUpdate(paymentIntent: paymentIntent)
             }
 
-            // If we are polling, fetch again after the retry interval has passed
+            // If we are activly polling schedule another fetch
             if isPolling {
-                self?.pollingQueue.asyncAfter(deadline: .now() + (self?.retryInterval ?? 0)) { [weak self] in
+                self.retryAfterInterval { [weak self] in
                     self?.fetchStatus()
                 }
             }
         }
+    }
+
+    private func retryAfterInterval(block: @escaping () -> Void) {
+        nextPollWorkItem = DispatchWorkItem {
+            block()
+        }
+
+        guard let nextPollWorkItem = nextPollWorkItem else { return }
+        pollingQueue.asyncAfter(deadline: .now() + retryInterval, execute: nextPollWorkItem)
     }
 }

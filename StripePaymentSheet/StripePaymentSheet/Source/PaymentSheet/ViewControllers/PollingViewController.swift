@@ -287,10 +287,12 @@ class PollingViewController: UIViewController {
 
     // Called after the timer expires to wrap up polling
     private func finishPolling() {
+        self.intentPoller.suspendPolling()
+
         // Do one last force poll after deadline
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self = self else { return }
-            self.intentPoller.fetchStatus()
+            self.intentPoller.fetchStatus(forceFetch: true)
         }
     }
 
