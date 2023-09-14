@@ -161,6 +161,8 @@ class PaymentSheetFormFactory {
             return makeExternalPayPal()
         } else if paymentMethod.stpPaymentMethodType == .OXXO {
             return  makeOXXO()
+        } else if paymentMethod.stpPaymentMethodType == .konbini {
+            return makeKonbini()
         }
 
         guard let spec = specFromJSONProvider() else {
@@ -504,6 +506,18 @@ extension PaymentSheetFormFactory {
             merchantName: merchantName,
             theme: theme
         )
+    }
+
+    func makeKonbini() -> PaymentMethodElement {
+        let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: true, emailRequiredByPaymentMethod: true, phoneRequiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let konbiniPhoneNumber = PaymentMethodElementWrapper(TextFieldElement.makeKonbini(theme: theme)) { textField, params in
+            params.confirmPaymentMethodOptions.konbiniOptions = .init()
+            params.confirmPaymentMethodOptions.konbiniOptions?.confirmationNumber = textField.text
+            return params
+        }
+        let elements = [contactInfoSection, konbiniPhoneNumber, billingDetails].compactMap { $0 }
+        return FormElement(autoSectioningElements: elements, theme: theme)
     }
 
     func makeExternalPayPal() -> PaymentMethodElement {

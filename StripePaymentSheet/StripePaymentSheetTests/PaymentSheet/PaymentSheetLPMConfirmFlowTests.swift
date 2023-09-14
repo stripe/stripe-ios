@@ -30,6 +30,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case BE = "be"
         case MX = "mex"  // The CI Backend uses "mex" instead of "mx"
         case AU = "au"
+        case JP = "jp"
 
         var publishableKey: String {
             switch self {
@@ -45,6 +46,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingMEXPublishableKey
             case .AU:
                 return STPTestingAUPublishableKey
+            case .JP:
+                return STPTestingJPPublishableKey
             }
         }
     }
@@ -178,6 +181,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                                currency: "MXN",
                                paymentMethodType: .dynamic("oxxo"),
                                merchantCountry: .MX) { form in
+            form.getTextFieldElement("Full name")?.setText("Jane Doe")
+            form.getTextFieldElement("Email")?.setText("foo@bar.com")
+        }
+    }
+
+    func testKonbiniConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "JPY",
+                               paymentMethodType: .dynamic("konbini"),
+                               merchantCountry: .JP) { form in
             form.getTextFieldElement("Full name")?.setText("Jane Doe")
             form.getTextFieldElement("Email")?.setText("foo@bar.com")
         }

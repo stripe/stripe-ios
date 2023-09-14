@@ -152,6 +152,38 @@ import UIKit
         return TextFieldElement(configuration: BlikCodeConfiguration(), theme: theme)
     }
 
+    // MARK: - Konbini confirmation/phone number
+
+    /// An optional 10 to 11 digit numeric-only string determining the confirmation code at applicable convenience stores. This is typically a phone number, so we label it as such.
+    struct KonbiniPhoneNumberConfiguration: TextFieldElementConfiguration {
+        public let label = String.Localized.phone
+        public let disallowedCharacters: CharacterSet = .decimalDigits.inverted
+        public let isOptional: Bool = true
+        let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)
+
+        public func validate(text: String, isOptional: Bool) -> ValidationState {
+            guard !text.isEmpty else {
+                return isOptional ? .valid : .invalid(Error.empty)
+            }
+            guard text.count > 9 else {
+                return .invalid(incompleteError)
+            }
+            return .valid
+        }
+
+        public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
+            return .init(type: .numberPad, textContentType: .telephoneNumber, autocapitalization: .none)
+        }
+
+        public func maxLength(for text: String) -> Int {
+            return 11
+        }
+    }
+
+    static func makeKonbini(theme: ElementsUITheme) -> TextFieldElement {
+        return TextFieldElement(configuration: KonbiniPhoneNumberConfiguration(), theme: theme)
+    }
+
     // MARK: - Phone number
     struct PhoneNumberConfiguration: TextFieldElementConfiguration {
         static let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)
