@@ -106,4 +106,3 @@ class MockIntentStatusPollerDelegate: IntentStatusPollerDelegate {
         self.expectation?.fulfill()
     }
 }
-

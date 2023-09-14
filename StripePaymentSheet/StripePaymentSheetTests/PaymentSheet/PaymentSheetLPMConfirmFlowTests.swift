@@ -204,7 +204,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                                merchantCountry: .SG) { form in
             // PayNow has no input fields
             XCTAssertEqual(form.getAllSubElements().count, 1)
-    }        
+        }
+    }
 }
 
 // MARK: - Helper methods

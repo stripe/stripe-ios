@@ -171,7 +171,7 @@ public class STPIntentAction: NSObject {
 
     /// Contains details for displaying the QR code required for PayNow.
     @objc public let payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
-    
+
     /// Contains instructions for authenticating a Konbini payment.
     @objc public let konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
 
