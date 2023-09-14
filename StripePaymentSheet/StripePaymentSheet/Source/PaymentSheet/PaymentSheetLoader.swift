@@ -141,7 +141,7 @@ final class PaymentSheetLoader {
 
     static func fetchIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration) async throws -> Intent {
         let intent: Intent
-        let customerEphemeralKey = customerEphemeralKey(configuration: configuration)
+        let customerEphemeralKey = configuration.customer?.ephemeralKeySecret
         switch mode {
         case .paymentIntentClientSecret(let clientSecret):
             let paymentIntent: STPPaymentIntent
@@ -188,13 +188,6 @@ final class PaymentSheetLoader {
             print(message)
         }
         return intent
-    }
-
-    static func customerEphemeralKey(configuration: PaymentSheet.Configuration) -> String? {
-        guard let ephemeralKey = configuration.customer?.ephemeralKeySecret else {
-            return nil
-        }
-        return ephemeralKey
     }
 
     static func getSavedPaymentMethods(intent: Intent, configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {

@@ -26,7 +26,7 @@ extension STPAPIClient {
         parameters["type"] = "payment_intent"
         parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
-        if let customerEphemeralKey = customerEphemeralKey {
+        if let customerEphemeralKey {
             parameters["legacy_customer_ephemeral_key"] = customerEphemeralKey
         }
 
@@ -42,7 +42,7 @@ extension STPAPIClient {
         customerEphemeralKey: String? = nil
     ) async throws -> STPElementsSession {
         var parameters = intentConfig.elementsSessionParameters(publishableKey: publishableKey)
-        if let customerEphemeralKey = customerEphemeralKey {
+        if let customerEphemeralKey {
             parameters["legacy_customer_ephemeral_key"] = customerEphemeralKey
         }
 
@@ -63,7 +63,7 @@ extension STPAPIClient {
         var deferredIntent = [String: Any]()
         deferredIntent["mode"] = "setup"
         parameters["deferred_intent"] = deferredIntent
-        if let customerEphemeralKey = customerEphemeralKey {
+        if let customerEphemeralKey {
             parameters["legacy_customer_ephemeral_key"] = customerEphemeralKey
         }
 
@@ -87,7 +87,7 @@ extension STPAPIClient {
         parameters["type"] = "setup_intent"
         parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
-        if let customerEphemeralKey = customerEphemeralKey {
+        if let customerEphemeralKey {
             parameters["legacy_customer_ephemeral_key"] = customerEphemeralKey
         }
 
