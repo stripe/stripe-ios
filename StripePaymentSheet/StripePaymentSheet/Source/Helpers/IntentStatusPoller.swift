@@ -78,13 +78,13 @@ class IntentStatusPoller {
             // If latest status is different than last known status notify our delegate
             if let paymentIntent = paymentIntent,
                paymentIntent.status != self.lastStatus,
-               (isPolling || forceFetch) { // don't notify our delegate if polling is suspended, could happen if network request is in-flight
+               (self.isPolling || forceFetch) { // don't notify our delegate if polling is suspended, could happen if network request is in-flight
                 self.lastStatus = paymentIntent.status
                 self.delegate?.didUpdate(paymentIntent: paymentIntent)
             }
 
             // If we are actively polling schedule another fetch
-            if isPolling {
+            if self.isPolling {
                 self.retryAfterInterval { [weak self] in
                     self?.fetchStatus()
                 }
