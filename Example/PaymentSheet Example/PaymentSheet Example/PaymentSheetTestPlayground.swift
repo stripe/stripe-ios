@@ -10,9 +10,9 @@ import SwiftUI
 
 @available(iOS 15.0, *)
 struct PaymentSheetTestPlayground: View {
-    @StateObject var playgroundController: PlaygroundController    
+    @StateObject var playgroundController: PlaygroundController
     @State var showingQRSheet = false
-    
+
     init(settings: PaymentSheetTestPlaygroundSettings) {
         _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings))
     }
@@ -60,11 +60,6 @@ struct PaymentSheetTestPlayground: View {
                                 .sheet(isPresented: $showingQRSheet, content: {
                                     QRView(url: playgroundController.settings.base64URL)
                                 })
-                            if #available(iOS 16.0, *) {
-                                ShareLink(item: playgroundController.settings.base64URL) {
-                                    Image(systemName: "square.and.arrow.up")
-                                }
-                            }
                         }
                         SettingView(setting: $playgroundController.settings.mode)
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
