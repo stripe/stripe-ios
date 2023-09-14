@@ -78,6 +78,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var usBankAccount: STPPaymentMethodUSBankAccount?
     /// If this is an Cash App PaymentMethod (i.e. `self.type == STPPaymentMethodTypeCashApp`), this contains additional details.
     @objc private(set) public var cashApp: STPPaymentMethodCashApp?
+    /// If this is an RevolutPay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeRevolutPay`), this contains additional details.
+    @objc private(set) public var revolutPay: STPPaymentMethodRevolutPay?
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
@@ -134,6 +136,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "affirm = \(String(describing: affirm))",
             "usBankAccount = \(String(describing: usBankAccount))",
             "cashapp = \(String(describing: cashApp))",
+            "revolutPay = \(String(describing: revolutPay))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -285,6 +288,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.cashApp = STPPaymentMethodCashApp.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "cashapp")
+        )
+        paymentMethod.revolutPay = STPPaymentMethodRevolutPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "revolut_pay")
         )
 
         return paymentMethod
