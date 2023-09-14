@@ -20,7 +20,7 @@ extension PaymentSheetFormFactory {
         let taxIdElement = TextFieldElement(
             configuration: IDNumberTextFieldConfiguration(
                 type: .BR_CPF_CNPJ,
-                label: STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
+                label: String.Localized.cpf_cpnj
             ),
             theme: theme
         )
