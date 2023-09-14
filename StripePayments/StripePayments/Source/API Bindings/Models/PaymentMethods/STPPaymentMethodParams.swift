@@ -592,7 +592,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             self.klarna = STPPaymentMethodKlarnaParams()
         case .affirm:
             self.affirm = STPPaymentMethodAffirmParams()
-        case .paynow, .zip, .amazonPay, .mobilePay, .konbini:
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini:
             // No parameters
             break
         // All reusable PaymentMethods go below:
@@ -1102,7 +1102,7 @@ extension STPPaymentMethodParams {
             usBankAccount = STPPaymentMethodUSBankAccountParams()
         case .cashApp:
             cashApp = STPPaymentMethodCashAppParams()
-        case .cardPresent, .linkInstantDebit, .paynow, .zip, .revolutPay, .amazonPay, .mobilePay, .konbini:
+        case .cardPresent, .linkInstantDebit, .paynow, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini:
             // These payment methods don't have any params
             break
         case .unknown:
@@ -1180,7 +1180,7 @@ extension STPPaymentMethodParams {
             return "Cash App Pay"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
-        case .paynow, .zip, .revolutPay, .amazonPay, .mobilePay, .konbini:
+        case .paynow, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini:
             // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
             return type.displayName
         @unknown default:

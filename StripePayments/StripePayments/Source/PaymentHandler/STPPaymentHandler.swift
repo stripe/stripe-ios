@@ -642,6 +642,7 @@ public class STPPaymentHandler: NSObject {
             .revolutPay,
             .mobilePay,
             .amazonPay,
+            .alma,
             .konbini:
             return false
 
