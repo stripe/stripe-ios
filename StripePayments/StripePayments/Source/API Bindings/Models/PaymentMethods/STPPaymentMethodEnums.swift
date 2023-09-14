@@ -75,6 +75,8 @@ import Foundation
     case revolutPay
     /// An AmazonPay payment method
     case amazonPay
+    /// An Alma payment method
+    case alma
     /// A MobilePay payment method
     case mobilePay
     /// A Konbini payment method
@@ -151,6 +153,8 @@ import Foundation
             return "Revolut Pay"
         case .amazonPay:
             return "Amazon Pay"
+        case .alma:
+            return "Alma"
         case .mobilePay:
             return "MobilePay"
         case .konbini:
@@ -233,6 +237,8 @@ import Foundation
             return "revolut_pay"
         case .amazonPay:
             return "amazon_pay"
+        case .alma:
+            return "alma"
         case .mobilePay:
             return "mobilepay"
         case .konbini:

@@ -32,6 +32,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case AU = "au"
         case JP = "jp"
         case BR = "br"
+        case FR = "fr"
 
         var publishableKey: String {
             switch self {
@@ -51,6 +52,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingJPPublishableKey
             case .BR:
                 return STPTestingBRPublishableKey
+            case .FR:
+                return STPTestingFRPublishableKey
             }
         }
     }
