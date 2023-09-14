@@ -85,16 +85,14 @@ class IntentStatusPoller {
 
             // If we are actively polling schedule another fetch
             if self.isPolling {
-                self.retryAfterInterval { [weak self] in
-                    self?.fetchStatus()
-                }
+                self.retryAfterInterval()
             }
         }
     }
 
-    private func retryAfterInterval(block: @escaping () -> Void) {
-        nextPollWorkItem = DispatchWorkItem {
-            block()
+    private func retryAfterInterval() {
+        nextPollWorkItem = DispatchWorkItem { [weak self] in
+            self?.fetchStatus()
         }
 
         guard let nextPollWorkItem = nextPollWorkItem else { return }

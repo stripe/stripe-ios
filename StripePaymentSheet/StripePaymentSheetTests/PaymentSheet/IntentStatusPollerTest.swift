@@ -20,15 +20,8 @@ class IntentStatusPollerTest: XCTestCase {
         super.setUp()
         mockIntentRetriever = MockPaymentIntentRetriever()
         mockDelegate = MockIntentStatusPollerDelegate()
-        sut = IntentStatusPoller(retryInterval: 1.0, intentRetriever: mockIntentRetriever, clientSecret: "test_client_secret")
+        sut = IntentStatusPoller(retryInterval: 0.1, intentRetriever: mockIntentRetriever, clientSecret: "test_client_secret")
         sut.delegate = mockDelegate
-    }
-
-    override func tearDown() {
-        sut = nil
-        mockIntentRetriever = nil
-        mockDelegate = nil
-        super.tearDown()
     }
 
     func setExpectations(apiExpectedCount: Int, delegateExpectedCount: Int) {

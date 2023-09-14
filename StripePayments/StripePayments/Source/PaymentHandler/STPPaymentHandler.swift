@@ -1617,10 +1617,13 @@ public class STPPaymentHandler: NSObject {
         )
     }
 
-    /// This method:
-    /// 1. Redirects to an app using url
-    /// 2. Open fallbackURL in a webview if 1) fails
-            ///
+    /// Handles redirection to URLs using a native URL or a fallback URL and updates the current action.
+    /// Redirects to an app if possible, if that fails opens the url in a web view
+    /// - Parameters:
+    ///     - nativeURL: A URL to be opened natively.
+    ///     - fallbackURL: A secondary URL to be attempted if the native URL is not available.
+    ///     - returnURL: The URL to be registered with the `STPURLCallbackHandler`.
+    ///     - completion: A completion block invoked after the URL redirection is handled. The SFSafariViewController used is provided as an argument, if it was used for the redirect.
     func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, completion: ((SFSafariViewController?) -> Void)? = nil) {
         if let redirectShim = _redirectShim, let url = nativeURL ?? fallbackURL {
             redirectShim(url, returnURL, true)
