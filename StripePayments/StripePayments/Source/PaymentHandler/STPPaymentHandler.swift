@@ -605,7 +605,7 @@ public class STPPaymentHandler: NSObject {
     /// because the funds can take up to 14 days to transfer from the customer's bank.
     class func _isProcessingIntentSuccess(for type: STPPaymentMethodType) -> Bool {
         switch type {
-        // Asynchronous
+        // Asynchronous payment methods whose intent.status is 'processing' after handling the next action
         case .SEPADebit,
             .bacsDebit,  // Bacs Debit takes 2-3 business days
             .AUBECSDebit,
@@ -641,7 +641,8 @@ public class STPPaymentHandler: NSObject {
             .zip,
             .revolutPay,
             .mobilePay,
-            .amazonPay:
+            .amazonPay,
+            .konbini:
             return false
 
         case .unknown:
@@ -652,7 +653,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-            func _handleNextAction(
+    func _handleNextAction(
         forPayment paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL returnURLString: String?,
@@ -1339,6 +1340,20 @@ public class STPPaymentHandler: NSObject {
                 // Present the polling view controller behind the web view so we can start polling right away
                 presentingVC.presentPollingVCForAction(action: currentAction, type: .paynow, safariViewController: safariViewController)
             }
+        case .konbiniDisplayDetails:
+            if let hostedVoucherURL = authenticationAction.konbiniDisplayDetails?.hostedVoucherURL {
+                self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
+            } else {
+                currentAction.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: _error(
+                        for: .unsupportedAuthenticationErrorCode,
+                        userInfo: [
+                            "STPIntentAction": authenticationAction.description,
+                        ]
+                    )
+                )
+            }
         @unknown default:
             fatalError()
         }
@@ -1788,6 +1803,7 @@ public class STPPaymentHandler: NSObject {
                 return false
             case .OXXODisplayDetails,
                 .boletoDisplayDetails,
+                .konbiniDisplayDetails,
                 .verifyWithMicrodeposits,
                 .BLIKAuthorize,
                 .upiAwaitNotification:
@@ -1815,7 +1831,7 @@ public class STPPaymentHandler: NSObject {
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
-            .upiAwaitNotification, .cashAppRedirectToApp, .payNowDisplayQrCode:
+            .upiAwaitNotification, .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode:
             break
         @unknown default:
             fatalError()

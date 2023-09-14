@@ -3,10 +3,11 @@
 * [Added] Properties of STPConnectAccountParams are now mutable.
 
 ### PaymentSheet
-* [Added] Support for Alipay, OXXO, and PayNow with PaymentIntents.
 * [Added] Support for Cash App Pay with SetupIntents and PaymentIntents with `setup_future_usage`.
 * [Added] Support for AU BECS Debit with SetupIntents.
-
+* [Added] Support for OXXO with PaymentIntents.
+* [Added] Support for Konbini with PaymentIntents.
+* [Added] Support for PayNow with PaymentIntents.
 
 ### CustomerSheet
 * [Changed] When adding a payment method, and tapping the close button, the newly added payment method was implicitly selected resulting with `.selected(PaymentOptionSelection?)`.  Now, the result will be `.canceled(PaymentOptionSelection?)`.

@@ -197,6 +197,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             verifyWithMicrodeposits: nil,
             cashAppRedirectToApp: nil,
             payNowDisplayQrCode: nil,
+            konbiniDisplayDetails: nil,
             allResponseFields: [:]
         )
         let setupIntent = STPSetupIntent(

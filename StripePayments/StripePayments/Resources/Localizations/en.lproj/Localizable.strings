@@ -49,6 +49,9 @@
 /* Payment Method type brand name */
 "Klarna" = "Klarna";
 
+/* Payment Method type brand name */
+"Konbini" = "Konbini";
+
 /* Link Payment Method type brand name */
 "Link" = "Link";
 

@@ -60,6 +60,8 @@ import Foundation
 
     /// Contains details for displaying the QR code required for PayNow.
     case payNowDisplayQrCode
+    /// Contains instructions for completing Konbini payments.
+    case konbiniDisplayDetails
 
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
@@ -90,6 +92,8 @@ import Foundation
             self = .cashAppRedirectToApp
         case "paynow_display_qr_code":
             self = .payNowDisplayQrCode
+        case "konbini_display_details":
+            self = .konbiniDisplayDetails
         default:
             self = .unknown
         }
@@ -120,6 +124,8 @@ import Foundation
             return "upi_await_notification"
         case .cashAppRedirectToApp:
             return "cashapp_handle_redirect_or_display_qr_code"
+        case .konbiniDisplayDetails:
+            return "konbini_display_details"
         case .unknown:
             break
         case .payNowDisplayQrCode:
@@ -165,6 +171,9 @@ public class STPIntentAction: NSObject {
 
     /// Contains details for displaying the QR code required for PayNow.
     @objc public let payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
+    
+    /// Contains instructions for authenticating a Konbini payment.
+    @objc public let konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
@@ -222,6 +231,10 @@ public class STPIntentAction: NSObject {
             if let payNowDisplayQrCode = payNowDisplayQrCode {
                 props.append("payNowDisplayQrCode = \(payNowDisplayQrCode)")
             }
+        case .konbiniDisplayDetails:
+            if let konbiniDisplayDetails {
+                props.append("konbini_display_details = \(konbiniDisplayDetails)")
+            }
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
             props.append("allResponseFields = \(allResponseFields)")
@@ -241,6 +254,7 @@ public class STPIntentAction: NSObject {
         verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?,
         cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?,
         payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?,
+        konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -253,6 +267,7 @@ public class STPIntentAction: NSObject {
         self.verifyWithMicrodeposits = verifyWithMicrodeposits
         self.cashAppRedirectToApp = cashAppRedirectToApp
         self.payNowDisplayQrCode = payNowDisplayQrCode
+        self.konbiniDisplayDetails = konbiniDisplayDetails
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -282,6 +297,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
         var verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
         var cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
         var payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
+        var konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
 
         switch type {
         case .unknown:
@@ -353,6 +369,13 @@ extension STPIntentAction: STPAPIResponseDecodable {
             if payNowDisplayQrCode == nil {
                 type = .unknown
             }
+        case .konbiniDisplayDetails:
+            konbiniDisplayDetails = STPIntentActionKonbiniDisplayDetails.decodedObject(
+                fromAPIResponse: dict["konbini_display_details"] as? [AnyHashable: Any]
+            )
+            if konbiniDisplayDetails == nil {
+                type = .unknown
+            }
         }
 
         return STPIntentAction(
@@ -366,6 +389,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             verifyWithMicrodeposits: verifyWithMicrodeposits,
             cashAppRedirectToApp: cashAppRedirectToApp,
             payNowDisplayQrCode: payNowDisplayQrCode,
+            konbiniDisplayDetails: konbiniDisplayDetails,
             allResponseFields: dict
         ) as? Self
     }

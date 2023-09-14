@@ -146,7 +146,7 @@ class PaymentSheetFormFactory {
         } else if paymentMethod == .USBankAccount {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         } else if paymentMethod == .UPI {
-            return makeDefaultsApplierWrapper(for: makeUPI())
+            return makeUPI()
         } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
             // special case, display mandate for Cash App when setting up or pi+sfu
             additionalElements = [makeCashAppMandate()]
@@ -156,11 +156,13 @@ class PaymentSheetFormFactory {
         } else if paymentMethod.stpPaymentMethodType == .bancontact {
             return makeBancontact()
         } else if paymentMethod.stpPaymentMethodType == .blik {
-            return makeDefaultsApplierWrapper(for: makeBLIK())
+            return makeBLIK()
         } else if paymentMethod == .externalPayPal {
             return makeExternalPayPal()
         } else if paymentMethod.stpPaymentMethodType == .OXXO {
-            return makeDefaultsApplierWrapper(for: makeOXXO())
+            return  makeOXXO()
+        } else if paymentMethod.stpPaymentMethodType == .konbini {
+            return makeKonbini()
         }
 
         guard let spec = specFromJSONProvider() else {
@@ -504,6 +506,18 @@ extension PaymentSheetFormFactory {
             merchantName: merchantName,
             theme: theme
         )
+    }
+
+    func makeKonbini() -> PaymentMethodElement {
+        let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: true, emailRequiredByPaymentMethod: true, phoneRequiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let konbiniPhoneNumber = PaymentMethodElementWrapper(TextFieldElement.makeKonbini(theme: theme)) { textField, params in
+            params.confirmPaymentMethodOptions.konbiniOptions = .init()
+            params.confirmPaymentMethodOptions.konbiniOptions?.confirmationNumber = textField.text
+            return params
+        }
+        let elements = [contactInfoSection, konbiniPhoneNumber, billingDetails].compactMap { $0 }
+        return FormElement(autoSectioningElements: elements, theme: theme)
     }
 
     func makeExternalPayPal() -> PaymentMethodElement {
