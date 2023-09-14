@@ -41,7 +41,7 @@ final class PaymentSheetLoader {
                 let intent = try await _intent
 
                 // List the Customer's saved PaymentMethods
-                async let savedPaymentMethods = getPaymentMethodsStrategy(intent: intent, configuration: configuration)
+                async let savedPaymentMethods = getSavedPaymentMethods(intent: intent, configuration: configuration)
 
                 // Overwrite the form specs that were already loaded from disk
                 switch intent {
@@ -59,7 +59,7 @@ final class PaymentSheetLoader {
 
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                 // TODO: Use v1/elements/sessions to fetch saved PMS https://jira.corp.stripe.com/browse/MOBILESDK-964
-                let filteredSavedPaymentMethods = try await savedPaymentMethods.value
+                let filteredSavedPaymentMethods = try await savedPaymentMethods
                     .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
                     .filter {
                         $0.paymentSheetPaymentMethodType().supportsSavedPaymentMethod(
@@ -197,15 +197,13 @@ final class PaymentSheetLoader {
         return ephemeralKey
     }
 
-    static func getPaymentMethodsStrategy(intent: Intent, configuration: PaymentSheet.Configuration) -> Task<[STPPaymentMethod], Error> {
+    static func getSavedPaymentMethods(intent: Intent, configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
         if let saved = getPaymentMethodsFrom(intent: intent) {
-            return Task {
-                saved
-            }
+            return saved
         } else {
-            return Task {
-                return try await fetchSavedPaymentMethods(configuration: configuration)
-            }
+            // If getting payment methods from elements/sessions fails,
+            // fall back to fetching the saved PMs in the public API
+            return try await fetchSavedPaymentMethods(configuration: configuration)
         }
     }
 
@@ -215,20 +213,20 @@ final class PaymentSheetLoader {
             let dict = underlyingIntent.allResponseFields
             if STPElementsCustomerError.decodedObject(fromAPIResponse: dict) != nil {
                 return nil
-            } else if let legacyElementsCustomer = STPLegacyElementsCustomer.decodedObject(fromAPIResponse: dict) {
+            } else if let legacyElementsCustomer = STPElementsCustomerInformation.decodedObject(fromAPIResponse: dict) {
                 return legacyElementsCustomer.paymentMethods
             }
         case .setupIntent(let underlyingIntent):
             let dict = underlyingIntent.allResponseFields
             if STPElementsCustomerError.decodedObject(fromAPIResponse: dict) != nil{
                 return nil
-            } else if let legacyElementsCustomer = STPLegacyElementsCustomer.decodedObject(fromAPIResponse: dict) {
+            } else if let legacyElementsCustomer = STPElementsCustomerInformation.decodedObject(fromAPIResponse: dict) {
                 return legacyElementsCustomer.paymentMethods
             }
         case .deferredIntent(let elementsSession, _):
             if elementsSession.customerError != nil{
                 return nil
-            } else if let payment_methods = elementsSession.legacyCustomer?.paymentMethods {
+            } else if let payment_methods = elementsSession.elementsCustomerInformation?.paymentMethods {
                 return payment_methods
             }
         }

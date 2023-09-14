@@ -139,7 +139,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
         if let customer_error = elementSession.customerError {
             throw CustomerSheetError.errorFetchingSavedPaymentMethods(customer_error)
         }
-        return elementSession.legacyCustomer?.paymentMethods ?? []
+        return elementSession.elementsCustomerInformation?.paymentMethods ?? []
     }
 
     open func attachPaymentMethod(_ paymentMethodId: String) async throws {

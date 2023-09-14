@@ -6,7 +6,7 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-final class STPLegacyElementsCustomer: NSObject {
+final class STPElementsCustomerInformation: NSObject {
     let paymentMethods: [STPPaymentMethod]?
 
     let allResponseFields: [AnyHashable: Any]
@@ -14,7 +14,7 @@ final class STPLegacyElementsCustomer: NSObject {
     /// :nodoc:
     @objc public override var description: String {
         let props: [String] = [
-            String(format: "%@: %p", NSStringFromClass(STPLegacyElementsCustomer.self), self),
+            String(format: "%@: %p", NSStringFromClass(STPElementsCustomerInformation.self), self),
             "paymentMethods = \(String(describing: paymentMethods))",
         ]
 
@@ -32,7 +32,7 @@ final class STPLegacyElementsCustomer: NSObject {
 }
 
 // MARK: - STPAPIResponseDecodable
-extension STPLegacyElementsCustomer: STPAPIResponseDecodable {
+extension STPElementsCustomerInformation: STPAPIResponseDecodable {
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let paymentMethodPrefDict = dict["legacy_customer"] as? [AnyHashable: Any],
@@ -40,7 +40,7 @@ extension STPLegacyElementsCustomer: STPAPIResponseDecodable {
             return nil
         }
         let paymentMethods = savedPaymentMethods.compactMap { STPPaymentMethod.decodedObject(fromAPIResponse: $0) }
-        return STPLegacyElementsCustomer(
+        return STPElementsCustomerInformation(
             allResponseFields: dict,
             paymentMethods: paymentMethods
         ) as? Self
