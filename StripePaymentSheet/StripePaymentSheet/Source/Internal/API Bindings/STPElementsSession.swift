@@ -34,8 +34,8 @@ final class STPElementsSession: NSObject {
     /// An object containing Customer's saved payment methods information
     let elementsCustomerInformation: STPElementsCustomerInformation?
 
-    /// An error associated with operations surrounding elementsCustomerInformation
-    let customerError: STPElementsCustomerError?
+    /// An error associated with operations surrounding STPElementsCustomerInformation
+    let customerError: Error?
 
     let allResponseFields: [AnyHashable: Any]
 
@@ -68,7 +68,7 @@ final class STPElementsSession: NSObject {
         linkSettings: LinkSettings?,
         paymentMethodSpecs: [[AnyHashable: Any]]?,
         elementsCustomerInformation: STPElementsCustomerInformation?,
-        customerError: STPElementsCustomerError?
+        customerError: Error?
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -108,7 +108,15 @@ extension STPElementsSession: STPAPIResponseDecodable {
             ),
             paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]],
             elementsCustomerInformation: STPElementsCustomerInformation.decodedObject(fromAPIResponse: dict),
-            customerError: STPElementsCustomerError.decodedObject(fromAPIResponse: dict)
+            customerError: decodedCustomerErrorObject(fromAPIResponse: dict["customer_error"] as? [AnyHashable: Any])
         ) as? Self
+    }
+
+    public static func decodedCustomerErrorObject(fromAPIResponse response: [AnyHashable: Any]?) -> Error? {
+        guard let dict = response,
+              let errorMessage = dict["customer_error"] as? String else {
+            return nil
+        }
+        return PaymentSheetError.fetchSavedPaymentMethodsViaElementsFailure(message: errorMessage)
     }
 }

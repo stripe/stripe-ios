@@ -7,7 +7,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 final class STPElementsCustomerInformation: NSObject {
-    let paymentMethods: [STPPaymentMethod]?
+    let paymentMethods: [STPPaymentMethod]
 
     let allResponseFields: [AnyHashable: Any]
 
@@ -23,7 +23,7 @@ final class STPElementsCustomerInformation: NSObject {
 
     private init(
         allResponseFields: [AnyHashable: Any],
-        paymentMethods: [STPPaymentMethod]?
+        paymentMethods: [STPPaymentMethod]
     ) {
         self.allResponseFields = allResponseFields
         self.paymentMethods = paymentMethods
@@ -35,7 +35,7 @@ final class STPElementsCustomerInformation: NSObject {
 extension STPElementsCustomerInformation: STPAPIResponseDecodable {
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
-            let paymentMethodPrefDict = dict["legacy_customer"] as? [AnyHashable: Any],
+              let paymentMethodPrefDict = dict["legacy_customer"] as? [AnyHashable: Any],
               let savedPaymentMethods = paymentMethodPrefDict["payment_methods"] as? [[AnyHashable: Any]] else {
             return nil
         }

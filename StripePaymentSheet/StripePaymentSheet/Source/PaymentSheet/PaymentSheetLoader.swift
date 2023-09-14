@@ -203,27 +203,12 @@ final class PaymentSheetLoader {
     static func getPaymentMethodsFrom(intent: Intent) -> [STPPaymentMethod]? {
         switch intent {
         case .paymentIntent(let underlyingIntent):
-            let dict = underlyingIntent.allResponseFields
-            if STPElementsCustomerError.decodedObject(fromAPIResponse: dict) != nil {
-                return nil
-            } else if let elementsCustomerInformation = STPElementsCustomerInformation.decodedObject(fromAPIResponse: dict) {
-                return elementsCustomerInformation.paymentMethods
-            }
+            return STPElementsCustomerInformation.decodedObject(fromAPIResponse: underlyingIntent.allResponseFields)?.paymentMethods
         case .setupIntent(let underlyingIntent):
-            let dict = underlyingIntent.allResponseFields
-            if STPElementsCustomerError.decodedObject(fromAPIResponse: dict) != nil{
-                return nil
-            } else if let elementsCustomerInformation = STPElementsCustomerInformation.decodedObject(fromAPIResponse: dict) {
-                return elementsCustomerInformation.paymentMethods
-            }
+            return STPElementsCustomerInformation.decodedObject(fromAPIResponse: underlyingIntent.allResponseFields)?.paymentMethods
         case .deferredIntent(let elementsSession, _):
-            if elementsSession.customerError != nil{
-                return nil
-            } else if let payment_methods = elementsSession.elementsCustomerInformation?.paymentMethods {
-                return payment_methods
-            }
+            return elementsSession.elementsCustomerInformation?.paymentMethods
         }
-        return nil
     }
 
     static func fetchSavedPaymentMethods(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
