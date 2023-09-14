@@ -193,4 +193,8 @@ extension String.Localized {
     static var contact_information: String {
         STPLocalizedString("Contact information", "Title for the contact information section")
     }
+
+    static var cpf_cpnj: String {
+        STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
+    }
 }

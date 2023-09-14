@@ -126,7 +126,7 @@ extension STPPaymentMethodType {
     /// light/dark agnostic icons
     var iconRequiresTinting: Bool {
         switch self {
-        case .card, .AUBECSDebit, .USBankAccount, .linkInstantDebit, .konbini:
+        case .card, .AUBECSDebit, .USBankAccount, .linkInstantDebit, .konbini, .boleto:
             return true
         default:
             return false
@@ -175,6 +175,8 @@ extension STPPaymentMethodType {
                     return .pm_type_oxxo
                 case .konbini:
                     return .pm_type_konbini
+                case .boleto:
+                    return .pm_type_boleto
                 default:
                     return nil
                 }
