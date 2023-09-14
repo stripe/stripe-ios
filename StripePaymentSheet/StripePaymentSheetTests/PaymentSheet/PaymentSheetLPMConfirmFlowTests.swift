@@ -168,16 +168,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             XCTAssertEqual(form.getAllSubElements().count, 1)
         }
     }
-    
-    func testAlmaConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent],
-                               currency: "EUR",
-                               paymentMethodType: .dynamic("alma"),
-                               merchantCountry: .FR) { form in
-            // AmazonPay has no input fields
-            XCTAssertEqual(form.getAllSubElements().count, 1)
-        }
-    }
 
     func testAlipayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],

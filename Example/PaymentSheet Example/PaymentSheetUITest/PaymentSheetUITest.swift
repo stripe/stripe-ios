@@ -604,6 +604,8 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
     func testAlmaPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .eur
+        settings.merchantCountryCode = .FR
         settings.customerMode = .new
         settings.apmsEnabled = .off
         loadPlayground(
@@ -611,14 +613,14 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
             settings
         )
         app.buttons["Present PaymentSheet"].tap()
-        let payButton = app.buttons["Pay $50.99"]
+        let payButton = app.buttons["Pay €50.99"]
 
-        // Select Amazon Pay
-        guard let amazonPay = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Amazon Pay") else {
+        // Select Alma
+        guard let alma = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Alma") else {
             XCTFail()
             return
         }
-        amazonPay.tap()
+        alma.tap()
 
         XCTAssertTrue(payButton.isEnabled)
 
