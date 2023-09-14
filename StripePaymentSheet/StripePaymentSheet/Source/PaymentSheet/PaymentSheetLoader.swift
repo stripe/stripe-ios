@@ -213,15 +213,15 @@ final class PaymentSheetLoader {
             let dict = underlyingIntent.allResponseFields
             if STPElementsCustomerError.decodedObject(fromAPIResponse: dict) != nil {
                 return nil
-            } else if let legacyElementsCustomer = STPElementsCustomerInformation.decodedObject(fromAPIResponse: dict) {
-                return legacyElementsCustomer.paymentMethods
+            } else if let elementsCustomerInformation = STPElementsCustomerInformation.decodedObject(fromAPIResponse: dict) {
+                return elementsCustomerInformation.paymentMethods
             }
         case .setupIntent(let underlyingIntent):
             let dict = underlyingIntent.allResponseFields
             if STPElementsCustomerError.decodedObject(fromAPIResponse: dict) != nil{
                 return nil
-            } else if let legacyElementsCustomer = STPElementsCustomerInformation.decodedObject(fromAPIResponse: dict) {
-                return legacyElementsCustomer.paymentMethods
+            } else if let elementsCustomerInformation = STPElementsCustomerInformation.decodedObject(fromAPIResponse: dict) {
+                return elementsCustomerInformation.paymentMethods
             }
         case .deferredIntent(let elementsSession, _):
             if elementsSession.customerError != nil{

@@ -1,5 +1,5 @@
 //
-//  STPLegacyElementsCustomer.swift
+//  STPElementsCustomerInformation.swift
 //  StripePaymentSheet
 //
 
