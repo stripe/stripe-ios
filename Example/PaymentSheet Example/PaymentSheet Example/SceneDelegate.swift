@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
                 if #available(iOS 15.0, *) {
                     // In this case, we'll pass it to the playground for test configuration.
-                    if url.host == "playground" {
+                    if url.scheme == "stp-paymentsheet-playground" {
                         launchWith(base64String: url.query!)
                     }
                 }

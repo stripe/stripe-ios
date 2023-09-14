@@ -32,6 +32,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case AU = "au"
         case JP = "jp"
         case BR = "br"
+        case FR = "fr"
 
         var publishableKey: String {
             switch self {
@@ -51,6 +52,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingJPPublishableKey
             case .BR:
                 return STPTestingBRPublishableKey
+            case .FR:
+                return STPTestingFRPublishableKey
             }
         }
     }
@@ -165,6 +168,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                                paymentMethodType: .dynamic("amazon_pay"),
                                merchantCountry: .US) { form in
             // AmazonPay has no input fields
+            XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
+
+    func testAlmaConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .dynamic("alma"),
+                               merchantCountry: .FR) { form in
+            // Alma has no input fields
             XCTAssertEqual(form.getAllSubElements().count, 1)
         }
     }

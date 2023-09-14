@@ -755,11 +755,11 @@
         "type": "amazon_pay",
         "async": false,
         "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-96e2ad49ffa7c7536dec91adaf68e898.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-711d254c9501ae4678f0046e7bb5e615.svg",
-            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-fca78ef1a93824996126dfda200a8ec4.png",
-            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-c928196e96115312f12ed07796272320.svg"
-        },
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-5694f2030b236ad5410b5b7e52bb538c.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-f932bc37514fd6dd1f66006767287085.svg",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-9e42e4498e0bee515c423ef66010852f.png",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-d3ef2eeefed43cea1f969c3a2a4118d8.svg"
+            },
         "fields": [
         ],
         "next_action_spec": {
@@ -778,6 +778,33 @@
             }
         }
     },
+    {
+        "type": "alma",
+        "async": false,
+        "selector_icon": {
+          "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-9adee7a095478e23c76054e7fcb4c275.png",
+          "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-e4cbf3b2cec6b09cb0fd10d404fbbf44.svg",
+          "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-41fe66ba84194788e98548aa6e749c79.png",
+          "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-74fb7ea51cccf2e1dd530f308bed9c60.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+          "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },   
     {
         "type": "mobilepay",
         "async": false,

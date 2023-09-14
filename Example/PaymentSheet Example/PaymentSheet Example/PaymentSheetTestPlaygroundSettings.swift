@@ -273,6 +273,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         return jsonData.base64EncodedString()
     }
 
+    var base64URL: URL {
+        URL(string: "stp-paymentsheet-playground://?\(base64Data)")!
+    }
+
     static func fromBase64<T: Decodable>(base64: String, className: T.Type) -> T? {
         if let base64Data = base64.data(using: .utf8),
            let data = Data(base64Encoded: base64Data),
