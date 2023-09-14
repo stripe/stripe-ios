@@ -980,6 +980,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         )
 
         app.buttons["Present PaymentSheet"].tap()
+        let payButton = app.buttons["Pay SGD 50.99"]
 
         // Select PayNow
         guard let payNow = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PayNow")
@@ -990,7 +991,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         payNow.tap()
 
         // Attempt payment
-        XCTAssertTrue(app.buttons["Pay SGD 50.99"].waitForExistenceAndTap(timeout: 5.0))
+        payButton.tap()
 
         // Close the webview, no need to see the successful pay
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
