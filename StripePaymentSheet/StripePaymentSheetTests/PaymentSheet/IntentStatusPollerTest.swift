@@ -10,6 +10,7 @@ import StripePaymentsTestUtils
 import XCTest
 
 class IntentStatusPollerTest: XCTestCase {
+    let retryInterval = 0.1
     var sut: IntentStatusPoller!
     var mockIntentRetriever: MockPaymentIntentRetriever!
     var mockDelegate: MockIntentStatusPollerDelegate!
@@ -20,7 +21,7 @@ class IntentStatusPollerTest: XCTestCase {
         super.setUp()
         mockIntentRetriever = MockPaymentIntentRetriever()
         mockDelegate = MockIntentStatusPollerDelegate()
-        sut = IntentStatusPoller(retryInterval: 0.1, intentRetriever: mockIntentRetriever, clientSecret: "test_client_secret")
+        sut = IntentStatusPoller(retryInterval: retryInterval, intentRetriever: mockIntentRetriever, clientSecret: "test_client_secret")
         sut.delegate = mockDelegate
     }
 
@@ -44,7 +45,7 @@ class IntentStatusPollerTest: XCTestCase {
 
         sut.beginPolling()
 
-        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: 5.0)
+        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: (retryInterval * 2) * 3) // longer timeout for 3 polls
         XCTAssertEqual(mockDelegate.latestPaymentIntent?.status, .requiresPaymentMethod)
 
         sut.suspendPolling() // We should no longer notify the delegate or call the API
@@ -55,7 +56,7 @@ class IntentStatusPollerTest: XCTestCase {
         delegateExpectation.isInverted = true
         mockIntentRetriever.mockedStatus = .succeeded
 
-        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: 5.0)
+        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: retryInterval * 2)
         // delegate should not have been notified of succeeded since polling was suspended
         XCTAssertEqual(mockDelegate.latestPaymentIntent?.status, .requiresPaymentMethod)
 
@@ -63,7 +64,7 @@ class IntentStatusPollerTest: XCTestCase {
         setExpectations(apiExpectedCount: 1, delegateExpectedCount: 1)
         sut.beginPolling()
 
-        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: 5.0)
+        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: retryInterval * 2)
         XCTAssertEqual(mockDelegate.latestPaymentIntent?.status, .succeeded)
     }
 
@@ -74,7 +75,7 @@ class IntentStatusPollerTest: XCTestCase {
         sut.pollOnce()
 
         // API client should be called and delegate should be notified of the new status since updating from .unknown`
-        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: 5.0)
+        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: retryInterval * 2)
         XCTAssertEqual(mockDelegate.latestPaymentIntent?.status, .requiresPaymentMethod)
     }
 }
