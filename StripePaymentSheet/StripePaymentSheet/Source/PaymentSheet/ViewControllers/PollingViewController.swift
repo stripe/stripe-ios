@@ -35,7 +35,7 @@ class PollingViewController: UIViewController {
               let clientSecret = currentAction.paymentIntent?.clientSecret else { fatalError() }
 
         let intentPoller = IntentStatusPoller(retryInterval: viewModel.retryInterval,
-                                              apiClient: currentAction.apiClient,
+                                              intentRetriever: currentAction.apiClient,
                                               clientSecret: clientSecret)
         intentPoller.delegate = self
         return intentPoller
@@ -292,7 +292,7 @@ class PollingViewController: UIViewController {
         // Do one last force poll after deadline
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self = self else { return }
-            self.intentPoller.fetchStatus(forceFetch: true)
+            self.intentPoller.pollOnce()
         }
     }
 

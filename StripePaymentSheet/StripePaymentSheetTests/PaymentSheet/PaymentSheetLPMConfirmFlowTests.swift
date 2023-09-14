@@ -396,7 +396,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
         guard let currentAction = action as? STPPaymentHandlerPaymentIntentActionParams else { return }
         // Simulate that the intent transitioned to succeeded
         // If we don't update the status to succeeded, completing the action with .succeeded may fail due to invalid state
-        currentAction.paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [type.identifier], status: "succeeded")
+        currentAction.paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
         currentAction.complete(with: .succeeded, error: nil)
     }
 }
