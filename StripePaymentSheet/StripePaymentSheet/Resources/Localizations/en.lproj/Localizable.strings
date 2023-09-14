@@ -76,6 +76,9 @@
 /* Title for the contact information section */
 "Contact information" = "Contact information";
 
+/* Label for CPF/CPNJ (Brazil tax ID) field */
+"CPF/CPNJ" = "CPF/CPNJ";
+
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
 

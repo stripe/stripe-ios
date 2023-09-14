@@ -32,6 +32,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case MX = "mex"  // The CI Backend uses "mex" instead of "mx"
         case AU = "au"
         case JP = "jp"
+        case BR = "br"
 
         var publishableKey: String {
             switch self {
@@ -49,6 +50,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingAUPublishableKey
             case .JP:
                 return STPTestingJPPublishableKey
+            case .BR:
+                return STPTestingBRPublishableKey
             }
         }
     }
@@ -204,6 +207,23 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                                merchantCountry: .SG) { form in
             // PayNow has no input fields
             XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
+    
+    func testBoletoConfirmFlows() async throws {
+        try await _testConfirm(
+            intentKinds: [.paymentIntent],
+            currency: "BRL",
+            paymentMethodType: .dynamic("boleto"),
+            merchantCountry: .BR
+        ) { form in
+            form.getTextFieldElement("Full name")?.setText("Jane Doe")
+            form.getTextFieldElement("Email")?.setText("foo@bar.com")
+            form.getTextFieldElement("CPF/CPNJ")?.setText("00000000000")
+            form.getTextFieldElement("Address line 1")?.setText("123 fake st")
+            form.getTextFieldElement("City")?.setText("City")
+            form.getTextFieldElement("State")?.setText("AC")  // Valid Brazilian state code
+            form.getTextFieldElement("Postal code")?.setText("11111111")
         }
     }
 }

@@ -918,6 +918,56 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 
+    func testBoletoPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .BR
+        settings.currency = .brl
+        settings.apmsEnabled = .off
+        settings.allowsDelayedPMs = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        guard let boleto = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Boleto") else {
+            XCTFail()
+            return
+        }
+        boleto.tap()
+
+        let name = app.textFields["Full name"]
+        name.tap()
+        app.typeText("Jane Doe")
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+        app.typeText("foo@bar.com")
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+        app.typeText("00000000000")
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+        app.typeText("123 fake st")
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+        app.typeText("City")
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+        app.typeText("AC")  // Valid brazilian state code.
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+        app.typeText("11111111")
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+
+        let payButton = app.buttons["Pay R$50.99"]
+        XCTAssertTrue(payButton.isEnabled)
+        payButton.tap()
+
+        // Just check that a web view exists after tapping buy.
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
+
     func testPayNowPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer
@@ -940,7 +990,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         payNow.tap()
 
         // Attempt payment
-        XCTAssertTrue(app.buttons["Pay SGD 50.99"].waitForExistenceAndTap(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Pay SGD 50.99"].waitForExistenceAndTap(timeout: 5.0))
 
         // Close the webview, no need to see the successful pay
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]

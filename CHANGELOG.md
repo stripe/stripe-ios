@@ -8,6 +8,7 @@
 * [Added] Support for OXXO with PaymentIntents.
 * [Added] Support for Konbini with PaymentIntents.
 * [Added] Support for PayNow with PaymentIntents.
+* [Added] Support for Boleto with PaymentIntents.
 
 ### CustomerSheet
 * [Changed] When adding a payment method, and tapping the close button, the newly added payment method was implicitly selected resulting with `.selected(PaymentOptionSelection?)`.  Now, the result will be `.canceled(PaymentOptionSelection?)`.
