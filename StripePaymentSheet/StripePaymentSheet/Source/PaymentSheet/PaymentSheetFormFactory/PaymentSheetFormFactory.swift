@@ -146,7 +146,7 @@ class PaymentSheetFormFactory {
         } else if paymentMethod == .USBankAccount {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         } else if paymentMethod == .UPI {
-            return makeDefaultsApplierWrapper(for: makeUPI())
+            return makeUPI()
         } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
             // special case, display mandate for Cash App when setting up or pi+sfu
             additionalElements = [makeCashAppMandate()]
@@ -156,11 +156,11 @@ class PaymentSheetFormFactory {
         } else if paymentMethod.stpPaymentMethodType == .bancontact {
             return makeBancontact()
         } else if paymentMethod.stpPaymentMethodType == .blik {
-            return makeDefaultsApplierWrapper(for: makeBLIK())
+            return makeBLIK()
         } else if paymentMethod == .externalPayPal {
             return makeExternalPayPal()
         } else if paymentMethod.stpPaymentMethodType == .OXXO {
-            return makeDefaultsApplierWrapper(for: makeOXXO())
+            return  makeOXXO()
         }
 
         guard let spec = specFromJSONProvider() else {
