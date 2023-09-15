@@ -322,7 +322,7 @@ extension PaymentSheet {
                         return []
                     case .payPal, .cashApp, .revolutPay:
                         return [.returnURL]
-                    case .USBankAccount:
+                    case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
                     case .sofort, .iDEAL, .bancontact:
                         // n.b. While sofort, iDEAL, and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
@@ -332,7 +332,7 @@ extension PaymentSheet {
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .klarna, .link, .linkInstantDebit,
                         .affirm, .paynow, .zip, .amazonPay, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay:
                         return [.unsupportedForSetup]
                     @unknown default:
