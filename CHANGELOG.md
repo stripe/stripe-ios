@@ -9,6 +9,7 @@
 * [Added] Support for OXXO with PaymentIntents.
 * [Added] Support for Konbini with PaymentIntents.
 * [Added] Support for PayNow with PaymentIntents.
+* [Added] Support for PromptPay with PaymentIntents.
 * [Added] Support for Boleto with PaymentIntents.
 * [Added] Support for External Payment Method as an invite-only private beta.
 * [Added] Support for RevolutPay with SetupIntents and PaymentIntents with setup_future_usage (private beta). Note: PaymentSheet doesn't display saved this as a saved payment methods yet.

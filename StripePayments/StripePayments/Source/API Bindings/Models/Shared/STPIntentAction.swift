@@ -64,6 +64,9 @@ import Foundation
     /// Contains instructions for completing Konbini payments.
     case konbiniDisplayDetails
 
+    /// Contains details for displaying the QR code required for PromptPay.
+    case promptpayDisplayQrCode
+
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the `next_action.type`
@@ -95,6 +98,8 @@ import Foundation
             self = .payNowDisplayQrCode
         case "konbini_display_details":
             self = .konbiniDisplayDetails
+        case "promptpay_display_qr_code":
+            self = .promptpayDisplayQrCode
         default:
             self = .unknown
         }
@@ -131,6 +136,8 @@ import Foundation
             break
         case .payNowDisplayQrCode:
             return "paynow_display_qr_code"
+        case .promptpayDisplayQrCode:
+            return "promptpay_display_qr_code"
         }
 
         // catch any unknown values here
@@ -175,6 +182,9 @@ public class STPIntentAction: NSObject {
 
     /// Contains instructions for authenticating a Konbini payment.
     @objc public let konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
+
+    /// Contains details for displaying the QR code required for PromptPay.
+    @objc public let promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
@@ -236,6 +246,10 @@ public class STPIntentAction: NSObject {
             if let konbiniDisplayDetails {
                 props.append("konbini_display_details = \(konbiniDisplayDetails)")
             }
+        case .promptpayDisplayQrCode:
+            if let promptPayDisplayQrCode = promptPayDisplayQrCode {
+                props.append("promptpayDisplayQrCode = \(promptPayDisplayQrCode)")
+            }
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
             props.append("allResponseFields = \(allResponseFields)")
@@ -256,6 +270,7 @@ public class STPIntentAction: NSObject {
         cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?,
         payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?,
         konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?,
+        promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -269,6 +284,7 @@ public class STPIntentAction: NSObject {
         self.cashAppRedirectToApp = cashAppRedirectToApp
         self.payNowDisplayQrCode = payNowDisplayQrCode
         self.konbiniDisplayDetails = konbiniDisplayDetails
+        self.promptPayDisplayQrCode = promptPayDisplayQrCode
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -299,6 +315,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
         var cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
         var payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
         var konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
+        var promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?
 
         switch type {
         case .unknown:
@@ -377,6 +394,13 @@ extension STPIntentAction: STPAPIResponseDecodable {
             if konbiniDisplayDetails == nil {
                 type = .unknown
             }
+        case .promptpayDisplayQrCode:
+            promptPayDisplayQrCode = STPIntentActionPromptPayDisplayQrCode.decodedObject(
+                fromAPIResponse: dict["promptpay_display_qr_code"] as? [AnyHashable: Any]
+            )
+            if promptPayDisplayQrCode == nil {
+                type = .unknown
+            }
         }
 
         return STPIntentAction(
@@ -391,6 +415,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             cashAppRedirectToApp: cashAppRedirectToApp,
             payNowDisplayQrCode: payNowDisplayQrCode,
             konbiniDisplayDetails: konbiniDisplayDetails,
+            promptPayDisplayQrCode: promptPayDisplayQrCode,
             allResponseFields: dict
         ) as? Self
     }
