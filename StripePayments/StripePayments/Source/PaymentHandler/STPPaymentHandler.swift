@@ -643,7 +643,7 @@ public class STPPaymentHandler: NSObject {
             .mobilePay,
             .amazonPay,
             .alma,
-            .konbini:
+            .konbini,
             .promptPay:
             return false
 

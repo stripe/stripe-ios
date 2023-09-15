@@ -63,7 +63,7 @@ import Foundation
 
     /// Contains instructions for completing Konbini payments.
     case konbiniDisplayDetails
-    
+
     /// Contains details for displaying the QR code required for PromptPay.
     case promptpayDisplayQrCode
 
@@ -182,7 +182,7 @@ public class STPIntentAction: NSObject {
 
     /// Contains instructions for authenticating a Konbini payment.
     @objc public let konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
-    
+
     /// Contains details for displaying the QR code required for PromptPay.
     @objc public let promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?
 

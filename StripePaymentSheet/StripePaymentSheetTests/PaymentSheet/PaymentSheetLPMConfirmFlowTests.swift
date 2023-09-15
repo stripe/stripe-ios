@@ -242,7 +242,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             form.getTextFieldElement("Postal code")?.setText("11111111")
         }
     }
-    
+
     func testPromptPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "THB",
