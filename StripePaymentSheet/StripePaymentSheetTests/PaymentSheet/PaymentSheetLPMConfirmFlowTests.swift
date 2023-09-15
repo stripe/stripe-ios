@@ -228,7 +228,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
 
     func testBoletoConfirmFlows() async throws {
         try await _testConfirm(
-            intentKinds: [.paymentIntent],
+            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
             currency: "BRL",
             paymentMethodType: .dynamic("boleto"),
             merchantCountry: .BR
