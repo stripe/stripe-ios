@@ -9,7 +9,7 @@ import XCTest
 
 class STPPaymentMethodRevolutPayTests: XCTestCase {
 
-    static let revolutPayPaymentIntentClientSecret = "pi_3NqNtpGoesj9fw9Q0BtxFWyY_secret_JQt5EYOtXT0i5mN1Ti9aUtkq3"
+    static let revolutPayPaymentIntentClientSecret = "pi_3NqgBBGoesj9fw9Q1TkY7iBp_secret_Ha7VfLCwaAuhEOshZiNnIDjh6"
 
     func _retrieveRevolutPayJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingGBPublishableKey)
