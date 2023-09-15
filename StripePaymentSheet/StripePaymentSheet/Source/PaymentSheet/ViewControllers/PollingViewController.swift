@@ -230,6 +230,7 @@ class PollingViewController: UIViewController {
 
     @objc func didTapCancel() {
         dismiss {
+            // Wait a short amount of time before completing the action to ensure smooth animations
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 self.currentAction.complete(with: .canceled, error: nil)
             }
@@ -348,6 +349,7 @@ extension PollingViewController: IntentStatusPollerDelegate {
             setErrorStateWorkItem.cancel() // cancel the error work item incase it was scheduled
             currentAction.paymentIntent = paymentIntent // update the local copy of the intent with the latest from the server
             dismiss {
+                // Wait a short amount of time before completing the action to ensure smooth animations
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self.currentAction.complete(with: .succeeded, error: nil)
                 }
