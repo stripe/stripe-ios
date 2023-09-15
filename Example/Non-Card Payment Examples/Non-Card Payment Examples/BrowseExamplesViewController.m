@@ -47,7 +47,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 26;
+    return 27;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -130,6 +130,9 @@
             break;
         case 25:
             cell.textLabel.text = @"PayPal";
+            break;
+        case 26:
+            cell.textLabel.text = @"RevolutPay";
             break;
     }
     return cell;
@@ -297,6 +300,12 @@
         }
         case 25: {
             PayPalExampleViewController *exampleVC = [PayPalExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 26: {
+            RevolutPayExampleViewController *exampleVC = [RevolutPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

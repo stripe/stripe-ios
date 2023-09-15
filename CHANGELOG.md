@@ -2,6 +2,7 @@
 ### Payments
 * [Added] Properties of STPConnectAccountParams are now mutable.
 * [Changed] Fixed STPConnectAccountCompanyParams.address being force unwrapped. It's now optional.
+* [Added] Support for RevolutPay bindings
 
 ### PaymentSheet
 * [Added] Support for Cash App Pay with SetupIntents and PaymentIntents with `setup_future_usage`.
