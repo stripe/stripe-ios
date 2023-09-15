@@ -34,6 +34,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case JP = "jp"
         case BR = "br"
         case FR = "fr"
+        case TH = "th"
 
         var publishableKey: String {
             switch self {
@@ -55,6 +56,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingBRPublishableKey
             case .FR:
                 return STPTestingFRPublishableKey
+            case .TH:
+                return STPTestingTHPublishableKey
             }
         }
     }
@@ -237,6 +240,15 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             form.getTextFieldElement("City")?.setText("City")
             form.getTextFieldElement("State")?.setText("AC")  // Valid Brazilian state code
             form.getTextFieldElement("Postal code")?.setText("11111111")
+        }
+    }
+
+    func testPromptPayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "THB",
+                               paymentMethodType: .dynamic("promptpay"),
+                               merchantCountry: .TH) { form in
+            form.getTextFieldElement("Email")?.setText("foo@bar.com")
         }
     }
 }

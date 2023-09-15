@@ -995,5 +995,35 @@
         "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark-d700c844535c608fd5fd4048f6a21146.svg"
       },
       "fields": []
+    },
+    {
+      "type": "promptpay",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/promptpay.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay-8bc83c76f38f2a4d3a5f64b6229450dd.svg",
+        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay_dark-dfd2904083152023d89a8300f04a666f.svg"
+      },
+      "fields": [
+        {
+          "type": "placeholder",
+          "for": "name"
+        },
+        {
+          "type": "email",
+          "api_path": {
+            "v1": "billing_details[email]"
+          }
+        },
+        {
+          "type": "placeholder",
+          "for": "phone"
+        },
+        {
+          "type": "placeholder",
+          "for": "billing_address"
+        }
+      ]
     }
+
 ]

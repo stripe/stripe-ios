@@ -40,6 +40,9 @@ static NSString * const STPTestingJPPublishableKey =
 // Test account in France
 static NSString * const STPTestingFRPublishableKey =
     @"pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt";
+// Test account in Thailand
+static NSString * const STPTestingTHPublishableKey =
+    @"pk_test_51NpEAWBgCYKNuUnnoBpaJZQYWOO6UpLtcioKggla08zpvDDy0cjfGKZdl5BsU8Gm5ilJNCqT7laCsqvyc0LndskG00pnPnJSpD";
 
 @interface STPTestingAPIClient : NSObject
 

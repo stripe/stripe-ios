@@ -198,6 +198,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             cashAppRedirectToApp: nil,
             payNowDisplayQrCode: nil,
             konbiniDisplayDetails: nil,
+            promptPayDisplayQrCode: nil,
             allResponseFields: [:]
         )
         let setupIntent = STPSetupIntent(
