@@ -984,5 +984,16 @@
       "type": "alipay",
       "async": false,
       "fields": []
+    },
+    {
+      "type": "paynow",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow@3x-06fb143923e8492b0d3fe379ad6692a9.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow-b25acf96aac928b13e6206afb8982444.svg",
+        "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark@3x-d49fe128abf7fe78fdfa939c445ca2cc.png",
+        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark-d700c844535c608fd5fd4048f6a21146.svg"
+      },
+      "fields": []
     }
 ]

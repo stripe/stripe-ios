@@ -8,10 +8,11 @@
 import StripeCoreTestUtils
 import XCTest
 
+import SafariServices
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
@@ -209,6 +210,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                                merchantCountry: .JP) { form in
             form.getTextFieldElement("Full name")?.setText("Jane Doe")
             form.getTextFieldElement("Email")?.setText("foo@bar.com")
+        }
+    }
+
+    func testPayNowConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "SGD",
+                               paymentMethodType: .dynamic("paynow"),
+                               merchantCountry: .SG) { form in
+            // PayNow has no input fields
+            XCTAssertEqual(form.getAllSubElements().count, 1)
         }
     }
 
@@ -414,8 +425,24 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     }
 }
 
-extension PaymentSheet_LPM_ConfirmFlowTests: STPAuthenticationContext {
+extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
+    }
+
+    func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
+        // no-op
+    }
+
+    func dismiss(_ authenticationViewController: UIViewController) {
+        // no-op
+    }
+
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+        guard let currentAction = action as? STPPaymentHandlerPaymentIntentActionParams else { return }
+        // Simulate that the intent transitioned to succeeded
+        // If we don't update the status to succeeded, completing the action with .succeeded may fail due to invalid state
+        currentAction.paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
+        currentAction.complete(with: .succeeded, error: nil)
     }
 }

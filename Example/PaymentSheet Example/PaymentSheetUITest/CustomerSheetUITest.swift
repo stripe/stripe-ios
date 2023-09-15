@@ -401,7 +401,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
         closeButton.tap()
 
-        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
 
     func testNoPrevPM_AddPM_ApplePay_closeInsteadOfConfirming() throws {
@@ -432,7 +432,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
         closeButton.tap()
 
-        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
 
     func testPrevPM_AddPM_selectedWithoutTapping_noApplePay() throws {
@@ -462,7 +462,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
         closeButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••4444, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
 
     func testPrevPM_AddPM_canceled_ApplePay() throws {
