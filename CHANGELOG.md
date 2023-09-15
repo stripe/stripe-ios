@@ -2,6 +2,7 @@
 ### Payments
 * [Added] Properties of STPConnectAccountParams are now mutable.
 * [Changed] Fixed STPConnectAccountCompanyParams.address being force unwrapped. It's now optional.
+* [Added] Support for RevolutPay bindings
 
 ### PaymentSheet
 * [Added] Support for Cash App Pay with SetupIntents and PaymentIntents with `setup_future_usage`.
@@ -13,7 +14,6 @@
 * [Added] Support for Boleto with PaymentIntents.
 * [Added] Support for External Payment Method as an invite-only private beta.
 * [Added] Support for RevolutPay with SetupIntents and PaymentIntents with setup_future_usage (private beta). Note: PaymentSheet doesn't display saved this as a saved payment methods yet.
-* [Added] Support for RevolutPay bindings
 * [Added] Support for Alma (Private Beta) with PaymentIntents.
 
 ## 23.15.0 2023-08-28
