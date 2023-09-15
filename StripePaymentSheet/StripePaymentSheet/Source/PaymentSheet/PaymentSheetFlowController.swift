@@ -469,8 +469,8 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
         presentingViewController.present(pollingVC, animated: true, completion: nil)
     }
 
-    func dismiss(_ authenticationViewController: UIViewController) {
-        authenticationViewController.dismiss(animated: true, completion: nil)
+    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
+        authenticationViewController.dismiss(animated: true, completion: completion)
     }
 
     let presentingViewController: UIViewController

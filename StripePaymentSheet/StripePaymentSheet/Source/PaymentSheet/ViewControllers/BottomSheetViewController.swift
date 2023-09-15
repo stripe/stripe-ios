@@ -285,11 +285,12 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         pushContentViewController(pollingVC)
     }
 
-    func dismiss(_ authenticationViewController: UIViewController) {
+    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
         guard contentViewController is BottomSheet3DS2ViewController || contentViewController is PollingViewController else {
             return
         }
         _ = popContentViewController()
+        completion?()
     }
 }
 

@@ -229,14 +229,18 @@ class PollingViewController: UIViewController {
     // MARK: Handlers
 
     @objc func didTapCancel() {
-        currentAction.complete(with: .canceled, error: nil)
-        dismiss()
+        dismiss {
+            // Wait a short amount of time before completing the action to ensure smooth animations
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                self.currentAction.complete(with: .canceled, error: nil)
+            }
+        }
     }
 
-    private func dismiss() {
+    private func dismiss(completion: (() -> Void)? = nil) {
         if let authContext = currentAction.authenticationContext as? PaymentSheetAuthenticationContext {
             authContext.authenticationContextWillDismiss?(self)
-            authContext.dismiss(self)
+            authContext.dismiss(self, completion: completion)
         }
 
         oneSecondTimer?.invalidate()
@@ -344,8 +348,12 @@ extension PollingViewController: IntentStatusPollerDelegate {
         if paymentIntent.status == .succeeded {
             setErrorStateWorkItem.cancel() // cancel the error work item incase it was scheduled
             currentAction.paymentIntent = paymentIntent // update the local copy of the intent with the latest from the server
-            currentAction.complete(with: .succeeded, error: nil)
-            dismiss()
+            dismiss {
+                // Wait a short amount of time before completing the action to ensure smooth animations
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self.currentAction.complete(with: .succeeded, error: nil)
+                }
+            }
         } else if paymentIntent.status != .requiresAction {
             // an error occured to take the intent out of requires action
             // update polling state to indicate that we have encountered an error

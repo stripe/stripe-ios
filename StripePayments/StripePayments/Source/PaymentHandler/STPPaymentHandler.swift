@@ -2331,7 +2331,7 @@ extension STPPaymentHandler {
         if let paymentSheet = currentAction.authenticationContext
             .authenticationPresentingViewController() as? PaymentSheetAuthenticationContext
         {
-            paymentSheet.dismiss(challengeViewController)
+            paymentSheet.dismiss(challengeViewController, completion: nil)
         } else {
             challengeViewController.dismiss(animated: true, completion: nil)
         }
@@ -2349,7 +2349,7 @@ extension STPPaymentHandler {
 /// Internal authentication context for PaymentSheet magic
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
-    func dismiss(_ authenticationViewController: UIViewController)
+    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
     func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
 }
 
