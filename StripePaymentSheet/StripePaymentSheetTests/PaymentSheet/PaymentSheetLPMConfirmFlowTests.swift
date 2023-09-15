@@ -446,8 +446,8 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
         // no-op
     }
 
-    func dismiss(_ authenticationViewController: UIViewController) {
-        // no-op
+    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
+        completion?()
     }
 
     func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
