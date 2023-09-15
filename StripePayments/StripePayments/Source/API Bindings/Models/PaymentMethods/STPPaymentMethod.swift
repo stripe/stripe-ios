@@ -80,6 +80,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var cashApp: STPPaymentMethodCashApp?
     /// If this is an RevolutPay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeRevolutPay`), this contains additional details.
     @objc private(set) public var revolutPay: STPPaymentMethodRevolutPay?
+
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated

@@ -4,17 +4,16 @@
 * [Changed] Fixed STPConnectAccountCompanyParams.address being force unwrapped. It's now optional.
 
 ### PaymentSheet
-* [Added] Support for Alipay with PaymentIntents.
+* [Added] Support for Cash App Pay with SetupIntents and PaymentIntents with `setup_future_usage`.
 * [Added] Support for AU BECS Debit with SetupIntents.
 * [Added] Support for OXXO with PaymentIntents.
 * [Added] Support for Konbini with PaymentIntents.
+* [Added] Support for PayNow with PaymentIntents.
+* [Added] Support for PromptPay with PaymentIntents.
 * [Added] Support for Boleto with PaymentIntents.
 * [Added] Support for External Payment Method as an invite-only private beta.
 * [Added] Support for RevolutPay with SetupIntents and PaymentIntents with setup_future_usage (private beta). Note: PaymentSheet doesn't display saved this as a saved payment methods yet.
 * [Added] Support for Alma (Private Beta) with PaymentIntents.
-
-### CustomerSheet
-* [Changed] When adding a payment method, and tapping the close button, the newly added payment method was implicitly selected resulting with `.selected(PaymentOptionSelection?)`.  Now, the result will be `.canceled(PaymentOptionSelection?)`.
 
 ## 23.15.0 2023-08-28
 ### PaymentSheet

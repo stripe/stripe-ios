@@ -30,7 +30,7 @@ extension PaymentSheet {
         .grabPay,
         .FPX,
         .alipay,
-        .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini,
+        .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
         .boleto,
     ]
 

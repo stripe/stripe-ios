@@ -643,7 +643,8 @@ public class STPPaymentHandler: NSObject {
             .mobilePay,
             .amazonPay,
             .alma,
-            .konbini:
+            .konbini,
+            .promptPay:
             return false
 
         case .unknown:
@@ -1290,7 +1291,7 @@ public class STPPaymentHandler: NSObject {
                 currentAction.complete(with: .succeeded, error: nil)
                 return
             }
-            presentingVC.presentPollingVCForAction(action: currentAction, type: .blik)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .blik, safariViewController: nil)
 
         case .verifyWithMicrodeposits:
             // The customer must authorize after the microdeposits appear in their bank account
@@ -1305,7 +1306,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
 
-            presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI)
+            presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI, safariViewController: nil)
         case .cashAppRedirectToApp:
             guard
                 let returnURL = URL(string: currentAction.returnURLString ?? "")
@@ -1326,6 +1327,21 @@ public class STPPaymentHandler: NSObject {
                     )
                 )
             }
+        case .payNowDisplayQrCode:
+            guard
+                let returnURL = URL(string: currentAction.returnURLString ?? ""),
+                let presentingVC = currentAction.authenticationContext
+                    as? PaymentSheetAuthenticationContext,
+                let hostedInstructionsURL = authenticationAction.payNowDisplayQrCode?.hostedInstructionsURL
+
+            else {
+                fatalError()
+            }
+
+            _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) { safariViewController in
+                // Present the polling view controller behind the web view so we can start polling right away
+                presentingVC.presentPollingVCForAction(action: currentAction, type: .paynow, safariViewController: safariViewController)
+            }
         case .konbiniDisplayDetails:
             if let hostedVoucherURL = authenticationAction.konbiniDisplayDetails?.hostedVoucherURL {
                 self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
@@ -1339,6 +1355,21 @@ public class STPPaymentHandler: NSObject {
                         ]
                     )
                 )
+            }
+        case .promptpayDisplayQrCode:
+            guard
+                let returnURL = URL(string: currentAction.returnURLString ?? ""),
+                let presentingVC = currentAction.authenticationContext
+                    as? PaymentSheetAuthenticationContext,
+                let hostedInstructionsURL = authenticationAction.promptPayDisplayQrCode?.hostedInstructionsURL
+
+            else {
+                fatalError()
+            }
+
+            _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL) { safariViewController in
+                // Present the polling view controller behind the web view so we can start polling right away
+                presentingVC.presentPollingVCForAction(action: currentAction, type: .promptPay, safariViewController: safariViewController)
             }
         @unknown default:
             fatalError()
@@ -1464,7 +1495,10 @@ public class STPPaymentHandler: NSObject {
                                                     retryCount: retryCount - 1
                                                 )
                                             }
-                                        } else {
+                                        } else if retrievedPaymentIntent?.paymentMethod?.type != .paynow
+                                                    && retrievedPaymentIntent?.paymentMethod?.type != .promptPay {
+                                            // For PayNow, we don't want to mark as canceled when the web view dismisses
+                                            // Instead we rely on the presented PollingViewController to complete the currentAction
                                             self._markChallengeCanceled(withCompletion: { _, _ in
                                                 // We don't forward cancelation errors
                                                 currentAction.complete(
@@ -1601,13 +1635,24 @@ public class STPPaymentHandler: NSObject {
         )
     }
 
-    /// This method:
-    /// 1. Redirects to an app using url
-    /// 2. Open fallbackURL in a webview if 1) fails
-            ///
-    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?) {
+    /// Handles redirection to URLs using a native URL or a fallback URL and updates the current action.
+    /// Redirects to an app if possible, if that fails opens the url in a web view
+    /// - Parameters:
+    ///     - nativeURL: A URL to be opened natively.
+    ///     - fallbackURL: A secondary URL to be attempted if the native URL is not available.
+    ///     - returnURL: The URL to be registered with the `STPURLCallbackHandler`.
+    ///     - completion: A completion block invoked after the URL redirection is handled. The SFSafariViewController used is provided as an argument, if it was used for the redirect.
+    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, completion: ((SFSafariViewController?) -> Void)? = nil) {
         if let redirectShim = _redirectShim, let url = nativeURL ?? fallbackURL {
             redirectShim(url, returnURL, true)
+        }
+
+        // During testing, the completion block is not called since the `UIApplication.open` completion block is never invoked.
+        // As a workaround we invoke the completion in a defer block if the _redirectShim is not nil to simulate presenting a web view
+        defer {
+            if _redirectShim != nil {
+                completion?(nil)
+            }
         }
 
         var url = nativeURL
@@ -1652,7 +1697,9 @@ public class STPPaymentHandler: NSObject {
                     }
                     safariViewController.delegate = self
                     self.safariViewController = safariViewController
-                    presentingViewController.present(safariViewController, animated: true)
+                    presentingViewController.present(safariViewController, animated: true, completion: {
+                      completion?(safariViewController)
+                    })
                 } else {
                     currentAction.complete(
                         with: STPPaymentHandlerActionStatus.failed,
@@ -1699,6 +1746,7 @@ public class STPPaymentHandler: NSObject {
                         // no app installed, launch safari view controller
                         presentSFViewControllerBlock()
                     } else {
+                        completion?(nil)
                         NotificationCenter.default.addObserver(
                             self,
                             selector: #selector(self._handleWillForegroundNotification),
@@ -1771,7 +1819,9 @@ public class STPPaymentHandler: NSObject {
                 .useStripeSDK,
                 .alipayHandleRedirect,
                 .weChatPayRedirectToApp,
-                .cashAppRedirectToApp:
+                .cashAppRedirectToApp,
+                .payNowDisplayQrCode,
+                .promptpayDisplayQrCode:
                 return false
             case .OXXODisplayDetails,
                 .boletoDisplayDetails,
@@ -1803,7 +1853,7 @@ public class STPPaymentHandler: NSObject {
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
-            .upiAwaitNotification, .cashAppRedirectToApp, .konbiniDisplayDetails:
+            .upiAwaitNotification, .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode, .promptpayDisplayQrCode:
             break
         @unknown default:
             fatalError()
@@ -2300,7 +2350,7 @@ extension STPPaymentHandler {
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController)
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType)
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
 }
 
 @_spi(STP) public protocol FormSpecPaymentHandler {

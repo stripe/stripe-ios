@@ -81,6 +81,8 @@ import Foundation
     case mobilePay
     /// A Konbini payment method
     case konbini
+    /// A PromptPay payment method
+    case promptPay
     /// An unknown type.
     case unknown
 
@@ -159,6 +161,8 @@ import Foundation
             return "MobilePay"
         case .konbini:
             return STPLocalizedString("Konbini", "Payment Method type brand name")
+        case .promptPay:
+            return "PromptPay"
         case .bacsDebit,
             .cardPresent,
             .unknown:
@@ -243,6 +247,8 @@ import Foundation
             return "mobilepay"
         case .konbini:
             return "konbini"
+        case .promptPay:
+            return "promptpay"
         }
     }
 }
