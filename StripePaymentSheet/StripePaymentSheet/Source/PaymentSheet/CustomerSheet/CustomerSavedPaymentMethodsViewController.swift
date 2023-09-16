@@ -21,7 +21,7 @@ protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
 class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: - Read-only Properties
-    let savedPaymentMethods: [STPPaymentMethod]
+    var savedPaymentMethods: [STPPaymentMethod]
     let selectedPaymentMethodOption: CustomerPaymentOption?
     let isApplePayEnabled: Bool
     let configuration: CustomerSheet.Configuration
@@ -449,11 +449,21 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
+
+            //before we finish
+            let paymentMethods = try await self.customerAdapter.fetchPaymentMethods()
+
             self.processingInFlight = false
             if shouldDismissSheetOnConfirm(paymentMethod: paymentMethod, setupIntent: setupIntent) {
                 self.handleDismissSheet(sheetCloseReason: .addedUsBankAccountViaMicrodeposits)
             } else {
-                self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
+//                self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
+
+                savedPaymentMethods = paymentMethods
+                savedPaymentOptionsViewController.didUpdateSavedPaymentMethods(paymentMethods: savedPaymentMethods)
+                // TODO: Ensure that fetching Payment methods will give us the card we just entered if there is overlap?
+                // TODO: remove unsynced payment methods
+
                 self.mode = .selectingSaved
                 self.updateUI(animated: true)
                 self.reinitAddPaymentMethodViewController()

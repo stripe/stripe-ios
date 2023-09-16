@@ -213,7 +213,10 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public func didAddSavedPaymentMethod(paymentMethod: STPPaymentMethod) {
+    func didUpdateSavedPaymentMethods(paymentMethods: [STPPaymentMethod]) {
+        self.savedPaymentMethods = paymentMethods
+    }
+    func didAddSavedPaymentMethod(paymentMethod: STPPaymentMethod) {
         let unsyncedSavedPaymentMethodsCopy = unsyncedSavedPaymentMethods
         self.unsyncedSavedPaymentMethods = [paymentMethod] + unsyncedSavedPaymentMethodsCopy
     }

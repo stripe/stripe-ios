@@ -1044,6 +1044,27 @@ extension STPAPIClient {
         }
     }
 
+    @_spi(STP) public func detachPaymentMethod(
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String
+    ) async throws -> Error? {
+        return try await withCheckedThrowingContinuation { continuation in
+            let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
+            APIRequest<STPPaymentMethod>.post(
+                with: self,
+                endpoint: endpoint,
+                additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
+                parameters: [:]
+            ) { _, _, error in
+                if let error {
+                    continuation.resume(returning: error)
+                    return
+                }
+                continuation.resume(returning: nil)
+            }
+        }
+    }
+
     @_spi(STP) public func attachPaymentMethod(
         _ paymentMethodID: String,
         customerID: String,

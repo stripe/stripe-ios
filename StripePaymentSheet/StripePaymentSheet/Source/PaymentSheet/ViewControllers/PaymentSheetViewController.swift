@@ -561,20 +561,32 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         else {
             return
         }
-        configuration.apiClient.detachPaymentMethod(
-            paymentMethod.stripeId,
-            fromCustomerUsing: ephemeralKey
-        ) { (_) in
-            // no-op
+        Task {
+            var paymentMethodIdsToDetach: [String] = []
+            do {
+                let paymentMethods = try await PaymentSheetLoader.fetchSimilarSavedPaymentMethods(configuration: configuration,
+                                                                                                  paymentMethod: paymentMethod)
+                paymentMethodIdsToDetach = paymentMethods.map { $0.stripeId }
+            } catch {
+                paymentMethodIdsToDetach = [paymentMethod.stripeId]
+            }
+            for paymentMethodIdToDetach in paymentMethodIdsToDetach {
+                configuration.apiClient.detachPaymentMethod(
+                    paymentMethodIdToDetach,
+                    fromCustomerUsing: ephemeralKey
+                ) { (_) in
+                    // no-op
+                }
+            }
+            if !savedPaymentOptionsViewController.hasRemovablePaymentMethods {
+                savedPaymentOptionsViewController.isRemovingPaymentMethods = false
+                // calling updateUI() at this point causes an issue with the height of the add card vc
+                // if you do a subsequent presentation. Since bottom sheet height stuff is complicated,
+                // just update the nav bar which is all we need to do anyway
+                configureNavBar()
+            }
+            updateBottomNotice()
         }
-        if !savedPaymentOptionsViewController.hasRemovablePaymentMethods {
-            savedPaymentOptionsViewController.isRemovingPaymentMethods = false
-            // calling updateUI() at this point causes an issue with the height of the add card vc
-            // if you do a subsequent presentation. Since bottom sheet height stuff is complicated,
-            // just update the nav bar which is all we need to do anyway
-            configureNavBar()
-        }
-        updateBottomNotice()
     }
 
     // MARK: Helpers
