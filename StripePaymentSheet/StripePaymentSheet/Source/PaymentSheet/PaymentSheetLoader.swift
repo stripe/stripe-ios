@@ -211,8 +211,22 @@ final class PaymentSheetLoader {
         }
     }
 
-    static func fetchSavedPaymentMethods(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
-        let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]  // hardcoded for now
+    static func fetchSimilarSavedPaymentMethods(configuration: PaymentSheet.Configuration,
+                                                paymentMethod: STPPaymentMethod) async throws -> [STPPaymentMethod] {
+        guard paymentMethod.type == .card else {
+            return [paymentMethod]
+        }
+        let fetchedPaymentMethods = try await fetchSavedPaymentMethods(configuration: configuration,
+                                                                       savedPaymentMethodTypes: [.card])
+        let paymentMethodToDelete = fetchedPaymentMethods.first { paymentMethod.stripeId == $0.stripeId }
+        guard let fingerprint = paymentMethodToDelete?.card?.fingerprint else {
+            return [paymentMethod]
+        }
+        return fetchedPaymentMethods.filter { $0.card?.fingerprint == fingerprint }
+    }
+
+    static func fetchSavedPaymentMethods(configuration: PaymentSheet.Configuration,
+                                         savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]) async throws -> [STPPaymentMethod] {
         guard let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret else {
             return []
         }
