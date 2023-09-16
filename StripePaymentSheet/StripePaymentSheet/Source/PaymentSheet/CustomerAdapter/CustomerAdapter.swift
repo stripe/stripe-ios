@@ -157,15 +157,26 @@ open class StripeCustomerAdapter: CustomerAdapter {
 
     open func detachPaymentMethod(paymentMethodId: String) async throws {
         let customerEphemeralKey = try await customerEphemeralKey
-        return try await withCheckedThrowingContinuation({ continuation in
-            apiClient.detachPaymentMethod(paymentMethodId, fromCustomerUsing: customerEphemeralKey.ephemeralKeySecret) { error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                    return
-                }
-                continuation.resume()
+
+        var paymentMethodIdsToDetach: [String] = []
+        do {
+            paymentMethodIdsToDetach = try await StripeCustomerAdapter.fetchSimilarSavedPaymentMethods(apiClient: apiClient,
+                                                                                                       customerEphemeralKey: customerEphemeralKey,
+                                                                                                       paymentMethodId: paymentMethodId)
+        } catch {
+            paymentMethodIdsToDetach = [paymentMethodId]
+        }
+
+        var lastError: Error?
+        for paymentMethodIdToDetach in paymentMethodIdsToDetach {
+            if let error = try await apiClient.detachPaymentMethod(paymentMethodIdToDetach,
+                                                                   fromCustomerUsing: customerEphemeralKey.ephemeralKeySecret) {
+                lastError = error
             }
-        })
+        }
+        if let lastError {
+            throw lastError
+        }
     }
 
     open func setSelectedPaymentOption(paymentOption: CustomerPaymentOption?) async throws {
@@ -185,6 +196,43 @@ open class StripeCustomerAdapter: CustomerAdapter {
             throw PaymentSheetError.setupIntentClientSecretProviderNil // TODO: This is a programming error, setupIntentClientSecretForCustomerAttach should not be called if canCreateSetupIntents is false
         }
         return try await setupIntentClientSecretProvider()
+    }
+
+    static func fetchSimilarSavedPaymentMethods(apiClient: STPAPIClient,
+                                                customerEphemeralKey: CustomerEphemeralKey,
+                                                paymentMethodId: String) async throws -> [String] {
+        let fetchedPaymentMethods = try await fetchSavedPaymentMethods(apiClient: apiClient,
+                                                                       customerEphemeralKey: customerEphemeralKey,
+                                                                       savedPaymentMethodTypes: [.card])
+        let paymentMethodToDelete = fetchedPaymentMethods.first { paymentMethodId == $0.stripeId }
+        guard let fingerprint = paymentMethodToDelete?.card?.fingerprint else {
+            return [paymentMethodId]
+        }
+        let paymentMethodIdsToDelete = fetchedPaymentMethods.filter { $0.card?.fingerprint == fingerprint }
+            .map { $0.stripeId }
+        guard !paymentMethodIdsToDelete.isEmpty else {
+            return [paymentMethodId]
+        }
+        return paymentMethodIdsToDelete
+    }
+
+    static func fetchSavedPaymentMethods(apiClient: STPAPIClient,
+                                         customerEphemeralKey: CustomerEphemeralKey,
+                                         savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]) async throws -> [STPPaymentMethod] {
+        return try await withCheckedThrowingContinuation { continuation in
+            apiClient.listPaymentMethods(
+                forCustomer: customerEphemeralKey.id,
+                using: customerEphemeralKey.ephemeralKeySecret,
+                types: savedPaymentMethodTypes
+            ) { paymentMethods, error in
+                guard let paymentMethods = paymentMethods, error == nil else {
+                    let error = error ?? PaymentSheetError.unexpectedResponseFromStripeAPI
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: paymentMethods)
+            }
+        }
     }
 }
 
