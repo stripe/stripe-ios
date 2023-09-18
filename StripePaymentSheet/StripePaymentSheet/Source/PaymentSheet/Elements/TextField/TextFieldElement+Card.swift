@@ -29,8 +29,10 @@ extension TextFieldElement {
         }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-            // If CBC is available and not nil, show it
-            if let cardBrandDropDownView = cardBrandDropDownView, CardBrandChoiceAvailability.isCardBrandChoiceAvailable {
+            // If CBC is available and not nil and 8 or more digits entered, show it
+            if let cardBrandDropDownView = cardBrandDropDownView,
+               text.count >= 8,
+               CardBrandChoiceAvailability.isCardBrandChoiceAvailable {
                 return cardBrandDropDownView
             }
 

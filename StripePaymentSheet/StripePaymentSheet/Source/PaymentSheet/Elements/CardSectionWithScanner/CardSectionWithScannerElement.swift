@@ -76,7 +76,6 @@ final class CardSection: ContainerElement {
         var cardBrandDropDown: DropdownFieldElement?
         if cardBrandChoiceEligible {
             cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(theme: theme)
-            cardBrandDropDown?.isEnabled = false
         }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
                                                                                        cardBrandDropDownView: cardBrandChoiceEligible ? cardBrandDropDown?.view : nil), theme: theme) { field, params in
@@ -144,35 +143,27 @@ final class CardSection: ContainerElement {
     }
 
     func updateCardBrandDropdown() {
-        guard cardBrandEligible else {
+        // Only fetch card brands if the merchant is eligible and we have at least 8 digits in the pan textfield
+        guard cardBrandEligible, panElement.text.count >= 8 else {
             return
         }
 
-        // Disable the dropdown if less than 8 digits entered for card number
-        if panElement.text.count < 8 {
-            cardBrandDropDown?.isEnabled = false
-            cardBrandDropDown?.selectedIndex = 0
-        } else {
-            // Otherwise, enable dropdown, and fetch brands
-            cardBrandDropDown?.isEnabled = true
-            // TODO(porter) Hard code test cards for card brand choice
-            STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
-                switch result {
-                case .success(let brands):
-                    DispatchQueue.main.async {
-                        self?.cardBrandDropDown?.update(items: DropdownFieldElement.items(from: brands))
-                        // If there is only one option select it
-                        if brands.count == 1 {
-                            self?.cardBrandDropDown?.select(index: 1)
-                        }
-
-                        // Only enable the dropdown if we have more than 1 possible brand
-                        self?.cardBrandDropDown?.isEnabled = brands.count > 1
+        STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
+            switch result {
+            case .success(let brands):
+                DispatchQueue.main.async {
+                    self?.cardBrandDropDown?.update(items: DropdownFieldElement.items(from: brands))
+                    // If there is only one option select it
+                    if brands.count == 1 {
+                        self?.cardBrandDropDown?.select(index: 1)
                     }
-                case .failure(let error):
-                    // TODO(porter) Handle error
-                    print(error)
+
+                    // Only enable the dropdown if we have more than 1 possible brand
+                    self?.cardBrandDropDown?.isEnabled = brands.count > 1
                 }
+            case .failure(let error):
+                // TODO(porter) Handle error
+                print(error)
             }
         }
     }

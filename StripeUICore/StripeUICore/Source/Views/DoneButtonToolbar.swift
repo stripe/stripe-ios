@@ -15,7 +15,7 @@ import UIKit
 
 @_spi(STP) public extension DoneButtonToolbarDelegate {
     func didTapCancel(_ toolbar: DoneButtonToolbar) {
-        // no-op, cancel button is disabled by default
+        // no-op, cancel button is hidden by default
     }
 }
 

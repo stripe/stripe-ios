@@ -69,16 +69,6 @@ import UIKit
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
 
-    public var isEnabled: Bool {
-        get {
-            return pickerFieldView.isEnabled
-        }
-
-        set {
-            pickerFieldView.isEnabled = newValue
-        }
-    }
-
     private(set) lazy var pickerView: UIPickerView = {
         let picker = UIPickerView()
         picker.delegate = self
@@ -152,11 +142,13 @@ import UIKit
     }
 
     public func update(items: [DropdownItem]) {
-        let newSelectedIndex = items.firstIndex(where: { $0.rawData == self.items[selectedIndex].rawData })
+        assert(!items.isEmpty, "`items` must contain at least one item")
+        // Try to re-select the same item afer updating, if not possible default to the first item in the list
+        let newSelectedIndex = items.firstIndex(where: { $0.rawData == self.items[selectedIndex].rawData }) ?? 0
 
         self.items = items
-        self.previouslySelectedIndex = newSelectedIndex ?? 0
-        self.selectedIndex = newSelectedIndex ?? 0
+        self.previouslySelectedIndex = newSelectedIndex
+        self.selectedIndex = newSelectedIndex
     }
 }
 
@@ -192,14 +184,12 @@ extension DropdownFieldElement: UIPickerViewDelegate {
     public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         let item = items[row]
 
-        // If this item is marked as a placeholder, apply placeholder text color
-        if item.isPlaceholder {
-            let placerholderString = NSMutableAttributedString.init(string: item.pickerDisplayName.string)
-            placerholderString.addAttribute(NSAttributedString.Key.foregroundColor, value: theme.colors.placeholderText, range: NSRange(location: 0, length: item.pickerDisplayName.length))
-            return placerholderString
-        }
+        guard item.isPlaceholder else { return item.pickerDisplayName }
 
-        return item.pickerDisplayName
+        // If this item is marked as a placeholder, apply placeholder text color
+        let attributes: [NSAttributedString.Key: Any] = [.foregroundColor: theme.colors.placeholderText]
+        let placeholderString = NSAttributedString(string: item.pickerDisplayName.string, attributes: attributes)
+        return placeholderString
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -233,7 +223,7 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
     }
 
     func didCancel(_ pickerFieldView: PickerFieldView) {
-        // Reset to previously selected index
+        // Reset to previously selected index when canceling
         selectedIndex = previouslySelectedIndex
     }
 }

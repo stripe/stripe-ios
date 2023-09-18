@@ -444,8 +444,8 @@ public class STPCardValidator: NSObject {
         let testCards: [String: [STPCardBrand]] = ["4000002500001001": [.cartesBancaires, .visa],
                                                    "5555552500001001": [.cartesBancaires, .mastercard], ]
 
-        if testCards.keys.contains(cardNumber) {
-            completion(.success(Set<STPCardBrand>(testCards[cardNumber] ?? [])))
+        if let testBrands = testCards[cardNumber] {
+            completion(.success(Set<STPCardBrand>(testBrands)))
             return
         }
 
