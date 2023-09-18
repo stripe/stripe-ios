@@ -35,7 +35,7 @@ extension TextFieldElement {
                 guard text.count >= 8 else {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
                 }
-                
+
                 return cardBrandDropDownView
             }
 

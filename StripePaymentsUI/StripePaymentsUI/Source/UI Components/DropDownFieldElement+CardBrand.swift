@@ -23,7 +23,8 @@ extension DropdownFieldElement {
             items: items(from: Set<STPCardBrand>(), theme: theme),
             defaultIndex: 0,
             label: nil,
-            theme: theme
+            theme: theme,
+            disableDropdownWithSingleElement: true
         )
     }
 
@@ -84,4 +85,3 @@ extension STPCardBrand: Comparable {
         )
     }
 }
-
