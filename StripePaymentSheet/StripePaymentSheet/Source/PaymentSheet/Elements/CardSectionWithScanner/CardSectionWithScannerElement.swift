@@ -152,14 +152,11 @@ final class CardSection: ContainerElement {
             switch result {
             case .success(let brands):
                 DispatchQueue.main.async {
-                    self?.cardBrandDropDown?.update(items: DropdownFieldElement.items(from: brands))
+                    self?.cardBrandDropDown?.update(items: DropdownFieldElement.items(from: brands, theme: self?.theme ?? .default))
                     // If there is only one option select it
                     if brands.count == 1 {
                         self?.cardBrandDropDown?.select(index: 1)
                     }
-
-                    // Only enable the dropdown if we have more than 1 possible brand
-                    self?.cardBrandDropDown?.isEnabled = brands.count > 1
                 }
             case .failure(let error):
                 // TODO(porter) Handle error

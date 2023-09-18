@@ -31,25 +31,18 @@ extension TextFieldElement {
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             // If CBC is available and not nil and 8 or more digits entered, show it
             if let cardBrandDropDownView = cardBrandDropDownView,
-               text.count >= 8,
                CardBrandChoiceAvailability.isCardBrandChoiceAvailable {
+                guard text.count >= 8 else {
+                    return DynamicImageView.makeUnknownCardImageView(theme: theme)
+                }
+                
                 return cardBrandDropDownView
             }
 
             let cardBrand = STPCardValidator.brand(forNumber: text)
             if cardBrand == .unknown {
                 if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
-                    return DynamicImageView(
-                        lightImage: STPImageLibrary.safeImageNamed(
-                            "card_unknown_updated_icon",
-                            darkMode: true
-                        ),
-                        darkImage: STPImageLibrary.safeImageNamed(
-                            "card_unknown_updated_icon",
-                            darkMode: false
-                        ),
-                        pairedColor: theme.colors.textFieldText
-                    )
+                    return DynamicImageView.makeUnknownCardImageView(theme: theme)
                 } else {
                     // display all available card brands
                     rotatingCardBrandsView.cardBrands =
