@@ -1,4 +1,4 @@
-## X.Y.Z 2023-XX-YY
+## 23.16.0 2023-09-18
 ### Payments
 * [Added] Properties of STPConnectAccountParams are now mutable.
 * [Changed] Fixed STPConnectAccountCompanyParams.address being force unwrapped. It's now optional.
