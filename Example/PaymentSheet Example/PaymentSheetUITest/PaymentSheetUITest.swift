@@ -6,7 +6,7 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 import XCTest
 
 class PaymentSheetUITestCase: XCTestCase {
@@ -845,7 +845,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testCardBrandChoice() throws {
-        CardBrandChoiceAvailability.isCardBrandChoiceAvailable = true
+        app.launchEnvironment = app.launchEnvironment.merging(["ENABLE_CBC": "true"]) { (_, new) in new }
 
         // Currently only our French merchant is eligible for card brand dhoice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -861,11 +861,8 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         let cardBrandTextField = app.textFields["Select card brand (optional)"]
         let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
-        XCTAssertTrue(cardBrandTextField.waitForExistence(timeout: 5))
-
-        // Card brand drop down should be disabled until 8 card digits are entered
-        cardBrandTextField.tap()
-        XCTAssertFalse(cardBrandChoiceDropdown.waitForExistence(timeout: 2))
+        // Card brand choice textfield/dropdown should not be visible
+        XCTAssertFalse(cardBrandTextField.waitForExistence(timeout: 2))
 
         let numberField = app.textFields["Card number"]
         numberField.tap()
@@ -885,8 +882,8 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         numberField.tap()
         numberField.clearText()
 
-        // We should reset to our placeholder card brand
-        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 5))
+        // We should reset to showing unknown in the textfield for card brand
+        XCTAssertFalse(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 2))
 
         // Type full card number to start fetching card brands again
         try fillCardData(app, cardNumber: "4000002500001001")
@@ -904,8 +901,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.buttons["Pay €50.99"].tap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-
-        CardBrandChoiceAvailability.isCardBrandChoiceAvailable = false
     }
 
     // This only tests the PaymentSheet + PaymentIntent flow.

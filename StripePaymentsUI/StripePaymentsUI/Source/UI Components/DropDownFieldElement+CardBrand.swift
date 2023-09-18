@@ -23,8 +23,7 @@ extension DropdownFieldElement {
             items: items(from: Set<STPCardBrand>(), theme: theme),
             defaultIndex: 0,
             label: nil,
-            theme: theme,
-            disableDropdownWithSingleElement: true
+            theme: theme
         )
     }
 

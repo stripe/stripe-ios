@@ -8,7 +8,9 @@
 import Foundation
 
 // TODO(porter) Remove this for card brand choice GA
-@_spi(STP) public struct CardBrandChoiceAvailability {
+class CardBrandChoiceAvailability {
     // Only for development/testing purposes
-    @_spi(STP) public static var isCardBrandChoiceAvailable = true
+    static let shared = CardBrandChoiceAvailability()
+    var isCardBrandChoiceAvailable = false
+    var test = ""
 }
