@@ -159,7 +159,8 @@ final class CardSection: ContainerElement {
                     }
                 }
             case .failure(let error):
-                // TODO(porter) Handle error
+                // TODO(porter) No-op on error for now
+                // Nothing the user can really do
                 print(error)
             }
         }
