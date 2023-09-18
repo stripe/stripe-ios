@@ -125,7 +125,12 @@ extension STPPaymentMethodType {
     /// A few payment method type icons need to be tinted white or black as they do not have
     /// light/dark agnostic icons
     var iconRequiresTinting: Bool {
-        return self == .card || self == .AUBECSDebit || self == .USBankAccount || self == .linkInstantDebit
+        switch self {
+        case .card, .AUBECSDebit, .USBankAccount, .linkInstantDebit, .konbini, .boleto:
+            return true
+        default:
+            return false
+        }
     }
 
     func makeImage(forDarkBackground: Bool = false) -> UIImage {
@@ -162,12 +167,18 @@ extension STPPaymentMethodType {
                     return .pm_type_upi
                 case .cashApp:
                     return .pm_type_cashapp
+                case .revolutPay:
+                    return .pm_type_revolutpay
                 case .blik:
                     return .pm_type_blik
                 case .alipay:
                     return .pm_type_alipay
                 case .OXXO:
                     return .pm_type_oxxo
+                case .konbini:
+                    return .pm_type_konbini
+                case .boleto:
+                    return .pm_type_boleto
                 default:
                     return nil
                 }

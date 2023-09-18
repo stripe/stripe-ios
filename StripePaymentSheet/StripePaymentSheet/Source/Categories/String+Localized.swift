@@ -171,6 +171,13 @@ extension String.Localized {
         )
     }
 
+    static var revolut_pay_mandate_text: String {
+        STPLocalizedString(
+            "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.",
+            "Revolut Pay mandate text"
+        )
+    }
+
     static var paypal_mandate_text_payment: String {
         STPLocalizedString(
             "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.",
@@ -192,5 +199,14 @@ extension String.Localized {
 
     static var contact_information: String {
         STPLocalizedString("Contact information", "Title for the contact information section")
+    }
+
+    static var paynow_confirm_payment: String {
+        STPLocalizedString("Confirm the payment in your bank or payment app within %@ to complete the purchase.",
+                           "Text for alert message when user needs to confirm payment in their banking app")
+    }
+
+    static var cpf_cpnj: String {
+        STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
     }
 }
