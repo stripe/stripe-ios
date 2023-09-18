@@ -40,7 +40,6 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     /// Card security code. It is highly recommended to always include this value.
     @objc public var cvc: String?
     /// The last 4 digits of the card.
-
     @objc public var last4: String? {
         if number != nil && (number?.count ?? 0) >= 4 {
             return (number as NSString?)?.substring(from: (number?.count ?? 0) - 4) ?? ""
@@ -48,6 +47,7 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
             return ""
         }
     }
+    
 
     // MARK: - Description
     /// :nodoc:
