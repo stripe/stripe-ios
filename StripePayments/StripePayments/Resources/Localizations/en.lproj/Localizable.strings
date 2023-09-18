@@ -8,7 +8,7 @@
 "Alipay" = "Alipay";
 
 /* Payment Method type brand name. */
-"AU BECS Direct Debit" = "AU BECS Direct Debit";
+"AU Direct Debit" = "AU Direct Debit";
 
 /* Payment Method type brand name */
 "Bancontact" = "Bancontact";
@@ -48,6 +48,9 @@
 
 /* Payment Method type brand name */
 "Klarna" = "Klarna";
+
+/* Payment Method type brand name */
+"Konbini" = "Konbini";
 
 /* Link Payment Method type brand name */
 "Link" = "Link";

@@ -58,6 +58,15 @@ import Foundation
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
     case cashAppRedirectToApp
 
+    /// Contains details for displaying the QR code required for PayNow.
+    case payNowDisplayQrCode
+
+    /// Contains instructions for completing Konbini payments.
+    case konbiniDisplayDetails
+
+    /// Contains details for displaying the QR code required for PromptPay.
+    case promptpayDisplayQrCode
+
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the `next_action.type`
@@ -85,6 +94,12 @@ import Foundation
             self = .upiAwaitNotification
         case "cashapp_handle_redirect_or_display_qr_code":
             self = .cashAppRedirectToApp
+        case "paynow_display_qr_code":
+            self = .payNowDisplayQrCode
+        case "konbini_display_details":
+            self = .konbiniDisplayDetails
+        case "promptpay_display_qr_code":
+            self = .promptpayDisplayQrCode
         default:
             self = .unknown
         }
@@ -115,8 +130,14 @@ import Foundation
             return "upi_await_notification"
         case .cashAppRedirectToApp:
             return "cashapp_handle_redirect_or_display_qr_code"
+        case .konbiniDisplayDetails:
+            return "konbini_display_details"
         case .unknown:
             break
+        case .payNowDisplayQrCode:
+            return "paynow_display_qr_code"
+        case .promptpayDisplayQrCode:
+            return "promptpay_display_qr_code"
         }
 
         // catch any unknown values here
@@ -155,6 +176,15 @@ public class STPIntentAction: NSObject {
 
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
     @objc public let cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
+
+    /// Contains details for displaying the QR code required for PayNow.
+    @objc public let payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
+
+    /// Contains instructions for authenticating a Konbini payment.
+    @objc public let konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
+
+    /// Contains details for displaying the QR code required for PromptPay.
+    @objc public let promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
@@ -208,6 +238,18 @@ public class STPIntentAction: NSObject {
             if let cashAppRedirectToApp = cashAppRedirectToApp {
                 props.append("cashAppRedirectToApp = \(cashAppRedirectToApp)")
             }
+        case .payNowDisplayQrCode:
+            if let payNowDisplayQrCode = payNowDisplayQrCode {
+                props.append("payNowDisplayQrCode = \(payNowDisplayQrCode)")
+            }
+        case .konbiniDisplayDetails:
+            if let konbiniDisplayDetails {
+                props.append("konbini_display_details = \(konbiniDisplayDetails)")
+            }
+        case .promptpayDisplayQrCode:
+            if let promptPayDisplayQrCode = promptPayDisplayQrCode {
+                props.append("promptpayDisplayQrCode = \(promptPayDisplayQrCode)")
+            }
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
             props.append("allResponseFields = \(allResponseFields)")
@@ -226,6 +268,9 @@ public class STPIntentAction: NSObject {
         boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?,
         verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?,
         cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?,
+        payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?,
+        konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?,
+        promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -237,6 +282,9 @@ public class STPIntentAction: NSObject {
         self.boletoDisplayDetails = boletoDisplayDetails
         self.verifyWithMicrodeposits = verifyWithMicrodeposits
         self.cashAppRedirectToApp = cashAppRedirectToApp
+        self.payNowDisplayQrCode = payNowDisplayQrCode
+        self.konbiniDisplayDetails = konbiniDisplayDetails
+        self.promptPayDisplayQrCode = promptPayDisplayQrCode
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -265,6 +313,9 @@ extension STPIntentAction: STPAPIResponseDecodable {
         var weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?
         var verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
         var cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
+        var payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
+        var konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
+        var promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?
 
         switch type {
         case .unknown:
@@ -329,6 +380,27 @@ extension STPIntentAction: STPAPIResponseDecodable {
             if cashAppRedirectToApp == nil {
                 type = .unknown
             }
+        case .payNowDisplayQrCode:
+            payNowDisplayQrCode = STPIntentActionPayNowDisplayQrCode.decodedObject(
+                fromAPIResponse: dict["paynow_display_qr_code"] as? [AnyHashable: Any]
+            )
+            if payNowDisplayQrCode == nil {
+                type = .unknown
+            }
+        case .konbiniDisplayDetails:
+            konbiniDisplayDetails = STPIntentActionKonbiniDisplayDetails.decodedObject(
+                fromAPIResponse: dict["konbini_display_details"] as? [AnyHashable: Any]
+            )
+            if konbiniDisplayDetails == nil {
+                type = .unknown
+            }
+        case .promptpayDisplayQrCode:
+            promptPayDisplayQrCode = STPIntentActionPromptPayDisplayQrCode.decodedObject(
+                fromAPIResponse: dict["promptpay_display_qr_code"] as? [AnyHashable: Any]
+            )
+            if promptPayDisplayQrCode == nil {
+                type = .unknown
+            }
         }
 
         return STPIntentAction(
@@ -341,6 +413,9 @@ extension STPIntentAction: STPAPIResponseDecodable {
             boletoDisplayDetails: boletoDisplayDetails,
             verifyWithMicrodeposits: verifyWithMicrodeposits,
             cashAppRedirectToApp: cashAppRedirectToApp,
+            payNowDisplayQrCode: payNowDisplayQrCode,
+            konbiniDisplayDetails: konbiniDisplayDetails,
+            promptPayDisplayQrCode: promptPayDisplayQrCode,
             allResponseFields: dict
         ) as? Self
     }

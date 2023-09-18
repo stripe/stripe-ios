@@ -67,6 +67,22 @@ import Foundation
     case USBankAccount
     /// A CashApp payment method
     case cashApp
+    /// A PayNow payment method
+    case paynow
+    /// A Zip payment method
+    case zip
+    /// A RevolutPay payment method
+    case revolutPay
+    /// An AmazonPay payment method
+    case amazonPay
+    /// An Alma payment method
+    case alma
+    /// A MobilePay payment method
+    case mobilePay
+    /// A Konbini payment method
+    case konbini
+    /// A PromptPay payment method
+    case promptPay
     /// An unknown type.
     case unknown
 
@@ -84,7 +100,7 @@ import Foundation
         case .SEPADebit:
             return STPLocalizedString("SEPA Debit", "Payment method brand name")
         case .AUBECSDebit:
-            return STPLocalizedString("AU BECS Direct Debit", "Payment Method type brand name.")
+            return STPLocalizedString("AU Direct Debit", "Payment Method type brand name.")
         case .grabPay:
             return STPLocalizedString("GrabPay", "Payment Method type brand name.")
         case .giropay:
@@ -131,6 +147,22 @@ import Foundation
             )
         case .cashApp:
             return STPLocalizedString("Cash App Pay", "Payment Method type brand name")
+        case .paynow:
+            return "PayNow"
+        case .zip:
+            return "Zip"
+        case .revolutPay:
+            return "Revolut Pay"
+        case .amazonPay:
+            return "Amazon Pay"
+        case .alma:
+            return "Alma"
+        case .mobilePay:
+            return "MobilePay"
+        case .konbini:
+            return STPLocalizedString("Konbini", "Payment Method type brand name")
+        case .promptPay:
+            return "PromptPay"
         case .bacsDebit,
             .cardPresent,
             .unknown:
@@ -199,8 +231,26 @@ import Foundation
             return "us_bank_account"
         case .cashApp:
             return "cashapp"
+        case .zip:
+            return "zip"
         case .unknown:
             return "unknown"
+        case .paynow:
+            return "paynow"
+        case .revolutPay:
+            return "revolut_pay"
+        case .amazonPay:
+            return "amazon_pay"
+        case .alma:
+            return "alma"
+        case .mobilePay:
+            return "mobilepay"
+        case .konbini:
+            return "konbini"
+        case .promptPay:
+            return "promptpay"
         }
     }
 }
+
+extension STPPaymentMethodType: CaseIterable { }

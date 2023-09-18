@@ -26,6 +26,8 @@ extension Element {
             return wrappedElement.element.getAllUnwrappedSubElements()
         case let wrappedElement as PaymentMethodElementWrapper<AddressSectionElement>:
             return wrappedElement.element.getAllUnwrappedSubElements()
+        case let wrappedElement as PaymentMethodElementWrapper<PhoneNumberElement>:
+            return [wrappedElement.element]
         default:
             return [self]
         }
@@ -46,6 +48,22 @@ extension Element {
     func getMandateElement() -> SimpleMandateElement? {
         return getAllUnwrappedSubElements()
             .compactMap { $0 as? SimpleMandateElement }
+            .first
+    }
+
+    func getAUBECSMandateElement() -> StaticElement? {
+        return getAllUnwrappedSubElements()
+            .compactMap { $0 as? StaticElement }
+            .first { $0.view is AUBECSLegalTermsView }
+    }
+
+    func getPhoneNumberElement() -> PhoneNumberElement? {
+        return getElement()
+    }
+
+    func getElement<T>() -> T? {
+        return getAllUnwrappedSubElements()
+            .compactMap { $0 as? T }
             .first
     }
 }

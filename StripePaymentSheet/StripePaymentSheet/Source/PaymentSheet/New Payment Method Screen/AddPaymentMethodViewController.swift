@@ -46,9 +46,13 @@ class AddPaymentMethodViewController: UIViewController {
             return linkEnabledElement.makePaymentOption()
         }
 
-        var params = IntentConfirmParams(type: selectedPaymentMethodType)
-        params = paymentMethodFormElement.applyDefaults(params: params)
+        let params = IntentConfirmParams(type: selectedPaymentMethodType)
+        params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
+            // TODO(yuki): Hack to support external_paypal
+            if selectedPaymentMethodType == .externalPayPal {
+                return .externalPayPal(confirmParams: params)
+            }
             return .new(confirmParams: params)
         }
         return nil
