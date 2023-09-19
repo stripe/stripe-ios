@@ -1,3 +1,7 @@
+## X.X.X
+### PaymentSheet
+* [Fixed] Fixed an issue with selecting from lists on macOS Catalyst. Note that only macOS 11 or later is supported: We do not recommend releasing a Catalyst app targeting macOS 10.15.
+
 ## 23.16.0 2023-09-18
 ### Payments
 * [Added] Properties of STPConnectAccountParams are now mutable.
