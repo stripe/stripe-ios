@@ -77,7 +77,7 @@ final class CardSection: ContainerElement {
             cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(theme: theme)
         }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
-                                                                                       cardBrandDropDownView: cardBrandChoiceEligible ? cardBrandDropDown?.view : nil), theme: theme) { field, params in
+                                                                                       cardBrandDropDownView: cardBrandDropDown?.view), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }

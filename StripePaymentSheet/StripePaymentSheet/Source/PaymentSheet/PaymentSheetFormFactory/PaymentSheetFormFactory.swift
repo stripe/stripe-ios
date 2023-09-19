@@ -39,7 +39,7 @@ class PaymentSheetFormFactory {
     let currency: String?
     let amount: Int?
     let countryCode: String?
-    let cardBroinceChoiceEligible: Bool
+    let cardBrandChoiceEligible: Bool
 
     var canSaveToLink: Bool {
         // For Link private beta, only save cards in ".none" mode: If there is no Customer object.
@@ -136,7 +136,7 @@ class PaymentSheetFormFactory {
         self.amount = amount
         self.countryCode = countryCode
         self.saveMode = saveMode
-        self.cardBroinceChoiceEligible = cardBrandChoiceEligible
+        self.cardBrandChoiceEligible = cardBrandChoiceEligible
     }
 
     func make() -> PaymentMethodElement {
@@ -145,7 +145,7 @@ class PaymentSheetFormFactory {
         // We have two ways to create the form for a payment method
         // 1. Custom, one-off forms
         if paymentMethod == .card {
-            return makeCard(cardBrandChoiceEligible: cardBroinceChoiceEligible)
+            return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
         } else if paymentMethod == .linkInstantDebit {
             return ConnectionsElement()
         } else if paymentMethod == .USBankAccount {

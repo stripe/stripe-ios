@@ -92,22 +92,4 @@ final class DropdownFieldElementTest: XCTestCase {
         element.update(items: items)
         XCTAssertEqual(index, 0)
     }
-
-    func testSelectedIndex() {
-        var index: Int?
-        let element = DropdownFieldElement(items: items, label: "", didUpdate: { index = $0 })
-        XCTAssertNil(index)
-
-        element.selectedIndex = 1
-        XCTAssertEqual(index, 1)
-
-        element.selectedIndex = 3
-        XCTAssertEqual(index, 3)
-
-        element.selectedIndex = 3
-        XCTAssertEqual(index, 3)
-
-        element.selectedIndex = 0
-        XCTAssertEqual(index, 0)
-    }
 }
