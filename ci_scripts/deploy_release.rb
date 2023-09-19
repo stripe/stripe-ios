@@ -100,11 +100,13 @@ def reply_email
 end
 
 def cleanup_project_files
-  rputs 'Cleanup generated project files from repo'
-  run_command("git checkout -b #{@cleanup_branchname}")
-  run_command("git pull -r origin master")
-  run_command('ci_scripts/delete_project_files.rb')
-  run_command("git add -u && git commit -m \"Remove generated project files for v#{@version}\"")
+  unless @is_dry_run
+    rputs 'Cleanup generated project files from repo'
+    run_command("git checkout -b #{@cleanup_branchname}")
+    run_command("git pull -r origin master")
+    run_command('ci_scripts/delete_project_files.rb')
+    run_command("git add -u && git commit -m \"Remove generated project files for v#{@version}\"")
+  end
 end
 
 def create_cleanup_pr
