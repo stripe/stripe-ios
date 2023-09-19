@@ -218,16 +218,16 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertTrue(sut.phone?.textFieldElement.text.isEmpty ?? false)
 
         // Country and phone should update together when country changes and phone text is empty
-        sut.country.selectedIndex = 0
+        sut.country.select(index: 0)
         XCTAssertEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
 
         // Country and phone should update together when country changes and phone text is empty
-        sut.country.selectedIndex = 1
+        sut.country.select(index: 1)
         XCTAssertEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
 
         // Phone country should not change once it has text populated
         sut.phone?.textFieldElement.setText("555")
-        sut.country.selectedIndex = 0
+        sut.country.select(index: 0)
         XCTAssertNotEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
     }
 }

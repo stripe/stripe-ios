@@ -52,7 +52,6 @@ final class CardSection: ContainerElement {
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
     let theme: ElementsUITheme
-    let cardBrandEligible: Bool
 
     init(
         collectName: Bool = false,
@@ -124,7 +123,6 @@ final class CardSection: ContainerElement {
         self.cardBrandDropDown = cardBrandDropDown
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element
-        self.cardBrandEligible = cardBrandChoiceEligible
         cardSection.delegate = self
     }
 
@@ -144,7 +142,7 @@ final class CardSection: ContainerElement {
 
     func updateCardBrandDropdown() {
         // Only fetch card brands if the merchant is eligible and we have at least 8 digits in the pan textfield
-        guard cardBrandEligible, panElement.text.count >= 8 else {
+        guard cardBrandDropDown != nil, panElement.text.count >= 8 else {
             return
         }
 
@@ -156,7 +154,7 @@ final class CardSection: ContainerElement {
                     // If there is only one option select it
                     if brands.count == 1 {
                         // Using 1 index as first index is a placeholder item
-                        self?.cardBrandDropDown?.selectedIndex = 1
+                        self?.cardBrandDropDown?.select(index: 1)
                     }
                 }
             case .failure(let error):

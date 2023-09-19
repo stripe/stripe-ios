@@ -61,16 +61,8 @@ import UIKit
         return items[selectedIndex]
     }
     public var selectedIndex: Int {
-        willSet {
-            if newValue < 0 || newValue >= items.count {
-                assertionFailure("Invalid index selected")
-            }
-        }
         didSet {
             updatePickerField()
-            if selectedIndex != oldValue {
-                didFinish(pickerFieldView)
-            }
         }
     }
     public var didUpdate: DidUpdateSelectedIndex?
@@ -144,6 +136,11 @@ import UIKit
         }
     }
 
+    public func select(index: Int) {
+        selectedIndex = index
+        didFinish(pickerFieldView)
+    }
+
     public func update(items: [DropdownItem]) {
         assert(!items.isEmpty, "`items` must contain at least one item")
         // Try to re-select the same item afer updating, if not possible default to the first item in the list
@@ -151,6 +148,7 @@ import UIKit
 
         self.items = items
         self.selectedIndex = newSelectedIndex
+        didFinish(pickerFieldView)
     }
 }
 

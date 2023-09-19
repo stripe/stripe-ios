@@ -42,6 +42,6 @@ extension DropdownFieldElement: TextOrDropdownElement {
                 return
             }
 
-        selectedIndex = itemIndex
+        select(index: itemIndex)
     }
 }

@@ -18,9 +18,9 @@ extension DropdownFieldElement {
         static let unknownBrandPlaceholder = "-1"
     }
 
-    @_spi(STP) public static func makeCardBrandDropdown(theme: ElementsUITheme = .default) -> DropdownFieldElement {
+    @_spi(STP) public static func makeCardBrandDropdown(cardBrands: Set<STPCardBrand> = Set<STPCardBrand>(), theme: ElementsUITheme = .default) -> DropdownFieldElement {
         return DropdownFieldElement(
-            items: items(from: Set<STPCardBrand>(), theme: theme),
+            items: items(from: cardBrands, theme: theme),
             defaultIndex: 0,
             label: nil,
             theme: theme
@@ -37,7 +37,6 @@ extension DropdownFieldElement {
         )
 
         let cardBrandItems = cardBrands.sorted().map { $0.cardBrandItem(theme: theme) }
-
         return [placeholderItem] + cardBrandItems
     }
 }

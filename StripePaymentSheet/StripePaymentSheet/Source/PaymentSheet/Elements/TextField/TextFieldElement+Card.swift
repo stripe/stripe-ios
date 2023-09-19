@@ -31,8 +31,7 @@ extension TextFieldElement {
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             // If CBC is available and not nil and 8 or more digits entered, show it
             // TODO(porter) Remove process ENABLE_CBC
-            if let cardBrandDropDownView = cardBrandDropDownView,
-               ProcessInfo.processInfo.environment["ENABLE_CBC"] == "true" {
+            if let cardBrandDropDownView = cardBrandDropDownView {
                 guard text.count >= 8 else {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
                 }

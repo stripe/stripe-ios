@@ -134,7 +134,7 @@ import UIKit
     }
 
     func selectCountry(index: Int, shouldUpdateDefaultNumber: Bool = false) {
-        countryDropdownElement.selectedIndex = index
+        countryDropdownElement.select(index: index)
 
         if shouldUpdateDefaultNumber {
             self.defaultPhoneNumber = phoneNumber
