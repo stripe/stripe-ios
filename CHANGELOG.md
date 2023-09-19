@@ -5,6 +5,9 @@
 ### Basic Integration
 * [Fixed] Fixed an issue with scanning card expiration dates.
 
+### Payments
+* [Fixed] Fixed an issue where amounts in Serbian Dinar were displayed incorrectly.
+
 ## 23.16.0 2023-09-18
 ### Payments
 * [Added] Properties of STPConnectAccountParams are now mutable.
