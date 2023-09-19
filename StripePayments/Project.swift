@@ -7,7 +7,6 @@ let project = Project.stripeFramework(
     dependencies: [
         .project(target: "StripeCore", path: "//StripeCore"),
         .project(target: "Stripe3DS2", path: "//Stripe3DS2"),
-        .project(target: "StripeUICore", path: "//StripeUICore"),
     ],
     testUtilsOptions: .testOptions(
         resources: .init(resources: [
