@@ -72,4 +72,42 @@ final class DropdownFieldElementTest: XCTestCase {
         element.didFinish(element.pickerFieldView)
         XCTAssertNil(index)
     }
+
+    func testUpdate() {
+        var index: Int?
+        let element = DropdownFieldElement(items: items, label: "", didUpdate: { index = $0 })
+        XCTAssertNil(index)
+        // Emulate a user changing the picker and hitting done button
+        element.pickerView(element.pickerView, didSelectRow: 3, inComponent: 0)
+        element.didFinish(element.pickerFieldView)
+        XCTAssertEqual(index, 3)
+
+        // Update items with same list should keep original item selected
+        element.update(items: items)
+        element.didFinish(element.pickerFieldView)
+        XCTAssertEqual(index, 3)
+
+        // Update items removing/replacing item at index 4, should select the first index
+        let items = ["A", "B", "C", "DD"].map { DropdownFieldElement.DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityValue: $0, rawData: $0) }
+        element.update(items: items)
+        XCTAssertEqual(index, 0)
+    }
+
+    func testSelectedIndex() {
+        var index: Int?
+        let element = DropdownFieldElement(items: items, label: "", didUpdate: { index = $0 })
+        XCTAssertNil(index)
+
+        element.selectedIndex = 1
+        XCTAssertEqual(index, 1)
+
+        element.selectedIndex = 3
+        XCTAssertEqual(index, 3)
+
+        element.selectedIndex = 3
+        XCTAssertEqual(index, 3)
+
+        element.selectedIndex = 0
+        XCTAssertEqual(index, 0)
+    }
 }

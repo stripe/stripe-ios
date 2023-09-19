@@ -155,7 +155,8 @@ final class CardSection: ContainerElement {
                     self?.cardBrandDropDown?.update(items: DropdownFieldElement.items(from: brands, theme: self?.theme ?? .default))
                     // If there is only one option select it
                     if brands.count == 1 {
-                        self?.cardBrandDropDown?.select(index: 1)
+                        // Using 1 index as first index is a placeholder item
+                        self?.cardBrandDropDown?.selectedIndex = 1
                     }
                 }
             case .failure(let error):

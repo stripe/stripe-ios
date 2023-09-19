@@ -392,7 +392,7 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         }
 
         if let autocompleteCountryIndex = autocompleteCountryIndex {
-            addressSection.country.select(index: autocompleteCountryIndex)
+            addressSection.country.selectedIndex = autocompleteCountryIndex
         }
         addressSection.line1?.setText(address.line1 ?? "")
         addressSection.city?.setText(address.city ?? "")
