@@ -156,7 +156,7 @@ final class PickerFieldView: UIView {
         return pickerView
         #else
         // Forward all events within our bounds to the textview
-        return textView
+        return textField
         #endif
     }
 
