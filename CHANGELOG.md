@@ -1,7 +1,7 @@
 ## X.X.X
 ### Payments
 * [Fixed] Fixed an issue where amounts in Serbian Dinar were displayed incorrectly.
-
+* [Fixed] Fixed an issue where the SDK could hang in macOS Catalyst.
 
 ## 23.16.0 2023-09-18
 ### Payments
