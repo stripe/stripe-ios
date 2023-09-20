@@ -62,7 +62,7 @@ import UIKit
         let action = { (action: UIAction) -> Void in
             self.selectedIndex = Int(action.identifier.rawValue) ?? 0
         }
-        
+
         if #available(macCatalyst 14.0, *) {
             let menu = UIMenu(children:
                 items.enumerated().map { (index, item) in
@@ -72,7 +72,7 @@ import UIKit
             button.menu = menu
             button.showsMenuAsPrimaryAction = true
         }
-        
+
         // We don't need to show this button, we're just using it to accept hits and present the menu.
         button.isHidden = true
         return button
@@ -85,7 +85,7 @@ import UIKit
         return picker
     }()
 #endif
-    
+
     private(set) lazy var pickerFieldView: PickerFieldView = {
         let pickerFieldView = PickerFieldView(
             label: label,
@@ -167,7 +167,7 @@ private extension DropdownFieldElement {
             pickerView.selectRow(selectedIndex, inComponent: 0, animated: false)
         }
         #endif
-        
+
         pickerFieldView.displayText = items[selectedIndex].labelDisplayName
         pickerFieldView.displayTextAccessibilityValue = items[selectedIndex].accessibilityValue
     }

@@ -21,7 +21,7 @@ protocol PickerFieldViewDelegate: AnyObject {
  */
 @objc(STP_Internal_PickerFieldView)
 final class PickerFieldView: UIView {
-    
+
     // MARK: - Views
     private lazy var toolbar = DoneButtonToolbar(delegate: self)
     private lazy var textField: PickerTextField = {
