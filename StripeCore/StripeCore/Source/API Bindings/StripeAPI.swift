@@ -129,7 +129,7 @@ import PassKit
         _deviceSupportsApplePay = deviceSupportsApplePay
         return deviceSupportsApplePay
     }
-    
+
     /// Cached value of deviceSupportsApplePay
     /// `PKPaymentAuthorizationController.canMakePayments` is very slow on macOS Catalyst, so we only request once per process
     /// or when the additional networks list changes.
