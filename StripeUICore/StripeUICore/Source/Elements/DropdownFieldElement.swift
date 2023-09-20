@@ -62,7 +62,7 @@ import UIKit
         let action = { (action: UIAction) -> Void in
             self.selectedIndex = Int(action.identifier.rawValue) ?? 0
         }
-
+        
         if #available(macCatalyst 14.0, *) {
             let menu = UIMenu(children:
                 items.enumerated().map { (index, item) in
