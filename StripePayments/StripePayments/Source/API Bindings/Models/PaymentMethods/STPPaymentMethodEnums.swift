@@ -83,6 +83,8 @@ import Foundation
     case konbini
     /// A PromptPay payment method
     case promptPay
+    /// A Swish payment method
+    case swish
     /// An unknown type.
     case unknown
 
@@ -163,6 +165,8 @@ import Foundation
             return STPLocalizedString("Konbini", "Payment Method type brand name")
         case .promptPay:
             return "PromptPay"
+        case .swish:
+            return STPLocalizedString("Swish", "Payment Method type brand name")
         case .bacsDebit,
             .cardPresent,
             .unknown:
@@ -249,6 +253,8 @@ import Foundation
             return "konbini"
         case .promptPay:
             return "promptpay"
+        case .swish:
+            return "swish"
         }
     }
 }

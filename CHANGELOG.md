@@ -1,4 +1,7 @@
 ## X.X.X
+### PaymentSheet
+* [Added] Support for Swish with PaymentIntents.
+
 ### Payments
 * [Fixed] Fixed an issue where amounts in Serbian Dinar were displayed incorrectly.
 

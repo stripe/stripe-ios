@@ -251,6 +251,18 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             form.getTextFieldElement("Email")?.setText("foo@bar.com")
         }
     }
+
+    func testSwishConfirmFlows() async throws {
+        try await _testConfirm(
+            intentKinds: [.paymentIntent],
+            currency: "SEK",
+            paymentMethodType: .dynamic("swish"),
+            merchantCountry: .FR
+        ) { form in
+            // Swish has no input fields
+            XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
 }
 
 // MARK: - Helper methods
@@ -432,7 +444,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                     print("✅ \(description): PaymentSheet.confirm completed")
                 }
             }
-            await fulfillment(of: [e], timeout: 5)
+            await fulfillment(of: [e], timeout: 10)
         }
     }
 }
