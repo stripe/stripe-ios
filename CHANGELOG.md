@@ -1,6 +1,7 @@
 ## X.X.X
 ### PaymentSheet
 * [Fixed] Fixed an issue with scanning card expiration dates.
+* [Fixed] Fixed an issue where billing address collection configuration was not passed to Apple Pay.
 
 ### Basic Integration
 * [Fixed] Fixed an issue with scanning card expiration dates.
