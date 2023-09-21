@@ -43,6 +43,10 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ST
         if NSClassFromString("XCTest") != nil {
             return true
         }
+        #if os(visionOS)
+        // visionOS does not currently support a live camera feed, so we can't scan cards.
+        return false
+        #endif
         return cardScanningAvailableCameraHasUsageDescription
     }
 
