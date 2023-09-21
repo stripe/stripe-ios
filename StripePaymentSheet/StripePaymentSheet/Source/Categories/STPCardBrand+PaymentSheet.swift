@@ -5,9 +5,9 @@
 //  Created by Nick Porter on 9/21/23.
 //
 
-@_spi(STP) import StripeUICore
-import StripePaymentsUI
 import Foundation
+import StripePaymentsUI
+@_spi(STP) import StripeUICore
 import UIKit
 
 extension STPCardBrand: Comparable {

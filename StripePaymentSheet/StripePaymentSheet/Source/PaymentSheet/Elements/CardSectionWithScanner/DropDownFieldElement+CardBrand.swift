@@ -8,8 +8,8 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension DropdownFieldElement {
 

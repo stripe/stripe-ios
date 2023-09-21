@@ -106,11 +106,14 @@ final class CardSection: ContainerElement {
             }
         }()
 
-        let allSubElements: [Element?] = [
+        var allSubElements: [Element?] = [
             nameElement,
-            panElement, SectionElement.HiddenElement(element: cardBrandDropDown!),
+            panElement,
             SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme),
         ]
+        if let cardBrandDropDown = cardBrandDropDown {
+            allSubElements += [SectionElement.HiddenElement(element: cardBrandDropDown)]
+        }
         let subElements = allSubElements.compactMap { $0 }
         self.cardSection = SectionElement(
             title: sectionTitle,
