@@ -1696,7 +1696,9 @@ public class STPPaymentHandler: NSObject {
                     return
                 }
 
-                if let fallbackURL = fallbackURL {
+                if let fallbackURL = fallbackURL,
+                    ["http", "https"].contains(fallbackURL.scheme)
+                {
                     let safariViewController = SFSafariViewController(url: fallbackURL)
                     safariViewController.modalPresentationStyle = .overFullScreen
                     safariViewController.dismissButtonStyle = .close

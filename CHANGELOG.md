@@ -4,6 +4,7 @@
 
 ### Payments
 * [Fixed] Fixed an issue where amounts in Serbian Dinar were displayed incorrectly.
+* [Added] Support for Swish bindings.
 
 
 ## 23.16.0 2023-09-18

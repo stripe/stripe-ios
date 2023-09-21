@@ -90,6 +90,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var cashApp: STPPaymentMethodCashAppParams?
     /// If this is a RevolutPay PaymentMethod, this contains additional details.
     @objc public var revolutPay: STPPaymentMethodRevolutPayParams?
+    /// If this is a Swish PaymentMethod, this contains additional details.
+    @objc public var swish: STPPaymentMethodSwishParams?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
@@ -554,6 +556,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a Swish PaymentMethod.
+    /// - Parameters:
+    ///   - swish:   An object containing additional Swish details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        swish: STPPaymentMethodSwishParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .swish
+        self.swish = swish
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
     /// with similar settings. It will return nil if used with a reusable PaymentMethod.
     /// - Parameter paymentMethod:       An object containing the original single-use PaymentMethod.
@@ -612,7 +632,9 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             self.klarna = STPPaymentMethodKlarnaParams()
         case .affirm:
             self.affirm = STPPaymentMethodAffirmParams()
-        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish:
+        case .swish:
+            self.swish = STPPaymentMethodSwishParams()
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay:
             // No parameters
             break
         // All reusable PaymentMethods go below:
@@ -668,6 +690,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: usBankAccount)): "us_bank_account",
             NSStringFromSelector(#selector(getter: cashApp)): "cashapp",
             NSStringFromSelector(#selector(getter: revolutPay)): "revolut_pay",
+            NSStringFromSelector(#selector(getter: swish)): "swish",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
         ]
@@ -1125,7 +1148,9 @@ extension STPPaymentMethodParams {
             cashApp = STPPaymentMethodCashAppParams()
         case .revolutPay:
             revolutPay = STPPaymentMethodRevolutPayParams()
-        case .cardPresent, .linkInstantDebit, .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish:
+        case .swish:
+            swish = STPPaymentMethodSwishParams()
+        case .cardPresent, .linkInstantDebit, .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay:
             // These payment methods don't have any params
             break
         case .unknown:
