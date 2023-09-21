@@ -31,7 +31,7 @@ import UIKit
     }
     var viewModel: SectionViewModel {
         return ViewModel(
-            views: elements.map({ $0.view }),
+            views: elements.filter { !($0 is HiddenElement) }.map({ $0.view }),
             title: title,
             errorText: errorText,
             subLabel: subLabel,
@@ -100,5 +100,33 @@ extension SectionElement: ElementDelegate {
             sectionView.update(with: viewModel)
         }
         delegate?.didUpdate(element: self)
+    }
+}
+
+extension SectionElement {
+
+    /// A class that encapsulates an element which needs to be visually hidden within the `SectionElement`.
+    /// While the element's view is hidden, its state, including delegate and validation state, continues to be managed by the `SectionElement`.
+    /// This class is typically used in scenarios where an element, although belonging to the same section as another element,
+    /// has its view nested inside a different element - for example, a dropdown menu for card brand selection in a payment card details form.
+    @_spi(STP) public final class HiddenElement: Element {
+        public var delegate: ElementDelegate? {
+            get {
+                return element.delegate
+            }
+            set {
+                element.delegate = newValue
+            }
+        }
+
+        public var view: UIView {
+            return self.element.view
+        }
+
+        let element: Element
+
+        public init(element: Element) {
+            self.element = element
+        }
     }
 }

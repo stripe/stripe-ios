@@ -69,6 +69,10 @@ import UIKit
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
 
+    public let theme: ElementsUITheme
+
+    public var validationState: ElementValidationState = .valid
+
     private(set) lazy var pickerView: UIPickerView = {
         let picker = UIPickerView()
         picker.delegate = self
@@ -90,21 +94,20 @@ import UIKit
     }()
 
     // MARK: - Private properties
-    private let theme: ElementsUITheme
     private var previouslySelectedIndex: Int
     private let disableDropdownWithSingleElement: Bool
 
     /**
      - Parameters:
-       - items: Items to populate this dropdown with.
-       - defaultIndex: Defaults the dropdown to the item with the corresponding index.
-       - label: Label for the dropdown
-       - didUpdate: Called when the user has finished selecting a new item.
-
+     - items: Items to populate this dropdown with.
+     - defaultIndex: Defaults the dropdown to the item with the corresponding index.
+     - label: Label for the dropdown
+     - didUpdate: Called when the user has finished selecting a new item.
+     
      - Note:
-       - Items must contain at least one item.
-       - If `defaultIndex` is outside of the bounds of the `items` array, then a default of `0` is used.
-       - `didUpdate` is not called if the user does not change their input before hitting "Done"
+     - Items must contain at least one item.
+     - If `defaultIndex` is outside of the bounds of the `items` array, then a default of `0` is used.
+     - `didUpdate` is not called if the user does not change their input before hitting "Done"
      */
     public init(
         items: [DropdownItem],
@@ -148,7 +151,10 @@ import UIKit
 
         self.items = items
         self.selectedIndex = newSelectedIndex
-        didFinish(pickerFieldView)
+    }
+
+    public func set(validationState: ElementValidationState) {
+        self.validationState = validationState
     }
 }
 

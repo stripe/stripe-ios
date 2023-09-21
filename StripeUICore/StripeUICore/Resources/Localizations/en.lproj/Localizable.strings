@@ -87,6 +87,9 @@ Label of an address field */
 /* Text for error labels */
 "Error" = "Error";
 
+/* Message when we fail to fetch card brands from the server */
+"Failed to fetch card brands" = "Failed to fetch card brands";
+
 /* Label for first (given) name field */
 "First" = "First";
 
@@ -148,6 +151,9 @@ Label of an address field */
 
 /* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
 "Search" = "Search";
+
+/* Message when a user is selecting a card brand in a dropdown */
+"Select card brand (optional)" = "Select card brand (optional)";
 
 /* Caption for State field on address form (only countries that use state , like United States)
 Label of an address field */

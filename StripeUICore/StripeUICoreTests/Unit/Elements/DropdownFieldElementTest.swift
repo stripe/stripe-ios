@@ -90,6 +90,7 @@ final class DropdownFieldElementTest: XCTestCase {
         // Update items removing/replacing item at index 4, should select the first index
         let items = ["A", "B", "C", "DD"].map { DropdownFieldElement.DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityValue: $0, rawData: $0) }
         element.update(items: items)
+        element.didFinish(element.pickerFieldView)
         XCTAssertEqual(index, 0)
     }
 }

@@ -108,7 +108,7 @@ final class CardSection: ContainerElement {
 
         let allSubElements: [Element?] = [
             nameElement,
-            panElement,
+            panElement, SectionElement.HiddenElement(element: cardBrandDropDown!),
             SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme),
         ]
         let subElements = allSubElements.compactMap { $0 }
@@ -128,41 +128,25 @@ final class CardSection: ContainerElement {
 
     // MARK: - ElementDelegate
     private var cardBrand: STPCardBrand = .unknown
+    private var selectedBrand: STPCardBrand? {
+        guard let cardBrandDropDown = cardBrandDropDown,
+              let cardBrandCaseIndex = Int(cardBrandDropDown.selectedItem.rawData) else {
+            return nil
+        }
+
+        return .init(rawValue: cardBrandCaseIndex) ?? .unknown
+    }
+
     func didUpdate(element: Element) {
         // Update the CVC field if the card brand changes
-        let cardBrand = STPCardValidator.brand(forNumber: panElement.text)
+        let cardBrand = selectedBrand ?? STPCardValidator.brand(forNumber: panElement.text)
         if self.cardBrand != cardBrand {
             self.cardBrand = cardBrand
             cvcElement.setText(cvcElement.text) // A hack to get the CVC to update
         }
 
-        updateCardBrandDropdown()
+        cardBrandDropDown?.fetchAndUpdateCardBrands(for: panElement.text)
         delegate?.didUpdate(element: self)
-    }
-
-    func updateCardBrandDropdown() {
-        // Only fetch card brands if the merchant is eligible and we have at least 8 digits in the pan textfield
-        guard cardBrandDropDown != nil, panElement.text.count >= 8 else {
-            return
-        }
-
-        STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
-            switch result {
-            case .success(let brands):
-                DispatchQueue.main.async {
-                    self?.cardBrandDropDown?.update(items: DropdownFieldElement.items(from: brands, theme: self?.theme ?? .default))
-                    // If there is only one option select it
-                    if brands.count == 1 {
-                        // Using 1 index as first index is a placeholder item
-                        self?.cardBrandDropDown?.select(index: 1)
-                    }
-                }
-            case .failure(let error):
-                // TODO(porter) No-op on error for now
-                // Nothing the user can really do
-                print(error)
-            }
-        }
     }
 }
 

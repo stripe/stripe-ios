@@ -317,4 +317,14 @@ import Foundation
     static var invalid_blik_code: String {
         STPLocalizedString("Your BLIK code is invalid.", "Error message when BLIK code is invalid")
     }
+
+    // MARK: - Card brand choice
+
+    static var card_brand_dropdown_placeholder: String {
+        STPLocalizedString("Select card brand (optional)", "Message when a user is selecting a card brand in a dropdown")
+    }
+
+    static var faild_to_fetch_card_brands: String {
+        STPLocalizedString("Failed to fetch card brands", "Message when we fail to fetch card brands from the server")
+    }
 }

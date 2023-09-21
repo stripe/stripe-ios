@@ -123,7 +123,8 @@ enum Intent {
     var cardBrandChoiceEligible: Bool {
         switch self {
         case .paymentIntent(let paymentIntent):
-            return paymentIntent.cardBrandChoice?.eligible ?? false
+            // TODO(porter) Remove enviorment check
+            return (paymentIntent.cardBrandChoice?.eligible ?? false) && ProcessInfo.processInfo.environment["ENABLE_CBC"] == "true"
         case .setupIntent, .deferredIntent: // TODO(porter) We will support SI and DI's later.
             return false
         }
