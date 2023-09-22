@@ -81,7 +81,7 @@ import UIKit
         if #available(macCatalyst 14.0, *) {
             let menu = UIMenu(children:
                 items.enumerated().map { (index, item) in
-                    UIAction(title: item.pickerDisplayName, identifier: .init(rawValue: String(index)), handler: action)
+                    UIAction(title: item.pickerDisplayName.string, identifier: .init(rawValue: String(index)), handler: action)
                 }
             )
             button.menu = menu
