@@ -896,7 +896,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         XCTAssertTrue(payButton.isEnabled)
         payButton.tap()
 
-        let approvePaymentText = app.buttons["AUTHORIZE TEST PAYMENT"]
+        let approvePaymentText = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
         approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
@@ -1085,7 +1085,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Attempt payment
         XCTAssertTrue(app.buttons["Pay SEK 50.99"].waitForExistenceAndTap(timeout: 5.0))
 
-        let approvePaymentText = app.links["AUTHORIZE TEST PAYMENT"]
+        let approvePaymentText = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
         approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
