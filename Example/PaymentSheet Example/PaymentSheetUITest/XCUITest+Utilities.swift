@@ -41,7 +41,9 @@ extension XCUIElement {
     }
 
     func firstDescendant(withLabel label: String) -> XCUIElement {
-        return descendants(matching: .any)[label]
+        return descendants(matching: .any).matching(
+            NSPredicate(format: "label == %@", label)
+        ).firstMatch
     }
 }
 
