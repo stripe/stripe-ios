@@ -1064,7 +1064,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     func testSwishPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer
-        settings.apmsEnabled = .on
+        settings.apmsEnabled = .off
         settings.currency = .sek
         settings.merchantCountryCode = .FR
         loadPlayground(
@@ -1083,9 +1083,9 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         swish.tap()
 
         // Attempt payment
-        XCTAssertTrue(app.buttons["Pay €50.99"].waitForExistenceAndTap(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Pay SEK 50.99"].waitForExistenceAndTap(timeout: 5.0))
 
-        let approvePaymentText = app.buttons["AUTHORIZE TEST PAYMENT"]
+        let approvePaymentText = app.links["AUTHORIZE TEST PAYMENT"]
         approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
