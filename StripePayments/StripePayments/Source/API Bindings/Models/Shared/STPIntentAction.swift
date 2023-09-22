@@ -67,6 +67,9 @@ import Foundation
     /// Contains details for displaying the QR code required for PromptPay.
     case promptpayDisplayQrCode
 
+    /// Contains details for redirecting to the Swish app.
+    case swishHandleRedirect
+
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the `next_action.type`
@@ -100,6 +103,8 @@ import Foundation
             self = .konbiniDisplayDetails
         case "promptpay_display_qr_code":
             self = .promptpayDisplayQrCode
+        case "swish_handle_redirect_or_display_qr_code":
+            self = .swishHandleRedirect
         default:
             self = .unknown
         }
@@ -138,6 +143,8 @@ import Foundation
             return "paynow_display_qr_code"
         case .promptpayDisplayQrCode:
             return "promptpay_display_qr_code"
+        case .swishHandleRedirect:
+            return "swish_handle_redirect_or_display_qr_code"
         }
 
         // catch any unknown values here
@@ -185,6 +192,9 @@ public class STPIntentAction: NSObject {
 
     /// Contains details for displaying the QR code required for PromptPay.
     @objc public let promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?
+
+    /// Contains details for redirecting to the Swish app.
+    @objc public let swishHandleRedirect: STPIntentActionSwishHandleRedirect?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
@@ -250,6 +260,10 @@ public class STPIntentAction: NSObject {
             if let promptPayDisplayQrCode = promptPayDisplayQrCode {
                 props.append("promptpayDisplayQrCode = \(promptPayDisplayQrCode)")
             }
+        case .swishHandleRedirect:
+            if let swishHandleRedirect = swishHandleRedirect {
+                props.append("swishHandleRedirect = \(swishHandleRedirect)")
+            }
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
             props.append("allResponseFields = \(allResponseFields)")
@@ -271,6 +285,7 @@ public class STPIntentAction: NSObject {
         payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?,
         konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?,
         promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?,
+        swishHandleRedirect: STPIntentActionSwishHandleRedirect?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -285,6 +300,7 @@ public class STPIntentAction: NSObject {
         self.payNowDisplayQrCode = payNowDisplayQrCode
         self.konbiniDisplayDetails = konbiniDisplayDetails
         self.promptPayDisplayQrCode = promptPayDisplayQrCode
+        self.swishHandleRedirect = swishHandleRedirect
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -316,6 +332,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
         var payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
         var konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
         var promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?
+        var swishHandleRedirect: STPIntentActionSwishHandleRedirect?
 
         switch type {
         case .unknown:
@@ -401,6 +418,13 @@ extension STPIntentAction: STPAPIResponseDecodable {
             if promptPayDisplayQrCode == nil {
                 type = .unknown
             }
+        case .swishHandleRedirect:
+            swishHandleRedirect = STPIntentActionSwishHandleRedirect.decodedObject(
+                fromAPIResponse: dict["swish_handle_redirect_or_display_qr_code"] as? [AnyHashable: Any]
+            )
+            if swishHandleRedirect == nil {
+                type = .unknown
+            }
         }
 
         return STPIntentAction(
@@ -416,6 +440,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             payNowDisplayQrCode: payNowDisplayQrCode,
             konbiniDisplayDetails: konbiniDisplayDetails,
             promptPayDisplayQrCode: promptPayDisplayQrCode,
+            swishHandleRedirect: swishHandleRedirect,
             allResponseFields: dict
         ) as? Self
     }

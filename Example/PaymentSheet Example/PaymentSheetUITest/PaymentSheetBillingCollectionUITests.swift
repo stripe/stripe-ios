@@ -636,7 +636,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
         // Complete payment
         payButton.tap()
-        let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
+        let authorizeButton = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
         authorizeButton.waitForExistenceAndTap(timeout: 10.0)
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
@@ -691,7 +691,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
         // Complete payment
         payButton.tap()
-        let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
+        let authorizeButton = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
         authorizeButton.waitForExistenceAndTap(timeout: 10.0)
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
@@ -746,7 +746,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
         // Complete payment
         payButton.tap()
-        let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
+        let authorizeButton = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
         authorizeButton.waitForExistenceAndTap(timeout: 10.0)
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }

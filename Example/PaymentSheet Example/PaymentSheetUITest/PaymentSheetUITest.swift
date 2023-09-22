@@ -896,7 +896,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         XCTAssertTrue(payButton.isEnabled)
         payButton.tap()
 
-        let approvePaymentText = app.buttons["AUTHORIZE TEST PAYMENT"]
+        let approvePaymentText = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
         approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
@@ -1059,6 +1059,36 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
+    }
+
+    func testSwishPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new // new customer
+        settings.apmsEnabled = .off
+        settings.currency = .sek
+        settings.merchantCountryCode = .FR
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Select Swish
+        guard let swish = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Swish")
+        else {
+            XCTFail()
+            return
+        }
+        swish.tap()
+
+        // Attempt payment
+        XCTAssertTrue(app.buttons["Pay SEK 50.99"].waitForExistenceAndTap(timeout: 5.0))
+
+        let approvePaymentText = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
+        approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 }
 

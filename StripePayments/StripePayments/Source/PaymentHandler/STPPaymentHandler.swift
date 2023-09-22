@@ -644,7 +644,8 @@ public class STPPaymentHandler: NSObject {
             .amazonPay,
             .alma,
             .konbini,
-            .promptPay:
+            .promptPay,
+            .swish:
             return false
 
         case .unknown:
@@ -1371,6 +1372,15 @@ public class STPPaymentHandler: NSObject {
                 // Present the polling view controller behind the web view so we can start polling right away
                 presentingVC.presentPollingVCForAction(action: currentAction, type: .promptPay, safariViewController: safariViewController)
             }
+        case .swishHandleRedirect:
+            guard
+                let returnURL = URL(string: currentAction.returnURLString ?? ""),
+                let mobileAuthURL = authenticationAction.swishHandleRedirect?.mobileAuthURL
+            else {
+                fatalError()
+            }
+
+            _handleRedirect(to: mobileAuthURL, withReturn: returnURL)
         @unknown default:
             fatalError()
         }
@@ -1484,11 +1494,11 @@ public class STPPaymentHandler: NSObject {
                                         currentAction.complete(with: .succeeded, error: nil)
                                     } else {
                                         // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
-                                        // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
+                                        // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                         let shouldRetryForCard = retrievedPaymentIntent?.paymentMethod?.type == .card && retrievedPaymentIntent?.nextAction?.type == .useStripeSDK
-                                        let shouldRetryForCashApp = retrievedPaymentIntent?.paymentMethod?.type == .cashApp
+                                        let shouldRetryForAppRedirect = [.cashApp, .swish].contains(retrievedPaymentIntent?.paymentMethod?.type)
                                         if retryCount > 0
-                                            && (shouldRetryForCard || shouldRetryForCashApp)
+                                            && (shouldRetryForCard || shouldRetryForAppRedirect)
                                         {
                                             self._retryWithExponentialDelay(retryCount: retryCount) {
                                                 self._retrieveAndCheckIntentForCurrentAction(
@@ -1686,7 +1696,9 @@ public class STPPaymentHandler: NSObject {
                     return
                 }
 
-                if let fallbackURL = fallbackURL {
+                if let fallbackURL = fallbackURL,
+                    ["http", "https"].contains(fallbackURL.scheme)
+                {
                     let safariViewController = SFSafariViewController(url: fallbackURL)
                     safariViewController.modalPresentationStyle = .overFullScreen
                     safariViewController.dismissButtonStyle = .close
@@ -1821,7 +1833,8 @@ public class STPPaymentHandler: NSObject {
                 .weChatPayRedirectToApp,
                 .cashAppRedirectToApp,
                 .payNowDisplayQrCode,
-                .promptpayDisplayQrCode:
+                .promptpayDisplayQrCode,
+                .swishHandleRedirect:
                 return false
             case .OXXODisplayDetails,
                 .boletoDisplayDetails,
@@ -1853,7 +1866,8 @@ public class STPPaymentHandler: NSObject {
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
-            .upiAwaitNotification, .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode, .promptpayDisplayQrCode:
+            .upiAwaitNotification, .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode,
+            .promptpayDisplayQrCode, .swishHandleRedirect:
             break
         @unknown default:
             fatalError()

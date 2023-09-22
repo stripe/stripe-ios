@@ -168,6 +168,8 @@ class PaymentSheetFormFactory {
             return makeKonbini()
         } else if paymentMethod.stpPaymentMethodType == .boleto {
             return makeBoleto()
+        } else if paymentMethod.stpPaymentMethodType == .swish {
+            return makeSwish()
         }
 
         guard let spec = specFromJSONProvider() else {
@@ -532,6 +534,16 @@ extension PaymentSheetFormFactory {
 
     func makeExternalPayPal() -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: false, emailRequiredByPaymentMethod: false, phoneRequiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
+    }
+
+    func makeSwish() -> PaymentMethodElement {
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
     }

@@ -87,6 +87,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case jpy
         case brl
         case thb
+        case sek
     }
 
     enum MerchantCountry: String, PickerEnum {
