@@ -21,21 +21,23 @@ extension TextFieldElement {
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
-        let cardBrandDropDownView: UIView?
+        let cardBrandDropDown: DropdownFieldElement?
 
-        init(defaultValue: String? = nil, cardBrandDropDownView: UIView? = nil) {
+        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil) {
             self.defaultValue = defaultValue
-            self.cardBrandDropDownView = cardBrandDropDownView
+            self.cardBrandDropDown = cardBrandDropDown
         }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-            // If CBC is available and not nil and 8 or more digits entered, show it
-            if let cardBrandDropDownView = cardBrandDropDownView {
-                guard text.count >= 8 else {
+            // If CBC is enabled...
+            if let cardBrandDropDown = cardBrandDropDown {
+                // Show unknown card brand if we have under 8 pan digits or 1 or less items in the dropdown (1 item only indicates only a placeholder)
+                if 8 > text.count || cardBrandDropDown.items.count <= 1 {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
+                } else if text.count >= 8 && cardBrandDropDown.items.count > 2 {
+                    // Show the dropdown if we have 8 or more digits and more than 2 items (placeholder + at least 2 brands), otherwise fall through and show brand as normal
+                    return cardBrandDropDown.view
                 }
-
-                return cardBrandDropDownView
             }
 
             let cardBrand = STPCardValidator.brand(forNumber: text)

@@ -77,7 +77,7 @@ final class CardSection: ContainerElement {
             cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(theme: theme)
         }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
-                                                                                       cardBrandDropDownView: cardBrandDropDown?.view), theme: theme) { field, params in
+                                                                                       cardBrandDropDown: cardBrandDropDown), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -148,8 +148,38 @@ final class CardSection: ContainerElement {
             cvcElement.setText(cvcElement.text) // A hack to get the CVC to update
         }
 
-        cardBrandDropDown?.fetchAndUpdateCardBrands(for: panElement.text)
+        fetchAndUpdateCardBrands()
         delegate?.didUpdate(element: self)
+    }
+
+    // MARK: Card brand choice
+    private var cardBrands = Set<STPCardBrand>()
+    func fetchAndUpdateCardBrands() {
+        // Only fetch card brands if we have at least 8 digits in the pan
+        guard let cardBrandDropDown = cardBrandDropDown, panElement.text.count >= 8 else {
+            // Clear any previously fetched card brands from the dropdown
+            self.cardBrands = Set<STPCardBrand>()
+            cardBrandDropDown?.update(items: DropdownFieldElement.items(from: cardBrands, theme: self.theme))
+            return
+        }
+
+        var fetchedCardBrands = Set<STPCardBrand>()
+        STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
+            switch result {
+            case .success(let brands):
+                cardBrandDropDown.validationState = .valid
+                fetchedCardBrands = brands
+            case .failure:
+                cardBrandDropDown.validationState = .invalid(error: DropdownFieldElement.Error.failedToFetchBrands, shouldDisplay: true)
+                fetchedCardBrands = Set<STPCardBrand>()
+            }
+
+            if self?.cardBrands != fetchedCardBrands {
+                self?.cardBrands = fetchedCardBrands
+                cardBrandDropDown.update(items: DropdownFieldElement.items(from: fetchedCardBrands, theme: self?.theme ?? .default))
+                self?.panElement.setText(self?.panElement.text ?? "") // Hack to get the accessory view to update
+            }
+        }
     }
 }
 

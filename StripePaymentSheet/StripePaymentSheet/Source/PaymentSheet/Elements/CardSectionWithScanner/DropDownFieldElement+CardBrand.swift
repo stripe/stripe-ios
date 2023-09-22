@@ -13,7 +13,7 @@ import UIKit
 
 extension DropdownFieldElement {
 
-    enum CardBrandDropDownError: ElementValidationError {
+    enum Error: ElementValidationError {
         case failedToFetchBrands
 
         var localizedDescription: String {
@@ -44,29 +44,5 @@ extension DropdownFieldElement {
 
         let cardBrandItems = cardBrands.sorted().map { $0.cardBrandItem(theme: theme) }
         return [placeholderItem] + cardBrandItems
-    }
-
-    @_spi(STP) public func fetchAndUpdateCardBrands(for number: String) {
-        // Only fetch card brands if we have at least 8 digits in the pan
-        guard number.count >= 8 else {
-            return
-        }
-
-        STPCardValidator.possibleBrands(forNumber: number) { [weak self] result in
-            switch result {
-            case .success(let brands):
-                DispatchQueue.main.async {
-                    self?.validationState = .valid
-                    self?.update(items: DropdownFieldElement.items(from: brands, theme: self?.theme ?? .default))
-                    // If there is only one option select it
-                    if brands.count == 1 {
-                        // Using 1 index as first index is a placeholder item
-                        self?.selectedIndex = 1
-                    }
-                }
-            case .failure:
-                self?.validationState = .invalid(error: CardBrandDropDownError.failedToFetchBrands, shouldDisplay: true)
-            }
-        }
     }
 }

@@ -873,6 +873,15 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         cardBrandTextField.tap()
         XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
         cardBrandChoiceDropdown.swipeUp()
+        app.toolbars.buttons["Cancel"].tap()
+
+        // We should still have no selected card brand
+        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 2))
+
+        // Select Visa from the CBC dropdown
+        cardBrandTextField.tap()
+        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
+        cardBrandChoiceDropdown.swipeUp()
         app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
