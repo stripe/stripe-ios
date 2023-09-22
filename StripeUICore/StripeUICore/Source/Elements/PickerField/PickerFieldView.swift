@@ -22,11 +22,15 @@ protocol PickerFieldViewDelegate: AnyObject {
  */
 @objc(STP_Internal_PickerFieldView)
 final class PickerFieldView: UIView {
+
     // MARK: - Views
     private lazy var toolbar = DoneButtonToolbar(delegate: self, showCancelButton: true, theme: theme)
     private lazy var textField: PickerTextField = {
         let textField = PickerTextField()
+        // Input views are not supported on Catalyst
+#if !targetEnvironment(macCatalyst)
         textField.inputView = pickerView
+#endif
         textField.adjustsFontForContentSizeCategory = true
         textField.font = theme.fonts.subheadline
         textField.inputAccessoryView = toolbar
@@ -118,6 +122,10 @@ final class PickerFieldView: UIView {
         self.theme = theme
         super.init(frame: .zero)
         addAndPinSubview(hStackView, directionalLayoutMargins: ElementsUI.contentViewInsets)
+//      On Catalyst, add the picker view as a subview instead of an input view.
+        #if targetEnvironment(macCatalyst)
+        addAndPinSubview(pickerView, directionalLayoutMargins: ElementsUI.contentViewInsets)
+        #endif
         layer.borderColor = theme.colors.border.cgColor
         isUserInteractionEnabled = true
     }
@@ -151,8 +159,13 @@ final class PickerFieldView: UIView {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
         }
-        // Forward all events within our bounds to the textfield
+        #if targetEnvironment(macCatalyst)
+        // Forward all events within our bounds to the button
+        return pickerView
+        #else
+        // Forward all events within our bounds to the textview
         return textField
+        #endif
     }
 
     override var intrinsicContentSize: CGSize {
