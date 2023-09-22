@@ -847,7 +847,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     func testCardBrandChoice() throws {
         app.launchEnvironment = app.launchEnvironment.merging(["ENABLE_CBC": "true"]) { (_, new) in new }
 
-        // Currently only our French merchant is eligible for card brand dhoice
+        // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
@@ -898,13 +898,13 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         try fillCardData(app, cardNumber: "4000002500001001")
 
         // Card brand choice drop down should be enabled
-        XCTAssertTrue(app.textFields["Visa"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistenceAndTap(timeout: 5))
         XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.swipeDown() // reset to optional selection for card brand
+        cardBrandChoiceDropdown.swipeUp() // reset to optional selection for card brand
         app.toolbars.buttons["Done"].tap()
 
-        // We should have selected the place holder
-        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 5))
+        // We should have selected Visa
+        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
 
         // Finish checkout
         app.buttons["Pay €50.99"].tap()
