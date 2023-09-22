@@ -2,6 +2,7 @@
 ### PaymentSheet
 * [Fixed] Fixed an issue with selecting from lists on macOS Catalyst. Note that only macOS 11 or later is supported: We do not recommend releasing a Catalyst app targeting macOS 10.15.
 * [Fixed] Fixed an issue with scanning card expiration dates.
+* [Fixed] Fixed an issue where billing address collection configuration was not passed to Apple Pay.
 
 ### Basic Integration
 * [Fixed] Fixed an issue with scanning card expiration dates.
