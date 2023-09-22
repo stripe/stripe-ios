@@ -1,11 +1,15 @@
 ## X.X.X
 ### PaymentSheet
+* [Fixed] Fixed an issue with scanning card expiration dates.
 * [Added] Support for Swish with PaymentIntents.
+
+### Basic Integration
+* [Fixed] Fixed an issue with scanning card expiration dates.
 
 ### Payments
 * [Fixed] Fixed an issue where amounts in Serbian Dinar were displayed incorrectly.
+* [Fixed] Fixed an issue where the SDK could hang in macOS Catalyst.
 * [Added] Support for Swish bindings.
-
 
 ## 23.16.0 2023-09-18
 ### Payments

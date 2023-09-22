@@ -23,16 +23,14 @@ enum STPCardScannerError: Int {
 @objc protocol STPCardScannerDelegate: NSObjectProtocol {
     @objc(cardScanner:didFinishWithCardParams:error:) func cardScanner(
         _ scanner: STPCardScanner,
-        didFinishWith cardParams: STPPaymentMethodCardParams?,
-        error: Error?
-    )
+        didFinishWith cardParams:
+        STPPaymentMethodCardParams?,
+        error: Error?)
 }
 
 @available(macCatalyst 14.0, *)
 @objc(STPCardScanner_legacy)
-class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
-    STPCardScanningProtocol
-{
+class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, STPCardScanningProtocol {
     // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
     static let cardScanningAvailableCameraHasUsageDescription = {
         return
@@ -62,11 +60,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
             // This is an optimization for portrait mode: The card will be centered in the screen,
             // so we can ignore the top and bottom. We'll use the whole frame in landscape.
             let kSTPCardScanningScreenCenter = CGRect(
-                x: 0,
-                y: CGFloat(0.3),
-                width: 1,
-                height: CGFloat(0.4)
-            )
+                x: 0, y: CGFloat(0.3), width: 1, height: CGFloat(0.4))
 
             // iOS camera image data is returned in LandcapeLeft orientation by default. We'll flip it as needed:
             switch newDeviceOrientation {
@@ -83,7 +77,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
                 textOrientation = .down
                 regionOfInterest = CGRect(x: 0, y: 0, width: 1, height: 1)
             case .portrait, .faceUp, .faceDown, .unknown:
-                // swift-format-ignore: NoCasesWithOnlyFallthrough
                 fallthrough
             default:
                 videoOrientation = .portrait
@@ -97,9 +90,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
     override init() {
     }
 
-    init(
-        delegate: STPCardScannerDelegate?
-    ) {
+    init(delegate: STPCardScannerDelegate?) {
         super.init()
         self.delegate = delegate
         captureSessionQueue = DispatchQueue(label: "com.stripe.CardScanning.CaptureSessionQueue")
@@ -114,8 +105,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
         startTime = Date()
 
         isScanning = true
-        didTimeout = false
-        timeoutStarted = false
+        timeoutTime = nil
         feedbackGenerator = UINotificationFeedbackGenerator()
         feedbackGenerator?.prepare()
 
@@ -125,8 +115,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
                 self.stopWithError(STPCardScanner.stp_cardScanningError())
                 return
             #else
-                self.detectedNumbers = NSCountedSet()  // capacity: 5
-                self.detectedExpirations = NSCountedSet()  // capacity: 5
+                self.detectedNumbers = NSCountedSet()
+                self.detectedExpirations = NSCountedSet()
                 self.setupCamera()
                 DispatchQueue.main.async(execute: {
                     self.cameraView?.captureSession = self.captureSession
@@ -149,14 +139,21 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
     private var videoDataOutputQueue: DispatchQueue?
     private var textRequest: VNRecognizeTextRequest?
     private var isScanning = false
-    private var didTimeout = false
-    private var timeoutStarted = false
+
+    private var timeoutTime: Date?
+    private var didTimeout: Bool {
+        if let timeoutTime = timeoutTime {
+            return timeoutTime <= Date()
+        }
+        return false
+    }
+
     private var stp_deviceOrientation: UIDeviceOrientation!
     private var videoOrientation: AVCaptureVideoOrientation!
     private var textOrientation: CGImagePropertyOrientation!
     private var regionOfInterest = CGRect.zero
-    private var detectedNumbers: NSCountedSet?
-    private var detectedExpirations: NSCountedSet?
+    private var detectedNumbers = NSCountedSet()
+    private var detectedExpirations = NSCountedSet()
     private var startTime: Date?
 
     // MARK: Public
@@ -169,8 +166,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
         return NSError(
             domain: STPCardScannerErrorDomain,
             code: STPCardScannerError.cameraNotAvailable.rawValue,
-            userInfo: userInfo
-        )
+            userInfo: userInfo)
     }
 
     deinit {
@@ -202,10 +198,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
         })
 
         let captureDevice = AVCaptureDevice.default(
-            .builtInWideAngleCamera,
-            for: .video,
-            position: .back
-        )
+            .builtInWideAngleCamera, for: .video, position: .back)
         self.captureDevice = captureDevice
 
         captureSession = AVCaptureSession()
@@ -281,10 +274,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
         var handler: VNImageRequestHandler?
         if let pixelBuffer = pixelBuffer {
             handler = VNImageRequestHandler(
-                cvPixelBuffer: pixelBuffer,
-                orientation: textOrientation,
-                options: [:]
-            )
+                cvPixelBuffer: pixelBuffer, orientation: textOrientation, options: [:])
         }
         do {
             try handler?.perform([textRequest].compactMap { $0 })
@@ -305,19 +295,15 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
             }
             for recognizedText in candidates {
                 let possibleNumber = STPCardValidator.sanitizedNumericString(
-                    for: recognizedText.string
-                )
-                // This probably isn't something we're interested in, so don't bother processing it.
+                    for: recognizedText.string)
                 if possibleNumber.count < 4 {
-                    continue
+                    continue  // This probably isn't something we're interested in, so don't bother processing it.
                 }
 
                 // First strategy: We check if Vision sent us a number in a group on its own. If that fails, we'll try
                 // to catch it later when we iterate over all the numbers.
                 if STPCardValidator.validationState(
-                    forNumber: possibleNumber,
-                    validatingCardBrand: true
-                )
+                    forNumber: possibleNumber, validatingCardBrand: true)
                     == .valid
                 {
                     addDetectedNumber(possibleNumber)
@@ -326,11 +312,9 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
                 {
                     // Try to parse anything that looks like an expiration date.
                     let expirationString = STPStringUtils.expirationDateString(
-                        from: recognizedText.string
-                    )
+                        from: recognizedText.string)
                     let sanitizedExpiration = STPCardValidator.sanitizedNumericString(
-                        for: expirationString ?? ""
-                    )
+                        for: expirationString ?? "")
                     let month = (sanitizedExpiration as NSString).substring(to: 2)
                     let year = (sanitizedExpiration as NSString).substring(from: 2)
 
@@ -368,56 +352,49 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
 
             // Then we'll add valid matches. It's okay if we add a number a second time after doing so above, as the success of that first pass means it's more likely to be a good match.
             if STPCardValidator.validationState(
-                forNumber: potentialCardString,
-                validatingCardBrand: true
-            )
+                forNumber: potentialCardString, validatingCardBrand: true)
                 == .valid
             {
                 addDetectedNumber(potentialCardString)
             } else if STPCardValidator.validationState(
-                forNumber: potentialAmexString,
-                validatingCardBrand: true
-            ) == .valid {
+                forNumber: potentialAmexString, validatingCardBrand: true) == .valid
+            {
                 addDetectedNumber(potentialAmexString)
             }
         }
     }
 
     func addDetectedNumber(_ number: String) {
-        detectedNumbers?.add(number)
+        detectedNumbers.add(number)
 
-        // Set a timeout: If we don't get enough scans in the next 1 second, we'll use the best option we have.
-        if !timeoutStarted {
-            timeoutStarted = true
+        // Set a timeout: If we don't get enough scans in the next 0.6 seconds, we'll use the best option we have.
+        if timeoutTime == nil {
+            self.timeoutTime = Date().addingTimeInterval(kSTPCardScanningTimeout)
             weak var weakSelf = self
             DispatchQueue.main.async(execute: {
                 let strongSelf = weakSelf
                 strongSelf?.cameraView?.playSnapshotAnimation()
                 strongSelf?.feedbackGenerator?.notificationOccurred(.success)
             })
+            // Just in case we don't get any frames, add another call to `finishIfReady` after timeoutTime to check
             videoDataOutputQueue?.asyncAfter(
-                deadline: DispatchTime.now() + Double(
-                    Int64(kSTPCardScanningTimeout * Double(NSEC_PER_SEC))
-                )
-                    / Double(NSEC_PER_SEC),
+                deadline: DispatchTime.now() + kSTPCardScanningTimeout,
                 execute: {
                     let strongSelf = weakSelf
                     if strongSelf?.isScanning ?? false {
-                        strongSelf?.didTimeout = true
                         strongSelf?.finishIfReady()
                     }
-                }
-            )
+                })
         }
 
-        if (detectedNumbers?.count(for: number) ?? 0) >= kSTPCardScanningMinimumValidScans {
+        if (detectedNumbers.count(for: number)) >= kSTPCardScanningMinimumValidScans {
             finishIfReady()
         }
     }
 
     func addDetectedExpiration(_ expiration: String) {
-        detectedExpirations?.add(expiration)
-        if (detectedExpirations?.count(for: expiration) ?? 0) >= kSTPCardScanningMinimumValidScans {
+        detectedExpirations.add(expiration)
+        if (detectedExpirations.count(for: expiration)) >= kSTPCardScanningMinimumValidScans {
             finishIfReady()
         }
     }
@@ -430,11 +407,10 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
         let detectedNumbers = self.detectedNumbers
         let detectedExpirations = self.detectedExpirations
 
-        let topNumber = (detectedNumbers?.allObjects as NSArray?)?.sortedArray(comparator: {
-            obj1,
-            obj2 in
-            let c1 = detectedNumbers?.count(for: obj1) ?? 0
-            let c2 = detectedNumbers?.count(for: obj2) ?? 0
+        let topNumber = (detectedNumbers.allObjects as NSArray).sortedArray(comparator: {
+            obj1, obj2 in
+            let c1 = detectedNumbers.count(for: obj1)
+            let c2 = detectedNumbers.count(for: obj2)
             if c1 < c2 {
                 return .orderedAscending
             } else if c1 > c2 {
@@ -443,11 +419,10 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
                 return .orderedSame
             }
         }).last
-        let topExpiration = (detectedExpirations?.allObjects as NSArray?)?.sortedArray(comparator: {
-            obj1,
-            obj2 in
-            let c1 = detectedExpirations?.count(for: obj1) ?? 0
-            let c2 = detectedExpirations?.count(for: obj2) ?? 0
+        let topExpiration = (detectedExpirations.allObjects as NSArray).sortedArray(comparator: {
+            obj1, obj2 in
+            let c1 = detectedExpirations.count(for: obj1)
+            let c2 = detectedExpirations.count(for: obj2)
             if c1 < c2 {
                 return .orderedAscending
             } else if c1 > c2 {
@@ -457,22 +432,19 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
             }
         }).last
 
-        if didTimeout
-            || (((detectedNumbers?.count(for: topNumber ?? 0) ?? 0)
-                >= kSTPCardScanningMinimumValidScans)
-                && ((detectedExpirations?.count(for: topExpiration ?? 0) ?? 0)
-                    >= kSTPCardScanningMinimumValidScans))
-            || ((detectedNumbers?.count(for: topNumber ?? 0) ?? 0) >= kSTPCardScanningMaxValidScans)
-        {
+        var didSeeEnoughScans = false
+        if let topNumber = topNumber, let topExpiration = topExpiration {
+            didSeeEnoughScans = detectedNumbers.count(for: topNumber) >= kSTPCardScanningMinimumValidScans &&
+                detectedExpirations.count(for: topExpiration) >= kSTPCardScanningMinimumValidScans
+        }
+        if didTimeout || didSeeEnoughScans {
             let params = STPPaymentMethodCardParams()
             params.number = topNumber as? String
             if let topExpiration = topExpiration {
                 params.expMonth = NSNumber(
-                    value: Int((topExpiration as! NSString).substring(to: 2)) ?? 0
-                )
+                    value: Int((topExpiration as! NSString).substring(to: 2)) ?? 0)
                 params.expYear = NSNumber(
-                    value: Int((topExpiration as! NSString).substring(from: 2)) ?? 0
-                )
+                    value: Int((topExpiration as! NSString).substring(from: 2)) ?? 0)
             }
             finish(with: params, error: nil)
         }
@@ -505,10 +477,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate,
 
 // The number of successful scans required for both card number and expiration date before returning a result.
 private let kSTPCardScanningMinimumValidScans = 2
-// If no expiration date is found, we'll return a result after this many successful scans.
-private let kSTPCardScanningMaxValidScans = 3
 // Once one successful scan is found, we'll stop scanning after this many seconds.
-private let kSTPCardScanningTimeout: TimeInterval = 1.0
+private let kSTPCardScanningTimeout: TimeInterval = 0.6
 let STPCardScannerErrorDomain = "STPCardScannerErrorDomain"
 
 /// :nodoc:
