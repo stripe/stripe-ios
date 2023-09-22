@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 /**
- A textfield whose input view is a `UIPickerView` with a list of the strings.
+ A textfield whose input view is a `UIPickerView` (on iOS) or a `UIMenu` (on Catalyst) with a list of the strings.
  
  For internal SDK use only
  */
@@ -56,13 +56,36 @@ import UIKit
     public var didUpdate: DidUpdateSelectedIndex?
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
+#if targetEnvironment(macCatalyst)
+    private(set) lazy var pickerView: UIButton = {
+        let button = UIButton()
+        let action = { (action: UIAction) -> Void in
+            self.selectedIndex = Int(action.identifier.rawValue) ?? 0
+        }
 
+        if #available(macCatalyst 14.0, *) {
+            let menu = UIMenu(children:
+                items.enumerated().map { (index, item) in
+                    UIAction(title: item.pickerDisplayName, identifier: .init(rawValue: String(index)), handler: action)
+                }
+            )
+            button.menu = menu
+            button.showsMenuAsPrimaryAction = true
+        }
+
+        // We don't need to show this button, we're just using it to accept hits and present the menu.
+        button.isHidden = true
+        return button
+    }()
+#else
     private(set) lazy var pickerView: UIPickerView = {
         let picker = UIPickerView()
         picker.delegate = self
         picker.dataSource = self
         return picker
     }()
+#endif
+
     private(set) lazy var pickerFieldView: PickerFieldView = {
         let pickerFieldView = PickerFieldView(
             label: label,
@@ -133,9 +156,17 @@ import UIKit
 private extension DropdownFieldElement {
 
     func updatePickerField() {
+        #if targetEnvironment(macCatalyst)
+        if #available(macCatalyst 14.0, *) {
+            // Mark the enabled menu item as selected
+            pickerView.menu?.children.forEach { ($0 as? UIAction)?.state = .off }
+            (pickerView.menu?.children[selectedIndex] as? UIAction)?.state = .on
+        }
+        #else
         if pickerView.selectedRow(inComponent: 0) != selectedIndex {
             pickerView.selectRow(selectedIndex, inComponent: 0, animated: false)
         }
+        #endif
 
         pickerFieldView.displayText = items[selectedIndex].labelDisplayName
         pickerFieldView.displayTextAccessibilityValue = items[selectedIndex].accessibilityValue
