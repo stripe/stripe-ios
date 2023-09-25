@@ -67,7 +67,6 @@ import UIKit
     }
     public var didUpdate: DidUpdateSelectedIndex?
     public let theme: ElementsUITheme
-    public var validationState: ElementValidationState = .valid
 
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
@@ -173,10 +172,6 @@ import UIKit
 
         self.items = items
         self.selectedIndex = newSelectedIndex
-    }
-
-    public func set(validationState: ElementValidationState) {
-        self.validationState = validationState
     }
 }
 

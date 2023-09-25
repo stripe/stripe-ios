@@ -13,17 +13,6 @@ import UIKit
 
 extension DropdownFieldElement {
 
-    enum Error: ElementValidationError {
-        case failedToFetchBrands
-
-        var localizedDescription: String {
-            switch self {
-            case .failedToFetchBrands:
-                return .Localized.faild_to_fetch_card_brands
-            }
-        }
-    }
-
     @_spi(STP) public static func makeCardBrandDropdown(cardBrands: Set<STPCardBrand> = Set<STPCardBrand>(), theme: ElementsUITheme = .default) -> DropdownFieldElement {
         return DropdownFieldElement(
             items: items(from: cardBrands, theme: theme),

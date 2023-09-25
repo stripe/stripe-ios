@@ -106,14 +106,11 @@ final class CardSection: ContainerElement {
             }
         }()
 
-        var allSubElements: [Element?] = [
+        let allSubElements: [Element?] = [
             nameElement,
             panElement,
             SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme),
         ]
-        if let cardBrandDropDown = cardBrandDropDown {
-            allSubElements += [SectionElement.HiddenElement(element: cardBrandDropDown)]
-        }
         let subElements = allSubElements.compactMap { $0 }
         self.cardSection = SectionElement(
             title: sectionTitle,
@@ -158,8 +155,11 @@ final class CardSection: ContainerElement {
         // Only fetch card brands if we have at least 8 digits in the pan
         guard let cardBrandDropDown = cardBrandDropDown, panElement.text.count >= 8 else {
             // Clear any previously fetched card brands from the dropdown
-            self.cardBrands = Set<STPCardBrand>()
-            cardBrandDropDown?.update(items: DropdownFieldElement.items(from: cardBrands, theme: self.theme))
+            if self.cardBrands != Set<STPCardBrand>() {
+                self.cardBrands = Set<STPCardBrand>()
+                cardBrandDropDown?.update(items: DropdownFieldElement.items(from: self.cardBrands, theme: self.theme))
+                self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
+            }
             return
         }
 
@@ -167,10 +167,9 @@ final class CardSection: ContainerElement {
         STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
             switch result {
             case .success(let brands):
-                cardBrandDropDown.validationState = .valid
                 fetchedCardBrands = brands
             case .failure:
-                cardBrandDropDown.validationState = .invalid(error: DropdownFieldElement.Error.failedToFetchBrands, shouldDisplay: true)
+                // If we fail to fetch card brands fall back to normal card brand detection
                 fetchedCardBrands = Set<STPCardBrand>()
             }
 
