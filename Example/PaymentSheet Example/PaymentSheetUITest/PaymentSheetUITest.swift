@@ -6,7 +6,6 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-@_spi(STP) @testable import StripePaymentSheet
 import XCTest
 
 class PaymentSheetUITestCase: XCTestCase {
