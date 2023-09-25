@@ -20,6 +20,11 @@ protocol HostViewControllerDelegate: AnyObject {
         _ viewController: HostViewController,
         didFetch synchronizePayload: FinancialConnectionsSynchronize
     )
+
+    func hostViewController(
+        _ hostViewController: HostViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 final class HostViewController: UIViewController {
@@ -102,6 +107,15 @@ extension HostViewController {
                     self.lastError = nil
                     self.delegate?.hostViewController(self, didFetch: synchronizePayload)
                 case .failure(let error):
+                    self.delegate?.hostViewController(
+                        self,
+                        didReceiveEvent: FinancialConnectionsEvent(
+                            name: .error,
+                            metadata: FinancialConnectionsEvent.Metadata(
+                                errorCode: .unexpectedError
+                            )
+                        )
+                    )
                     self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
                     self.loadingView.errorView.isHidden = false
                     self.lastError = error
@@ -121,6 +135,10 @@ private extension HostViewController {
 
     @objc
     func didTapClose() {
+        delegate?.hostViewController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+        )
         delegate?.hostViewControllerDidFinish(self, lastError: lastError)
     }
 }

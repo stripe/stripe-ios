@@ -66,6 +66,7 @@ class HostController {
 // MARK: - HostViewControllerDelegate
 
 extension HostController: HostViewControllerDelegate {
+
     func hostViewControllerDidFinish(_ viewController: HostViewController, lastError: Error?) {
         guard let error = lastError else {
             delegate?.hostController(self, viewController: viewController, didFinish: .canceled)
@@ -121,6 +122,13 @@ extension HostController: HostViewControllerDelegate {
         )
         nativeFlowController?.delegate = self
         nativeFlowController?.startFlow()
+    }
+
+    func hostViewController(
+        _ hostViewController: HostViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.hostController(self, didReceiveEvent: event)
     }
 }
 

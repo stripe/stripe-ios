@@ -189,6 +189,10 @@ extension FinancialConnectionsWebFlowViewController {
                         {
                             self.notifyDelegateOfSuccess(session: session)
                         } else {
+                            self.delegate?.webFlowViewController(
+                                self,
+                                didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+                            )
                             self.notifyDelegate(result: .canceled)
                         }
                     } else if webCancelled {
@@ -206,7 +210,7 @@ extension FinancialConnectionsWebFlowViewController {
                 }
             }
     }
-    
+
     private func notifyDelegateOfSuccess(session: StripeAPI.FinancialConnectionsSession) {
         delegate?.webFlowViewController(
             self,
@@ -219,7 +223,7 @@ extension FinancialConnectionsWebFlowViewController {
         )
         notifyDelegate(result: .completed(session: session))
     }
-    
+
     // all failures except custom manual entry failure
     private func notifyDelegateOfFailure(error: Error) {
         delegate?.webFlowViewController(
