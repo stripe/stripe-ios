@@ -22,6 +22,10 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
         _ viewController: AccountPickerViewController,
         didReceiveTerminalError error: Error
     )
+    func accountPickerViewController(
+        _ viewController: AccountPickerViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 enum AccountPickerType {
@@ -151,6 +155,16 @@ final class AccountPickerViewController: UIViewController {
                         .logPaneLoaded(pane: .accountPicker)
 
                     if accounts.isEmpty {
+                        self.delegate?.accountPickerViewController(
+                            self,
+                            didReceiveEvent: FinancialConnectionsEvent(
+                                name: .error,
+                                metadata: FinancialConnectionsEvent.Metadata(
+                                    errorCode: .accountsUnavailable
+                                )
+                            )
+                        )
+
                         // if there were no accounts returned, API should have thrown an error
                         // ...handle it here since API did not throw error
                         self.showAccountLoadErrorView(
@@ -204,6 +218,16 @@ final class AccountPickerViewController: UIViewController {
                         // show "AccountLoadErrorView."
                         numberOfIneligibleAccounts > 0
                     {
+                        self.delegate?.accountPickerViewController(
+                            self,
+                            didReceiveEvent: FinancialConnectionsEvent(
+                                name: .error,
+                                metadata: FinancialConnectionsEvent.Metadata(
+                                    errorCode: .noDebitableAccount
+                                )
+                            )
+                        )
+
                         let errorView = AccountPickerNoAccountEligibleErrorView(
                             institution: self.dataSource.institution,
                             bussinessName: self.businessName,
@@ -224,6 +248,16 @@ final class AccountPickerViewController: UIViewController {
                                 pane: .accountPicker
                             )
                     } else {
+                        self.delegate?.accountPickerViewController(
+                            self,
+                            didReceiveEvent: FinancialConnectionsEvent(
+                                name: .error,
+                                metadata: FinancialConnectionsEvent.Metadata(
+                                    errorCode: .accountsUnavailable
+                                )
+                            )
+                        )
+
                         // if we didn't get that specific error back, we don't know what's wrong. could the be
                         // aggregator, could be Stripe.
                         self.showAccountLoadErrorView(error: error)

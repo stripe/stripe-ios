@@ -509,6 +509,13 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
     ) {
         showTerminalError(error)
     }
+
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.nativeFlowController(self, didReceiveEvent: event)
+    }
 }
 
 // MARK: - AccountPickerViewControllerDelegate
@@ -555,6 +562,13 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
+    }
+
+    func accountPickerViewController(
+        _ viewController: AccountPickerViewController,
+        didReceiveEvent event: StripeCore.FinancialConnectionsEvent
+    ) {
+        delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
 }
 
@@ -732,6 +746,13 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
         _ viewController: AttachLinkedPaymentAccountViewController
     ) {
         pushPane(.manualEntry, animated: true)
+    }
+
+    func attachLinkedPaymentAccountViewController(
+        _ viewController: AttachLinkedPaymentAccountViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
 }
 

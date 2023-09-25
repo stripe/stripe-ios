@@ -20,6 +20,10 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
         _ viewController: PartnerAuthViewController,
         didCompleteWithAuthSession authSession: FinancialConnectionsAuthSession
     )
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 final class PartnerAuthViewController: UIViewController {
@@ -171,6 +175,16 @@ final class PartnerAuthViewController: UIViewController {
                 }
             )
             if let expectedToBeAvailableAt = extraFields["expected_to_be_available_at"] as? TimeInterval {
+                delegate?.partnerAuthViewController(
+                    self,
+                    didReceiveEvent: FinancialConnectionsEvent(
+                        name: .error,
+                        metadata: FinancialConnectionsEvent.Metadata(
+                            errorCode: .institutionUnavailablePlanned
+                        )
+                    )
+                )
+
                 let expectedToBeAvailableDate = Date(timeIntervalSince1970: expectedToBeAvailableAt)
                 let dateFormatter = DateFormatter()
                 dateFormatter.timeStyle = .short
@@ -241,6 +255,16 @@ final class PartnerAuthViewController: UIViewController {
                     pane: .partnerAuth
                 )
             } else {
+                delegate?.partnerAuthViewController(
+                    self,
+                    didReceiveEvent: FinancialConnectionsEvent(
+                        name: .error,
+                        metadata: FinancialConnectionsEvent.Metadata(
+                            errorCode: .institutionUnavailableUnplanned
+                        )
+                    )
+                )
+
                 errorView = ReusableInformationView(
                     iconType: .view(institutionIconView),
                     title: String(
@@ -609,6 +633,15 @@ final class PartnerAuthViewController: UIViewController {
                         self?.showRetrievingAccountsView(false)
                     }
                 case .failure(let error):
+                    self.delegate?.partnerAuthViewController(
+                        self,
+                        didReceiveEvent: FinancialConnectionsEvent(
+                            name: .error,
+                            metadata: FinancialConnectionsEvent.Metadata(
+                                errorCode: .authorizationFailed
+                            )
+                        )
+                    )
                     self.showRetrievingAccountsView(false)  // important to come BEFORE showing error view so we avoid showing back button
                     self.showErrorView(error)
                     assert(self.navigationItem.hidesBackButton)

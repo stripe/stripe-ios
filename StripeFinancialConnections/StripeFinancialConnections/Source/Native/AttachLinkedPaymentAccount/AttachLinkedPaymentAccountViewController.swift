@@ -22,6 +22,10 @@ protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
     func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(
         _ viewController: AttachLinkedPaymentAccountViewController
     )
+    func attachLinkedPaymentAccountViewController(
+        _ viewController: AttachLinkedPaymentAccountViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 final class AttachLinkedPaymentAccountViewController: UIViewController {
@@ -126,6 +130,15 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                         let reason = extraFields["reason"] as? String,
                         reason == "account_number_retrieval_failed"
                     {
+                        self.delegate?.attachLinkedPaymentAccountViewController(
+                            self,
+                            didReceiveEvent: FinancialConnectionsEvent(
+                                name: .error,
+                                metadata: FinancialConnectionsEvent.Metadata(
+                                    errorCode: .accountNumbersUnavailable
+                                )
+                            )
+                        )
                         let errorView = AccountNumberRetrievalErrorView(
                             institution: self.dataSource.institution,
                             didSelectAnotherBank: self.didSelectAnotherBank,
