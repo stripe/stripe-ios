@@ -97,7 +97,14 @@ class NativeFlowController {
                 || navigationController.topViewController is LinkAccountPickerViewController)
 
         let finishClosingAuthFlow = { [weak self] in
-            self?.closeAuthFlow()
+            guard let self = self else {
+                return
+            }
+            self.delegate?.nativeFlowController(
+                self,
+                didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+            )
+            self.closeAuthFlow()
         }
         if showConfirmationAlert {
             CloseConfirmationAlertHandler.present(
@@ -310,6 +317,15 @@ extension NativeFlowController {
                         if !session.accounts.data.isEmpty || session.paymentAccount != nil
                             || session.bankAccountToken != nil
                         {
+                            self.delegate?.nativeFlowController(
+                                self,
+                                didReceiveEvent: FinancialConnectionsEvent(
+                                    name: .success,
+                                    metadata: FinancialConnectionsEvent.Metadata(
+                                        manualEntry: session.bankAccountToken != nil
+                                    )
+                                )
+                            )
                             self.logCompleteEvent(
                                 type: eventType,
                                 status: "completed",

@@ -77,7 +77,7 @@ public struct FinancialConnectionsEvent {
        /// `error_code` will be available in metadata as ErrorCode
        case error = "error"
 
-       /// The modal is closed by the user, either by clicking the “X” or clicking outside the modal
+       /// The modal is closed by the user by clicking the “X” button.
        case cancel = "cancel"
 
        /// The modal is launched on an external browser. After receiving this event, no other events
