@@ -153,7 +153,7 @@ extension FinancialConnectionsWebFlowViewController {
                 case .success(.nativeCancelled):
                     self.fetchSession(userDidCancelInNative: true)
                 case .failure(let error):
-                    self.notifyDelegate(result: .failed(error: error))
+                    self.notifyDelegateOfFailure(error: error)
                 case .success(.redirect(url: let url)):
                     self.redirect(to: url)
                 }
@@ -187,7 +187,7 @@ extension FinancialConnectionsWebFlowViewController {
                         if !session.accounts.data.isEmpty || session.paymentAccount != nil
                             || session.bankAccountToken != nil
                         {
-                            self.notifyDelegate(result: .completed(session: session))
+                            self.notifyDelegateOfSuccess(session: session)
                         } else {
                             self.notifyDelegate(result: .canceled)
                         }
@@ -198,13 +198,40 @@ extension FinancialConnectionsWebFlowViewController {
                             self.notifyDelegate(result: .canceled)
                         }
                     } else {
-                        self.notifyDelegate(result: .completed(session: session))
+                        self.notifyDelegateOfSuccess(session: session)
                     }
                 case .failure(let error):
                     self.loadingView.errorView.isHidden = false
                     self.fetchSessionError = error
                 }
             }
+    }
+    
+    private func notifyDelegateOfSuccess(session: StripeAPI.FinancialConnectionsSession) {
+        delegate?.webFlowViewController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(
+                name: .success,
+                metadata: FinancialConnectionsEvent.Metadata(
+                    manualEntry: session.bankAccountToken != nil
+                )
+            )
+        )
+        notifyDelegate(result: .completed(session: session))
+    }
+    
+    // all failures except custom manual entry failure
+    private func notifyDelegateOfFailure(error: Error) {
+        delegate?.webFlowViewController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(
+                name: .error,
+                metadata: FinancialConnectionsEvent.Metadata(
+                    errorCode: .unexpectedError
+                )
+            )
+        )
+        notifyDelegate(result: .failed(error: error))
     }
 }
 
@@ -238,7 +265,7 @@ private extension FinancialConnectionsWebFlowViewController {
 
     private func manuallyCloseWebFlowViewController() {
         if let fetchSessionError = fetchSessionError {
-            notifyDelegate(result: .failed(error: fetchSessionError))
+            notifyDelegateOfFailure(error: fetchSessionError)
         } else {
             notifyDelegate(result: .canceled)
         }
