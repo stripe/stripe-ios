@@ -20,6 +20,7 @@
 * [Added] Support for RevolutPay bindings
 
 ### PaymentSheet
+* [Added] Support for Alipay with PaymentIntents.
 * [Added] Support for Cash App Pay with SetupIntents and PaymentIntents with `setup_future_usage`.
 * [Added] Support for AU BECS Debit with SetupIntents.
 * [Added] Support for OXXO with PaymentIntents.
