@@ -18,6 +18,8 @@ extension STPCardBrand: Comparable {
     func brandIconAttributedString(theme: ElementsUITheme = .default) -> NSAttributedString {
         let brandImageAttachment = NSTextAttachment()
         brandImageAttachment.image = self == .unknown ? DynamicImageView.makeUnknownCardImageView(theme: theme).image : STPImageLibrary.cardBrandImage(for: self)
+        // Hard code image size to fit nicely in the card textfield
+        brandImageAttachment.bounds = CGRect(x: 0, y: -3, width: 27.5, height: 17)
 
         return NSAttributedString(attachment: brandImageAttachment)
     }
