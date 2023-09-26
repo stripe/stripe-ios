@@ -39,6 +39,7 @@ class PaymentSheetFormFactory {
     let currency: String?
     let amount: Int?
     let countryCode: String?
+    let cardBrandChoiceEligible: Bool
 
     var canSaveToLink: Bool {
         // For Link private beta, only save cards in ".none" mode: If there is no Customer object.
@@ -57,7 +58,8 @@ class PaymentSheetFormFactory {
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
-        linkAccount: PaymentSheetLinkAccount? = nil
+        linkAccount: PaymentSheetLinkAccount? = nil,
+        cardBrandChoiceEligible: Bool = false
     ) {
         func saveModeFor(merchantRequiresSave: Bool) -> SaveMode {
             let hasCustomer = configuration.hasCustomer
@@ -93,6 +95,7 @@ class PaymentSheetFormFactory {
                   addressSpecProvider: addressSpecProvider,
                   offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
                   linkAccount: linkAccount,
+                  cardBrandChoiceEligible: cardBrandChoiceEligible,
                   supportsLinkCard: intent.supportsLinkCard,
                   isPaymentIntent: intent.isPaymentIntent,
                   currency: intent.currency,
@@ -108,6 +111,7 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
+        cardBrandChoiceEligible: Bool = false,
         supportsLinkCard: Bool,
         isPaymentIntent: Bool,
         currency: String?,
@@ -132,6 +136,7 @@ class PaymentSheetFormFactory {
         self.amount = amount
         self.countryCode = countryCode
         self.saveMode = saveMode
+        self.cardBrandChoiceEligible = cardBrandChoiceEligible
     }
 
     func make() -> PaymentMethodElement {
@@ -140,7 +145,7 @@ class PaymentSheetFormFactory {
         // We have two ways to create the form for a payment method
         // 1. Custom, one-off forms
         if paymentMethod == .card {
-            return makeCard()
+            return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
         } else if paymentMethod == .linkInstantDebit {
             return ConnectionsElement()
         } else if paymentMethod == .USBankAccount {

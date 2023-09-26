@@ -122,7 +122,8 @@ import UIKit
     }
 
     private func updateDisplayText() {
-        pickerFieldView.displayText = selectedDate.map { dateFormatter.string(from: $0) }
+        let selectedDate = selectedDate.map { dateFormatter.string(from: $0) }
+        pickerFieldView.displayText = NSAttributedString(string: selectedDate ?? "")
     }
 }
 
@@ -154,6 +155,10 @@ extension DateFieldElement: PickerFieldViewDelegate {
             delegate?.didUpdate(element: self)
         }
         delegate?.continueToNextField(element: self)
+    }
+
+    func didCancel(_ pickerFieldView: PickerFieldView) {
+        // no-op
     }
 }
 

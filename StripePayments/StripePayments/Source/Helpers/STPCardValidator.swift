@@ -437,8 +437,18 @@ public class STPCardValidator: NSObject {
         possibleBrands(forNumber: cardNumber, completion: completion)
     }
 
-    class func possibleBrands(forNumber cardNumber: String,
-                              completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
+    public class func possibleBrands(forNumber cardNumber: String,
+                                     completion: @escaping (Result<Set<STPCardBrand>, Error>) -> Void) {
+        // Hardcoded test cards that are in our docs but not supported by the card metadata service
+        // https://stripe.com/docs/card-brand-choice#testing
+        let testCards: [String: [STPCardBrand]] = ["4000002500001001": [.cartesBancaires, .visa],
+                                                   "5555552500001001": [.cartesBancaires, .mastercard], ]
+
+        if let testBrands = testCards[cardNumber] {
+            completion(.success(Set<STPCardBrand>(testBrands)))
+            return
+        }
+
         cbcBinController.retrieveBINRanges(forPrefix: cardNumber, recordErrorsAsSuccess: false, onlyFetchForVariableLengthBINs: false) { result in
             switch result {
             case .failure(let error):
