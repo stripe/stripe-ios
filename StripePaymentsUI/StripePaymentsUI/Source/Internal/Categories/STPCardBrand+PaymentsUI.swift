@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -15,14 +14,20 @@ extension STPCardBrand: Comparable {
         return (STPCardBrandUtilities.stringFrom(lhs) ?? "") < (STPCardBrandUtilities.stringFrom(rhs) ?? "")
     }
 
-    func brandIconAttributedString(theme: ElementsUITheme = .default) -> NSAttributedString {
+    func brandIconAttributedString(theme: ElementsUITheme = .default, maxWidth: CGFloat? = nil) -> NSAttributedString {
         let brandImageAttachment = NSTextAttachment()
-        brandImageAttachment.image = self == .unknown ? DynamicImageView.makeUnknownCardImageView(theme: theme).image : STPImageLibrary.cardBrandImage(for: self)
+        let image: UIImage = self == .unknown ? STPImageLibrary.cardBrandChoiceImage() : STPImageLibrary.cardBrandImage(for: self)
+        brandImageAttachment.image = image
+        if let maxWidth = maxWidth {
+            let widthRatio = maxWidth / image.size.width
+            // TODO: -3 is a hack for proper vertical alignment, investigate this
+            brandImageAttachment.bounds = .init(x: 0, y: -3, width: maxWidth, height: image.size.height * widthRatio)
+        }
 
         return NSAttributedString(attachment: brandImageAttachment)
     }
 
-    func cardBrandItem(theme: ElementsUITheme = .default) -> DropdownFieldElement.DropdownItem {
+    func cardBrandItem(theme: ElementsUITheme = .default, maxWidth: CGFloat? = nil) -> DropdownFieldElement.DropdownItem {
         let brandName = STPCardBrandUtilities.stringFrom(self) ?? ""
 
         let displayText = NSMutableAttributedString(attributedString: brandIconAttributedString(theme: theme))
@@ -30,7 +35,7 @@ extension STPCardBrand: Comparable {
 
         return DropdownFieldElement.DropdownItem(
             pickerDisplayName: displayText,
-            labelDisplayName: brandIconAttributedString(theme: theme),
+            labelDisplayName: brandIconAttributedString(theme: theme, maxWidth: maxWidth),
             accessibilityValue: brandName,
             rawData: "\(self.rawValue)"
         )
