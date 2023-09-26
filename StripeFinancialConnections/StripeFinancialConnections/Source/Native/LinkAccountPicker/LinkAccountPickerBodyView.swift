@@ -51,7 +51,7 @@ final class LinkAccountPickerBodyView: UIView {
 
         accountTuples.forEach { accountTuple in
             let accountRowView = LinkAccountPickerRowView(
-                isDisabled: !accountTuple.accountPickerAccount.allowSelection,
+                isDisabled: false, // !accountTuple.accountPickerAccount.allowSelection,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.linkAccountPickerBodyView(
@@ -134,7 +134,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                             ),
                             logo: nil
                         ),
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: "authorization"
                     )
                 ),
                 (
@@ -160,7 +161,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         allowSelectionMessage: nil,
                         status: "disabled",
                         institution: nil,
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: "authorization"
                     )
                 ),
                 (
@@ -184,7 +186,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         allowSelectionMessage: nil,
                         status: "disabled",
                         institution: nil,
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: "authorization"
                     )
                 ),
             ],

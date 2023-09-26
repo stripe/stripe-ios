@@ -22,6 +22,7 @@ protocol LinkAccountPickerDataSource: AnyObject {
     var selectedAccountTuple: FinancialConnectionsAccountTuple? { get }
     var nextPaneOnAddAccount: FinancialConnectionsSessionManifest.NextPane? { get set }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var partnerToCoreAuths: [String: String]? { get set }
 
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
     func selectNetworkedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) -> Future<FinancialConnectionsInstitutionList>
@@ -42,6 +43,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
             delegate?.linkAccountPickerDataSource(self, didSelectAccount: selectedAccountTuple)
         }
     }
+    var partnerToCoreAuths: [String: String]?
     weak var delegate: LinkAccountPickerDataSourceDelegate?
 
     init(

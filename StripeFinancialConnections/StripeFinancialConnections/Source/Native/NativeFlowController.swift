@@ -807,6 +807,13 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
+        didSetCoreAuthorizationPendingNetworkingRepair authorization: String
+    ) {
+        dataManager.coreAuthorizationPendingNetworkingRepair = authorization
+    }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
@@ -868,6 +875,12 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
     }
 }
 
+// MARK: - BankAuthRepairViewControllerDelegate
+
+extension NativeFlowController: BankAuthRepairViewControllerDelegate {
+    
+}
+
 // MARK: - Static Helpers
 
 private func CreatePaneViewController(
@@ -920,8 +933,19 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .bankAuthRepair:
-        assertionFailure("Not supported")
-        viewController = nil
+        let bankAuthRepairDataSource = BankAuthRepairDataSourceImplementation(
+            manifest: dataManager.manifest,
+            returnURL: dataManager.returnURL,
+            apiClient: dataManager.apiClient,
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient,
+            reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors
+        )
+        let bankAuthRepairViewController = BankAuthRepairViewController(
+            dataSource: bankAuthRepairDataSource
+        )
+        bankAuthRepairViewController.delegate = nativeFlowController
+        viewController = bankAuthRepairViewController
     case .consent:
         let consentDataSource = ConsentDataSourceImplementation(
             manifest: dataManager.manifest,

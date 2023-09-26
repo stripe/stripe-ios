@@ -33,6 +33,11 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
+        didSetCoreAuthorizationPendingNetworkingRepair authorization: String
+    )
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
         didReceiveTerminalError error: Error
     )
 
@@ -81,6 +86,8 @@ final class LinkAccountPickerViewController: UIViewController {
                 retreivingAccountsLoadingView.removeFromSuperview()
                 switch result {
                 case .success(let networkedAccountsResponse):
+                    self.dataSource.partnerToCoreAuths = networkedAccountsResponse.partnerToCoreAuths
+
                     if let returningNetworkingUserAccountPicker = networkedAccountsResponse.display?.text?.returningNetworkingUserAccountPicker {
                         self.display(
                             partnerAccounts: networkedAccountsResponse.data,
@@ -170,9 +177,9 @@ final class LinkAccountPickerViewController: UIViewController {
             return
         }
 
-        let nextPane = selectedAccountTuple
-            .partnerAccount
-            .nextPaneOnSelection
+        let nextPane: FinancialConnectionsSessionManifest.NextPane? = .bankAuthRepair // selectedAccountTuple
+//            .partnerAccount
+//            .nextPaneOnSelection
 
         // update data model with selected account
         delegate?.linkAccountPickerViewController(
@@ -316,6 +323,25 @@ extension LinkAccountPickerViewController: LinkAccountPickerDataSourceDelegate {
         _ dataSource: LinkAccountPickerDataSource,
         didSelectAccount selectedAccountTuple: FinancialConnectionsAccountTuple?
     ) {
+        if
+            let account = selectedAccountTuple?.partnerAccount,
+            account.nextPaneOnSelection == .bankAuthRepair
+        {
+            // The `bank_auth_repair` pane needs to know which authorization to repair.
+            // Since we may have many accounts selected, the pane can't derive that
+            // from the selected accounts, so we'll explicitly set the auth-to-repair
+            // any time a broken account is picked.
+            if
+                let partnerToCoreAuths = dataSource.partnerToCoreAuths,
+                let coreAuths = partnerToCoreAuths[account.authorization]
+            {
+                delegate?.linkAccountPickerViewController(
+                    self,
+                    didSetCoreAuthorizationPendingNetworkingRepair: coreAuths
+                )
+            }
+        }
+
         bodyView?.selectAccount(selectedAccountTuple)
         footerView?.didSelectedAccount(selectedAccountTuple)
     }
