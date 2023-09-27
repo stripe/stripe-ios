@@ -90,11 +90,21 @@ class NativeFlowController {
                 || navigationController.topViewController is NetworkingLinkVerificationViewController
                 || navigationController.topViewController is NetworkingSaveToLinkVerificationViewController
                 || navigationController.topViewController is LinkAccountPickerViewController)
-        closeAuthFlow(
-            showConfirmationAlert: showConfirmationAlert,
-            showNetworkingLanguageInConfirmationAlert: (dataManager.manifest.isNetworkingUserFlow == true && navigationController.topViewController is NetworkingLinkSignupViewController),
-            error: nil
-        )
+
+        let finishClosingAuthFlow = { [weak self] in
+            self?.closeAuthFlow()
+        }
+        if showConfirmationAlert {
+            CloseConfirmationAlertHandler.present(
+                businessName: dataManager.manifest.businessName,
+                showNetworkingLanguageInConfirmationAlert: (dataManager.manifest.isNetworkingUserFlow == true && navigationController.topViewController is NetworkingLinkSignupViewController),
+                didSelectOK: {
+                    finishClosingAuthFlow()
+                }
+            )
+        } else {
+            finishClosingAuthFlow()
+        }
     }
 
     @objc private func applicationWillEnterForeground() {
@@ -149,9 +159,9 @@ extension NativeFlowController {
         clearNavigationStack: Bool = false
     ) {
         if pane == .success && dataManager.manifest.skipSuccessPane == true {
-            closeAuthFlow(showConfirmationAlert: false, error: nil)
+            closeAuthFlow(error: nil)
         } else if pane == .manualEntry && dataManager.manifest.manualEntryMode == .custom {
-            closeAuthFlow(showConfirmationAlert: false, customManualEntry: true)
+            closeAuthFlow(customManualEntry: true)
         } else {
             let paneViewController = CreatePaneViewController(
                 pane: pane,
@@ -193,7 +203,7 @@ extension NativeFlowController {
 
     private func didSelectAnotherBank() {
         if dataManager.manifest.disableLinkMoreAccounts {
-            closeAuthFlow(showConfirmationAlert: false, error: nil)
+            closeAuthFlow(error: nil)
         } else {
             startResetFlow()
         }
@@ -245,7 +255,7 @@ extension NativeFlowController {
             assertionFailure(
                 "We should always get a view controller for \(FinancialConnectionsSessionManifest.NextPane.terminalError)"
             )
-            closeAuthFlow(showConfirmationAlert: false, error: terminalError)
+            closeAuthFlow(error: terminalError)
             return
         }
         setNavigationControllerViewControllers([terminalErrorViewController], animated: false)
@@ -256,9 +266,7 @@ extension NativeFlowController {
     // 2. User closes, no accounts are returned, and there's an error. That's a failure.
     // 3. User closes, no accounts are returned, and there's no error. That's a cancel.
     // 4. User closes, and fetching accounts returns an error. That's a failure.
-        private func closeAuthFlow(
-        showConfirmationAlert: Bool,
-        showNetworkingLanguageInConfirmationAlert: Bool = false,
+    private func closeAuthFlow(
         customManualEntry: Bool = false,
         error closeAuthFlowError: Error? = nil  // user can also close AuthFlow while looking at an error screen
     ) {
@@ -267,86 +275,71 @@ extension NativeFlowController {
             self.delegate?.authFlow(controller: self, didFinish: result)
         }
 
-        let completeFinancialConnectionsSession = { [weak self] in
-            guard let self = self else { return }
-            self.dataManager
-                .completeFinancialConnectionsSession(
-                    terminalError: customManualEntry ? "user_initiated_with_custom_manual_entry" : nil
-                )
-                .observe(on: .main) { [weak self] result in
-                    guard let self = self else { return }
-                    switch result {
-                    case .success(let session):
-                        let eventType = "object"
-                        if session.status == .cancelled
-                            && session.statusDetails?.cancelled?.reason == .customManualEntry
+        dataManager
+            .completeFinancialConnectionsSession(
+                terminalError: customManualEntry ? "user_initiated_with_custom_manual_entry" : nil
+            )
+            .observe(on: .main) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let session):
+                    let eventType = "object"
+                    if session.status == .cancelled
+                        && session.statusDetails?.cancelled?.reason == .customManualEntry
+                    {
+                        self.logCompleteEvent(
+                            type: eventType,
+                            status: "custom_manual_entry"
+                        )
+                        finishAuthSession(.failed(error: FinancialConnectionsCustomManualEntryRequiredError()))
+                    } else {
+                        if !session.accounts.data.isEmpty || session.paymentAccount != nil
+                            || session.bankAccountToken != nil
                         {
                             self.logCompleteEvent(
                                 type: eventType,
-                                status: "custom_manual_entry"
+                                status: "completed",
+                                numberOfLinkedAccounts: session.accounts.data.count
                             )
-                            finishAuthSession(.failed(error: FinancialConnectionsCustomManualEntryRequiredError()))
+                            finishAuthSession(.completed(session: session))
+                        } else if let closeAuthFlowError = closeAuthFlowError {
+                            self.logCompleteEvent(
+                                type: eventType,
+                                status: "failed",
+                                error: closeAuthFlowError
+                            )
+                            finishAuthSession(.failed(error: closeAuthFlowError))
                         } else {
-                            if !session.accounts.data.isEmpty || session.paymentAccount != nil
-                                || session.bankAccountToken != nil
-                            {
-                                self.logCompleteEvent(
-                                    type: eventType,
-                                    status: "completed",
-                                    numberOfLinkedAccounts: session.accounts.data.count
-                                )
-                                finishAuthSession(.completed(session: session))
-                            } else if let closeAuthFlowError = closeAuthFlowError {
+                            if let terminalError = self.dataManager.terminalError {
                                 self.logCompleteEvent(
                                     type: eventType,
                                     status: "failed",
-                                    error: closeAuthFlowError
+                                    error: terminalError
                                 )
-                                finishAuthSession(.failed(error: closeAuthFlowError))
+                                finishAuthSession(.failed(error: terminalError))
                             } else {
-                                if let terminalError = self.dataManager.terminalError {
-                                    self.logCompleteEvent(
-                                        type: eventType,
-                                        status: "failed",
-                                        error: terminalError
-                                    )
-                                    finishAuthSession(.failed(error: terminalError))
-                                } else {
-                                    self.logCompleteEvent(
-                                        type: eventType,
-                                        status: "canceled"
-                                    )
-                                    finishAuthSession(.canceled)
-                                }
+                                self.logCompleteEvent(
+                                    type: eventType,
+                                    status: "canceled"
+                                )
+                                finishAuthSession(.canceled)
                             }
                         }
-                    case .failure(let completeFinancialConnectionsSessionError):
-                        self.logCompleteEvent(
-                            type: "error",
-                            status: "failed",
-                            error: completeFinancialConnectionsSessionError
-                        )
+                    }
+                case .failure(let completeFinancialConnectionsSessionError):
+                    self.logCompleteEvent(
+                        type: "error",
+                        status: "failed",
+                        error: completeFinancialConnectionsSessionError
+                    )
 
-                        if let closeAuthFlowError = closeAuthFlowError {
-                            finishAuthSession(.failed(error: closeAuthFlowError))
-                        } else {
-                            finishAuthSession(.failed(error: completeFinancialConnectionsSessionError))
-                        }
+                    if let closeAuthFlowError = closeAuthFlowError {
+                        finishAuthSession(.failed(error: closeAuthFlowError))
+                    } else {
+                        finishAuthSession(.failed(error: completeFinancialConnectionsSessionError))
                     }
                 }
-        }
-
-        if showConfirmationAlert {
-            CloseConfirmationAlertHandler.present(
-                businessName: dataManager.manifest.businessName,
-                showNetworkingLanguageInConfirmationAlert: showNetworkingLanguageInConfirmationAlert,
-                didSelectOK: {
-                    completeFinancialConnectionsSession()
-                }
-            )
-        } else {
-            completeFinancialConnectionsSession()
-        }
+            }
     }
 
     private func logCompleteEvent(
@@ -502,7 +495,7 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
 extension NativeFlowController: SuccessViewControllerDelegate {
 
     func successViewControllerDidSelectDone(_ viewController: SuccessViewController) {
-        closeAuthFlow(showConfirmationAlert: false, error: nil)
+        closeAuthFlow(error: nil)
     }
 }
 
@@ -522,7 +515,7 @@ extension NativeFlowController: ManualEntryViewControllerDelegate {
         if dataManager.manifest.manualEntryUsesMicrodeposits {
             pushPane(.manualEntrySuccess, animated: true)
         } else {
-            closeAuthFlow(showConfirmationAlert: false, error: nil)
+            closeAuthFlow(error: nil)
         }
     }
 }
@@ -532,7 +525,7 @@ extension NativeFlowController: ManualEntryViewControllerDelegate {
 extension NativeFlowController: ManualEntrySuccessViewControllerDelegate {
 
     func manualEntrySuccessViewControllerDidFinish(_ viewController: ManualEntrySuccessViewController) {
-        closeAuthFlow(showConfirmationAlert: false, error: nil)
+        closeAuthFlow(error: nil)
     }
 }
 
@@ -562,7 +555,7 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
         _ viewController: ResetFlowViewController,
         didFailWithError error: Error
     ) {
-        closeAuthFlow(showConfirmationAlert: false, error: error)
+        closeAuthFlow(error: error)
     }
 }
 
@@ -638,7 +631,7 @@ extension NativeFlowController: TerminalErrorViewControllerDelegate {
         _ viewController: TerminalErrorViewController,
         didCloseWithError error: Error
     ) {
-        closeAuthFlow(showConfirmationAlert: false, error: error)
+        closeAuthFlow(error: error)
     }
 
     func terminalErrorViewControllerDidSelectManualEntry(_ viewController: TerminalErrorViewController) {

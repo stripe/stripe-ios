@@ -169,30 +169,7 @@ extension STPFilePurpose: CustomStringConvertible {
 /// :nodoc:
 extension STPIntentActionType: CustomStringConvertible {
     public var description: String {
-        switch self {
-        case .BLIKAuthorize:
-            return "BLIKAuthorize"
-        case .OXXODisplayDetails:
-            return "OXXODisplayDetails"
-        case .alipayHandleRedirect:
-            return "alipayHandleRedirect"
-        case .boletoDisplayDetails:
-            return "boletoDisplayDetails"
-        case .redirectToURL:
-            return "redirectToURL"
-        case .unknown:
-            return "unknown"
-        case .upiAwaitNotification:
-            return "upiAwaitNotification"
-        case .useStripeSDK:
-            return "useStripeSDK"
-        case .verifyWithMicrodeposits:
-            return "verifyWithMicrodeposits"
-        case .weChatPayRedirectToApp:
-            return "weChatPayRedirectToApp"
-        case .cashAppRedirectToApp:
-            return "cashAppRedirectToApp"
-        }
+        return self.stringValue
     }
 }
 
@@ -538,6 +515,11 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "weChatPay"
         case .cashApp:
             return "cashApp"
+        case .swish:
+            return "swish"
+        case .paynow, .zip, .revolutPay, .mobilePay, .amazonPay, .alma, .konbini, .promptPay:
+            // `description` is the value used when this type is converted to a string for debugging purposes, just use the display name.
+            return displayName
         }
     }
 }

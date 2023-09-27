@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
@@ -22,6 +23,7 @@ extension PaymentSheet {
         case saved(paymentMethod: STPPaymentMethod)
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
+        case externalPayPal(confirmParams: IntentConfirmParams) // TODO(yuki): Rewrite this when we support more EPMs
 
         var paymentMethodTypeAnalyticsValue: String? {
             switch self {
@@ -33,6 +35,8 @@ extension PaymentSheet {
                 return confirmParams.paymentMethodType.identifier
             case .link:
                 return PaymentSheet.PaymentMethodType.link.identifier
+            case .externalPayPal:
+                return "external_paypal"
             }
         }
     }
@@ -58,6 +62,8 @@ extension PaymentSheet {
                     label = confirmParams.paymentSheetLabel
                 case .link(let option):
                     label = option.paymentSheetLabel
+                case .externalPayPal:
+                    label = STPPaymentMethodType.payPal.displayName
                 }
             }
         }
@@ -457,14 +463,14 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
         presentingViewController.present(authenticationViewController, animated: true, completion: nil)
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType) {
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
-                                                      appearance: self.appearance)
+                                              appearance: self.appearance, safariViewController: safariViewController)
         presentingViewController.present(pollingVC, animated: true, completion: nil)
     }
 
-    func dismiss(_ authenticationViewController: UIViewController) {
-        authenticationViewController.dismiss(animated: true, completion: nil)
+    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
+        authenticationViewController.dismiss(animated: true, completion: completion)
     }
 
     let presentingViewController: UIViewController

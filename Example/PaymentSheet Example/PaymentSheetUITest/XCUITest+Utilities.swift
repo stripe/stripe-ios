@@ -39,6 +39,12 @@ extension XCUIElement {
         forceTapElement()
         return true
     }
+
+    func firstDescendant(withLabel label: String) -> XCUIElement {
+        return descendants(matching: .any).matching(
+            NSPredicate(format: "label == %@", label)
+        ).firstMatch
+    }
 }
 
 // MARK: - XCUIApplication

@@ -21,27 +21,30 @@ extension TextFieldElement {
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
+        let cardBrandDropDown: DropdownFieldElement?
 
-        init(defaultValue: String? = nil) {
+        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil) {
             self.defaultValue = defaultValue
+            self.cardBrandDropDown = cardBrandDropDown
         }
 
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-            let cardBrand = STPCardValidator.brand(forNumber: text)
+            // If CBC is enabled...
+            if let cardBrandDropDown = cardBrandDropDown {
+                // Show unknown card brand if we have under 9 pan digits and no card brands
+                // CBC dropdown always has one item (a placeholder)
+                if 9 > text.count && cardBrandDropDown.items.count == 1 {
+                    return DynamicImageView.makeUnknownCardImageView(theme: theme)
+                } else if text.count >= 8 && cardBrandDropDown.items.count > 2 {
+                    // Show the dropdown if we have 8 or more digits and more than 2 items (placeholder + at least 2 brands), otherwise fall through and show brand as normal
+                    return cardBrandDropDown.view
+                }
+            }
 
+            let cardBrand = STPCardValidator.brand(forNumber: text)
             if cardBrand == .unknown {
                 if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
-                    return DynamicImageView(
-                        lightImage: STPImageLibrary.safeImageNamed(
-                            "card_unknown_updated_icon",
-                            darkMode: true
-                        ),
-                        darkImage: STPImageLibrary.safeImageNamed(
-                            "card_unknown_updated_icon",
-                            darkMode: false
-                        ),
-                        pairedColor: theme.colors.textFieldText
-                    )
+                    return DynamicImageView.makeUnknownCardImageView(theme: theme)
                 } else {
                     // display all available card brands
                     rotatingCardBrandsView.cardBrands =

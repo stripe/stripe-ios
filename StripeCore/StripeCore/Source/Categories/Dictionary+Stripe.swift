@@ -69,7 +69,7 @@ extension Dictionary where Value == Any {
 }
 
 // From https://talk.objc.io/episodes/S01E31-mutating-untyped-dictionaries
-extension Dictionary {
+@_spi(STP) public extension Dictionary {
     /// Example usage: `dict[jsonDict: "countries"]?[jsonDict: "japan"]?["capital"] = "berlin"`
     subscript(jsonDict key: Key) -> [String: Any]? {
         get {

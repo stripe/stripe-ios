@@ -132,7 +132,7 @@ class MyBackendCustomerSheetModel: ObservableObject {
               let publishableKey = json["publishableKey"] else {
             return
         }
-        StripeAPI.defaultPublishableKey = publishableKey
+        STPAPIClient.shared.publishableKey = publishableKey
 
         // Create Customer Sheet
         var configuration = CustomerSheet.Configuration()

@@ -71,11 +71,6 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
 
 // MARK: - PaymentMethodElement
 extension PaymentMethodElementWrapper: PaymentMethodElement {
-    func applyDefaults(params: IntentConfirmParams) -> IntentConfirmParams {
-        guard let defaultsApplier = defaultsApplier else { return params }
-        return defaultsApplier(element, params)
-    }
-
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         guard !element.view.isHidden else {
             return params

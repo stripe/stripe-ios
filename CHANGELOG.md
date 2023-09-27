@@ -1,6 +1,36 @@
-## X.Y.Z 2023-XX-YY
+## X.X.X
+### PaymentSheet
+* [Fixed] Fixed an issue with selecting from lists on macOS Catalyst. Note that only macOS 11 or later is supported: We do not recommend releasing a Catalyst app targeting macOS 10.15.
+* [Fixed] Fixed an issue with scanning card expiration dates.
+* [Fixed] Fixed an issue where billing address collection configuration was not passed to Apple Pay.
+* [Added] Support for Swish with PaymentIntents.
+
+### Basic Integration
+* [Fixed] Fixed an issue with scanning card expiration dates.
+
+### Payments
+* [Fixed] Fixed an issue where amounts in Serbian Dinar were displayed incorrectly.
+* [Fixed] Fixed an issue where the SDK could hang in macOS Catalyst.
+* [Added] Support for Swish bindings.
+
+## 23.16.0 2023-09-18
 ### Payments
 * [Added] Properties of STPConnectAccountParams are now mutable.
+* [Fixed] Fixed STPConnectAccountCompanyParams.address being force unwrapped. It's now optional.
+* [Added] Support for RevolutPay bindings
+
+### PaymentSheet
+* [Added] Support for Alipay with PaymentIntents.
+* [Added] Support for Cash App Pay with SetupIntents and PaymentIntents with `setup_future_usage`.
+* [Added] Support for AU BECS Debit with SetupIntents.
+* [Added] Support for OXXO with PaymentIntents.
+* [Added] Support for Konbini with PaymentIntents.
+* [Added] Support for PayNow with PaymentIntents.
+* [Added] Support for PromptPay with PaymentIntents.
+* [Added] Support for Boleto with PaymentIntents and SetupIntets.
+* [Added] Support for External Payment Method as an invite-only private beta.
+* [Added] Support for RevolutPay with SetupIntents and PaymentIntents with setup_future_usage (private beta). Note: PaymentSheet doesn't display this as a saved payment method yet.
+* [Added] Support for Alma (Private Beta) with PaymentIntents.
 
 ## 23.15.0 2023-08-28
 ### PaymentSheet
