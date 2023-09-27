@@ -434,6 +434,17 @@ extension PaymentSheet {
             params.mandateData = mandateData
         }
         params.paymentMethodOptions = paymentOptions
+//        let paymentMethodParams = STPPaymentMethodParams()
+//        paymentMethodParams.type = .card
+//        let addr = STPPaymentMethodAddress()
+//        addr.postalCode = "12345"
+//        paymentMethodParams.nonnil_billingDetails.address = addr
+//        params.paymentMethodParams = paymentMethodParams
+//        params.paymentMethodParams?.billingDetails?.address?.postalCode = "12345"
+//        let cardOptions = STPConfirmCardOptions()
+//        params.paymentMethodOptions?.cardOptions = cardOptions
+//        params.paymentMethodOptions?.cardOptions?.cvc = "999"
+
         params.returnURL = configuration.returnURL
         params.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
         return params
