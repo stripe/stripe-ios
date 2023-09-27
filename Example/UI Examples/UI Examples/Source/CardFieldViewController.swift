@@ -13,7 +13,7 @@ import UIKit
 class CardFieldViewController: UIViewController {
 
     let cardField = STPPaymentCardTextField()
-    
+
     var theme = STPTheme.defaultTheme
     var alwaysEnableCBC = false
 

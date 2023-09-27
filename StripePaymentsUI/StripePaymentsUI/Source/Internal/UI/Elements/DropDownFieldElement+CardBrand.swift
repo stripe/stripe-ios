@@ -13,12 +13,13 @@ import UIKit
 
 extension DropdownFieldElement {
 
-    @_spi(STP) public static func makeCardBrandDropdown(cardBrands: Set<STPCardBrand> = Set<STPCardBrand>(), theme: ElementsUITheme = .default, maxWidth: CGFloat? = nil) -> DropdownFieldElement {
+    @_spi(STP) public static func makeCardBrandDropdown(cardBrands: Set<STPCardBrand> = Set<STPCardBrand>(), theme: ElementsUITheme = .default, maxWidth: CGFloat? = nil, hasPadding: Bool = true) -> DropdownFieldElement {
         return DropdownFieldElement(
             items: items(from: cardBrands, theme: theme, maxWidth: maxWidth),
             defaultIndex: 0,
             label: nil,
-            theme: theme
+            theme: theme,
+            hasPadding: hasPadding
         )
     }
 

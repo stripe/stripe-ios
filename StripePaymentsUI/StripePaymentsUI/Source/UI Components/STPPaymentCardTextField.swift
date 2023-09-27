@@ -667,9 +667,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     @objc internal lazy var brandImageView: UIImageView = UIImageView(
         image: Self.brandImage(for: .unknown)
     )
-    
+
     @objc internal var cardBrandDropDown: DropdownFieldElement?
-    
+
     @objc internal lazy var fieldsView: UIView = UIView()
     @objc internal lazy var numberField: STPFormTextField = {
         return build()
@@ -735,7 +735,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     let STPPaymentCardTextFieldDefaultInsets: CGFloat = 13
 
     let STPPaymentCardTextFieldMinimumPadding: CGFloat = 10
-    
+
     static let STPCBCBrandIconMaxWidth = 24.0
 
     // MARK: initializers
@@ -829,9 +829,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 action: #selector(UIResponder.becomeFirstResponder)
             )
         )
-        
+
         self.addCBCIfNeeded()
-        
+
         focusedTextFieldForLayout = nil
         updateCVCPlaceholder()
         resetSubviewEditingTransitionState()
@@ -853,12 +853,12 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         sendSubviewToBack(sizingField)
 
     }
-    
+
     func addCBCIfNeeded() {
         if shouldShowCBC && cardBrandDropDown == nil {
             let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(maxWidth: Self.STPCBCBrandIconMaxWidth)
             cardBrandDropDown.view.translatesAutoresizingMaskIntoConstraints = false
-            
+
             addSubview(cardBrandDropDown.view)
             NSLayoutConstraint.activate(
                 [
@@ -1672,9 +1672,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             updateCVCPlaceholder()
             cvcField.validText = viewModel.validationStateForCVC() != .invalid
             updateImage(for: fieldType)
-            
+
             updateCardBrandsIfNeeded()
-            
+
             if viewModel.hasCompleteMetadataForCardNumber {
                 let state = STPCardValidator.validationState(
                     forNumber: viewModel.cardNumber ?? "",
@@ -2055,8 +2055,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             }
             recalculateSubviewLayout()
         }
-        
-        
+
         let addLoadingIndicator: (() -> Void)? = {
             if self.metadataLoadingIndicator == nil {
                 self.metadataLoadingIndicator = STPCardLoadingIndicator()
@@ -2185,7 +2184,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             }
         }
     }
-    
+
     // MARK: Card brand choice
     // For internal testing
     @_spi(STP) public var alwaysEnableCBC: Bool = false {
@@ -2193,12 +2192,12 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             addCBCIfNeeded()
         }
     }
-    
+
     private var shouldShowCBC: Bool {
         // TODO: Pull this from the wallet-config endpoint
         return alwaysEnableCBC
     }
-    
+
     private var cardBrands = Set<STPCardBrand>()
     func updateCardBrandsIfNeeded() {
         guard cardBrandDropDown != nil else {

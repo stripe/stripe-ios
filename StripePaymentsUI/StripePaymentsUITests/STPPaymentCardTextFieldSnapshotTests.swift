@@ -7,10 +7,10 @@
 
 import iOSSnapshotTestCase
 @_spi(STP)@testable import StripeCore
-@_spi(STP)@testable import StripePaymentsUI
-@_spi(STP)@testable import StripeUICore
 import StripeCoreTestUtils
 import StripePaymentsTestUtils
+@_spi(STP)@testable import StripePaymentsUI
+@_spi(STP)@testable import StripeUICore
 
 class STPPaymentCardTextFieldSnapshotTests: FBSnapshotTestCase {
 
@@ -36,7 +36,7 @@ class STPPaymentCardTextFieldSnapshotTests: FBSnapshotTestCase {
         pctf.paymentMethodParams = params
         STPSnapshotVerifyView(pctf)
     }
-    
+
     func testPaymentCardTextFieldCBC() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let pctf = STPPaymentCardTextField(frame: CGRect(x: 0, y: 0, width: 600, height: 200))
@@ -55,5 +55,5 @@ class STPPaymentCardTextFieldSnapshotTests: FBSnapshotTestCase {
         }
         waitForExpectations(timeout: 3.0)
     }
-    
+
 }

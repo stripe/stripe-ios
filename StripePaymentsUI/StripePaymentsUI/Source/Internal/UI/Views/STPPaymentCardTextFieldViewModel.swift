@@ -228,7 +228,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
 
         }
     }
-    
+
     private var cardBrands = Set<STPCardBrand>()
     func fetchCardBrands(handler: @escaping (Set<STPCardBrand>) -> Void) {
         // Only fetch card brands if we have at least 8 digits in the pan

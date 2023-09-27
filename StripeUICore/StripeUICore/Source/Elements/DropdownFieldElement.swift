@@ -67,6 +67,7 @@ import UIKit
     }
     public var didUpdate: DidUpdateSelectedIndex?
     public let theme: ElementsUITheme
+    public let hasPadding: Bool
 
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
@@ -106,7 +107,8 @@ import UIKit
             shouldShowChevron: disableDropdownWithSingleElement ? items.count != 1 : true,
             pickerView: pickerView,
             delegate: self,
-            theme: theme
+            theme: theme,
+            hasPadding: hasPadding
         )
         if disableDropdownWithSingleElement && items.count == 1 {
             pickerFieldView.isUserInteractionEnabled = false
@@ -135,6 +137,7 @@ import UIKit
         defaultIndex: Int = 0,
         label: String?,
         theme: ElementsUITheme = .default,
+        hasPadding: Bool = true,
         disableDropdownWithSingleElement: Bool = false,
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
@@ -145,6 +148,7 @@ import UIKit
         self.items = items
         self.disableDropdownWithSingleElement = disableDropdownWithSingleElement
         self.didUpdate = didUpdate
+        self.hasPadding = hasPadding
 
         // Default to defaultIndex, if in bounds
         if defaultIndex < 0 || defaultIndex >= items.count {
