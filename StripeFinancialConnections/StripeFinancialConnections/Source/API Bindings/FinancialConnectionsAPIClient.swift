@@ -121,6 +121,17 @@ protocol FinancialConnectionsAPIClient {
         clientSecret: String
     ) -> Future<LookupConsumerSessionResponse>
 
+    func initiateAuthRepairSession(
+        clientSecret: String,
+        coreAuthorizationId: String
+    ) -> Promise<FinancialConnectionsAuthRepairSession>
+
+    func completeAuthRepairSession(
+        clientSecret: String,
+        authRepairSessionId: String,
+        coreAuthorizationId: String
+    ) -> Promise<FinancialConnectionsAuthRepairSessionComplete>
+
     // MARK: - Link API's
 
     func consumerSessionStartVerification(
@@ -573,6 +584,32 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return post(resource: APIEndpointConsumerSessions, parameters: parameters)
     }
 
+    func initiateAuthRepairSession(
+        clientSecret: String,
+        coreAuthorizationId: String
+    ) -> Promise<FinancialConnectionsAuthRepairSession> {
+        let body: [String: Any] = [
+            "client_secret": clientSecret,
+            "core_authorization": coreAuthorizationId,
+//            "return_url": "ios",
+        ]
+        return self.post(resource: APIEndpointRepairSessionsGenerateUrl, parameters: body)
+    }
+
+    func completeAuthRepairSession(
+        clientSecret: String,
+        authRepairSessionId: String,
+        coreAuthorizationId: String
+    ) -> Promise<FinancialConnectionsAuthRepairSessionComplete> {
+        let body: [String: Any] = [
+            "client_secret": clientSecret,
+            "auth_repair_session": authRepairSessionId,
+            "core_authorization": coreAuthorizationId,
+//            "return_url": "ios",
+        ]
+        return self.post(resource: APIEndpointRepairSessionsComplete, parameters: body)
+    }
+
     // MARK: - Link API's
 
     func consumerSessionStartVerification(
@@ -636,3 +673,5 @@ private let APIEndpointNetworkedAccounts = "link_account_sessions/networked_acco
 private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts_to_link"
 private let APIEndpointShareNetworkedAccount = "link_account_sessions/share_networked_account"
 private let APIEndpointConsumerSessions = "connections/link_account_sessions/consumer_sessions"
+private let APIEndpointRepairSessionsGenerateUrl = "connections/repair_sessions/generate_url"
+private let APIEndpointRepairSessionsComplete = "connections/repair_sessions/complete"

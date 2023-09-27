@@ -16,11 +16,20 @@ protocol BankAuthRepairDataSource: AnyObject {
     var pendingAuthSession: FinancialConnectionsAuthSession? { get }
     var reduceManualEntryProminenceInErrors: Bool { get }
     var disableAuthSessionRetrieval: Bool { get }
+
+    func initiateAuthRepairSession() -> Promise<FinancialConnectionsAuthRepairSession>
+
+//    func completeAuthRepairSession(
+//        clientSecret: String,
+//        authRepairSessionId: String,
+//        coreAuthorizationId: String
+//    ) -> Promise<FinancialConnectionsAuthRepairSessionComplete>
 }
 
 final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
 
 //    var institution: FinancialConnectionsInstitution
+    let coreAuthorizationId: String
     let manifest: FinancialConnectionsSessionManifest
     let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
@@ -39,6 +48,7 @@ final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
     private(set) var pendingAuthSession: FinancialConnectionsAuthSession?
 
     init(
+        coreAuthorizationId: String,
         manifest: FinancialConnectionsSessionManifest,
         returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
@@ -46,12 +56,27 @@ final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
         analyticsClient: FinancialConnectionsAnalyticsClient,
         reduceManualEntryProminenceInErrors: Bool
     ) {
-//        self.institution = institution
+        self.coreAuthorizationId = coreAuthorizationId
         self.manifest = manifest
         self.returnURL = returnURL
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
         self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors
+    }
+
+    func initiateAuthRepairSession() -> Promise<FinancialConnectionsAuthRepairSession> {
+        return apiClient.initiateAuthRepairSession(
+            clientSecret: clientSecret,
+            coreAuthorizationId: coreAuthorizationId
+        )
+    }
+
+    func completeAuthRepairSession() -> Promise<FinancialConnectionsAuthRepairSessionComplete> {
+        return apiClient.completeAuthRepairSession(
+            clientSecret: clientSecret,
+            authRepairSessionId: "", // TODO: Fix
+            coreAuthorizationId: coreAuthorizationId
+        )
     }
 }

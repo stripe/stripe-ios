@@ -878,7 +878,7 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
 // MARK: - BankAuthRepairViewControllerDelegate
 
 extension NativeFlowController: BankAuthRepairViewControllerDelegate {
-    
+
 }
 
 // MARK: - Static Helpers
@@ -933,19 +933,25 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .bankAuthRepair:
-        let bankAuthRepairDataSource = BankAuthRepairDataSourceImplementation(
-            manifest: dataManager.manifest,
-            returnURL: dataManager.returnURL,
-            apiClient: dataManager.apiClient,
-            clientSecret: dataManager.clientSecret,
-            analyticsClient: dataManager.analyticsClient,
-            reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors
-        )
-        let bankAuthRepairViewController = BankAuthRepairViewController(
-            dataSource: bankAuthRepairDataSource
-        )
-        bankAuthRepairViewController.delegate = nativeFlowController
-        viewController = bankAuthRepairViewController
+        if let coreAuthorizationId = dataManager.coreAuthorizationPendingNetworkingRepair {
+            let bankAuthRepairDataSource = BankAuthRepairDataSourceImplementation(
+                coreAuthorizationId: coreAuthorizationId,
+                manifest: dataManager.manifest,
+                returnURL: dataManager.returnURL,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient,
+                reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors
+            )
+            let bankAuthRepairViewController = BankAuthRepairViewController(
+                dataSource: bankAuthRepairDataSource
+            )
+            bankAuthRepairViewController.delegate = nativeFlowController
+            viewController = bankAuthRepairViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
     case .consent:
         let consentDataSource = ConsentDataSourceImplementation(
             manifest: dataManager.manifest,

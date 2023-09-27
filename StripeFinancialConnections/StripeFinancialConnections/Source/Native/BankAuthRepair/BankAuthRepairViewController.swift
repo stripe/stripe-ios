@@ -69,7 +69,11 @@ final class BankAuthRepairViewController: UIViewController {
         dataSource
             .analyticsClient
             .logPaneLoaded(pane: .bankAuthRepair)
-        
-        // call initiateAuthRepairSession
+
+        dataSource
+            .initiateAuthRepairSession()
+            .observe(on: .main) { _ in
+
+            }
     }
 }
