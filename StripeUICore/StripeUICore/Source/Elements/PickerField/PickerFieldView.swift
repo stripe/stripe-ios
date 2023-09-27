@@ -121,7 +121,8 @@ final class PickerFieldView: UIView {
         self.delegate = delegate
         self.theme = theme
         super.init(frame: .zero)
-        addAndPinSubview(hStackView, directionalLayoutMargins: ElementsUI.contentViewInsets)
+//        TODO: Swap between .zero and ElementsUI.contentViewInsets depending on context
+        addAndPinSubview(hStackView, directionalLayoutMargins: .zero)
 //      On Catalyst, add the picker view as a subview instead of an input view.
         #if targetEnvironment(macCatalyst)
         addAndPinSubview(pickerView, directionalLayoutMargins: ElementsUI.contentViewInsets)
