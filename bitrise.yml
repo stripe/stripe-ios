@@ -337,7 +337,7 @@ workflows:
     after_run: []
     meta:
       bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
+        stack: osx-xcode-15.0.x-edge
         machine_type_id: g2-m1.8core
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
