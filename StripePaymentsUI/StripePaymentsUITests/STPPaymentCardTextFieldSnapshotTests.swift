@@ -18,14 +18,18 @@ class STPPaymentCardTextFieldSnapshotTests: FBSnapshotTestCase {
         super.setUp()
 //        self.recordMode = true
     }
+    
+    var paymentCardTextField: STPPaymentCardTextField {
+        return STPPaymentCardTextField(frame: CGRect(x: 0, y: 0, width: 400, height: 50))
+    }
 
     func testPaymentCardTextField() {
-        let pctf = STPPaymentCardTextField(frame: CGRect(x: 0, y: 0, width: 600, height: 200))
+        let pctf = paymentCardTextField
         STPSnapshotVerifyView(pctf)
     }
 
     func testPaymentCardTextFieldWithNumber() {
-        let pctf = STPPaymentCardTextField(frame: CGRect(x: 0, y: 0, width: 600, height: 200))
+        let pctf = paymentCardTextField
         let card = STPPaymentMethodCardParams()
         card.number = "4242424242424242"
         card.expMonth = 12
@@ -39,7 +43,7 @@ class STPPaymentCardTextFieldSnapshotTests: FBSnapshotTestCase {
 
     func testPaymentCardTextFieldCBC() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
-        let pctf = STPPaymentCardTextField(frame: CGRect(x: 0, y: 0, width: 600, height: 200))
+        let pctf = paymentCardTextField
         pctf.alwaysEnableCBC = true
         let card = STPPaymentMethodCardParams()
         card.number = "4973019750239993"
