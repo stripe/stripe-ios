@@ -142,6 +142,16 @@ extension PaymentSheet {
         /// @see SavePaymentMethodOptInBehavior
         public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic
 
+        /// Enables recollecting the CVC value of a saved payment method.
+        /// In the case of client-side confirmation, the CVC/CVV value will be
+        /// sent with the confirmation of the payment intent within payment_method_options.
+        ///
+        /// (Future) In the case of server-side confirmation, the CVC/CVV value
+        /// will be contained in a ConfirmationToken and exposed via
+        /// a ConfirmationTokenID
+        @_spi(EarlyAccessCVCRecollectionFeature)
+        public var cvcRecollectionEnabled: Bool = false
+
         /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default
 

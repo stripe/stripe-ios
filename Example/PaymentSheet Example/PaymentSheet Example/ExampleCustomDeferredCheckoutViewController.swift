@@ -6,7 +6,7 @@
 //
 // This is an example of an integration using PaymentSheet.FlowController where you collect payment details before creating an Intent.
 
-import StripePaymentSheet
+@_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
 import UIKit
 
 // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
@@ -273,6 +273,8 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
                 configuration.allowsDelayedPaymentMethods = true
+                configuration.cvcRecollectionEnabled = true
+
                 DispatchQueue.main.async {
                     PaymentSheet.FlowController.create(
                         intentConfiguration: self.intentConfig,
