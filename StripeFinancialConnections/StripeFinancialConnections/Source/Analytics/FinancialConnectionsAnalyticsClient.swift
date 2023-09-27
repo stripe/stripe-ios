@@ -9,10 +9,18 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
+protocol FinancialConnectionsAnalyticsClientDelegate: AnyObject {
+    func analyticsClient(
+        _ analyticsClient: FinancialConnectionsAnalyticsClient,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
+}
+
 final class FinancialConnectionsAnalyticsClient {
 
     private let analyticsClient: AnalyticsClientV2
     private var additionalParameters: [String: Any] = [:]
+    weak var delegate: FinancialConnectionsAnalyticsClientDelegate?
 
     init(
         analyticsClient: AnalyticsClientV2 = AnalyticsClientV2(
@@ -96,6 +104,27 @@ extension FinancialConnectionsAnalyticsClient {
         errorName: String,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) {
+        delegate?.analyticsClient(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(
+                name: .error,
+                metadata: FinancialConnectionsEvent.Metadata(
+                    errorCode: {
+                        if
+                            let error = error as? StripeError,
+                            case .apiError(let apiError) = error,
+                            apiError.type == .invalidRequestError,
+                            apiError.param == "client_secret",
+                            (apiError.message ?? "").contains("expired")
+                        {
+                            return .sessionExpired
+                        } else {
+                            return .unexpectedError
+                        }
+                    }() as FinancialConnectionsEvent.ErrorCode
+                )
+            )
+        )
         log(
             error: error,
             errorName: errorName,

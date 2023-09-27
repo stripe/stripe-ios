@@ -60,6 +60,7 @@ class HostController {
             publishableKey: publishableKey,
             stripeAccount: stripeAccount
         )
+        analyticsClient.delegate = self
     }
 }
 
@@ -190,6 +191,18 @@ extension HostController: NativeFlowControllerDelegate {
 
     func nativeFlowController(
         _ nativeFlowController: NativeFlowController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.hostController(self, didReceiveEvent: event)
+    }
+}
+
+// MARK: - FinancialConnectionsAnalyticsClientDelegate
+
+extension HostController: FinancialConnectionsAnalyticsClientDelegate {
+    
+    func analyticsClient(
+        _ analyticsClient: FinancialConnectionsAnalyticsClient,
         didReceiveEvent event: FinancialConnectionsEvent
     ) {
         delegate?.hostController(self, didReceiveEvent: event)
