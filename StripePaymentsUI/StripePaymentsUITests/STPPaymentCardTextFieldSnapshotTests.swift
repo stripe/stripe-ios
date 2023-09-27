@@ -18,7 +18,7 @@ class STPPaymentCardTextFieldSnapshotTests: FBSnapshotTestCase {
         super.setUp()
 //        self.recordMode = true
     }
-    
+
     var paymentCardTextField: STPPaymentCardTextField {
         return STPPaymentCardTextField(frame: CGRect(x: 0, y: 0, width: 400, height: 50))
     }
