@@ -668,7 +668,6 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         image: Self.brandImage(for: .unknown)
     )
     
-    @objc internal lazy var cbcIndicatorView: STPCBCPickerIndicator = STPCBCPickerIndicator()
     @objc internal var cardBrandDropDown: DropdownFieldElement?
     
     @objc internal lazy var fieldsView: UIView = UIView()
