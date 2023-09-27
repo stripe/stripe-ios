@@ -36,7 +36,7 @@ extension Intent {
             }
         }
     }
-    
+
     var linkPassthroughModeEnabled: Bool {
         switch self {
         case .paymentIntent(let paymentIntent):
