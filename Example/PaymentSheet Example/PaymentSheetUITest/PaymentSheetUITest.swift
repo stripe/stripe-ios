@@ -221,7 +221,11 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
-        try! fillCardData(app)  // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
+
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
+        try! fillCardData(app)
         // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         if !expectDefaultSelectionOn {
@@ -1797,7 +1801,11 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
-        try! fillCardData(app)  // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
+
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
+        try! fillCardData(app)
         // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         if !expectDefaultSelectionOn {
