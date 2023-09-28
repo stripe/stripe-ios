@@ -2008,6 +2008,44 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
+
+    func testLinkWebFlow() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.linkEnabled = .on
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        app.buttons["Pay with Link"].forceTapWhenHittableInTestCase(self)
+
+        // Allow link.com to sign in
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        springboard.buttons["Continue"].forceTapWhenHittableInTestCase(self)
+        
+        let emailField = app.textFields["Email"]
+        emailField.forceTapWhenHittableInTestCase(self)
+        emailField.typeText("mobile-payments-sdk@stripe.com")
+
+        let phoneField = app.textFields["verification code"]
+        // Phone field appears after the network call finishes. We want to wait for it to appear.
+        XCTAssert(phoneField.waitForExistence(timeout: 10))
+        phoneField.tap()
+        phoneField.typeText("3105551234")
+
+        // The name field is only required for non-US countries. Only fill it out if it exists.
+        let nameField = app.textFields["Name"]
+        if nameField.exists {
+            nameField.tap()
+            nameField.typeText("Jane Done")
+        }
+
+        // Pay!
+        app.buttons["Pay $50.99"].tap()
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
 }
 
 // MARK: Helpers
