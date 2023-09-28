@@ -73,4 +73,31 @@ public class STPCardBrandUtilities: NSObject {
         }
     }
 
+    /// Returns brand API string value from given card brand.
+    ///
+    /// - Parameter brand: The `STPCardBrand` to transform into a string.
+    /// - Returns: A `String` representing the card brand. This could be "visa",
+    @objc(apiValueFromCardBrand:) public static func apiValue(from brand: STPCardBrand) -> String {
+        switch brand {
+        case .visa:
+            return "visa"
+        case .amex:
+            return "american express"
+        case .mastercard:
+            return "mastercard"
+        case .discover:
+            return "discover"
+        case .JCB:
+            return "jcb"
+        case .dinersClub:
+            return "diners club"
+        case .unionPay:
+            return "unionpay"
+        case .cartesBancaires:
+            return "cartes_bancaires"
+        default:
+            return "unknown"
+        }
+    }
+
 }
