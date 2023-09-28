@@ -476,7 +476,7 @@ extension PaymentSheet {
             }
 
             // Paypal and Cash App Pay require mandate_data if setting up
-            if (params.paymentMethodType == .payPal || params.paymentMethodType == .cashApp)
+            if (params.paymentMethodType == .payPal || params.paymentMethodType == .cashApp || params.paymentMethodType == .revolutPay)
                 && paymentIntent.setupFutureUsage == .offSession
             {
                 params.mandateData = .makeWithInferredValues()
@@ -520,8 +520,8 @@ extension PaymentSheet {
                 params = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
             }
-            // Paypal requires mandate_data if setting up
-            if params.paymentMethodType == .payPal {
+            // Paypal & revolut requires mandate_data if setting up
+            if params.paymentMethodType == .payPal || params.paymentMethodType == .revolutPay {
                 params.mandateData = .makeWithInferredValues()
             }
         }

@@ -75,8 +75,16 @@ import Foundation
     case revolutPay
     /// An AmazonPay payment method
     case amazonPay
+    /// An Alma payment method
+    case alma
     /// A MobilePay payment method
     case mobilePay
+    /// A Konbini payment method
+    case konbini
+    /// A PromptPay payment method
+    case promptPay
+    /// A Swish payment method
+    case swish
     /// An unknown type.
     case unknown
 
@@ -94,7 +102,7 @@ import Foundation
         case .SEPADebit:
             return STPLocalizedString("SEPA Debit", "Payment method brand name")
         case .AUBECSDebit:
-            return STPLocalizedString("AU BECS Direct Debit", "Payment Method type brand name.")
+            return STPLocalizedString("AU Direct Debit", "Payment Method type brand name.")
         case .grabPay:
             return STPLocalizedString("GrabPay", "Payment Method type brand name.")
         case .giropay:
@@ -151,8 +159,16 @@ import Foundation
             return "Revolut Pay"
         case .amazonPay:
             return "Amazon Pay"
+        case .alma:
+            return "Alma"
         case .mobilePay:
             return "MobilePay"
+        case .konbini:
+            return STPLocalizedString("Konbini", "Payment Method type brand name")
+        case .promptPay:
+            return "PromptPay"
+        case .swish:
+            return STPLocalizedString("Swish", "Payment Method type brand name")
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -230,8 +246,16 @@ import Foundation
             return "revolut_pay"
         case .amazonPay:
             return "amazon_pay"
+        case .alma:
+            return "alma"
         case .mobilePay:
             return "mobilepay"
+        case .konbini:
+            return "konbini"
+        case .promptPay:
+            return "promptpay"
+        case .swish:
+            return "swish"
         }
     }
 }

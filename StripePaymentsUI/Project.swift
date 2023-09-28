@@ -10,5 +10,12 @@ let project = Project.stripeFramework(
         .project(target: "StripePayments", path: "//StripePayments"),
         .project(target: "Stripe3DS2", path: "//Stripe3DS2"),
     ],
-    unitTestOptions: .testOptions()
+    unitTestOptions: .testOptions(
+        dependencies: [
+            .project(target: "StripeCoreTestUtils", path: "//StripeCore"),
+            .project(target: "StripePaymentsObjcTestUtils", path: "//StripePayments"),
+            .project(target: "StripePaymentsTestUtils", path: "//StripePayments"),
+        ],
+        includesSnapshots: true
+    )
 )

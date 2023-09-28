@@ -403,4 +403,22 @@ extension STPPaymentIntentStatus {
         let key = string.lowercased()
         return map[key] ?? .unknown
     }
+
+    /// Take a `STPPaymentIntentStatus` and return the corresponding string,
+    /// or "unknown" if it's not recognized by this function.
+    /// - Parameter status: the `STPPaymentIntentStatus` to convert into a string
+    internal static func string(from status: STPPaymentIntentStatus) -> String {
+        let map: [STPPaymentIntentStatus: String] = [
+            .requiresPaymentMethod: "requires_payment_method",
+            .requiresConfirmation: "requires_confirmation",
+            .requiresAction: "requires_action",
+            .processing: "processing",
+            .succeeded: "succeeded",
+            .requiresCapture: "requires_capture",
+            .canceled: "canceled",
+            .unknown: "unknown",
+        ]
+
+        return map[status] ?? "unknown"
+    }
 }

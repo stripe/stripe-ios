@@ -163,6 +163,7 @@ extension STPApplePayContext {
             country: applePay.merchantCountryCode,
             currency: intent.currency ?? "USD"
         )
+        paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(from: configuration)
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
@@ -213,4 +214,24 @@ private func makeShippingDetails(from configuration: PaymentSheet.Configuration)
         name: name,
         phone: shippingDetails.phone
     )
+}
+
+private func makeRequiredBillingDetails(from configuration: PaymentSheet.Configuration) -> Set<PKContactField> {
+    var requiredPKContactFields = Set<PKContactField>()
+    let billingConfig = configuration.billingDetailsCollectionConfiguration
+    // By default, we always want to request the billing address (as it includes the postal code)
+    if billingConfig.address == .automatic || billingConfig.address == .full {
+        requiredPKContactFields.insert(.postalAddress)
+    }
+    // Only request other fields if requested:
+    if billingConfig.email == .always {
+        requiredPKContactFields.insert(.emailAddress)
+    }
+    if billingConfig.phone == .always {
+        requiredPKContactFields.insert(.phoneNumber)
+    }
+    if billingConfig.name == .always {
+        requiredPKContactFields.insert(.name)
+    }
+    return requiredPKContactFields
 }

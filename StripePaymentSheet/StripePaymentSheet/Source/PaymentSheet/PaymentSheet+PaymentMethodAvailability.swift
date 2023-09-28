@@ -31,7 +31,9 @@ extension PaymentSheet {
         .FPX,
         .bacsDebit,
         .alipay,
-        .OXXO, .zip, .revolutPay, .amazonPay, .mobilePay,
+        .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
+        .boleto,
+        .swish,
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet

@@ -84,6 +84,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case sgd
         case myr
         case mxn
+        case jpy
+        case brl
+        case thb
+        case sek
     }
 
     enum MerchantCountry: String, PickerEnum {
@@ -97,6 +101,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case SG
         case MY
         case MX
+        case JP
+        case BR
+        case TH
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -267,6 +274,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var base64Data: String {
         let jsonData = try! JSONEncoder().encode(self)
         return jsonData.base64EncodedString()
+    }
+
+    var base64URL: URL {
+        URL(string: "stp-paymentsheet-playground://?\(base64Data)")!
     }
 
     static func fromBase64<T: Decodable>(base64: String, className: T.Type) -> T? {

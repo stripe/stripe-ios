@@ -325,20 +325,20 @@ extension PaymentSheet {
                     switch stpPaymentMethodType {
                     case .card:
                         return []
-                    case .alipay, .payPal, .cashApp:
+                    case .payPal, .cashApp, .revolutPay:
                         return [.returnURL]
-                    case .USBankAccount:
+                    case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
                     case .sofort, .iDEAL, .bancontact:
                         // n.b. While sofort, iDEAL, and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .SEPADebit:
+                    case .SEPADebit, .AUBECSDebit:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .boleto, .klarna, .link, .linkInstantDebit,
-                        .affirm, .paynow, .zip, .revolutPay, .amazonPay, .mobilePay, .unknown:
+                    case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .klarna, .link, .linkInstantDebit,
+                        .affirm, .paynow, .zip, .amazonPay, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -347,17 +347,17 @@ extension PaymentSheet {
             } else {
                 requirements = {
                     switch stpPaymentMethodType {
-                    case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow:
+                    case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow, .promptPay:
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
-                            .linkInstantDebit, .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .mobilePay:
+                            .linkInstantDebit, .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .swish:
                         return [.returnURL]
                     case .USBankAccount:
                         return [
                             .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
                             .validUSBankVerificationMethod,
                         ]
-                    case .OXXO, .boleto, .AUBECSDebit, .SEPADebit:
+                    case .OXXO, .boleto, .AUBECSDebit, .SEPADebit, .konbini:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit, .sofort:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]

@@ -152,6 +152,9 @@ Label of an address field */
 /* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
 "Sort code" = "Sort code";
 
+/* Message when a user is selecting a card brand in a dropdown */
+"Select card brand (optional)" = "Select card brand (optional)";
+
 /* Caption for State field on address form (only countries that use state , like United States)
 Label of an address field */
 "State" = "State";

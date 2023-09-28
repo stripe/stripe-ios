@@ -204,7 +204,7 @@ extension CustomerSheetTestPlaygroundController {
                 return
             }
 
-            StripeAPI.defaultPublishableKey = publishableKey
+            STPAPIClient.shared.publishableKey = publishableKey
 
             Task {
                 // Create Customer Sheet
