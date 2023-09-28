@@ -16,14 +16,11 @@ protocol BankAuthRepairDataSource: AnyObject {
     var pendingAuthSession: FinancialConnectionsAuthSession? { get }
     var reduceManualEntryProminenceInErrors: Bool { get }
     var disableAuthSessionRetrieval: Bool { get }
+    var sharedPartnerAuthDataSource: SharedPartnerAuthDataSource { get }
 
     func initiateAuthRepairSession() -> Promise<FinancialConnectionsAuthRepairSession>
 
-//    func completeAuthRepairSession(
-//        clientSecret: String,
-//        authRepairSessionId: String,
-//        coreAuthorizationId: String
-//    ) -> Promise<FinancialConnectionsAuthRepairSessionComplete>
+    func completeAuthRepairSession(authRepairSessionId: String) -> Promise<FinancialConnectionsAuthRepairSessionComplete>
 }
 
 final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
@@ -39,6 +36,8 @@ final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
     var disableAuthSessionRetrieval: Bool {
         return manifest.features?["bank_connections_disable_defensive_auth_session_retrieval_on_complete"] == true
     }
+
+    let sharedPartnerAuthDataSource: SharedPartnerAuthDataSource
 
     // a "pending" auth session is a session which has started
     // BUT the session is still yet-to-be authorized
@@ -63,6 +62,16 @@ final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
         self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors
+        self.sharedPartnerAuthDataSource = SharedPartnerAuthDataSourceImplementation(
+            pane: .bankAuthRepair,
+            // TODO(kgaidis): FIX
+            institution: FinancialConnectionsInstitution(id: "", name: "", url: nil, icon: nil, logo: nil),
+            manifest: manifest,
+            returnURL: returnURL,
+            apiClient: apiClient,
+            clientSecret: clientSecret,
+            analyticsClient: analyticsClient
+        )
     }
 
     func initiateAuthRepairSession() -> Promise<FinancialConnectionsAuthRepairSession> {
@@ -72,10 +81,12 @@ final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
         )
     }
 
-    func completeAuthRepairSession() -> Promise<FinancialConnectionsAuthRepairSessionComplete> {
+    func completeAuthRepairSession(
+        authRepairSessionId: String
+    ) -> Promise<FinancialConnectionsAuthRepairSessionComplete> {
         return apiClient.completeAuthRepairSession(
             clientSecret: clientSecret,
-            authRepairSessionId: "", // TODO: Fix
+            authRepairSessionId: authRepairSessionId,
             coreAuthorizationId: coreAuthorizationId
         )
     }

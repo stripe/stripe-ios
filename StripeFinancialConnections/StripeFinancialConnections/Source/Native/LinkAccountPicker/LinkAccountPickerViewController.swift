@@ -177,9 +177,9 @@ final class LinkAccountPickerViewController: UIViewController {
             return
         }
 
-        let nextPane: FinancialConnectionsSessionManifest.NextPane? = .bankAuthRepair // selectedAccountTuple
-//            .partnerAccount
-//            .nextPaneOnSelection
+        let nextPane = selectedAccountTuple
+            .partnerAccount
+            .nextPaneOnSelection
 
         // update data model with selected account
         delegate?.linkAccountPickerViewController(

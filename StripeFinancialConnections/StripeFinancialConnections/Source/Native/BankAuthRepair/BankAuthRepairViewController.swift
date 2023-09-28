@@ -27,6 +27,7 @@ final class BankAuthRepairViewController: UIViewController {
     private var continueStateView: ContinueStateView?
 
     private let dataSource: BankAuthRepairDataSource
+    private let sharedPartnerAuthViewController: SharedPartnerAuthViewController
 //    private var institution: FinancialConnectionsInstitution {
 //        return dataSource.institution
 //    }
@@ -56,6 +57,9 @@ final class BankAuthRepairViewController: UIViewController {
 
     init(dataSource: BankAuthRepairDataSource) {
         self.dataSource = dataSource
+        self.sharedPartnerAuthViewController = SharedPartnerAuthViewController(
+            dataSource: dataSource.sharedPartnerAuthDataSource
+        )
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -66,14 +70,122 @@ final class BankAuthRepairViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
+
+        addChild(sharedPartnerAuthViewController)
+        view.addAndPinSubview(sharedPartnerAuthViewController.view)
+        sharedPartnerAuthViewController.didMove(toParent: self)
+
         dataSource
             .analyticsClient
             .logPaneLoaded(pane: .bankAuthRepair)
 
+        sharedPartnerAuthViewController.showConnectingToBankView(true)
         dataSource
             .initiateAuthRepairSession()
-            .observe(on: .main) { _ in
+            .observe(on: .main) { [weak self] result in
+                guard let self = self else { return }
+                sharedPartnerAuthViewController.showConnectingToBankView(false)
 
+                switch result {
+                case .success(let authRepairSession):
+                    self.sharedPartnerAuthViewController.startWithAuthSession(
+                        FinancialConnectionsAuthSession(
+                            id: authRepairSession.id,
+                            flow: authRepairSession.flow,
+                            institutionSkipAccountSelection: nil,
+                            nextPane: .success,
+                            showPartnerDisclosure: nil,
+                            skipAccountSelection: nil,
+                            url: authRepairSession.url,
+                            isOauth: authRepairSession.isOauth,
+                            display: authRepairSession.display
+                        )
+                    )
+                case .failure(let error):
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "InitiateAuthRepairSessionError",
+                            pane: .bankAuthRepair
+                        )
+                    // TODO(kgaidis): 2. go back to link account picker...
+                }
             }
+    }
+
+    private func repairSessionCompleted() {
+//        if (multiAccountFlow) {
+//          pushPane('link_account_picker');
+//        } else {
+//          shareNetworkedAccounts();
+//        }
+
+    }
+}
+
+// MARK: - SharedPartnerAuthViewControllerDelegate
+
+extension BankAuthRepairViewController: SharedPartnerAuthViewControllerDelegate {
+
+    func sharedPartnerAuthViewController(
+        _ viewController: SharedPartnerAuthViewController,
+        didSucceedWithAuthSession authSession: FinancialConnectionsAuthSession,
+        considerCallingAuthorize: Bool
+    ) {
+        print(authSession)
+
+        if authSession.isOauthNonOptional {
+            dataSource.completeAuthRepairSession(
+                authRepairSessionId: authSession.id
+            )
+            .observe(on: .main) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let authRepairSessionComplete):
+                    print(authRepairSessionComplete)
+                    self.repairSessionCompleted()
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        } else {
+            repairSessionCompleted()
+        }
+    }
+
+    func sharedPartnerAuthViewController(
+        _ viewController: SharedPartnerAuthViewController,
+        didCancelWithAuthSession authSession: FinancialConnectionsAuthSession,
+        statusWasReturned: Bool
+    ) {
+        print(authSession)
+    }
+
+    func sharedPartnerAuthViewController(
+        _ viewController: SharedPartnerAuthViewController,
+        didFailWithAuthSession authSession: FinancialConnectionsAuthSession
+    ) {
+        print(authSession)
+    }
+
+    func sharedPartnerAuthViewControllerDidRequestToGoBack(
+        _ viewController: SharedPartnerAuthViewController
+    ) {
+        print("sharedPartnerAuthViewControllerDidRequestToGoBack")
+    }
+
+    func sharedPartnerAuthViewController(
+        _ viewController: SharedPartnerAuthViewController,
+        didReceiveError error: Error
+    ) {
+        print(error)
+    }
+
+    func sharedPartnerAuthViewController(
+        _ viewController: SharedPartnerAuthViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        print(error)
     }
 }

@@ -9,12 +9,12 @@ import Foundation
 
 struct FinancialConnectionsAuthRepairSession: Decodable {
     let id: String
+    let flow: FinancialConnectionsAuthSession.Flow
     let url: String
+    let isOauth: Bool
     let institution: FinancialConnectionsInstitution
-    
-    //flow: AuthSessionFlow;
-    //display?: AuthSessionDisplay;
-    //partner_institution_token?: string | null | undefined;
-    //used_abstract?: boolean;
-    //is_oauth?: boolean;
+    let display: FinancialConnectionsAuthSession.Display
+
+    // partner_institution_token?: string | null | undefined;
+    // used_abstract?: boolean;
 }
