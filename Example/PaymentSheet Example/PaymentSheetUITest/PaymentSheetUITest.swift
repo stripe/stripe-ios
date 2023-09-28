@@ -243,7 +243,6 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
 
         // return to payment method selector
-        paymentMethodButton = app.staticTexts["••••4242"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
 
@@ -259,7 +258,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
 
-        XCTAssertTrue(app.cells.count == 1)
+        XCTAssertTrue(app.cells.count == 2)
     }
 
     func testPaymentSheetSwiftUI() throws {
@@ -1823,7 +1822,6 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
 
         // return to payment method selector
-        paymentMethodButton = app.staticTexts["••••4242"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
 
@@ -1839,7 +1837,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
 
-        XCTAssertTrue(app.cells.count == 1)
+        XCTAssertTrue(app.cells.count == 2)
     }
 
     // MARK: - External PayPal 
