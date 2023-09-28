@@ -263,11 +263,17 @@ NZ
 
         // Using PaymentSheet.FlowController w/o a shipping address...
         app.buttons["Payment method"].waitForExistenceAndTap()
+        
+        // Open the new Payment Method sheet
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
 
         // ...should not show the "Billing address is same as shipping" checkbox
         XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
         XCTAssertEqual(app.textFields["ZIP"].value as? String, "")
         XCTAssertFalse(app.switches["Billing address is same as shipping"].exists)
+        app.buttons["UIButton.Back"].tap()
         app.buttons["Close"].tap()
 
         // Entering a shipping address...
@@ -291,6 +297,10 @@ NZ
 
         // ...and then using PaymentSheet.FlowController...
         app.buttons["Payment method"].waitForExistenceAndTap()
+        
+        // Open the new Payment Method sheet
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
 
         // ...should show the "Billing address is same as shipping" checkbox selected and set the address values to shipping
         XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
