@@ -263,7 +263,7 @@ NZ
 
         // Using PaymentSheet.FlowController w/o a shipping address...
         app.buttons["Payment method"].waitForExistenceAndTap()
-        
+
         // Open the new Payment Method sheet
         let addCardButton = app.buttons["+ Add"]
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
@@ -297,7 +297,7 @@ NZ
 
         // ...and then using PaymentSheet.FlowController...
         app.buttons["Payment method"].waitForExistenceAndTap()
-        
+
         // Open the new Payment Method sheet
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
