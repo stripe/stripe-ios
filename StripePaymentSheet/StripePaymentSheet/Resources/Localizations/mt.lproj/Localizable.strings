@@ -42,6 +42,8 @@
 
 "Confirm" = "Ikkonferma";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Ikkonferma l-pagament fl-app tal-bank fi żmien %@ biex tlesti x-xirja.";
+
 "Contact information" = "Id-dettalji tal-kuntatt";
 
 "EPS Bank" = "EPS Bank";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Ħallas bin-nifs grazzi għal %@";
 
+"Pay with Link" = "Ħallas b'Link";
+
 "Pay with your bank account in just a few steps." = "Ħallas bil-kont tal-bank tiegħek fi ftit passi.";
 
 "Payment failed" = "Il-pagament ma rnexxiex";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Erfa' din il-kard għal pagamenti futuri %@";
 
+"Save your bank account in just a few steps." = "Erfa' l-kont tal-bank tiegħek fi ftit passi.";
+
 "Select your payment method" = "Agħżel il-metodu tal-ħlas tiegħek";
 
 "Set up" = "Stabilixxi";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Ma nistgħux nibagħtu l-affarijiet lejn: %@";
 
 "Show menu" = "Uri l-menù";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe se tiddepożita $0.01 fil-kont tiegħek fi żmien jum/jumejn tax-xogħol. Imbagħad se tirċievi email bl-istruzzjonijiet biex tlesti l-proċess li terfa' l-kont tiegħek ma' %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe se tiddepożita $0.01 fil-kont tiegħek fi żmien jum/jumejn tax-xogħol. Imbagħad se tirċievi email bl-istruzzjonijiet biex tagħmel il-pagament lil %@.";
 

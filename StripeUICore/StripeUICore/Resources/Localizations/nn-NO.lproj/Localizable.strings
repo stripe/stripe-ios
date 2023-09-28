@@ -40,6 +40,8 @@
 
 "Do Si" = "Do Si";
 
+"Do you want to close this form?" = "Vil du lukke dette skjemaet?";
+
 "Done" = "Ferdig";
 
 "Double tap to edit" = "Dobbeltæpp for å redigere";
@@ -116,9 +118,13 @@
 
 "Your BLIK code is incomplete." = "BLIK-koden er ufullstendig.";
 
+"Your BLIK code is invalid." = "BLIK-koden er ugyldig.";
+
 "Your ZIP is incomplete." = "ZIP-koden er ufullstendig.";
 
 "Your email is invalid." = "E-postadressa di er ugyldig.";
+
+"Your payment information will not be saved." = "Betalingsinformasjonen din blir ikkje lagra.";
 
 "Your postal code is incomplete." = "Postnummeret er ufullstendig.";
 

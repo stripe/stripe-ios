@@ -42,6 +42,8 @@
 
 "Confirm" = "Onayla";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ içinde banka uygulamanızda ödemeyi onaylayarak satın almayı tamamlayın.";
+
 "Contact information" = "İletişim bilgileri";
 
 "EPS Bank" = "EPS Bank";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "%@ ile zaman içinde ödeyin";
 
+"Pay with Link" = "Link ile öde";
+
 "Pay with your bank account in just a few steps." = "Sadece birkaç adımda banka hesabınız ile ödeyin.";
 
 "Payment failed" = "Ödeme başarısız oldu";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Bu kartı gelecekteki %@ ödemeleri için kaydedin";
 
+"Save your bank account in just a few steps." = "Banka hesabınızı birkaç adımda kaydedin.";
+
 "Select your payment method" = "Ödeme yönteminizi seçin";
 
 "Set up" = "Ayarla";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Varış noktası %@ olan gönderimler desteklenmez.";
 
 "Show menu" = "Menüyü göster";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe, 1-2 iş günü içerisinde hesabınıza 0,01 ABD doları yatıracaktır. Bunun ardından %@ işletmesinde banka hesabınızı kaydetme işlemini tamamlamak için yapmanız gerekenleri içeren bir e-posta alacaksınız.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe, 1-2 iş günü içinde hesabınıza 0,01 ABD doları yatıracaktır. Ardından, %@ ödemesini tamamlama talimatlarını içeren bir e-posta alacaksınız.";
 

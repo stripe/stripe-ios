@@ -42,6 +42,8 @@
 
 "Confirm" = "확인";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ 이내에 은행 앱에서 결제를 확인하여 구매를 완료하십시오.";
+
 "Contact information" = "연락처 정보";
 
 "EPS Bank" = "EPS 은행";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "%@으로 할부 결제";
 
+"Pay with Link" = "Link로 결제";
+
 "Pay with your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌로 결제하십시오.";
 
 "Payment failed" = "결제 실패";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
 
+"Save your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌를 저장하십시오.";
+
 "Select your payment method" = "결제 수단을 선택하세요.";
 
 "Set up" = "설정";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "%@ 배송은 지원되지 않습니다.";
 
 "Show menu" = "메뉴 표시";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe는 영업일 기준 1~2일 후에 계좌에 0.01$를 예금할 예정입니다. 이후 %@에 은행 계좌 저장을 완료하라는 지침이 포함된 이메일이 전송됩니다.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe에서 영업일 기준 1~2일 후에 계좌로 0.01$를 입금할 예정입니다. 그런 다음 %@에 대한 결제를 완료하기 위한 지침이 포함된 이메일을 전송할 것입니다.";
 

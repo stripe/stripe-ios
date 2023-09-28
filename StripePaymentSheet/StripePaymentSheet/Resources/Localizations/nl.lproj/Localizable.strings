@@ -42,6 +42,8 @@
 
 "Confirm" = "Bevestigen";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Bevestig de betaling in de app van je bank binnen %@ om de aankoop af te ronden.";
+
 "Contact information" = "Contactgegevens";
 
 "EPS Bank" = "EPS Bank";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Betalen in termijnen met %@";
 
+"Pay with Link" = "Betalen met Link";
+
 "Pay with your bank account in just a few steps." = "Betaal in een paar stappen met je bankrekening.";
 
 "Payment failed" = "Betaling is mislukt";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Deze kaart opslaan voor toekomstige aankopen bij %@";
 
+"Save your bank account in just a few steps." = "Sla je bankrekening in een paar stappen op.";
+
 "Select your payment method" = "Betaalmethode selecteren";
 
 "Set up" = "Instellen";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Verzending naar %@ wordt niet ondersteund.";
 
 "Show menu" = "Menu weergeven";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Binnen 1 à 2 werkdagen stort Stripe $ 0,01 op je rekening. Daarna krijg je een e-mail met instructies om het instellen van je bankrekening bij %@ te voltooien.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Binnen 1-2 werkdagen stort Stripe $ 0,01 op je rekening. Daarna krijg je een e-mail met instructies over hoe je de betaling aan %@ kunt voltooien.";
 

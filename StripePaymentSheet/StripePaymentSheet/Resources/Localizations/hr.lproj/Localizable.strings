@@ -42,6 +42,8 @@
 
 "Confirm" = "Potvrdi";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Potvrdite plaćanje u aplikaciji svoje banke unutar %@ da biste dovršili kupnju.";
+
 "Contact information" = "Podaci za kontakt";
 
 "EPS Bank" = "Banka EPS";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Platite u ratama koristeći %@";
 
+"Pay with Link" = "Platite koristeći Link";
+
 "Pay with your bank account in just a few steps." = "Platite svojim bankovnim računom u samo par koraka.";
 
 "Payment failed" = "Plaćanje nije uspjelo";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Spremi ovu karticu za buduća plaćanja %@";
 
+"Save your bank account in just a few steps." = "Spremite svoj bankovni račun u samo par koraka.";
+
 "Select your payment method" = "Odaberite način plaćanja";
 
 "Set up" = "Postavi";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Dostava do %@ nije podržana.";
 
 "Show menu" = "Prikaži izbornik";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe će uplatiti polog u iznosu od 0,01 USD na vaš račun u roku od 1-2 radna dana. Zatim ćete zaprimiti poruku e-pošte s uputama za dovršetak spremanja svog bankovnog računa kod %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe će uplatiti polog u iznosu od 0,01 USD na vaš račun u roku od 1-2 radna dana. Zatim ćete zaprimiti poruku e-pošte s uputama za dovršetak plaćanja za %@.";
 

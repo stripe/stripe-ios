@@ -42,6 +42,8 @@
 
 "Confirm" = "Bestätigen";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Bestätigen Sie die Zahlung in Ihrer Bank-App innerhalb von %@, um den Kauf abzuschließen.";
+
 "Contact information" = "Kontaktinformationen";
 
 "EPS Bank" = "EPS-Bank";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Ratenzahlung mit %@";
 
+"Pay with Link" = "Mit Link bezahlen";
+
 "Pay with your bank account in just a few steps." = "In nur wenigen Schritten von Ihrem Bankkonto aus zahlen.";
 
 "Payment failed" = "Zahlung fehlgeschlagen";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Karte für zukünftige Zahlungen von %@ speichern";
 
+"Save your bank account in just a few steps." = "Speichern Sie Ihr Bankkonto in nur wenigen Schritten.";
+
 "Select your payment method" = "Zahlungsmethode auswählen";
 
 "Set up" = "Einrichten";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Der Versandort %@ wird nicht unterstützt.";
 
 "Show menu" = "Menü anzeigen";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "In ein bis zwei Werktagen wird Stripe Ihrem Konto einen Betrag von 0,01 USD gutschreiben. Danach erhalten Sie eine E-Mail mit weiteren Anweisungen, damit Sie Ihr Bankkonto bei %@ speichern können.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "In ein bis zwei Werktagen wird Stripe Ihrem Konto einen Betrag von 0,01 USD gutschreiben. Danach erhalten Sie eine E-Mail mit weiteren Anweisungen zur Durchführung der Zahlung an %@.";
 
