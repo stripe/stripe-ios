@@ -13,7 +13,7 @@ import StripePayments
 import UIKit
 
 extension PaymentSheetFormFactory {
-    func makeCard() -> PaymentMethodElement {
+    func makeCard(cardBrandChoiceEligible: Bool = false) -> PaymentMethodElement {
         let isLinkEnabled = offerSaveToLinkWhenSupported && canSaveToLink
         let saveCheckbox = makeSaveCheckbox(
             label: String.Localized.save_this_card_for_future_$merchant_payments(
@@ -56,6 +56,7 @@ extension PaymentSheetFormFactory {
         let cardSection = CardSection(
             collectName: configuration.billingDetailsCollectionConfiguration.name == .always,
             defaultValues: cardDefaultValues,
+            cardBrandChoiceEligible: cardBrandChoiceEligible,
             theme: theme
         )
 
@@ -87,18 +88,17 @@ extension PaymentSheetFormFactory {
                 shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             ],
             theme: theme)
-        let cardFormElementWrapper = makeDefaultsApplierWrapper(for: cardFormElement)
 
         if case .paymentSheet(let configuration) = configuration, isLinkEnabled {
             return LinkEnabledPaymentMethodElement(
                 type: .card,
-                paymentMethodElement: cardFormElementWrapper,
+                paymentMethodElement: cardFormElement,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 country: countryCode
             )
         } else {
-            return cardFormElementWrapper
+            return cardFormElement
         }
     }
 }

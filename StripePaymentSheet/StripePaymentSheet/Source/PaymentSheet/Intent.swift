@@ -120,6 +120,16 @@ enum Intent {
         }
     }
 
+    var cardBrandChoiceEligible: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            // TODO(porter) Remove enviorment check
+            return (paymentIntent.cardBrandChoice?.eligible ?? false) && ProcessInfo.processInfo.environment["ENABLE_CBC"] == "true"
+        case .setupIntent, .deferredIntent: // TODO(porter) We will support SI and DI's later.
+            return false
+        }
+    }
+
     var shouldDisableExternalPayPal: Bool {
         let allResponseFields: [AnyHashable: Any]
         switch self {

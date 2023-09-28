@@ -26,7 +26,9 @@ import UIKit
     /// The customer canceled the payment or setup attempt
     case canceled
 
-    /// The attempt failed.
+    /// An error occurred.
+    /// - Note: `PaymentSheet` returns this only when an unrecoverable error is encountered (e.g. if PaymentSheet fails to load). In other cases, the error is shown directly to the user in the sheet (e.g. if payment failed).
+    ///   `PaymentSheet.FlowController` returns this whenever an error is encountered.
     /// - Parameter error: The error encountered by the customer. You can display its `localizedDescription` to the customer.
     case failed(error: Error)
 
@@ -105,8 +107,8 @@ public class PaymentSheet {
 
     /// Presents a sheet for a customer to complete their payment
     /// - Parameter presentingViewController: The view controller to present a payment sheet
-    /// - Parameter completion: Called with the result of the payment after the payment sheet is dismissed
-            public func present(
+    /// - Parameter completion: Called with the result of the payment after the payment sheet is dismissed.
+    public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {

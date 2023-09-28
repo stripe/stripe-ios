@@ -240,26 +240,6 @@ extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
 }
 
 extension USBankAccountPaymentMethodElement: PaymentMethodElement {
-    func applyDefaults(params: IntentConfirmParams) -> IntentConfirmParams {
-        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
-            return params
-        }
-        if let name = configuration.defaultBillingDetails.name {
-            params.paymentMethodParams.nonnil_billingDetails.name = name
-        }
-        if let email = configuration.defaultBillingDetails.email {
-            params.paymentMethodParams.nonnil_billingDetails.email = email
-        }
-        if let phone = configuration.defaultBillingDetails.phone {
-            params.paymentMethodParams.nonnil_billingDetails.phone = phone
-        }
-        if configuration.defaultBillingDetails.address != .init() {
-            params.paymentMethodParams.nonnil_billingDetails.address =
-                STPPaymentMethodAddress(address: configuration.defaultBillingDetails.address)
-        }
-        return params
-    }
-
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         if let updatedParams = self.formElement.updateParams(params: params),
            let linkedBank = linkedBank {

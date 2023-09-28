@@ -39,6 +39,7 @@ class PaymentSheetFormFactory {
     let currency: String?
     let amount: Int?
     let countryCode: String?
+    let cardBrandChoiceEligible: Bool
 
     var canSaveToLink: Bool {
         // For Link private beta, only save cards in ".none" mode: If there is no Customer object.
@@ -57,7 +58,8 @@ class PaymentSheetFormFactory {
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
-        linkAccount: PaymentSheetLinkAccount? = nil
+        linkAccount: PaymentSheetLinkAccount? = nil,
+        cardBrandChoiceEligible: Bool = false
     ) {
         func saveModeFor(merchantRequiresSave: Bool) -> SaveMode {
             let hasCustomer = configuration.hasCustomer
@@ -93,6 +95,7 @@ class PaymentSheetFormFactory {
                   addressSpecProvider: addressSpecProvider,
                   offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
                   linkAccount: linkAccount,
+                  cardBrandChoiceEligible: cardBrandChoiceEligible,
                   supportsLinkCard: intent.supportsLinkCard,
                   isPaymentIntent: intent.isPaymentIntent,
                   currency: intent.currency,
@@ -108,6 +111,7 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
+        cardBrandChoiceEligible: Bool = false,
         supportsLinkCard: Bool,
         isPaymentIntent: Bool,
         currency: String?,
@@ -132,6 +136,7 @@ class PaymentSheetFormFactory {
         self.amount = amount
         self.countryCode = countryCode
         self.saveMode = saveMode
+        self.cardBrandChoiceEligible = cardBrandChoiceEligible
     }
 
     func make() -> PaymentMethodElement {
@@ -140,29 +145,38 @@ class PaymentSheetFormFactory {
         // We have two ways to create the form for a payment method
         // 1. Custom, one-off forms
         if paymentMethod == .card {
-            return makeCard()
+            return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
         } else if paymentMethod == .linkInstantDebit {
             return ConnectionsElement()
         } else if paymentMethod == .USBankAccount {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         } else if paymentMethod == .UPI {
-            return makeDefaultsApplierWrapper(for: makeUPI())
+            return makeUPI()
         } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
             // special case, display mandate for Cash App when setting up or pi+sfu
             additionalElements = [makeCashAppMandate()]
         } else if paymentMethod.stpPaymentMethodType == .payPal && saveMode == .merchantRequired {
             // Paypal requires mandate when setting up
             additionalElements = [makePaypalMandate()]
+        } else if paymentMethod.stpPaymentMethodType == .revolutPay && saveMode == .merchantRequired {
+            // special case, display mandate for revolutPay when setting up or pi+sfu
+            additionalElements = [makeRevolutPayMandate()]
         } else if paymentMethod.stpPaymentMethodType == .bancontact {
             return makeBancontact()
         } else if paymentMethod.stpPaymentMethodType == .bacsDebit {
             return makeBacsDebit()
         } else if paymentMethod.stpPaymentMethodType == .blik {
-            return makeDefaultsApplierWrapper(for: makeBLIK())
+            return makeBLIK()
         } else if paymentMethod == .externalPayPal {
             return makeExternalPayPal()
         } else if paymentMethod.stpPaymentMethodType == .OXXO {
-            return makeDefaultsApplierWrapper(for: makeOXXO())
+            return  makeOXXO()
+        } else if paymentMethod.stpPaymentMethodType == .konbini {
+            return makeKonbini()
+        } else if paymentMethod.stpPaymentMethodType == .boleto {
+            return makeBoleto()
+        } else if paymentMethod.stpPaymentMethodType == .swish {
+            return makeSwish()
         }
 
         guard let spec = specFromJSONProvider() else {
@@ -329,6 +343,11 @@ extension PaymentSheetFormFactory {
 
     func makeCashAppMandate() -> PaymentMethodElement {
         let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+
+    func makeRevolutPayMandate() -> PaymentMethodElement {
+        let mandateText = String(format: String.Localized.revolut_pay_mandate_text, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
     }
 
@@ -562,8 +581,30 @@ extension PaymentSheetFormFactory {
         )
     }
 
+    func makeKonbini() -> PaymentMethodElement {
+        let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: true, emailRequiredByPaymentMethod: true, phoneRequiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let konbiniPhoneNumber = PaymentMethodElementWrapper(TextFieldElement.makeKonbini(theme: theme)) { textField, params in
+            params.confirmPaymentMethodOptions.konbiniOptions = .init()
+            params.confirmPaymentMethodOptions.konbiniOptions?.confirmationNumber = textField.text
+            return params
+        }
+        let elements = [contactInfoSection, konbiniPhoneNumber, billingDetails].compactMap { $0 }
+        return FormElement(autoSectioningElements: elements, theme: theme)
+    }
+
     func makeExternalPayPal() -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: false, emailRequiredByPaymentMethod: false, phoneRequiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
+    }
+
+    func makeSwish() -> PaymentMethodElement {
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
     }

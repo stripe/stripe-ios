@@ -51,6 +51,12 @@ extension Element {
             .first
     }
 
+    func getAUBECSMandateElement() -> StaticElement? {
+        return getAllUnwrappedSubElements()
+            .compactMap { $0 as? StaticElement }
+            .first { $0.view is AUBECSLegalTermsView }
+    }
+
     func getPhoneNumberElement() -> PhoneNumberElement? {
         return getElement()
     }

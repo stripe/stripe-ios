@@ -91,6 +91,42 @@ class STPPaymentIntentEnumsTest: XCTestCase {
         )
     }
 
+    func testStringFromStatus() {
+
+        XCTAssertEqual(
+            STPPaymentIntentStatus.string(from: .requiresPaymentMethod),
+            "requires_payment_method"
+        )
+        XCTAssertEqual(
+            STPPaymentIntentStatus.string(from: .requiresConfirmation),
+            "requires_confirmation"
+        )
+        XCTAssertEqual(
+            STPPaymentIntentStatus.string(from: .requiresAction),
+            "requires_action"
+        )
+        XCTAssertEqual(
+            STPPaymentIntentStatus.string(from: .processing),
+            "processing"
+        )
+        XCTAssertEqual(
+            STPPaymentIntentStatus.string(from: .succeeded),
+            "succeeded"
+        )
+        XCTAssertEqual(
+            STPPaymentIntentStatus.string(from: .requiresCapture),
+            "requires_capture"
+        )
+        XCTAssertEqual(
+            STPPaymentIntentStatus.string(from: .canceled),
+            "canceled"
+        )
+        XCTAssertEqual(
+            STPPaymentIntentStatus.string(from: .unknown),
+            "unknown"
+        )
+    }
+
     func testCaptureMethodFromString() {
         XCTAssertEqual(
             STPPaymentIntentCaptureMethod.captureMethod(from: "manual"),

@@ -37,6 +37,9 @@
 /* Paypal mandate text */
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
+/* Revolut Pay mandate text */
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.";
+
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
@@ -68,10 +71,16 @@
 "Confirm" = "Confirm";
 
 /* Text for alert message when user needs to confirm payment in their banking app */
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
+
+/* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirm the payment in your bank's app within %@ to complete the purchase.";
 
 /* Title for the contact information section */
 "Contact information" = "Contact information";
+
+/* Label for CPF/CPNJ (Brazil tax ID) field */
+"CPF/CPNJ" = "CPF/CPNJ";
 
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";

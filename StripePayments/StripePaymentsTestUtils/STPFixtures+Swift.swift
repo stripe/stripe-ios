@@ -29,14 +29,15 @@ public extension STPFixtures {
         paymentMethodTypes: [String],
         orderedPaymentMethodTypes: [String]? = nil,
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
-        currency: String = "usd"
+        currency: String = "usd",
+        status: STPPaymentIntentStatus = .requiresPaymentMethod
     ) -> STPPaymentIntent {
         var apiResponse: [AnyHashable: Any?] = [
             "id": "123",
             "client_secret": "sec",
             "amount": 10,
             "currency": currency,
-            "status": "requires_payment_method",
+            "status": STPPaymentIntentStatus.string(from: status),
             "livemode": false,
             "created": 1652736692.0,
             "payment_method_types": paymentMethodTypes,

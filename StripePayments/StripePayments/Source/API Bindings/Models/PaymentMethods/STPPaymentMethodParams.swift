@@ -88,6 +88,10 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var usBankAccount: STPPaymentMethodUSBankAccountParams?
     /// If this is a Cash App PaymentMethod, this contains additional details.
     @objc public var cashApp: STPPaymentMethodCashAppParams?
+    /// If this is a RevolutPay PaymentMethod, this contains additional details.
+    @objc public var revolutPay: STPPaymentMethodRevolutPayParams?
+    /// If this is a Swish PaymentMethod, this contains additional details.
+    @objc public var swish: STPPaymentMethodSwishParams?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
@@ -534,6 +538,42 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for an RevolutPay PaymentMethod.
+    /// - Parameters:
+    ///   - revolutPay:   An object containing additional RevolutPay details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        revolutPay: STPPaymentMethodRevolutPayParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .revolutPay
+        self.revolutPay = revolutPay
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
+    /// Creates params for a Swish PaymentMethod.
+    /// - Parameters:
+    ///   - swish:   An object containing additional Swish details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        swish: STPPaymentMethodSwishParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .swish
+        self.swish = swish
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
     /// with similar settings. It will return nil if used with a reusable PaymentMethod.
     /// - Parameter paymentMethod:       An object containing the original single-use PaymentMethod.
@@ -592,7 +632,9 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             self.klarna = STPPaymentMethodKlarnaParams()
         case .affirm:
             self.affirm = STPPaymentMethodAffirmParams()
-        case .paynow, .zip, .amazonPay, .mobilePay:
+        case .swish:
+            self.swish = STPPaymentMethodSwishParams()
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay:
             // No parameters
             break
         // All reusable PaymentMethods go below:
@@ -647,6 +689,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: affirm)): "affirm",
             NSStringFromSelector(#selector(getter: usBankAccount)): "us_bank_account",
             NSStringFromSelector(#selector(getter: cashApp)): "cashapp",
+            NSStringFromSelector(#selector(getter: revolutPay)): "revolut_pay",
+            NSStringFromSelector(#selector(getter: swish)): "swish",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
         ]
@@ -1102,7 +1146,11 @@ extension STPPaymentMethodParams {
             usBankAccount = STPPaymentMethodUSBankAccountParams()
         case .cashApp:
             cashApp = STPPaymentMethodCashAppParams()
-        case .cardPresent, .linkInstantDebit, .paynow, .zip, .revolutPay, .amazonPay, .mobilePay:
+        case .revolutPay:
+            revolutPay = STPPaymentMethodRevolutPayParams()
+        case .swish:
+            swish = STPPaymentMethodSwishParams()
+        case .cardPresent, .linkInstantDebit, .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay:
             // These payment methods don't have any params
             break
         case .unknown:
@@ -1178,9 +1226,11 @@ extension STPPaymentMethodParams {
             return "US Bank Account"
         case .cashApp:
             return "Cash App Pay"
+        case .revolutPay:
+            return "Revolut Pay"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
-        case .paynow, .zip, .revolutPay, .amazonPay, .mobilePay:
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish:
             // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
             return type.displayName
         @unknown default:

@@ -23,7 +23,7 @@ protocol TextFieldViewDelegate: AnyObject {
 @objc(STP_Internal_TextFieldView)
 class TextFieldView: UIView {
     weak var delegate: TextFieldViewDelegate?
-    private lazy var toolbar = DoneButtonToolbar(delegate: self)
+    private lazy var toolbar = DoneButtonToolbar(delegate: self, theme: viewModel.theme)
     var text: String {
         return textField.text ?? ""
     }
