@@ -24,10 +24,7 @@
   },
   "testTargets" : [
     {
-      "skippedTests" : [
-        "PaymentSheetBillingCollectionUITestCase",
-        "PaymentSheetUITestCase"
-      ],
+      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:PaymentSheet Example.xcodeproj",
         "identifier" : "AAF1424C7F0424C3506712E6",
