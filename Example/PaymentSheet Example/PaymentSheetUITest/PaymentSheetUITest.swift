@@ -186,6 +186,11 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         var paymentMethodButton = app.buttons["Payment method"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
+
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
         try! fillCardData(app)
 
         // toggle save this card on and off
@@ -1758,6 +1763,11 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var paymentMethodButton = app.buttons["Payment method"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
+
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
         try! fillCardData(app)
 
         // toggle save this card on and off

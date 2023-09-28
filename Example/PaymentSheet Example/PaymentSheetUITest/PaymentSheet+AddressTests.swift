@@ -350,7 +350,6 @@ NZ
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
 
-
         XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
         XCTAssertEqual(app.textFields["Postal code"].value as? String, updatedBillingAddressPostalCode)
 
