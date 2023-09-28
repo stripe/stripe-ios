@@ -253,6 +253,7 @@ class ExampleDeferredCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
+            "customer_id": paymentSheetConfiguration.customer?.id,
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])

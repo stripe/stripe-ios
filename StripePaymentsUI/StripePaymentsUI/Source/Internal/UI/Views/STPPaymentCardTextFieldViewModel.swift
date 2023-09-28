@@ -229,6 +229,36 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
+    private var cardBrands = Set<STPCardBrand>()
+    func fetchCardBrands(handler: @escaping (Set<STPCardBrand>) -> Void) {
+        // Only fetch card brands if we have at least 8 digits in the pan
+        guard let cardNumber = cardNumber,
+              cardNumber.count >= 8 else {
+            // Clear any previously fetched card brands from the dropdown
+            if self.cardBrands != Set<STPCardBrand>() {
+                self.cardBrands = Set<STPCardBrand>()
+                handler(cardBrands)
+            }
+            return
+        }
+
+        var fetchedCardBrands = Set<STPCardBrand>()
+        STPCardValidator.possibleBrands(forNumber: cardNumber) { [weak self] result in
+            switch result {
+            case .success(let brands):
+                fetchedCardBrands = brands
+            case .failure:
+                // If we fail to fetch card brands fall back to normal card brand detection
+                fetchedCardBrands = Set<STPCardBrand>()
+            }
+
+            if self?.cardBrands != fetchedCardBrands {
+                self?.cardBrands = fetchedCardBrands
+                handler(fetchedCardBrands)
+            }
+        }
+    }
+
     @objc
     public class func keyPathsForValuesAffectingIsValid() -> Set<String> {
         return Set<String>([
