@@ -308,6 +308,7 @@ NZ
         XCTAssertTrue(app.switches["Billing address is same as shipping"].isSelected)
 
         // Updating the shipping address country...
+        app.buttons["UIButton.Back"].tap()
         app.buttons["Close"].tap()
         app.buttons["Address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
@@ -317,6 +318,11 @@ NZ
 
         // ...should update PaymentSheet.FlowController
         app.buttons["Payment method"].waitForExistenceAndTap()
+
+        // Open the new Payment Method sheet
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
         XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
 
         // If you change the billing address, however...
@@ -329,6 +335,7 @@ NZ
         XCTAssertFalse(app.switches["Billing address is same as shipping"].isSelected)
 
         // ...and changing the shipping address...
+        app.buttons["UIButton.Back"].tap()
         app.buttons["Close"].tap()
         app.buttons["Address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
@@ -338,6 +345,12 @@ NZ
 
         // ...should not affect your billing address...
         app.buttons["Payment method"].waitForExistenceAndTap()
+
+        // Open the new Payment Method sheet
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+
+
         XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
         XCTAssertEqual(app.textFields["Postal code"].value as? String, updatedBillingAddressPostalCode)
 
