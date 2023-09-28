@@ -149,11 +149,11 @@ Label of an address field */
 /* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
 "Search" = "Search";
 
-/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
-"Sort code" = "Sort code";
-
 /* Message when a user is selecting a card brand in a dropdown */
 "Select card brand (optional)" = "Select card brand (optional)";
+
+/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
+"Sort code" = "Sort code";
 
 /* Caption for State field on address form (only countries that use state , like United States)
 Label of an address field */
