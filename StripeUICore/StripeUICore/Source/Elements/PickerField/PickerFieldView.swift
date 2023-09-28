@@ -113,7 +113,8 @@ final class PickerFieldView: UIView {
         shouldShowChevron: Bool,
         pickerView: UIView,
         delegate: PickerFieldViewDelegate,
-        theme: ElementsUITheme
+        theme: ElementsUITheme,
+        hasPadding: Bool = true
     ) {
         self.label = label
         self.shouldShowChevron = shouldShowChevron
@@ -121,7 +122,7 @@ final class PickerFieldView: UIView {
         self.delegate = delegate
         self.theme = theme
         super.init(frame: .zero)
-        addAndPinSubview(hStackView, directionalLayoutMargins: ElementsUI.contentViewInsets)
+        addAndPinSubview(hStackView, directionalLayoutMargins: hasPadding ? ElementsUI.contentViewInsets : .zero)
 //      On Catalyst, add the picker view as a subview instead of an input view.
         #if targetEnvironment(macCatalyst)
         addAndPinSubview(pickerView, directionalLayoutMargins: ElementsUI.contentViewInsets)
