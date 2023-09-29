@@ -313,7 +313,8 @@ import UIKit
                 let paymentMethod = STPPaymentMethod(stripeId: paymentMethodId)
                 PaymentSheet
                     .handleDeferredIntentConfirmation(
-                        confirmType: .saved(paymentMethod),
+                        //TODO: COnfirm this
+                        confirmType: .saved(paymentMethod, paymentOptions: nil),
                         configuration: configuration,
                         intentConfig: intentConfiguration,
                         authenticationContext: authenticationContext,

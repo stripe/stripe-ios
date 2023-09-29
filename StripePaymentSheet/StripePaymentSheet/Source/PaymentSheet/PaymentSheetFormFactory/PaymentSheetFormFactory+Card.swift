@@ -101,4 +101,9 @@ extension PaymentSheetFormFactory {
             return cardFormElement
         }
     }
+    func makeCardCVCCollection() -> PaymentMethodElement {
+        return FormElement(
+            elements: [CVCRecollectionElement()],
+            theme: theme)
+    }
 }

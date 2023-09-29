@@ -86,8 +86,11 @@ class PaymentSheetViewController: UIViewController {
                 customerID: configuration.customer?.id,
                 showApplePay: showApplePay,
                 showLink: showLink,
-                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                showCVCRecollection: false//configuration.cvcRecollectionEnabled -- not supported yet
             ),
+            paymentSheetConfiguration: configuration,
+            intent: intent,
             appearance: configuration.appearance,
             delegate: self
         )
@@ -536,6 +539,11 @@ extension PaymentSheetViewController: BottomSheetContentViewController {
 // MARK: - SavedPaymentOptionsViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate {
+    func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
+        error = nil  // clear error
+        updateUI()
+    }
+
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection

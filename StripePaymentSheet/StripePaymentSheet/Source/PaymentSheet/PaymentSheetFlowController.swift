@@ -20,7 +20,7 @@ extension PaymentSheet {
     /// Represents the ways a customer can pay in PaymentSheet
     enum PaymentOption {
         case applePay
-        case saved(paymentMethod: STPPaymentMethod)
+        case saved(paymentMethod: STPPaymentMethod, confirmParams: IntentConfirmParams?)
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
         case externalPayPal(confirmParams: IntentConfirmParams) // TODO(yuki): Rewrite this when we support more EPMs
@@ -29,7 +29,7 @@ extension PaymentSheet {
             switch self {
             case .applePay:
                 return "apple_pay"
-            case .saved(paymentMethod: let paymentMethod):
+            case .saved(paymentMethod: let paymentMethod, confirmParams: _):
                 return paymentMethod.type.identifier
             case .new(confirmParams: let confirmParams):
                 return confirmParams.paymentMethodType.identifier
@@ -56,7 +56,7 @@ extension PaymentSheet {
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
-                case .saved(let paymentMethod):
+                case .saved(let paymentMethod, _):
                     label = paymentMethod.paymentSheetLabel
                 case .new(let confirmParams):
                     label = confirmParams.paymentSheetLabel

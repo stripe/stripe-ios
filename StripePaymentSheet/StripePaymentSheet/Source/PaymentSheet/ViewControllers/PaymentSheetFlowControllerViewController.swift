@@ -48,7 +48,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             guard let selectedPaymentOption = selectedPaymentOption else {
                 return .dynamic("")
             }
-            if case let .saved(paymentMethod) = selectedPaymentOption {
+            if case let .saved(paymentMethod, _) = selectedPaymentOption {
                 return paymentMethod.paymentSheetPaymentMethodType()
             } else if case .applePay = selectedPaymentOption {
                 return .card
@@ -59,6 +59,10 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             return addPaymentMethodViewController.selectedPaymentMethodType
         }
     }
+    var isInCVCRecollectionFlow: Bool {
+        return self.configuration.cvcRecollectionEnabled && self.selectedPaymentMethodType == .card
+    }
+
     weak var delegate: PaymentSheetFlowControllerViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
@@ -157,8 +161,11 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 customerID: configuration.customer?.id,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
-                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                showCVCRecollection: configuration.cvcRecollectionEnabled
             ),
+            paymentSheetConfiguration: configuration,
+            intent: intent,
             appearance: configuration.appearance
         )
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
@@ -320,7 +327,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     func updateButton() {
         switch mode {
         case .selectingSaved:
-            if selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
+            if selectedPaymentMethodType.requiresMandateDisplayForSavedSelection ||
+                isInCVCRecollectionFlow {
                 if confirmButton.isHidden {
                     confirmButton.alpha = 0
                     confirmButton.setHiddenIfNecessary(false)
@@ -329,7 +337,10 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                         self.view.layoutIfNeeded()
                     }
                 }
-                confirmButton.update(state: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled,
+                let confirmationButtonEnabled = !savedPaymentOptionsViewController.isRemovingPaymentMethods &&
+                (savedPaymentOptionsViewController.selectedPaymentOptionHasAdditionalFields && savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams != nil)                
+
+                confirmButton.update(state: confirmationButtonEnabled ? .enabled : .disabled,
                                      callToAction: .customWithLock(title: String.Localized.continue), animated: true)
             } else {
                 if !confirmButton.isHidden {
@@ -442,6 +453,11 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
 // MARK: - SavedPaymentOptionsViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewControllerDelegate {
+    func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
+        error = nil  // clear error
+        updateUI()
+    }
+
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
@@ -461,7 +477,8 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         case .applePay, .link, .saved:
             delegate?.paymentSheetFlowControllerViewControllerDidUpdateSelection(self)
             updateUI()
-            if isDismissable, !selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
+            if isDismissable, (!selectedPaymentMethodType.requiresMandateDisplayForSavedSelection &&
+                               !isInCVCRecollectionFlow) {
                 delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)
             }
         }

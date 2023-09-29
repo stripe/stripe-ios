@@ -101,7 +101,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         }
     }
     var bottomNoticeAttributedString: NSAttributedString? {
-        if case .saved(let paymentMethod) = selectedPaymentOption {
+        if case .saved(let paymentMethod, _) = selectedPaymentOption {
             if paymentMethod.usBankAccount != nil {
                 return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(theme: appearance.asElementsTheme)
             }
@@ -125,7 +125,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         case .applePay:
             return .applePay
         case let .saved(paymentMethod):
-            return .saved(paymentMethod: paymentMethod)
+            return .saved(paymentMethod: paymentMethod, confirmParams: nil)
         }
     }
     var savedPaymentMethods: [STPPaymentMethod] {

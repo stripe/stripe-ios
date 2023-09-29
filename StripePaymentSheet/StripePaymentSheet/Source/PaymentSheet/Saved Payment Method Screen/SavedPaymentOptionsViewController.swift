@@ -14,6 +14,7 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
+    func didUpdate(_ viewController: SavedPaymentOptionsViewController)
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
@@ -55,6 +56,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let showApplePay: Bool
         let showLink: Bool
         let removeSavedPaymentMethodMessage: String?
+        let showCVCRecollection: Bool
     }
 
     var hasRemovablePaymentMethods: Bool {
@@ -87,7 +89,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
     }
     var bottomNoticeAttributedString: NSAttributedString? {
-        if case .saved(let paymentMethod) = selectedPaymentOption {
+        if case .saved(let paymentMethod, _) = selectedPaymentOption {
             if paymentMethod.usBankAccount != nil {
                 return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(theme: appearance.asElementsTheme)
             }
@@ -97,6 +99,8 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Internal Properties
     let configuration: Configuration
+    private let intent: Intent
+    private let paymentSheetConfiguration: PaymentSheet.Configuration
 
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex else {
@@ -111,9 +115,45 @@ class SavedPaymentOptionsViewController: UIViewController {
         case .link:
             return .link(option: .wallet)
         case let .saved(paymentMethod):
-            return .saved(paymentMethod: paymentMethod)
+            return .saved(paymentMethod: paymentMethod, confirmParams: selectedPaymentOptionIntentConfirmParams)
         }
     }
+    //Might not need this?
+    var selectedPaymentOptionHasAdditionalFields: Bool {
+        guard let index = selectedViewModelIndex else {
+            return false
+        }
+
+        switch viewModels[index] {
+        case let .saved(paymentMethod):
+            if paymentMethod.type == .card {
+                //todo check to see if cvc recollection is enabled.  if so,.. return true
+                return true
+//                let params = IntentConfirmParams(type: paymentMethod.paymentSheetPaymentMethodType())
+//                if cvcFormElement.updateParams(params: params) != nil {
+//                    return true
+//                }
+            }
+            return false
+        default:
+            return false
+        }
+    }
+    var selectedPaymentOptionIntentConfirmParams: IntentConfirmParams? {
+        guard let index = selectedViewModelIndex else {
+            return nil
+        }
+        guard case let .saved(paymentMethod) = viewModels[index],
+              paymentMethod.type == .card else {
+            return nil
+        }
+        let params = IntentConfirmParams(type: paymentMethod.paymentSheetPaymentMethodType())
+        if let updatedParams = cvcFormElement.updateParams(params: params) {
+            return updatedParams
+        }
+        return nil
+    }
+
     var savedPaymentMethods: [STPPaymentMethod] {
         didSet {
             updateUI()
@@ -148,7 +188,23 @@ class SavedPaymentOptionsViewController: UIViewController {
         return IndexPath(item: index, section: 0)
     }
 
+
+    private lazy var cvcFormElement: PaymentMethodElement = {
+        let formElement = PaymentSheetFormFactory(
+            intent: intent,
+            configuration: .paymentSheet(paymentSheetConfiguration),
+            paymentMethod: .card,
+            previousCustomerInput: nil)
+        let cvcCollectionElement = formElement.makeCardCVCCollection()
+        cvcCollectionElement.delegate = self
+        return cvcCollectionElement
+    }()
+
     // MARK: - Views
+    private lazy var cvcFormElementView: UIView = {
+        return cvcFormElement.view
+    }()
+
     private lazy var collectionView: SavedPaymentMethodCollectionView = {
         let collectionView = SavedPaymentMethodCollectionView(appearance: appearance)
         collectionView.delegate = self
@@ -156,15 +212,30 @@ class SavedPaymentOptionsViewController: UIViewController {
         return collectionView
     }()
 
+    private lazy var cvcRecollectionContainerView: DynamicHeightContainerView = {
+        let view = DynamicHeightContainerView(pinnedDirection: .top)
+        view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        if configuration.showCVCRecollection {
+            // TODO: Remove view if needed, or just remove dynamic height container?
+            view.addPinnedSubview(cvcFormElementView)
+        }
+        view.updateHeight()
+        return view
+    }()
+
     // MARK: - Inits
     required init(
         savedPaymentMethods: [STPPaymentMethod],
         configuration: Configuration,
+        paymentSheetConfiguration: PaymentSheet.Configuration,
+        intent: Intent,
         appearance: PaymentSheet.Appearance,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
         self.configuration = configuration
+        self.paymentSheetConfiguration = paymentSheetConfiguration
+        self.intent = intent
         self.appearance = appearance
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
@@ -179,16 +250,19 @@ class SavedPaymentOptionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        [collectionView].forEach({
-            view.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        })
-
+        let stackView = UIStackView(arrangedSubviews: [
+            collectionView, cvcRecollectionContainerView,
+        ])
+        stackView.bringSubviewToFront(collectionView)
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
         NSLayoutConstraint.activate([
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
         updateUI()
     }
@@ -196,6 +270,25 @@ class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - Private methods
     private func updateUI() {
         let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customerID)
+
+        if cvcFormElement.view !== cvcFormElementView {
+            let oldView = cvcFormElementView
+            let newView = cvcFormElement.view
+
+            cvcRecollectionContainerView.addPinnedSubview(newView)
+            cvcRecollectionContainerView.layoutIfNeeded()
+            newView.alpha = 0
+
+            animateHeightChange {
+                self.cvcRecollectionContainerView.updateHeight()
+                oldView.alpha = 0
+                newView.alpha = 1
+            } completion: { _ in
+                if oldView !== self.cvcFormElementView {
+                    oldView.removeFromSuperview()
+                }
+            }
+        }
 
         // Move default to front
         var savedPaymentMethods = self.savedPaymentMethods
@@ -417,5 +510,16 @@ extension STPPaymentMethod {
             assertionFailure()
             return (title: "", message: "")
         }
+    }
+}
+
+extension SavedPaymentOptionsViewController: ElementDelegate {
+    func continueToNextField(element: Element) {
+        delegate?.didUpdate(self)
+    }
+
+    func didUpdate(element: Element) {
+        delegate?.didUpdate(self)
+        animateHeightChange()
     }
 }
