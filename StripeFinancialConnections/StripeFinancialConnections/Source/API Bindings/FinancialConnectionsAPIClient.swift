@@ -591,7 +591,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         let body: [String: Any] = [
             "client_secret": clientSecret,
             "core_authorization": coreAuthorizationId,
-//            "return_url": "ios",
+            "return_url": "ios",
         ]
         return self.post(resource: APIEndpointRepairSessionsGenerateUrl, parameters: body)
     }

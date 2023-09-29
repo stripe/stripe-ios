@@ -83,7 +83,7 @@ private func CreateContentView(
     headerSubtitle: String?,
     bulletItems: [FinancialConnectionsBulletPoint],
     extraNotice: String?,
-    learnMoreText: String,
+    learnMoreText: String?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalStackView = HitTestStackView(
@@ -140,7 +140,7 @@ private func CreateHeaderView(
 private func CreateBulletinAndExtraLabelView(
     bulletItems: [FinancialConnectionsBulletPoint],
     extraNotice: String?,
-    learnMoreText: String,
+    learnMoreText: String?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalStackView = HitTestStackView(
@@ -166,12 +166,14 @@ private func CreateBulletinAndExtraLabelView(
                 extraNoticeLabel.setText(extraNotice, action: didSelectURL)
                 subviews.append(extraNoticeLabel)
             }
-            subviews.append(
-                CreateLearnMoreLabel(
-                    text: learnMoreText,
-                    didSelectURL: didSelectURL
+            if let learnMoreText = learnMoreText {
+                subviews.append(
+                    CreateLearnMoreLabel(
+                        text: learnMoreText,
+                        didSelectURL: didSelectURL
+                    )
                 )
-            )
+            }
             return subviews
         }()
     )

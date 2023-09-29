@@ -41,7 +41,7 @@ final class SharedPartnerAuthDataSourceImplementation: SharedPartnerAuthDataSour
     // in other words, a `pendingAuthSession` is up for being
     // cancelled unless the user successfully authorizes
     var pendingAuthSession: FinancialConnectionsAuthSession? // private(set)
-    
+
     init(
         pane: FinancialConnectionsSessionManifest.NextPane,
         institution: FinancialConnectionsInstitution,
@@ -59,7 +59,7 @@ final class SharedPartnerAuthDataSourceImplementation: SharedPartnerAuthDataSour
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
     }
-    
+
     func clearReturnURL(
         authSession: FinancialConnectionsAuthSession,
         authURL: String
@@ -90,7 +90,7 @@ final class SharedPartnerAuthDataSourceImplementation: SharedPartnerAuthDataSour
             }
         return promise
     }
-    
+
     func recordAuthSessionEvent(
         eventName: String,
         authSessionId: String

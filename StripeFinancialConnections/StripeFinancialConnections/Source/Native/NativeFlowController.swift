@@ -879,6 +879,14 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
 
 extension NativeFlowController: BankAuthRepairViewControllerDelegate {
 
+    func bankAuthRepairViewController(
+        _ viewController: BankAuthRepairViewController,
+        didSucceedWithInstitution institution: FinancialConnectionsInstitution?
+    ) {
+        dataManager.institution = institution
+        dataManager.saveToLinkWithStripeSucceeded = true
+        pushPane(.success, animated: true)
+    }
 }
 
 // MARK: - Static Helpers
@@ -933,9 +941,15 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .bankAuthRepair:
-        if let coreAuthorizationId = dataManager.coreAuthorizationPendingNetworkingRepair {
+        if
+            let coreAuthorizationId = dataManager.coreAuthorizationPendingNetworkingRepair,
+            let consumerSession = dataManager.consumerSession,
+            let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first
+        {
             let bankAuthRepairDataSource = BankAuthRepairDataSourceImplementation(
                 coreAuthorizationId: coreAuthorizationId,
+                consumerSession: consumerSession,
+                selectedAccountId: selectedAccountId,
                 manifest: dataManager.manifest,
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,

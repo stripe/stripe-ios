@@ -12,7 +12,10 @@ import Foundation
 import UIKit
 
 protocol BankAuthRepairViewControllerDelegate: AnyObject {
-
+    func bankAuthRepairViewController(
+        _ viewController: BankAuthRepairViewController,
+        didSucceedWithInstitution institution: FinancialConnectionsInstitution?
+    )
 }
 
 final class BankAuthRepairViewController: UIViewController {
@@ -61,6 +64,7 @@ final class BankAuthRepairViewController: UIViewController {
             dataSource: dataSource.sharedPartnerAuthDataSource
         )
         super.init(nibName: nil, bundle: nil)
+        sharedPartnerAuthViewController.delegate = self
     }
 
     required init?(coder: NSCoder) {
@@ -109,18 +113,34 @@ final class BankAuthRepairViewController: UIViewController {
                             errorName: "InitiateAuthRepairSessionError",
                             pane: .bankAuthRepair
                         )
+
                     // TODO(kgaidis): 2. go back to link account picker...
                 }
             }
     }
 
     private func repairSessionCompleted() {
+        dataSource
+            .selectNetworkedAccount()
+            .observe(on: .main) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let response):
+                    self.delegate?.bankAuthRepairViewController(
+                        self,
+                        didSucceedWithInstitution: response.data.first
+                    )
+                case .failure(let error):
+                    print(error)
+                }
+            }
+
+//        dataSource
 //        if (multiAccountFlow) {
 //          pushPane('link_account_picker');
 //        } else {
 //          shareNetworkedAccounts();
 //        }
-
     }
 }
 

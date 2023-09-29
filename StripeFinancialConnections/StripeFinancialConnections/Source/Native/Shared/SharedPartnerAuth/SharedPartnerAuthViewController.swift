@@ -19,7 +19,7 @@ protocol SharedPartnerAuthViewControllerDelegate: AnyObject {
         // for OAuth, non-retrieve-auth-session successes, we should call `authorize`
         considerCallingAuthorize: Bool
     )
-    
+
     func sharedPartnerAuthViewController(
         _ viewController: SharedPartnerAuthViewController,
         didCancelWithAuthSession authSession: FinancialConnectionsAuthSession,
@@ -27,20 +27,20 @@ protocol SharedPartnerAuthViewControllerDelegate: AnyObject {
         // which can change how we handle the cancel
         statusWasReturned: Bool
     )
-    
+
     func sharedPartnerAuthViewController(
         _ viewController: SharedPartnerAuthViewController,
         didFailWithAuthSession authSession: FinancialConnectionsAuthSession
     )
-    
+
     func sharedPartnerAuthViewControllerDidRequestToGoBack(_ viewController: SharedPartnerAuthViewController)
-    
+
     // we call this when we should display an error
     func sharedPartnerAuthViewController(
         _ viewController: SharedPartnerAuthViewController,
         didReceiveError error: Error
     )
-    
+
     func sharedPartnerAuthViewController(
         _ viewController: SharedPartnerAuthViewController,
         didReceiveTerminalError error: Error
@@ -99,10 +99,10 @@ final class SharedPartnerAuthViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
     }
-    
+
     func startWithAuthSession(_ authSession: FinancialConnectionsAuthSession) {
         dataSource.pendingAuthSession = authSession
-        
+
         dataSource.recordAuthSessionEvent(
             eventName: "launched",
             authSessionId: authSession.id
@@ -314,13 +314,13 @@ final class SharedPartnerAuthViewController: UIViewController {
                 eventName: "success",
                 authSessionId: authSession.id
             )
-            
+
             delegate?.sharedPartnerAuthViewController(
                 self,
                 didSucceedWithAuthSession: authSession,
                 considerCallingAuthorize: true
             )
-            
+
 //            if authSession.isOauthNonOptional {
 //                // for OAuth flows, we need to fetch OAuth results
 //                self.authorizeAuthSession(authSession)
@@ -333,7 +333,7 @@ final class SharedPartnerAuthViewController: UIViewController {
                 eventName: "failure",
                 authSessionId: authSession.id
             )
-            
+
             delegate?.sharedPartnerAuthViewController(self, didFailWithAuthSession: authSession)
 
 //            // cancel current auth session
@@ -356,7 +356,7 @@ final class SharedPartnerAuthViewController: UIViewController {
                             didCancelWithAuthSession: authSession,
                             statusWasReturned: true
                         )
-                        
+
 //                        self.dataSource.recordAuthSessionEvent(
 //                            eventName: "cancel",
 //                            authSessionId: authSession.id
@@ -391,13 +391,13 @@ final class SharedPartnerAuthViewController: UIViewController {
                 authSessionId: authSession.id
             )
         }
-        
+
         delegate?.sharedPartnerAuthViewController(
             self,
             didCancelWithAuthSession: authSession,
             statusWasReturned: false
         )
-        
+
 //        // cancel current auth session because something went wrong
 //        dataSource.cancelPendingAuthSessionIfNeeded()
 //

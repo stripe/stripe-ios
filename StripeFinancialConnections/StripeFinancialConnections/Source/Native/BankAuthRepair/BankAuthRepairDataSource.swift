@@ -19,14 +19,16 @@ protocol BankAuthRepairDataSource: AnyObject {
     var sharedPartnerAuthDataSource: SharedPartnerAuthDataSource { get }
 
     func initiateAuthRepairSession() -> Promise<FinancialConnectionsAuthRepairSession>
-
     func completeAuthRepairSession(authRepairSessionId: String) -> Promise<FinancialConnectionsAuthRepairSessionComplete>
+    func selectNetworkedAccount() -> Future<FinancialConnectionsInstitutionList>
 }
 
 final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
 
 //    var institution: FinancialConnectionsInstitution
-    let coreAuthorizationId: String
+    private let coreAuthorizationId: String
+    private let consumerSession: ConsumerSessionData
+    private let selectedAccountId: String
     let manifest: FinancialConnectionsSessionManifest
     let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
@@ -48,6 +50,8 @@ final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
 
     init(
         coreAuthorizationId: String,
+        consumerSession: ConsumerSessionData,
+        selectedAccountId: String,
         manifest: FinancialConnectionsSessionManifest,
         returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
@@ -56,6 +60,8 @@ final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
         reduceManualEntryProminenceInErrors: Bool
     ) {
         self.coreAuthorizationId = coreAuthorizationId
+        self.consumerSession = consumerSession
+        self.selectedAccountId = selectedAccountId
         self.manifest = manifest
         self.returnURL = returnURL
         self.apiClient = apiClient
@@ -78,6 +84,14 @@ final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
         return apiClient.initiateAuthRepairSession(
             clientSecret: clientSecret,
             coreAuthorizationId: coreAuthorizationId
+        )
+    }
+
+    func selectNetworkedAccount() -> Future<FinancialConnectionsInstitutionList> {
+        return apiClient.selectNetworkedAccounts(
+            selectedAccountIds: [selectedAccountId],
+            clientSecret: clientSecret,
+            consumerSessionClientSecret: consumerSession.clientSecret
         )
     }
 

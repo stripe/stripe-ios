@@ -13,7 +13,7 @@ struct ConsentBottomSheetModel {
     let subtitle: String?
     let body: Body
     let extraNotice: String?
-    let learnMore: String
+    let learnMore: String?
     let cta: String
 
     struct Body: Decodable {
