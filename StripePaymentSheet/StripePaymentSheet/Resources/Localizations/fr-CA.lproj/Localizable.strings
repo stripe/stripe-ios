@@ -42,6 +42,8 @@
 
 "Confirm" = "Confirmer";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Veuillez confirmer le paiement dans votre application bancaire sous %@ pour effectuer l'achat.";
+
 "Contact information" = "Coordonnées";
 
 "EPS Bank" = "Banque EPS";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Payer par versements échelonnés avec %@";
 
+"Pay with Link" = "Payer avec Link";
+
 "Pay with your bank account in just a few steps." = "Payez avec votre compte bancaire en quelques étapes.";
 
 "Payment failed" = "Le paiement a échoué";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Enregistrer cette carte pour vos prochains achats chez %@";
 
+"Save your bank account in just a few steps." = "Enregistrez votre compte bancaire en quelques clics.";
+
 "Select your payment method" = "Sélectionnez votre moyen de paiement";
 
 "Set up" = "Configurer";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "La livraison dans le pays suivant : %@ n'est pas prise en charge.";
 
 "Show menu" = "Afficher le menu";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe va effectuer un versement de 0,01 $ sur votre compte sous 1 ou 2 jours ouvrables. Vous recevrez ensuite un courriel contenant des instructions pour finaliser l'enregistrement de votre compte bancaire auprès de %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe va effectuer un versement de 0,01 $ sur votre compte sous 1 ou 2 jours ouvrables. Vous recevrez ensuite un courriel contenant des instructions pour finaliser le paiement à %@.";
 

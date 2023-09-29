@@ -76,6 +76,8 @@
 
 "Pay over time with %@" = "Betal over tid med %@";
 
+"Pay with Link" = "Betal med Link";
+
 "Pay with your bank account in just a few steps." = "Betal med bankkontoen din med berre eit par trinn.";
 
 "Payment failed" = "Betaling mislukka";
@@ -106,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Lagre dette kortet for framtidige %@ betalingar";
 
+"Save your bank account in just a few steps." = "Lagre bankkontoen din på berre nokre få steg.";
+
 "Select your payment method" = "Vel betalingsmåte";
 
 "Set up" = "Opprett";
@@ -113,6 +117,8 @@
 "Shipping to %@ is not supported." = "Levering til %@ er ikkje støtta.";
 
 "Show menu" = "Vis meny";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe set inn 0,01 USD på kontoen din i løpet av 1–2 verkedagar. Deretter får du ei e-postmelding som forklarar resten av prosessen med å lagre bankkontoen din hos %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sett inn 0,01 USD på kontoen din om 1–2 verkedagar. Så får du ei e-postmelding med instruksjonar om å fullføre betaling til %@.";
 

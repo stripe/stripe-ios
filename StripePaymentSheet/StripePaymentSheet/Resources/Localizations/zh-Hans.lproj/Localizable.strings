@@ -42,6 +42,8 @@
 
 "Confirm" = "确定";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "%@内在您的银行应用中确认付款，完成购物。";
+
 "Contact information" = "联系信息";
 
 "EPS Bank" = "EPS 银行";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "用 %@ 慢慢支付";
 
+"Pay with Link" = "用 Link 支付";
+
 "Pay with your bank account in just a few steps." = "只需少许几步，即可用您的银行账户付款。";
 
 "Payment failed" = "付款失败";
@@ -82,7 +86,7 @@
 
 "Point the camera at your card." = "将摄像头正对银行卡。";
 
-"Processing..." = "正在处理...";
+"Processing..." = "处理中...";
 
 "Przelewy24 Bank" = "Przelewy24 银行";
 
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "保存该卡，用于未来在 %@ 付款";
 
+"Save your bank account in just a few steps." = "几步保存您的银行账户。";
+
 "Select your payment method" = "选择您的支付方式";
 
 "Set up" = "设置";
@@ -112,12 +118,14 @@
 
 "Show menu" = "显示菜单";
 
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe 会在 1-2 个工作日向您的账户存入 0.01 美元。然后您会收到一封包含说明的邮件，指导您用 %@ 保存您的银行账户。";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe 会在 1-2 个工作日向您的账户存入 0.01 美元。然后您会收到一封邮件，指导您完成向 %@ 的付款。";
 
 "The IBAN you entered is incomplete." = "您输入的 IBAN 不完整。";
 
 "Update card" = "更新卡";
 
-"Your IBAN should start with a two-letter country code." = "您的 IBAN 应以一个两字母国家代码开头。";
+"Your IBAN should start with a two-letter country code." = "您的 IBAN 应以两个字母的国家代码开头。";
 
 "iDEAL Bank" = "iDEAL 银行";

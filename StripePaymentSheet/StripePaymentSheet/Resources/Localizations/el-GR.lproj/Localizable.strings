@@ -42,6 +42,8 @@
 
 "Confirm" = "Επιβεβαίωση";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Επιβεβαιώστε την πληρωμή στην εφαρμογή της τράπεζάς σας μέσα σε %@ για την ολοκλήρωση της αγοράς.";
+
 "Contact information" = "Στοιχεία επικοινωνίας";
 
 "EPS Bank" = "Τράπεζα με EPS";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Πληρωμή σταδιακά με %@";
 
+"Pay with Link" = "Πληρωμή με το Link";
+
 "Pay with your bank account in just a few steps." = "Πληρώστε με τον τραπεζικό λογαριασμό σας με λίγα μόνο βήματα.";
 
 "Payment failed" = "Η πληρωμή απέτυχε";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Αποθηκεύστε αυτή την κάρτα για μελλοντικές %@ πληρωμές";
 
+"Save your bank account in just a few steps." = "Αποθηκεύστε τον τραπεζικό λογαριασμό σας με λίγα μόνο βήματα.";
+
 "Select your payment method" = "Επιλέξτε τη μέθοδο πληρωμής σας";
 
 "Set up" = "Διαμόρφωση";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Η αποστολή στη χώρα %@ δεν υποστηρίζεται.";
 
 "Show menu" = "Εμφάνιση μενού";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Η Stripe θα καταθέσει 0,01 $ στον λογαριασμό σας σε 1-2 εργάσιμες ημέρες. Στη συνέχεια, θα λάβετε email με οδηγίες για να ολοκληρώσετε την αποθήκευση του τραπεζικού λογαριασμού σας με την %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Η Stripe θα καταθέσει 0,01 $ στον λογαριασμό σας σε 1-2 εργάσιμες ημέρες. Στη συνέχεια, θα λάβετε email με οδηγίες για να ολοκληρώσετε την πληρωμή στην %@.";
 

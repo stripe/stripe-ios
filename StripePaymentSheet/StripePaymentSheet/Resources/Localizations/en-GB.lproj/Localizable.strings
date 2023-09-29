@@ -42,6 +42,8 @@
 
 "Confirm" = "Confirm";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirm the payment in your bank's app within %@ to complete the purchase.";
+
 "Contact information" = "Contact information";
 
 "EPS Bank" = "EPS Bank";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Pay over time with %@";
 
+"Pay with Link" = "Pay with Link";
+
 "Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
 
 "Payment failed" = "Payment failed";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
 
+"Save your bank account in just a few steps." = "Save your bank account in just a few steps.";
+
 "Select your payment method" = "Select your payment method";
 
 "Set up" = "Set up";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
 
 "Show menu" = "Show menu";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
 

@@ -42,6 +42,8 @@
 
 "Confirm" = "Megerősítés";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést bankja alkalmazásában.";
+
 "Contact information" = "Kapcsolattartási adatok";
 
 "EPS Bank" = "EPS Bank";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Fizessen később a következővel: %@";
 
+"Pay with Link" = "Fizetés Linkkel";
+
 "Pay with your bank account in just a few steps." = "Fizessen egyszerűen a bankszámlájával.";
 
 "Payment failed" = "A fizetés nem sikerült";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "A kártya mentése a(z) %@ részére történő fizetésekhez";
 
+"Save your bank account in just a few steps." = "Mentse el egyszerűen bankszámláját.";
+
 "Select your payment method" = "Fizetési mód kiválasztása";
 
 "Set up" = "Beállítás";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Ebbe az országba nem támogatott a szállítás: %@";
 
 "Show menu" = "Menü megjelenítése";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "A Stripe 1-2 munkanapon belül egy 0,01 dollár összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a bankszámlája mentéséről a(z) %@ vállalkozáshoz.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "A Stripe néhány munkanapon belül egy 0,01 $ összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a fizetés befejezéséhez a(z) %@ felé.";
 

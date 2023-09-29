@@ -1,5 +1,3 @@
-"AU BECS Direct Debit" = "AU BECS 直接借記 ";
-
 "Affirm" = "Affirm";
 
 "Afterpay" = "Afterpay";
@@ -50,7 +48,7 @@
 
 "Unknown" = "未知";
 
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "我們無法驗證您的付款方式。請選擇其他付款方式，然後再試一次。";
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "我們未能驗證您的支付方式。請選擇另一支付方式並重試。";
 
 "WeChat Pay" = "微信支付";
 

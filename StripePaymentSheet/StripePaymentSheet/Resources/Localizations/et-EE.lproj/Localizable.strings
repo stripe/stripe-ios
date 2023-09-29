@@ -42,6 +42,8 @@
 
 "Confirm" = "Kinnita";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma pangarakenduses %@ jooksul.";
+
 "Contact information" = "Kontaktandmed";
 
 "EPS Bank" = "EPS pank";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Maksa aja jooksul makseviisiga %@";
 
+"Pay with Link" = "Maksa Linkiga";
+
 "Pay with your bank account in just a few steps." = "Pangakontoga maksmine vaid mõne sammuga.";
 
 "Payment failed" = "Makse ebaõnnestus";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Salvestage see kaart tulevasteks makseteks teenuses %@";
 
+"Save your bank account in just a few steps." = "Salvestage oma pangakonto vaid mõne lihtsa sammuga.";
+
 "Select your payment method" = "Valige makseviis";
 
 "Set up" = "Seadista";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Kohaletoimetamist %@ ei ole toetatud.";
 
 "Show menu" = "Kuva menüü";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega oma pangakonto %@ salvestamiseks.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega makse sooritamiseks ettevõttele %@.";
 
