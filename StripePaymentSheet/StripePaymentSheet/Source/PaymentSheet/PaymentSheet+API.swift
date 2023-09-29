@@ -138,11 +138,6 @@ extension PaymentSheet {
             case .paymentIntent(let paymentIntent):
                 let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod), paymentIntent: paymentIntent, configuration: configuration)
 
-                // The Dashboard app requires MOTO
-                if configuration.apiClient.publishableKeyIsUserKey {
-                    paymentIntentParams.paymentMethodOptions?.setMoto()
-                }
-
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
                     with: authenticationContext,
@@ -423,6 +418,9 @@ extension PaymentSheet {
         params.paymentMethodOptions = paymentOptions
         params.returnURL = configuration.returnURL
         params.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+
+        // Always set moto to true for Dashboard
+        params.paymentMethodOptions?.setMoto()
         return params
     }
 
