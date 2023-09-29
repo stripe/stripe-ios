@@ -10,11 +10,11 @@
 
 extension Intent {
     var supportsLink: Bool {
-        return recommendedPaymentMethodTypes.contains(.link)
+        return recommendedPaymentMethodTypes.contains(.link) || linkPassthroughModeEnabled
     }
 
     var supportsLinkCard: Bool {
-        return supportsLink && (linkFundingSources?.contains(.card) ?? false)
+        return supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }
 
     var onlySupportsLinkBank: Bool {
@@ -34,6 +34,17 @@ extension Intent {
             case .setup:
                 return .setup
             }
+        }
+    }
+
+    var linkPassthroughModeEnabled: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.linkSettings?.passthroughModeEnabled ?? false
+        case .setupIntent(let setupIntent):
+            return setupIntent.linkSettings?.passthroughModeEnabled ?? false
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.linkSettings?.passthroughModeEnabled ?? false
         }
     }
 
