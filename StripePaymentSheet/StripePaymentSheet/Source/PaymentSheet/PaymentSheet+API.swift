@@ -11,12 +11,67 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+import SwiftUI
 import UIKit
 
 extension PaymentSheet {
 
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
     static func confirm(
+        configuration: PaymentSheet.Configuration,
+        authenticationContext: STPAuthenticationContext,
+        intent: Intent,
+        paymentOption: PaymentOption,
+        paymentHandler: STPPaymentHandler,
+        isFlowController: Bool = false,
+        paymentMethodID: String? = nil,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        performLocalActionsIfNeededAndConfirm(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, paymentHandler: paymentHandler, completion: completion)
+    }
+
+    /// Perform PaymentSheet-specific local actions before confirming.
+    /// These actions are not represented in the PaymentIntent state and are specific to
+    /// Payment Element (not the API bindings), so we need to handle them here.
+    static fileprivate func performLocalActionsIfNeededAndConfirm(
+        configuration: PaymentSheet.Configuration,
+        authenticationContext: STPAuthenticationContext,
+        intent: Intent,
+        paymentOption: PaymentOption,
+        paymentHandler: STPPaymentHandler,
+        isFlowController: Bool = false,
+        paymentMethodID: String? = nil,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        // First, handle any client-side required actions:
+        if case let .new(confirmParams) = paymentOption,
+           confirmParams.paymentMethodType == .bacsDebit {
+            // MARK: - Bacs Debit
+            // Display the Bacs Debit mandate view
+            let mandateView = BacsDDMandateView(email: confirmParams.paymentMethodParams.billingDetails?.email ?? "",
+                                                name: confirmParams.paymentMethodParams.billingDetails?.name ?? "",
+                                                sortCode: confirmParams.paymentMethodParams.bacsDebit?.sortCode ?? "",
+                                                accountNumber: confirmParams.paymentMethodParams.bacsDebit?.accountNumber ?? "",
+                                                confirmAction: {
+                // If confirmed, dismiss the MandateView and complete the transaction:
+                authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
+                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, paymentHandler: paymentHandler, completion: completion)
+            }, cancelAction: {
+                // Dismiss the MandateView and return to PaymentSheet
+                authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
+                completion(.canceled, nil)
+            })
+
+            let hostingController = UIHostingController(rootView: mandateView)
+            hostingController.isModalInPresentation = true
+            authenticationContext.authenticationPresentingViewController().present(hostingController, animated: true)
+        } else {
+            // MARK: - No local actions
+            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, paymentHandler: paymentHandler, completion: completion)
+        }
+    }
+
+    static fileprivate func confirmAfterHandlingLocalActions(
         configuration: PaymentSheet.Configuration,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,

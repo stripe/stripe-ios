@@ -4,6 +4,7 @@
 * [Fixed] Fixed an issue with scanning card expiration dates.
 * [Fixed] Fixed an issue where billing address collection configuration was not passed to Apple Pay.
 * [Added] Support for Swish with PaymentIntents.
+* [Added] Support for Bacs Direct Debit with PaymentIntents.
 
 ### Basic Integration
 * [Fixed] Fixed an issue with scanning card expiration dates.

@@ -171,6 +171,8 @@ extension STPPaymentMethodType {
                     return .pm_type_revolutpay
                 case .blik:
                     return .pm_type_blik
+                case .bacsDebit:
+                    return .pm_type_us_bank
                 case .alipay:
                     return .pm_type_alipay
                 case .OXXO:

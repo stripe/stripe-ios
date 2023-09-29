@@ -36,6 +36,7 @@ extension PaymentSheet {
         case dynamic(String)
         case UPI
         case cashApp
+        case bacsDebit
         case externalPayPal // TODO(yuki): Replace this when we support more EPMs
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
@@ -52,6 +53,8 @@ extension PaymentSheet {
                 self = .UPI
             case STPPaymentMethod.string(from: .cashApp):
                 self = .cashApp
+            case STPPaymentMethod.string(from: .bacsDebit):
+                self = .bacsDebit
             case "external_paypal":
                 self = .externalPayPal
             default:
@@ -74,6 +77,8 @@ extension PaymentSheet {
                 return STPPaymentMethod.string(from: .UPI)
             case .cashApp:
                 return STPPaymentMethod.string(from: .cashApp)
+            case .bacsDebit:
+                return STPPaymentMethod.string(from: .bacsDebit)
             case .dynamic(let str):
                 return str
             case .externalPayPal:

@@ -152,6 +152,9 @@ Label of an address field */
 /* Message when a user is selecting a card brand in a dropdown */
 "Select card brand (optional)" = "Select card brand (optional)";
 
+/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
+"Sort code" = "Sort code";
+
 /* Caption for State field on address form (only countries that use state , like United States)
 Label of an address field */
 "State" = "State";
@@ -170,6 +173,9 @@ Label of an address field */
 
 /* An error message. */
 "The ID number you entered is incomplete." = "The ID number you entered is incomplete.";
+
+/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
+"The sort code you entered is invalid." = "The sort code you entered is invalid.";
 
 /* Label of an address field */
 "Town or city" = "Town or city";
