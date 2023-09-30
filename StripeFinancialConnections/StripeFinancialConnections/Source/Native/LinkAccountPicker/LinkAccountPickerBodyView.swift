@@ -51,7 +51,7 @@ final class LinkAccountPickerBodyView: UIView {
 
         accountTuples.forEach { accountTuple in
             let accountRowView = LinkAccountPickerRowView(
-                isDisabled: false, // !accountTuple.accountPickerAccount.allowSelection,
+                isDisabled: !accountTuple.accountPickerAccount.allowSelection,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.linkAccountPickerBodyView(

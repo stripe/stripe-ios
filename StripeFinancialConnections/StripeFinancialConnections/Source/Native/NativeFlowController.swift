@@ -887,6 +887,19 @@ extension NativeFlowController: BankAuthRepairViewControllerDelegate {
         dataManager.saveToLinkWithStripeSucceeded = true
         pushPane(.success, animated: true)
     }
+    
+    func bankAuthRepairViewControllerDidRequestToGoBackToLinkAccountPicker(
+        _ viewController: BankAuthRepairViewController
+    ) {
+        navigationController.popViewController(animated: true)
+    }
+    
+    func bankAuthRepairViewController(
+        _ viewController: BankAuthRepairViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        showTerminalError(error)
+    }
 }
 
 // MARK: - Static Helpers

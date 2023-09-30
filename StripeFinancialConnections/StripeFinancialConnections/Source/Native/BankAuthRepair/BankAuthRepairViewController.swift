@@ -16,6 +16,13 @@ protocol BankAuthRepairViewControllerDelegate: AnyObject {
         _ viewController: BankAuthRepairViewController,
         didSucceedWithInstitution institution: FinancialConnectionsInstitution?
     )
+    func bankAuthRepairViewControllerDidRequestToGoBackToLinkAccountPicker(
+        _ viewController: BankAuthRepairViewController
+    )
+    func bankAuthRepairViewController(
+        _ viewController: BankAuthRepairViewController,
+        didReceiveTerminalError error: Error
+    )
 }
 
 final class BankAuthRepairViewController: UIViewController {
@@ -31,9 +38,6 @@ final class BankAuthRepairViewController: UIViewController {
 
     private let dataSource: BankAuthRepairDataSource
     private let sharedPartnerAuthViewController: SharedPartnerAuthViewController
-//    private var institution: FinancialConnectionsInstitution {
-//        return dataSource.institution
-//    }
     private var webAuthenticationSession: ASWebAuthenticationSession?
     private var lastHandledAuthenticationSessionReturnUrl: URL?
     weak var delegate: BankAuthRepairViewControllerDelegate?
@@ -113,8 +117,7 @@ final class BankAuthRepairViewController: UIViewController {
                             errorName: "InitiateAuthRepairSessionError",
                             pane: .bankAuthRepair
                         )
-
-                    // TODO(kgaidis): 2. go back to link account picker...
+                    self.delegate?.bankAuthRepairViewControllerDidRequestToGoBackToLinkAccountPicker(self)
                 }
             }
     }
@@ -131,16 +134,12 @@ final class BankAuthRepairViewController: UIViewController {
                         didSucceedWithInstitution: response.data.first
                     )
                 case .failure(let error):
-                    print(error)
+                    self.delegate?.bankAuthRepairViewController(
+                        self,
+                        didReceiveTerminalError: error
+                    )
                 }
             }
-
-//        dataSource
-//        if (multiAccountFlow) {
-//          pushPane('link_account_picker');
-//        } else {
-//          shareNetworkedAccounts();
-//        }
     }
 }
 
@@ -153,8 +152,6 @@ extension BankAuthRepairViewController: SharedPartnerAuthViewControllerDelegate 
         didSucceedWithAuthSession authSession: FinancialConnectionsAuthSession,
         considerCallingAuthorize: Bool
     ) {
-        print(authSession)
-
         if authSession.isOauthNonOptional {
             dataSource.completeAuthRepairSession(
                 authRepairSessionId: authSession.id
@@ -162,11 +159,10 @@ extension BankAuthRepairViewController: SharedPartnerAuthViewControllerDelegate 
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let authRepairSessionComplete):
-                    print(authRepairSessionComplete)
+                case .success:
                     self.repairSessionCompleted()
                 case .failure(let error):
-                    print(error)
+                    self.delegate?.bankAuthRepairViewController(self, didReceiveTerminalError: error)
                 }
             }
         } else {
@@ -179,33 +175,33 @@ extension BankAuthRepairViewController: SharedPartnerAuthViewControllerDelegate 
         didCancelWithAuthSession authSession: FinancialConnectionsAuthSession,
         statusWasReturned: Bool
     ) {
-        print(authSession)
+        delegate?.bankAuthRepairViewControllerDidRequestToGoBackToLinkAccountPicker(self)
     }
 
     func sharedPartnerAuthViewController(
         _ viewController: SharedPartnerAuthViewController,
         didFailWithAuthSession authSession: FinancialConnectionsAuthSession
     ) {
-        print(authSession)
+        delegate?.bankAuthRepairViewControllerDidRequestToGoBackToLinkAccountPicker(self)
     }
 
     func sharedPartnerAuthViewControllerDidRequestToGoBack(
         _ viewController: SharedPartnerAuthViewController
     ) {
-        print("sharedPartnerAuthViewControllerDidRequestToGoBack")
+        delegate?.bankAuthRepairViewControllerDidRequestToGoBackToLinkAccountPicker(self)
     }
 
     func sharedPartnerAuthViewController(
         _ viewController: SharedPartnerAuthViewController,
         didReceiveError error: Error
     ) {
-        print(error)
+        delegate?.bankAuthRepairViewControllerDidRequestToGoBackToLinkAccountPicker(self)
     }
 
     func sharedPartnerAuthViewController(
         _ viewController: SharedPartnerAuthViewController,
         didReceiveTerminalError error: Error
     ) {
-        print(error)
+        delegate?.bankAuthRepairViewController(self, didReceiveTerminalError: error)
     }
 }
