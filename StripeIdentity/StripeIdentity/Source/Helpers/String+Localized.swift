@@ -178,4 +178,12 @@ extension String.Localized {
         )
     }
 
+    // MARK: - BottomSheet
+    static var bottomSheetClose: String {
+        STPLocalizedString(
+            "Close",
+            "Button to close bottomsheet"
+        )
+    }
+
 }

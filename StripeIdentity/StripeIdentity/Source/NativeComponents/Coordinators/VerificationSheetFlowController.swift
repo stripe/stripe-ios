@@ -27,6 +27,8 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 
     var navigationController: UINavigationController { get }
 
+    var visitedIndividualWelcomePage: Bool { get }
+
     func transitionToNextScreen(
         skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
@@ -71,6 +73,8 @@ final class VerificationSheetFlowController: NSObject {
     let brandLogo: UIImage
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
+
+    var visitedIndividualWelcomePage: Bool = false
 
     private(set) var isUsingWebView = false
 
@@ -406,6 +410,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         case .selfieCaptureDestination:
             completion(makeSelfieWarmupViewController(sheetController: sheetController))
         case .individualWelcomeDestination:
+            visitedIndividualWelcomePage = true
             // if missing .name or .dob, then verification type is not document.
             // Transition to IndividualWelcomeViewController.
             return completion(

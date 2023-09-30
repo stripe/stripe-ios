@@ -52,7 +52,12 @@ struct IdentityUI {
         return UILabel.appearance().textColor ?? .label
     }
 
+    static var secondaryLabelColor: UIColor {
+        return UIColor.systemGray
+    }
+
     static let iconColor = UIColor.systemGray
+    static let darkIconColor = UIColor.label
 
     // MARK: Separator
 

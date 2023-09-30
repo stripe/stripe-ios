@@ -33,6 +33,9 @@ class IdentityFlowView: UIView {
             bottom: 8,
             trailing: 16
         )
+        static let stackViewSpacing: CGFloat = 8
+
+        static let privacyPolicyBottomPadding: CGFloat = 16
 
         static func buttonConfiguration(isPrimary: Bool) -> Button.Configuration {
             return isPrimary ? .identityPrimary() : .identitySecondary()
@@ -73,6 +76,7 @@ class IdentityFlowView: UIView {
         let headerViewModel: HeaderView.ViewModel?
         let contentViewModel: Content
         let buttons: [Button]
+        var privacyPolicyModel: HTMLTextView.ViewModel?
         var scrollViewDelegate: UIScrollViewDelegate?
         var flowViewDelegate: IdentityFlowViewDelegate?
     }
@@ -89,6 +93,7 @@ class IdentityFlowView: UIView {
     private let scrollContainerStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
+        stackView.spacing = Style.stackViewSpacing
         stackView.distribution = .fill
         stackView.alignment = .fill
         return stackView
@@ -108,6 +113,8 @@ class IdentityFlowView: UIView {
         buttonBackgroundView.backgroundColor = .systemBackground
         return buttonBackgroundView
     }()
+
+    private let privacyPolicyView = HTMLTextView()
 
     private var flowViewDelegate: IdentityFlowViewDelegate?
 
@@ -140,10 +147,11 @@ class IdentityFlowView: UIView {
     /// - Note: This method changes the view hierarchy and activates new
     /// constraints which can affect screen render performance. It should only be
     /// called from a view controller's `init` or `viewDidLoad`.
-    func configure(with viewModel: ViewModel) {
+    func configure(with viewModel: ViewModel) throws {
         configureHeaderView(with: viewModel.headerViewModel)
         configureContentView(with: viewModel.contentViewModel)
         configureButtons(with: viewModel.buttons)
+        try configurePrivacyAndPolicy(with: viewModel.privacyPolicyModel)
         flowViewDelegate = viewModel.flowViewDelegate
         if let scrollViewDelegate = viewModel.scrollViewDelegate {
             scrollView.delegate = scrollViewDelegate
@@ -213,6 +221,7 @@ extension IdentityFlowView {
 
         // Arrange container stack view: scroll + button
         addAndPinSubview(scrollView)
+        addSubview(privacyPolicyView)
         addSubview(buttonBackgroundView)
         buttonBackgroundView.addAndPinSubviewToSafeArea(
             buttonStackView,
@@ -222,8 +231,12 @@ extension IdentityFlowView {
 
     fileprivate func installConstraints() {
         buttonBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        privacyPolicyView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
+            // Constrain privacy and policies to top of bottons
+            privacyPolicyView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            privacyPolicyView.bottomAnchor.constraint(equalTo: buttonBackgroundView.topAnchor, constant: -Style.privacyPolicyBottomPadding),
             // Constrain buttons to bottom
             buttonBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
             buttonBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -307,6 +320,34 @@ extension IdentityFlowView {
         } else {
             headerView.isHidden = true
         }
+    }
+
+    fileprivate func configurePrivacyAndPolicy(with privacyPolicyModel: HTMLTextView.ViewModel?) throws {
+        privacyPolicyView.isHidden = true
+        if let privacyPolicyModel = privacyPolicyModel {
+            do {
+                try privacyPolicyView.configure(with: privacyPolicyModel)
+                privacyPolicyView.isHidden = false
+            } catch {
+                throw error
+            }
+        }
+    }
+
+    static func privacyPolicyLineContentStyle() -> HTMLStyle {
+        let boldFont = IdentityUI.preferredFont(forTextStyle: UIFont.TextStyle.caption1, weight: .bold)
+        return .init(
+            bodyFont: IdentityUI.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            bodyColor: IdentityUI.secondaryLabelColor,
+            h1Font: boldFont,
+            h2Font: boldFont,
+            h3Font: boldFont,
+            h4Font: boldFont,
+            h5Font: boldFont,
+            h6Font: boldFont,
+            isLinkUnderlined: true,
+            shouldCenterText: false
+        )
     }
 }
 
