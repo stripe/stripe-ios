@@ -22,9 +22,53 @@ final class CVCRecollectionElement: ContainerElement {
         return [cvcSection]
     }
 
-    let cvcSection: SectionElement
-    let cvcElement: TextFieldElement
     let theme: ElementsUITheme
+
+    let defaultValues: DefaultValues
+
+    lazy var cardBrand: STPCardBrand = .unknown
+
+    lazy var cvcElementConfiguration: TextFieldElement.CVCConfiguration = {
+        return TextFieldElement.CVCConfiguration(defaultValue: defaultValues.cvc) {
+            // TODO: Get brand from selected payment method
+            return self.cardBrand
+        }
+    }()
+
+    lazy var cvcElementPaymentMethodElement: PaymentMethodElementWrapper = {
+        return PaymentMethodElementWrapper(cvcElementConfiguration, theme: theme) { field, params in
+            let cardOptions = STPConfirmCardOptions()
+            cardOptions.cvc = field.text
+            params.confirmPaymentMethodOptions.cardOptions = cardOptions
+            return params
+        }
+    }()
+    lazy var cvcElement: TextFieldElement = {
+        return cvcElementPaymentMethodElement.element
+    }()
+
+    lazy var cvcSection: SectionElement = {
+        let allSubElements: [Element?] = [
+            cvcElementPaymentMethodElement
+        ]
+        let subElements = allSubElements.compactMap { $0 }
+        let sectionElement = SectionElement(
+            // TODO: Translations
+            title: "Security Code",
+            elements: subElements,
+            theme: theme
+        )
+        sectionElement.delegate = self
+        return sectionElement
+    }()
+
+    func didUpdateCardBrand(updatedCardBrand: STPCardBrand) {
+        // Update the CVC field if the card brand changes
+        if self.cardBrand != updatedCardBrand {
+            self.cardBrand = updatedCardBrand
+            cvcElement.setText("")//cvcElement.text) // A hack to get the CVC to update
+        }
+    }
 
     struct DefaultValues {
         internal init(cvc: String? = nil) {
@@ -32,39 +76,16 @@ final class CVCRecollectionElement: ContainerElement {
         }
         let cvc: String?
     }
-    static var counter = 0
+
     init(
         defaultValues: DefaultValues = .init(),
         theme: ElementsUITheme = .default
     ) {
         self.theme = theme
-
-
-        let cvcElementConfiguration = TextFieldElement.CVCConfiguration(defaultValue: defaultValues.cvc) {
-            // TODO: Get brand from selected payment method
-            return .visa
-
-        }
-        let cvcElement = PaymentMethodElementWrapper(cvcElementConfiguration, theme: theme) { field, params in
-            let cardOptions = STPConfirmCardOptions()
-            cardOptions.cvc = field.text
-            params.confirmPaymentMethodOptions.cardOptions = cardOptions
-            return params
-        }
-
-        let allSubElements: [Element?] = [
-            cvcElement
-        ]
-        let subElements = allSubElements.compactMap { $0 }
-        self.cvcSection = SectionElement(
-            // TODO: Translations
-            title: "Security Code",
-            elements: subElements,
-            theme: theme
-        )
-        self.cvcElement = cvcElement.element
+        self.defaultValues = defaultValues
         cvcSection.delegate = self
     }
+
 }
 
 extension CVCRecollectionElement: ElementDelegate {

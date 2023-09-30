@@ -15,6 +15,7 @@ import UIKit
 
 protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: SavedPaymentOptionsViewController)
+    func isCVCRecollectionEnabled() -> Bool
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
@@ -56,7 +57,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         let showApplePay: Bool
         let showLink: Bool
         let removeSavedPaymentMethodMessage: String?
-        let showCVCRecollection: Bool
     }
 
     var hasRemovablePaymentMethods: Bool {
@@ -118,35 +118,15 @@ class SavedPaymentOptionsViewController: UIViewController {
             return .saved(paymentMethod: paymentMethod, confirmParams: selectedPaymentOptionIntentConfirmParams)
         }
     }
-    //Might not need this?
-    var selectedPaymentOptionHasAdditionalFields: Bool {
-        guard let index = selectedViewModelIndex else {
-            return false
-        }
 
-        switch viewModels[index] {
-        case let .saved(paymentMethod):
-            if paymentMethod.type == .card {
-                //todo check to see if cvc recollection is enabled.  if so,.. return true
-                return true
-//                let params = IntentConfirmParams(type: paymentMethod.paymentSheetPaymentMethodType())
-//                if cvcFormElement.updateParams(params: params) != nil {
-//                    return true
-//                }
-            }
-            return false
-        default:
-            return false
-        }
-    }
     var selectedPaymentOptionIntentConfirmParams: IntentConfirmParams? {
-        guard let index = selectedViewModelIndex else {
-            return nil
-        }
-        guard case let .saved(paymentMethod) = viewModels[index],
+        guard let index = selectedViewModelIndex,
+              case let .saved(paymentMethod) = viewModels[index],
+              delegate?.isCVCRecollectionEnabled() ?? false,
               paymentMethod.type == .card else {
             return nil
         }
+
         let params = IntentConfirmParams(type: paymentMethod.paymentSheetPaymentMethodType())
         if let updatedParams = cvcFormElement.updateParams(params: params) {
             return updatedParams
@@ -159,6 +139,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             updateUI()
         }
     }
+
     /// Whether or not there are any payment options we can show
     /// i.e. Are there any cells besides the Add cell?
     var hasPaymentOptions: Bool {
@@ -200,6 +181,13 @@ class SavedPaymentOptionsViewController: UIViewController {
         return cvcCollectionElement
     }()
 
+    private lazy var cvcRecollectionElement: CVCRecollectionElement? = {
+        if let cvc = cvcFormElement.getAllSubElements().first(where: { ($0 as? CVCRecollectionElement) != nil}) as? CVCRecollectionElement {
+            return cvc
+        }
+        return nil
+    }()
+
     // MARK: - Views
     private lazy var cvcFormElementView: UIView = {
         return cvcFormElement.view
@@ -215,7 +203,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     private lazy var cvcRecollectionContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .top)
         view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
-        if configuration.showCVCRecollection {
+        if delegate?.isCVCRecollectionEnabled() ?? false {
             // TODO: Remove view if needed, or just remove dynamic height container?
             view.addPinnedSubview(cvcFormElementView)
         }
@@ -411,8 +399,12 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                 .stripeId(paymentMethod.stripeId),
                 forCustomer: configuration.customerID
             )
-        }
+            if let cvcRecollectionElement = self.cvcRecollectionElement,
+               let brand = paymentMethod.card?.brand {
+                cvcRecollectionElement.didUpdateCardBrand(updatedCardBrand: brand)
+            }
 
+        }
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }
 }

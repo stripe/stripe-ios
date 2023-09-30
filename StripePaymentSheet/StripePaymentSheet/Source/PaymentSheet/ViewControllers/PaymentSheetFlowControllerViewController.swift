@@ -59,8 +59,9 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             return addPaymentMethodViewController.selectedPaymentMethodType
         }
     }
+    var cvcRecollectionEnabled: Bool = false
     var isInCVCRecollectionFlow: Bool {
-        return self.configuration.cvcRecollectionEnabled && self.selectedPaymentMethodType == .card
+        return cvcRecollectionEnabled && self.selectedPaymentMethodType == .card
     }
 
     weak var delegate: PaymentSheetFlowControllerViewControllerDelegate?
@@ -161,8 +162,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 customerID: configuration.customer?.id,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
-                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                showCVCRecollection: configuration.cvcRecollectionEnabled
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
@@ -338,7 +338,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                     }
                 }
                 let confirmationButtonEnabled = !savedPaymentOptionsViewController.isRemovingPaymentMethods &&
-                (savedPaymentOptionsViewController.selectedPaymentOptionHasAdditionalFields && savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams != nil)                
+                savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams != nil
 
                 confirmButton.update(state: confirmationButtonEnabled ? .enabled : .disabled,
                                      callToAction: .customWithLock(title: String.Localized.continue), animated: true)
@@ -453,6 +453,10 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
 // MARK: - SavedPaymentOptionsViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewControllerDelegate {
+    func isCVCRecollectionEnabled() -> Bool {
+        return self.cvcRecollectionEnabled
+    }
+
     func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
         error = nil  // clear error
         updateUI()

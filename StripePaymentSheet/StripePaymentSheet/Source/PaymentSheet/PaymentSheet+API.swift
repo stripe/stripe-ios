@@ -381,7 +381,7 @@ extension PaymentSheet {
                                              paymentHandler: STPPaymentHandler,
                                              authenticationContext: STPAuthenticationContext,
                                              completion: @escaping ((IntentConfirmParams?) -> Void)) {
-        guard configuration.cvcRecollectionEnabled, confirmParams == nil else {
+        guard configuration.isCVCRecollectionEnabledCallback(), confirmParams == nil else {
             completion(confirmParams)
             return
         }
@@ -395,7 +395,7 @@ extension PaymentSheet {
 
         let preConfirmationViewController = PreConfirmationViewController(intent: intent,
                                                                           configuration: configuration,
-                                                                          completion: completion) { vc in
+                                                                          onCompletion: completion) { vc in
             vc.dismiss(animated: true)
         }
 

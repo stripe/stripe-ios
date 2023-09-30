@@ -9,15 +9,12 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
-//protocol PreConfirmationViewControllerDelegate: AnyObject {
-//    func preConfirmationViewControllerShouldClose(_ preConfirmationViewController: PreConfirmationViewController)
-//}
 
 /// For internal SDK use only
 //@objc(STP_Internal_PaymentSheetFlowControllerViewController)
 class PreConfirmationViewController: UIViewController {
 
-    let completion: ((IntentConfirmParams?) -> Void)
+    let onCompletion: ((IntentConfirmParams?) -> Void)
     let onDismiss: ((PreConfirmationViewController) -> Void)
 
     let configuration: PaymentSheet.Configuration
@@ -27,8 +24,6 @@ class PreConfirmationViewController: UIViewController {
         navBar.delegate = self
         return navBar
     }()
-//    weak var delegate: PreConfirmationViewControllerDelegate?
-
 
     private lazy var paymentContainerView: DynamicHeightContainerView = {
         return DynamicHeightContainerView()
@@ -56,11 +51,11 @@ class PreConfirmationViewController: UIViewController {
     required init(
         intent: Intent,
         configuration: PaymentSheet.Configuration,
-        completion: @escaping ((IntentConfirmParams?) -> Void),
+        onCompletion: @escaping ((IntentConfirmParams?) -> Void),
         onDismiss: @escaping((PreConfirmationViewController) -> Void)
     ) {
         self.configuration = configuration
-        self.completion = completion
+        self.onCompletion = onCompletion
         self.onDismiss = onDismiss
         self.cvcReconfirmationViewController = CVCReconfirmationViewController(intent: intent,
                                                                                configuration: configuration)
@@ -140,7 +135,7 @@ class PreConfirmationViewController: UIViewController {
     @objc
     private func didTapAddButton() {
         //TODO Analytics
-        completion(cvcReconfirmationViewController.paymentOptionIntentConfirmParams)
+        onCompletion(cvcReconfirmationViewController.paymentOptionIntentConfirmParams)
         didDismiss()
     }
 
