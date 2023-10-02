@@ -10,6 +10,8 @@
 
 "Area" = "地区";
 
+"BLIK code" = "BLIK 代码";
+
 "BSB number" = "BSB 号码";
 
 "Billing address is same as shipping" = "账单地址与收货地址相同";
@@ -37,6 +39,8 @@
 "District" = "区";
 
 "Do Si" = "道/县";
+
+"Do you want to close this form?" = "您想关闭此表单吗？";
 
 "Done" = "完成";
 
@@ -112,9 +116,15 @@
 
 "Use rotor to access links" = "用转子访问链接";
 
+"Your BLIK code is incomplete." = "您的 BLIK 代码不完整。";
+
+"Your BLIK code is invalid." = "您的 BLIK 代码无效。";
+
 "Your ZIP is incomplete." = "您的邮编不完整。";
 
 "Your email is invalid." = "您的邮件地址无效。";
+
+"Your payment information will not be saved." = "不会保存您的付款信息。";
 
 "Your postal code is incomplete." = "您的邮编不完整。";
 

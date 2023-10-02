@@ -61,6 +61,10 @@ extension String.Localized {
         STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
     }
 
+    static var bank_account_sentence_case: String {
+        STPLocalizedString("Bank account", "Title for collected bank account information")
+    }
+
     static var pay_with_link: String {
         STPLocalizedString("Pay with Link", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
     }
@@ -161,6 +165,13 @@ extension String.Localized {
         STPLocalizedString(
             "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.",
             "SEPA mandate text"
+        )
+    }
+
+    static var bacs_mandate_text: String {
+        STPLocalizedString(
+            "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.",
+            "Bacs Debit mandate text"
         )
     }
 

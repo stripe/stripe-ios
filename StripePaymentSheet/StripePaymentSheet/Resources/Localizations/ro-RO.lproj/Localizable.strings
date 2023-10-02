@@ -42,6 +42,8 @@
 
 "Confirm" = "Confirmare";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. în termen de %@ pentru a finaliza achiziția.";
+
 "Contact information" = "Informații de contact";
 
 "EPS Bank" = "Banca EPS";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Folosiți ca metodă de plată de-a lungul timpului %@";
 
+"Pay with Link" = "Plătiți cu Link";
+
 "Pay with your bank account in just a few steps." = "Plătiți cu contul dvs. bancar în doar câțiva pași.";
 
 "Payment failed" = "Plata nu a reușit";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Salvați acest card pentru plăți viitoare către %@";
 
+"Save your bank account in just a few steps." = "Salvați-vă contul bancar în doar câțiva pași.";
+
 "Select your payment method" = "Selectați metoda de plată";
 
 "Set up" = "Configurare";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Expedierea către %@ nu este acceptată.";
 
 "Show menu" = "Afișare meniu";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe va depune 0,01 USD în contul dvs. în 1-2 zile lucrătoare. Apoi veți primi un e-mail cu instrucțiuni pentru a finaliza salvarea contului dvs. bancar cu %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe va depune 0,01 USD în contul dvs. în decurs de 1-2 zile lucrătoare. Apoi veți primi un e-mail cu instrucțiuni pentru a finaliza plata către %@.";
 

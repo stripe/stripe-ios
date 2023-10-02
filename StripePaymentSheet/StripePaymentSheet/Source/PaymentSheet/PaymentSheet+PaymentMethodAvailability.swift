@@ -29,6 +29,7 @@ extension PaymentSheet {
         .blik,
         .grabPay,
         .FPX,
+        .bacsDebit,
         .alipay,
         .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
         .boleto,

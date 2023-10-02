@@ -72,4 +72,7 @@ enum Image: String, CaseIterable, ImageMaker {
 
     // Polling / UPI
     case polling_error = "polling_error_icon"
+
+    // Mandates
+    case bacsdd_logo = "bacsdd_logo"
 }

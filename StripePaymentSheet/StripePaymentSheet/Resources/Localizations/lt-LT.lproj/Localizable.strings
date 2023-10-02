@@ -42,6 +42,8 @@
 
 "Confirm" = "Patvirtinti";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Patvirtinkite mokėjimą savo banko programėlėje per %@ ir užbaikite pirkimą.";
+
 "Contact information" = "Kontaktinė informacija";
 
 "EPS Bank" = "EPS bankas";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Mokėkite vėliau naudodami %@";
 
+"Pay with Link" = "Mokėti naudojant „Link“";
+
 "Pay with your bank account in just a few steps." = "Mokėkite naudodami savo banko sąskaitą vos keliais veiksmais.";
 
 "Payment failed" = "Sumokėti nepavyko";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Išsaugoti kortelę vėlesniems %@ mokėjimams";
 
+"Save your bank account in just a few steps." = "Vos keliais veiksmais įrašykite savo banko sąskaitą.";
+
 "Select your payment method" = "Pasirinkite mokėjimo būdą";
 
 "Set up" = "Nustatyti";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Siuntimas į %@ nepalaikomas.";
 
 "Show menu" = "Rodyti meniu";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Per 1–2 darbo dienas „Stripe“ į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip baigti įrašyti savo banko sąskaitą naudojant „%@“.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Po 1–2 darbo dienas „Stripe“ į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip užbaigti mokėjimą %@.";
 

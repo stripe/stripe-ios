@@ -42,6 +42,8 @@
 
 "Confirm" = "Kumpirmahin";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa app ng iyong bangko sa loob ng %@ para kumpletuhin ang pagbili.";
+
 "Contact information" = "Impormasyon sa pakikipag-ugnayan";
 
 "EPS Bank" = "EPS Bank";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Magbayad ng over time gamit ang %@";
 
+"Pay with Link" = "Magbayad gamit ang Link";
+
 "Pay with your bank account in just a few steps." = "Magbayad gamit ang iyong account sa bangko sa ilang hakbang lamang.";
 
 "Payment failed" = "Nabigo ang pagbabayad";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "I-save ang kard na ito para sa mga hinaharap na pagbabayad sa %@";
 
+"Save your bank account in just a few steps." = "I-save ang iyong account sa bangko sa ilang hakbang lamang.";
+
 "Select your payment method" = "Piliin ang iyong paraan ng pagbabayad";
 
 "Set up" = "I-set up";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Hindi sinusuportahan ang pagpapadala sa %@.";
 
 "Show menu" = "Ipakita ang menu";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Idedeposito ng Stripe ang $0.01 sa iyong account sa loob ng 1-2 araw ng trabaho. Pagkatapos ay makakatanggap ka ng email na may mga tagubilin na tapusin ang pag-save sa iyong account sa bangko sa %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Idedeposito ng Stripe ang $0.01 sa iyong account sa loob ng 1-2 araw ng trabaho. Pagkatapos ay makakatanggap ka ng email na may mga tagubilin para kumpletuhin ang pagbabayad sa %@.";
 

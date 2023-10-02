@@ -42,6 +42,8 @@
 
 "Confirm" = "Xác nhận";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng của quý vị trong vòng %@ để hoàn tất giao dịch mua.";
+
 "Contact information" = "Thông tin liên lạc";
 
 "EPS Bank" = "Ngân hàng EPS";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Trả dần bằng %@";
 
+"Pay with Link" = "Thanh toán bằng Link";
+
 "Pay with your bank account in just a few steps." = "Thanh toán bằng tài khoản ngân hàng của bạn chỉ trong vài bước.";
 
 "Payment failed" = "Thanh toán không thành công";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Lưu thẻ này để thanh toán nhanh %@ sau này";
 
+"Save your bank account in just a few steps." = "Lưu tài khoản ngân hàng chỉ trong vài bước.";
+
 "Select your payment method" = "Chọn phương thức thanh toán của bạn";
 
 "Set up" = "Cài đặt";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Chuyển hàng đến %@ không được hỗ trợ.";
 
 "Show menu" = "Hiển thị trình đơn";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe sẽ gửi 0,01 đô la vào tài khoản của bạn sau 1-2 ngày làm việc. Sau đó, bạn sẽ nhận được email kèm theo hướng dẫn để hoàn tất quá trình lưu tài khoản ngân hàng với %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sẽ gửi $0.01 vào tài khoản của bạn trong 1-2 ngày làm việc. Khi đó bạn sẽ nhận được một email chứa hướng dẫn để hoàn tất thanh toán cho %@.";
 

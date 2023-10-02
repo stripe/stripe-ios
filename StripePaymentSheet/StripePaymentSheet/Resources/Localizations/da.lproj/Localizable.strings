@@ -42,6 +42,8 @@
 
 "Confirm" = "Bekræft";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Bekræft betalingen i din banks app  indenfor %@ for at gennemføre købet.";
+
 "Contact information" = "Kontaktoplysninger";
 
 "EPS Bank" = "EPS Bank";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Betal over tid med %@";
 
+"Pay with Link" = "Betal med Link";
+
 "Pay with your bank account in just a few steps." = "Betal med din bankkonto i blot få trin.";
 
 "Payment failed" = "Betalingen mislykkedes";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Gem dette kort til fremtidige %@ betalinger";
 
+"Save your bank account in just a few steps." = "Gem din bankkonto med blot nogle få trin.";
+
 "Select your payment method" = "Vælg din betalingsmetode";
 
 "Set up" = "Opsætning";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Forsewndelse til %@ understøttes ikke.";
 
 "Show menu" = "Vis menu";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe vil sætte 0,01 USD ind på din konto i løbet af 1-2 hverdage. Derefter modtager du en e-mail med instruktioner til at fuldføre lagring af din bankkonto hos %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe vil sætte 0,01 USD ind på din konto i løbet af 1-2 hverdage. Derefter modtager du en e-mail med instruktioner til at fuldføre betalingen til %@.";
 

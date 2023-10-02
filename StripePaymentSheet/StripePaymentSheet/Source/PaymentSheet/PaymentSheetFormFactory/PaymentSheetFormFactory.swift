@@ -163,6 +163,8 @@ class PaymentSheetFormFactory {
             additionalElements = [makeRevolutPayMandate()]
         } else if paymentMethod.stpPaymentMethodType == .bancontact {
             return makeBancontact()
+        } else if paymentMethod.stpPaymentMethodType == .bacsDebit {
+            return makeBacsDebit()
         } else if paymentMethod.stpPaymentMethodType == .blik {
             return makeBLIK()
         } else if paymentMethod == .externalPayPal {
@@ -300,6 +302,38 @@ extension PaymentSheetFormFactory {
 
     func makeAUBECSMandate() -> StaticElement {
         return StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
+    }
+
+    func makeSortCode() -> PaymentMethodElementWrapper<TextFieldElement> {
+        let defaultValue = previousCustomerInput?.paymentMethodParams.bacsDebit?.sortCode
+        let element = TextFieldElement.Account.makeSortCode(defaultValue: defaultValue, theme: theme)
+        return PaymentMethodElementWrapper(element) { textField, params in
+            let sortCodeText = BSBNumber(number: textField.text).bsbNumberText()
+            params.paymentMethodParams.nonnil_bacsDebit.sortCode = sortCodeText
+            return params
+        }
+    }
+
+    func makeBacsAccountNumber() -> PaymentMethodElementWrapper<TextFieldElement> {
+        let defaultValue = previousCustomerInput?.paymentMethodParams.bacsDebit?.accountNumber
+        let element = TextFieldElement.Account.makeBacsAccountNumber(defaultValue: defaultValue, theme: theme)
+        return PaymentMethodElementWrapper(element) { textField, params in
+            params.paymentMethodParams.nonnil_bacsDebit.accountNumber = textField.text
+            return params
+        }
+    }
+
+    func makeBacsMandate() -> PaymentMethodElementWrapper<CheckboxElement> {
+        let mandateText = String(format: String.Localized.bacs_mandate_text, configuration.merchantDisplayName)
+        let element = CheckboxElement(
+            theme: configuration.appearance.asElementsTheme,
+            label: mandateText,
+            isSelectedByDefault: false
+        )
+        return PaymentMethodElementWrapper(element) { checkbox, params in
+            // Only return params if the mandate has been accepted
+            return checkbox.isSelected ? params : nil
+        }
     }
 
     func makeSepaMandate() -> PaymentMethodElement {
@@ -454,6 +488,28 @@ extension PaymentSheetFormFactory {
         let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         let mandate: Element? = saveMode == .merchantRequired ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
         let elements: [Element?] = [contactSection, addressSection, mandate]
+        return FormElement(
+            autoSectioningElements: elements.compactMap { $0 },
+            theme: theme
+        )
+    }
+
+    func makeBacsDebit() -> PaymentMethodElement {
+        let contactSection: Element? = makeContactInformationSection(
+            nameRequiredByPaymentMethod: true,
+            emailRequiredByPaymentMethod: true,
+            phoneRequiredByPaymentMethod: false
+        )
+        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: true)
+        let sortCodeField = makeSortCode()
+        let accountNumberField = makeBacsAccountNumber()
+        let mandate = makeBacsMandate()
+        let bacsAccountSection = SectionElement(
+            title: String.Localized.bank_account_sentence_case,
+            elements: [sortCodeField, accountNumberField],
+            theme: theme
+        )
+        let elements: [Element?] = [contactSection, bacsAccountSection, addressSection, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
             theme: theme

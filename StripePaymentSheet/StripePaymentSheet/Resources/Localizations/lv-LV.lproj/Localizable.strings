@@ -42,6 +42,8 @@
 
 "Confirm" = "Apstiprināt";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas lietotnē %@, lai pabeigtu maksājumu.";
+
 "Contact information" = "Kontaktinformācija";
 
 "EPS Bank" = "EPS Bank";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Maksāt pakāpeniski ar %@";
 
+"Pay with Link" = "Maksāt ar Link";
+
 "Pay with your bank account in just a few steps." = "Maksājiet ar savu bankas kontu, izpildot tikai dažus soļus";
 
 "Payment failed" = "Maksājums neizdevās";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Saglabāt šo karti %@ maksājumiem nākotnē";
 
+"Save your bank account in just a few steps." = "Saglabājiet savu bankas kontu, izpildot tikai dažus soļus.";
+
 "Select your payment method" = "Izvēlēties savu maksājuma veidu";
 
 "Set up" = "Iestatīt";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Piegāde uz %@ netiek atbalstīts.";
 
 "Show menu" = "Rādīt izvēlni";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe uz jūsu kontu 1–2 darbadienu laikā nosūtīs 0,01 $. Pēc tam saņemsiet e-pastu ar norādījumiem, kā pabeigt bankas konta saglabāšanu ar %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe uz jūsu kontu 1-2 darbadienu laikā nosūtīs 0,01 $. Pēc tam saņemsiet e-pastu ar norādījumiem, kā pabeigt maksājumu ar %@.";
 

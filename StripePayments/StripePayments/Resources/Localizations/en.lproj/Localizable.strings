@@ -11,6 +11,9 @@
 "AU Direct Debit" = "AU Direct Debit";
 
 /* Payment Method type brand name */
+"Bacs Direct Debit" = "Bacs Direct Debit";
+
+/* Payment Method type brand name */
 "Bancontact" = "Bancontact";
 
 /* Link Instant Debit payment method display name */

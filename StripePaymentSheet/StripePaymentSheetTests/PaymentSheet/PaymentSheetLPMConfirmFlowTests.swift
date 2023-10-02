@@ -29,6 +29,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         case SG = "sg"
         case MY = "my"
         case BE = "be"
+        case GB = "gb"
         case MX = "mex"  // The CI Backend uses "mex" instead of "mx"
         case AU = "au"
         case JP = "jp"
@@ -46,6 +47,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                 return STPTestingMYPublishableKey
             case .BE:
                 return STPTestingBEPublishableKey
+            case .GB:
+                return STPTestingGBPublishableKey
             case .MX:
                 return STPTestingMEXPublishableKey
             case .AU:
@@ -165,6 +168,20 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             form.getTextFieldElement("BLIK code")?.setText("123456")
         }
     }
+
+    func testBacsDDConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .dynamic("bacs_debit"), merchantCountry: .GB) { form in
+            form.getTextFieldElement("Full name")!.setText("Foo")
+            form.getTextFieldElement("Email")!.setText("f@z.c")
+            form.getTextFieldElement("Sort code")!.setText("108800")
+            form.getTextFieldElement("Account number")!.setText("00012345")
+            form.getTextFieldElement("Address line 1")!.setText("asdf")
+            form.getTextFieldElement("City")!.setText("asdf")
+            form.getTextFieldElement("ZIP")!.setText("12345")
+            form.getCheckboxElement(startingWith: "I understand that Stripe will be collecting Direct Debits")!.isSelected = true
+        }
+    }
+
 /* TODO: @lisaliu -- TODO: (9/15/2023) Uncomment this when amazon test mode becomes stable
     func testAmazonPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
@@ -298,6 +315,10 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                       paymentMethodType: PaymentSheet.PaymentMethodType,
                       merchantCountry: MerchantCountry = .US,
                       formCompleter: (PaymentMethodElement) -> Void) async throws {
+        // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
+        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _, _ in })
+        _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
+
         func makeDeferredIntent(_ intentConfig: PaymentSheet.IntentConfiguration) -> Intent {
             return .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig)
         }
@@ -434,7 +455,6 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 paymentOption: .new(confirmParams: intentConfirmParams),
                 paymentHandler: paymentHandler
             ) { result, _  in
-                e.fulfill()
                 switch result {
                 case .failed(error: let error):
                     XCTFail("❌ \(description): PaymentSheet.confirm failed - \(error)")
@@ -443,6 +463,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 case .completed:
                     print("✅ \(description): PaymentSheet.confirm completed")
                 }
+                e.fulfill()
             }
             await fulfillment(of: [e], timeout: 10)
         }

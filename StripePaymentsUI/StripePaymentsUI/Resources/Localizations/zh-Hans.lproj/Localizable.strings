@@ -30,7 +30,7 @@
 
 "Postal Code" = "邮编";
 
-"Shipping Address" = "送货地址";
+"Shipping Address" = "收货地址";
 
 "State / Province / Region" = "州/省/地区";
 
@@ -54,7 +54,7 @@
 
 "Your card's security code is incomplete." = "您的银行卡的安全码不完整。";
 
-"Your card's security code is invalid." = "您的银行卡安全码无效。";
+"Your card's security code is invalid." = "您的银行卡的安全码无效。";
 
 "Your postal code is invalid." = "您的邮编无效。";
 

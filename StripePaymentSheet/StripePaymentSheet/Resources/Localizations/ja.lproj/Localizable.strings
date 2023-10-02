@@ -42,6 +42,8 @@
 
 "Confirm" = "確定する";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "購入を完了するには、%@ 以内に銀行のアプリで支払いを確定してください。";
+
 "Contact information" = "連絡先情報";
 
 "EPS Bank" = "EPS 銀行";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "%@ で時間をかけて支払う";
 
+"Pay with Link" = "Link で支払う";
+
 "Pay with your bank account in just a few steps." = "銀行口座を使用して簡単に支払えます。";
 
 "Payment failed" = "支払いに失敗しました";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "今後の %@ の支払いのためにこのカードを保存する";
 
+"Save your bank account in just a few steps." = "銀行口座の保存はわずか数ステップで完了します。";
+
 "Select your payment method" = "支払い方法を選択してください";
 
 "Set up" = "設定";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "%@ への配送には対応していません。";
 
 "Show menu" = "メニューを表示";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe は 1 ～ 2 営業日後に口座に $0.01 を入金します。その後、%@ で銀行口座の保存を完了させるための手順が記載されたメールが送信されます。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "1 ～ 2 営業日以内に Stripe は口座に $0.01 を入金します。その後、%@ への支払いを完了するための手順が記載されたメールが送信されます。";
 

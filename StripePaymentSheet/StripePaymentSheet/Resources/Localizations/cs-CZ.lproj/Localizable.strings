@@ -42,6 +42,8 @@
 
 "Confirm" = "Potvrdit";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Dokončete nákup potvrzením platby v bankovní aplikaci do  %@.";
+
 "Contact information" = "Kontaktní údaje";
 
 "EPS Bank" = "Banka EPS";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Platit průběžně pomocí %@";
 
+"Pay with Link" = "Zaplatit pomocí Link";
+
 "Pay with your bank account in just a few steps." = "Zaplaťte pomocí bankovního účtu v několika málo krocích.";
 
 "Payment failed" = "Platba se nezdařila.";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Uložit tuto kartu pro budoucí platby %@";
 
+"Save your bank account in just a few steps." = "Uložte si svůj bankovní účet v několika málo krocích.";
+
 "Select your payment method" = "Vyberte svou platební metodu";
 
 "Set up" = "Nastavit";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Dodání do zemí jako %@ není podporováno.";
 
 "Show menu" = "Zobrazit nabídku";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe vloží 0,01 USD na váš účet během 1 až 2 pracovních dnů. Poté obdržíte e-mail s pokyny k dokončení ukládání na bankovní účet u %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "V průběhu 1 až 2 pracovních dnů vloží Stripe na váš účet vklad ve výšce 0,01 USD. Potom dostanete e-mail s instrukcemi k dokončení platby společnosti %@.";
 

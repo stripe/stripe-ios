@@ -42,6 +42,8 @@
 
 "Confirm" = "Подтвердить";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Подтвердите платеж в вашем банковском приложении в течение %@ для оформления покупки.";
+
 "Contact information" = "Контактные данные";
 
 "EPS Bank" = "Банк EPS";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
 
+"Pay with Link" = "Оплатить с помощью Link";
+
 "Pay with your bank account in just a few steps." = "Платите с использованием своего банковского счета в несколько простых действий.";
 
 "Payment failed" = "Выполнить платеж не удалось";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Сохранить данные этой карты для будущих платежей %@";
 
+"Save your bank account in just a few steps." = "Сохраните реквизиты своего банковского счета всего за несколько шагов.";
+
 "Select your payment method" = "Выберите способ оплаты";
 
 "Set up" = "Настроить";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Доставка в страну «%@» не поддерживается.";
 
 "Show menu" = "Показать меню";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Через 1-2 рабочих дня Stripe зачислит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями, которые помогут вам закончить сохранение реквизитов своего банковского счета у %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Через 1-2 рабочих дня Stripe положит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями по завершению платежа в адрес %@.";
 

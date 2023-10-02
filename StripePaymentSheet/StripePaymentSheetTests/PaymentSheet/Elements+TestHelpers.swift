@@ -61,6 +61,12 @@ extension Element {
         return getElement()
     }
 
+    func getCheckboxElement(startingWith prefix: String) -> CheckboxElement? {
+        return getAllUnwrappedSubElements()
+            .compactMap { $0 as? CheckboxElement }
+            .first { $0.label.hasPrefix(prefix) }
+    }
+
     func getElement<T>() -> T? {
         return getAllUnwrappedSubElements()
             .compactMap { $0 as? T }

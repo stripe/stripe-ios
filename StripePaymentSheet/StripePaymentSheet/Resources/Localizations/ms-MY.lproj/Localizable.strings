@@ -42,6 +42,8 @@
 
 "Confirm" = "Sahkan";
 
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank anda dalam %@ untuk menyelesaikan pembelian.";
+
 "Contact information" = "Maklumat hubungan";
 
 "EPS Bank" = "Bank EPS";
@@ -74,6 +76,8 @@
 
 "Pay over time with %@" = "Bayar dari semasa ke semasa dengan %@";
 
+"Pay with Link" = "Bayar dengan Link";
+
 "Pay with your bank account in just a few steps." = "Bayar dengan akaun bank anda dengan hanya beberapa langkah.";
 
 "Payment failed" = "Pembayaran tidak berjaya";
@@ -104,6 +108,8 @@
 
 "Save this card for future %@ payments" = "Simpan kad ini untuk pembayaran %@ masa hadapan";
 
+"Save your bank account in just a few steps." = "Simpan akaun bank anda dengan hanya beberapa langkah.";
+
 "Select your payment method" = "Pilih kaedah pembayaran anda";
 
 "Set up" = "Sediakan";
@@ -111,6 +117,8 @@
 "Shipping to %@ is not supported." = "Penghantaran ke %@ tidak disokong.";
 
 "Show menu" = "Paparkan menu";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan proses menyimpan akaun bank anda dengan %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan pembayaran kepada %@.";
 
