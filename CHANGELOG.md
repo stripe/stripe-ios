@@ -1,6 +1,6 @@
 ## x.x.x x-x-x
 ### PaymentSheet
-* [Fixed] Fixed an issue when advancing from the country dropdown that prevented user's' from typing in their postal code. (#2936)
+* [Fixed] Fixed an issue when advancing from the country dropdown that prevented user's' from typing in their postal code. ([#2936](https://github.com/stripe/stripe-ios/issues/2936))
 
 ## 23.17.0 2023-10-02
 ### PaymentSheet
