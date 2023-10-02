@@ -1606,6 +1606,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         UIAccessibility.post(notification: .screenChanged, argument: nil)
         if previous?.hasText ?? false {
             previous?.deleteBackward()
+            onChange()
         }
     }
 
