@@ -229,7 +229,7 @@ extension InstitutionPickerViewController {
                     case .failure(let error):
                         self.institutionSearchTableView.loadInstitutions([])
                         self.institutionSearchTableView.showError(true)
-                        
+
                         if
                             let error = error as? StripeError,
                             case .apiError(let apiError) = error,

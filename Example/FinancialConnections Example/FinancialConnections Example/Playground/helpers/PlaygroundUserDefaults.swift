@@ -69,6 +69,12 @@ final class PlaygroundUserDefaults {
         defaultValue: ""
     )
     static var customSecretKey: String
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_SHOW_LIVE_EVENTS",
+        defaultValue: false
+    )
+    static var showLiveEvents: Bool
 }
 
 @propertyWrapper

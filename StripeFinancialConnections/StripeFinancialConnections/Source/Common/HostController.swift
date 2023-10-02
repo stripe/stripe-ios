@@ -200,7 +200,7 @@ extension HostController: NativeFlowControllerDelegate {
 // MARK: - FinancialConnectionsAnalyticsClientDelegate
 
 extension HostController: FinancialConnectionsAnalyticsClientDelegate {
-    
+
     func analyticsClient(
         _ analyticsClient: FinancialConnectionsAnalyticsClient,
         didReceiveEvent event: FinancialConnectionsEvent
