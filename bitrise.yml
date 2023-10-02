@@ -189,6 +189,8 @@ workflows:
       bitrise.io:
         stack: osx-xcode-14.1.x-ventura
         machine_type_id: g2-m1.8core
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=14.1
   deploy-example-apps:
     steps:
     - set-xcode-build-number@1:
@@ -399,6 +401,8 @@ workflows:
         title: fastlane installation_spm_swift
     before_run:
     - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=14.1
   integration-all:
     steps:
     - xcode-test@4:
@@ -415,6 +419,8 @@ workflows:
       bitrise.io:
         stack: osx-xcode-14.1.x-ventura
         machine_type_id: g2-m1-max.10core
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=14.1
   legacy-tests-14:
     steps:
     - fastlane@3:
