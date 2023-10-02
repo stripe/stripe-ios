@@ -82,7 +82,7 @@ public class STPCardBrandUtilities: NSObject {
         case .visa:
             return "visa"
         case .amex:
-            return "american express"
+            return "american_express"
         case .mastercard:
             return "mastercard"
         case .discover:
@@ -90,7 +90,7 @@ public class STPCardBrandUtilities: NSObject {
         case .JCB:
             return "jcb"
         case .dinersClub:
-            return "diners club"
+            return "diners_club"
         case .unionPay:
             return "unionpay"
         case .cartesBancaires:

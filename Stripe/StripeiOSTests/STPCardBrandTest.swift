@@ -68,9 +68,9 @@ class STPCardBrandTest: XCTestCase {
 
             switch brand {
             case .amex:
-                XCTAssertEqual(string, "american express")
+                XCTAssertEqual(string, "american_express")
             case .dinersClub:
-                XCTAssertEqual(string, "diners club")
+                XCTAssertEqual(string, "diners_club")
             case .discover:
                 XCTAssertEqual(string, "discover")
             case .JCB:
