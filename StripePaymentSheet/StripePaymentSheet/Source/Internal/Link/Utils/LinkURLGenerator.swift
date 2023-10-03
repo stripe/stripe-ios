@@ -68,9 +68,7 @@ class LinkURLGenerator {
             return nil
         }()
 
-        let paymentObjectType: LinkURLParams.PaymentObjectMode = intent.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
-
-        return LinkURLParams(paymentObject: paymentObjectType,
+        return LinkURLParams(paymentObject: .link_payment_method,
                              publishableKey: publishableKey,
                              paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
                              merchantInfo: merchantInfo,
