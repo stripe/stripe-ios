@@ -126,6 +126,16 @@ class IntentConfirmParams {
 }
 
 extension STPConfirmPaymentMethodOptions {
+    func setPreferredNetworks(_ networks: [STPCardBrand]?) {
+        guard let networks = networks else { return }
+//        let networkStringArray = networks.map({STPCardbrandut})
+        // TOOD(porter) After other branch gets merged
+        
+        let cardOptions = self.cardOptions ?? STPConfirmCardOptions()
+        cardOptions.additionalAPIParameters["preferred_networks"] = ["TODO"]
+        self.cardOptions = cardOptions
+    }
+    
     func setMoto() {
         let cardOptions = self.cardOptions ?? STPConfirmCardOptions()
         cardOptions.additionalAPIParameters["moto"] = true

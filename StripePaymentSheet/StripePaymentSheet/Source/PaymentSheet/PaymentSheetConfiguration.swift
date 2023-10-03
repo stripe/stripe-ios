@@ -149,6 +149,10 @@ extension PaymentSheet {
         /// This is used to display a "Billing address is same as shipping" checkbox if `defaultBillingDetails` is not provided
         /// If `name` and `line1` are populated, it's also [attached to the PaymentIntent](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping) during payment.
         public var shippingDetails: () -> AddressViewController.AddressDetails? = { return nil }
+        
+        /// The list of preferred networks that should be used to process payments made with a co-branded card.
+        /// This value will only be used if your user hasn't selected a network themselves.
+        public var preferredNetworks: [STPCardBrand]? = nil
 
         /// Initializes a Configuration with default values
         public init() {}
