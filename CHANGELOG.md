@@ -2,6 +2,10 @@
 ### PaymentSheet
 * [Fixed] Fixed an issue when advancing from the country dropdown that prevented user's' from typing in their postal code. ([#2936](https://github.com/stripe/stripe-ios/issues/2936))
 
+### PaymentsUI
+* [Fixed] An issue with `STPPaymentCardTextField`, where the `paymentCardTextFieldDidChange` delegate method wasn't being called after deleting an empty sub field.
+
+
 ## 23.17.0 2023-10-02
 ### PaymentSheet
 * [Fixed] Fixed an issue with selecting from lists on macOS Catalyst. Note that only macOS 11 or later is supported: We do not recommend releasing a Catalyst app targeting macOS 10.15.
