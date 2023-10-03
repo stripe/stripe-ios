@@ -23,19 +23,16 @@ import Foundation
 
     @_spi(STP) public let fundingSources: Set<FundingSource>
     @_spi(STP) public let popupWebviewOption: PopupWebviewOption?
-    @_spi(STP) public let passthroughModeEnabled: Bool?
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
     @_spi(STP) public init(
         fundingSources: Set<FundingSource>,
         popupWebviewOption: PopupWebviewOption?,
-        passthroughModeEnabled: Bool?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.fundingSources = fundingSources
         self.popupWebviewOption = popupWebviewOption
-        self.passthroughModeEnabled = passthroughModeEnabled
         self.allResponseFields = allResponseFields
     }
 
@@ -53,12 +50,10 @@ import Foundation
         let validFundingSources = Set(fundingSourcesStrings.compactMap(FundingSource.init))
 
         let webviewOption = PopupWebviewOption(rawValue: response["link_popup_webview_option"] as? String ?? "")
-        let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool ?? false
 
         return LinkSettings(
             fundingSources: validFundingSources,
             popupWebviewOption: webviewOption,
-            passthroughModeEnabled: passthroughModeEnabled,
             allResponseFields: response
         ) as? Self
     }
