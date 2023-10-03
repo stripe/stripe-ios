@@ -256,6 +256,7 @@ NZ
         settings.linkEnabled = .off
         settings.uiStyle = .flowController
         settings.shippingInfo = .on
+        settings.customerMode = .returning
             loadPlayground(
                 app,
                 settings

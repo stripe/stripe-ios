@@ -178,6 +178,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // so we must manually turn off Link.
         settings.apmsEnabled = .off
         settings.linkEnabled = .off
+        settings.customerMode = .returning
         loadPlayground(
             app,
             settings
@@ -1757,6 +1758,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.linkEnabled = .off
         settings.integrationType = .deferred_ssc
         settings.uiStyle = .flowController
+        settings.customerMode = .returning
 
         loadPlayground(
             app,
