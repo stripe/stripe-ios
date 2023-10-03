@@ -9,9 +9,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class LinkEnabledPaymentMethodElement: ContainerElement {
-    public lazy var elements: [Element] = { [paymentMethodElement, inlineSignupElement] }()
-
+final class LinkEnabledPaymentMethodElement: Element {
     struct Constants {
         static let spacing: CGFloat = 12
     }
