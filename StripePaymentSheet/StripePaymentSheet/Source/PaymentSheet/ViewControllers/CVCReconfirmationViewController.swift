@@ -31,6 +31,13 @@ class CVCReconfirmationViewController: UIViewController {
         return cvcCollectionElement
     }()
 
+    private lazy var cvcRecollectionElement: CVCRecollectionElement? = {
+        if let cvc = cvcFormElement.getAllSubElements().first(where: { ($0 as? CVCRecollectionElement) != nil}) as? CVCRecollectionElement {
+            return cvc
+        }
+        return nil
+    }()
+
     // MARK: - Views
     private lazy var cvcFormElementView: UIView = {
         return cvcFormElement.view
@@ -39,14 +46,10 @@ class CVCReconfirmationViewController: UIViewController {
     private lazy var cvcRecollectionContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .top)
         view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
-//        if configuration.showCVCRecollection {
-            // TODO: Remove view if needed, or just remove dynamic height container?
-            view.addPinnedSubview(cvcFormElementView)
-//        }
+        view.addPinnedSubview(cvcFormElementView)
         view.updateHeight()
         return view
     }()
-
 
     // MARK: - Internal Properties
     private let configuration: PaymentSheet.Configuration
@@ -66,6 +69,7 @@ class CVCReconfirmationViewController: UIViewController {
     }
 
     required init(
+        brand: STPCardBrand,
         intent: Intent,
         configuration: PaymentSheet.Configuration
     ) {
@@ -73,7 +77,7 @@ class CVCReconfirmationViewController: UIViewController {
         self.intent = intent
         super.init(nibName: nil, bundle: nil)
         updateUI()
-
+        updateBrand(brand: brand)
     }
 
     // MARK: - UIViewController
@@ -115,6 +119,12 @@ class CVCReconfirmationViewController: UIViewController {
                     oldView.removeFromSuperview()
                 }
             }
+        }
+    }
+
+    private func updateBrand(brand: STPCardBrand) {
+        if let cvcRecollectionElement = self.cvcRecollectionElement {
+            cvcRecollectionElement.didUpdateCardBrand(updatedCardBrand: brand)
         }
     }
 

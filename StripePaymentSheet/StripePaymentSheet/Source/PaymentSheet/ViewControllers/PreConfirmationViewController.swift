@@ -18,6 +18,7 @@ class PreConfirmationViewController: UIViewController {
     let onDismiss: ((PreConfirmationViewController) -> Void)
 
     let configuration: PaymentSheet.Configuration
+    let paymentMethod: STPPaymentMethod
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
@@ -25,14 +26,17 @@ class PreConfirmationViewController: UIViewController {
         return navBar
     }()
 
-    private lazy var paymentContainerView: DynamicHeightContainerView = {
-        return DynamicHeightContainerView()
-    }()
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
     }()
 
-    private let cvcReconfirmationViewController: CVCReconfirmationViewController
+    private lazy var selectedCardInformationView: UIView = {
+        return PaymentMethodInformationView(paymentMethod: paymentMethod, appearance: configuration.appearance)
+    }()
+
+    private lazy var paymentContainerView: DynamicHeightContainerView = {
+        return DynamicHeightContainerView()
+    }()
 
     private lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(
@@ -44,20 +48,28 @@ class PreConfirmationViewController: UIViewController {
         )
         return button
     }()
+
+    private let cvcReconfirmationViewController: CVCReconfirmationViewController
+
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     required init(
+        paymentMethod: STPPaymentMethod,
         intent: Intent,
         configuration: PaymentSheet.Configuration,
         onCompletion: @escaping ((IntentConfirmParams?) -> Void),
         onDismiss: @escaping((PreConfirmationViewController) -> Void)
     ) {
+        self.paymentMethod = paymentMethod
         self.configuration = configuration
         self.onCompletion = onCompletion
         self.onDismiss = onDismiss
-        self.cvcReconfirmationViewController = CVCReconfirmationViewController(intent: intent,
+        let brand = paymentMethod.card?.brand ?? .unknown
+        self.cvcReconfirmationViewController = CVCReconfirmationViewController(brand: brand,
+                                                                               intent: intent,
                                                                                configuration: configuration)
 
         super.init(nibName: nil, bundle: nil)
@@ -72,6 +84,7 @@ class PreConfirmationViewController: UIViewController {
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
             headerLabel,
+            selectedCardInformationView,
             paymentContainerView,
 //            errorLabel,
             confirmButton,
@@ -80,7 +93,7 @@ class PreConfirmationViewController: UIViewController {
         stackView.bringSubviewToFront(headerLabel)
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.spacing = PaymentSheetUI.defaultPadding
+        stackView.spacing = 10
         stackView.axis = .vertical
         [stackView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -107,6 +120,9 @@ class PreConfirmationViewController: UIViewController {
     }
 
     private func updateUI() {
+
+        configureNavBar()
+
         let targetViewController = cvcReconfirmationViewController
         switchContentIfNecessary(
             to: targetViewController,
@@ -114,6 +130,8 @@ class PreConfirmationViewController: UIViewController {
         )
 
         updateButton()
+        headerLabel.text = STPLocalizedString("For security, please re-enter your card's security code",
+                                              "Title for prompting for a card's CVC/CVC on confirming the payment")
 
     }
     func updateButton() {
@@ -131,6 +149,11 @@ class PreConfirmationViewController: UIViewController {
                              callToAction: .customWithLock(title: String.Localized.continue), animated: true)
     }
 
+    // MARK: - Private Methods
+
+    private func configureNavBar() {
+        navigationBar.setStyle(.close(showAdditionalButton: false))
+    }
 
     @objc
     private func didTapAddButton() {
@@ -139,7 +162,7 @@ class PreConfirmationViewController: UIViewController {
         didDismiss()
     }
 
-    func didDismiss() {
+    private func didDismiss() {
         onDismiss(self)
     }
 }
@@ -157,16 +180,14 @@ extension PreConfirmationViewController: BottomSheetContentViewController {
     }
 
     func didTapOrSwipeToDismiss() {
-//        if isDismissable {
-//            didDismiss()
-//        }
+        didDismiss()
     }
 
 }
 
 extension PreConfirmationViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-        //todo
+        didDismiss()
     }
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
         //todo

@@ -154,7 +154,11 @@ class SavedPaymentOptionsViewController: UIViewController {
     var appearance = PaymentSheet.Appearance.default
 
     // MARK: - Private Properties
-    private var selectedViewModelIndex: Int?
+    private var selectedViewModelIndex: Int? {
+        didSet {
+            updateBrand()
+        }
+    }
     private var viewModels: [Selection] = []
 
     private var selectedIndexPath: IndexPath? {
@@ -168,7 +172,6 @@ class SavedPaymentOptionsViewController: UIViewController {
 
         return IndexPath(item: index, section: 0)
     }
-
 
     private lazy var cvcFormElement: PaymentMethodElement = {
         let formElement = PaymentSheetFormFactory(
@@ -399,13 +402,23 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                 .stripeId(paymentMethod.stripeId),
                 forCustomer: configuration.customerID
             )
-            if let cvcRecollectionElement = self.cvcRecollectionElement,
-               let brand = paymentMethod.card?.brand {
-                cvcRecollectionElement.didUpdateCardBrand(updatedCardBrand: brand)
-            }
-
         }
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+    }
+
+    private func updateBrand() {
+        guard let selectedViewModelIndex = selectedViewModelIndex else {
+            return
+        }
+        let viewModel = viewModels[selectedViewModelIndex]
+
+        guard case .saved(let paymentMethod) = viewModel else {
+            return
+        }
+        if let cvcRecollectionElement = self.cvcRecollectionElement,
+           let brand = paymentMethod.card?.brand {
+            cvcRecollectionElement.didUpdateCardBrand(updatedCardBrand: brand)
+        }
     }
 }
 

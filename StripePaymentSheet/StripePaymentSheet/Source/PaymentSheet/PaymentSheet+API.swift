@@ -134,7 +134,8 @@ extension PaymentSheet {
             // MARK: - Saved Payment Method
             //TODO: Handle additional confirm params
         case let .saved(paymentMethod, confirmParams):
-            collectConfirmParamsIfNeeded(confirmParams,
+            collectConfirmParamsIfNeeded(paymentMethod,
+                                         confirmParams: confirmParams,
                                          intent: intent,
                                          configuration: configuration,
                                          paymentHandler: paymentHandler,
@@ -375,7 +376,8 @@ extension PaymentSheet {
 
 
     // MARK: - Helper methods
-    static func collectConfirmParamsIfNeeded(_ confirmParams: IntentConfirmParams?,
+    static func collectConfirmParamsIfNeeded(_ paymentMethod: STPPaymentMethod,
+                                             confirmParams: IntentConfirmParams?,
                                              intent: Intent,
                                              configuration: PaymentSheet.Configuration,
                                              paymentHandler: STPPaymentHandler,
@@ -393,50 +395,39 @@ extension PaymentSheet {
             return
         }
 
-        let preConfirmationViewController = PreConfirmationViewController(intent: intent,
-                                                                          configuration: configuration,
-                                                                          onCompletion: completion) { vc in
-            vc.dismiss(animated: true)
-        }
+        let preConfirmationViewController = PreConfirmationViewController(
+            paymentMethod: paymentMethod,
+            intent: intent,
+            configuration: configuration,
+            onCompletion: completion) { vc in
+                vc.dismiss(animated: true)
+            }
 
-        let showPaymentOptions: () -> Void = { //[weak self] in
-//            guard let self = self else { return }
-
+        let presentPreConfirmationViewController: () -> Void = {
             // Set the PaymentSheetViewController as the content of our bottom sheet
             let bottomSheetVC = Self.makeBottomSheetViewController(
                 preConfirmationViewController,
                 configuration: configuration,
-                didCancelNative3DS2: { //[weak self] in
+                didCancelNative3DS2: {
                     paymentHandler.cancel3DS2ChallengeFlow()
                 }
             )
-
             presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
-//            self.isPresented = true
         }
-
-        showPaymentOptions()
-
-
-//        let confirmParams = IntentConfirmParams(type: .card)
-////        let pmo = STPConfirmPaymentMethodOptions()
-//        let cardOptions = STPConfirmCardOptions()
-//        cardOptions.cvc = "123"
-//        confirmParams.confirmPaymentMethodOptions.cardOptions = cardOptions
-//        completion(confirmParams)
+        presentPreConfirmationViewController()
     }
 
     // MARK: Internal helper methods
     static func makeBottomSheetViewController(
         _ contentViewController: BottomSheetContentViewController,
         configuration: Configuration,
-        didCancelNative3DS2: (() -> Void)? = nil
+        didCancelNative3DS2: @escaping (() -> Void)
     ) -> BottomSheetViewController {
         let sheet = BottomSheetViewController(
             contentViewController: contentViewController,
             appearance: configuration.appearance,
             isTestMode: configuration.apiClient.isTestmode,
-            didCancelNative3DS2: didCancelNative3DS2 ?? { } // TODO(MOBILESDK-864): Refactor this out.
+            didCancelNative3DS2: didCancelNative3DS2
         )
 
         configuration.style.configure(sheet)
