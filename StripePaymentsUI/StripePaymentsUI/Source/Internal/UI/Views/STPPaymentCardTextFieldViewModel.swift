@@ -107,26 +107,26 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             )
         }
     }
-    
+
     enum BrandState {
         case brand(STPCardBrand)
         case cbcBrandSelected(STPCardBrand)
         case unknown
         case unknownMultipleOptions
-        
+
         var isCBC: Bool {
             switch self {
-            case .brand(_), .unknown:
+            case .brand, .unknown:
                 false
-            case .cbcBrandSelected(_), .unknownMultipleOptions:
+            case .cbcBrandSelected, .unknownMultipleOptions:
                 true
             }
         }
     }
-    
+
     var brandState: BrandState {
-        if (cbcEnabled) {
-            if (cardBrands.count > 1) {
+        if cbcEnabled {
+            if cardBrands.count > 1 {
                 if let selectedBrand = selectedBrand {
                     return .cbcBrandSelected(selectedBrand)
                 }
@@ -241,7 +241,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             )
         }
     }
-    
+
     var cbcEnabled: Bool = true
 
     private var _expirationMonth: String?
@@ -271,7 +271,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
 
         }
     }
-    
+
     var selectedBrand: STPCardBrand?
 
     var cardBrands = Set<STPCardBrand>()

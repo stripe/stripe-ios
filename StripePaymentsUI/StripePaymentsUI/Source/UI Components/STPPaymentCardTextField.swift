@@ -613,7 +613,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     @objc(cvcImageForCardBrand:) open class func cvcImage(for cardBrand: STPCardBrand) -> UIImage? {
         return STPImageLibrary.cvcImage(for: cardBrand)
     }
-    
+
     /// Returns the image used for a card when no brand is selected but
     /// multiple brands are available.
     /// Override this method in a subclass if you would like to provide custom images.
@@ -621,7 +621,6 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     @objc(cardBrandChoiceImage) open class func cardBrandChoiceImage() -> UIImage? {
         return STPImageLibrary.cardBrandChoiceImage()
     }
-
 
     /// Returns the brand image used for a card brand.
     /// Override this method in a subclass if you would like to provide custom images.
@@ -672,7 +671,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             height: height
         )
     }
-    
+
     /// Returns the rectangle in which the receiver draws the text fields.
     /// - Parameter bounds: The bounding rectangle of the receiver.
     /// - Returns: The rectangle in which the receiver draws the text fields.
@@ -691,12 +690,10 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     @objc internal lazy var brandImageView: UIImageView = UIImageView(
         image: Self.brandImage(for: .unknown)
     )
-    
+
     @objc internal lazy var cbcIndicatorView: UIImageView = UIImageView(
         image: UIImage.init(systemName: "chevron.down")
     )
-
-    @objc internal var cardBrandDropDown: DropdownFieldElement?
 
     @objc internal lazy var fieldsView: UIView = UIView()
     @objc internal lazy var numberField: STPFormTextField = {
@@ -801,8 +798,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         cbcIndicatorView.contentMode = .scaleAspectFit
         cbcIndicatorView.backgroundColor = UIColor.clear
         cbcIndicatorView.tintColor = placeholderColor
+        cbcIndicatorView.alpha = 0.0 // Hide by default
 
-        
         // This does not offer quick-type suggestions (as iOS 11.2), but does pick
         // the best keyboard (maybe other, hidden behavior?)
         numberField.textContentType = .creditCardNumber
@@ -859,9 +856,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         addSubview(cbcIndicatorView)
         cbcIndicatorView.isUserInteractionEnabled = true
 
-        addCBCIfNeeded()
         setupBrandTapGestureRecognizers()
-        
+
         focusedTextFieldForLayout = nil
         updateCVCPlaceholder()
         resetSubviewEditingTransitionState()
@@ -883,30 +879,14 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         sendSubviewToBack(sizingField)
 
     }
-    
+
     func setupBrandTapGestureRecognizers() {
-        if (viewModel.cbcEnabled) {
-            // TODO: Check if && cbcBrandsAreAvailable too!
-//            _ = cardBrandDropDown?.beginEditing()
-//            let action = { (action: UIAction) -> Void in
-    //                TODO: Do something with selection!
-    //                self.selectedIndex = Int(action.identifier.rawValue) ?? 0
-//                let brand = STPCard.brand(from: action.identifier.rawValue)
-//            }
-//            let menu = UIMenu(children:
-//                viewModel.cardBrands.enumerated().map { (index, brand) in
-//                    let brandString = STPCard.string(from: brand)
-//                    return UIAction(title: brandString, identifier: .init(rawValue: brandString), handler: action)
-//                }
-//          )
+        // TODO: Swap these out as needed as CBC eligibilty changes
+        // TODO2: Maybe instead always add gesture recognizers, implement gestureRecognizerShouldBegin, have it return true if needed?
+        if viewModel.cbcEnabled {
             if #available(iOS 14.0, *) {
-//                let contextMenuInteraction = UIContextMenuInteraction(delegate: self)
-//                brandImageControl.addInteraction(contextMenuInteraction)
                 self.showsMenuAsPrimaryAction = true
                 self.isContextMenuInteractionEnabled = true
-//                cbcIndicatorControl.addInteraction(contextMenuInteraction)
-//                cbcIndicatorControl.showsMenuAsPrimaryAction = true
-//                cbcIndicatorControl.isContextMenuInteractionEnabled = true
             }
         } else {
             brandImageView.addGestureRecognizer(
@@ -922,42 +902,19 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 )
             )
         }
-
-    }
-    
-    func addCBCIfNeeded() {
-        if shouldShowCBC && cardBrandDropDown == nil {
-            let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown()
-//            cardBrandDropDown.view.translatesAutoresizingMaskIntoConstraints = false
-//
-//            addSubview(cardBrandDropDown.view)
-//            NSLayoutConstraint.activate(
-//                [
-//                    cardBrandDropDown.view.topAnchor.constraint(
-//                        equalTo: self.brandImageView.topAnchor
-//                    ),
-//                    cardBrandDropDown.view.bottomAnchor.constraint(
-//                        equalTo: self.brandImageView.bottomAnchor
-//                    ),
-//                    cardBrandDropDown.view.leadingAnchor.constraint(
-//                        equalTo: self.brandImageView.leadingAnchor
-//                    ),
-//                ].compactMap { $0 }
-//            )
-            self.cardBrandDropDown = cardBrandDropDown
-            // Relayout the brand image as needed
-            updateImage(for: .number)
-        }
     }
 
     open override func menuAttachmentPoint(for configuration: UIContextMenuConfiguration) -> CGPoint {
         let brandImageRect = self.brandImageRect(forBounds: self.bounds)
         return CGPoint(x: brandImageRect.minX, y: brandImageRect.maxY + 4)
     }
-    
+
     open override func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        let brandRect = self.brandImageRect(forBounds: self.bounds)
-        if !brandRect.contains(location) {
+        var targetRect = self.brandImageRect(forBounds: self.bounds)
+        // Add a little padding to include the arrow view
+        targetRect.size.width += 4.0
+        
+        if !targetRect.contains(location) {
             // Don't pop a menu outside the brand selector area
             return nil
         }
@@ -965,7 +922,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             // Don't pop the menu during CVC entry, as the brand isn't visible
             return nil
         }
-        return UIContextMenuConfiguration(actionProvider: { suggestedActions in
+        return UIContextMenuConfiguration(actionProvider: { _ in
             if !self.viewModel.brandState.isCBC {
                 // Not doing CBC at the moment, don't return anything
                 return nil
@@ -979,7 +936,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             let menu = UIMenu(children:
                                 [UIAction(title: .Localized.card_brand_dropdown_placeholder, image: Self.cardBrandChoiceImage(), state: self.viewModel.selectedBrand == nil ? .on : .off, handler: action)]
                   +
-                  self.viewModel.cardBrands.enumerated().map { (index, brand) in
+                  self.viewModel.cardBrands.enumerated().map { (_, brand) in
                         let brandString = STPCard.string(from: brand)
                 return UIAction(title: brandString, image: Self.brandImage(for: brand), identifier: .init(rawValue: brandString), state: self.viewModel.selectedBrand == brand ? .on : .off, handler: action)
                 }
@@ -987,7 +944,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             return menu
         })
     }
-    
+
     // MARK: appearance properties
     func clearSizingCache() {
         textToWidthCache = [:]
@@ -2164,22 +2121,6 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     func updateImage(for fieldType: STPCardFieldType) {
-
-        // If CBC is enabled...
-        if let cardBrandDropDown = cardBrandDropDown {
-            // Show unknown card brand if we have under 9 pan digits and no card brands
-            // CBC dropdown always has one item (a placeholder)
-            if let cardNumber = cardNumber, cardNumber.count >= 8 && cardBrandDropDown.items.count > 2 {
-                // Show the dropdown if we have 8 or more digits and more than 2 items (placeholder + at least 2 brands), otherwise fall through and show brand as normal
-//                cardBrandDropDown.view.isHidden = false
-//                brandImageView.isHidden = true
-            } else {
-//                cardBrandDropDown.view.isHidden = true
-//                brandImageView.isHidden = false
-            }
-            recalculateSubviewLayout()
-        }
-
         let addLoadingIndicator: (() -> Void)? = {
             if self.metadataLoadingIndicator == nil {
                 self.metadataLoadingIndicator = STPCardLoadingIndicator()
@@ -2322,7 +2263,10 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     // For internal testing
     @_spi(STP) public var alwaysEnableCBC: Bool = false {
         didSet {
-            addCBCIfNeeded()
+            // TODO: This doesn't make sense
+            if alwaysEnableCBC {
+                viewModel.cbcEnabled = alwaysEnableCBC
+            }
         }
     }
 
@@ -2333,12 +2277,11 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     private var cardBrands = Set<STPCardBrand>()
     func updateCardBrandsIfNeeded() {
-        guard cardBrandDropDown != nil else {
+        guard viewModel.cbcEnabled else {
             // Do nothing, CBC is not initializaed
             return
         }
         self.viewModel.fetchCardBrands { [weak self] cardBrands in
-            self?.cardBrandDropDown?.update(items: DropdownFieldElement.items(from: cardBrands, theme: .default))
             self?.updateImage(for: .number)
         }
     }
