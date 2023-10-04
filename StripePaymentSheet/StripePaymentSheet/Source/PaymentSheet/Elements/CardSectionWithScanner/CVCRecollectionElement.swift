@@ -29,9 +29,8 @@ final class CVCRecollectionElement: ContainerElement {
     lazy var cardBrand: STPCardBrand = .unknown
 
     lazy var cvcElementConfiguration: TextFieldElement.CVCConfiguration = {
-        return TextFieldElement.CVCConfiguration(defaultValue: defaultValues.cvc) {
-            // TODO: Get brand from selected payment method
-            return self.cardBrand
+        return TextFieldElement.CVCConfiguration(defaultValue: defaultValues.cvc) { [weak self] in
+            return self?.cardBrand ?? .unknown
         }
     }()
 
@@ -53,20 +52,18 @@ final class CVCRecollectionElement: ContainerElement {
         ]
         let subElements = allSubElements.compactMap { $0 }
         let sectionElement = SectionElement(
-            // TODO: Translations
-            title: "Security Code",
+            title: STPLocalizedString("Security Code",
+                                      "Title for input field which accepts the CVC/CVV for a card"),
             elements: subElements,
             theme: theme
         )
-        sectionElement.delegate = self
         return sectionElement
     }()
 
     func didUpdateCardBrand(updatedCardBrand: STPCardBrand) {
-        // Update the CVC field if the card brand changes
         if self.cardBrand != updatedCardBrand {
             self.cardBrand = updatedCardBrand
-            cvcElement.setText("")//cvcElement.text) // A hack to get the CVC to update
+            cvcElement.setText("") // A hack to get the CVC to update
         }
     }
 
