@@ -109,7 +109,7 @@ extension PaymentSheet {
             case .paymentIntent(let paymentIntent):
                 // TODO(porter) Move this up to support SI's and DI's in the future
                 confirmParams.confirmPaymentMethodOptions.setPreferredNetworks(configuration.preferredNetworks)
-                
+
                 // The Dashboard app cannot pass `paymentMethodParams` ie payment_method_data
                 if configuration.apiClient.publishableKeyIsUserKey {
                     configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) {

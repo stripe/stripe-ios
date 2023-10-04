@@ -188,16 +188,16 @@ final class CardSection: ContainerElement {
             if self?.cardBrands != fetchedCardBrands {
                 self?.cardBrands = fetchedCardBrands
                 cardBrandDropDown.update(items: DropdownFieldElement.items(from: fetchedCardBrands, theme: self?.theme ?? .default))
-                
+
                 // If we didn't previously have brands but now have them select based on merchant preference
+                // Select the first brand in the fetched brands that
                 if !hadBrands,
                    let preferredNetworks = self?.preferredNetworks,
-                   let indexToSelect = cardBrandDropDown.items.first(where: {$0.rawData})
-                    
-                   let indexToSelect = fetchedCardBrands.firstIndex(where: {preferredNetworks.contains($0)}) {
-                    cardBrandDropDown.selectedIndex = indexToSelect + 1 // add 1 to account for placeholder
+                   let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
+                   let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == "\(brandToSelect.rawValue)" }){
+                    cardBrandDropDown.selectedIndex = indexToSelect
                 }
-                
+
                 self?.panElement.setText(self?.panElement.text ?? "") // Hack to get the accessory view to update
             }
         }

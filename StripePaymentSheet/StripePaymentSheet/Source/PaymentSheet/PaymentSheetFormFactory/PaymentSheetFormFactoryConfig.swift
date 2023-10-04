@@ -75,7 +75,7 @@ enum PaymentSheetFormFactoryConfig {
             return .automatic
         }
     }
-    
+
     var preferredNetworks: [STPCardBrand]? {
         switch self {
         case .paymentSheet(let config):
