@@ -107,9 +107,50 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             )
         }
     }
+    
+    enum BrandState {
+        case brand(STPCardBrand)
+        case cbcBrandSelected(STPCardBrand)
+        case unknown
+        case unknownMultipleOptions
+        
+        var isCBC: Bool {
+            switch self {
+            case .brand(_), .unknown:
+                false
+            case .cbcBrandSelected(_), .unknownMultipleOptions:
+                true
+            }
+        }
+    }
+    
+    var brandState: BrandState {
+        if (cbcEnabled) {
+            if (cardBrands.count > 1) {
+                if let selectedBrand = selectedBrand {
+                    return .cbcBrandSelected(selectedBrand)
+                }
+                return .unknownMultipleOptions
+            }
+            if let cardBrand = cardBrands.first {
+                return .brand(cardBrand)
+            }
+            return .unknown
+        } else {
+            // Otherwise, return the brand for the number
+            return .brand(STPCardValidator.brand(forNumber: cardNumber ?? ""))
+        }
+    }
 
     @objc dynamic var brand: STPCardBrand {
-        return STPCardValidator.brand(forNumber: cardNumber ?? "")
+        switch brandState {
+        case .brand(let brand):
+            return brand
+        case .cbcBrandSelected(let brand):
+            return brand
+        case .unknown, .unknownMultipleOptions:
+            return .unknown
+        }
     }
 
     @objc dynamic var isValid: Bool {
@@ -200,6 +241,8 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             )
         }
     }
+    
+    var cbcEnabled: Bool = true
 
     private var _expirationMonth: String?
     @objc private(set) var expirationMonth: String? {
@@ -228,8 +271,10 @@ class STPPaymentCardTextFieldViewModel: NSObject {
 
         }
     }
+    
+    var selectedBrand: STPCardBrand?
 
-    private var cardBrands = Set<STPCardBrand>()
+    var cardBrands = Set<STPCardBrand>()
     func fetchCardBrands(handler: @escaping (Set<STPCardBrand>) -> Void) {
         // Only fetch card brands if we have at least 8 digits in the pan
         guard let cardNumber = cardNumber,

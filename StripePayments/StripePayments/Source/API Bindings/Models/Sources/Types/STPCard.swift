@@ -93,7 +93,7 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
             return .dinersClub
         } else if brand == "unionpay" {
             return .unionPay
-        } else if brand == "cartes_bancaires" {
+        } else if (brand == "cartes_bancaires") || (brand == "cartes bancaires") {
             return .cartesBancaires
         } else {
             return .unknown

@@ -76,8 +76,8 @@ public class STPImageLibrary: NSObject {
         return self.brandImage(for: brand, template: false)
     }
 
-    /// This returns the icon for an unselected brand when Card Brand Choice is available.
-    @_spi(STP) public class func cardBrandChoiceImage()
+    /// This returns the icon for an unselected brand when multiple card brands are available.
+    @objc(cardBrandChoiceImage) public class func cardBrandChoiceImage()
         -> UIImage
     {
         return self.safeImageNamed("stp_card_cbc", templateIfAvailable: false)
