@@ -254,7 +254,10 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
             didUpdate?(selectedIndex)
         }
         previouslySelectedIndex = selectedIndex
-        delegate?.continueToNextField(element: self)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.continueToNextField(element: self)
+        }
     }
 
     func didCancel(_ pickerFieldView: PickerFieldView) {

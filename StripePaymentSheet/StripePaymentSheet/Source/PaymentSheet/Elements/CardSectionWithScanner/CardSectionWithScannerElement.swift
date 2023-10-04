@@ -74,12 +74,20 @@ final class CardSection: ContainerElement {
                 return params
             }
             : nil
-        var cardBrandDropDown: DropdownFieldElement?
+        var cardBrandDropDown: PaymentMethodElementWrapper<DropdownFieldElement>?
         if cardBrandChoiceEligible {
-            cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(theme: theme)
+            cardBrandDropDown = PaymentMethodElementWrapper(DropdownFieldElement.makeCardBrandDropdown(theme: theme)) { field, params in
+                guard let cardBrandCaseIndex = Int(field.selectedItem.rawData),
+                      let cardBrand: STPCardBrand = .init(rawValue: cardBrandCaseIndex) else {
+                    return params
+                }
+
+                cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: STPCardBrandUtilities.apiValue(from: cardBrand))
+                return params
+            }
         }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
-                                                                                       cardBrandDropDown: cardBrandDropDown), theme: theme) { field, params in
+                                                                                       cardBrandDropDown: cardBrandDropDown?.element), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -110,7 +118,7 @@ final class CardSection: ContainerElement {
 
         let allSubElements: [Element?] = [
             nameElement,
-            panElement,
+            panElement, SectionElement.HiddenElement(cardBrandDropDown),
             SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme),
         ]
         let subElements = allSubElements.compactMap { $0 }
@@ -122,7 +130,7 @@ final class CardSection: ContainerElement {
 
         self.nameElement = nameElement?.element
         self.panElement = panElement.element
-        self.cardBrandDropDown = cardBrandDropDown
+        self.cardBrandDropDown = cardBrandDropDown?.element
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element
         self.preferredNetworks = preferredNetworks

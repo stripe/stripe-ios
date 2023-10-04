@@ -19,11 +19,13 @@ class STPPaymentMethodCardParamsTest: XCTestCase {
         params1.cvc = "123"
         params1.expYear = 22
         params1.expMonth = 12
+        params1.networks = .init(preferred: "visa")
         let params2 = STPPaymentMethodCardParams()
         params2.number = "4242424242424242"
         params2.cvc = "123"
         params2.expYear = 22
         params2.expMonth = 12
+        params2.networks = .init(preferred: "visa")
         XCTAssertEqual(params1, params2)
         params1.additionalAPIParameters["test"] = "bla"
         XCTAssertNotEqual(params1, params2)
@@ -64,5 +66,34 @@ class STPPaymentMethodCardParamsTest: XCTestCase {
         XCTAssertEqual(cardParams.addressState, "NY")
         XCTAssertEqual(cardParams.addressCountry, "US")
         XCTAssertEqual(cardParams.addressZip, "12345")
+    }
+
+    func testPropertyNamesToFormFieldsMapping() {
+        // Test for STPPaymentMethodCardParams
+        let cardParams = STPPaymentMethodCardParams()
+
+        let cardParamsExpectedMapping = [
+            "number": "number",
+            "expMonth": "exp_month",
+            "expYear": "exp_year",
+            "cvc": "cvc",
+            "token": "token",
+            "networks": "networks",
+        ]
+
+        let cardParamsMapping = type(of: cardParams).propertyNamesToFormFieldNamesMapping()
+
+        XCTAssertEqual(cardParamsMapping, cardParamsExpectedMapping)
+
+        // Test for STPPaymentMethodCardNetworksParams
+        let networksParams = STPPaymentMethodCardNetworksParams()
+
+        let networksParamsExpectedMapping = [
+            "preferred": "preferred",
+        ]
+
+        let networksParamsMapping = type(of: networksParams).propertyNamesToFormFieldNamesMapping()
+
+        XCTAssertEqual(networksParamsMapping, networksParamsExpectedMapping)
     }
 }
