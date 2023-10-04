@@ -1,4 +1,7 @@
-## X.X.X
+## x.x.x x-x-x
+### PaymentSheet
+* [Fixed] Fixed an issue when advancing from the country dropdown that prevented user's' from typing in their postal code. ([#2936](https://github.com/stripe/stripe-ios/issues/2936))
+
 ### PaymentsUI
 * [Fixed] An issue with `STPPaymentCardTextField`, where the `paymentCardTextFieldDidChange` delegate method wasn't being called after deleting an empty sub field.
 

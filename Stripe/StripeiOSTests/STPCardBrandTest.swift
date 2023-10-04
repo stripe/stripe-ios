@@ -49,4 +49,45 @@ class STPCardBrandTest: XCTestCase {
             }
         }
     }
+
+    func testApiValueFromBrand() {
+        let brands = [
+            STPCardBrand.visa,
+            STPCardBrand.amex,
+            STPCardBrand.mastercard,
+            STPCardBrand.discover,
+            STPCardBrand.JCB,
+            STPCardBrand.dinersClub,
+            STPCardBrand.unionPay,
+            STPCardBrand.cartesBancaires,
+            STPCardBrand.unknown,
+        ]
+
+        for brand in brands {
+            let string = STPCardBrandUtilities.apiValue(from: brand)
+
+            switch brand {
+            case .amex:
+                XCTAssertEqual(string, "american_express")
+            case .dinersClub:
+                XCTAssertEqual(string, "diners_club")
+            case .discover:
+                XCTAssertEqual(string, "discover")
+            case .JCB:
+                XCTAssertEqual(string, "jcb")
+            case .mastercard:
+                XCTAssertEqual(string, "mastercard")
+            case .unionPay:
+                XCTAssertEqual(string, "unionpay")
+            case .visa:
+                XCTAssertEqual(string, "visa")
+            case .cartesBancaires:
+                XCTAssertEqual(string, "cartes_bancaires")
+            case .unknown:
+                XCTAssertEqual(string, "unknown")
+            @unknown default:
+                break
+            }
+        }
+    }
 }
