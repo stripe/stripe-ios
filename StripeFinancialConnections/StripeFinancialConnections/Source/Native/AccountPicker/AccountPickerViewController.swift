@@ -13,8 +13,7 @@ import UIKit
 protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
-        bySkippingSelection skippedAccountSelection: Bool
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
@@ -89,7 +88,10 @@ final class AccountPickerViewController: UIViewController {
                         eventName: "click.link_accounts",
                         pane: .accountPicker
                     )
-
+                self.delegate?.accountPickerViewController(
+                    self,
+                    didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
+                )
                 self.didSelectLinkAccounts(bySkippingSelection: false)
             },
             didSelectMerchantDataAccessLearnMore: { [weak self] in
@@ -175,8 +177,7 @@ final class AccountPickerViewController: UIViewController {
                     } else if shouldSkipAccountSelection {
                         self.delegate?.accountPickerViewController(
                             self,
-                            didSelectAccounts: accounts,
-                            bySkippingSelection: true
+                            didSelectAccounts: accounts
                         )
                     } else if self.dataSource.manifest.singleAccount,
                         self.dataSource.authSession.institutionSkipAccountSelection ?? false,
@@ -372,8 +373,7 @@ final class AccountPickerViewController: UIViewController {
                 case .success(let linkedAccounts):
                     self.delegate?.accountPickerViewController(
                         self,
-                        didSelectAccounts: linkedAccounts.data,
-                        bySkippingSelection: bySkippingSelection
+                        didSelectAccounts: linkedAccounts.data
                     )
                 case .failure(let error):
                     self.dataSource

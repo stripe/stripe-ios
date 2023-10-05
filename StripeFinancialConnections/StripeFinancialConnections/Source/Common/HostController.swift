@@ -86,7 +86,6 @@ extension HostController: HostViewControllerDelegate {
         guard
             let consentPaneModel = synchronizePayload.text?.consentPane
         else {
-            delegate?.hostController(self, didReceiveEvent: FinancialConnectionsEvent(name: .flowLaunchedInBrowser))
             continueWithWebFlow(synchronizePayload.manifest)
             return
         }
@@ -138,6 +137,13 @@ extension HostController: HostViewControllerDelegate {
 private extension HostController {
 
     func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest) {
+        delegate?.hostController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(
+                name: .flowLaunchedInBrowser
+            )
+        )
+
         let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
         let sessionFetcher = FinancialConnectionsSessionAPIFetcher(
             api: api,

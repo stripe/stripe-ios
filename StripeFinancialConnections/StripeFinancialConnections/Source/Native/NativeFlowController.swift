@@ -524,18 +524,9 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
 
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
-        bySkippingSelection skippedAccountSelection: Bool
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     ) {
         dataManager.linkedAccounts = selectedAccounts
-
-        if !skippedAccountSelection {
-            // user manually selected the accounts
-            delegate?.nativeFlowController(
-                self,
-                didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
-            )
-        }
 
         let shouldAttachLinkedPaymentAccount = (dataManager.manifest.paymentMethodType != nil)
         if shouldAttachLinkedPaymentAccount {

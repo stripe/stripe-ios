@@ -95,7 +95,7 @@ public struct FinancialConnectionsEvent {
        }
 
        private static let institutionNameKey = "institution_name"
-       public var institutionNameKey: String? {
+       public var institutionName: String? {
            return dictionary[Self.institutionNameKey] as? String
        }
 

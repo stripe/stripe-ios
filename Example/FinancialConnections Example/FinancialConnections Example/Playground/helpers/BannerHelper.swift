@@ -10,6 +10,7 @@ import UIKit
 final class BannerHelper {
 
     static let shared = BannerHelper()
+    private var windows: [UIWindow] = []
     
     private init() {}
 
@@ -20,6 +21,7 @@ final class BannerHelper {
         newWindow.backgroundColor = .clear
         // Allow touches to pass through
         newWindow.isUserInteractionEnabled = false
+        windows.append(newWindow)
         
         let bannerView = BannerView()
         bannerView.display(
