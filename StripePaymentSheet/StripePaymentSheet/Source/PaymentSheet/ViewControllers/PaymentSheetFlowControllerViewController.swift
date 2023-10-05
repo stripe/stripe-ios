@@ -323,6 +323,15 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         // Notice
         updateBottomNotice()
     }
+    func confirmButtonEnabledForSavedPayments() -> ConfirmButton.Status {
+        if savedPaymentOptionsViewController.isRemovingPaymentMethods {
+            return .disabled
+        } else if savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParamsRequired &&
+                savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams == nil {
+                    return .disabled
+        }
+        return .enabled
+    }
 
     func updateButton() {
         switch mode {
@@ -337,10 +346,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                         self.view.layoutIfNeeded()
                     }
                 }
-                let confirmationButtonEnabled = !savedPaymentOptionsViewController.isRemovingPaymentMethods &&
-                savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams != nil
 
-                confirmButton.update(state: confirmationButtonEnabled ? .enabled : .disabled,
+                confirmButton.update(state: confirmButtonEnabledForSavedPayments(),
                                      callToAction: .customWithLock(title: String.Localized.continue), animated: true)
             } else {
                 if !confirmButton.isHidden {

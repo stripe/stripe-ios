@@ -118,11 +118,19 @@ class SavedPaymentOptionsViewController: UIViewController {
             return .saved(paymentMethod: paymentMethod, confirmParams: selectedPaymentOptionIntentConfirmParams)
         }
     }
-
+    var selectedPaymentOptionIntentConfirmParamsRequired: Bool {
+        if let index = selectedViewModelIndex,
+           case let .saved(paymentMethod) = viewModels[index] {
+            let result = delegate?.isCVCRecollectionEnabled() ?? false &&
+              paymentMethod.type == .card
+            return result
+        }
+        return false
+    }
     var selectedPaymentOptionIntentConfirmParams: IntentConfirmParams? {
         guard let index = selectedViewModelIndex,
-              case let .saved(paymentMethod) = viewModels[index],
-              delegate?.isCVCRecollectionEnabled() ?? false,
+           case let .saved(paymentMethod) = viewModels[index],
+            delegate?.isCVCRecollectionEnabled() ?? false,
               paymentMethod.type == .card else {
             return nil
         }
@@ -157,6 +165,10 @@ class SavedPaymentOptionsViewController: UIViewController {
     private var selectedViewModelIndex: Int? {
         didSet {
             updateBrand()
+            //TODO: FIX THIS
+            // we need to update the form element here, but this will cause an infinite loop.
+            // updateFormElement()
+
         }
     }
     private var viewModels: [Selection] = []
@@ -174,14 +186,15 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     private lazy var cvcFormElement: PaymentMethodElement = {
-        let formElement = PaymentSheetFormFactory(
-            intent: intent,
-            configuration: .paymentSheet(paymentSheetConfiguration),
-            paymentMethod: .card,
-            previousCustomerInput: nil)
-        let cvcCollectionElement = formElement.makeCardCVCCollection()
-        cvcCollectionElement.delegate = self
-        return cvcCollectionElement
+        return makeElement()
+//        let formElement = PaymentSheetFormFactory(
+//            intent: intent,
+//            configuration: .paymentSheet(paymentSheetConfiguration),
+//            paymentMethod: .card,
+//            previousCustomerInput: nil)
+//        let cvcCollectionElement = formElement.makeCardCVCCollection()
+//        cvcCollectionElement.delegate = self
+//        return cvcCollectionElement
     }()
 
     private lazy var cvcRecollectionElement: CVCRecollectionElement? = {
@@ -206,10 +219,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     private lazy var cvcRecollectionContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .top)
         view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
-        if delegate?.isCVCRecollectionEnabled() ?? false {
-            // TODO: Remove view if needed, or just remove dynamic height container?
-            view.addPinnedSubview(cvcFormElementView)
-        }
+        view.addPinnedSubview(cvcFormElementView)
         view.updateHeight()
         return view
     }()
@@ -265,6 +275,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         if cvcFormElement.view !== cvcFormElementView {
             let oldView = cvcFormElementView
             let newView = cvcFormElement.view
+            self.cvcFormElementView = newView
 
             cvcRecollectionContainerView.addPinnedSubview(newView)
             cvcRecollectionContainerView.layoutIfNeeded()
@@ -403,6 +414,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                 forCustomer: configuration.customerID
             )
         }
+        updateFormElement()
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }
 
@@ -419,6 +431,29 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
            let brand = paymentMethod.card?.brand {
             cvcRecollectionElement.didUpdateCardBrand(updatedCardBrand: brand)
         }
+    }
+
+    private func makeElement() -> PaymentMethodElement {
+        guard case .saved(let paymentMethod, _) = self.selectedPaymentOption,
+              paymentMethod.type == .card else {
+            return FormElement(elements: [], theme: paymentSheetConfiguration.appearance.asElementsTheme)
+        }
+
+        let formElement = PaymentSheetFormFactory(
+            intent: intent,
+            configuration: .paymentSheet(paymentSheetConfiguration),
+            paymentMethod: .card,
+            previousCustomerInput: nil)
+        let cvcCollectionElement = formElement.makeCardCVCCollection()
+        cvcCollectionElement.delegate = self
+        return cvcCollectionElement
+    }
+
+
+    private func updateFormElement() {
+        cvcFormElement = makeElement()
+        updateUI()
+        sendEventToSubviews(.viewDidAppear, from: view)
     }
 }
 
