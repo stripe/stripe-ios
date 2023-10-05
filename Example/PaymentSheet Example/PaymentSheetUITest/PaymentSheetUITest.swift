@@ -920,7 +920,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
-        settings.preferredNetworks = [.visa, .cartesBancaires] // Set preferredNetworks
+        settings.preferredNetworksEnabled = .on
         loadPlayground(
             app,
             settings

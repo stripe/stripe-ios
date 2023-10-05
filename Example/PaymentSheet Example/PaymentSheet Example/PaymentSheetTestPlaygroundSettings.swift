@@ -208,6 +208,22 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum PreferredNetworksEnabled: String, PickerEnum {
+        static let enumName: String = "Preferred Networks (CBC)"
+
+        case on
+        case off
+
+        var displayName: String {
+            switch self {
+            case .on:
+                return "[visa, cartesBancaires]"
+            case .off:
+                return "off"
+            }
+        }
+    }
+
     var uiStyle: UIStyle
     var mode: Mode
     var integrationType: IntegrationType
@@ -226,7 +242,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var checkoutEndpoint: String?
     var autoreload: Autoreload
     var externalPayPalEnabled: ExternalPayPalEnabled
-    var preferredNetworks: [STPCardBrand]?
+    var preferredNetworksEnabled: PreferredNetworksEnabled
 
     var attachDefaults: BillingDetailsAttachDefaults
     var collectName: BillingDetailsName
@@ -253,7 +269,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
             externalPayPalEnabled: .off,
-            preferredNetworks: nil,
+            preferredNetworksEnabled: .off,
             attachDefaults: .off,
             collectName: .automatic,
             collectEmail: .automatic,

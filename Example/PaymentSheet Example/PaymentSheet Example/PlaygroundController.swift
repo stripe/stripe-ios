@@ -134,8 +134,7 @@ class PlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
-        configuration.preferredNetworks = settings.preferredNetworks
-        configuration.preferredNetworks = [.visa, .cartesBancaires]
+        configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
         return configuration
     }
 
