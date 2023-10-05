@@ -63,6 +63,11 @@ import UIKit
     public var selectedIndex: Int {
         didSet {
             updatePickerField()
+
+            if previouslySelectedIndex != selectedIndex {
+                didUpdate?(selectedIndex)
+            }
+            previouslySelectedIndex = selectedIndex
         }
     }
     public var didUpdate: DidUpdateSelectedIndex?
@@ -190,6 +195,7 @@ private extension DropdownFieldElement {
         }
         #else
         if pickerView.selectedRow(inComponent: 0) != selectedIndex {
+            pickerView.reloadComponent(0)
             pickerView.selectRow(selectedIndex, inComponent: 0, animated: false)
         }
         #endif
@@ -250,10 +256,6 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
     }
 
     func didFinish(_ pickerFieldView: PickerFieldView) {
-        if previouslySelectedIndex != selectedIndex {
-            didUpdate?(selectedIndex)
-        }
-        previouslySelectedIndex = selectedIndex
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.delegate?.continueToNextField(element: self)

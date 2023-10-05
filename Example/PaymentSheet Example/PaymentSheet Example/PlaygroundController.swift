@@ -12,11 +12,11 @@
 import Combine
 import Contacts
 import PassKit
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
+import StripePayments
 @_spi(STP) @_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 import SwiftUI
 import UIKit
-import StripePayments
 
 class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?

@@ -6,8 +6,8 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-import XCTest
 import StripePayments
+import XCTest
 
 class PaymentSheetUITestCase: XCTestCase {
     var app: XCUIApplication!
@@ -911,7 +911,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-    
+
     func testCardBrandChoiceWithPreferredNetworks() throws {
         app.launchEnvironment = app.launchEnvironment.merging(["ENABLE_CBC": "true"]) { (_, new) in new }
 
@@ -920,7 +920,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
-        settings.preferredNetworks = [.visa, .cartesBancaires] // set preferredNetworks
+        settings.preferredNetworks = [.visa, .cartesBancaires] // Set preferredNetworks
         loadPlayground(
             app,
             settings
@@ -967,14 +967,14 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Type full card number to start fetching card brands again
         try fillCardData(app, cardNumber: "4000002500001001")
 
-        // Card brand choice drop down should be enabled
-        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistenceAndTap(timeout: 5))
+        // Card brand choice drop down should be enabled and we should auto select Visa
+        XCTAssertTrue(app.textFields["Visa"].waitForExistenceAndTap(timeout: 5))
         XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.swipeUp() // reset to optional selection for card brand
+        cardBrandChoiceDropdown.swipeDown() // reset to optional selection for card brand
         app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
-        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 5))
 
         // Finish checkout
         app.buttons["Pay €50.99"].tap()
