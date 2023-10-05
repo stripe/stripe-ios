@@ -662,8 +662,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     func cbcIndicatorRect(forBounds bounds: CGRect) -> CGRect {
         let brandImageRect = brandImageRect(forBounds: bounds)
-        let width: CGFloat = 10
-        let height: CGFloat = 10
+        let width: CGFloat = 9
+        let height: CGFloat = 9
         return CGRect(
             x: brandImageRect.maxX,
             y: brandImageRect.midY - (height / 2.0) + 1, // Add 1 to match hacky brand view inset
@@ -692,7 +692,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     )
 
     @objc internal lazy var cbcIndicatorView: UIImageView = UIImageView(
-        image: UIImage.init(systemName: "chevron.down")
+        image: Image.icon_chevron_down.makeImage(template: true)
     )
 
     @objc internal lazy var fieldsView: UIView = UIView()
@@ -906,14 +906,15 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     open override func menuAttachmentPoint(for configuration: UIContextMenuConfiguration) -> CGPoint {
         let brandImageRect = self.brandImageRect(forBounds: self.bounds)
-        return CGPoint(x: brandImageRect.minX, y: brandImageRect.maxY + 4)
+        // TODO: Figure out actual padding (not 14px)
+        return CGPoint(x: brandImageRect.minX + 14, y: brandImageRect.maxY + 4)
     }
 
     open override func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         var targetRect = self.brandImageRect(forBounds: self.bounds)
         // Add a little padding to include the arrow view
         targetRect.size.width += 4.0
-        
+
         if !targetRect.contains(location) {
             // Don't pop a menu outside the brand selector area
             return nil
@@ -934,7 +935,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 self.updateImage(for: .number)
             }
             let menu = UIMenu(children:
-                                [UIAction(title: .Localized.card_brand_dropdown_placeholder, image: Self.cardBrandChoiceImage(), state: self.viewModel.selectedBrand == nil ? .on : .off, handler: action)]
+                                [UIAction(title: .Localized.card_brand_dropdown_placeholder, attributes: .disabled, state: .off, handler: action)]
                   +
                   self.viewModel.cardBrands.enumerated().map { (_, brand) in
                         let brandString = STPCard.string(from: brand)
@@ -2248,7 +2249,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 applyBrandImage?(fieldType, (viewModel.validationStateForPostalCode()))
             }
         }
-        let shouldShowCBCIndicator = self.viewModel.brandState.isCBC && fieldType != .CVC
+        let shouldShowCBCIndicator = self.viewModel.brandState.isCBC && fieldType != .CVC // && isError
         UIView.transition(
             with: self.cbcIndicatorView,
             duration: 0.2,
@@ -2281,7 +2282,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             // Do nothing, CBC is not initializaed
             return
         }
-        self.viewModel.fetchCardBrands { [weak self] cardBrands in
+        self.viewModel.fetchCardBrands { [weak self] _ in
             self?.updateImage(for: .number)
         }
     }
