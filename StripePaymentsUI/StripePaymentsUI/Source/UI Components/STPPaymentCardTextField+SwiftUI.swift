@@ -64,3 +64,12 @@ extension STPPaymentCardTextField {
         }
     }
 }
+
+@_spi(STP)
+public struct STPPaymentCardTextFieldRepresentable_Previews: PreviewProvider {
+    @State static var params: STPPaymentMethodParams?
+
+    public static var previews: some View {
+        return STPPaymentCardTextField.Representable(paymentMethodParams: $params)
+    }
+}

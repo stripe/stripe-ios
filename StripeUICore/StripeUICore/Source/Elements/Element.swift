@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 import UIKit
 
 // MARK: - Element
@@ -41,6 +42,12 @@ import UIKit
      Text to display to the user under the item, if any.
      */
     var subLabelText: String? { get }
+}
+
+@_spi(STP) public protocol SwiftUIElement: Element {
+    associatedtype ViewType: View
+
+    var swiftUIView: ViewType { get }
 }
 
 public extension Element {

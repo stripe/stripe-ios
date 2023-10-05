@@ -47,11 +47,11 @@ extension AddressSectionElement {
             didTap()
         }
 
-        func textFieldViewDidUpdate(view: TextFieldView) {
+        public func textFieldViewDidUpdate(view: TextFieldView) {
             // no-op
         }
 
-        func textFieldViewContinueToNextField(view: TextFieldView) {
+        public func textFieldViewContinueToNextField(view: TextFieldView) {
             // no-op
         }
 

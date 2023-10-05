@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol TextFieldViewDelegate: AnyObject {
+@_spi(STP) public protocol TextFieldViewDelegate: AnyObject {
     func textFieldViewDidUpdate(view: TextFieldView)
     func textFieldViewContinueToNextField(view: TextFieldView)
 }
@@ -21,7 +21,7 @@ protocol TextFieldViewDelegate: AnyObject {
  For internal SDK use only
  */
 @objc(STP_Internal_TextFieldView)
-class TextFieldView: UIView {
+public class TextFieldView: UIView {
     weak var delegate: TextFieldViewDelegate?
     private lazy var toolbar = DoneButtonToolbar(delegate: self, theme: viewModel.theme)
     var text: String {
@@ -30,7 +30,7 @@ class TextFieldView: UIView {
     var isEditing: Bool {
         return textField.isEditing
     }
-    override var isUserInteractionEnabled: Bool {
+    public override var isUserInteractionEnabled: Bool {
         didSet {
             textField.isUserInteractionEnabled = isUserInteractionEnabled
             updateUI(with: viewModel)
@@ -49,10 +49,13 @@ class TextFieldView: UIView {
         textField.spellCheckingType = .no
         textField.adjustsFontForContentSizeCategory = true
         textField.font = viewModel.theme.fonts.subheadline
+        textField.backgroundColor = .blue
         return textField
     }()
     private lazy var textFieldView: FloatingPlaceholderTextFieldView = {
-        return FloatingPlaceholderTextFieldView(textField: textField, theme: viewModel.theme)
+        let view = FloatingPlaceholderTextFieldView(textField: textField, theme: viewModel.theme)
+        view.backgroundColor = .green
+        return view
     }()
 
     let accessoryContainerView = UIView()
@@ -95,6 +98,20 @@ class TextFieldView: UIView {
 
     // MARK: - Initializers
 
+    init() {
+        viewModel = .init(
+            placeholder: "",
+            accessibilityLabel: "",
+            attributedText: NSAttributedString(),
+            keyboardProperties: .init(type: .URL, textContentType: nil, autocapitalization: .none),
+            validationState: .valid,
+            accessoryView: nil,
+            shouldShowClearButton: false,
+            theme: ElementsUITheme.default
+        )
+        super.init(frame: .zero)
+    }
+
     init(viewModel: TextFieldElement.ViewModel, delegate: TextFieldViewDelegate) {
         self.viewModel = viewModel
         self.delegate = delegate
@@ -111,7 +128,7 @@ class TextFieldView: UIView {
 
     // MARK: - Overrides
 
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
         }
@@ -130,6 +147,7 @@ class TextFieldView: UIView {
 
     fileprivate func installConstraints() {
         hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, accessoryContainerView])
+        hStack.backgroundColor = .magenta
         clearButton.setContentHuggingPriority(.required, for: .horizontal)
         clearButton.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
                                                       for: .horizontal)
@@ -143,6 +161,11 @@ class TextFieldView: UIView {
         hStack.spacing = 6
         addAndPinSubview(hStack, insets: ElementsUI.contentViewInsets)
     }
+
+//    public override var intrinsicContentSize: CGSize {
+////        return systemLayoutSizeFitting(CGSize(width: 500, height: 200))
+//        return CGSize(width: 300, height: 100)
+//    }
 
     @objc private func clearText() {
         textField.text = nil
@@ -160,6 +183,8 @@ class TextFieldView: UIView {
 
     func updateUI(with viewModel: TextFieldElement.ViewModel) {
         self.viewModel = viewModel
+
+        backgroundColor = .red
 
         // Update accessibility
         textField.accessibilityLabel = viewModel.accessibilityLabel
@@ -215,7 +240,7 @@ class TextFieldView: UIView {
         layoutIfNeeded()
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateUI(with: viewModel)
     }
@@ -236,7 +261,7 @@ extension TextFieldView: UITextFieldDelegate {
         delegate?.textFieldViewDidUpdate(view: self)
     }
 
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
         // If text is already present in the text field we should show the clear button
         if let text = textField.text, !text.isEmpty, viewModel.shouldShowClearButton {
             setClearButton(hidden: false)
@@ -245,20 +270,20 @@ extension TextFieldView: UITextFieldDelegate {
         delegate?.textFieldViewDidUpdate(view: self)
     }
 
-    func textFieldDidEndEditing(_ textField: UITextField) {
+    public func textFieldDidEndEditing(_ textField: UITextField) {
         setClearButton(hidden: true) // Hide clear button when not editing
         textFieldView.updatePlaceholder()
         textField.layoutIfNeeded() // Without this, the text jumps for some reason
         delegate?.textFieldViewDidUpdate(view: self)
     }
 
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         delegate?.textFieldViewContinueToNextField(view: self)
         textField.resignFirstResponder()
         return false
     }
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         // This detects autofill specifically, which as of iOS 15 Apple only allows on empty text fields. This will also catch pastes into empty text fields.
         // This is not a perfect heuristic, but is sufficient for the purposes of being able to process autofilled text specifically (e.g. a phone number with unpredictable formatting that we want to parse)
         didReceiveAutofill = (text.isEmpty && range.length == 0 && range.location == 0 && string.count > 1)
@@ -268,8 +293,8 @@ extension TextFieldView: UITextFieldDelegate {
 
 // MARK: - EventHandler
 
-extension TextFieldView: EventHandler {
-    func handleEvent(_ event: STPEvent) {
+@_spi(STP) extension TextFieldView: EventHandler {
+    public func handleEvent(_ event: STPEvent) {
         switch event {
         case .shouldEnableUserInteraction:
             isUserInteractionEnabled = true
@@ -283,8 +308,8 @@ extension TextFieldView: EventHandler {
 
 // MARK: - DoneButtonToolbarDelegate
 
-extension TextFieldView: DoneButtonToolbarDelegate {
-    func didTapDone(_ toolbar: DoneButtonToolbar) {
+@_spi(STP) extension TextFieldView: DoneButtonToolbarDelegate {
+    public func didTapDone(_ toolbar: DoneButtonToolbar) {
         textField.resignFirstResponder()
     }
 }

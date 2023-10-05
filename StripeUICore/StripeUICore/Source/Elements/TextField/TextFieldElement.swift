@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+import SwiftUI
 import UIKit
 
 /**
@@ -64,7 +65,7 @@ import UIKit
         let autocapitalization: UITextAutocapitalizationType
     }
 
-    struct ViewModel {
+    public struct ViewModel {
         let placeholder: String
         let accessibilityLabel: String
         let attributedText: NSAttributedString
@@ -150,10 +151,18 @@ extension TextFieldElement: Element {
     }
 }
 
+@_spi(STP) extension TextFieldElement: SwiftUIElement {
+    @_spi(STP) public typealias ViewType = TextFieldSwiftUIView
+
+    @_spi(STP) public var swiftUIView: ViewType {
+        return TextFieldSwiftUIView(viewModel: viewModel, delegate: self)
+    }
+}
+
 // MARK: - TextFieldViewDelegate
 
 extension TextFieldElement: TextFieldViewDelegate {
-    func textFieldViewDidUpdate(view: TextFieldView) {
+    public func textFieldViewDidUpdate(view: TextFieldView) {
         // Update our state
         let newText = sanitize(text: view.text)
         if text != newText {
@@ -172,7 +181,7 @@ extension TextFieldElement: TextFieldViewDelegate {
         delegate?.didUpdate(element: self)
     }
 
-    func textFieldViewContinueToNextField(view: TextFieldView) {
+    public func textFieldViewContinueToNextField(view: TextFieldView) {
         isEditing = view.isEditing
         delegate?.continueToNextField(element: self)
     }

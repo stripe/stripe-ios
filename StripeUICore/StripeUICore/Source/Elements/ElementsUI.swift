@@ -65,7 +65,7 @@ import UIKit
 }
 
 /// Describes the appearance of an Element
-@_spi(STP) public struct ElementsUITheme {
+public struct ElementsUITheme {
 
     /// The default appearance used for Elements
     public static let `default` = ElementsUITheme()
