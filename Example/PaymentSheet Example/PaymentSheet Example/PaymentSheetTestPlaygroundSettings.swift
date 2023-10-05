@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import StripePayments
 
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum UIStyle: String, PickerEnum {
