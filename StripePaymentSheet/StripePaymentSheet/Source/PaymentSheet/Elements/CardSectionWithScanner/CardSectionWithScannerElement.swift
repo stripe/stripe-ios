@@ -195,7 +195,7 @@ final class CardSection: ContainerElement {
                    let preferredNetworks = self?.preferredNetworks,
                    let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
                    let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == "\(brandToSelect.rawValue)" }){
-                    cardBrandDropDown.selectedIndex = indexToSelect
+                    cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
                 }
 
                 self?.panElement.setText(self?.panElement.text ?? "") // Hack to get the accessory view to update

@@ -146,7 +146,7 @@ extension DateFieldElement: PickerFieldViewDelegate {
         selectedDate = datePickerView.date
     }
 
-    func didFinish(_ pickerFieldView: PickerFieldView) {
+    func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {
         if previouslySelectedDate != selectedDate,
             let selectedDate = selectedDate
         {
@@ -154,7 +154,9 @@ extension DateFieldElement: PickerFieldViewDelegate {
             previouslySelectedDate = selectedDate
             delegate?.didUpdate(element: self)
         }
-        delegate?.continueToNextField(element: self)
+        if shouldAutoAdvance {
+            delegate?.continueToNextField(element: self)
+        }
     }
 
     func didCancel(_ pickerFieldView: PickerFieldView) {

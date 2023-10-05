@@ -164,9 +164,9 @@ import UIKit
         }
     }
 
-    public func select(index: Int) {
+    public func select(index: Int, shouldAutoAdvance: Bool = true) {
         selectedIndex = index
-        didFinish(pickerFieldView)
+        didFinish(pickerFieldView, shouldAutoAdvance: shouldAutoAdvance)
     }
 
     public func update(items: [DropdownItem]) {
@@ -175,7 +175,7 @@ import UIKit
         let newSelectedIndex = items.firstIndex(where: { $0.rawData == self.items[selectedIndex].rawData }) ?? 0
 
         self.items = items
-        self.selectedIndex = newSelectedIndex
+        self.select(index: newSelectedIndex, shouldAutoAdvance: false)
     }
 }
 
@@ -250,15 +250,17 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
         // No-op
     }
 
-    func didFinish(_ pickerFieldView: PickerFieldView) {
+    func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {
         if previouslySelectedIndex != selectedIndex {
             didUpdate?(selectedIndex)
         }
         previouslySelectedIndex = selectedIndex
 
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.delegate?.continueToNextField(element: self)
+        if shouldAutoAdvance {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.continueToNextField(element: self)
+            }
         }
     }
 

@@ -852,6 +852,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
+        settings.preferredNetworksEnabled = .off
         loadPlayground(
             app,
             settings
@@ -942,17 +943,11 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Card brand choice drop down should be enabled
         cardBrandTextField.tap()
         XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.swipeUp()
+        cardBrandChoiceDropdown.swipeDown()
         app.toolbars.buttons["Cancel"].tap()
 
         // We should have selected Visa due to preferreedNetworks configuration API
         XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 2))
-
-        // Select Visa from the CBC dropdown
-        cardBrandTextField.tap()
-        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.swipeUp()
-        app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
         XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
@@ -968,13 +963,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         try fillCardData(app, cardNumber: "4000002500001001")
 
         // Card brand choice drop down should be enabled and we should auto select Visa
-        XCTAssertTrue(app.textFields["Visa"].waitForExistenceAndTap(timeout: 5))
-        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.swipeDown() // reset to optional selection for card brand
-        app.toolbars.buttons["Done"].tap()
-
-        // We should have selected Visa
-        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
 
         // Finish checkout
         app.buttons["Pay €50.99"].tap()
