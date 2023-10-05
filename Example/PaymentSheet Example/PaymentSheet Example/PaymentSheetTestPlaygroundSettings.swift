@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import StripePayments
 
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum UIStyle: String, PickerEnum {
@@ -225,6 +226,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var checkoutEndpoint: String?
     var autoreload: Autoreload
     var externalPayPalEnabled: ExternalPayPalEnabled
+    var preferredNetworks: [STPCardBrand]?
 
     var attachDefaults: BillingDetailsAttachDefaults
     var collectName: BillingDetailsName
@@ -251,6 +253,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
             externalPayPalEnabled: .off,
+            preferredNetworks: nil,
             attachDefaults: .off,
             collectName: .automatic,
             collectEmail: .automatic,

@@ -16,6 +16,7 @@ import PassKit
 @_spi(STP) @_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
 import SwiftUI
 import UIKit
+import StripePayments
 
 class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
@@ -133,7 +134,8 @@ class PlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
-        configuration.preferredNetworks = [.cartesBancaires, .visa]
+        configuration.preferredNetworks = settings.preferredNetworks
+        configuration.preferredNetworks = [.visa, .cartesBancaires]
         return configuration
     }
 
