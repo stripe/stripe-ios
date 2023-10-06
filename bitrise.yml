@@ -4,7 +4,7 @@ project_type: ios
 app:
   envs:
   - FASTLANE_XCODE_LIST_TIMEOUT: "120"
-  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
+  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   - BITRISE_PROJECT_PATH: Stripe.xcworkspace
   - GIT_AUTHOR_NAME: Bitrise CI
   - GIT_AUTHOR_EMAIL: mobile-sdk-team@stripe.com
@@ -189,6 +189,8 @@ workflows:
       bitrise.io:
         stack: osx-xcode-14.1.x-ventura
         machine_type_id: g2-m1.8core
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   deploy-example-apps:
     steps:
     - set-xcode-build-number@1:
@@ -339,15 +341,11 @@ workflows:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
         machine_type_id: g2-m1.8core
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   test-builds-xcode-143:
     steps:
     - xcode-build-for-test@2:
         inputs:
         - scheme: AllStripeFrameworks
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=16.4
     before_run:
     - prep_all
     meta:
@@ -360,8 +358,6 @@ workflows:
         inputs:
         - scheme: AllStripeFrameworks
         - configuration: Release
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=16.4
     before_run:
     - prep_all
     meta:
@@ -379,7 +375,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x-edge
+        stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
@@ -405,6 +401,8 @@ workflows:
         title: fastlane installation_spm_swift
     before_run:
     - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   integration-all:
     steps:
     - xcode-test@4:
@@ -421,6 +419,8 @@ workflows:
       bitrise.io:
         stack: osx-xcode-14.1.x-ventura
         machine_type_id: g2-m1-max.10core
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   legacy-tests-14:
     steps:
     - fastlane@3:
@@ -463,8 +463,6 @@ workflows:
         title: fastlane analyze
     before_run:
     - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 14,OS=16.4
     meta:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
@@ -561,8 +559,6 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 14,OS=16.4
     meta:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
@@ -581,8 +577,6 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 14,OS=16.4
     meta:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
