@@ -162,13 +162,8 @@ class SavedPaymentOptionsViewController: UIViewController {
     var appearance = PaymentSheet.Appearance.default
 
     // MARK: - Private Properties
-    private var selectedViewModelIndex: Int? {
-        didSet {
-            updateFormElement()
-            updateBrand()
+    private var selectedViewModelIndex: Int?
 
-        }
-    }
     private var viewModels: [Selection] = []
 
     private var selectedIndexPath: IndexPath? {
@@ -240,7 +235,6 @@ class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-
         let stackView = UIStackView(arrangedSubviews: [
             collectionView, cvcRecollectionContainerView,
         ])
@@ -261,8 +255,6 @@ class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - Private methods
     private func updateUI() {
         let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customerID)
-
-        swapFormElementUIIfNeeded()
 
         // Move default to front
         var savedPaymentMethods = self.savedPaymentMethods
@@ -291,9 +283,13 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
+
+        updateFormElement()
+        updateBrand()
     }
 
     private func swapFormElementUIIfNeeded() {
+
         if cvcFormElement.view !== cvcFormElementView {
             let oldView = cvcFormElementView
             let newView = cvcFormElement.view
@@ -367,7 +363,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     private func makeElement() -> PaymentMethodElement {
         guard case .saved(let paymentMethod, _) = self.selectedPaymentOption,
               paymentMethod.type == .card else {
-            return FormElement(elements: [], theme: paymentSheetConfiguration.appearance.asElementsTheme)
+            return FormElement(autoSectioningElements: [])
         }
 
         let formElement = PaymentSheetFormFactory(
@@ -445,6 +441,8 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                 forCustomer: configuration.customerID
             )
         }
+        updateFormElement()
+        updateBrand()
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }
 }

@@ -103,7 +103,7 @@ extension PaymentSheetFormFactory {
     }
     func makeCardCVCCollection() -> PaymentMethodElement {
         return FormElement(
-            elements: [CVCRecollectionElement()],
+            autoSectioningElements: [CVCRecollectionElement()],
             theme: theme)
     }
 }
