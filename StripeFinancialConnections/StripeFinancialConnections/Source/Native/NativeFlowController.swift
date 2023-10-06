@@ -887,13 +887,13 @@ extension NativeFlowController: BankAuthRepairViewControllerDelegate {
         dataManager.saveToLinkWithStripeSucceeded = true
         pushPane(.success, animated: true)
     }
-    
+
     func bankAuthRepairViewControllerDidRequestToGoBackToLinkAccountPicker(
         _ viewController: BankAuthRepairViewController
     ) {
         navigationController.popViewController(animated: true)
     }
-    
+
     func bankAuthRepairViewController(
         _ viewController: BankAuthRepairViewController,
         didReceiveTerminalError error: Error
@@ -967,8 +967,7 @@ private func CreatePaneViewController(
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
-                analyticsClient: dataManager.analyticsClient,
-                reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors
+                analyticsClient: dataManager.analyticsClient
             )
             let bankAuthRepairViewController = BankAuthRepairViewController(
                 dataSource: bankAuthRepairDataSource

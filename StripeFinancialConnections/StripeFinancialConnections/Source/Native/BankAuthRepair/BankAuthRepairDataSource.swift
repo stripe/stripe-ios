@@ -9,44 +9,26 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol BankAuthRepairDataSource: AnyObject {
-//    var institution: FinancialConnectionsInstitution { get }
-    var manifest: FinancialConnectionsSessionManifest { get }
-    var returnURL: String? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
-    var pendingAuthSession: FinancialConnectionsAuthSession? { get }
-    var reduceManualEntryProminenceInErrors: Bool { get }
-    var disableAuthSessionRetrieval: Bool { get }
     var sharedPartnerAuthDataSource: SharedPartnerAuthDataSource { get }
 
     func initiateAuthRepairSession() -> Promise<FinancialConnectionsAuthRepairSession>
-    func completeAuthRepairSession(authRepairSessionId: String) -> Promise<FinancialConnectionsAuthRepairSessionComplete>
     func selectNetworkedAccount() -> Future<FinancialConnectionsInstitutionList>
+    func completeAuthRepairSession(
+        authRepairSessionId: String
+    ) -> Promise<FinancialConnectionsAuthRepairSessionComplete>
 }
 
 final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
 
-//    var institution: FinancialConnectionsInstitution
     private let coreAuthorizationId: String
     private let consumerSession: ConsumerSessionData
     private let selectedAccountId: String
-    let manifest: FinancialConnectionsSessionManifest
-    let returnURL: String?
+    private let manifest: FinancialConnectionsSessionManifest
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
-    let reduceManualEntryProminenceInErrors: Bool
-    var disableAuthSessionRetrieval: Bool {
-        return manifest.features?["bank_connections_disable_defensive_auth_session_retrieval_on_complete"] == true
-    }
-
     let sharedPartnerAuthDataSource: SharedPartnerAuthDataSource
-
-    // a "pending" auth session is a session which has started
-    // BUT the session is still yet-to-be authorized
-    //
-    // in other words, a `pendingAuthSession` is up for being
-    // cancelled unless the user successfully authorizes
-    private(set) var pendingAuthSession: FinancialConnectionsAuthSession?
 
     init(
         coreAuthorizationId: String,
@@ -56,18 +38,15 @@ final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
         returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient,
-        reduceManualEntryProminenceInErrors: Bool
+        analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.coreAuthorizationId = coreAuthorizationId
         self.consumerSession = consumerSession
         self.selectedAccountId = selectedAccountId
         self.manifest = manifest
-        self.returnURL = returnURL
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
-        self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors
         self.sharedPartnerAuthDataSource = SharedPartnerAuthDataSourceImplementation(
             pane: .bankAuthRepair,
             // TODO(kgaidis): FIX

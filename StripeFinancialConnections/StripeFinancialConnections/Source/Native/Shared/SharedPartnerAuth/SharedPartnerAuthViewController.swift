@@ -33,9 +33,12 @@ protocol SharedPartnerAuthViewControllerDelegate: AnyObject {
         didFailWithAuthSession authSession: FinancialConnectionsAuthSession
     )
 
-    func sharedPartnerAuthViewControllerDidRequestToGoBack(_ viewController: SharedPartnerAuthViewController)
+    func sharedPartnerAuthViewControllerDidRequestToGoBack(
+        _ viewController: SharedPartnerAuthViewController
+    )
 
     // we call this when we should display an error
+    // (vs. terminating the session with a terminal error)
     func sharedPartnerAuthViewController(
         _ viewController: SharedPartnerAuthViewController,
         didReceiveError error: Error
