@@ -182,7 +182,23 @@ class SavedPaymentOptionsViewController: UIViewController {
         return makeElement()
     }()
 
-    func cvcRecollectionElement() -> CVCRecollectionElement? {
+    private func makeElement() -> PaymentMethodElement {
+        guard case .saved(let paymentMethod, _) = self.selectedPaymentOption,
+              paymentMethod.type == .card else {
+            return FormElement(autoSectioningElements: [])
+        }
+
+        let formElement = PaymentSheetFormFactory(
+            intent: intent,
+            configuration: .paymentSheet(paymentSheetConfiguration),
+            paymentMethod: .card,
+            previousCustomerInput: nil)
+        let cvcCollectionElement = formElement.makeCardCVCCollection()
+        cvcCollectionElement.delegate = self
+        return cvcCollectionElement
+    }
+
+    private func cvcRecollectionElement() -> CVCRecollectionElement? {
         if let cvc = cvcFormElement.getAllSubElements().first(where: { ($0 as? CVCRecollectionElement) != nil}) as? CVCRecollectionElement {
             return cvc
         }
@@ -285,7 +301,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
 
         updateFormElement()
-        updateBrand()
     }
 
     private func swapFormElementUIIfNeeded() {
@@ -358,22 +373,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         cvcFormElement = makeElement()
         swapFormElementUIIfNeeded()
         sendEventToSubviews(.viewDidAppear, from: view)
-    }
-
-    private func makeElement() -> PaymentMethodElement {
-        guard case .saved(let paymentMethod, _) = self.selectedPaymentOption,
-              paymentMethod.type == .card else {
-            return FormElement(autoSectioningElements: [])
-        }
-
-        let formElement = PaymentSheetFormFactory(
-            intent: intent,
-            configuration: .paymentSheet(paymentSheetConfiguration),
-            paymentMethod: .card,
-            previousCustomerInput: nil)
-        let cvcCollectionElement = formElement.makeCardCVCCollection()
-        cvcCollectionElement.delegate = self
-        return cvcCollectionElement
+        updateBrand()
     }
 }
 
@@ -442,7 +442,6 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             )
         }
         updateFormElement()
-        updateBrand()
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }
 }
