@@ -198,13 +198,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         return cvcCollectionElement
     }
 
-    private func cvcRecollectionElement() -> CVCRecollectionElement? {
-        if let cvc = cvcFormElement.getAllSubElements().first(where: { ($0 as? CVCRecollectionElement) != nil}) as? CVCRecollectionElement {
-            return cvc
-        }
-        return nil
-    }
-
     // MARK: - Views
     private lazy var cvcFormElementView: UIView = {
         return cvcFormElement.view
@@ -363,7 +356,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         guard case .saved(let paymentMethod) = viewModel else {
             return
         }
-        if let cvcRecollectionElement = self.cvcRecollectionElement(),
+        if let cvcRecollectionElement = cvcFormElement as? CVCRecollectionElement,
            let brand = paymentMethod.card?.brand {
             cvcRecollectionElement.didUpdateCardBrand(updatedCardBrand: brand)
         }

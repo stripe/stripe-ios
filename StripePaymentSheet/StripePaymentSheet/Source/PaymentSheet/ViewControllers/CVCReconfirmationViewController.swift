@@ -31,13 +31,6 @@ class CVCReconfirmationViewController: UIViewController {
         return cvcCollectionElement
     }()
 
-    private lazy var cvcRecollectionElement: CVCRecollectionElement? = {
-        if let cvc = cvcFormElement.getAllSubElements().first(where: { ($0 as? CVCRecollectionElement) != nil}) as? CVCRecollectionElement {
-            return cvc
-        }
-        return nil
-    }()
-
     // MARK: - Views
     private lazy var cvcFormElementView: UIView = {
         return cvcFormElement.view
@@ -123,7 +116,7 @@ class CVCReconfirmationViewController: UIViewController {
     }
 
     private func updateBrand(brand: STPCardBrand) {
-        if let cvcRecollectionElement = self.cvcRecollectionElement {
+        if let cvcRecollectionElement = cvcFormElement as? CVCRecollectionElement {
             cvcRecollectionElement.didUpdateCardBrand(updatedCardBrand: brand)
         }
     }

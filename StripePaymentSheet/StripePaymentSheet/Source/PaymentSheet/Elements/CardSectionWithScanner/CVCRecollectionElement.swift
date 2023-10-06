@@ -10,12 +10,12 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class CVCRecollectionElement: ContainerElement {
+final class CVCRecollectionElement: Element {
 
     weak var delegate: ElementDelegate?
 
     lazy var view: UIView = {
-        return cvcSection.view
+        return formElement.view
     }()
 
     var elements: [Element] {
@@ -35,6 +35,7 @@ final class CVCRecollectionElement: ContainerElement {
     }()
 
     lazy var cvcElementPaymentMethodElement: PaymentMethodElementWrapper = {
+
         return PaymentMethodElementWrapper(cvcElementConfiguration, theme: theme) { field, params in
             let cardOptions = STPConfirmCardOptions()
             cardOptions.cvc = field.text
@@ -42,6 +43,7 @@ final class CVCRecollectionElement: ContainerElement {
             return params
         }
     }()
+
     lazy var cvcElement: TextFieldElement = {
         return cvcElementPaymentMethodElement.element
     }()
@@ -58,6 +60,12 @@ final class CVCRecollectionElement: ContainerElement {
             theme: theme
         )
         return sectionElement
+    }()
+
+    lazy var formElement: FormElement = {
+        let form = FormElement(autoSectioningElements: [cvcSection], theme: theme)
+        form.delegate = self
+        return form
     }()
 
     func didUpdateCardBrand(updatedCardBrand: STPCardBrand) {
@@ -91,5 +99,14 @@ extension CVCRecollectionElement: ElementDelegate {
     }
     func continueToNextField(element: Element) {
         delegate?.continueToNextField(element: element)
+    }
+}
+
+extension CVCRecollectionElement: PaymentMethodElement {
+    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
+        if let updatedParams = self.formElement.updateParams(params: params) {
+            return updatedParams
+        }
+        return nil
     }
 }
