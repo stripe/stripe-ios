@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "bank_icon_suntrust@3x.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

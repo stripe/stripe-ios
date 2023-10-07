@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "stp_bank_fpx_ambank.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

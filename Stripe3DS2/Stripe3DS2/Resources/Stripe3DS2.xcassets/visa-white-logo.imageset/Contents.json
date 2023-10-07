@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "visa-white-logo.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

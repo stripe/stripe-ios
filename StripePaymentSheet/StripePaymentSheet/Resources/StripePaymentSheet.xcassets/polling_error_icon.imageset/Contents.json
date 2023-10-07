@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "polling_error_icon@3x.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

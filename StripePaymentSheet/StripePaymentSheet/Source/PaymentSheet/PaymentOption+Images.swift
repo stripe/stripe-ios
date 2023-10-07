@@ -192,13 +192,6 @@ extension STPPaymentMethodType {
             return UIImage()
         }
 
-        let overrideUserInterfaceStyle: UIUserInterfaceStyle
-        // payment method type icons are light/dark agnostic except PayPal
-        if self == .payPal {
-            overrideUserInterfaceStyle = forDarkBackground ? .dark : .light
-        } else {
-            overrideUserInterfaceStyle = .light
-        }
-        return image.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+        return image.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
     }
 }

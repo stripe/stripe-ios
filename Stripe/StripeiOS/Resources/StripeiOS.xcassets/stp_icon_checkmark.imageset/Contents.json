@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "stp_icon_checkmark.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
