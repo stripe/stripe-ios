@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "icon_chevron_left_standalone@3x.png",
+      "filename" : "chevronLeft.svg",
       "idiom" : "universal"
     }
   ],
