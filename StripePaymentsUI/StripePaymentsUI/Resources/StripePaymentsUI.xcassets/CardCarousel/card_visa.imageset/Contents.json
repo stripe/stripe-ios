@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "card_visa@3x.png",
+      "filename" : "visa_light.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "visa_dark.pdf",
       "idiom" : "universal"
     }
   ],

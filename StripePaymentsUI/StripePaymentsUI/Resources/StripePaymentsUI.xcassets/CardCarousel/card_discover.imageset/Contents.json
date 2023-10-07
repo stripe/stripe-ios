@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "card_discover@3x.png",
+      "filename" : "discover_light.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "discover_dark.pdf",
       "idiom" : "universal"
     }
   ],

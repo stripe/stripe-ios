@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "card_unionpay@3x.png",
+      "filename" : "unionpay_light.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "unionpay_dark.pdf",
       "idiom" : "universal"
     }
   ],

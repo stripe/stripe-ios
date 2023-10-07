@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "card_unknown@3x.png",
+      "filename" : "light.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "dark.pdf",
       "idiom" : "universal"
     }
   ],

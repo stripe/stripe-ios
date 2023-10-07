@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "card_mastercard@3x.png",
+      "filename" : "mastercard_light.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "mastercard_dark.pdf",
       "idiom" : "universal"
     }
   ],
