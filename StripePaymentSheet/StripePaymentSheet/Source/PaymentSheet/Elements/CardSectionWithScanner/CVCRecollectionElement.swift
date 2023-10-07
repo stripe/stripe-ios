@@ -26,7 +26,7 @@ final class CVCRecollectionElement: Element {
 
     let defaultValues: DefaultValues
 
-    lazy var cardBrand: STPCardBrand = .unknown
+    var cardBrand: STPCardBrand = .unknown
 
     lazy var cvcElementConfiguration: TextFieldElement.CVCConfiguration = {
         return TextFieldElement.CVCConfiguration(defaultValue: defaultValues.cvc) { [weak self] in
@@ -84,9 +84,11 @@ final class CVCRecollectionElement: Element {
 
     init(
         defaultValues: DefaultValues = .init(),
+        cardBrand: STPCardBrand,
         theme: ElementsUITheme = .default
     ) {
         self.theme = theme
+        self.cardBrand = cardBrand
         self.defaultValues = defaultValues
         cvcSection.delegate = self
     }

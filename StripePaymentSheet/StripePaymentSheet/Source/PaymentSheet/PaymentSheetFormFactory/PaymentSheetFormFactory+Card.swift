@@ -101,7 +101,7 @@ extension PaymentSheetFormFactory {
             return cardFormElement
         }
     }
-    func makeCardCVCCollection() -> PaymentMethodElement {
-        return CVCRecollectionElement()
+    func makeCardCVCCollection(cardBrand: STPCardBrand = .unknown) -> PaymentMethodElement {
+        return CVCRecollectionElement(cardBrand: cardBrand)
     }
 }

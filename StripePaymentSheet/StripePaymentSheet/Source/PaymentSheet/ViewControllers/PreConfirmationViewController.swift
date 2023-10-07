@@ -11,7 +11,6 @@ import Foundation
 import UIKit
 
 /// For internal SDK use only
-//@objc(STP_Internal_PaymentSheetFlowControllerViewController)
 class PreConfirmationViewController: UIViewController {
 
     let onCompletion: ((IntentConfirmParams?) -> Void)
@@ -86,9 +85,7 @@ class PreConfirmationViewController: UIViewController {
             headerLabel,
             selectedCardInformationView,
             paymentContainerView,
-//            errorLabel,
             confirmButton,
-//            bottomNoticeTextField,
         ])
         stackView.bringSubviewToFront(headerLabel)
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins

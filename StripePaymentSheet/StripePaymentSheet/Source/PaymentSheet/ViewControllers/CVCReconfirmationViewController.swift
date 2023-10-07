@@ -26,7 +26,7 @@ class CVCReconfirmationViewController: UIViewController {
             configuration: .paymentSheet(configuration),
             paymentMethod: .card,
             previousCustomerInput: nil)
-        let cvcCollectionElement = formElement.makeCardCVCCollection()
+        let cvcCollectionElement = formElement.makeCardCVCCollection(cardBrand: brand)
         cvcCollectionElement.delegate = self
         return cvcCollectionElement
     }()
@@ -47,6 +47,7 @@ class CVCReconfirmationViewController: UIViewController {
     // MARK: - Internal Properties
     private let configuration: PaymentSheet.Configuration
     private let intent: Intent
+    private let brand: STPCardBrand
 
     var paymentOptionIntentConfirmParams: IntentConfirmParams? {
         //TODO: Dont hard cdoe this
@@ -68,9 +69,8 @@ class CVCReconfirmationViewController: UIViewController {
     ) {
         self.configuration = configuration
         self.intent = intent
+        self.brand = brand
         super.init(nibName: nil, bundle: nil)
-        updateUI()
-        updateBrand(brand: brand)
     }
 
     // MARK: - UIViewController
@@ -115,7 +115,7 @@ class CVCReconfirmationViewController: UIViewController {
         }
     }
 
-    private func updateBrand(brand: STPCardBrand) {
+    private func updateBrand(brand: STPCardBrand, shouldUpdate: Bool) {
         if let cvcRecollectionElement = cvcFormElement as? CVCRecollectionElement {
             cvcRecollectionElement.didUpdateCardBrand(updatedCardBrand: brand)
         }
