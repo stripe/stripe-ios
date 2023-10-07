@@ -13,31 +13,27 @@ import UIKit
 @objc(STP_Internal_DynamicImageView)
 @_spi(STP) public class DynamicImageView: UIImageView {
     private let pairedColor: UIColor
-    private let darkImage: UIImage?
-    private let lightImage: UIImage?
+    private let dynamicImage: UIImage?
 
     private func makeImage(for traitCollection: UITraitCollection) -> UIImage? {
-        return pairedColor.resolvedColor(with: traitCollection).isDark
-            ? darkImage ?? lightImage
-            : lightImage ?? darkImage
+        let userInterfaceStyle: UIUserInterfaceStyle = pairedColor.resolvedColor(with: traitCollection).isDark ? .dark : .light
+        let traitCollection = UITraitCollection(userInterfaceStyle: userInterfaceStyle)
+        return image?.withConfiguration(traitCollection.imageConfiguration)
     }
 
     /// Initializes a `DynamicImageView`.
     ///
     /// - Parameters:
-    ///   - lightImage: The image to show when the `pairedColor` is light.
-    ///   - darkImage: The image to show when the `pairedColor` is dark.
+    ///   - image: A UIImage with light and dark variants.
     ///   - pairedColor: The color brightness to monitor. This should be a
     ///     `UIColor` initialized with `init(dynamicProvider:)`, otherwise the image will only be
     ///     choosen on initialization but won't change dynamically.
     public init(
-        lightImage: UIImage? = nil,
-        darkImage: UIImage? = nil,
+        dynamicImage: UIImage? = nil,
         pairedColor: UIColor
     ) {
-        assert(lightImage != nil || darkImage != nil)
-        self.lightImage = lightImage
-        self.darkImage = darkImage
+        assert(dynamicImage != nil)
+        self.dynamicImage = dynamicImage
         self.pairedColor = pairedColor
         // init(frame:) doesn't work for some reason and we cannot access `currentImage` yet,
         // so call init with a nil image and then set the right image.

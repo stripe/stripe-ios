@@ -195,18 +195,8 @@ extension TextFieldElement {
             return .valid
         }
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
-            let logoName = cardBrandProvider() == .amex
-                ? "card_cvc_amex_updated_icon"
-                : "card_cvc_updated_icon"
             return DynamicImageView(
-                lightImage: STPImageLibrary.safeImageNamed(
-                    logoName,
-                    darkMode: true
-                ),
-                darkImage: STPImageLibrary.safeImageNamed(
-                    logoName,
-                    darkMode: false
-                ),
+                dynamicImage: STPImageLibrary.cvcImage(for: cardBrandProvider()),
                 pairedColor: theme.colors.textFieldText
             )
         }
