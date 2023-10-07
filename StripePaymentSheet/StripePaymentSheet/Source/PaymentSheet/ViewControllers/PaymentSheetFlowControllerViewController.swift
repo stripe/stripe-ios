@@ -436,6 +436,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             configureEditSavedPaymentMethodsButton()
             updateUI()
         }
+        savedPaymentOptionsViewController.notifyIsDismissing()
     }
 }
 

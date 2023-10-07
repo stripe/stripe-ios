@@ -93,6 +93,11 @@ final class CVCRecollectionElement: Element {
         cvcSection.delegate = self
     }
 
+    func cleanupOnDismissal() {
+        if case .invalid = cvcElement.validationState {
+            cvcElement.setText("")
+        }
+    }
 }
 
 extension CVCRecollectionElement: ElementDelegate {
