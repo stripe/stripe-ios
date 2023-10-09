@@ -190,11 +190,11 @@ final class CardSection: ContainerElement {
                 cardBrandDropDown.update(items: DropdownFieldElement.items(from: fetchedCardBrands, theme: self?.theme ?? .default))
 
                 // If we didn't previously have brands but now have them select based on merchant preference
-                // Select the first brand in the fetched brands that
+                // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks
                 if !hadBrands,
                    let preferredNetworks = self?.preferredNetworks,
                    let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
-                   let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == "\(brandToSelect.rawValue)" }){
+                   let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == "\(brandToSelect.rawValue)" }) {
                     cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
                 }
 

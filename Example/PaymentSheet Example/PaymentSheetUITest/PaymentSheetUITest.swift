@@ -896,7 +896,13 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 2))
 
         // Type full card number to start fetching card brands again
-        try fillCardData(app, cardNumber: "4000002500001001")
+        numberField.forceTapWhenHittableInTestCase(self)
+        app.typeText("4000002500001001")
+        app.toolbars.buttons["Done"].tap() // CBC picker toolbar's "Done" button
+        app.typeText("1228") // Expiry
+        app.typeText("123") // CVC
+        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled
         XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistenceAndTap(timeout: 5))
@@ -960,7 +966,13 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 2))
 
         // Type full card number to start fetching card brands again
-        try fillCardData(app, cardNumber: "4000002500001001")
+        numberField.forceTapWhenHittableInTestCase(self)
+        app.typeText("4000002500001001")
+        app.toolbars.buttons["Done"].tap() // CBC picker toolbar's "Done" button
+        app.typeText("1228") // Expiry
+        app.typeText("123") // CVC
+        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled and we should auto select Visa
         XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))

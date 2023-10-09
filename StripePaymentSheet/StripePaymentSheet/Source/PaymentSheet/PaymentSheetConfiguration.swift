@@ -152,7 +152,13 @@ extension PaymentSheet {
 
         /// The list of preferred networks that should be used to process payments made with a co-branded card.
         /// This value will only be used if your user hasn't selected a network themselves.
-        public var preferredNetworks: [STPCardBrand]?
+        public var preferredNetworks: [STPCardBrand]? {
+            didSet {
+                guard let preferredNetworks = preferredNetworks else { return }
+                assert(Set<STPCardBrand>(preferredNetworks).count == preferredNetworks.count,
+                       "preferredNetworks must not contain any duplicate card brands")
+            }
+        }
 
         /// Initializes a Configuration with default values
         public init() {}
