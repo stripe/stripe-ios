@@ -898,7 +898,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Type full card number to start fetching card brands again
         numberField.forceTapWhenHittableInTestCase(self)
         app.typeText("4000002500001001")
-        app.toolbars.buttons["Done"].tap() // CBC picker toolbar's "Done" button
+        app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
         app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
@@ -968,7 +968,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Type full card number to start fetching card brands again
         numberField.forceTapWhenHittableInTestCase(self)
         app.typeText("4000002500001001")
-        app.toolbars.buttons["Done"].tap() // CBC picker toolbar's "Done" button
+        app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
         app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
