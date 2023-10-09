@@ -86,6 +86,8 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   carthage-install-test:
     steps:
     - fastlane@3:
@@ -96,6 +98,8 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   check-docs:
     steps:
     - script@1:
@@ -483,6 +487,8 @@ workflows:
         title: pod lib lint
     before_run:
     - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   prep_all:
     steps:
     - xcode-start-simulator@0:
