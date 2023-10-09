@@ -47,7 +47,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     /// SDK is capable of using.
     ///
     /// - Note: Update this value when a new API version is ready for use in production.
-    static let productionApiVersion: Int = 4
+    static let productionApiVersion: Int = 5
 
     var betas: Set<String> {
         return ["identity_client_api=v\(apiVersion)"]
