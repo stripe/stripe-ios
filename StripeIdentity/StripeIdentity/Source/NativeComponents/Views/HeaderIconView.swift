@@ -28,12 +28,13 @@ import UIKit
 // +------------------------+
 class HeaderIconView: UIView {
     struct Styling {
+        static let largeBaseIconLength: CGFloat = 64
+        static let largeCornerRadius: CGFloat = 16
+
         static let baseIconLength: CGFloat = 32
         static let cornerRadius: CGFloat = 8
-        static let heightConstraint: CGFloat = 32
 
         static let plusIconTintColor: UIColor = .label
-        static let plusIconLength: CGFloat = 16
 
         static let shadowConfig = ShadowConfiguration(
             shadowColor: .black,
@@ -57,14 +58,15 @@ class HeaderIconView: UIView {
         let iconImageContentMode: UIView.ContentMode
         let iconTintColor: UIColor?
         let shouldIconBackgroundMatchTintColor: Bool
+        var useLargeIcon: Bool = false
 
-        func baseIconViewModel(tintColor: UIColor?) -> ShadowedCorneredImageView.ViewModel {
+        func baseIconViewModel(useLargeIcon: Bool, tintColor: UIColor?) -> ShadowedCorneredImageView.ViewModel {
             return .init(
                 image: iconImage,
                 imageContentMode: iconImageContentMode,
                 imageTintColor: iconTintColor,
                 backgroundColor: shouldIconBackgroundMatchTintColor ? tintColor : nil,
-                cornerRadius: Styling.cornerRadius,
+                cornerRadius: useLargeIcon ? Styling.largeCornerRadius : Styling.cornerRadius,
                 shadowConfiguration: Styling.shadowConfig
             )
         }
@@ -74,13 +76,15 @@ class HeaderIconView: UIView {
             iconImage: UIImage,
             iconImageContentMode: UIView.ContentMode,
             iconTintColor: UIColor? = nil,
-            shouldIconBackgroundMatchTintColor: Bool = false
+            shouldIconBackgroundMatchTintColor: Bool = false,
+            useLargeIcon: Bool = false
         ) {
             self.iconType = iconType
             self.iconImage = iconImage
             self.iconImageContentMode = iconImageContentMode
             self.iconTintColor = iconTintColor
             self.shouldIconBackgroundMatchTintColor = shouldIconBackgroundMatchTintColor
+            self.useLargeIcon = useLargeIcon
         }
     }
 
@@ -141,7 +145,7 @@ class HeaderIconView: UIView {
         // Only cache the view model if necessary for updating background color
         self.viewModel = viewModel.shouldIconBackgroundMatchTintColor ? viewModel : nil
 
-        baseIconView.configure(viewModel: viewModel.baseIconViewModel(tintColor: tintColor))
+        baseIconView.configure(viewModel: viewModel.baseIconViewModel(useLargeIcon: viewModel.useLargeIcon, tintColor: tintColor))
 
         switch viewModel.iconType {
         case .brand:
@@ -151,6 +155,8 @@ class HeaderIconView: UIView {
             plusIconView.isHidden = true
             stripeIconView.isHidden = true
         }
+
+        updateIconSize(useLargeIcon: viewModel.useLargeIcon)
     }
 
     // MARK: - UIView
@@ -162,7 +168,7 @@ class HeaderIconView: UIView {
             return
         }
 
-        baseIconView.configure(viewModel: viewModel.baseIconViewModel(tintColor: tintColor))
+        baseIconView.configure(viewModel: viewModel.baseIconViewModel(useLargeIcon: viewModel.useLargeIcon, tintColor: tintColor))
     }
 }
 
@@ -178,14 +184,6 @@ extension HeaderIconView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            // Set the base icon view's static square height and width
-            baseIconView.heightAnchor.constraint(equalToConstant: Styling.baseIconLength),
-            baseIconView.widthAnchor.constraint(equalToConstant: Styling.baseIconLength),
-
-            // Set the stripe icon view's static square height and width
-            stripeIconView.heightAnchor.constraint(equalToConstant: Styling.baseIconLength),
-            stripeIconView.widthAnchor.constraint(equalToConstant: Styling.baseIconLength),
-
             // The stack view should have some padding for the shadow to show
             // and be aligned to the center.
             stackView.topAnchor.constraint(equalTo: topAnchor, constant: Styling.stackViewPadding),
@@ -194,6 +192,19 @@ extension HeaderIconView {
                 constant: -Styling.stackViewPadding
             ),
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+        ])
+    }
+
+    fileprivate func updateIconSize(useLargeIcon: Bool) {
+        let iconLength = useLargeIcon ? Styling.largeBaseIconLength : Styling.baseIconLength
+        NSLayoutConstraint.activate([
+            // Set the base icon view's static square height and width
+            baseIconView.heightAnchor.constraint(equalToConstant: iconLength),
+            baseIconView.widthAnchor.constraint(equalToConstant: iconLength),
+
+            // Set the stripe icon view's static square height and width
+            stripeIconView.heightAnchor.constraint(equalToConstant: iconLength),
+            stripeIconView.widthAnchor.constraint(equalToConstant: iconLength),
         ])
     }
 }
