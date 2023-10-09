@@ -1,0 +1,797 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		002AB37F1CEB2A671FE25987 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		07B25EDF1B807A9AFE1F7AEB /* BackendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F704B5A25E6D5269C95964 /* BackendModel.swift */; };
+		0CFBEED684F12B0096153EF9 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1D58D3A6F04B068A53B27F73 /* ApplePayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EE0AFE515326ADBB9D63E4 /* ApplePayModel.swift */; };
+		33BB12A5897E5783DC05DEFD /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */; };
+		3A2EE294E127268841000FCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3932D439D7C2F9F7D1C5812A /* Assets.xcassets */; };
+		543195F43BC3FEF740FB44DF /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78B3861C50B56331151BCE15 /* ApplePayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EE0AFE515326ADBB9D63E4 /* ApplePayModel.swift */; };
+		7A29727534280B91C0B9BDF7 /* AppClipExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DBFFFF533A057CB91DD770 /* AppClipExampleApp.swift */; };
+		80A0A95E55A4364ACD8BCDFB /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8CFEDE40D5937726D3558808 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */; };
+		92F2B9E0E01686BAC7805F4F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF973233C9E71C139B25674 /* ContentView.swift */; };
+		9DA0A61B181DE220C293A5A0 /* PaymentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D5AB492BDDD29A2B7B3EC9 /* PaymentButton.swift */; };
+		A867EF1F2FE7DCAFA1C6CBB0 /* BackendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F704B5A25E6D5269C95964 /* BackendModel.swift */; };
+		AC41799891BB47F756B5C829 /* PaymentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D5AB492BDDD29A2B7B3EC9 /* PaymentButton.swift */; };
+		BCDBDA39BBF54392CF758AE9 /* AppClipExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DBFFFF533A057CB91DD770 /* AppClipExampleApp.swift */; };
+		BFC82EC4ED5C824458015B96 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7785865DF939EC7FE00923B3 /* Preview Assets.xcassets */; };
+		C25C8C8EFF4AD32716D7D98D /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */; };
+		D9F9006AAA76C41F44315600 /* AppClipExampleClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 8FDB2A87374049BA75496715 /* AppClipExampleClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E1F51EB51C34EDDF0CE0F005 /* AppClip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73241689160B1EC3894FDD6 /* AppClip.framework */; };
+		E31EBD365B001C9C59401F55 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */; };
+		E86C959646005CCBD250D387 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF973233C9E71C139B25674 /* ContentView.swift */; };
+		EF281549070AAC9F91526610 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51480E1BF51E8CB6C70CA5F1 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		174E3AE2B4F090D0BE74A66A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADA3A7DA56C705A650B25A1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA48939682BA660D1EF1D35D;
+			remoteInfo = AppClipExampleClip;
+		};
+		796A6CE57C07EF00DE01B050 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADA3A7DA56C705A650B25A1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5172E870AD36F11AEEE0C2B2;
+			remoteInfo = AppClipExample;
+		};
+		B3173E1A9EE52D3CFB896048 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADA3A7DA56C705A650B25A1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA48939682BA660D1EF1D35D;
+			remoteInfo = AppClipExampleClip;
+		};
+		E32B8A95E89CA9A069B92998 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADA3A7DA56C705A650B25A1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA48939682BA660D1EF1D35D;
+			remoteInfo = AppClipExampleClip;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2ACD435BD524FB2FD99BDD80 /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				D9F9006AAA76C41F44315600 /* AppClipExampleClip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		59705D5537236979178F004A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCA489AC35B86F942D620A1B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C42089162A0F570E200D861D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4C5952DE2B62C4594DD0580 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				543195F43BC3FEF740FB44DF /* StripeApplePay.framework in Embed Frameworks */,
+				0CFBEED684F12B0096153EF9 /* StripeCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F78305C7B13BADF74B632714 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				80A0A95E55A4364ACD8BCDFB /* StripeApplePay.framework in Embed Frameworks */,
+				002AB37F1CEB2A671FE25987 /* StripeCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0A6DF2A677294E6EB70CF000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		17F704B5A25E6D5269C95964 /* BackendModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendModel.swift; sourceTree = "<group>"; };
+		29CCF0C0D077116684FFD209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		30E442F06D23668D501C8C8E /* AppClipExampleTests-iOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleTests-iOS-Release.xcconfig"; sourceTree = "<group>"; };
+		36DBFFFF533A057CB91DD770 /* AppClipExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExampleApp.swift; sourceTree = "<group>"; };
+		3932D439D7C2F9F7D1C5812A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		443909E7DA6C80AD83EDABDB /* AppClipExampleClipUITests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClipUITests-Debug.xcconfig"; sourceTree = "<group>"; };
+		4C8F6C7B0D0923B1BA540BC3 /* AppClipExampleClipTests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClipTests-Release.xcconfig"; sourceTree = "<group>"; };
+		51480E1BF51E8CB6C70CA5F1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5222A08DC440D011B4E85F8C /* AppClipExampleClipUITests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClipUITests-Release.xcconfig"; sourceTree = "<group>"; };
+		5F447775F516EDF85E4EEC0E /* AppClipExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClipExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		67DB18A9B2F0B274C7D864D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		70027B2F6D7A3AEFAC760B32 /* AppClipExampleClipTests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClipTests-Debug.xcconfig"; sourceTree = "<group>"; };
+		756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7785865DF939EC7FE00923B3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		79D5AB492BDDD29A2B7B3EC9 /* PaymentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentButton.swift; sourceTree = "<group>"; };
+		7B21218CBEB7B215C997B44C /* AppClipExampleTestsiOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppClipExampleTestsiOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C0E2F373CE5D7C9FA554911 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		86EE0AFE515326ADBB9D63E4 /* ApplePayModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePayModel.swift; sourceTree = "<group>"; };
+		8724AD2252297C4EFF084A7E /* AppClipExampleClipTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppClipExampleClipTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8FDB2A87374049BA75496715 /* AppClipExampleClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClipExampleClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AEAACD6553AC5D9449CE62BA /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		AF4954F9DF7D3F13773F8C09 /* AppClipExampleClip-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClip-Debug.xcconfig"; sourceTree = "<group>"; };
+		BCE8F6EBFD3B9A5C29F4B9B0 /* AppClipExampleClipUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppClipExampleClipUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BEB85BD9F60559775AA470A2 /* AppClipExampleTests-iOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleTests-iOS-Debug.xcconfig"; sourceTree = "<group>"; };
+		BEBA7304F30731960BFED590 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE6C5CDB954EA154B893DF04 /* AppClipExampleClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppClipExampleClip.entitlements; sourceTree = "<group>"; };
+		D0E86BA32430563BF29E96BC /* AppClipExample (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "AppClipExample (iOS).entitlements"; sourceTree = "<group>"; };
+		D73241689160B1EC3894FDD6 /* AppClip.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppClip.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AppClip.framework; sourceTree = DEVELOPER_DIR; };
+		DD91FC958226D99379B2DEFB /* AppClipExample-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExample-Debug.xcconfig"; sourceTree = "<group>"; };
+		DEF973233C9E71C139B25674 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E8886339F9F82BE463762B03 /* AppClipExample-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExample-Release.xcconfig"; sourceTree = "<group>"; };
+		F22AD92C29237B736ECC75B3 /* AppClipExampleClip-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClip-Release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3F5FA91DDAD84264F2E9DBE1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C25C8C8EFF4AD32716D7D98D /* StripeApplePay.framework in Frameworks */,
+				8CFEDE40D5937726D3558808 /* StripeCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB112237D66DA2CEDA56DA7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE4348528B24A29FECA19670 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1F51EB51C34EDDF0CE0F005 /* AppClip.framework in Frameworks */,
+				E31EBD365B001C9C59401F55 /* StripeApplePay.framework in Frameworks */,
+				33BB12A5897E5783DC05DEFD /* StripeCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F475340F78A3B48A0F7D5E33 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC9D4BE2265C79B886243377 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		147102A5DFEB955422AA2EE6 = {
+			isa = PBXGroup;
+			children = (
+				4B185B1F44EE5F4D5BC5EFD5 /* Project */,
+				A39ABB2C7FB01B17AA563E7C /* Frameworks */,
+				B6570EB574B6F847FEABCEB7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2B6415E0B774FA8AA69E4E13 /* AppClipExampleClipUITests */ = {
+			isa = PBXGroup;
+			children = (
+				67DB18A9B2F0B274C7D864D8 /* Info.plist */,
+			);
+			path = AppClipExampleClipUITests;
+			sourceTree = "<group>";
+		};
+		2F785AAB04AFD3153B98C9E0 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				DD91FC958226D99379B2DEFB /* AppClipExample-Debug.xcconfig */,
+				E8886339F9F82BE463762B03 /* AppClipExample-Release.xcconfig */,
+				AF4954F9DF7D3F13773F8C09 /* AppClipExampleClip-Debug.xcconfig */,
+				F22AD92C29237B736ECC75B3 /* AppClipExampleClip-Release.xcconfig */,
+				70027B2F6D7A3AEFAC760B32 /* AppClipExampleClipTests-Debug.xcconfig */,
+				4C8F6C7B0D0923B1BA540BC3 /* AppClipExampleClipTests-Release.xcconfig */,
+				443909E7DA6C80AD83EDABDB /* AppClipExampleClipUITests-Debug.xcconfig */,
+				5222A08DC440D011B4E85F8C /* AppClipExampleClipUITests-Release.xcconfig */,
+				BEB85BD9F60559775AA470A2 /* AppClipExampleTests-iOS-Debug.xcconfig */,
+				30E442F06D23668D501C8C8E /* AppClipExampleTests-iOS-Release.xcconfig */,
+			);
+			path = BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		4B185B1F44EE5F4D5BC5EFD5 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				9D49AB58947EF99352A2E37C /* AppClipExampleClip */,
+				CFA793D11B793A3A11EDE704 /* AppClipExampleClipTests */,
+				2B6415E0B774FA8AA69E4E13 /* AppClipExampleClipUITests */,
+				2F785AAB04AFD3153B98C9E0 /* BuildConfigurations */,
+				D2B6724F7E4D645A6E4791CE /* BuildConfigurations */,
+				B5FD68C638102AE2EC771448 /* Shared */,
+				FF5254A15D574D3330F91F6D /* Tests iOS */,
+				D0E86BA32430563BF29E96BC /* AppClipExample (iOS).entitlements */,
+				29CCF0C0D077116684FFD209 /* Info.plist */,
+			);
+			name = Project;
+			sourceTree = "<group>";
+		};
+		9D49AB58947EF99352A2E37C /* AppClipExampleClip */ = {
+			isa = PBXGroup;
+			children = (
+				A2AB7D7B714456D04346E2AD /* Preview Content */,
+				CE6C5CDB954EA154B893DF04 /* AppClipExampleClip.entitlements */,
+				51480E1BF51E8CB6C70CA5F1 /* Assets.xcassets */,
+			);
+			path = AppClipExampleClip;
+			sourceTree = "<group>";
+		};
+		A2AB7D7B714456D04346E2AD /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				7785865DF939EC7FE00923B3 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		A39ABB2C7FB01B17AA563E7C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D73241689160B1EC3894FDD6 /* AppClip.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B5FD68C638102AE2EC771448 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				36DBFFFF533A057CB91DD770 /* AppClipExampleApp.swift */,
+				86EE0AFE515326ADBB9D63E4 /* ApplePayModel.swift */,
+				3932D439D7C2F9F7D1C5812A /* Assets.xcassets */,
+				17F704B5A25E6D5269C95964 /* BackendModel.swift */,
+				DEF973233C9E71C139B25674 /* ContentView.swift */,
+				79D5AB492BDDD29A2B7B3EC9 /* PaymentButton.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		B6570EB574B6F847FEABCEB7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5F447775F516EDF85E4EEC0E /* AppClipExample.app */,
+				8FDB2A87374049BA75496715 /* AppClipExampleClip.app */,
+				8724AD2252297C4EFF084A7E /* AppClipExampleClipTests.xctest */,
+				BCE8F6EBFD3B9A5C29F4B9B0 /* AppClipExampleClipUITests.xctest */,
+				7B21218CBEB7B215C997B44C /* AppClipExampleTestsiOS.xctest */,
+				C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */,
+				756E5D5CB2AE47AB9796F9A8 /* StripeCore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CFA793D11B793A3A11EDE704 /* AppClipExampleClipTests */ = {
+			isa = PBXGroup;
+			children = (
+				0A6DF2A677294E6EB70CF000 /* Info.plist */,
+			);
+			path = AppClipExampleClipTests;
+			sourceTree = "<group>";
+		};
+		D2B6724F7E4D645A6E4791CE /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				AEAACD6553AC5D9449CE62BA /* Project-Debug.xcconfig */,
+				BEBA7304F30731960BFED590 /* Project-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../../BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		FF5254A15D574D3330F91F6D /* Tests iOS */ = {
+			isa = PBXGroup;
+			children = (
+				7C0E2F373CE5D7C9FA554911 /* Info.plist */,
+			);
+			path = "Tests iOS";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5172E870AD36F11AEEE0C2B2 /* AppClipExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4DBCFF14216A2ECF03A62354 /* Build configuration list for PBXNativeTarget "AppClipExample" */;
+			buildPhases = (
+				B1B2BF0A585E1BC896A077EC /* Sources */,
+				C3B3D6248DAD2847B4E560C4 /* Resources */,
+				2ACD435BD524FB2FD99BDD80 /* Embed App Clips */,
+				F78305C7B13BADF74B632714 /* Embed Frameworks */,
+				3F5FA91DDAD84264F2E9DBE1 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9FD5650323F0DA6DEAA326F4 /* PBXTargetDependency */,
+			);
+			name = AppClipExample;
+			productName = AppClipExample;
+			productReference = 5F447775F516EDF85E4EEC0E /* AppClipExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BD8DCEDEBC31D1D4301EC40D /* AppClipExampleClipTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3F87DF68DA89D981D56AA445 /* Build configuration list for PBXNativeTarget "AppClipExampleClipTests" */;
+			buildPhases = (
+				F81164E6F39A6E1E11D35C26 /* Sources */,
+				4CD184CBBA68CDB6D89539EE /* Resources */,
+				59705D5537236979178F004A /* Embed Frameworks */,
+				FC9D4BE2265C79B886243377 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7D4E5F6796A701178C04DC74 /* PBXTargetDependency */,
+			);
+			name = AppClipExampleClipTests;
+			productName = AppClipExampleClipTests;
+			productReference = 8724AD2252297C4EFF084A7E /* AppClipExampleClipTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CBC19CEADF0880F5CA6B9A7F /* AppClipExampleClipUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 974A2D2C20EFB8201F0C43A0 /* Build configuration list for PBXNativeTarget "AppClipExampleClipUITests" */;
+			buildPhases = (
+				6C1E0A45C4B30C7200C6B2F0 /* Sources */,
+				7C823DC59EE6D1F36D908B87 /* Resources */,
+				BCA489AC35B86F942D620A1B /* Embed Frameworks */,
+				F475340F78A3B48A0F7D5E33 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5CD043C1E3DC493D40501124 /* PBXTargetDependency */,
+			);
+			name = AppClipExampleClipUITests;
+			productName = AppClipExampleClipUITests;
+			productReference = BCE8F6EBFD3B9A5C29F4B9B0 /* AppClipExampleClipUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		EA48939682BA660D1EF1D35D /* AppClipExampleClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D6A4EFA9A9595789940DB992 /* Build configuration list for PBXNativeTarget "AppClipExampleClip" */;
+			buildPhases = (
+				858E0B6058F9DA70F79517AA /* Sources */,
+				53F66C206AB5BAB3A60602F1 /* Resources */,
+				F4C5952DE2B62C4594DD0580 /* Embed Frameworks */,
+				DE4348528B24A29FECA19670 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AppClipExampleClip;
+			productName = AppClipExampleClip;
+			productReference = 8FDB2A87374049BA75496715 /* AppClipExampleClip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
+		};
+		F2EAC263F068AD2E112F7309 /* AppClipExampleTests iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 02099519327A276EE9AFFFB3 /* Build configuration list for PBXNativeTarget "AppClipExampleTests iOS" */;
+			buildPhases = (
+				5582A106C30DF855FA343D1B /* Sources */,
+				CE04CB4C005142B53121F0D2 /* Resources */,
+				C42089162A0F570E200D861D /* Embed Frameworks */,
+				CB112237D66DA2CEDA56DA7E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7FAEF71D184BCE6EB37670F7 /* PBXTargetDependency */,
+			);
+			name = "AppClipExampleTests iOS";
+			productName = AppClipExampleTestsiOS;
+			productReference = 7B21218CBEB7B215C997B44C /* AppClipExampleTestsiOS.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DADA3A7DA56C705A650B25A1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				TargetAttributes = {
+					BD8DCEDEBC31D1D4301EC40D = {
+						TestTargetID = EA48939682BA660D1EF1D35D;
+					};
+					CBC19CEADF0880F5CA6B9A7F = {
+						TestTargetID = EA48939682BA660D1EF1D35D;
+					};
+					F2EAC263F068AD2E112F7309 = {
+						TestTargetID = 5172E870AD36F11AEEE0C2B2;
+					};
+				};
+			};
+			buildConfigurationList = 97FD91B7B7DB944745270C85 /* Build configuration list for PBXProject "AppClipExample" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 147102A5DFEB955422AA2EE6;
+			productRefGroup = B6570EB574B6F847FEABCEB7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5172E870AD36F11AEEE0C2B2 /* AppClipExample */,
+				F2EAC263F068AD2E112F7309 /* AppClipExampleTests iOS */,
+				EA48939682BA660D1EF1D35D /* AppClipExampleClip */,
+				BD8DCEDEBC31D1D4301EC40D /* AppClipExampleClipTests */,
+				CBC19CEADF0880F5CA6B9A7F /* AppClipExampleClipUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4CD184CBBA68CDB6D89539EE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53F66C206AB5BAB3A60602F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF281549070AAC9F91526610 /* Assets.xcassets in Resources */,
+				BFC82EC4ED5C824458015B96 /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C823DC59EE6D1F36D908B87 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C3B3D6248DAD2847B4E560C4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A2EE294E127268841000FCB /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE04CB4C005142B53121F0D2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5582A106C30DF855FA343D1B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6C1E0A45C4B30C7200C6B2F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		858E0B6058F9DA70F79517AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCDBDA39BBF54392CF758AE9 /* AppClipExampleApp.swift in Sources */,
+				1D58D3A6F04B068A53B27F73 /* ApplePayModel.swift in Sources */,
+				07B25EDF1B807A9AFE1F7AEB /* BackendModel.swift in Sources */,
+				E86C959646005CCBD250D387 /* ContentView.swift in Sources */,
+				9DA0A61B181DE220C293A5A0 /* PaymentButton.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B1B2BF0A585E1BC896A077EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A29727534280B91C0B9BDF7 /* AppClipExampleApp.swift in Sources */,
+				78B3861C50B56331151BCE15 /* ApplePayModel.swift in Sources */,
+				A867EF1F2FE7DCAFA1C6CBB0 /* BackendModel.swift in Sources */,
+				92F2B9E0E01686BAC7805F4F /* ContentView.swift in Sources */,
+				AC41799891BB47F756B5C829 /* PaymentButton.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F81164E6F39A6E1E11D35C26 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5CD043C1E3DC493D40501124 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AppClipExampleClip;
+			target = EA48939682BA660D1EF1D35D /* AppClipExampleClip */;
+			targetProxy = 174E3AE2B4F090D0BE74A66A /* PBXContainerItemProxy */;
+		};
+		7D4E5F6796A701178C04DC74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AppClipExampleClip;
+			target = EA48939682BA660D1EF1D35D /* AppClipExampleClip */;
+			targetProxy = E32B8A95E89CA9A069B92998 /* PBXContainerItemProxy */;
+		};
+		7FAEF71D184BCE6EB37670F7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AppClipExample;
+			target = 5172E870AD36F11AEEE0C2B2 /* AppClipExample */;
+			targetProxy = 796A6CE57C07EF00DE01B050 /* PBXContainerItemProxy */;
+		};
+		9FD5650323F0DA6DEAA326F4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AppClipExampleClip;
+			target = EA48939682BA660D1EF1D35D /* AppClipExampleClip */;
+			targetProxy = B3173E1A9EE52D3CFB896048 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0ED58EAF316CD792CC803378 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BEB85BD9F60559775AA470A2 /* AppClipExampleTests-iOS-Debug.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = "Tests iOS/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExampleTests;
+				PRODUCT_NAME = AppClipExampleTestsiOS;
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = AppClipExample;
+			};
+			name = Debug;
+		};
+		23245D2CA3740C808FDC8F4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AF4954F9DF7D3F13773F8C09 /* AppClipExampleClip-Debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExampleClip/AppClipExampleClip.entitlements";
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.Clip;
+				PRODUCT_NAME = AppClipExampleClip;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		68DC98EF24E45819B1842DCE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E8886339F9F82BE463762B03 /* AppClipExample-Release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExample (iOS).entitlements";
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample;
+				PRODUCT_NAME = AppClipExample;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		77931DBE2C5F85195651C039 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F22AD92C29237B736ECC75B3 /* AppClipExampleClip-Release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExampleClip/AppClipExampleClip.entitlements";
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.Clip;
+				PRODUCT_NAME = AppClipExampleClip;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		7F201C18ECC0D268147BD2C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 70027B2F6D7A3AEFAC760B32 /* AppClipExampleClipTests-Debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = AppClipExampleClipTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipTests;
+				PRODUCT_NAME = AppClipExampleClipTests;
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppClipExampleClip.app/AppClipExampleClip";
+				TEST_TARGET_NAME = AppClipExampleClip;
+			};
+			name = Debug;
+		};
+		8DF489E5B5371EA7586021F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD91FC958226D99379B2DEFB /* AppClipExample-Debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/AppClipExample (iOS).entitlements";
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample;
+				PRODUCT_NAME = AppClipExample;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		B7FB46363406913E975AAAB3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5222A08DC440D011B4E85F8C /* AppClipExampleClipUITests-Release.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = AppClipExampleClipUITests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipUITests;
+				PRODUCT_NAME = AppClipExampleClipUITests;
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = AppClipExampleClip;
+			};
+			name = Release;
+		};
+		C019DE1B92D9298B0D6F9EA5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C8F6C7B0D0923B1BA540BC3 /* AppClipExampleClipTests-Release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = AppClipExampleClipTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipTests;
+				PRODUCT_NAME = AppClipExampleClipTests;
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppClipExampleClip.app/AppClipExampleClip";
+				TEST_TARGET_NAME = AppClipExampleClip;
+			};
+			name = Release;
+		};
+		D4BD43E3E58D45A214635965 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BEBA7304F30731960BFED590 /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		E22368A713173FC0671925DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AEAACD6553AC5D9449CE62BA /* Project-Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		E505F83F7904A5E64CD2F3BA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 443909E7DA6C80AD83EDABDB /* AppClipExampleClipUITests-Debug.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = AppClipExampleClipUITests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExample.AppClipExampleClipUITests;
+				PRODUCT_NAME = AppClipExampleClipUITests;
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = AppClipExampleClip;
+			};
+			name = Debug;
+		};
+		E896108FF9FBFFC70FAE0F86 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 30E442F06D23668D501C8C8E /* AppClipExampleTests-iOS-Release.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = "Tests iOS/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.AppClipExampleTests;
+				PRODUCT_NAME = AppClipExampleTestsiOS;
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = AppClipExample;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		02099519327A276EE9AFFFB3 /* Build configuration list for PBXNativeTarget "AppClipExampleTests iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0ED58EAF316CD792CC803378 /* Debug */,
+				E896108FF9FBFFC70FAE0F86 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3F87DF68DA89D981D56AA445 /* Build configuration list for PBXNativeTarget "AppClipExampleClipTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7F201C18ECC0D268147BD2C2 /* Debug */,
+				C019DE1B92D9298B0D6F9EA5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4DBCFF14216A2ECF03A62354 /* Build configuration list for PBXNativeTarget "AppClipExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8DF489E5B5371EA7586021F6 /* Debug */,
+				68DC98EF24E45819B1842DCE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		974A2D2C20EFB8201F0C43A0 /* Build configuration list for PBXNativeTarget "AppClipExampleClipUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E505F83F7904A5E64CD2F3BA /* Debug */,
+				B7FB46363406913E975AAAB3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		97FD91B7B7DB944745270C85 /* Build configuration list for PBXProject "AppClipExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E22368A713173FC0671925DC /* Debug */,
+				D4BD43E3E58D45A214635965 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D6A4EFA9A9595789940DB992 /* Build configuration list for PBXNativeTarget "AppClipExampleClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				23245D2CA3740C808FDC8F4E /* Debug */,
+				77931DBE2C5F85195651C039 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DADA3A7DA56C705A650B25A1 /* Project object */;
+}
