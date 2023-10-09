@@ -20,6 +20,8 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     var isFinishedCollecting = false
     var analyticsLastScreen: IdentityFlowViewController?
 
+    var visitedIndividualWelcomePage = false
+
     weak var delegate: VerificationSheetFlowControllerDelegate?
 
     let navigationController = UINavigationController()

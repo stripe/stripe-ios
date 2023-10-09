@@ -42,12 +42,13 @@ extension StripeAPI {
         let success: VerificationPageStaticContentTextPage
         /// If true, the client cannot support the VerificationSession.
         let unsupportedClient: Bool
+        let bottomsheet: [String: VerificationPageStaticContentBottomSheetContent]?
     }
 
 }
 
 extension StripeAPI.VerificationPage {
     func copyWithNewMissings(newMissings: Set<StripeAPI.VerificationPageFieldType>) -> StripeAPI.VerificationPage {
-        return StripeAPI.VerificationPage(biometricConsent: self.biometricConsent, documentCapture: self.documentCapture, documentSelect: self.documentSelect, individual: self.individual, countryNotListed: self.countryNotListed, individualWelcome: self.individualWelcome, phoneOtp: self.phoneOtp, fallbackUrl: self.fallbackUrl, id: self.id, livemode: self.livemode, requirements: StripeAPI.VerificationPageRequirements(missing: newMissings), selfie: self.selfie, status: self.status, submitted: self.submitted, success: self.success, unsupportedClient: self.unsupportedClient)
+        return StripeAPI.VerificationPage(biometricConsent: self.biometricConsent, documentCapture: self.documentCapture, documentSelect: self.documentSelect, individual: self.individual, countryNotListed: self.countryNotListed, individualWelcome: self.individualWelcome, phoneOtp: self.phoneOtp, fallbackUrl: self.fallbackUrl, id: self.id, livemode: self.livemode, requirements: StripeAPI.VerificationPageRequirements(missing: newMissings), selfie: self.selfie, status: self.status, submitted: self.submitted, success: self.success, unsupportedClient: self.unsupportedClient, bottomsheet: self.bottomsheet)
     }
 }
