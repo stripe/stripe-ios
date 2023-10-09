@@ -105,19 +105,6 @@ class IdentityFlowViewController: UIViewController {
     }
 }
 
-extension IdentityFlowViewController {
-    func openInSafariViewController(url: URL) {
-        guard url.scheme == "http" || url.scheme == "https" else {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            return
-        }
-
-        let safariVC = SFSafariViewController(url: url)
-        safariVC.modalPresentationStyle = .popover
-        present(safariVC, animated: true, completion: nil)
-    }
-}
-
 // MARK: - Private Helpers
 
 extension IdentityFlowViewController {
