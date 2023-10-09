@@ -152,6 +152,7 @@ extension PaymentSheet {
 
         /// The list of preferred networks that should be used to process payments made with a co-branded card.
         /// This value will only be used if your user hasn't selected a network themselves.
+        @_spi(STP)
         public var preferredNetworks: [STPCardBrand]? {
             didSet {
                 guard let preferredNetworks = preferredNetworks else { return }
