@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension FinancialConnectionsEvent {
-    
+
     static func events(fromError error: Error) -> [FinancialConnectionsEvent] {
         var errorCodes: [FinancialConnectionsEvent.ErrorCode] = []
         if

@@ -87,6 +87,13 @@ final class NetworkingLinkLoginWarmupViewController: UIViewController {
                         didSelectSkipWithManifest: manifest
                     )
                 case .failure(let error):
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "DisableNetworkingError",
+                            pane: .networkingLinkLoginWarmup
+                        )
                     self.delegate?.networkingLinkLoginWarmupViewController(self, didReceiveTerminalError: error)
                 }
             }

@@ -94,6 +94,12 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
                     self.pendingAuthSession = copiedSession
                     promise.fullfill(with: .success(copiedSession))
                 case .failure(let error):
+                    self.analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "SynchronizeClearReturnURLError",
+                            pane: .partnerAuth
+                        )
                     promise.reject(with: error)
                 }
             }
