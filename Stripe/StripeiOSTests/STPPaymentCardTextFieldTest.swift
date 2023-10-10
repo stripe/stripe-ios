@@ -1214,7 +1214,7 @@ class STPPaymentCardTextFieldUITests: XCTestCase {
         XCTAssertTrue(didEnd, "delegate method has been invoked")
     }
 
-    func testDidChangeCalledOnDeleteEmptyField() {
+    func testValueUpdatesWhenDeletingOnEmptyField() {
         let card = STPPaymentMethodCardParams()
         let number = "4242424242424242"
         card.number = number
@@ -1223,6 +1223,7 @@ class STPPaymentCardTextFieldUITests: XCTestCase {
         let delegate = PaymentCardTextFieldBlockDelegate()
         delegate.didChange = { textField in
             XCTAssertEqual(textField.numberField.text, "424242424242424")
+            XCTAssertEqual(textField.cardNumber, "424242424242424")
             XCTAssertFalse(hasChanged, "didChange delegate method should not have been called yet")
             hasChanged = true
         }
@@ -1230,6 +1231,8 @@ class STPPaymentCardTextFieldUITests: XCTestCase {
         sut.delegate = delegate
         sut.becomeFirstResponder()
         sut.deleteBackward()
+        XCTAssertEqual(sut.numberField.text, "424242424242424")
+        XCTAssertEqual(sut.cardNumber, "424242424242424")
         XCTAssertTrue(hasChanged, "delegate method has been invoked")
     }
 }

@@ -1,3 +1,7 @@
+## X.X.X
+### PaymentsUI
+* [Fixed] An issue with `STPPaymentCardTextField`, where the card params were not updated after deleting an empty sub field.
+
 ## 23.17.1 2023-10-09
 ### PaymentSheet
 * [Fixed] Fixed an issue when advancing from the country dropdown that prevented user's' from typing in their postal code. ([#2936](https://github.com/stripe/stripe-ios/issues/2936))
