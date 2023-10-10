@@ -197,17 +197,7 @@ import UIKit
     /// :nodoc:
     @objc
     public override func deleteBackward() {
-        // `UITextField.deleteBackwards` doesn't update the `text` property directly, and we depend on the `didSet`
-        // call on it to update our backing store.
-        // To get around this we manually remove the last character if the text is not empty, instead of forwarding
-        // the `deleteBackwards` call.
-        if var text = text, text.count > 0 {
-            text.removeLast()
-            self.text = text
-        } else {
-            super.deleteBackward()
-        }
-
+        super.deleteBackward()
         if (text?.count ?? 0) == 0 {
             if formDelegate?.responds(
                 to: #selector(STPPaymentCardTextField.formTextFieldDidBackspace(onEmpty:))
