@@ -107,15 +107,11 @@ extension HostViewController {
                     self.lastError = nil
                     self.delegate?.hostViewController(self, didFetch: synchronizePayload)
                 case .failure(let error):
-                    self.delegate?.hostViewController(
-                        self,
-                        didReceiveEvent: FinancialConnectionsEvent(
-                            name: .error,
-                            metadata: FinancialConnectionsEvent.Metadata(
-                                errorCode: .unexpectedError
-                            )
-                        )
-                    )
+                    let events = FinancialConnectionsEvent.events(fromError: error)
+                    events.forEach { event in
+                        self.delegate?.hostViewController(self, didReceiveEvent: event)
+                    }
+
                     self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
                     self.loadingView.errorView.isHidden = false
                     self.lastError = error

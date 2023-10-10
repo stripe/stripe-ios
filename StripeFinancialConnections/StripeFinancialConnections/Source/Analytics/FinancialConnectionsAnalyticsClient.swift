@@ -104,27 +104,6 @@ extension FinancialConnectionsAnalyticsClient {
         errorName: String,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) {
-        delegate?.analyticsClient(
-            self,
-            didReceiveEvent: FinancialConnectionsEvent(
-                name: .error,
-                metadata: FinancialConnectionsEvent.Metadata(
-                    errorCode: {
-                        if
-                            let error = error as? StripeError,
-                            case .apiError(let apiError) = error,
-                            apiError.type == .invalidRequestError,
-                            apiError.param == "client_secret",
-                            (apiError.message ?? "").contains("expired")
-                        {
-                            return .sessionExpired
-                        } else {
-                            return .unexpectedError
-                        }
-                    }() as FinancialConnectionsEvent.ErrorCode
-                )
-            )
-        )
         log(
             error: error,
             errorName: errorName,
@@ -139,6 +118,8 @@ extension FinancialConnectionsAnalyticsClient {
         eventName: String,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) {
+        emitEvent(forError: error)
+
         var parameters: [String: Any] = [:]
         parameters["error"] = errorName
         if let stripeError = error as? StripeError,
@@ -162,6 +143,13 @@ extension FinancialConnectionsAnalyticsClient {
             parameters["code"] = (error as NSError).code
         }
         log(eventName: eventName, parameters: parameters, pane: pane)
+    }
+
+    private func emitEvent(forError error: Error) {
+        let events = FinancialConnectionsEvent.events(fromError: error)
+        events.forEach { event in
+            delegate?.analyticsClient(self, didReceiveEvent: event)
+        }
     }
 
     func logMerchantDataAccessLearnMore(pane: FinancialConnectionsSessionManifest.NextPane) {
@@ -190,7 +178,7 @@ extension FinancialConnectionsAnalyticsClient {
         additionalParameters["account_holder_id"] = manifest.accountholderToken
     }
 
-        static func paneFromViewController(
+    static func paneFromViewController(
         _ viewController: UIViewController?
     ) -> FinancialConnectionsSessionManifest.NextPane {
         switch viewController {

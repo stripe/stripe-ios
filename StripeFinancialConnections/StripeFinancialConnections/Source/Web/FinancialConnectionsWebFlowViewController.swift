@@ -226,15 +226,11 @@ extension FinancialConnectionsWebFlowViewController {
 
     // all failures except custom manual entry failure
     private func notifyDelegateOfFailure(error: Error) {
-        delegate?.webFlowViewController(
-            self,
-            didReceiveEvent: FinancialConnectionsEvent(
-                name: .error,
-                metadata: FinancialConnectionsEvent.Metadata(
-                    errorCode: .unexpectedError
-                )
-            )
-        )
+        let events = FinancialConnectionsEvent.events(fromError: error)
+        events.forEach { event in
+            delegate?.webFlowViewController(self, didReceiveEvent: event)
+        }
+
         notifyDelegate(result: .failed(error: error))
     }
 }

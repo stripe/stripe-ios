@@ -11,7 +11,7 @@ final class BannerHelper {
 
     static let shared = BannerHelper()
     private var windows: [UIWindow] = []
-    
+
     private init() {}
 
     func showBanner(with message: String, for duration: TimeInterval) {
@@ -22,7 +22,7 @@ final class BannerHelper {
         // Allow touches to pass through
         newWindow.isUserInteractionEnabled = false
         windows.append(newWindow)
-        
+
         let bannerView = BannerView()
         bannerView.display(
             message: message,
@@ -35,38 +35,37 @@ final class BannerHelper {
     }
 }
 
-
 private class BannerView: UIView {
-    
+
     private let messageLabel = UILabel()
     private var hideTimer: Timer?
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
     }
-    
+
     private func setupView() {
         self.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         messageLabel.textColor = .white
         messageLabel.textAlignment = .center
         messageLabel.numberOfLines = 0
-        
+
         addSubview(messageLabel)
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
+            messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
         ])
     }
-    
+
     func display(
         message: String,
         for duration: TimeInterval,
@@ -74,16 +73,16 @@ private class BannerView: UIView {
         completionHandler: @escaping () -> Void
     ) {
         messageLabel.text = message
-        
+
         if self.superview == nil {
             window.addSubview(self)
             setupConstraints(in: window)
         }
-        
+
         UIView.animate(withDuration: 0.3) {
             self.alpha = 1.0
         }
-        
+
         hideTimer?.invalidate()
         hideTimer = Timer.scheduledTimer(
             withTimeInterval: duration,
@@ -100,14 +99,14 @@ private class BannerView: UIView {
             )
         }
     }
-     
+
     private func setupConstraints(in window: UIWindow) {
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             leadingAnchor.constraint(equalTo: window.leadingAnchor),
             trailingAnchor.constraint(equalTo: window.trailingAnchor),
             topAnchor.constraint(equalTo: window.safeAreaLayoutGuide.topAnchor),
-            heightAnchor.constraint(greaterThanOrEqualToConstant: 50)
+            heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
         ])
     }
 }
