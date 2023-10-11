@@ -243,6 +243,8 @@ workflows:
         - webhook_url: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
         - webhook_url_on_error: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
     - deploy-to-bitrise-io@2: {}
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   financial-connections-stability-tests-for-edge:
     before_run:
     - prep_all
@@ -254,6 +256,8 @@ workflows:
         - maximum_test_repetitions: "5"
         - scheme: FinancialConnections Example
     - deploy-to-bitrise-io@2: {}
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
   framework-tests:
     steps:
     - fastlane@3:
