@@ -329,7 +329,7 @@ extension PaymentSheet {
                     paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
                     error: result.error
                 )
-
+                self.viewController.clearFieldsPostConfirm()
                 if case .completed = result, case .link = paymentOption {
                     // Remember Link as default payment method for users who just created an account.
                     CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)

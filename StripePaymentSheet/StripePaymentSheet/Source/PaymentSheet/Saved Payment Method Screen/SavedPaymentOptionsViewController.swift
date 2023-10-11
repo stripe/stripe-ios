@@ -347,9 +347,14 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredHorizontally)
     }
 
-    public func notifyIsDismissing() {
+    func notifyIsDismissing() {
         if let cvcForm = self.cvcFormElement as? CVCRecollectionElement {
             cvcForm.cleanupOnDismissal()
+        }
+    }
+    func cleanupOnConfirm() {
+        if let cvcForm = self.cvcFormElement as? CVCRecollectionElement {
+            cvcForm.clearForm()
         }
     }
 

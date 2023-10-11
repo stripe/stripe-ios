@@ -98,6 +98,9 @@ final class CVCRecollectionElement: Element {
             cvcElement.setText("")
         }
     }
+    func clearForm() {
+        cvcElement.setText("")
+    }
 }
 
 extension CVCRecollectionElement: ElementDelegate {

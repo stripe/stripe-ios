@@ -61,6 +61,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     }
     var cvcRecollectionEnabled: Bool = false
     var isInCVCRecollectionFlow: Bool {
+        //TODO: ADD selecting saved as well.
         return cvcRecollectionEnabled && self.selectedPaymentMethodType == .card
     }
 
@@ -233,6 +234,9 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             currency: intent.currency,
             intentConfig: intent.intentConfig
         )
+    }
+    func clearFieldsPostConfirm() {
+        self.savedPaymentOptionsViewController.cleanupOnConfirm()
     }
 
     // MARK: - Private Methods
