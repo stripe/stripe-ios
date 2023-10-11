@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "afterpay_mark@3x.png",
+      "filename" : "vector (13).svg",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "afterpay_mark_dark@3x.png",
+      "filename" : "vector (14).svg",
       "idiom" : "universal"
     }
   ],

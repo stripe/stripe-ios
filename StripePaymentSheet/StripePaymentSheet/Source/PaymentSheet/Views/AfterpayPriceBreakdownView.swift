@@ -22,14 +22,14 @@ class AfterpayPriceBreakdownView: UIView {
         imageView.contentMode = .scaleAspectFit
         imageView.image = PaymentSheetImageLibrary.afterpayLogo(locale: locale)
         imageView.tintColor = theme.colors.parentBackground.contrastingColor
-
+        
         return imageView
     }()
     private lazy var afterpayMarkImage: UIImage = {
         return PaymentSheetImageLibrary.afterpayLogo(locale: locale)
     }()
     private lazy var infoImage: UIImage = {
-        return PaymentSheetImageLibrary.safeImageNamed("afterpay_icon_info@3x")
+        return PaymentSheetImageLibrary.safeImageNamed("afterpay_icon_info")
     }()
 
     private lazy var infoURL: URL? = {

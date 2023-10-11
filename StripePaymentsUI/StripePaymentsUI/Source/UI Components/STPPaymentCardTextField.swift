@@ -737,6 +737,38 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     let STPPaymentCardTextFieldMinimumPadding: CGFloat = 10
 
     static let STPCBCBrandIconMaxWidth = 24.0
+    
+    /// The list of preferred networks that should be used to process
+    /// payments made with a co-branded card if your user hasn't selected a
+    /// network themselves.
+    ///
+    /// The first preferred network that matches any available network will
+    /// be used. If no preferred network is applicable, Stripe will select
+    /// the network.
+    open var preferredNetworks: [STPCardBrand]?
+    
+    /// The list of preferred networks that should be used to process
+    /// payments made with a co-branded card if your user hasn't selected a
+    /// network themselves.
+    ///
+    /// The first preferred network that matches any available network will
+    /// be used. If no preferred network is applicable, Stripe will select
+    /// the network.
+    ///
+    /// In Objective-C, this is an array of NSNumbers representing STPCardBrands.
+    /// For example:
+    /// [textField setPreferredNetworks:@[@STPCardBrandVisa, @STPCardBrandMastercard]]
+    ///
+    @available(swift, obsoleted: 1.0)
+    @objc(preferredNetworks) open var preferredNetworks_objc: [NSNumber]? {
+        get {
+            
+        }
+        set {
+            
+        }
+    }
+
 
     // MARK: initializers
     /// :nodoc:

@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "clearpay_mark@3x.png",
+      "filename" : "vector (15).svg",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "clearpay_mark_dark@3x.png",
+      "filename" : "vector (16).svg",
       "idiom" : "universal"
     }
   ],

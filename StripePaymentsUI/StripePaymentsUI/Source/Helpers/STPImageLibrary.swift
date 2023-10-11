@@ -100,8 +100,7 @@ public class STPImageLibrary: NSObject {
     /// This returns a small icon indicating a card number error for the given card brand.
     @objc(errorImageForCardBrand:) public class func errorImage(for brand: STPCardBrand) -> UIImage
     {
-        let imageName = brand == .amex ? "stp_card_error_amex" : "stp_card_error"
-        return self.safeImageNamed(imageName)
+        return self.safeImageNamed("stp_card_error")
     }
 
     @_spi(STP) public class func bankIcon() -> UIImage {
