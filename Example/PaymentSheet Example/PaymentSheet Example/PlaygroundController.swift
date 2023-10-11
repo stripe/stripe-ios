@@ -12,8 +12,9 @@
 import Combine
 import Contacts
 import PassKit
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
+import StripePayments
 @_spi(STP) @_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -133,7 +134,7 @@ class PlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
-
+        configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
         return configuration
     }
 

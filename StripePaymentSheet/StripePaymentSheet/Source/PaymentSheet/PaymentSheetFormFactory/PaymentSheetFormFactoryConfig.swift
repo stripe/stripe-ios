@@ -75,4 +75,14 @@ enum PaymentSheetFormFactoryConfig {
             return .automatic
         }
     }
+
+    var preferredNetworks: [STPCardBrand]? {
+        switch self {
+        case .paymentSheet(let config):
+            return config.preferredNetworks
+        case .customerSheet:
+            // TODO(porter) Support CBC in CustomerSheet
+            return nil
+        }
+    }
 }

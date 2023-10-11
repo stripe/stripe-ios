@@ -10,7 +10,7 @@ import UIKit
 
 protocol PickerFieldViewDelegate: AnyObject {
     func didBeginEditing(_ pickerFieldView: PickerFieldView)
-    func didFinish(_ pickerFieldView: PickerFieldView)
+    func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool)
     func didCancel(_ pickerFieldView: PickerFieldView)
 }
 
@@ -220,7 +220,7 @@ extension PickerFieldView: UITextFieldDelegate {
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         floatingPlaceholderTextFieldView?.updatePlaceholder()
-        delegate?.didFinish(self)
+        delegate?.didFinish(self, shouldAutoAdvance: true)
     }
 }
 
