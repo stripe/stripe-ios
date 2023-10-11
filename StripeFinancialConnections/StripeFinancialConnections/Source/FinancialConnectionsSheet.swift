@@ -52,7 +52,13 @@ final public class FinancialConnectionsSheet {
     /// get back to your app after completing authentication in another app (such as bank app or Safari).
     public let returnURL: String?
 
-    // TODO: add docs
+    /// The `onEvent` closure is triggered upon the occurrence of specific events
+    /// during the process of a user connecting their financial accounts.
+    ///
+    /// Refer to `FinancialConnectionsEvent.Name` for a list of possible event types.
+    ///
+    /// Every `FinancialConnectionsEvent` can carry additional metadata,
+    /// the content of which can vary based on the specific type of occurring event.
     public var onEvent: ((FinancialConnectionsEvent) -> Void)?
 
     /// The APIClient instance used to make requests to Stripe

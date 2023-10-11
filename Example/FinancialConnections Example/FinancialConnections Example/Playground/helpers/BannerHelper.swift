@@ -10,6 +10,7 @@ import UIKit
 final class BannerHelper {
 
     static let shared = BannerHelper()
+
     private var windows: [UIWindow] = []
 
     private init() {}
@@ -42,16 +43,8 @@ private class BannerView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupView()
-    }
+        backgroundColor = .black.withAlphaComponent(0.8)
 
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupView()
-    }
-
-    private func setupView() {
-        self.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         messageLabel.textColor = .white
         messageLabel.textAlignment = .center
         messageLabel.numberOfLines = 0
@@ -66,6 +59,10 @@ private class BannerView: UIView {
         ])
     }
 
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
     func display(
         message: String,
         for duration: TimeInterval,
@@ -74,15 +71,24 @@ private class BannerView: UIView {
     ) {
         messageLabel.text = message
 
-        if self.superview == nil {
+        // add to window
+        if superview == nil {
             window.addSubview(self)
-            setupConstraints(in: window)
+            translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                leadingAnchor.constraint(equalTo: window.leadingAnchor),
+                trailingAnchor.constraint(equalTo: window.trailingAnchor),
+                topAnchor.constraint(equalTo: window.safeAreaLayoutGuide.topAnchor),
+                heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
+            ])
         }
 
+        // present
         UIView.animate(withDuration: 0.3) {
             self.alpha = 1.0
         }
 
+        // hide (after timer completes)
         hideTimer?.invalidate()
         hideTimer = Timer.scheduledTimer(
             withTimeInterval: duration,
@@ -98,15 +104,5 @@ private class BannerView: UIView {
                 }
             )
         }
-    }
-
-    private func setupConstraints(in window: UIWindow) {
-        translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            leadingAnchor.constraint(equalTo: window.leadingAnchor),
-            trailingAnchor.constraint(equalTo: window.trailingAnchor),
-            topAnchor.constraint(equalTo: window.safeAreaLayoutGuide.topAnchor),
-            heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
-        ])
     }
 }

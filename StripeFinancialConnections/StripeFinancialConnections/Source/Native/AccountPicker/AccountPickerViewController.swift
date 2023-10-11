@@ -92,7 +92,7 @@ final class AccountPickerViewController: UIViewController {
                     self,
                     didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
                 )
-                self.didSelectLinkAccounts(bySkippingSelection: false)
+                self.didSelectLinkAccounts()
             },
             didSelectMerchantDataAccessLearnMore: { [weak self] in
                 guard let self = self else { return }
@@ -177,7 +177,7 @@ final class AccountPickerViewController: UIViewController {
                         // just one to send back in a single-account context. treat these as if
                         // we had done account selection, and submit.
                         self.dataSource.updateSelectedAccounts(accounts)
-                        self.didSelectLinkAccounts(bySkippingSelection: true)
+                        self.didSelectLinkAccounts()
                     } else {
                         let (enabledAccounts, disabledAccounts) =
                             accounts
@@ -327,7 +327,7 @@ final class AccountPickerViewController: UIViewController {
         self.errorView = errorView
     }
 
-    private func didSelectLinkAccounts(bySkippingSelection: Bool) {
+    private func didSelectLinkAccounts() {
         let numberOfSelectedAccounts = dataSource.selectedAccounts.count
         let linkingAccountsLoadingView = LinkingAccountsLoadingView(
             numberOfSelectedAccounts: numberOfSelectedAccounts,
