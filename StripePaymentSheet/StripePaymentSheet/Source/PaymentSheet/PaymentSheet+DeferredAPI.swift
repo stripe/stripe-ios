@@ -17,6 +17,8 @@ extension PaymentSheet {
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
+        isDashboardApp: Bool,
+        dashboardParamsUpdater: @escaping DashboardParamsUpdater = setParamsForDashboardApp(confirmType:paymentIntentParams:paymentIntent:configuration:),
         mandateData: STPMandateDataParams? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
@@ -52,12 +54,21 @@ extension PaymentSheet {
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 4a. Client-side confirmation
                         try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent, intentConfiguration: intentConfig, isFlowController: isFlowController)
-                        let paymentIntentParams = makePaymentIntentParams(
+                        var paymentIntentParams = makePaymentIntentParams(
                             confirmPaymentMethodType: confirmType,
                             paymentIntent: paymentIntent,
                             configuration: configuration,
                             mandateData: mandateData
                         )
+
+                        // Dashboard specfic logic
+                        if isDashboardApp {
+                            paymentIntentParams = dashboardParamsUpdater(confirmType,
+                                                                           paymentIntentParams,
+                                                                           paymentIntent,
+                                                                           configuration)
+                        }
+
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext
@@ -147,5 +158,33 @@ extension PaymentSheet {
             paymentUserAgentValues.append("autopm")
         }
         return paymentUserAgentValues
+    }
+
+    typealias DashboardParamsUpdater = (ConfirmPaymentMethodType, STPPaymentIntentParams, STPPaymentIntent, PaymentSheet.Configuration) -> STPPaymentIntentParams
+    static func setParamsForDashboardApp(confirmType: ConfirmPaymentMethodType,
+                                         paymentIntentParams: STPPaymentIntentParams,
+                                         paymentIntent: STPPaymentIntent,
+                                         configuration: PaymentSheet.Configuration) -> STPPaymentIntentParams {
+        var intentParamsCopy = paymentIntentParams
+        switch confirmType {
+        case .saved:
+            // The Dashboard app requires MOTO
+            intentParamsCopy.paymentMethodOptions?.setMoto()
+        case .new(_, _, let paymentMethod, let shouldSave):
+            // The Dashboard app cannot pass `paymentMethodParams` ie payment_method_data
+            intentParamsCopy = IntentConfirmParams.makeDashboardParams(
+                paymentIntentClientSecret: paymentIntent.clientSecret,
+                paymentMethodID: paymentMethod?.stripeId ?? "",
+                shouldSave: shouldSave,
+                paymentMethodType: paymentMethod?.type ?? .unknown,
+                customer: configuration.customer
+            )
+            intentParamsCopy.shipping = makeShippingParams(
+                for: paymentIntent,
+                configuration: configuration
+            )
+        }
+
+        return intentParamsCopy
     }
 }

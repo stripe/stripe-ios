@@ -107,50 +107,22 @@ extension PaymentSheet {
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
-                // The Dashboard app cannot pass `paymentMethodParams` ie payment_method_data
-                if configuration.apiClient.publishableKeyIsUserKey {
-                    configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) {
-                        paymentMethod,
-                        error in
-                        if let error = error {
-                            completion(.failed(error: error), nil)
-                            return
-                        }
-                        let paymentIntentParams = confirmParams.makeDashboardParams(
-                            paymentIntentClientSecret: paymentIntent.clientSecret,
-                            paymentMethodID: paymentMethod?.stripeId ?? "",
-                            configuration: configuration
-                        )
-                        paymentIntentParams.shipping = makeShippingParams(
-                            for: paymentIntent,
-                            configuration: configuration
-                        )
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext,
-                            completion: { actionStatus, _, error in
-                                paymentHandlerCompletion(actionStatus, error)
-                            }
-                        )
+                let params = makePaymentIntentParams(
+                    confirmPaymentMethodType: .new(
+                        params: confirmParams.paymentMethodParams,
+                        paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                        shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
+                    ),
+                    paymentIntent: paymentIntent,
+                    configuration: configuration
+                )
+                paymentHandler.confirmPayment(
+                    params,
+                    with: authenticationContext,
+                    completion: { actionStatus, _, error in
+                        paymentHandlerCompletion(actionStatus, error)
                     }
-                } else {
-                    let params = makePaymentIntentParams(
-                        confirmPaymentMethodType: .new(
-                            params: confirmParams.paymentMethodParams,
-                            paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                            shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
-                        ),
-                        paymentIntent: paymentIntent,
-                        configuration: configuration
-                    )
-                    paymentHandler.confirmPayment(
-                        params,
-                        with: authenticationContext,
-                        completion: { actionStatus, _, error in
-                            paymentHandlerCompletion(actionStatus, error)
-                        }
-                    )
-                }
+                )
             // MARK: ↪ SetupIntent
             case .setupIntent(let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
@@ -182,6 +154,7 @@ extension PaymentSheet {
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
+                    isDashboardApp: configuration.apiClient.publishableKeyIsUserKey,
                     completion: completion
                 )
             }
@@ -192,11 +165,6 @@ extension PaymentSheet {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
                 let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod), paymentIntent: paymentIntent, configuration: configuration)
-
-                // The Dashboard app requires MOTO
-                if configuration.apiClient.publishableKeyIsUserKey {
-                    paymentIntentParams.paymentMethodOptions?.setMoto()
-                }
 
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
@@ -228,6 +196,7 @@ extension PaymentSheet {
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
+                    isDashboardApp: configuration.apiClient.publishableKeyIsUserKey,
                     completion: completion
                 )
             }
@@ -270,6 +239,7 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
+                        isDashboardApp: configuration.apiClient.publishableKeyIsUserKey,
                         completion: completion
                     )
                 }
@@ -316,6 +286,7 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
+                        isDashboardApp: configuration.apiClient.publishableKeyIsUserKey,
                         completion: completion
                     )
                 }
@@ -491,6 +462,7 @@ extension PaymentSheet {
         params.paymentMethodOptions = paymentOptions
         params.returnURL = configuration.returnURL
         params.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+
         return params
     }
 

@@ -319,6 +319,7 @@ import UIKit
                         authenticationContext: authenticationContext,
                         paymentHandler: STPPaymentHandler.shared(),
                         isFlowController: true,
+                        isDashboardApp: configuration.apiClient.publishableKeyIsUserKey,
                         mandateData: STPMandateDataParams.makeWithInferredValues()) { result, _ in
                     switch result {
                     case .canceled:

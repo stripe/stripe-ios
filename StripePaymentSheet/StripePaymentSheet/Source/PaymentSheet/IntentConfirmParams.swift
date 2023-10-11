@@ -72,10 +72,12 @@ class IntentConfirmParams {
         self.confirmPaymentMethodOptions = STPConfirmPaymentMethodOptions()
     }
 
-    func makeDashboardParams(
+    static func makeDashboardParams(
         paymentIntentClientSecret: String,
         paymentMethodID: String,
-        configuration: PaymentSheet.Configuration
+        shouldSave: Bool,
+        paymentMethodType: STPPaymentMethodType,
+        customer: PaymentSheet.CustomerConfiguration?
     ) -> STPPaymentIntentParams {
         let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
         params.paymentMethodId = paymentMethodID
@@ -83,9 +85,9 @@ class IntentConfirmParams {
         // Dashboard only supports a specific payment flow today
         let options = STPConfirmPaymentMethodOptions()
         options.setSetupFutureUsageIfNecessary(
-            saveForFutureUseCheckboxState == .selected,
+            shouldSave,
             paymentMethodType: paymentMethodType,
-            customer: configuration.customer
+            customer: customer
         )
         params.paymentMethodOptions = options
 
