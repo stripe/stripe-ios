@@ -737,7 +737,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     let STPPaymentCardTextFieldMinimumPadding: CGFloat = 10
 
     static let STPCBCBrandIconMaxWidth = 24.0
-    
+
     /// The list of preferred networks that should be used to process
     /// payments made with a co-branded card if your user hasn't selected a
     /// network themselves.
@@ -746,7 +746,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// be used. If no preferred network is applicable, Stripe will select
     /// the network.
     open var preferredNetworks: [STPCardBrand]?
-    
+
     /// The list of preferred networks that should be used to process
     /// payments made with a co-branded card if your user hasn't selected a
     /// network themselves.
@@ -762,13 +762,12 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     @available(swift, obsoleted: 1.0)
     @objc(preferredNetworks) open var preferredNetworks_objc: [NSNumber]? {
         get {
-            
+
         }
         set {
-            
+
         }
     }
-
 
     // MARK: initializers
     /// :nodoc:

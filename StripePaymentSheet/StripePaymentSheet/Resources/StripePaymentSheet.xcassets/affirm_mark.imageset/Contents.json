@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "affirm_mark@3x.png",
+      "filename" : "vector (18).svg",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "affirm_mark_dark@3x.png",
+      "filename" : "vector (17).svg",
       "idiom" : "universal"
     }
   ],
