@@ -22,7 +22,7 @@ final class IntentConfirmParamsTest: XCTestCase {
                                                              paymentMethodType: .card,
                                                              customer: .init(id: "test_id",
                                                                              ephemeralKeySecret: "test_key"))
-        
+
         XCTAssertEqual(params.clientSecret, "test_client_secret")
         XCTAssertEqual(params.paymentMethodId, "test_payment_method_id")
         XCTAssertEqual(params.paymentMethodOptions?.cardOptions?.additionalAPIParameters["setup_future_usage"] as? String, "off_session")
