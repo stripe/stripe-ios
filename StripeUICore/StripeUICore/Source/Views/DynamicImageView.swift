@@ -15,10 +15,10 @@ import UIKit
     private let pairedColor: UIColor
     private let dynamicImage: UIImage?
 
-    private func makeImage(for traitCollection: UITraitCollection) -> UIImage? {
+    private static func makeImage(for traitCollection: UITraitCollection, dynamicImage: UIImage?, pairedColor: UIColor) -> UIImage? {
         let userInterfaceStyle: UIUserInterfaceStyle = pairedColor.resolvedColor(with: traitCollection).isDark ? .dark : .light
         let traitCollection = UITraitCollection(userInterfaceStyle: userInterfaceStyle)
-        return image?.withConfiguration(traitCollection.imageConfiguration)
+        return dynamicImage?.withConfiguration(traitCollection.imageConfiguration)
     }
 
     /// Initializes a `DynamicImageView`.
@@ -35,10 +35,8 @@ import UIKit
         assert(dynamicImage != nil)
         self.dynamicImage = dynamicImage
         self.pairedColor = pairedColor
-        // init(frame:) doesn't work for some reason and we cannot access `currentImage` yet,
-        // so call init with a nil image and then set the right image.
-        super.init(image: nil)
-        image = makeImage(for: traitCollection)
+        let image = Self.makeImage(for: UITraitCollection.current, dynamicImage: dynamicImage, pairedColor: pairedColor)
+        super.init(image: image)
     }
 
     public required init?(coder: NSCoder) {
@@ -47,6 +45,6 @@ import UIKit
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        image = makeImage(for: traitCollection)
+        image = Self.makeImage(for: traitCollection, dynamicImage: dynamicImage, pairedColor: pairedColor)
     }
 }

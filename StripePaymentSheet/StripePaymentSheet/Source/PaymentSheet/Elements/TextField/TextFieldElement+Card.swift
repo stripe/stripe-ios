@@ -197,7 +197,7 @@ extension TextFieldElement {
         func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
             return DynamicImageView(
                 dynamicImage: STPImageLibrary.cvcImage(for: cardBrandProvider()),
-                pairedColor: theme.colors.textFieldText
+                pairedColor: theme.colors.background    
             )
         }
     }
