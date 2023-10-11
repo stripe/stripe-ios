@@ -150,6 +150,17 @@ extension PaymentSheet {
         /// If `name` and `line1` are populated, it's also [attached to the PaymentIntent](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping) during payment.
         public var shippingDetails: () -> AddressViewController.AddressDetails? = { return nil }
 
+        /// The list of preferred networks that should be used to process payments made with a co-branded card.
+        /// This value will only be used if your user hasn't selected a network themselves.
+        @_spi(STP)
+        public var preferredNetworks: [STPCardBrand]? {
+            didSet {
+                guard let preferredNetworks = preferredNetworks else { return }
+                assert(Set<STPCardBrand>(preferredNetworks).count == preferredNetworks.count,
+                       "preferredNetworks must not contain any duplicate card brands")
+            }
+        }
+
         /// Initializes a Configuration with default values
         public init() {}
 

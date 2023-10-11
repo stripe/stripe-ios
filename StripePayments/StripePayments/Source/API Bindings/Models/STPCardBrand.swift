@@ -31,7 +31,7 @@ import Foundation
 }
 
 /// :nodoc:
-extension STPCardBrand: CaseIterable {
+extension STPCardBrand: CaseIterable, Codable {
     // intentionally empty
 }
 

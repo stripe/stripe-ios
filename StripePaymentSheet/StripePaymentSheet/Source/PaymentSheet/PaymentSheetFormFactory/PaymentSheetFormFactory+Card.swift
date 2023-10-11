@@ -56,6 +56,7 @@ extension PaymentSheetFormFactory {
         let cardSection = CardSection(
             collectName: configuration.billingDetailsCollectionConfiguration.name == .always,
             defaultValues: cardDefaultValues,
+            preferredNetworks: configuration.preferredNetworks,
             cardBrandChoiceEligible: cardBrandChoiceEligible,
             theme: theme
         )
