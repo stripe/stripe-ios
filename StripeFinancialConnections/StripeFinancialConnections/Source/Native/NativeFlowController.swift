@@ -100,10 +100,6 @@ class NativeFlowController {
             guard let self = self else {
                 return
             }
-            self.delegate?.nativeFlowController(
-                self,
-                didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
-            )
             self.closeAuthFlow()
         }
         if showConfirmationAlert {
@@ -348,6 +344,10 @@ extension NativeFlowController {
                                 )
                                 finishAuthSession(.failed(error: terminalError))
                             } else {
+                                self.delegate?.nativeFlowController(
+                                    self,
+                                    didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+                                )
                                 self.logCompleteEvent(
                                     type: eventType,
                                     status: "canceled"
