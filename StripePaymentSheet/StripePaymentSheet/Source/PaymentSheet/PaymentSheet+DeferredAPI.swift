@@ -169,6 +169,7 @@ extension PaymentSheet {
         switch confirmType {
         case .saved:
             // The Dashboard app requires MOTO
+            intentParamsCopy.paymentMethodOptions = intentParamsCopy.paymentMethodOptions == nil ? .init() : intentParamsCopy.paymentMethodOptions
             intentParamsCopy.paymentMethodOptions?.setMoto()
         case .new(_, _, let paymentMethod, let shouldSave):
             // The Dashboard app cannot pass `paymentMethodParams` ie payment_method_data
