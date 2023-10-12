@@ -52,10 +52,12 @@ final class CardSection: ContainerElement {
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
     let theme: ElementsUITheme
+    let preferredNetworks: [STPCardBrand]?
 
     init(
         collectName: Bool = false,
         defaultValues: DefaultValues = .init(),
+        preferredNetworks: [STPCardBrand]? = nil,
         cardBrandChoiceEligible: Bool = false,
         theme: ElementsUITheme = .default
     ) {
@@ -131,6 +133,7 @@ final class CardSection: ContainerElement {
         self.cardBrandDropDown = cardBrandDropDown?.element
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element
+        self.preferredNetworks = preferredNetworks
         cardSection.delegate = self
     }
 
@@ -163,7 +166,7 @@ final class CardSection: ContainerElement {
         // Only fetch card brands if we have at least 8 digits in the pan
         guard let cardBrandDropDown = cardBrandDropDown, panElement.text.count >= 8 else {
             // Clear any previously fetched card brands from the dropdown
-            if self.cardBrands != Set<STPCardBrand>() {
+            if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
                 cardBrandDropDown?.update(items: DropdownFieldElement.items(from: self.cardBrands, theme: self.theme))
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
@@ -172,6 +175,7 @@ final class CardSection: ContainerElement {
         }
 
         var fetchedCardBrands = Set<STPCardBrand>()
+        let hadBrands = !cardBrands.isEmpty
         STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
             switch result {
             case .success(let brands):
@@ -184,6 +188,16 @@ final class CardSection: ContainerElement {
             if self?.cardBrands != fetchedCardBrands {
                 self?.cardBrands = fetchedCardBrands
                 cardBrandDropDown.update(items: DropdownFieldElement.items(from: fetchedCardBrands, theme: self?.theme ?? .default))
+
+                // If we didn't previously have brands but now have them select based on merchant preference
+                // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks
+                if !hadBrands,
+                   let preferredNetworks = self?.preferredNetworks,
+                   let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
+                   let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == "\(brandToSelect.rawValue)" }) {
+                    cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
+                }
+
                 self?.panElement.setText(self?.panElement.text ?? "") // Hack to get the accessory view to update
             }
         }

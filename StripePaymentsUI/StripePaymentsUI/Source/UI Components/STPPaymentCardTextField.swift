@@ -1671,9 +1671,12 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         let previous = previousField()
         previous?.becomeFirstResponder()
         UIAccessibility.post(notification: .screenChanged, argument: nil)
-        if previous?.hasText ?? false {
-            previous?.deleteBackward()
-            onChange()
+        if let previous = previous, previous.hasText, let previousText = previous.text {
+            // `UITextField.deleteBackwards` doesn't update the `text` property directly, and we depend on the `didSet`
+            // call on it to update our backing store.
+            // To get around this we manually remove the last character instead of calling `deleteBackwards` in the
+            // previous field.
+            previous.text = String(previousText.dropLast())
         }
     }
 
