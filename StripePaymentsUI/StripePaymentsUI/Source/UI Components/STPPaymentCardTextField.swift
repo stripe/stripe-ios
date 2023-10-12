@@ -423,12 +423,12 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 address.country = countryCode ?? Locale.autoupdatingCurrent.regionCode
                 billingDetails!.address = address  // billingDetails will always be non-nil
             }
-            
+
             // If CBC is enabled, set the selected card brand
             if let selectedBrand = viewModel.selectedBrand {
                 cardToReturn.networks = STPPaymentMethodCardNetworksParams(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
             }
-            
+
             return STPPaymentMethodParams(
                 card: cardToReturn,
                 billingDetails: billingDetails,
@@ -489,7 +489,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             if let countryCode = callersCardParams.billingDetails?.address?.country {
                 self.countryCode = countryCode
             }
-            
+
             // If a card brand is explicitly selected, retain that information
             if let preferredBrandString = callersCardParams.card?.networks?.preferred {
                 viewModel.selectedBrand = STPPaymentMethodCard.brand(from: preferredBrandString)
@@ -2349,7 +2349,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             "viewModel.hasCompleteMetadataForCardNumber",
         ])
     }
-    
+
     /// The list of preferred networks that should be used to process
     /// payments made with a co-branded card if your user hasn't selected a
     /// network themselves.
@@ -2379,9 +2379,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         guard let preferredNetworks = self.preferredNetworks else {
             return nil
         }
-        return preferredNetworks.map { NSNumber(integerLiteral: $0.rawValue) }
+        return preferredNetworks.map { NSNumber(value: $0.rawValue) }
     }
-    
+
     /// The list of preferred networks that should be used to process
     /// payments made with a co-branded card if your user hasn't selected a
     /// network themselves.

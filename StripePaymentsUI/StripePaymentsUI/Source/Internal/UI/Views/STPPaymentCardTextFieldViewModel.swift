@@ -243,7 +243,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     }
 
     var cbcEnabledOverride: Bool?
-        
+
     var cbcEnabled: Bool {
         if let cbcEnabledOverride = cbcEnabledOverride {
             return cbcEnabledOverride
@@ -295,9 +295,9 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             }
         }
     }
-    
+
     var preferredNetworks: [STPCardBrand]?
-    
+
     func fetchCardBrands(handler: @escaping (Set<STPCardBrand>) -> Void) {
         // Only fetch card brands if we have at least 8 digits in the pan
         guard let cardNumber = cardNumber,

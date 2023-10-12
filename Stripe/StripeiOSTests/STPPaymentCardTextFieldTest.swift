@@ -189,7 +189,7 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         sut.paymentMethodParams = params
         XCTAssertEqual(sut.paymentMethodParams.card!.networks!.preferred, "visa")
     }
-    
+
     func testSetCard_numberAmex() {
         let sut = STPPaymentCardTextField()
         let card = STPPaymentMethodCardParams()
@@ -918,7 +918,7 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         XCTAssertNil(sut.currentFirstResponderField())
         XCTAssertFalse(sut.isValid)
     }
-    
+
     func testUsesPreferredNetworks() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let sut = STPPaymentCardTextField()
