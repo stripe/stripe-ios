@@ -423,6 +423,12 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 address.country = countryCode ?? Locale.autoupdatingCurrent.regionCode
                 billingDetails!.address = address  // billingDetails will always be non-nil
             }
+            
+            // If CBC is enabled, set the selected card brand
+            if let selectedBrand = viewModel.selectedBrand {
+                cardToReturn.networks = STPPaymentMethodCardNetworksParams(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
+            }
+            
             return STPPaymentMethodParams(
                 card: cardToReturn,
                 billingDetails: billingDetails,
@@ -482,6 +488,11 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             // If an explicit country code is passed, set it. Otherwise use the default behavior (NSLocale.current)
             if let countryCode = callersCardParams.billingDetails?.address?.country {
                 self.countryCode = countryCode
+            }
+            
+            // If a card brand is explicitly selected, retain that information
+            if let preferredBrandString = callersCardParams.card?.networks?.preferred {
+                viewModel.selectedBrand = STPPaymentMethodCard.brand(from: preferredBrandString)
             }
 
             setText(desiredCardParams.number, inField: .number)
@@ -2263,18 +2274,13 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     // MARK: Card brand choice
     // For internal testing
-    @_spi(STP) public var alwaysEnableCBC: Bool = false {
-        didSet {
-            // TODO: This doesn't make sense
-            if alwaysEnableCBC {
-                viewModel.cbcEnabled = alwaysEnableCBC
-            }
+    @_spi(STP) public var cbcEnabledOverride: Bool? {
+        get {
+            viewModel.cbcEnabledOverride
         }
-    }
-
-    private var shouldShowCBC: Bool {
-        // TODO: Pull this from the wallet-config endpoint
-        return alwaysEnableCBC
+        set {
+            viewModel.cbcEnabledOverride = newValue
+        }
     }
 
     private var cardBrands = Set<STPCardBrand>()
@@ -2342,6 +2348,58 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             "viewModel.isValid",
             "viewModel.hasCompleteMetadataForCardNumber",
         ])
+    }
+    
+    /// The list of preferred networks that should be used to process
+    /// payments made with a co-branded card if your user hasn't selected a
+    /// network themselves.
+    ///
+    /// The first preferred network that matches any available network will
+    /// be offered to the customer. If no preferred network is applicable, the
+    /// customer will select the network.
+    open var preferredNetworks: [STPCardBrand]? {
+        didSet {
+            viewModel.preferredNetworks = preferredNetworks
+        }
+    }
+
+    /// The list of preferred networks that should be used to process
+    /// payments made with a co-branded card if your user hasn't selected a
+    /// network themselves.
+    ///
+    /// The first preferred network that matches any available network will
+    /// be offered to the customer. If no preferred network is applicable, the
+    /// customer will select the network.
+    ///
+    /// In Objective-C, this is an array of NSNumbers representing STPCardBrands.
+    /// For example:
+    /// [textField setPreferredNetworks:@[[NSNumber numberWithInt:STPCardBrandVisa]]];
+    @available(swift, obsoleted: 1.0)
+    @objc(preferredNetworks) open func preferredNetworks_objc() -> [NSNumber]? {
+        guard let preferredNetworks = self.preferredNetworks else {
+            return nil
+        }
+        return preferredNetworks.map { NSNumber(integerLiteral: $0.rawValue) }
+    }
+    
+    /// The list of preferred networks that should be used to process
+    /// payments made with a co-branded card if your user hasn't selected a
+    /// network themselves.
+    ///
+    /// The first preferred network that matches any available network will
+    /// be offered to the customer. If no preferred network is applicable, the
+    /// customer will select the network.
+    ///
+    /// In Objective-C, this is an array of NSNumbers representing STPCardBrands.
+    /// For example:
+    /// [textField setPreferredNetworks:@[[NSNumber numberWithInt:STPCardBrandVisa]]];
+    @available(swift, obsoleted: 1.0)
+    @objc(setPreferredNetworks:) open func setPreferredNetworks_objc(preferredNetworks: [NSNumber]?) {
+        guard let preferredNetworks = preferredNetworks else {
+            self.preferredNetworks = nil
+            return
+        }
+        self.preferredNetworks = preferredNetworks.map { STPCardBrand(rawValue: $0.intValue) ?? .unknown }
     }
 }
 

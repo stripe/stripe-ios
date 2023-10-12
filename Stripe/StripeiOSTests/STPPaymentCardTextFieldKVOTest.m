@@ -74,4 +74,10 @@
     [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
+- (void)testPaymentCardTextFieldCanSetPreferredBrands {
+    STPPaymentCardTextField *textField = [[STPPaymentCardTextField alloc] initWithFrame:self.window.bounds];
+    [textField setPreferredNetworks:@[[NSNumber numberWithInt:STPCardBrandVisa]]];
+    XCTAssertEqual([[[textField preferredNetworks] firstObject] intValue], STPCardBrandVisa);
+}
+
 @end

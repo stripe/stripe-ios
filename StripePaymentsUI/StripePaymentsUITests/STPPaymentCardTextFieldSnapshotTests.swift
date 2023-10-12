@@ -44,7 +44,7 @@ class STPPaymentCardTextFieldSnapshotTests: FBSnapshotTestCase {
     func testPaymentCardTextFieldCBC() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let pctf = paymentCardTextField
-        pctf.alwaysEnableCBC = true
+        pctf.cbcEnabledOverride = true
         let card = STPPaymentMethodCardParams()
         card.number = "4973019750239993"
         card.expMonth = 12

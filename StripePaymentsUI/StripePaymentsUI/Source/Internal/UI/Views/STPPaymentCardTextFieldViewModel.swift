@@ -242,7 +242,14 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    var cbcEnabled: Bool = true
+    var cbcEnabledOverride: Bool?
+        
+    var cbcEnabled: Bool {
+        if let cbcEnabledOverride = cbcEnabledOverride {
+            return cbcEnabledOverride
+        }
+        return CardElementConfigService.shared.isCBCEligible
+    }
 
     private var _expirationMonth: String?
     @objc private(set) var expirationMonth: String? {
@@ -274,7 +281,23 @@ class STPPaymentCardTextFieldViewModel: NSObject {
 
     var selectedBrand: STPCardBrand?
 
-    var cardBrands = Set<STPCardBrand>()
+    var cardBrands = Set<STPCardBrand>() {
+        didSet {
+            // If the selected brand does not exist in the current list of brands, reset it
+            if let selectedBrand = selectedBrand, !cardBrands.contains(selectedBrand) {
+                self.selectedBrand = nil
+            }
+            // If the selected brand is nil and our preferred brand exists, set that as the selected brand
+            if let preferredNetworks = preferredNetworks,
+               selectedBrand == nil,
+               let preferredBrand = preferredNetworks.first(where: { cardBrands.contains($0) }) {
+                self.selectedBrand = preferredBrand
+            }
+        }
+    }
+    
+    var preferredNetworks: [STPCardBrand]?
+    
     func fetchCardBrands(handler: @escaping (Set<STPCardBrand>) -> Void) {
         // Only fetch card brands if we have at least 8 digits in the pan
         guard let cardNumber = cardNumber,
