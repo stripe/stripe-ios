@@ -575,7 +575,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.billingDetails = billingDetails
         self.metadata = metadata
     }
-    
+
     /// Creates params for a MobilePay PaymentMethod.
     /// - Parameters:
     ///   - mobilePay:           An object containing additional MobilePay details.

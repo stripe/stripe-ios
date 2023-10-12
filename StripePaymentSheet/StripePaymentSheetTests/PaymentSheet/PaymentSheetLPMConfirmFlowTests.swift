@@ -280,7 +280,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             XCTAssertEqual(form.getAllSubElements().count, 1)
         }
     }
-    
+
     func testMobilePayConfirmFlows() async throws {
         try await _testConfirm(
             intentKinds: [.paymentIntent],

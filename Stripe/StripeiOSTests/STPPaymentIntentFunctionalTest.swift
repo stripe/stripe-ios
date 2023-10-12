@@ -8,10 +8,10 @@
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
-import StripeCoreTestUtils
 
 class STPPaymentIntentFunctionalTest: XCTestCase {
     func testCreatePaymentIntentWithTestingServer() {
@@ -28,7 +28,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
     func testCreatePaymentIntentWithInvalidCurrency() {
         let expectation = self.expectation(description: "PaymentIntent create.")
         STPTestingAPIClient.shared.createPaymentIntent(withParams: [
-            "payment_method_types": ["bancontact"]
+            "payment_method_types": ["bancontact"],
         ]) { clientSecret, error in
             XCTAssertNil(clientSecret)
             XCTAssertNotNil(error)
@@ -487,7 +487,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             giropay: giropayParams,
             billingDetails: billingDetails,
             metadata: [
-                "test_key": "test_value"
+                "test_key": "test_value",
             ])
         paymentIntentParams.returnURL = "example-app-scheme://authorized"
 
@@ -547,7 +547,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             aubecsDebit: becsParams,
             billingDetails: billingDetails,
             metadata: [
-                "test_key": "test_value"
+                "test_key": "test_value",
             ])
 
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret!)
@@ -604,7 +604,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             przelewy24: przelewy24Params,
             billingDetails: billingDetails,
             metadata: [
-                "test_key": "test_value"
+                "test_key": "test_value",
             ])
         paymentIntentParams.returnURL = "example-app-scheme://authorized"
         client.confirmPaymentIntent(
@@ -660,7 +660,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             bancontact: bancontact,
             billingDetails: billingDetails,
             metadata: [
-                "test_key": "test_value"
+                "test_key": "test_value",
             ])
         paymentIntentParams.returnURL = "example-app-scheme://authorized"
         client.confirmPaymentIntent(
@@ -719,7 +719,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             oxxo: oxxo,
             billingDetails: billingDetails,
             metadata: [
-                "test_key": "test_value"
+                "test_key": "test_value",
             ])
         client.confirmPaymentIntent(
             with: paymentIntentParams) { paymentIntent, error in
@@ -772,7 +772,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             eps: epsParams,
             billingDetails: billingDetails,
             metadata: [
-                "test_key": "test_value"
+                "test_key": "test_value",
             ])
         paymentIntentParams.returnURL = "example-app-scheme://authorized"
 
@@ -935,7 +935,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             payPal: payPal,
             billingDetails: billingDetails,
             metadata: [
-                "test_key": "test_value"
+                "test_key": "test_value",
             ])
         paymentIntentParams.returnURL = "example-app-scheme://authorized"
         client.confirmPaymentIntent(
@@ -993,7 +993,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             blik: blik,
             billingDetails: billingDetails,
             metadata: [
-                "test_key": "test_value"
+                "test_key": "test_value",
             ])
         let options = STPConfirmPaymentMethodOptions()
         options.blikOptions = STPConfirmBLIKOptions(code: "123456")
@@ -1046,7 +1046,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
             affirm: affirm,
             metadata: [
-                "test_key": "test_value"
+                "test_key": "test_value",
             ])
 
         let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: "123 Main St")
@@ -1076,9 +1076,9 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
-    
+
     // MARK: - MobilePay
-    
+
     func testConfirmPaymentIntentWithMobilePay() {
         var clientSecret: String?
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
@@ -1106,7 +1106,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
             mobilePay: STPPaymentMethodMobilePayParams(),
             billingDetails: nil,
             metadata: [
-                "test_key": "test_value"
+                "test_key": "test_value",
             ]
         )
 
@@ -1115,12 +1115,12 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
         paymentIntentParams.returnURL = "example-app-scheme://unused"
         client.confirmPaymentIntent(with: paymentIntentParams) { paymentIntent, error in
             XCTAssertNil(error, "With valid key + secret, should be able to confirm the intent")
-            
+
             XCTAssertNotNil(paymentIntent)
             XCTAssertEqual(paymentIntent?.stripeId, paymentIntentParams.stripeId)
             XCTAssertFalse(paymentIntent!.livemode)
             XCTAssertNotNil(paymentIntent?.paymentMethodId)
-            
+
             XCTAssertEqual(paymentIntent?.status, .requiresAction)
             XCTAssertEqual(paymentIntent!.nextAction?.type, .redirectToURL)
             expectation.fulfill()
@@ -1128,7 +1128,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
-    
+
     // MARK: - US Bank Account
     func createAndConfirmPaymentIntentWithUSBankAccount(
         paymentMethodOptions: STPConfirmUSBankAccountOptions? = nil,
