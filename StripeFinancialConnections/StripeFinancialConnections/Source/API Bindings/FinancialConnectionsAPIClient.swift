@@ -10,7 +10,11 @@ import Foundation
 
 protocol FinancialConnectionsAPIClient {
 
-    func synchronize(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize>
+    func synchronize(
+        clientSecret: String,
+        returnURL: String?,
+        emitEvents: Bool
+    ) -> Future<FinancialConnectionsSynchronize>
 
     func fetchFinancialConnectionsAccounts(
         clientSecret: String,
@@ -31,7 +35,8 @@ protocol FinancialConnectionsAPIClient {
 
     func retrieveAuthSession(
         clientSecret: String,
-        authSessionId: String
+        authSessionId: String,
+        emitEvents: Bool
     ) -> Future<FinancialConnectionsAuthSession>
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
@@ -161,7 +166,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         )
     }
 
-    func synchronize(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
+    func synchronize(
+        clientSecret: String,
+        returnURL: String?,
+        emitEvents: Bool
+    ) -> Future<FinancialConnectionsSynchronize> {
         let parameters: [String: Any] = [
             "expand": ["manifest.active_auth_session"],
             "client_secret": clientSecret,
@@ -174,6 +183,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 return mobileParameters
             }(),
             "locale": Locale.current.toLanguageTag(),
+            // if `true`, the response may contain `events_to_emit`
+            "emit_events": emitEvents,
         ]
         return self.post(
             resource: "financial_connections/sessions/synchronize",
@@ -235,13 +246,16 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func retrieveAuthSession(
         clientSecret: String,
-        authSessionId: String
+        authSessionId: String,
+        emitEvents: Bool
     ) -> Future<FinancialConnectionsAuthSession> {
-        let body = [
+        let body: [String: Any] = [
             "client_secret": clientSecret,
             "id": authSessionId,
+            // if `true`, the response may contain `events_to_emit`
+            "emit_events": emitEvents,
         ]
-        return self.post(resource: APIEndpointAuthSessionsRetrieve, object: body)
+        return self.post(resource: APIEndpointAuthSessionsRetrieve, parameters: body)
     }
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<

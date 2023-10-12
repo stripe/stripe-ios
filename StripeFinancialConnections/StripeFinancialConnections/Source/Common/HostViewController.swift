@@ -99,7 +99,11 @@ extension HostViewController {
         loadingView.errorView.isHidden = true
         loadingView.activityIndicatorView.stp_startAnimatingAndShow()
         apiClient
-            .synchronize(clientSecret: clientSecret, returnURL: returnURL)
+            .synchronize(
+                clientSecret: clientSecret,
+                returnURL: returnURL,
+                emitEvents: true // listen for `open` event
+            )
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {

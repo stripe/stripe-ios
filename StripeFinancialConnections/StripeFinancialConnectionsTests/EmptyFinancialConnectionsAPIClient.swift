@@ -22,7 +22,11 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
 
-    func synchronize(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
+    func synchronize(
+        clientSecret: String,
+        returnURL: String?,
+        emitEvents: Bool
+    ) -> Future<FinancialConnectionsSynchronize> {
         return Promise<FinancialConnectionsSynchronize>()
     }
 
@@ -48,7 +52,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
 
     func retrieveAuthSession(
         clientSecret: String,
-        authSessionId: String
+        authSessionId: String,
+        emitEvents: Bool
     ) -> Future<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }

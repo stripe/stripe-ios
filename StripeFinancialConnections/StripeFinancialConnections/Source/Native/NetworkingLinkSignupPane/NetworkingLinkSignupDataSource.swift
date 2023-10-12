@@ -45,7 +45,8 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     func synchronize() -> Future<FinancialConnectionsNetworkingLinkSignup> {
         return apiClient.synchronize(
             clientSecret: clientSecret,
-            returnURL: returnURL
+            returnURL: returnURL,
+            emitEvents: false
         )
         .chained { synchronize in
             if let networkingLinkSignup = synchronize.text?.networkingLinkSignupPane {

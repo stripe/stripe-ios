@@ -77,7 +77,11 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         let promise = Promise<FinancialConnectionsAuthSession>()
 
         apiClient
-            .synchronize(clientSecret: clientSecret, returnURL: nil)
+            .synchronize(
+                clientSecret: clientSecret,
+                returnURL: nil,
+                emitEvents: false
+            )
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
@@ -178,7 +182,8 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     ) -> Future<FinancialConnectionsAuthSession> {
         return apiClient.retrieveAuthSession(
             clientSecret: clientSecret,
-            authSessionId: authSession.id
+            authSessionId: authSession.id,
+            emitEvents: true // listen for `institutionAuthorized` event
         ).chained { [weak self] (authSession: FinancialConnectionsAuthSession) in
             // update the `pendingAuthSession` with the latest from the server
             self?.pendingAuthSession = authSession
