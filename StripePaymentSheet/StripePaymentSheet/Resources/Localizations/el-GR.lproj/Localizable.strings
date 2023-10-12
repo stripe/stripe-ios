@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Εάν συνεχίσετε στο PayPal, επιτρέπετε στην %@ να χρεώσει τον λογαριασμό σας PayPal για μελλοντικές πληρωμές σύμφωνα με τους όρους της.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Αν συνεχίσετε στο Revolut Pay, επιτρέπετε στην %@ να χρεώνει τον λογαριασμό σας Revolut Pay για μελλοντικές πληρωμές σύμφωνα με τους όρους της.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση <terms>αυτούς τους όρους</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Συνεχίζοντας, εξουσιοδοτείτε την %1$@ να χρεώσει τον λογαριασμό σας Cash App για αυτήν την πληρωμή και μελλοντικές πληρωμές σύμφωνα με τους όρους της %2$@, μέχρι να ανακληθεί αυτή η εξουσιοδότηση. Μπορείτε να αλλάξετε αυτήν την επιλογή οποιαδήποτε στιγμή στις ρυθμίσεις Cash App.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Αποθηκεύοντας τον τραπεζικό λογαριασμό σας για την %@, συμφωνείτε να εξουσιοδοτείτε πληρωμές σύμφωνα με <terms>αυτούς τους όρους</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Ακύρωση και πληρωμή με άλλον τρόπο";
 
 "Choose a payment method" = "Επιλέξτε μέθοδο πληρωμής";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Επιβεβαίωση";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Επιβεβαιώστε την πληρωμή στην εφαρμογή τράπεζας ή πληρωμής σας μέσα σε %@ για να ολοκληρώσετε την αγορά.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Επιβεβαιώστε την πληρωμή στην εφαρμογή της τράπεζάς σας μέσα σε %@ για την ολοκλήρωση της αγοράς.";
 
 "Contact information" = "Στοιχεία επικοινωνίας";
@@ -49,6 +55,8 @@
 "EPS Bank" = "Τράπεζα με EPS";
 
 "Enter address manually" = "Πληκτρολογήστε τη διεύθυνση";
+
+"FPX Bank" = "FPX Bank";
 
 "IBAN" = "IBAN";
 
