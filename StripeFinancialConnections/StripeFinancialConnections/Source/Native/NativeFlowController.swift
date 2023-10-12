@@ -811,6 +811,13 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
     ) {
         showTerminalError(error)
     }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didReceiveEvent event: StripeCore.FinancialConnectionsEvent
+    ) {
+        delegate?.nativeFlowController(self, didReceiveEvent: event)
+    }
 }
 
 // MARK: - NetworkingSaveToLinkVerificationDelegate
