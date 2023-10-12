@@ -935,11 +935,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 self.updateImage(for: .number)
             }
             let menu = UIMenu(children:
-                                [UIAction(title: .Localized.card_brand_dropdown_placeholder, attributes: .disabled, state: .off, handler: action)]
-                  +
                   self.viewModel.cardBrands.enumerated().map { (_, brand) in
                         let brandString = STPCard.string(from: brand)
-                return UIAction(title: brandString, image: Self.brandImage(for: brand), identifier: .init(rawValue: brandString), state: self.viewModel.selectedBrand == brand ? .on : .off, handler: action)
+                        return UIAction(title: brandString, image: Self.brandImage(for: brand), identifier: .init(rawValue: brandString), state: self.viewModel.selectedBrand == brand ? .on : .off, handler: action)
                 }
             )
             return menu
