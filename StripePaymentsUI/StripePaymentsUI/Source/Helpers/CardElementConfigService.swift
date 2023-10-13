@@ -9,6 +9,7 @@ import Foundation
 
 private let CardElementConfigEndpoint = URL(string: "https://merchant-ui-api.stripe.com/elements/mobile-card-element-config")!
 
+// TODO: Write unit tests with mocked STPAPIClient data
 class CardElementConfigService {
     // The card element does not currently support non-singleton API clients, use the shared one for now.
     let apiClient = STPAPIClient.shared
