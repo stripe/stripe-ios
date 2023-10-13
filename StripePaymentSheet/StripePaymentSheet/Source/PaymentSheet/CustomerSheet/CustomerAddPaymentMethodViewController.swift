@@ -23,7 +23,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?
 
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
-        return paymentMethodTypesView.viewModel.selected
+        return paymentMethodTypeSelectorViewModel.selected
     }
     var paymentOption: PaymentOption? {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
