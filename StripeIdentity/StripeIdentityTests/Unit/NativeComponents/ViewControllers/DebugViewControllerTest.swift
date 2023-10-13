@@ -45,21 +45,29 @@ final class DebugViewControllerTest: XCTestCase {
 
     func testClickSubmitWithSuccess() {
         vc.didTapButton(.submit(completeOption: .success))
+
+        XCTAssertEqual(mockSheetController.testModeReturnResult, .flowCompleted)
         XCTAssertEqual(mockSheetController.completeOption, .success)
     }
 
     func testClickSubmitWithSuccessAsync() {
         vc.didTapButton(.submit(completeOption: .successAsync))
+
+        XCTAssertEqual(mockSheetController.testModeReturnResult, .flowCompleted)
         XCTAssertEqual(mockSheetController.completeOption, .successAsync)
     }
 
     func testClickSubmitWithFailure() {
         vc.didTapButton(.submit(completeOption: .failure))
+
+        XCTAssertEqual(mockSheetController.testModeReturnResult, .flowCompleted)
         XCTAssertEqual(mockSheetController.completeOption, .failure)
     }
 
     func testClickSubmitWithFailureAsync() {
         vc.didTapButton(.submit(completeOption: .failureAsync))
+
+        XCTAssertEqual(mockSheetController.testModeReturnResult, .flowCompleted)
         XCTAssertEqual(mockSheetController.completeOption, .failureAsync)
     }
 }
