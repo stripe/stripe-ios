@@ -17,8 +17,6 @@ extension PaymentSheet {
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
-        isDashboardApp: Bool,
-        dashboardParamsUpdater: @escaping DashboardParamsUpdater = setParamsForDashboardApp(confirmType:paymentIntentParams:paymentIntent:configuration:),
         mandateData: STPMandateDataParams? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
@@ -62,11 +60,11 @@ extension PaymentSheet {
                         )
 
                         // Dashboard specfic logic
-                        if isDashboardApp {
-                            paymentIntentParams = dashboardParamsUpdater(confirmType,
-                                                                           paymentIntentParams,
-                                                                           paymentIntent,
-                                                                           configuration)
+                        if configuration.apiClient.publishableKeyIsUserKey {
+                            paymentIntentParams = setParamsForDashboardApp(confirmType: confirmType,
+                                                                           paymentIntentParams: paymentIntentParams,
+                                                                           paymentIntent: paymentIntent,
+                                                                           configuration: configuration)
                         }
 
                         paymentHandler.confirmPayment(
@@ -160,7 +158,6 @@ extension PaymentSheet {
         return paymentUserAgentValues
     }
 
-    typealias DashboardParamsUpdater = (ConfirmPaymentMethodType, STPPaymentIntentParams, STPPaymentIntent, PaymentSheet.Configuration) -> STPPaymentIntentParams
     static func setParamsForDashboardApp(confirmType: ConfirmPaymentMethodType,
                                          paymentIntentParams: STPPaymentIntentParams,
                                          paymentIntent: STPPaymentIntent,

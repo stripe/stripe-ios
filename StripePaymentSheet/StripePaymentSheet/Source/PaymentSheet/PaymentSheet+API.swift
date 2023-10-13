@@ -154,7 +154,6 @@ extension PaymentSheet {
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
-                    isDashboardApp: configuration.apiClient.publishableKeyIsUserKey,
                     completion: completion
                 )
             }
@@ -196,7 +195,6 @@ extension PaymentSheet {
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
-                    isDashboardApp: configuration.apiClient.publishableKeyIsUserKey,
                     completion: completion
                 )
             }
@@ -239,7 +237,6 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
-                        isDashboardApp: configuration.apiClient.publishableKeyIsUserKey,
                         completion: completion
                     )
                 }
@@ -286,7 +283,6 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
-                        isDashboardApp: configuration.apiClient.publishableKeyIsUserKey,
                         completion: completion
                     )
                 }

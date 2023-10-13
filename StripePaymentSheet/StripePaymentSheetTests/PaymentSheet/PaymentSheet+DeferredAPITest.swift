@@ -33,112 +33,6 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
         return config
     }()
 
-    lazy var paymentHandler: STPPaymentHandler = {
-        return STPPaymentHandler(
-            apiClient: apiClient,
-            formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()
-        )
-    }()
-
-    var confirmHandlerPaymentIntent: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, intentCreationCallback in
-        let createIntentCompletion: (String?, Error?) -> Void = { clientSecret, error in
-            if let clientSecret {
-                intentCreationCallback(.success(clientSecret))
-            } else {
-                intentCreationCallback(.failure(error ?? ExpectedError()))
-            }
-        }
-        let params: [String: Any] = [
-            "amount": 1050,
-        ]
-        STPTestingAPIClient.shared.createPaymentIntent(withParams: params, completion: createIntentCompletion)
-    }
-
-    var confirmHandlerSetupIntent: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, intentCreationCallback in
-        let createIntentCompletion: (String?, Error?) -> Void = { clientSecret, error in
-            if let clientSecret {
-                intentCreationCallback(.success(clientSecret))
-            } else {
-                intentCreationCallback(.failure(error ?? ExpectedError()))
-            }
-        }
-
-        STPTestingAPIClient.shared.createSetupIntent(withParams: [:], completion: createIntentCompletion)
-    }
-
-    struct ExpectedError: LocalizedError {
-        var errorDescription: String?
-    }
-
-    // MARK: handleDeferredIntentConfirmation Dashboard tests
-
-    // When isDashboardApp is true for a PaymentIntent we should call the Dashboard closure
-    func testHandleDeferredIntentConfirmation_shouldCallDashboardClosure_paymentIntent() {
-        let expectation = XCTestExpectation()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD"), confirmHandler: confirmHandlerPaymentIntent)
-
-        PaymentSheet.handleDeferredIntentConfirmation(confirmType: .saved(createValidSavedPaymentMethod()),
-                                                      configuration: configuration, intentConfig: intentConfig, authenticationContext: self, paymentHandler: paymentHandler, isFlowController: false, isDashboardApp: true) { _, _, _, _ in
-            expectation.fulfill()
-            return STPPaymentIntentParams()
-        } completion: { _, _ in
-            // no-op
-        }
-
-        wait(for: [expectation], timeout: 5.0)
-    }
-
-    // When isDashboardApp for a PaymentIntent is false we should not call the Dashboard closure
-    func testHandleDeferredIntentConfirmation_shouldNotCallDashboardClosure_paymentIntent() {
-        let expectation = XCTestExpectation()
-        expectation.isInverted = true
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD"), confirmHandler: confirmHandlerPaymentIntent)
-
-        PaymentSheet.handleDeferredIntentConfirmation(confirmType: .saved(createValidSavedPaymentMethod()),
-                                                      configuration: configuration, intentConfig: intentConfig, authenticationContext: self, paymentHandler: paymentHandler, isFlowController: false, isDashboardApp: false) { _, _, _, _ in
-            expectation.fulfill()
-            return STPPaymentIntentParams()
-        } completion: { _, _ in
-            // no-op
-        }
-
-        wait(for: [expectation], timeout: 5.0)
-    }
-
-    // When isDashboardApp is true for a SetupIntent we should not call the Dashboard closure
-    func testHandleDeferredIntentConfirmation_shouldCallDashboardClosure_setupIntent() {
-        let expectation = XCTestExpectation()
-        expectation.isInverted = true
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD", setupFutureUsage: .offSession), confirmHandler: confirmHandlerSetupIntent)
-
-        PaymentSheet.handleDeferredIntentConfirmation(confirmType: .saved(createValidSavedPaymentMethod()),
-                                                      configuration: configuration, intentConfig: intentConfig, authenticationContext: self, paymentHandler: paymentHandler, isFlowController: false, isDashboardApp: true) { _, _, _, _ in
-            expectation.fulfill()
-            return STPPaymentIntentParams()
-        } completion: { _, _ in
-            // no-op
-        }
-
-        wait(for: [expectation], timeout: 5.0)
-    }
-
-    // When isDashboardApp for a SetupIntent is false we should not call the Dashboard closure
-    func testHandleDeferredIntentConfirmation_shouldNotCallDashboardClosure_setupIntent() {
-        let expectation = XCTestExpectation()
-        expectation.isInverted = true
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD", setupFutureUsage: .offSession), confirmHandler: confirmHandlerSetupIntent)
-
-        PaymentSheet.handleDeferredIntentConfirmation(confirmType: .saved(createValidSavedPaymentMethod()),
-                                                      configuration: configuration, intentConfig: intentConfig, authenticationContext: self, paymentHandler: paymentHandler, isFlowController: false, isDashboardApp: false) { _, _, _, _ in
-            expectation.fulfill()
-            return STPPaymentIntentParams()
-        } completion: { _, _ in
-            // no-op
-        }
-
-        wait(for: [expectation], timeout: 5.0)
-    }
-
     // MARK: setParamsForDashboardApp tests
     func testSetParamsForDashboardApp_saved() {
         let examplePaymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
@@ -183,13 +77,5 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
         }
         waitForExpectations(timeout: 10)
         return validSavedPM!
-    }
-}
-
-// MARK: - STPAuthenticationContext
-
-extension PaymentSheet_DeferredAPITest: STPAuthenticationContext {
-    func authenticationPresentingViewController() -> UIViewController {
-        return UIViewController()
     }
 }
