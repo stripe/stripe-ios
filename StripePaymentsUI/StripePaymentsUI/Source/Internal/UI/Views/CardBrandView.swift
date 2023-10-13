@@ -185,13 +185,9 @@ import UIKit
     /// - Returns: Image.
     private func image(for cardBrand: STPCardBrand) -> UIImage {
         if showCVC {
-            return cardBrand == .amex
-                ? STPImageLibrary.safeImageNamed("card_cvc_amex_icon")
-                : STPImageLibrary.safeImageNamed("card_cvc_icon")
+            return STPImageLibrary.cvcImage(for: cardBrand)
         } else {
-            return cardBrand == .unknown
-                ? STPImageLibrary.safeImageNamed("card_unknown_icon")
-                : STPImageLibrary.cardBrandImage(for: cardBrand)
+            return STPImageLibrary.cardBrandImage(for: cardBrand)
         }
     }
 

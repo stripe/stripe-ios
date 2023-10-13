@@ -27,9 +27,6 @@ class PaymentSheetImageLibrary {
     /// This returns the appropriate icon for the affirm logo
     @objc
     public class func affirmLogo() -> UIImage {
-        if isDarkMode(){
-            return Image.affirm_copy_dark.makeImage()
-        }
         return Image.affirm_copy.makeImage()
     }
 

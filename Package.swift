@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.7
 import PackageDescription
 
 let package = Package(
@@ -48,7 +48,7 @@ let package = Package(
             path: "Stripe/StripeiOS",
             exclude: ["Info.plist"],
             resources: [
-                .process("Resources/Images")
+                .process("Resources/StripeiOS.xcassets")
             ]
         ),
         .target(
@@ -94,7 +94,8 @@ let package = Package(
             path: "StripeCardScan/StripeCardScan",
             exclude: ["Info.plist"],
             resources: [
-                .process("Resources/CompiledModels")
+                .copy("Resources/CompiledModels/UxModel.mlmodelc"),
+                .copy("Resources/CompiledModels/SSDOcr.mlmodelc")
             ]
         ),
         .target(
@@ -103,7 +104,7 @@ let package = Package(
             path: "StripeUICore/StripeUICore",
             exclude: ["Info.plist"],
             resources: [
-                .process("Resources/Images"),
+                .process("Resources/StripeUICore.xcassets"),
                 .process("Resources/JSON")
             ]
         ),
@@ -122,7 +123,7 @@ let package = Package(
             path: "StripePaymentsUI/StripePaymentsUI",
             exclude: ["Info.plist"],
             resources: [
-                .process("Resources/Images"),
+                .process("Resources/StripePaymentsUI.xcassets"),
                 .process("Resources/JSON")
             ]
         ),
@@ -132,7 +133,7 @@ let package = Package(
             path: "StripePaymentSheet/StripePaymentSheet",
             exclude: ["Info.plist"],
             resources: [
-                .process("Resources/Images"),
+                .process("Resources/StripePaymentSheet.xcassets"),
                 .process("Resources/JSON")
             ]
         ),

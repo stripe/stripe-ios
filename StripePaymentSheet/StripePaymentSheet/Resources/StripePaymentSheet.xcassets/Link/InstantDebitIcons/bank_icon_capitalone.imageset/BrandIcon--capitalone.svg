@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>BrandIcon--capitalone</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="BrandIcon--capitalone" fill-rule="nonzero">
+            <polygon id="Container" fill="#037FB0" points="0 0 32 0 32 32 0 32"></polygon>
+            <path d="M16.355,21.203 C22.029,14.683 22.689,11.613 22.045,10.573 C19.93,7.156 10.105,9.057 5.38,10.427 L5.249,10.47 C5.221,10.477 5.195,10.448 5.189,10.403 C5.185,10.358 5.204,10.315 5.231,10.308 L5.364,10.261 C9.204,8.893 16.54,6.919 21.558,6.919 C23.992,6.919 25.881,7.384 26.561,8.607 C27.49,10.276 25.656,13.072 22.736,16.237 L22.608,16.345 L22.741,16.242 C21.089,17.722 14.782,23.802 13.353,25.018 L13.297,25.066 C13.274,25.092 13.243,25.083 13.227,25.046 C13.211,25.009 13.217,24.958 13.239,24.932 L13.306,24.869 L16.351,21.206 L16.355,21.203 L16.355,21.203 Z" id="path-1" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

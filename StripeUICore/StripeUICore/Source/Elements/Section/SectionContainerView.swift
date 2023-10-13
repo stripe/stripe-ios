@@ -116,7 +116,7 @@ class SectionContainerView: UIView {
         layer.applyShadow(shadow: theme.shadow)
         layer.cornerRadius = theme.cornerRadius
 
-        if isUserInteractionEnabled || isDarkMode() {
+        if isUserInteractionEnabled || UITraitCollection.current.isDarkMode {
             backgroundColor = theme.colors.background
         } else {
             backgroundColor = .tertiarySystemGroupedBackground

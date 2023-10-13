@@ -49,26 +49,18 @@ enum Image: String, CaseIterable, ImageMaker {
     case icon_checkmark = "icon_checkmark"
     case icon_chevron_left = "icon_chevron_left"
     case icon_lock = "icon_lock"
-    case icon_menu = "icon_menu"
-    case icon_menu_horizontal = "icon_menu_horizontal"
     case icon_plus = "icon_plus"
     case icon_x = "icon_x"
     case icon_x_standalone = "icon_x_standalone"
     case icon_chevron_left_standalone = "icon_chevron_left_standalone"
 
     // Link
-    case back_button = "back_button"
-    case icon_cancel = "icon_cancel"
-    case icon_add_bordered = "icon_add_bordered"
     case link_logo = "link_logo"
     case link_arrow = "link_arrow"
-    case icon_link_success = "icon_link_success"
-    case icon_link_error = "icon_link_error"
     case link_carousel_logo = "link_carousel_logo"
 
     // Affirm Images
     case affirm_copy = "affirm_mark"
-    case affirm_copy_dark = "affirm_mark_dark"
 
     // Polling / UPI
     case polling_error = "polling_error_icon"
