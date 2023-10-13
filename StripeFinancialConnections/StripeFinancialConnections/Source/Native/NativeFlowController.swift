@@ -97,10 +97,7 @@ class NativeFlowController {
                 || navigationController.topViewController is LinkAccountPickerViewController)
 
         let finishClosingAuthFlow = { [weak self] in
-            guard let self = self else {
-                return
-            }
-            self.closeAuthFlow()
+            self?.closeAuthFlow()
         }
         if showConfirmationAlert {
             CloseConfirmationAlertHandler.present(
