@@ -164,11 +164,10 @@ class RotatingCardBrandsView: UIView {
                 return
             }
 
-            let spacer = UIView()
             rotatingCardBrandView = UIImageView()
             rotatingCardBrandView.contentMode = .scaleAspectFit
             rotatingCardBrandView.setContentHuggingPriority(.required, for: .horizontal)
-            let cardBrandViews: [UIView] = [spacer] + cardBrands.prefix(Self.MaxStaticBrands).map( { brand in
+            let cardBrandViews: [UIImageView] = cardBrands.prefix(Self.MaxStaticBrands).map( { brand in
                 let imageView = UIImageView()
                 imageView.contentMode = .scaleAspectFit
                 imageView.setContentHuggingPriority(.required, for: .horizontal)
@@ -179,7 +178,6 @@ class RotatingCardBrandsView: UIView {
 
             let stackView = UIStackView(arrangedSubviews: cardBrandViews)
             stackView.spacing = Self.LogoSpacing
-            stackView.distribution = .fill
             stackView.alignment = .center
             self.stackView = stackView
         }
