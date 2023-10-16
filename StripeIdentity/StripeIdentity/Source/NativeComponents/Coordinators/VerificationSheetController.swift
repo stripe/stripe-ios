@@ -71,11 +71,13 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     )
 
     func verifyAndTransition(
-        simulateDelay: Bool
+        simulateDelay: Bool,
+        completion: @escaping () -> Void
     )
 
     func unverifyAndTransition(
-        simulateDelay: Bool
+        simulateDelay: Bool,
+        completion: @escaping () -> Void
     )
 
     /// Request a new phoneOtp, transition to error view controller if request failed, callback on successCallback otherwise.
@@ -357,22 +359,28 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     func verifyAndTransition(
-        simulateDelay: Bool
+        simulateDelay: Bool,
+        completion: @escaping () -> Void
     ) {
         apiClient.verifyTestVerificationSession(
             simulateDelay: simulateDelay
         ).observe(on: .main) { [weak self] result in
+            self?.overrideTestModeReturnValue(result: .flowCompleted)
             self?.transitionWithVerificaionPageDataResult(result)
+            completion()
         }
     }
 
     func unverifyAndTransition(
-        simulateDelay: Bool
+        simulateDelay: Bool,
+        completion: @escaping () -> Void
     ) {
         apiClient.unverifyTestVerificationSession(
             simulateDelay: simulateDelay
         ).observe(on: .main) { [weak self] result in
+            self?.overrideTestModeReturnValue(result: .flowCompleted)
             self?.transitionWithVerificaionPageDataResult(result)
+            completion()
         }
     }
 
