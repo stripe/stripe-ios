@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pereidami į „PayPal“ leisite „%@“ nuskaityti mokestį nuo jūsų „PayPal“ sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pereidami į „Revolut Pay“ leisite %@ nuskaityti mokestį nuo jūsų „Revolut Pay“ sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Tęsdami įgaliojate „%1$@“ nurašyti mokestį nuo jūsų „Cash App“ sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal „%2$@“ sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti „Cash App“ nuostatose.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Išsaugodami savo banko sąskaitą %@, sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
 
 "Choose a payment method" = "Pasirinkite mokėjimo būdą";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Patvirtinti";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Patvirtinkite mokėjimą savo banko programėlėje per %@ ir užbaikite pirkimą.";
 
 "Contact information" = "Kontaktinė informacija";
@@ -49,6 +55,8 @@
 "EPS Bank" = "EPS bankas";
 
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
+
+"FPX Bank" = "FPX bankas";
 
 "IBAN" = "IBAN";
 

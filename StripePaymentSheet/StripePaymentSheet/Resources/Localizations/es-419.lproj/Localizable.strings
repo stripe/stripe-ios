@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Si accedes a PayPal, permitirás que %@ efectúe cargos de pagos futuros en tu cuenta de PayPal conforme a las condiciones estipuladas.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Si accedes a Revolut Pay, permitirás que %@ efectúe cargos de pagos futuros en tu cuenta de Revolut Pay conforme a las condiciones estipuladas.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al continuar, aceptas autorizar pagos conforme a <terms>estas condiciones</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Si continúas, autorizas a %1$@ a que cargue en tu cuenta de Cash App este pago y futuros pagos conforme a las condiciones de %2$@ hasta que se revoque esta autorización. Puedes cambiarla en cualquier momento en la configuración de Cash App.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al guardar tu cuenta bancaria para %@, aceptas autorizar pagos conforme a estas <terms>condiciones</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Cancelar y pagar por otra vía";
 
 "Choose a payment method" = "Elegir un método de pago";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Confirmar";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirma el pago en la aplicación del banco o de pago en el transcurso de %@ para completar la compra.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirma el pago en la aplicación de tu banco en el transcurso de %@ para completar la compra.";
 
 "Contact information" = "Información de contacto";
@@ -49,6 +55,8 @@
 "EPS Bank" = "Banco que opera con EPS";
 
 "Enter address manually" = "Ingresar dirección manualmente";
+
+"FPX Bank" = "Banco para FPX";
 
 "IBAN" = "IBAN";
 

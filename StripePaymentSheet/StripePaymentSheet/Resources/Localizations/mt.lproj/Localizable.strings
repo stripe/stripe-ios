@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Meta tkompli għal PayPal tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' PayPal tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Meta tkompli għal Revolut Pay tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' Revolut Pay tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tkompli tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Meta tkompli tkun qed tagħti permess lil %1$@ biex, sakemm dal-permess jitneħħa, tkun tista' tiġbor il-flus mill-kont Cash App tiegħek għal dal-pagament u għall-pagamenti tal-ġejjieni skont ir-regoli ta' %2$@. Tista' tibdel dil-ħaġa meta trid mill-Għażliet ta' Cash App.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tissejvja l-kont tal-bank tiegħek għal %@ tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Ikkanċella u ħallas mod ieħor";
 
 "Choose a payment method" = "Agħżel metodu tal-ħlas";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Ikkonferma";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Biex tlesti x-xirja kkonferma l-pagament, fl-app tal-bank jew fl-app tal-pagamenti, fi żmien %@.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Ikkonferma l-pagament fl-app tal-bank fi żmien %@ biex tlesti x-xirja.";
 
 "Contact information" = "Id-dettalji tal-kuntatt";
@@ -49,6 +55,8 @@
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ikteb l-indirizz int stess";
+
+"FPX Bank" = "FPX Bank";
 
 "IBAN" = "IBAN";
 

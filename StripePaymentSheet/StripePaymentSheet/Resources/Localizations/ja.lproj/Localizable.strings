@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal を継続すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Revolut Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Revolut Pay アカウントに請求することを許可することになります。";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "続行すると、%2$@ の利用規約に従って、この許可が取り消されない限り、お客様は今回の支払いおよび今後の支払いを、Cash App のアカウントから引き落とすことを %1$@ に許可したものとみなされます。これは、Cash App の設定でいつでも変更することができます。";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "キャンセルして別の方法で支払う";
 
 "Choose a payment method" = "支払い方法を選択";
@@ -42,6 +46,8 @@
 
 "Confirm" = "確定する";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 内で銀行または決済アプリで支払いを確定して、購入を完了します。";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "購入を完了するには、%@ 以内に銀行のアプリで支払いを確定してください。";
 
 "Contact information" = "連絡先情報";
@@ -49,6 +55,8 @@
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "住所を手動で入力";
+
+"FPX Bank" = "FPX 銀行";
 
 "IBAN" = "IBAN";
 

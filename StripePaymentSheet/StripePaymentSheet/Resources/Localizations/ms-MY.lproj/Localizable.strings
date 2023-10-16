@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke Revolut Pay, anda membenarkan %@ mengecaj akaun Revolut Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan meneruskan langkah, anda mengizinkan %1$@ untuk mendebitkan akaun Cash App anda bagi pembayaran ini dan pembayaran masa hadapan menurut terma %2$@, sehinggalah keizinan ini dibatalkan. Anda boleh mengubah keizinan ini pada bila-bila masa dalam Tetapan Cash App anda.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan akaun bank anda untuk %@, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
 
 "Choose a payment method" = "Pilih kaedah pembayaran";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Sahkan";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank atau aplikasi pembayaran anda dalam %@ untuk menyelesaikan pembelian.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank anda dalam %@ untuk menyelesaikan pembelian.";
 
 "Contact information" = "Maklumat hubungan";
@@ -49,6 +55,8 @@
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Masukkan alamat secara manual";
+
+"FPX Bank" = "Bank untuk FPX";
 
 "IBAN" = "IBAN";
 

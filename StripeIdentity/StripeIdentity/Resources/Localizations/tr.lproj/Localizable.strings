@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Gerçekten siz olduğunuzu doğrulamak için sonraki adımda otomatik olarak birkaç fotoğraf çekilecek";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Kimlik belgenizin fotoğrafını manuel olarak da yükleyebilirsiniz.";
 
 "App Settings" = "Uygulama Ayarları";
@@ -37,6 +39,8 @@
 "Front of driver's license" = "Sürücü belgesinin ön yüzü";
 
 "Front of identity card" = "Kimliğin ön yüzü";
+
+"Get ready to take a selfie" = "Selfie çekmeye hazırlanın";
 
 "Go Back" = "Geri Git";
 

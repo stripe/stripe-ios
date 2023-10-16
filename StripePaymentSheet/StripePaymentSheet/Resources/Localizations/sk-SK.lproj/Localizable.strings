@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pokračovaním na službu PayPal povolíte spoločnosti %@, aby z vášho účtu PayPal účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pokračovaním na službu Revolut Pay povolíte spoločnosti %@, aby z vášho účtu Revolut Pay účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračovaním oprávňujete spoločnosť %1$@, aby zaúčtovala túto platbu a budúce platby na debet vášho účtu Cash App v súlade s podmienkami spoločnosti %2$@, až do odvolania tohto oprávnenia. Toto oprávnenie môžete kedykoľvek zmeniť v nastaveniach aplikácie Cash App.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Uložením bankového účtu pre spoločnosť %@ súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Zrušiť a zaplatiť iným spôsobom";
 
 "Choose a payment method" = "Vyberte spôsob platby";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Potvrdiť";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v banke alebo platobnej aplikácii v priebehu %@.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v aplikácii vašej banky v priebehu %@.";
 
 "Contact information" = "Kontaktné informácie";
@@ -49,6 +55,8 @@
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Zadať adresu manuálne";
+
+"FPX Bank" = "FPX Bank";
 
 "IBAN" = "IBAN";
 
