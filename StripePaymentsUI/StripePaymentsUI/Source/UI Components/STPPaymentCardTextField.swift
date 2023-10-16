@@ -908,13 +908,13 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             )
         )
     }
-    
+
     @objc func brandViewTapped() {
         if !self.viewModel.brandState.isCBC {
             self.numberField.becomeFirstResponder()
         }
     }
-    
+
     var isShowingCBCIndicator: Bool {
         // The brand state is CBC
         return self.viewModel.brandState.isCBC &&
@@ -2232,7 +2232,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 )
             }
         }
-        
+
         if !(viewModel.hasCompleteMetadataForCardNumber)
             && STPBINController.shared.isLoadingCardMetadata(forPrefix: viewModel.cardNumber ?? "")
         {
