@@ -29,7 +29,7 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         return stackView
     }()
     let errorStateImageView: UIImageView = {
-        let imageView = UIImageView(image: STPImageLibrary.safeImageNamed("form_error_icon"))
+        let imageView = UIImageView(image: Image.icon_error.makeImage())
         imageView.contentMode = UIView.ContentMode.scaleAspectFit
         return imageView
     }()

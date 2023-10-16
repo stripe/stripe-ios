@@ -11,15 +11,8 @@ import Foundation
 @_spi(STP) public extension DynamicImageView {
     static func makeUnknownCardImageView(theme: ElementsUITheme) -> DynamicImageView {
         return DynamicImageView(
-            lightImage: STPImageLibrary.safeImageNamed(
-                "card_unknown_updated_icon",
-                darkMode: true
-            ),
-            darkImage: STPImageLibrary.safeImageNamed(
-                "card_unknown_updated_icon",
-                darkMode: false
-            ),
-            pairedColor: theme.colors.textFieldText
+            dynamicImage: STPImageLibrary.unknownCardCardImage(),
+            pairedColor: theme.colors.background
         )
     }
 }

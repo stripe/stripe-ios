@@ -280,6 +280,19 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             XCTAssertEqual(form.getAllSubElements().count, 1)
         }
     }
+
+    func testMobilePayConfirmFlows() async throws {
+        try await _testConfirm(
+            intentKinds: [.paymentIntent],
+            currency: "DKK",
+            paymentMethodType: .dynamic("mobilepay"),
+            merchantCountry: .FR
+        ) { form in
+            // MobilePay has no input fields
+            XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
+
 }
 
 // MARK: - Helper methods

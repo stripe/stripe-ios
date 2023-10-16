@@ -265,7 +265,7 @@ extension PaymentMethodMessagingView {
 
     static func makeMessagingContentEndpointParams(configuration: Configuration) -> [String: Any] {
         let logoColor: String
-        switch isDarkMode()
+        switch UITraitCollection.current.isDarkMode
             ? configuration.imageColor.userInterfaceStyleDark
             : configuration.imageColor.userInterfaceStyleLight
         {

@@ -41,7 +41,7 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
             card: card,
             billingDetails: billingDetails,
             metadata: [
-                "test_key": "test_value"
+                "test_key": "test_value",
             ])
         let expectation = self.expectation(description: "Payment Method Card create")
         client.createPaymentMethod(
@@ -153,6 +153,19 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
             expectation.fulfill()
         }
 
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func testCreateMobilePayPaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
+        let params = STPPaymentMethodParams(mobilePay: STPPaymentMethodMobilePayParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .mobilePay)
+            expectation.fulfill()
+        }
         waitForExpectations(timeout: 5, handler: nil)
     }
 }
