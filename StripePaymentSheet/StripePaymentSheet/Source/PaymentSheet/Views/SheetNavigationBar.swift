@@ -61,7 +61,7 @@ class SheetNavigationBar: UIView {
 
         return button
     }()
-    
+
     fileprivate lazy var titleLabel: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
         label.isHidden = true

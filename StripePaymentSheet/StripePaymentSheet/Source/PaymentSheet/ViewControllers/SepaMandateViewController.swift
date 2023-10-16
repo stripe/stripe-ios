@@ -6,9 +6,9 @@
 //
 
 @_spi(STP) import StripeCore
-import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+import UIKit
 
 class SepaMandateViewController: UIViewController, BottomSheetContentViewController {
     let requiresFullScreen: Bool = false
