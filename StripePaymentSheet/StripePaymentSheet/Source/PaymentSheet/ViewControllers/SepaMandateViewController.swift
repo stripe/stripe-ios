@@ -15,7 +15,6 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
 
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: false, appearance: configuration.appearance)
-        navBar.setStyle(.none)
         navBar.delegate = self
         return navBar
     }()

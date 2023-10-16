@@ -69,7 +69,7 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
         var configuration = configuration
-        configuration.appearance = PaymentSheetTestUtils.snapshotTestTheme
+        configuration.appearance = ._testMSPaintTheme
         let vc = AddressViewController(
             addressSpecProvider: addressSpecProvider,
             configuration: configuration,

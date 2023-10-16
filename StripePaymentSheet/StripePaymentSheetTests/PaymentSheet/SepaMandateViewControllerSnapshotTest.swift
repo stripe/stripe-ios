@@ -28,7 +28,7 @@ final class SepaMandateViewControllerSnapshotTest: FBSnapshotTestCase {
 
     func testViewWithAppearanceConfiguration() {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        configuration.appearance = PaymentSheetTestUtils.snapshotTestTheme
+        configuration.appearance = ._testMSPaintTheme
         let sut = SepaMandateViewController(configuration: configuration) { _ in
            // no-op
         }
