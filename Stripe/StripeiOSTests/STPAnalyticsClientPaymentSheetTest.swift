@@ -17,8 +17,9 @@ import XCTest
 class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     private var client: STPAnalyticsClient!
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
+        await PaymentSheetLoader.loadMiscellaneousSingletons()
         client = STPAnalyticsClient()
     }
 
