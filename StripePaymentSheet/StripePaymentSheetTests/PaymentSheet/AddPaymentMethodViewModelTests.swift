@@ -93,6 +93,8 @@ class AddPaymentMethodViewModelTests: XCTestCase {
         }
 
         XCTAssertEqual(option.account, testLinkAccount)
+
+        LinkAccountContext.shared.account = nil
     }
 
     func testUSBankAccountFormElement() throws {
