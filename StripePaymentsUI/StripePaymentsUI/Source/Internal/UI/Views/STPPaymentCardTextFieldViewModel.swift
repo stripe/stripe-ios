@@ -117,9 +117,9 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         var isCBC: Bool {
             switch self {
             case .brand, .unknown:
-                false
+                return false
             case .cbcBrandSelected, .unknownMultipleOptions:
-                true
+                return true
             }
         }
     }

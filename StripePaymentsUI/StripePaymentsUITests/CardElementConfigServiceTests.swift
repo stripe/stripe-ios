@@ -7,12 +7,12 @@ import Foundation
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP) @testable import StripePaymentsUI
 @_spi(STP) @testable import StripeCoreTestUtils
+@_spi(STP) @testable import StripePaymentsUI
 import XCTest
 
 class CardElementConfigServiceTests: APIStubbedTestCase {
-    
+
     func testFetchConfig() throws {
         let exp = expectation(description: "fetched config")
         let cecs = CardElementConfigService()
@@ -31,7 +31,7 @@ class CardElementConfigServiceTests: APIStubbedTestCase {
         }
         // Returns false at first...
         XCTAssertFalse(cecs.isCBCEligible)
-        
+
         waitForExpectations(timeout: 3.0)
         // But after waiting for the response (and another turn of the runloop), it returns true!
         let exp2 = expectation(description: "processed and checked response")
@@ -41,5 +41,5 @@ class CardElementConfigServiceTests: APIStubbedTestCase {
         }
         waitForExpectations(timeout: 1.0)
     }
-    
+
 }
