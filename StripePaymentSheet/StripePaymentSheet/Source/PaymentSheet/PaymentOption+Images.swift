@@ -71,7 +71,7 @@ extension STPPaymentMethod {
     }
 
     func makeCarouselImage(for view: UIView) -> UIImage {
-        if type == .card, let cardBrand = card?.brand {
+        if type == .card, let cardBrand = card?.networks?.preferredBrand ?? card?.brand {
             return cardBrand.makeCarouselImage()
         } else if type == .USBankAccount {
             return PaymentSheetImageLibrary.bankIcon(
