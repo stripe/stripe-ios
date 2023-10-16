@@ -7,14 +7,15 @@
 
 @_spi(STP) import StripeCore
 import UIKit
-// @_spi(STP) import StripePayments
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
 class SepaMandateViewController: UIViewController, BottomSheetContentViewController {
     let requiresFullScreen: Bool = false
 
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: false, appearance: configuration.appearance)
+        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode, appearance: configuration.appearance)
+        navBar.title = STPPaymentMethodType.SEPADebit.displayName
         navBar.delegate = self
         return navBar
     }()
@@ -32,6 +33,11 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
             }
         )
         return button
+    }()
+    private lazy var headerLabel: UILabel = {
+        let label = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
+        label.text = STPPaymentMethodType.SEPADebit.displayName
+        return label
     }()
 
     let configuration: PaymentSheet.Configuration
@@ -55,12 +61,7 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
         stackView.axis = .vertical
         stackView.spacing = PaymentSheetUI.defaultPadding
 
-        view.addAndPinSubviewToSafeArea(stackView, insets: PaymentSheetUI.defaultSheetMargins/*.insets(
-            top: PaymentSheetUI.defaultSheetMargins.top,
-            leading: PaymentSheetUI.defaultSheetMargins.leading,
-            bottom: PaymentSheetUI.defaultSheetMargins.bottom,
-            trailing: PaymentSheetUI.defaultSheetMargins.trailing
-        )*/)
+        view.addAndPinSubviewToSafeArea(stackView, insets: PaymentSheetUI.defaultSheetMargins)
     }
 
     func didTapOrSwipeToDismiss() {
