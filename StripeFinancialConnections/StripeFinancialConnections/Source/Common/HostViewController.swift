@@ -101,8 +101,7 @@ extension HostViewController {
         apiClient
             .synchronize(
                 clientSecret: clientSecret,
-                returnURL: returnURL,
-                emitEvents: true // listen for `open` event
+                returnURL: returnURL
             )
             .observe { [weak self] result in
                 guard let self = self else { return }
