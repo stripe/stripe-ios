@@ -662,10 +662,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// - Returns: the rectangle in which the receiver draws its brand image.
     @objc(brandImageRectForBounds:) open func brandImageRect(forBounds bounds: CGRect) -> CGRect {
         let height = CGFloat(min(bounds.size.height, brandImageView.image?.size.height ?? 0))
-        // the -1 to y here helps the image actually be centered
         return CGRect(
             x: STPPaymentCardTextFieldDefaultPadding,
-            y: 0.5 * bounds.size.height - 0.5 * height - 1,
+            y: 0.5 * bounds.size.height - 0.5 * height,
             width: brandImageView.image?.size.width ?? 0.0,
             height: height
         )
@@ -677,7 +676,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         let height: CGFloat = 9
         return CGRect(
             x: brandImageRect.maxX,
-            y: brandImageRect.midY - (height / 2.0) + 1, // Add 1 to match hacky brand view inset
+            y: brandImageRect.midY - (height / 2.0),
             width: width,
             height: height
         )
@@ -892,27 +891,40 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     func setupBrandTapGestureRecognizers() {
-        // TODO: Swap these out as needed as CBC eligibilty changes
-        // TODO2: Maybe instead always add gesture recognizers, implement gestureRecognizerShouldBegin, have it return true if needed?
-        if viewModel.cbcEnabled {
-            if #available(iOS 14.0, *) {
-                self.showsMenuAsPrimaryAction = true
-                self.isContextMenuInteractionEnabled = true
-            }
-        } else {
-            brandImageView.addGestureRecognizer(
-                UITapGestureRecognizer(
-                    target: numberField,
-                    action: #selector(UIResponder.becomeFirstResponder)
-                )
-            )
-            cbcIndicatorView.addGestureRecognizer(
-                UITapGestureRecognizer(
-                    target: numberField,
-                    action: #selector(UIResponder.becomeFirstResponder)
-                )
-            )
+        if #available(iOS 14.0, *) {
+            self.showsMenuAsPrimaryAction = true
+            self.isContextMenuInteractionEnabled = true
         }
+        brandImageView.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(brandViewTapped)
+            )
+        )
+        cbcIndicatorView.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(brandViewTapped)
+            )
+        )
+    }
+    
+    @objc func brandViewTapped() {
+        if !self.viewModel.brandState.isCBC {
+            self.numberField.becomeFirstResponder()
+        }
+    }
+    
+    var isShowingCBCIndicator: Bool {
+        // The brand state is CBC
+        return self.viewModel.brandState.isCBC &&
+        // And the CVC field isn't selected
+        STPCardFieldType(rawValue: focusedTextFieldForLayout?.intValue ?? 0) != .CVC &&
+        // And the card is not valid (we're not showing an error image)
+        STPCardValidator.validationState(
+            forNumber: viewModel.cardNumber ?? "",
+            validatingCardBrand: true
+        ) != .invalid
     }
 
     open override func menuAttachmentPoint(for configuration: UIContextMenuConfiguration) -> CGPoint {
@@ -930,7 +942,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             // Don't pop a menu outside the brand selector area
             return nil
         }
-        if STPCardFieldType(rawValue: focusedTextFieldForLayout?.intValue ?? 0) == .CVC {
+        if !isShowingCBCIndicator {
             // Don't pop the menu during CVC entry, as the brand isn't visible
             return nil
         }
@@ -2220,7 +2232,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 )
             }
         }
-
+        
         if !(viewModel.hasCompleteMetadataForCardNumber)
             && STPBINController.shared.isLoadingCardMetadata(forPrefix: viewModel.cardNumber ?? "")
         {
@@ -2261,13 +2273,12 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 applyBrandImage?(fieldType, (viewModel.validationStateForPostalCode()))
             }
         }
-        let shouldShowCBCIndicator = self.viewModel.brandState.isCBC && fieldType != .CVC // && isError
         UIView.transition(
             with: self.cbcIndicatorView,
             duration: 0.2,
             options: [.curveEaseInOut, .transitionCrossDissolve],
             animations: {
-                self.cbcIndicatorView.alpha = shouldShowCBCIndicator ? 1.0 : 0.0
+                self.cbcIndicatorView.alpha = self.isShowingCBCIndicator ? 1.0 : 0.0
             }
         )
     }
