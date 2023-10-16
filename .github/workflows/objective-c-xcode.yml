@@ -18,4 +18,4 @@ jobs:
         run: |
           brew install tuist &&
           tuist generate &&
-          ruby ci_scripts/test.rb --scheme StripeiOS
+          ruby ci_scripts/test.rb --device "iPhone 13" --version 16.1 --scheme StripeiOS
