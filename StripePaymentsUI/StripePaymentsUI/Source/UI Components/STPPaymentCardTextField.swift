@@ -857,7 +857,6 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             self.fieldsView.addSubview(field)
         }
 
-        // TODO: both of these tap gesture recognizers should open CBC for CBC users, along with a little extra padding
         addSubview(brandImageView)
         // On small screens, the number field fits ~4 numbers, and the brandImage is just as large.
         // Previously, taps on the brand image would *dismiss* the keyboard. Make it move to the numberField instead
@@ -934,18 +933,19 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     open override func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        if !isShowingCBCIndicator {
+            // Don't pop a menu if the CBC indicator isn't visible
+            return nil
+        }
+
         var targetRect = self.brandImageRect(forBounds: self.bounds)
         // Add a little padding to include the arrow view
-        targetRect.size.width += 4.0
-
+        targetRect.size.width += self.cbcIndicatorRect(forBounds: self.bounds).width
         if !targetRect.contains(location) {
             // Don't pop a menu outside the brand selector area
             return nil
         }
-        if !isShowingCBCIndicator {
-            // Don't pop the menu during CVC entry, as the brand isn't visible
-            return nil
-        }
+        
         return UIContextMenuConfiguration(actionProvider: { _ in
             if !self.viewModel.brandState.isCBC {
                 // Not doing CBC at the moment, don't return anything
