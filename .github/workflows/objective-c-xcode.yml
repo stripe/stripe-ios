@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build and analyse default scheme using xcodebuild command
-    runs-on: macos-13-xlarge
+    runs-on: macos-13-large
 
     steps:
       - name: Checkout
