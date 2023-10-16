@@ -354,6 +354,14 @@ extension NativeFlowController {
                         }
                     }
                 case .failure(let completeFinancialConnectionsSessionError):
+                    self.dataManager
+                        .analyticsClient
+                        .logUnexpectedError(
+                            completeFinancialConnectionsSessionError,
+                            errorName: "CompleteSessionError",
+                            pane: FinancialConnectionsAnalyticsClient
+                                .paneFromViewController(self.navigationController.topViewController)
+                        )
                     self.logCompleteEvent(
                         type: "error",
                         status: "failed",

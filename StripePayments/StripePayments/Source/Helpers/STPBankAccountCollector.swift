@@ -126,9 +126,9 @@ public class STPBankAccountCollector: NSObject {
     /// - Parameters:
     ///   - clientSecret:      Client secret of the payment intent
     ///   - returnURL:         A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).
-    ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
     ///   - params:            Parameters for this call
     ///   - viewController:    Presenting view controller that will present the modal
+    ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
     ///   - completion:        Completion block to be called on completion of the operation.
     ///                        Upon success, the `STPPaymentIntent` instance will have an
     ///                        expanded `paymentMethod` containing detailed payment method information
@@ -356,9 +356,9 @@ public class STPBankAccountCollector: NSObject {
     /// - Parameters:
     ///   - clientSecret:      Client secret of the setup intent
     ///   - returnURL:         A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).
-    ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
     ///   - params:            Parameters for this call
     ///   - viewController:    Presenting view controller that will present the modal
+    ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
     ///   - completion:        Completion block to be called on completion of the operation.
     ///                        Upon success, the `STPSetupIntent` instance will have an
     ///                        expanded `paymentMethod` containing detailed payment method information

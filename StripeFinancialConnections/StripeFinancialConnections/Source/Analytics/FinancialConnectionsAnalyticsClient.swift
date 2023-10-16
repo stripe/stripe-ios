@@ -118,7 +118,11 @@ extension FinancialConnectionsAnalyticsClient {
         eventName: String,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) {
-        emitEvent(forError: error)
+        FinancialConnectionsEvent
+            .events(fromError: error)
+            .forEach { event in
+                delegate?.analyticsClient(self, didReceiveEvent: event)
+            }
 
         var parameters: [String: Any] = [:]
         parameters["error"] = errorName
@@ -143,13 +147,6 @@ extension FinancialConnectionsAnalyticsClient {
             parameters["code"] = (error as NSError).code
         }
         log(eventName: eventName, parameters: parameters, pane: pane)
-    }
-
-    private func emitEvent(forError error: Error) {
-        let events = FinancialConnectionsEvent.events(fromError: error)
-        events.forEach { event in
-            delegate?.analyticsClient(self, didReceiveEvent: event)
-        }
     }
 
     func logMerchantDataAccessLearnMore(pane: FinancialConnectionsSessionManifest.NextPane) {
