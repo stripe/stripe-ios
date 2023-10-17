@@ -2,8 +2,6 @@
 
 require_relative 'release_common'
 
-verify_xcode_version
-
 @version = version_from_file
 
 @changelog = changelog(@version)
@@ -12,7 +10,18 @@ verify_xcode_version
 
 def export_builds
   # Compile the build products: bundle install && ./ci_scripts/export_builds.rb
-  run_command('ci_scripts/export_builds.rb')
+  if @is_dry_run
+    # Run locally
+    run_command('ci_scripts/export_builds.rb')
+  else
+    # Run in VM
+    if need_to_build_vm?
+      build_vm
+    end
+    bring_up_vm_and_wait_for_boot
+    run_command_vm('source ~/.zprofile && sudo gem install bundler:2.1.2 && bundle install && tuist generate -n && bundle exec ./ci_scripts/export_builds.rb')
+    finish_vm  
+  end
 end
 
 def approve_pr
