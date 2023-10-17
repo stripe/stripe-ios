@@ -180,6 +180,11 @@ final class LinkAccountPickerViewController: UIViewController {
             didSelectAccount: selectedAccountTuple.partnerAccount
         )
 
+        self.delegate?.linkAccountPickerViewController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
+        )
+
         if nextPane == .success {
             let linkingAccountsLoadingView = LinkingAccountsLoadingView(
                 numberOfSelectedAccounts: 1,
@@ -200,10 +205,6 @@ final class LinkAccountPickerViewController: UIViewController {
                                 pane: .linkAccountPicker
                             )
 
-                        self.delegate?.linkAccountPickerViewController(
-                            self,
-                            didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
-                        )
                         if let institution = institutionList.data.first {
                             self.delegate?.linkAccountPickerViewController(
                                 self,
