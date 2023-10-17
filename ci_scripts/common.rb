@@ -2,6 +2,7 @@
 
 require 'colorize'
 require 'English'
+require 'net/ssh'
 
 # This should generally be the minimum Xcode version supported by the App Store, as the
 # compiled XCFrameworks won't be usable on older versions.
@@ -30,3 +31,33 @@ def run_command(command, raise_on_failure = true)
   rputs "Command failed: #{command} \a"
   raise if raise_on_failure
 end
+
+def run_command_vm(command, raise_on_failure = true)
+  tart_pid = spawn("tart run my-ventura-xcode --dir=stripe-ios:/Users/davidestes/stripe/stripe-ios-private")
+  Process.detach(tart_pid)
+  puts "tart> #{command}".blue
+
+  Net::SSH.start(`tart ip my-ventura-xcode`.strip, 'admin', :password => "admin") do |ssh|
+    # capture all stderr and stdout output from a remote process
+    output = ssh.exec!("mkdir -p /tmp/build/stripe-ios")
+    puts output
+    output = ssh.exec!("rsync -a --delete --exclude '.git' \"/Volumes/My Shared Files/stripe-ios\" /tmp/build/")
+    puts output
+    output = ssh.exec!("cd \"/tmp/build/stripe-ios\" && #{command}")
+    puts output
+    output = ssh.exec!("rsync -aO --exclude '.git' /tmp/build/stripe-ios/ \"/Volumes/My Shared Files/stripe-ios/\"")
+    puts output
+  end
+
+  # Process.kill("HUP", tart_pid)
+  # return unless $CHILD_STATUS.exitstatus != 0
+
+  # rputs "Command failed: #{command} \a"
+  # raise if raise_on_failure
+end
+# run_command_vm('sudo gem install bundler:2.1.2')
+# run_command_vm('bundle install')
+# run_command_vm('source ~/.zprofile && brew install tuist')
+# run_command_vm('source ~/.zprofile && tuist generate -n')
+# run_command_vm('source ~/.zprofile && bundle install')
+run_command_vm('source ~/.zprofile && tuist generate -n && bundle exec ./ci_scripts/export_builds.rb')
