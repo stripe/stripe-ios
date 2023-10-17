@@ -217,7 +217,7 @@ extension FinancialConnectionsWebFlowViewController {
             didReceiveEvent: FinancialConnectionsEvent(
                 name: .success,
                 metadata: FinancialConnectionsEvent.Metadata(
-                    manualEntry: session.bankAccountToken != nil
+                    manualEntry: session.paymentAccount?.isManualEntry ?? false
                 )
             )
         )
