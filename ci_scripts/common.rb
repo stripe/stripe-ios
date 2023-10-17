@@ -40,11 +40,10 @@ def run_command(command, raise_on_failure = true)
 end
 
 def run_command_vm(command, raise_on_failure = true)
-  tart_pid = spawn("tart run my-ventura-xcode --dir=stripe-ios:/Users/davidestes/stripe/stripe-ios")
-  Process.detach(tart_pid)
   puts "tart> #{command}".blue
 
-  Net::SSH.start(`tart ip my-ventura-xcode`.strip, 'admin', :password => "admin") do |ssh|
+  Net::SSH.start(`tart ip builder-vm`.strip, 'admin', :password => "admin") do |ssh|
+    ssh.exec!('mkdir -p "/tmp/build/stripe-ios"')
     output = ssh.exec!("cd \"/tmp/build/stripe-ios\" && #{command}")
     puts output
   end
@@ -63,7 +62,7 @@ def bring_up_vm_and_wait_for_boot
 
   # Create a new VM
   run_command("tart clone #{VM_NAME} builder-vm")
-  tart_pid = spawn("tart run my-ventura-xcode --dir=stripe-ios:/Users/davidestes/stripe/stripe-ios")
+  tart_pid = spawn("tart run builder-vm --dir=stripe-ios:/Users/davidestes/stripe/stripe-ios")
   Process.detach(tart_pid)
   # Retry a basic command every ten seconds until the VM boots, catch error and retry
   booted = false
@@ -83,9 +82,8 @@ end
 
 def setup_vm_requirements
   # Clone the repo:
-  g = Git.clone('org-13141669@github.com:stripe-ios/ios-deploy-vm.git', path: '~/stripe/ios-deploy-vm')
-  g = Git.open('~/stripe/ios-deploy-vm')
-  g.checkout("origin/#{VM_NAME.sub(':', '_')}")
+  `git clone org-13141669@github.com:stripe-ios/ios-deploy-vm.git #{Dir.home}/stripe/ios-deploy-vm`
+  `cd #{Dir.home}/stripe/ios-deploy-vm && git fetch origin && git checkout origin/#{VM_NAME.sub(':', '_')}`
 end
 
 def finish_vm
@@ -95,14 +93,19 @@ def finish_vm
 end
 
 def need_to_build_vm?
-  `tart list`.include? VM_NAME
+  !`tart list`.include? VM_NAME
 end
 
 def build_vm
   rputs 'Building VM images! This will take a while, grab some coffee and keep your Mac awake...'
   setup_vm_requirements
-  Dir.chdir(git_publish_dir) do
-    run_command('packer build -var-file="variables.pkrvars.hcl" templates/base.pkr.hcl')
+  Dir.chdir("#{Dir.home}/stripe/ios-deploy-vm") do
+    unless `tart list`.include? 'ventura-vanilla'
+      run_command('packer build -var-file="variables.pkrvars.hcl" templates/vanilla-ventura.pkr.hcl')
+    end
+    unless `tart list`.include? 'ventura-base'
+      run_command('packer build -var-file="variables.pkrvars.hcl" templates/base.pkr.hcl')
+    end
     run_command('packer build -var-file="variables.pkrvars.hcl" templates/xcode.pkr.hcl')
   end
 end
@@ -110,4 +113,6 @@ end
 if need_to_build_vm?
   build_vm
 end
+bring_up_vm_and_wait_for_boot
 run_command_vm('source ~/.zprofile && sudo gem install bundler:2.1.2 && bundle install && tuist generate -n && bundle exec ./ci_scripts/export_builds.rb')
+finish_vm
