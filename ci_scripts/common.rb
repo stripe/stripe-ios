@@ -60,4 +60,5 @@ end
 # run_command_vm('source ~/.zprofile && brew install tuist')
 # run_command_vm('source ~/.zprofile && tuist generate -n')
 # run_command_vm('source ~/.zprofile && bundle install')
-run_command_vm('source ~/.zprofile && tuist generate -n && bundle exec ./ci_scripts/export_builds.rb')
+# run_command_vm('source ~/.zprofile && bundle exec ./ci_scripts/export_builds.rb')
+run_command_vm('source ~/.zprofile')
