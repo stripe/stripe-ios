@@ -57,7 +57,7 @@ extension STPPaymentMethod {
                 return STPImageLibrary.unknownCardCardImage()
             }
 
-            return STPImageLibrary.cardBrandImage(for: card.brand)
+            return STPImageLibrary.cardBrandImage(for: card.networks?.preferredBrand ?? card.brand)
         case .iDEAL:
             return Image.pm_type_ideal.makeImage()
         case .USBankAccount:
@@ -90,7 +90,7 @@ extension STPPaymentMethodParams {
                 return STPImageLibrary.unknownCardCardImage()
             }
 
-            let brand = STPCardValidator.brand(forNumber: number)
+            let brand = card.networks?.preferredBrand ?? STPCardValidator.brand(forNumber: number)
             return STPImageLibrary.cardBrandImage(for: brand)
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
