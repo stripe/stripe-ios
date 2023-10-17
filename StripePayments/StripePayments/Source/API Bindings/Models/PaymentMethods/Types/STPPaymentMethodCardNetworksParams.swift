@@ -15,7 +15,7 @@ public class STPPaymentMethodCardNetworksParams: NSObject, STPFormEncodable {
     /// method. This must reflect an explicit user choice. If your user didn't
     /// make a selection, then pass `null`.
     @objc public var preferred: String?
-    
+
     /// Convience helper to convert the preferred String into a card brand
     @_spi(STP) public var preferredBrand: STPCardBrand? {
         guard let preferred = preferred else { return nil }
