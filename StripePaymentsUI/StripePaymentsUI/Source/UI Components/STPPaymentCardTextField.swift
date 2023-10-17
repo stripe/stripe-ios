@@ -661,11 +661,12 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// - Parameter bounds: The bounding rectangle of the receiver.
     /// - Returns: the rectangle in which the receiver draws its brand image.
     @objc(brandImageRectForBounds:) open func brandImageRect(forBounds bounds: CGRect) -> CGRect {
-        let height = CGFloat(min(bounds.size.height, brandImageView.image?.size.height ?? 0))
+        let brandIconSize: CGSize = .init(width: 29.0, height: 19.0)
+        let height = CGFloat(min(bounds.size.height, brandIconSize.height))
         return CGRect(
             x: STPPaymentCardTextFieldDefaultPadding,
             y: 0.5 * bounds.size.height - 0.5 * height,
-            width: brandImageView.image?.size.width ?? 0.0,
+            width: brandIconSize.width,
             height: height
         )
     }
@@ -801,7 +802,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
         clipsToBounds = true
 
-        brandImageView.contentMode = .center
+        brandImageView.contentMode = .scaleAspectFit
         brandImageView.backgroundColor = UIColor.clear
         brandImageView.tintColor = placeholderColor
 
