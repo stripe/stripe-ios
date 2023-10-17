@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative 'release_common'
+require_relative 'vm_tools'
 
 @version = version_from_file
 
@@ -20,7 +21,7 @@ def export_builds
     end
     bring_up_vm_and_wait_for_boot
     run_command_vm('source ~/.zprofile && sudo gem install bundler:2.1.2 && bundle install && tuist generate -n && bundle exec ./ci_scripts/export_builds.rb')
-    finish_vm  
+    finish_vm
   end
 end
 
