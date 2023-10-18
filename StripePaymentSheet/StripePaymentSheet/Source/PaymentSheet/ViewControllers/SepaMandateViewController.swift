@@ -18,9 +18,11 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
         navBar.delegate = self
         return navBar
     }()
-    private lazy var sepaMandateElement: SimpleMandateElement = {
+    private lazy var sepaMandateView: SimpleMandateTextView = {
         let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
-        return SimpleMandateElement(mandateText: mandateText, theme: configuration.appearance.asElementsTheme)
+        let view = SimpleMandateTextView(mandateText: mandateText, theme: configuration.appearance.asElementsTheme)
+        view.label.textAlignment = .left
+        return view
     }()
 
     private lazy var confirmButton: ConfirmButton = {
@@ -56,7 +58,7 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, sepaMandateElement.view, confirmButton])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, sepaMandateView, confirmButton])
         stackView.axis = .vertical
         stackView.spacing = PaymentSheetUI.defaultPadding
 
