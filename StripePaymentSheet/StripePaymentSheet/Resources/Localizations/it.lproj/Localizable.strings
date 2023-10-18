@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Continuando su PayPal, consenti a %@ di addebitare i pagamenti futuri sul tuo conto PayPal in base a quanto previsto dai relativi termini e condizioni.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Continuando su Revolut Pay, consenti a %@ di addebitare i pagamenti futuri sul tuo conto Revolut Pay in base a quanto previsto dai relativi termini e condizioni.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Se continui, accetti di autorizzare i pagamenti conformemente ai <terms>questi termini</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Continuando, autorizzi %1$@ ad addebitare questo pagamento e i pagamenti futuri sul tuo conto Cash App conformemente ai termini di %2$@, fino alla revoca di tale autorizzazione. Puoi modificarla in qualsiasi momento nelle impostazioni di Cash app.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Salvando il tuo conto bancario per %@, accetti di autorizzare i pagamenti conformemente a <terms>questi termini</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Annulla e paga in altro modo";
 
 "Choose a payment method" = "Scegli una modalità di pagamento";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Conferma";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Per completare l'acquisto, conferma il pagamento nell'app della tua banca o nell'app per i pagamenti entro %@";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Per completare l'acquisto, conferma il pagamento nell'app della tua banca entro %@.";
 
 "Contact information" = "Informazioni di contatto";
@@ -49,6 +55,8 @@
 "EPS Bank" = "Banca EPS";
 
 "Enter address manually" = "Inserisci manualmente l'indirizzo";
+
+"FPX Bank" = "Banca FBX";
 
 "IBAN" = "IBAN";
 

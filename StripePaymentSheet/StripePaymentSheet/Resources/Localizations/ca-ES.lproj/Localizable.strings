@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Si continueu a PayPal, permeteu que %@ faci càrrecs al vostre compte de PayPal per a pagaments en el futur d'acord amb les seves condicions.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Si continueu a Revolut Pay, permeteu que %@ faci càrrecs al vostre compte de Revolut Pay per a pagaments en el futur d'acord amb les seves condicions.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuar, accepteu autoritzar aquests pagaments segons <terms>aquests termes</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "En continuar, autoritzeu %1$@ a carregar aquest pagament i els pagaments futurs al compte de Cash App segons les condicions de %2$@ fins que es revoqui l'autorització. Podeu canviar això en qualsevol moment a la configuració de Cash App.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En desar el compte bancari per a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquests termes</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Cancel·la i paga d'una altra manera";
 
 "Choose a payment method" = "Escull un mètode de pagament";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Confirma";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmeu el pagament al vostre banc o a l'aplicació de pagament en un termini de %@ per completar la compra.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmeu el pagament a l'aplicació del vostre banc en un termini de %@ per completar la compra.";
 
 "Contact information" = "Informació de contacte";
@@ -49,6 +55,8 @@
 "EPS Bank" = "Banc EPS";
 
 "Enter address manually" = "Introduir l'adreça manualment";
+
+"FPX Bank" = "Banc FPX";
 
 "IBAN" = "IBAN";
 

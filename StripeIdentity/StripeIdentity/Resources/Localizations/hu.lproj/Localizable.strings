@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Automatikusan elkészítünk néhány fényképet a következő lépés során, hogy ellenőrizhessük a személyazonosságát";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Emellett lehetősége van arra is, hogy fotót töltsön fel az azonosító okmányáról.";
 
 "App Settings" = "Alkalmazásbeállítások";
@@ -37,6 +39,8 @@
 "Front of driver's license" = "Vezetői engedély előlapja";
 
 "Front of identity card" = "Személyazonosító igazolvány előlapja";
+
+"Get ready to take a selfie" = "Készüljön fel egy szelfi elkészítésére";
 
 "Go Back" = "Visszalépés";
 

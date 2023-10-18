@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "À l'étape suivante, nous prendrons quelques photos de façon automatique afin de vérifier votre identité";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Vous pouvez également charger manuellement une photo de votre pièce d’identité.";
 
 "App Settings" = "Paramètres de l'application";
@@ -37,6 +39,8 @@
 "Front of driver's license" = "Recto du permis de conduire";
 
 "Front of identity card" = "Recto de la carte d'identité";
+
+"Get ready to take a selfie" = "Préparez-vous à vous prendre en photo";
 
 "Go Back" = "Retour";
 

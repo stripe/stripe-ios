@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved å gå vidare til PayPal gir du %@ tillating til å trekkje framtidige betalingar frå PayPal-kontoen din i samsvar med vilkåra deira.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ved å gå vidare til Revolut Pay tillet du at %@ trekk framtidige betalingar frå Revolut Pay-kontoen din i samsvar med vilkåra deira.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å halde fram godtek du å autorisere betalingar i samsvar med desse <terms>vilkåra</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ved å gå vidare gir du %1$@ tillating til å debitere Cash App-kontoen din for denne betalinga og framtidige betalingar i samsvar med %2$@ sine vilkår, fram til denne autoriseringa blir trekt tilbake. Du kan endre dette når som helst i Cash App-innstillingane.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å lagre bankkontoen din for %@ godtek du å autorisere betalingar i samsvar med desse <terms>vilkåra</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Avbryt og betal på ei anna måte";
 
 "Choose a payment method" = "Vel ein betalingsmåte";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Stadfest";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Stadfest betalinga i banken eller betalingsappen innan %@ for å fullføre kjøpet.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Stadfest betalinga i bankappen innan %@ for å fullføre kjøpet.";
 
 "Contact information" = "Kontaktopplysningar";
@@ -49,6 +55,8 @@
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Skriv inn adresse manuelt";
+
+"FPX Bank" = "FPX-bank";
 
 "IBAN" = "IBAN";
 
