@@ -1,0 +1,88 @@
+{
+  "account_id": "acct_1HvTI7Lu5o3P18Zp",
+  "apple_pay_preference": "enabled",
+  "business_name": "Mobile Example Account",
+  "flags": {
+    "ece_apple_pay_payment_request_passthrough": false
+  },
+  "google_pay_preference": "enabled",
+  "legacy_customer": {
+    "default_payment_method": null,
+    "payment_methods": [
+        {
+          "id": "pm_123456789",
+          "object": "payment_method",
+          "billing_details": {
+            "address": {
+              "city": null,
+              "country": "US",
+              "line1": null,
+              "line2": null,
+              "postal_code": "42424",
+              "state": null
+            },
+            "email": null,
+            "name": null,
+            "phone": null
+          },
+          "card": {
+            "brand": "visa",
+            "checks": {
+              "address_line1_check": null,
+              "address_postal_code_check": null,
+              "cvc_check": null
+            },
+            "country": "US",
+            "exp_month": 4,
+            "exp_year": 2024,
+            "funding": "credit",
+            "generated_from": null,
+            "last4": "4242",
+            "networks": {
+              "available": [
+                "visa"
+              ],
+              "preferred": null
+            },
+            "three_d_secure_usage": {
+              "supported": true
+            },
+            "wallet": null
+          },
+          "created": 1694550739,
+          "customer": "cus_Ocso99loZJWSXg",
+          "livemode": false,
+          "type": "card"
+      }
+    ]
+  },
+  "merchant_country": "US",
+  "merchant_currency": "usd",
+  "merchant_id": "acct_1234",
+  "merchant_logo_url": null,
+  "meta_pay_signed_container_context": null,
+  "order": null,
+  "ordered_payment_method_types_and_wallets": [
+      <paymentMethods>
+  ],
+  "payment_method_preference": {
+    "object": "payment_method_preference",
+    "country_code": "US",
+    "ordered_payment_method_types": [
+        <paymentMethods>
+    ],
+    "type": "deferred_intent"
+  },
+  "paypal_express_config": {
+    "client_id": null,
+    "paypal_merchant_id": null
+  },
+  "session_id": "elements_session_1WnzSkDmifQ",
+  "shipping_address_settings": {
+    "autocomplete_allowed": true
+  },
+  "unactivated_payment_method_types": [],
+  "unverified_payment_methods_on_domain": [
+    "apple_pay"
+  ]
+}

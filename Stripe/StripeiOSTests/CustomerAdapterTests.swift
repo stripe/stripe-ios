@@ -86,6 +86,51 @@ class CustomerAdapterTests: APIStubbedTestCase {
         }
     }
 
+    func stubElementsSessions(
+        key: CustomerEphemeralKey,
+        paymentMethodJSONs: [[AnyHashable: Any]],
+        expectedCount: Int,
+        apiClient: STPAPIClient
+    ) {
+        let exp = expectation(description: "listPaymentMethod")
+        exp.expectedFulfillmentCount = expectedCount
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/elements/sessions") ?? false
+            && urlRequest.url?.query?.contains("legacy_customer_ephemeral_key=\(key.ephemeralKeySecret)") ?? false
+            && urlRequest.httpMethod == "GET"
+        } response: { _ in
+            let paymentMethodsJSON = """
+                {
+                    "session_id": "123",
+                    "payment_method_preference": {
+                      "object": "payment_method_preference",
+                      "country_code": "US",
+                      "ordered_payment_method_types": [
+                        "card"
+                      ],
+                    },
+                    "legacy_customer" : {
+                        "payment_methods": [
+                        ]
+                    }
+                }
+                """
+            var pmList =
+                try! JSONSerialization.jsonObject(
+                    with: paymentMethodsJSON.data(using: .utf8)!,
+                    options: []
+                ) as! [AnyHashable: Any]
+            var legacyCustomer = pmList["legacy_customer"] as! [AnyHashable: Any]
+            legacyCustomer["payment_methods"] = paymentMethodJSONs
+            pmList["legacy_customer"] = legacyCustomer
+            DispatchQueue.main.async {
+                // Fulfill after response is sent
+                exp.fulfill()
+            }
+            return HTTPStubsResponse(jsonObject: pmList, statusCode: 200, headers: nil)
+        }
+    }
+
     func testGetOrCreateKeyErrorForwardedToFetchPMs() async throws {
         let exp = expectation(description: "fetchPMs")
         let expectedError = NSError(domain: "test", code: 123, userInfo: nil)
@@ -113,9 +158,8 @@ class CustomerAdapterTests: APIStubbedTestCase {
         let expectedPaymentMethods = [STPFixtures.paymentMethod()]
         let expectedPaymentMethodsJSON = [STPFixtures.paymentMethodJSON()]
         let apiClient = stubbedAPIClient()
-        // Expect 1 call per PM: cards
-        stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethodsJSON, expectedCount: 1, apiClient: apiClient)
-        stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: [], expectedCount: 1, apiClient: apiClient)
+
+        stubElementsSessions(key: exampleKey, paymentMethodJSONs: expectedPaymentMethodsJSON, expectedCount: 1, apiClient: apiClient)
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
         let sut = StripeCustomerAdapter(customerEphemeralKeyProvider: ekm.getEphemeralKey, apiClient: apiClient)
@@ -127,15 +171,11 @@ class CustomerAdapterTests: APIStubbedTestCase {
     }
 
     func testFetchPM_CardAndUSBankAccount() async throws {
-        let expectedPaymentMethods_card = [STPFixtures.paymentMethod()]
-        let expectedPaymentMethods_cardJSON = [STPFixtures.paymentMethodJSON()]
-
-        let expectedPaymentMethods_usbank = [STPFixtures.bankAccountPaymentMethod()]
-        let expectedPaymentMethods_usbankJSON = [STPFixtures.bankAccountPaymentMethodJSON()]
-
+        let expectedPaymentMethods_card_usBank = [STPFixtures.paymentMethod(), STPFixtures.bankAccountPaymentMethod()]
+        let expectedPaymentMethods_card_usBankJSON = [STPFixtures.paymentMethodJSON(), STPFixtures.bankAccountPaymentMethodJSON()]
         let apiClient = stubbedAPIClient()
-        stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethods_cardJSON, expectedCount: 1, apiClient: apiClient)
-        stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: expectedPaymentMethods_usbankJSON, expectedCount: 1, apiClient: apiClient)
+
+        stubElementsSessions(key: exampleKey, paymentMethodJSONs: expectedPaymentMethods_card_usBankJSON, expectedCount: 1, apiClient: apiClient)
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
         let sut = StripeCustomerAdapter(customerEphemeralKeyProvider: ekm.getEphemeralKey,
@@ -143,8 +183,8 @@ class CustomerAdapterTests: APIStubbedTestCase {
                                         apiClient: apiClient)
         let pms = try await sut.fetchPaymentMethods()
         XCTAssertEqual(pms.count, 2)
-        XCTAssertEqual(pms[0].stripeId, expectedPaymentMethods_card[0].stripeId)
-        XCTAssertEqual(pms[1].stripeId, expectedPaymentMethods_usbank[0].stripeId)
+        XCTAssertEqual(pms[0].stripeId, expectedPaymentMethods_card_usBank[0].stripeId)
+        XCTAssertEqual(pms[1].stripeId, expectedPaymentMethods_card_usBank[1].stripeId)
         await waitForExpectations(timeout: 2)
     }
 
@@ -152,9 +192,8 @@ class CustomerAdapterTests: APIStubbedTestCase {
         let expectedPaymentMethods = [STPFixtures.paymentMethod()]
         let expectedPaymentMethodsJSON = [STPFixtures.paymentMethodJSON()]
         let apiClient = stubbedAPIClient()
-        // Expect 1 call per PM: cards
-        stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethodsJSON, expectedCount: 1, apiClient: apiClient)
-        stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: [], expectedCount: 1, apiClient: apiClient)
+
+        stubElementsSessions(key: exampleKey, paymentMethodJSONs: expectedPaymentMethodsJSON, expectedCount: 1, apiClient: apiClient)
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
         let sut = StripeCustomerAdapter(customerEphemeralKeyProvider: ekm.getEphemeralKey, apiClient: apiClient)

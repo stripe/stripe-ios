@@ -1,0 +1,127 @@
+{
+  "account_id": "acct_123456",
+  "apple_pay_merchant_token_webhook_url": "https://pm-hooks.stripe.com/apple_pay/merchant_token/pDq7tf9uieoQWMVJixFwuOve/acct_123456/",
+  "apple_pay_preference": "enabled",
+  "business_name": "Mobile Example Account",
+  "experiments_data": {
+    "arb_id": "13539b84-39de-43a6-b694-123456789",
+    "experiment_assignments": {
+      "elements_debit_mulberry_purchase_protections": "control",
+    }
+  },
+  "flags": {
+    "ece_apple_pay_payment_request_passthrough": false,
+  },
+  "google_pay_preference": "enabled",
+  "legacy_customer": {
+    "default_payment_method": "src_123456789",
+    "payment_methods": [
+      {
+        "id": "pm_122222222",
+        "object": "payment_method",
+        "billing_details": {
+          "address": {
+            "city": "San Francisco",
+            "country": "US",
+            "line1": "510 Townsend St.",
+            "line2": null,
+            "postal_code": "94102",
+            "state": "California"
+          },
+          "email": "foo@bar.com",
+          "name": "Jane Doe",
+          "phone": "+13105551234"
+        },
+        "created": 1690920999,
+        "customer": "cus_AAAAAAAAAAA",
+        "livemode": false,
+        "type": "us_bank_account",
+        "us_bank_account": {
+          "account_holder_type": "individual",
+          "account_type": "checking",
+          "bank_name": "STRIPE TEST BANK",
+          "financial_connections_account": "fca_1123456789",
+          "fingerprint": "abcdebf12345",
+          "last4": "1113",
+          "linked_account": "fca_1123456789",
+          "networks": {
+            "preferred": "ach",
+            "supported": [
+              "ach",
+              "us_domestic_wire"
+            ]
+          },
+          "routing_number": "110000000",
+          "status_details": null
+        }
+      }
+    ]
+  },
+  "merchant_country": "US",
+  "merchant_currency": "usd",
+  "merchant_id": "acct_123456789",
+  "merchant_logo_url": null,
+  "meta_pay_signed_container_context": null,
+  "order": null,
+  "ordered_payment_method_types_and_wallets": [
+      <paymentMethods>
+  ],
+  "payment_method_preference": {
+    "object": "payment_method_preference",
+    "country_code": "US",
+    "ordered_payment_method_types": [
+        <paymentMethods>
+    ],
+    "payment_intent": {
+      "id": "pi_3Kth",
+      "object": "payment_intent",
+      "amount": 5099,
+      "amount_details": {
+        "tip": {}
+      },
+      "automatic_payment_methods": {
+        "allow_redirects": "always",
+        "enabled": true
+      },
+      "canceled_at": null,
+      "cancellation_reason": null,
+      "capture_method": "automatic",
+      "client_secret": "pi_123456_secret_54321",
+      "confirmation_method": "automatic",
+      "created": 1694620938,
+      "currency": "usd",
+      "description": null,
+      "last_payment_error": null,
+      "livemode": false,
+      "next_action": null,
+      "payment_method": null,
+      "payment_method_options": {
+        "us_bank_account": {
+          "verification_method": "automatic"
+        }
+      },
+      "payment_method_types": [
+          <paymentMethods>
+      ],
+      "processing": null,
+      "receipt_email": null,
+      "setup_future_usage": null,
+      "shipping": null,
+      "source": null,
+      "status": "requires_payment_method"
+    },
+    "type": "payment_intent"
+  },
+  "paypal_express_config": {
+    "client_id": null,
+    "paypal_merchant_id": null
+  },
+  "session_id": "elements_session_0123456789",
+  "shipping_address_settings": {
+    "autocomplete_allowed": true
+  },
+  "unactivated_payment_method_types": [],
+  "unverified_payment_methods_on_domain": [
+    "apple_pay"
+  ]
+}

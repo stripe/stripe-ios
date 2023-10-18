@@ -31,6 +31,12 @@ final class STPElementsSession: NSObject {
     /// A map describing payment method types form specs.
     let paymentMethodSpecs: [[AnyHashable: Any]]?
 
+    /// An object containing Customer's saved payment methods information
+    let elementsCustomerInformation: STPElementsCustomerInformation?
+
+    /// An error associated with operations surrounding STPElementsCustomerInformation
+    let customerError: Error?
+
     let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
@@ -45,6 +51,8 @@ final class STPElementsSession: NSObject {
             "countryCode = \(String(describing: countryCode))",
             "merchantCountryCode = \(String(describing: merchantCountryCode))",
             "paymentMethodSpecs = \(String(describing: paymentMethodSpecs))",
+            "elementsCustomerInformation = \(String(describing: elementsCustomerInformation))",
+            "customerError = \(String(describing: customerError))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -58,7 +66,9 @@ final class STPElementsSession: NSObject {
         countryCode: String?,
         merchantCountryCode: String?,
         linkSettings: LinkSettings?,
-        paymentMethodSpecs: [[AnyHashable: Any]]?
+        paymentMethodSpecs: [[AnyHashable: Any]]?,
+        elementsCustomerInformation: STPElementsCustomerInformation?,
+        customerError: Error?
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -68,6 +78,8 @@ final class STPElementsSession: NSObject {
         self.merchantCountryCode = merchantCountryCode
         self.linkSettings = linkSettings
         self.paymentMethodSpecs = paymentMethodSpecs
+        self.elementsCustomerInformation = elementsCustomerInformation
+        self.customerError = customerError
         super.init()
     }
 }
@@ -94,7 +106,17 @@ extension STPElementsSession: STPAPIResponseDecodable {
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]
             ),
-            paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]]
+            paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]],
+            elementsCustomerInformation: STPElementsCustomerInformation.decodedObject(fromAPIResponse: dict),
+            customerError: decodedCustomerErrorObject(fromAPIResponse: dict["customer_error"] as? [AnyHashable: Any])
         ) as? Self
+    }
+
+    public static func decodedCustomerErrorObject(fromAPIResponse response: [AnyHashable: Any]?) -> Error? {
+        guard let dict = response,
+              let errorMessage = dict["customer_error"] as? String else {
+            return nil
+        }
+        return PaymentSheetError.fetchSavedPaymentMethodsViaElementsFailure(message: errorMessage)
     }
 }

@@ -14,7 +14,8 @@ extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
 
     func retrievePaymentIntentWithPreferences(
-        withClientSecret secret: String
+        withClientSecret secret: String,
+        customerEphemeralKey: String? = nil
     ) async throws -> STPPaymentIntent {
         guard STPPaymentIntentParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
             throw NSError.stp_clientSecretError()
@@ -25,6 +26,9 @@ extension STPAPIClient {
         parameters["type"] = "payment_intent"
         parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
+        if let customerEphemeralKey {
+            parameters["legacy_customer_ephemeral_key"] = customerEphemeralKey
+        }
 
         return try await APIRequest<STPPaymentIntent>.getWith(
             self,
@@ -34,9 +38,14 @@ extension STPAPIClient {
     }
 
     func retrieveElementsSession(
-        withIntentConfig intentConfig: PaymentSheet.IntentConfiguration
+        withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
+        customerEphemeralKey: String? = nil
     ) async throws -> STPElementsSession {
-        let parameters = intentConfig.elementsSessionParameters(publishableKey: publishableKey)
+        var parameters = intentConfig.elementsSessionParameters(publishableKey: publishableKey)
+        if let customerEphemeralKey {
+            parameters["legacy_customer_ephemeral_key"] = customerEphemeralKey
+        }
+
         return try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointIntentWithPreferences,
@@ -44,7 +53,9 @@ extension STPAPIClient {
         )
     }
 
-    func retrieveElementsSessionForCustomerSheet() async throws -> STPElementsSession {
+    func retrieveElementsSessionForCustomerSheet(
+        customerEphemeralKey: String? = nil
+    ) async throws -> STPElementsSession {
         var parameters: [String: Any] = [:]
         parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
@@ -52,6 +63,9 @@ extension STPAPIClient {
         var deferredIntent = [String: Any]()
         deferredIntent["mode"] = "setup"
         parameters["deferred_intent"] = deferredIntent
+        if let customerEphemeralKey {
+            parameters["legacy_customer_ephemeral_key"] = customerEphemeralKey
+        }
 
         return try await APIRequest<STPElementsSession>.getWith(
             self,
@@ -61,7 +75,8 @@ extension STPAPIClient {
     }
 
     func retrieveSetupIntentWithPreferences(
-        withClientSecret secret: String
+        withClientSecret secret: String,
+        customerEphemeralKey: String? = nil
     ) async throws -> STPSetupIntent {
         guard STPSetupIntentConfirmParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
             throw NSError.stp_clientSecretError()
@@ -72,6 +87,9 @@ extension STPAPIClient {
         parameters["type"] = "setup_intent"
         parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
         parameters["locale"] = Locale.current.toLanguageTag()
+        if let customerEphemeralKey {
+            parameters["legacy_customer_ephemeral_key"] = customerEphemeralKey
+        }
 
         return try await APIRequest<STPSetupIntent>.getWith(
             self,

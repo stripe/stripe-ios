@@ -1,0 +1,133 @@
+{
+  "account_id": "acct_123456",
+  "apple_pay_merchant_token_webhook_url": "https://pm-hooks.stripe.com/apple_pay/merchant_token/pDq7tf9uieoQWMVJixFwuOve/acct_123456/",
+  "apple_pay_preference": "enabled",
+  "business_name": "Mobile Example Account",
+  "experiments_data": {
+    "arb_id": "13539b84-39de-43a6-b694-123456789",
+    "experiment_assignments": {
+      "elements_debit_mulberry_purchase_protections": "control",
+    }
+  },
+  "flags": {
+    "ece_apple_pay_payment_request_passthrough": false,
+  },
+  "google_pay_preference": "enabled",
+  "legacy_customer": {
+    "default_payment_method": "src_123456789",
+    "payment_methods": [
+      {
+        "id": "pm_0000000",
+        "object": "payment_method",
+        "billing_details": {
+          "address": {
+            "city": "Seattle",
+            "country": "US",
+            "line1": "123 Main St.",
+            "line2": null,
+            "postal_code": "39500",
+            "state": null
+          },
+          "email": null,
+          "name": null,
+          "phone": null
+        },
+        "card": {
+          "brand": "visa",
+          "checks": {
+            "address_line1_check": null,
+            "address_postal_code_check": null,
+            "cvc_check": null
+          },
+          "country": "US",
+          "exp_month": 11,
+          "exp_year": 2025,
+          "funding": "credit",
+          "generated_from": null,
+          "last4": "4242",
+          "networks": {
+            "available": [
+              "visa"
+            ],
+            "preferred": null
+          },
+          "three_d_secure_usage": {
+            "supported": true
+          },
+          "wallet": null
+        },
+        "created": 1694410331,
+        "customer": "cus_AAAAAAAAAAA",
+        "livemode": false,
+        "type": "card"
+      }
+    ]
+  },
+  "merchant_country": "US",
+  "merchant_currency": "usd",
+  "merchant_id": "acct_123456789",
+  "merchant_logo_url": null,
+  "meta_pay_signed_container_context": null,
+  "order": null,
+  "ordered_payment_method_types_and_wallets": [
+      <paymentMethods>
+  ],
+  "payment_method_preference": {
+    "object": "payment_method_preference",
+    "country_code": "US",
+    "ordered_payment_method_types": [
+        <paymentMethods>
+    ],
+    "payment_intent": {
+      "id": "pi_3Kth",
+      "object": "payment_intent",
+      "amount": 5099,
+      "amount_details": {
+        "tip": {}
+      },
+      "automatic_payment_methods": {
+        "allow_redirects": "always",
+        "enabled": true
+      },
+      "canceled_at": null,
+      "cancellation_reason": null,
+      "capture_method": "automatic",
+      "client_secret": "pi_123456_secret_54321",
+      "confirmation_method": "automatic",
+      "created": 1694620938,
+      "currency": "usd",
+      "description": null,
+      "last_payment_error": null,
+      "livemode": false,
+      "next_action": null,
+      "payment_method": null,
+      "payment_method_options": {
+        "us_bank_account": {
+          "verification_method": "automatic"
+        }
+      },
+      "payment_method_types": [
+          <paymentMethods>
+      ],
+      "processing": null,
+      "receipt_email": null,
+      "setup_future_usage": null,
+      "shipping": null,
+      "source": null,
+      "status": "requires_payment_method"
+    },
+    "type": "payment_intent"
+  },
+  "paypal_express_config": {
+    "client_id": null,
+    "paypal_merchant_id": null
+  },
+  "session_id": "elements_session_0123456789",
+  "shipping_address_settings": {
+    "autocomplete_allowed": true
+  },
+  "unactivated_payment_method_types": [],
+  "unverified_payment_methods_on_domain": [
+    "apple_pay"
+  ]
+}
