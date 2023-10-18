@@ -604,20 +604,8 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
 /// :nodoc:
 extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
-        error = nil  // clear error
+        error = addPaymentMethodViewModel.error
         updateUI()
-    }
-
-    func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard isLinkEnabled else {
-            return false
-        }
-
-        return LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
-    }
-
-    func updateErrorLabel(for error: Error?) {
-        set(error: error)
     }
 }
 
