@@ -117,6 +117,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
     var savedPaymentMethods: [STPPaymentMethod] {
         didSet {
+            updateViewModels()
             updateUI()
         }
     }
@@ -159,26 +160,23 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     /// This contains views to display below the saved PM collectionView
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [sepaMandateView])
+        let stackView = UIStackView(arrangedSubviews: [collectionView, sepaMandateView])
         stackView.axis = .vertical
         return stackView
     }()
 
     private lazy var sepaMandateView: UIView = {
+        let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
         let view = UIView()
-        let mandateView = sepaMandateElement.view
-        var margins = NSDirectionalEdgeInsets.insets(
+        let mandateView = SimpleMandateTextView(mandateText: mandateText, theme: appearance.asElementsTheme)
+        let margins = NSDirectionalEdgeInsets.insets(
             top: 8,
             leading: PaymentSheetUI.defaultMargins.leading,
             bottom: 0,
             trailing: PaymentSheetUI.defaultMargins.trailing
         )
-        view.addAndPinSubview(sepaMandateElement.view, directionalLayoutMargins: margins)
+        view.addAndPinSubview(mandateView, directionalLayoutMargins: margins)
         return view
-    }()
-    private lazy var sepaMandateElement: SimpleMandateElement = {
-        let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
-        return SimpleMandateElement(mandateText: mandateText)
     }()
 
     // MARK: - Inits
@@ -193,7 +191,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.appearance = appearance
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-        updateUI() // Unfortunately this call is needed
+        updateViewModels()
     }
 
     required init?(coder: NSCoder) {
@@ -204,15 +202,12 @@ class SavedPaymentOptionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        for subview in [collectionView, stackView] {
+        for subview in [stackView] {
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: stackView.topAnchor),
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -221,7 +216,8 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     // MARK: - Private methods
-    private func updateUI() {
+
+    private func updateViewModels() {
         let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customerID)
 
         // Move default to front
@@ -247,7 +243,9 @@ class SavedPaymentOptionsViewController: UIViewController {
         // Select default
         selectedViewModelIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod })
             ?? 1
+    }
 
+    private func updateUI() {
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)

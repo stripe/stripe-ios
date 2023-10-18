@@ -21,7 +21,7 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
     private lazy var sepaMandateView: SimpleMandateTextView = {
         let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
         let view = SimpleMandateTextView(mandateText: mandateText, theme: configuration.appearance.asElementsTheme)
-        view.label.textAlignment = .left
+        view.label.textAlignment = .natural
         return view
     }()
 

@@ -1246,7 +1246,10 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         // Save SEPA
         app.buttons["+ Add"].waitForExistenceAndTap()
-        guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else { XCTFail("Couldn't find SEPA"); return; }
+        guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else {
+            XCTFail("Couldn't find SEPA")
+            return
+        }
         sepa.tap()
 
         app.textFields["Full name"].tap()

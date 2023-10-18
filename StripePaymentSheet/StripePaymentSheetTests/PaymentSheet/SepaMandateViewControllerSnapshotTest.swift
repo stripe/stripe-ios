@@ -19,7 +19,7 @@ final class SepaMandateViewControllerSnapshotTest: FBSnapshotTestCase {
 
     func testView() {
         let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        let sut = SepaMandateViewController(configuration: configuration) { _ in
+            let sut = SepaMandateViewController(configuration: configuration) { _ in
            // no-op
         }
         sut.view.autosizeHeight(width: 375)
