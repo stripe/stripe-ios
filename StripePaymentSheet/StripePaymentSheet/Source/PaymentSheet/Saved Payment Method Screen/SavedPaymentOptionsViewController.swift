@@ -158,7 +158,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         return collectionView
     }()
 
-    /// This contains views to display below the saved PM collectionView
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [collectionView, sepaMandateView])
         stackView.axis = .vertical
@@ -201,17 +200,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        for subview in [stackView] {
-            subview.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(subview)
-        }
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        view.addAndPinSubview(stackView)
         updateUI()
     }
 
