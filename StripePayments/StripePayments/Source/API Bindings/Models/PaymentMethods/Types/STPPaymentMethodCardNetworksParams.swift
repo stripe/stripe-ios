@@ -16,12 +16,6 @@ public class STPPaymentMethodCardNetworksParams: NSObject, STPFormEncodable {
     /// make a selection, then pass `null`.
     @objc public var preferred: String?
 
-    /// Convience helper to convert the preferred String into a card brand
-    @_spi(STP) public var preferredBrand: STPCardBrand? {
-        guard let preferred = preferred else { return nil }
-        return STPCard.brand(from: preferred)
-    }
-
     @objc public convenience init(preferred: String?) {
         self.init()
         self.preferred = preferred

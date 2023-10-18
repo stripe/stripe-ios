@@ -17,12 +17,6 @@ public class STPPaymentMethodCardNetworks: NSObject, STPAPIResponseDecodable {
     /// The preferred network for the card if one exists.
     @objc public private(set) var preferred: String?
 
-    /// Convience helper to convert the preferred String into a card brand
-    @_spi(STP) public var preferredBrand: STPCardBrand? {
-        guard let preferred = preferred else { return nil }
-        return STPCard.brand(from: preferred)
-    }
-
     /// :nodoc:
     @objc public override var description: String {
         let props = [
