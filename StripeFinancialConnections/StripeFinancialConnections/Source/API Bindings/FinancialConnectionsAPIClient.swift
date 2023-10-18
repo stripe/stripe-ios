@@ -194,7 +194,6 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList> {
         let parameters = [
             "client_secret": clientSecret,
-            "limit": "10",
         ]
         return self.get(
             resource: APIEndpointFeaturedInstitutions,
