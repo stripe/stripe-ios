@@ -2,8 +2,6 @@
 
 require 'colorize'
 require 'English'
-require 'net/ssh'
-require 'git'
 
 # The name of the VM for the Xcode version
 # This should generally be the minimum Xcode version supported by the App Store, as the

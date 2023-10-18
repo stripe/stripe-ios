@@ -23,6 +23,7 @@ def export_builds
     run_command_vm('source ~/.zprofile && sudo gem install bundler:2.1.2 && bundle install && tuist generate -n && bundle exec ./ci_scripts/export_builds.rb')
     finish_vm
   end
+  raise 'build/Stripe.xcframework.zip not found. Did the build fail?' unless File.exist?('build/Stripe.xcframework.zip')
 end
 
 def approve_pr

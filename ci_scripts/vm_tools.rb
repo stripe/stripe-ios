@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative 'common'
+require 'net/ssh'
 
 def run_command_vm(command, raise_on_failure = true)
   puts "tart> #{command}".blue
@@ -46,7 +47,7 @@ end
 def finish_vm
   # Copy files from VM
   run_command_vm("rsync -aO --exclude '.git' /tmp/build/stripe-ios/ \"/Volumes/My Shared Files/stripe-ios/\"")
-  
+  run_command("tart stop builder-vm")
 end
 
 def need_to_build_vm?
