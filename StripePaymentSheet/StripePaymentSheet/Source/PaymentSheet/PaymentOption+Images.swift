@@ -32,18 +32,20 @@ extension PaymentOption {
         }
     }
 
-    /// Returns an image representing the payment option, suitable for display within PaymentSheet cells
-    func makeCarouselImage(for view: UIView) -> UIImage {
+    /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
+    func makeSavedPaymentMethodCellImage(for view: UIView) -> UIImage {
         switch self {
         case .applePay:
             return makeIcon(for: view.traitCollection, updateImageHandler: nil)
         case .saved(let paymentMethod):
-            return paymentMethod.makeCarouselImage(for: view)
-        case .new(let confirmParams):
-            return confirmParams.paymentMethodParams.makeCarouselImage(for: view)
+            return paymentMethod.makeSavedPaymentMethodCellImage()
+        case .new:
+            assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
+            return UIImage()
         case .link:
             return Image.link_carousel_logo.makeImage(template: true)
         case .externalPayPal:
+            assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")
             return Image.pm_type_paypal.makeImage()
         }
     }
@@ -70,15 +72,22 @@ extension STPPaymentMethod {
         }
     }
 
-    func makeCarouselImage(for view: UIView) -> UIImage {
-        if type == .card, let cardBrand = card?.brand {
-            return cardBrand.makeCarouselImage()
-        } else if type == .USBankAccount {
+    /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
+    func makeSavedPaymentMethodCellImage() -> UIImage {
+        switch type {
+        case .card:
+            return card?.brand.makeSavedPaymentMethodCellImage() ?? makeIcon()
+        case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
             )
+        case .SEPADebit:
+            // The insets are used to make it appear the same size as the other saved PM cells
+            return makeIcon().withAlignmentRectInsets(.init(top: -9, left: -9, bottom: -9, right: -9))
+        default:
+            assertionFailure("\(type) not supported for saved PMs")
+            return makeIcon()
         }
-        return makeIcon()
     }
 }
 
@@ -96,14 +105,6 @@ extension STPPaymentMethodParams {
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             return self.paymentSheetPaymentMethodType().makeImage(updateHandler: updateHandler)
         }
-    }
-
-    func makeCarouselImage(for view: UIView) -> UIImage {
-        if type == .card, let card = card, let number = card.number {
-            let cardBrand = STPCardValidator.brand(forNumber: number)
-            return cardBrand.makeCarouselImage()
-        }
-        return makeIcon(updateHandler: nil)
     }
 }
 

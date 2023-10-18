@@ -77,7 +77,7 @@ class PaymentSheetImageLibrary {
 
 extension STPCardBrand {
     /// Returns a borderless image of the card brand's logo
-    func makeCarouselImage() -> UIImage {
+    func makeSavedPaymentMethodCellImage() -> UIImage {
         let imageName: String
         switch self {
         case .JCB:
