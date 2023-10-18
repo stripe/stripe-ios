@@ -534,6 +534,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 ].merging(paramsForServerSideConfirmation) { _, b in b }
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
+                    currency: currency,
                     merchantCountry: merchantCountry.rawValue,
                     paymentMethodID: paymentMethod.stripeId,
                     customerID: customer,
