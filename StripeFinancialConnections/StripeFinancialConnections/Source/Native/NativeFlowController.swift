@@ -82,14 +82,9 @@ class NativeFlowController {
         )
 
         let showConfirmationAlert =
-            (navigationController.topViewController is AccountPickerViewController
-                || navigationController.topViewController is PartnerAuthViewController
-                || navigationController.topViewController is AttachLinkedPaymentAccountViewController
-                || navigationController.topViewController is NetworkingLinkSignupViewController
-                || navigationController.topViewController is NetworkingLinkStepUpVerificationViewController
-                || navigationController.topViewController is NetworkingLinkVerificationViewController
-                || navigationController.topViewController is NetworkingSaveToLinkVerificationViewController
-                || navigationController.topViewController is LinkAccountPickerViewController)
+            !(navigationController.topViewController is ConsentViewController
+                || navigationController.topViewController is SuccessViewController
+                || navigationController.topViewController is ManualEntrySuccessViewController)
 
         let finishClosingAuthFlow = { [weak self] in
             self?.closeAuthFlow()
