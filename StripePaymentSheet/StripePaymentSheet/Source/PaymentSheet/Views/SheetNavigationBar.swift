@@ -22,7 +22,7 @@ class SheetNavigationBar: UIView {
     static let height: CGFloat = 48
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [closeButtonLeft, backButton, titleLabel, testModeView])
+        let stack = UIStackView(arrangedSubviews: [closeButtonLeft, backButton, testModeView])
         stack.spacing = PaymentSheetUI.defaultPadding
         return stack
     }()
@@ -62,20 +62,8 @@ class SheetNavigationBar: UIView {
         return button
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
-        let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
-        label.isHidden = true
-        return label
-    }()
-
     let testModeView = TestModeView()
     let appearance: PaymentSheet.Appearance
-    var title: String? {
-        didSet {
-            titleLabel.text = title
-            titleLabel.isHidden = title == nil
-        }
-    }
 
     override var isUserInteractionEnabled: Bool {
         didSet {
@@ -88,6 +76,7 @@ class SheetNavigationBar: UIView {
     }
 
     init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
+        testModeView.isHidden = !isTestMode
         self.appearance = appearance
         super.init(frame: .zero)
         backgroundColor = appearance.colors.background.withAlphaComponent(0.9)

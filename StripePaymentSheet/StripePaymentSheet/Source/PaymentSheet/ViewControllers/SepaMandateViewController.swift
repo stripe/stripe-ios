@@ -15,7 +15,6 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
 
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode, appearance: configuration.appearance)
-        navBar.title = STPPaymentMethodType.SEPADebit.displayName
         navBar.delegate = self
         return navBar
     }()
@@ -57,7 +56,7 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
-        let stackView = UIStackView(arrangedSubviews: [sepaMandateElement.view, confirmButton])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, sepaMandateElement.view, confirmButton])
         stackView.axis = .vertical
         stackView.spacing = PaymentSheetUI.defaultPadding
 

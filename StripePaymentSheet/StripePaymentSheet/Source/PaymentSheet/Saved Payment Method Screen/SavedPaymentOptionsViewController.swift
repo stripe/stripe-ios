@@ -91,16 +91,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         if case .saved(let paymentMethod) = selectedPaymentOption {
             if paymentMethod.usBankAccount != nil {
                 return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(theme: appearance.asElementsTheme)
-//            } else if paymentMethod.type == .SEPADebit {
-//                let string = NSMutableAttributedString(string: String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
-//                let style = NSMutableParagraphStyle()
-//                style.alignment = .left
-//                string.addAttributes([.paragraphStyle: style,
-//                                      .font: UIFont.preferredFont(forTextStyle: .footnote),
-//                                      .foregroundColor: appearance.asElementsTheme.colors.secondaryText,
-//                                              ],
-//                                              range: NSRange(location: 0, length: string.length))
-//                return string
             }
         }
         return nil
@@ -271,7 +261,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         let shouldHideSEPA: Bool
         if case .saved(paymentMethod: let paymentMethod) = viewModel, paymentMethod.type == .SEPADebit {
             shouldHideSEPA = false
-//            shouldHideSEPA = true // TODO Is this better?
         } else {
             shouldHideSEPA = true
         }
