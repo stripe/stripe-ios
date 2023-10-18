@@ -8,10 +8,10 @@
 import Foundation
 
 extension StripeAPI.FinancialConnectionsSession.PaymentAccount {
-    
+
     var isManualEntry: Bool {
         switch self {
-        case .bankAccount(_):
+        case .bankAccount:
             return true
         default:
             return false
