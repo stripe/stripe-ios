@@ -10,7 +10,9 @@ require_relative 'vm_tools'
 @cleanup_branchname = "releases/#{@version}_cleanup"
 
 def export_builds
-  # Compile the build products: bundle install && ./ci_scripts/export_builds.rb
+  # Delete Stripe.xcframework.zip if one exists
+  run_command('rm -f build/Stripe.xcframework.zip')
+
   if @is_dry_run
     # Run locally
     run_command('ci_scripts/export_builds.rb')
