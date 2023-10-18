@@ -58,7 +58,6 @@ final class PaymentSheetLoader {
                 LinkAccountContext.shared.account = linkAccount
 
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
-                // TODO: Use v1/elements/sessions to fetch saved PMS https://jira.corp.stripe.com/browse/MOBILESDK-964
                 let filteredSavedPaymentMethods = try await savedPaymentMethods
                     .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
                     .filter {
@@ -191,13 +190,10 @@ final class PaymentSheetLoader {
     }
 
     static func getSavedPaymentMethods(intent: Intent, configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
-        if let saved = getPaymentMethodsFrom(intent: intent) {
-            return saved
-        } else {
-            // If getting payment methods from elements/sessions fails,
-            // fall back to fetching the saved PMs in the public API
-            return try await fetchSavedPaymentMethods(configuration: configuration)
-        }
+        // TODO: Update v1/elements/sessions to return SEPA_Debit PMs and call `getPaymentMethodsFrom(intent:)` before falling back to `fetchSavedPaymentMethods`.
+        // If getting payment methods from elements/sessions fails,
+        // fall back to fetching the saved PMs in the public API
+        return try await fetchSavedPaymentMethods(configuration: configuration)
     }
 
     static func getPaymentMethodsFrom(intent: Intent) -> [STPPaymentMethod]? {
