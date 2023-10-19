@@ -22,8 +22,11 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     }
 
     func testReturningCustomerWithNoSavedCards() throws {
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_pi_withNoSavedPM_200,
-                                    paymentMethods: "\"card\", \"us_bank_account\"")
+                                    paymentMethods: "\"card\", \"us_bank_account\", \"sepa_debit\"")
 
         let loaded = expectation(description: "Loaded")
         PaymentSheetLoader.load(
@@ -47,6 +50,9 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     }
 
     func testReturningCustomerWithSingleSavedCard() throws {
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_pi_withSavedCard_200,
                                     paymentMethods: "\"card\", \"us_bank_account\"")
 
@@ -73,6 +79,9 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     }
 
     func testReturningCustomerWithCardAndUSBankAccount_onlyCards() throws {
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_pi_withSavedCardUSBank_200,
                                     paymentMethods: "\"card\"")
 
@@ -99,6 +108,9 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     }
 
     func testReturningCustomerWithCardAndUSBankAccount() throws {
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_pi_withSavedCardUSBank_200,
                                     paymentMethods: "\"card\", \"us_bank_account\"")
 
@@ -127,6 +139,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     }
 
     func testReturningCustomerWithUSBankAccountOnly() throws {
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+
         StubbedBackend.stubSessions(fileMock: .elementsSessionsLegacyCustomer_pi_withSavedUSBank_200,
                                     paymentMethods: "\"us_bank_account\"")
 

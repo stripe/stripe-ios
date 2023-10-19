@@ -278,18 +278,18 @@ extension SavedPaymentMethodCollectionView {
                     }
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                    paymentMethodLogo.image = paymentMethod.makeCarouselImage(for: self)
+                    paymentMethodLogo.image = paymentMethod.makeSavedPaymentMethodCellImage()
                 case .applePay:
                     // TODO (cleanup) - get this from PaymentOptionDisplayData?
                     label.text = String.Localized.apple_pay
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
-                    paymentMethodLogo.image = PaymentOption.applePay.makeCarouselImage(for: self)
+                    paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(for: self)
                 case .link:
                     label.text = STPPaymentMethodType.link.displayName
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
-                    paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeCarouselImage(for: self)
+                    paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(for: self)
                     paymentMethodLogo.tintColor = UIColor.linkNavLogo.resolvedContrastingColor(
                         forBackgroundColor: appearance.colors.componentBackground
                     )

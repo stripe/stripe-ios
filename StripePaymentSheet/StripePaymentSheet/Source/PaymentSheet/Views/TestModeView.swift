@@ -47,4 +47,7 @@ class TestModeView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override var intrinsicContentSize: CGSize {
+        return .init(width: 82, height: 23)
+    }
 }

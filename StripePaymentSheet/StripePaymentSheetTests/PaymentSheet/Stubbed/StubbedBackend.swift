@@ -55,14 +55,15 @@ class StubbedBackend {
 
     private static func stubSessions(fileMock: FileMock, requestCallback: ((URLRequest) -> Bool)? = nil, responseCallback: ((Data) -> Data)? = nil) {
         stub { urlRequest in
-            guard urlRequest.url?.absoluteString.contains("/v1/elements/sessions") != nil else {
+            guard let url = urlRequest.url, url.absoluteString.contains("/v1/elements/sessions") else {
                 return false
             }
             if let requestCallback = requestCallback {
                 return requestCallback(urlRequest)
             }
             return true
-        } response: { _ in
+        } response: { request in
+            print("Returning sessions for \(request)")
             let mockResponseData = try! fileMock.data()
             let data = responseCallback?(mockResponseData) ?? mockResponseData
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)

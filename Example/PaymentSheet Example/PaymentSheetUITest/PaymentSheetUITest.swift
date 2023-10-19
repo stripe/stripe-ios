@@ -1274,6 +1274,78 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
+
+    func testSavedSEPADebitPaymentMethod_FlowController_ShowsMandate() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .new
+        settings.applePayEnabled = .off // disable Apple Pay
+        settings.mode = .setup
+        settings.allowsDelayedPMs = .on
+        loadPlayground(app, settings)
+
+        let paymentMethodButton = app.buttons["Payment method"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
+        paymentMethodButton.tap()
+
+        // Save SEPA
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else {
+            XCTFail("Couldn't find SEPA")
+            return
+        }
+        sepa.tap()
+
+        app.textFields["Full name"].tap()
+        app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
+        app.textFields["Address line 1"].tap()
+        app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+        app.textFields["ZIP"].tap()
+        app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        // Unfortunately, the next time you check out, Link is still selected by default.
+        // Select the saved SEPA PM to make it the default and make sure we can still check out successfully.
+        paymentMethodButton.tap()
+        app.buttons["••••3201"].waitForExistenceAndTap()
+        XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.exists)
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        // This time, expect SEPA to be pre-selected as the default
+        XCTAssertEqual(paymentMethodButton.label, "••••3201")
+        // Tapping confirm without presenting flowcontroller should show the mandate
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.waitForExistence(timeout: 1))
+        // Tapping out should cancel the payment
+        app.tap()
+        XCTAssertTrue(app.staticTexts["Payment canceled."].waitForExistence(timeout: 10.0))
+        // Tapping confirm again and hitting continue should confirm the payment
+        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        // If you present the flowcontroller and see the mandate...
+        app.buttons["••••3201"].waitForExistenceAndTap()
+        XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.exists)
+        // ...you shouldn't see the mandate again when you confirm
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
 }
 
 class PaymentSheetDeferredUITests: PaymentSheetUITestCase {

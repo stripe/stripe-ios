@@ -78,7 +78,6 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     private var isSavingInProgress: Bool = false
     private var isVerificationInProgress: Bool = false
     private let isApplePayEnabled: Bool
-
     private let isLinkEnabled: Bool
 
     // MARK: - Views
@@ -157,7 +156,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 customerID: configuration.customer?.id,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
-                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                merchantDisplayName: configuration.merchantDisplayName
             ),
             appearance: configuration.appearance
         )
@@ -179,6 +179,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = configuration.appearance.colors.background
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
@@ -382,7 +383,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         switch mode {
         case .selectingSaved:
             if selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
-                self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
+                self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString // TODO remove probably?
             } else {
                 self.bottomNoticeTextField.attributedText = nil
             }
@@ -558,6 +559,6 @@ extension PaymentSheetFlowControllerViewController: SheetNavigationBarDelegate {
 // MARK: - PaymentSheetPaymentMethodType Helpers
 extension PaymentSheet.PaymentMethodType {
     var requiresMandateDisplayForSavedSelection: Bool {
-        return self == .USBankAccount
+        return self == .USBankAccount || self == .dynamic("sepa_debit")
     }
 }

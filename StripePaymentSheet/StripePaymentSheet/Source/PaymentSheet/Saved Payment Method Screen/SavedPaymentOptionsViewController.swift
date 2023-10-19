@@ -55,6 +55,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let showApplePay: Bool
         let showLink: Bool
         let removeSavedPaymentMethodMessage: String?
+        let merchantDisplayName: String
     }
 
     var hasRemovablePaymentMethods: Bool {
@@ -114,7 +115,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             return .saved(paymentMethod: paymentMethod)
         }
     }
-    var savedPaymentMethods: [STPPaymentMethod] {
+    private(set) var savedPaymentMethods: [STPPaymentMethod] {
         didSet {
             updateUI()
         }
@@ -156,6 +157,26 @@ class SavedPaymentOptionsViewController: UIViewController {
         return collectionView
     }()
 
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [collectionView, sepaMandateView])
+        stackView.axis = .vertical
+        return stackView
+    }()
+
+    private lazy var sepaMandateView: UIView = {
+        let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
+        let view = UIView()
+        let mandateView = SimpleMandateTextView(mandateText: mandateText, theme: appearance.asElementsTheme)
+        let margins = NSDirectionalEdgeInsets.insets(
+            top: 8,
+            leading: PaymentSheetUI.defaultMargins.leading,
+            bottom: 0,
+            trailing: PaymentSheetUI.defaultMargins.trailing
+        )
+        view.addAndPinSubview(mandateView, directionalLayoutMargins: margins)
+        return view
+    }()
+
     // MARK: - Inits
     required init(
         savedPaymentMethods: [STPPaymentMethod],
@@ -178,22 +199,11 @@ class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        [collectionView].forEach({
-            view.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        })
-
-        NSLayoutConstraint.activate([
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
-        updateUI()
+        view.addAndPinSubview(stackView)
     }
 
     // MARK: - Private methods
+
     private func updateUI() {
         let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customerID)
 
@@ -224,6 +234,21 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
+        updateMandateView()
+    }
+
+    private func updateMandateView() {
+        let shouldHideSEPA: Bool = {
+            if let selectedViewModelIndex, let viewModel = viewModels.stp_boundSafeObject(at: selectedViewModelIndex),
+               case .saved(paymentMethod: let paymentMethod) = viewModel, paymentMethod.type == .SEPADebit {
+                // Only show SEPA if there's a selected PM and it's type is SEPADebit.
+                return false
+            }
+            return true
+        }()
+        if sepaMandateView.isHidden != shouldHideSEPA {
+            stackView.toggleArrangedSubview(sepaMandateView, shouldShow: !shouldHideSEPA, animated: isViewLoaded)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -319,7 +344,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                 forCustomer: configuration.customerID
             )
         }
-
+        updateMandateView()
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }
 }
