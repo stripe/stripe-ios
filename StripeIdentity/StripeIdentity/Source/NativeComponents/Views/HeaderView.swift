@@ -17,7 +17,7 @@ class HeaderView: UIView {
     struct Styling {
         static let leadingTrailingConstraint: CGFloat = 16
 
-        static let stackViewSpacing: CGFloat = 16
+        static let stackViewSpacing: CGFloat = 24
 
         static func topConstraint(headerType: ViewModel.HeaderType) -> CGFloat {
             switch headerType {
@@ -39,7 +39,7 @@ class HeaderView: UIView {
         // Background color is configurable since the nav bar and header color has to match
         let backgroundColor: UIColor
         let headerType: HeaderType
-        let titleText: String
+        let titleText: String?
     }
 
     private let iconView = HeaderIconView()
@@ -94,8 +94,13 @@ extension HeaderView {
     fileprivate func configureStyle(with viewModel: ViewModel) {
         backgroundColor = viewModel.backgroundColor
 
-        titleLabel.text = viewModel.titleText
-        titleLabel.textAlignment = .center
+        if let titleText = viewModel.titleText {
+            titleLabel.isHidden = false
+            titleLabel.text = titleText
+            titleLabel.textAlignment = .center
+        } else {
+            titleLabel.isHidden = true
+        }
     }
 
     // Reconfigure subviews and reset constraint constants
