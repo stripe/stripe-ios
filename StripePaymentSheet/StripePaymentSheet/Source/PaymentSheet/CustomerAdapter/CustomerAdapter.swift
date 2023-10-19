@@ -135,11 +135,22 @@ open class StripeCustomerAdapter: CustomerAdapter {
 
     open func fetchPaymentMethods() async throws -> [STPPaymentMethod] {
         let customerEphemeralKey = try await customerEphemeralKey
-        let elementSession = try await apiClient.retrieveElementsSessionForCustomerSheet(customerEphemeralKey: customerEphemeralKey.ephemeralKeySecret)
-        if let customer_error = elementSession.customerError {
-            throw CustomerSheetError.errorFetchingSavedPaymentMethods(customer_error)
-        }
-        return elementSession.elementsCustomerInformation?.paymentMethods ?? []
+        return try await withCheckedThrowingContinuation({ continuation in
+            // List the Customer's saved PaymentMethods
+            let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount] // hardcoded for now
+            apiClient.listPaymentMethods(
+                forCustomer: customerEphemeralKey.id,
+                using: customerEphemeralKey.ephemeralKeySecret,
+                types: savedPaymentMethodTypes
+            ) { paymentMethods, error in
+                guard let paymentMethods = paymentMethods, error == nil else {
+                    let error = error ?? PaymentSheetError.unexpectedResponseFromStripeAPI // TODO: make a better default error
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(with: .success(paymentMethods))
+            }
+        })
     }
 
     open func attachPaymentMethod(_ paymentMethodId: String) async throws {

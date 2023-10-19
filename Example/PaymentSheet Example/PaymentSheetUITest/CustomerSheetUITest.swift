@@ -118,7 +118,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
-        removeFirstPaymentMethodInList(alertBodyText: "Remove Visa ending in 4242")
+        removeFirstPaymentMethodInList()
 
         let doneButton = app.staticTexts["Done"]
         XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
@@ -312,10 +312,10 @@ class CustomerSheetUITest: XCTestCase {
             settings
         )
 
-        presentCSAndAddCardFrom(buttonLabel: "None", cardNumber: "4242424242424242")
-        presentCSAndAddCardFrom(buttonLabel: "••••4242", cardNumber: "5555555555554444")
+        presentCSAndAddCardFrom(buttonLabel: "None")
+        presentCSAndAddCardFrom(buttonLabel: "••••4242")
 
-        let selectButton = app.staticTexts["••••4444"]
+        let selectButton = app.staticTexts["••••4242"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
@@ -323,8 +323,8 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
-        removeFirstPaymentMethodInList(alertBodyText: "Remove Mastercard ending in 4444")
-        removeFirstPaymentMethodInList(alertBodyText: "Remove Visa ending in 4242")
+        removeFirstPaymentMethodInList()
+        removeFirstPaymentMethodInList()
 
         let doneButton = app.staticTexts["Done"]
         XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
@@ -349,10 +349,10 @@ class CustomerSheetUITest: XCTestCase {
             settings
         )
 
-        presentCSAndAddCardFrom(buttonLabel: "None", cardNumber: "4242424242424242", tapAdd: false)
-        presentCSAndAddCardFrom(buttonLabel: "••••4242", cardNumber: "5555555555554444")
+        presentCSAndAddCardFrom(buttonLabel: "None", tapAdd: false)
+        presentCSAndAddCardFrom(buttonLabel: "••••4242")
 
-        let selectButton = app.staticTexts["••••4444"]
+        let selectButton = app.staticTexts["••••4242"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
@@ -360,8 +360,8 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
-        removeFirstPaymentMethodInList(alertBodyText: "Remove Mastercard ending in 4444")
-        removeFirstPaymentMethodInList(alertBodyText: "Remove Visa ending in 4242")
+        removeFirstPaymentMethodInList()
+        removeFirstPaymentMethodInList()
 
         let doneButton = app.staticTexts["Done"]
         XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
@@ -661,7 +661,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(last4Selectedlabel.waitForExistence(timeout: 10.0))
     }
 
-    func presentCSAndAddCardFrom(buttonLabel: String, cardNumber: String? = nil, tapAdd: Bool = true) {
+    func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
         let selectButton = app.staticTexts[buttonLabel]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
@@ -670,20 +670,20 @@ class CustomerSheetUITest: XCTestCase {
             app.staticTexts["+ Add"].tap()
         }
 
-        try! fillCardData(app, cardNumber: cardNumber, postalEnabled: true)
+        try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
 
         let confirmButton = app.buttons["Confirm"]
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
         confirmButton.tap()
-        let last4 = cardNumber?.suffix(4) ?? "4242"
-        dismissAlertView(alertBody: "Success: ••••\(last4), selected", alertTitle: "Complete", buttonToTap: "OK")
+
+        dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
 
-    func removeFirstPaymentMethodInList(alertBodyText: String) {
+    func removeFirstPaymentMethodInList() {
         let removeButton1 = app.buttons["Remove"].firstMatch
         removeButton1.tap()
-        dismissAlertView(alertBody: alertBodyText, alertTitle: "Remove Card", buttonToTap: "Remove")
+        dismissAlertView(alertBody: "Remove Visa ending in 4242", alertTitle: "Remove Card", buttonToTap: "Remove")
     }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {
