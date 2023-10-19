@@ -46,7 +46,7 @@ import Foundation
     public class func queryStringForURL(from params: [String: Any]) -> String {
         let encoder = if #available(iOS 17.0, *) {
             // don't escape here because URL init escapes in iOS 17
-            identity
+            escapeSpacesOnly
         } else {
             escape
         }
@@ -120,6 +120,14 @@ private func escape(_ string: String) -> String {
     string.addingPercentEncoding(withAllowedCharacters: URLQueryAllowed) ?? string
 }
 
+private func escapeSpacesOnly(_ string: String) -> String {
+    return if #available(iOS 16.0, *) {
+        string.replacing(" ", with: "+")
+    } else {
+        string
+    }
+}
+
 private func query(_ parameters: [String: Any], encoder: (String) -> String) -> String {
     var components: [(String, String)] = []
 
@@ -129,8 +137,6 @@ private func query(_ parameters: [String: Any], encoder: (String) -> String) -> 
     }
     return components.map { "\($0)=\($1)" }.joined(separator: "&")
 }
-
-private func identity(_ str: String) -> String { str }
 
 /// Creates a CharacterSet from RFC 3986 allowed characters.
 ///
