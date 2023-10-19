@@ -15,7 +15,7 @@ import UIKit
 
 protocol PaymentSheetFlowControllerViewControllerDelegate: AnyObject {
     func paymentSheetFlowControllerViewControllerShouldClose(
-        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController)
+        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController, didCancel: Bool)
     func paymentSheetFlowControllerViewControllerDidUpdateSelection(
         _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController)
 }
@@ -400,20 +400,20 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped)
         switch mode {
         case .selectingSaved:
-            self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)
+            self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: false)
         case .addingNew:
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
                 addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
             } else {
-                self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)
+                self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
 
     }
 
-    func didDismiss() {
+    func didDismiss(didCancel: Bool) {
         // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen
-        delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)
+        delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: didCancel)
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
             configureEditSavedPaymentMethodsButton()
@@ -431,7 +431,7 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
 
     func didTapOrSwipeToDismiss() {
         if isDismissable {
-            didDismiss()
+            didDismiss(didCancel: true)
         }
     }
 
@@ -463,7 +463,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             delegate?.paymentSheetFlowControllerViewControllerDidUpdateSelection(self)
             updateUI()
             if isDismissable, !selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
-                delegate?.paymentSheetFlowControllerViewControllerShouldClose(self)
+                delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
     }
@@ -540,7 +540,7 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-        didDismiss()
+        didDismiss(didCancel: true)
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
