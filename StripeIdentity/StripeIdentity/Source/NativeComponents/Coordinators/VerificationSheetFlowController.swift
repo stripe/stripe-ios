@@ -596,7 +596,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         }
 
         // reinitalize documentUploader with new idDocumentType each time
-        documentUploader = DocumentUploader(
+        let documentUploader = DocumentUploader(
             imageUploader: IdentityImageUploader(
                 configuration: .init(from: staticContent.documentCapture),
                 apiClient: sheetController.apiClient,
@@ -604,6 +604,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 idDocumentType: documentType
             )
         )
+        self.documentUploader = documentUploader
 
         switch documentScannerResult {
         case .failure(let error):
@@ -614,7 +615,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 documentType: documentType,
                 requireLiveCapture: staticContent.documentCapture.requireLiveCapture,
                 sheetController: sheetController,
-                documentUploader: documentUploader!
+                documentUploader: documentUploader
             )
 
         case .success(let anyDocumentScanner):
@@ -623,7 +624,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 documentType: documentType,
                 sheetController: sheetController,
                 cameraSession: makeDocumentCaptureCameraSession(),
-                documentUploader: documentUploader!,
+                documentUploader: documentUploader,
                 anyDocumentScanner: anyDocumentScanner
             )
         }

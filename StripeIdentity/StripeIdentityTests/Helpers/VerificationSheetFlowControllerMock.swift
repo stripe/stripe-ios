@@ -78,7 +78,8 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
 
     func transitionToErrorScreen(
         sheetController: StripeIdentity.VerificationSheetControllerProtocol,
-        error: Error, completion: @escaping () -> Void
+        error: Error,
+        completion: @escaping () -> Void
     ) {
         // no-op
     }
