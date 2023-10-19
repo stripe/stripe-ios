@@ -55,7 +55,7 @@ class PaymentSheetAPITest: XCTestCase {
                     billingDetails: .init(),
                     metadata: nil
                 ),
-                type: .card
+                type: .stripe(.card)
             )
         )
 
@@ -346,12 +346,12 @@ class PaymentSheetAPITest: XCTestCase {
         var errorDescription: String?
     }
     var valid_card_checkbox_selected: IntentConfirmParams {
-        let intentConfirmParams = IntentConfirmParams(params: ._testValidCardValue(), type: .card)
+        let intentConfirmParams = IntentConfirmParams(params: ._testValidCardValue(), type: .stripe(.card))
         intentConfirmParams.saveForFutureUseCheckboxState = .selected
         return intentConfirmParams
     }
     var valid_card_checkbox_deselected: IntentConfirmParams {
-        let intentConfirmParams = IntentConfirmParams(params: ._testValidCardValue(), type: .card)
+        let intentConfirmParams = IntentConfirmParams(params: ._testValidCardValue(), type: .stripe(.card))
         intentConfirmParams.saveForFutureUseCheckboxState = .deselected
         return intentConfirmParams
     }
@@ -438,7 +438,7 @@ class PaymentSheetAPITest: XCTestCase {
 
     func testDeferredConfirm_new_expired_card() {
         // Note: This fails when the PM is created
-        let invalid_exp_year_card = IntentConfirmParams(params: .init(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil), type: .card)
+        let invalid_exp_year_card = IntentConfirmParams(params: .init(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil), type: .stripe(.card))
         _testDeferredConfirm(
             inputPaymentOption: .new(confirmParams: invalid_exp_year_card),
             expectedShouldSavePaymentMethod: false,
@@ -471,7 +471,7 @@ class PaymentSheetAPITest: XCTestCase {
 
     func testDeferredConfirm_new_insufficient_funds_card() {
         // Note: This fails when the intent is confirmed
-        let insufficient_funds_new_PM = IntentConfirmParams(params: ._testCardValue(number: "4000000000009995"), type: .card)
+        let insufficient_funds_new_PM = IntentConfirmParams(params: ._testCardValue(number: "4000000000009995"), type: .stripe(.card))
         _testDeferredConfirm(
             inputPaymentOption: .new(confirmParams: insufficient_funds_new_PM),
             expectedShouldSavePaymentMethod: false,
@@ -897,7 +897,7 @@ class PaymentSheetAPITest: XCTestCase {
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             true,
-            paymentMethodType: PaymentSheet.PaymentMethodType.card,
+            paymentMethodType: .stripe(.card),
             customer: .init(id: "", ephemeralKeySecret: "")
         )
 
@@ -920,7 +920,7 @@ class PaymentSheetAPITest: XCTestCase {
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
-            paymentMethodType: PaymentSheet.PaymentMethodType.card,
+            paymentMethodType: .stripe(.card),
             customer: .init(id: "", ephemeralKeySecret: "")
         )
 
@@ -943,7 +943,7 @@ class PaymentSheetAPITest: XCTestCase {
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
-            paymentMethodType: PaymentSheet.PaymentMethodType.card,
+            paymentMethodType: .stripe(.card),
             customer: nil
         )
 
@@ -957,7 +957,7 @@ class PaymentSheetAPITest: XCTestCase {
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
-            paymentMethodType: PaymentSheet.PaymentMethodType.card,
+            paymentMethodType: .stripe(.card),
             customer: nil
         )
 

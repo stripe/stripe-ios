@@ -168,7 +168,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             configuration: configuration,
             logAvailability: false
         )
-        XCTAssertEqual(paymentMethodTypes, [.dynamic("paypal")])
+        XCTAssertEqual(paymentMethodTypes, [.stripe(.payPal)])
     }
 
     func testDontShowPaypalIfFlag() {

@@ -119,7 +119,7 @@ final class PartnerAuthViewController: UIViewController {
                     self.dataSource.analyticsClient.log(
                         eventName: "click.prepane.continue",
                         parameters: [
-                            "requires_native_redirect": authSession.requiresNativeRedirect
+                            "requires_native_redirect": authSession.requiresNativeRedirect,
                         ],
                         pane: .partnerAuth
                     )
@@ -190,7 +190,7 @@ final class PartnerAuthViewController: UIViewController {
                     ),
                     subtitle: {
                         let beginningOfSubtitle: String = {
-                            if IsToday(expectedToBeAvailableDate) {
+                            if isToday(expectedToBeAvailableDate) {
                                 return String(
                                     format: STPLocalizedString(
                                         "Maintenance is scheduled to end at %@.",
@@ -901,6 +901,6 @@ extension PartnerAuthViewController: ASWebAuthenticationPresentationContextProvi
     }
 }
 
-private func IsToday(_ comparisonDate: Date) -> Bool {
+private func isToday(_ comparisonDate: Date) -> Bool {
     return Calendar.current.startOfDay(for: comparisonDate) == Calendar.current.startOfDay(for: Date())
 }

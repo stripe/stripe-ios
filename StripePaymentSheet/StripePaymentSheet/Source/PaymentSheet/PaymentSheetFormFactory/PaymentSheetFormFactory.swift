@@ -44,7 +44,7 @@ class PaymentSheetFormFactory {
     var canSaveToLink: Bool {
         // For Link private beta, only save cards in ".none" mode: If there is no Customer object.
         // We don't want to override the merchant's own "Save this card" checkbox.
-        return (supportsLinkCard && paymentMethod == .card && saveMode == .none)
+        return (supportsLinkCard && paymentMethod == .stripe(.card) && saveMode == .none)
     }
 
     var theme: ElementsUITheme {
@@ -140,6 +140,9 @@ class PaymentSheetFormFactory {
     }
 
     func make() -> PaymentMethodElement {
+        guard case .stripe(let paymentMethod) = paymentMethod else {
+            return makeExternalPayPal()
+        }
         var additionalElements = [Element]()
 
         // We have two ways to create the form for a payment method
@@ -155,27 +158,25 @@ class PaymentSheetFormFactory {
         } else if paymentMethod == .cashApp && saveMode == .merchantRequired {
             // special case, display mandate for Cash App when setting up or pi+sfu
             additionalElements = [makeCashAppMandate()]
-        } else if paymentMethod.stpPaymentMethodType == .payPal && saveMode == .merchantRequired {
+        } else if paymentMethod == .payPal && saveMode == .merchantRequired {
             // Paypal requires mandate when setting up
             additionalElements = [makePaypalMandate()]
-        } else if paymentMethod.stpPaymentMethodType == .revolutPay && saveMode == .merchantRequired {
+        } else if paymentMethod == .revolutPay && saveMode == .merchantRequired {
             // special case, display mandate for revolutPay when setting up or pi+sfu
             additionalElements = [makeRevolutPayMandate()]
-        } else if paymentMethod.stpPaymentMethodType == .bancontact {
+        } else if paymentMethod == .bancontact {
             return makeBancontact()
-        } else if paymentMethod.stpPaymentMethodType == .bacsDebit {
+        } else if paymentMethod == .bacsDebit {
             return makeBacsDebit()
-        } else if paymentMethod.stpPaymentMethodType == .blik {
+        } else if paymentMethod == .blik {
             return makeBLIK()
-        } else if paymentMethod == .externalPayPal {
-            return makeExternalPayPal()
-        } else if paymentMethod.stpPaymentMethodType == .OXXO {
+        } else if paymentMethod == .OXXO {
             return  makeOXXO()
-        } else if paymentMethod.stpPaymentMethodType == .konbini {
+        } else if paymentMethod == .konbini {
             return makeKonbini()
-        } else if paymentMethod.stpPaymentMethodType == .boleto {
+        } else if paymentMethod == .boleto {
             return makeBoleto()
-        } else if paymentMethod.stpPaymentMethodType == .swish {
+        } else if paymentMethod == .swish {
             return makeSwish()
         }
 
@@ -183,9 +184,9 @@ class PaymentSheetFormFactory {
             assertionFailure("Failed to get form spec!")
             return FormElement(elements: [], theme: theme)
         }
-        if paymentMethod.stpPaymentMethodType == .iDEAL {
+        if paymentMethod == .iDEAL {
             return makeiDEAL(spec: spec)
-        } else if paymentMethod.stpPaymentMethodType == .sofort {
+        } else if paymentMethod == .sofort {
             return makeSofort(spec: spec)
         }
 

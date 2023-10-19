@@ -483,12 +483,12 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         let sut = STPPaymentCardTextField()
         let params = STPPaymentMethodCardParams()
         sut.paymentMethodParams = STPPaymentMethodParams(card: params, billingDetails: nil, metadata: [
-            "hello": "test"
+            "hello": "test",
         ])
         let actual = sut.paymentMethodParams
 
         XCTAssertEqual([
-            "hello": "test"
+            "hello": "test",
         ], actual.metadata)
     }
 

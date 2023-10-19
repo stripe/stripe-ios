@@ -61,7 +61,7 @@ final class PaymentSheetLoader {
                 let filteredSavedPaymentMethods = try await savedPaymentMethods
                     .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
                     .filter {
-                        $0.paymentSheetPaymentMethodType().supportsSavedPaymentMethod(
+                        $0.supportsSavedPaymentMethod(
                             configuration: configuration,
                             intent: intent
                         )

@@ -312,7 +312,7 @@ class PaymentSheetViewController: UIViewController {
 
         // Content header
         walletHeader.isHidden = !shouldShowWalletHeader
-        walletHeader.showsCardPaymentMessage = (addPaymentMethodViewController.paymentMethodTypes == [.card])
+        walletHeader.showsCardPaymentMessage = (addPaymentMethodViewController.paymentMethodTypes == [.stripe(.card)])
 
         switch mode {
         case .addingNew:

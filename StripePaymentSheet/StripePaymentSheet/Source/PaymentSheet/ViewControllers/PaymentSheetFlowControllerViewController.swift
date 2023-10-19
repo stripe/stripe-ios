@@ -42,18 +42,19 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             return savedPaymentOptionsViewController.selectedPaymentOption
         }
     }
+
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         switch mode {
         case .selectingSaved:
             guard let selectedPaymentOption = selectedPaymentOption else {
-                return .dynamic("")
+                return .stripe(.unknown)
             }
             if case let .saved(paymentMethod) = selectedPaymentOption {
                 return paymentMethod.paymentSheetPaymentMethodType()
             } else if case .applePay = selectedPaymentOption {
-                return .card
+                return .stripe(.card)
             } else {
-                return .dynamic("")
+                return .stripe(.unknown)
             }
         case .addingNew:
             return addPaymentMethodViewController.selectedPaymentMethodType
@@ -278,7 +279,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 "Select your payment method",
                 "Title shown above a carousel containing the customer's payment methods")
         case .addingNew:
-            if addPaymentMethodViewController.paymentMethodTypes == [.card] {
+            if addPaymentMethodViewController.paymentMethodTypes == [.stripe(.card)] {
                 headerLabel.text = STPLocalizedString("Add a card", "Title shown above a card entry form")
             } else {
                 headerLabel.text = STPLocalizedString("Choose a payment method", "TODO")
@@ -560,6 +561,6 @@ extension PaymentSheetFlowControllerViewController: SheetNavigationBarDelegate {
 // MARK: - PaymentSheetPaymentMethodType Helpers
 extension PaymentSheet.PaymentMethodType {
     var requiresMandateDisplayForSavedSelection: Bool {
-        return self == .USBankAccount || self == .dynamic("sepa_debit")
+        return self == .stripe(.USBankAccount) || self == .stripe(.SEPADebit)
     }
 }

@@ -85,7 +85,7 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     var bottomNoticeAttributedString: NSAttributedString? {
-        if selectedPaymentMethodType == .USBankAccount {
+        if selectedPaymentMethodType == .stripe(.USBankAccount) {
             if let usBankPaymentMethodElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement {
                 return usBankPaymentMethodElement.mandateString
             }
@@ -94,7 +94,7 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     var overrideBuyButtonBehavior: OverrideableBuyButtonBehavior? {
-        if selectedPaymentMethodType == .USBankAccount {
+        if selectedPaymentMethodType == .stripe(.USBankAccount) {
             if let paymentOption = paymentOption,
                 case .new = paymentOption
             {
@@ -121,7 +121,7 @@ class AddPaymentMethodViewController: UIViewController {
         return paymentMethodElement as? USBankAccountPaymentMethodElement
     }()
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
-        if selectedPaymentMethodType == .USBankAccount,
+        if selectedPaymentMethodType == .stripe(.USBankAccount),
             let usBankAccountFormElement = usBankAccountFormElement
         {
             return usBankAccountFormElement
@@ -192,7 +192,7 @@ class AddPaymentMethodViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-        if paymentMethodTypes == [.card] {
+        if paymentMethodTypes == [.stripe(.card)] {
             paymentMethodTypesView.isHidden = true
         } else {
             paymentMethodTypesView.isHidden = false
@@ -296,7 +296,7 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private func updateFormElement() {
-        if selectedPaymentMethodType == .USBankAccount,
+        if selectedPaymentMethodType == .stripe(.USBankAccount),
             let usBankAccountFormElement = usBankAccountFormElement
         {
             paymentMethodFormElement = usBankAccountFormElement

@@ -53,14 +53,14 @@ final class USBankAccountPaymentMethodElement: Element {
     static let MicrodepositCopy_CustomerSheet: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@.", "Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name")
 
     var canLinkAccount: Bool {
-        let params = self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))
+        let params = self.formElement.updateParams(params: IntentConfirmParams(type: .stripe(.USBankAccount)))
         // If name and email are not collected they won't be verified when updating params.
         // Check if params are valid, and name and email are provided either through the form or through defaults.
         return params != nil && name != nil && email != nil
     }
 
     var name: String? {
-        return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))?.paymentMethodParams.nonnil_billingDetails.name
+        return self.formElement.updateParams(params: IntentConfirmParams(type: .stripe(.USBankAccount)))?.paymentMethodParams.nonnil_billingDetails.name
             ?? defaultName
     }
 
@@ -70,7 +70,7 @@ final class USBankAccountPaymentMethodElement: Element {
     }
 
     var email: String? {
-        return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))?.paymentMethodParams.nonnil_billingDetails.email
+        return self.formElement.updateParams(params: IntentConfirmParams(type: .stripe( .USBankAccount)))?.paymentMethodParams.nonnil_billingDetails.email
             ?? defaultEmail
     }
 

@@ -25,6 +25,7 @@ class IntentConfirmParams {
     }
 
     let paymentMethodParams: STPPaymentMethodParams
+    // TODO: Make this STPPaymentMethodType
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions
 
