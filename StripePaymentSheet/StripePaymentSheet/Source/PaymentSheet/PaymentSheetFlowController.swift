@@ -121,7 +121,7 @@ extension PaymentSheet {
         }
 
         private var isPresented = false
-        private(set) var didPresent: Bool = false
+        private(set) var didPresentAndContinue: Bool = false
 
         // MARK: - Initializer (Internal)
 
@@ -269,7 +269,6 @@ extension PaymentSheet {
 
                 presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
                 self.isPresented = true
-                self.didPresent = true
             }
 
             showPaymentOptions()
@@ -308,7 +307,7 @@ extension PaymentSheet {
 
             let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController, appearance: configuration.appearance)
 
-            guard didPresent || viewController.selectedPaymentMethodType != .dynamic("sepa_debit") else {
+            guard didPresentAndContinue || viewController.selectedPaymentMethodType != .dynamic("sepa_debit") else {
                 // We're legally required to show the customer the SEPA mandate before every payment/setup
                 // In the edge case where the customer never opened the sheet, and thus never saw the mandate, we present the mandate directly
                 presentSEPAMandate()
@@ -459,8 +458,12 @@ extension PaymentSheet {
 // MARK: - PaymentSheetFlowControllerViewControllerDelegate
 extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerDelegate {
     func paymentSheetFlowControllerViewControllerShouldClose(
-        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
+        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController,
+        didCancel: Bool
     ) {
+        if !didCancel {
+            self.didPresentAndContinue = true
+        }
         PaymentSheetFlowControllerViewController.dismiss(animated: true) {
             self.presentPaymentOptionsCompletion?()
             self.isPresented = false
