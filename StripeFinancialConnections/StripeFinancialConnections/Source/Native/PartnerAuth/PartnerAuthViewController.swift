@@ -20,6 +20,10 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
         _ viewController: PartnerAuthViewController,
         didCompleteWithAuthSession authSession: FinancialConnectionsAuthSession
     )
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 final class PartnerAuthViewController: UIViewController {

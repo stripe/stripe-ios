@@ -15,6 +15,11 @@ protocol HostControllerDelegate: AnyObject {
         viewController: UIViewController,
         didFinish result: FinancialConnectionsSheet.Result
     )
+
+    func hostController(
+        _ hostController: HostController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 class HostController {
@@ -55,12 +60,14 @@ class HostController {
             publishableKey: publishableKey,
             stripeAccount: stripeAccount
         )
+        analyticsClient.delegate = self
     }
 }
 
 // MARK: - HostViewControllerDelegate
 
 extension HostController: HostViewControllerDelegate {
+
     func hostViewControllerDidFinish(_ viewController: HostViewController, lastError: Error?) {
         guard let error = lastError else {
             delegate?.hostController(self, viewController: viewController, didFinish: .canceled)
@@ -74,6 +81,8 @@ extension HostController: HostViewControllerDelegate {
         _ viewController: HostViewController,
         didFetch synchronizePayload: FinancialConnectionsSynchronize
     ) {
+        delegate?.hostController(self, didReceiveEvent: FinancialConnectionsEvent(name: .open))
+
         guard
             let consentPaneModel = synchronizePayload.text?.consentPane
         else {
@@ -114,6 +123,13 @@ extension HostController: HostViewControllerDelegate {
         nativeFlowController?.delegate = self
         nativeFlowController?.startFlow()
     }
+
+    func hostViewController(
+        _ hostViewController: HostViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.hostController(self, didReceiveEvent: event)
+    }
 }
 
 // MARK: - Helpers
@@ -121,6 +137,13 @@ extension HostController: HostViewControllerDelegate {
 private extension HostController {
 
     func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest) {
+        delegate?.hostController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(
+                name: .flowLaunchedInBrowser
+            )
+        )
+
         let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
         let sessionFetcher = FinancialConnectionsSessionAPIFetcher(
             api: api,
@@ -142,20 +165,52 @@ private extension HostController {
 // MARK: - ConnectionsWebFlowViewControllerDelegate
 
 extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
-    func financialConnectionsWebFlow(
-        viewController: FinancialConnectionsWebFlowViewController,
+
+    func webFlowViewController(
+        _ viewController: FinancialConnectionsWebFlowViewController,
         didFinish result: FinancialConnectionsSheet.Result
     ) {
         delegate?.hostController(self, viewController: viewController, didFinish: result)
     }
+
+    func webFlowViewController(
+        _ webFlowViewController: UIViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.hostController(self, didReceiveEvent: event)
+    }
 }
 
+// MARK: - NativeFlowControllerDelegate
+
 extension HostController: NativeFlowControllerDelegate {
-    func authFlow(controller: NativeFlowController, didFinish result: FinancialConnectionsSheet.Result) {
+    func nativeFlowController(
+        _ nativeFlowController: NativeFlowController,
+        didFinish result: FinancialConnectionsSheet.Result
+    ) {
         guard let viewController = navigationController.topViewController else {
             assertionFailure("Navigation stack is empty")
             return
         }
         delegate?.hostController(self, viewController: viewController, didFinish: result)
+    }
+
+    func nativeFlowController(
+        _ nativeFlowController: NativeFlowController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.hostController(self, didReceiveEvent: event)
+    }
+}
+
+// MARK: - FinancialConnectionsAnalyticsClientDelegate
+
+extension HostController: FinancialConnectionsAnalyticsClientDelegate {
+
+    func analyticsClient(
+        _ analyticsClient: FinancialConnectionsAnalyticsClient,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.hostController(self, didReceiveEvent: event)
     }
 }

@@ -130,6 +130,12 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
+    @Published var showLiveEvents: Bool = PlaygroundUserDefaults.showLiveEvents {
+        didSet {
+            PlaygroundUserDefaults.showLiveEvents = showLiveEvents
+        }
+    }
+
     @Published var isLoading: Bool = false
 
     init() {
@@ -160,40 +166,47 @@ final class PlaygroundMainViewModel: ObservableObject {
         ) { [weak self] setupPlaygroundResponse in
             if let setupPlaygroundResponse = setupPlaygroundResponse {
                 PresentFinancialConnectionsSheet(
-                    setupPlaygroundResponseJSON: setupPlaygroundResponse
-                ) { result in
-                    switch result {
-                    case .completed(let session):
-                        let accounts = session.accounts.data.filter { $0.last4 != nil }
-                        let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
-                        let sessionInfo =
+                    setupPlaygroundResponseJSON: setupPlaygroundResponse,
+                    onEvent: { event in
+                        if self?.showLiveEvents == true {
+                            let message = "\(event.name.rawValue); \(event.metadata.dictionary)"
+                            BannerHelper.shared.showBanner(with: message, for: 3.0)
+                        }
+                    },
+                    completionHandler: { result in
+                        switch result {
+                        case .completed(let session):
+                            let accounts = session.accounts.data.filter { $0.last4 != nil }
+                            let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
+                            let sessionInfo =
 """
 session_id=\(session.id)
 account_names=\(session.accounts.data.map({ $0.displayName ?? "N/A" }))
 account_ids=\(session.accounts.data.map({ $0.id }))
 """
 
-                        UIAlertController.showAlert(
-                            title: "Success",
-                            message: "\(accountInfos)\n\n\(sessionInfo)"
-                        )
-                    case .canceled:
-                        UIAlertController.showAlert(
-                            title: "Cancelled"
-                        )
-                    case .failed(let error):
-                        UIAlertController.showAlert(
-                            title: "Failed",
-                            message: {
-                                if case .unknown(let debugDescription) = error as? FinancialConnectionsSheetError {
-                                    return debugDescription
-                                } else {
-                                    return error.localizedDescription
-                                }
-                            }()
-                        )
+                            UIAlertController.showAlert(
+                                title: "Success",
+                                message: "\(accountInfos)\n\n\(sessionInfo)"
+                            )
+                        case .canceled:
+                            UIAlertController.showAlert(
+                                title: "Cancelled"
+                            )
+                        case .failed(let error):
+                            UIAlertController.showAlert(
+                                title: "Failed",
+                                message: {
+                                    if case .unknown(let debugDescription) = error as? FinancialConnectionsSheetError {
+                                        return debugDescription
+                                    } else {
+                                        return error.localizedDescription
+                                    }
+                                }()
+                            )
+                        }
                     }
-                }
+                )
             } else {
                 UIAlertController.showAlert(
                     title: "Playground App Setup Failed",
@@ -272,6 +285,7 @@ private func SetupPlayground(
 
 private func PresentFinancialConnectionsSheet(
     setupPlaygroundResponseJSON: [String: String],
+    onEvent: @escaping (FinancialConnectionsEvent) -> Void,
     completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
 ) {
     guard let clientSecret = setupPlaygroundResponseJSON["client_secret"] else {
@@ -303,6 +317,7 @@ private func PresentFinancialConnectionsSheet(
         financialConnectionsSessionClientSecret: clientSecret,
         returnURL: "financial-connections-example://redirect"
     )
+    financialConnectionsSheet.onEvent = onEvent
     financialConnectionsSheet.present(
         from: UIViewController.topMostViewController()!,
         completion: { result in

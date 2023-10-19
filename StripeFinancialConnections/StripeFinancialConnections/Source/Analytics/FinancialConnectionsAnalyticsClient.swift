@@ -9,10 +9,18 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
+protocol FinancialConnectionsAnalyticsClientDelegate: AnyObject {
+    func analyticsClient(
+        _ analyticsClient: FinancialConnectionsAnalyticsClient,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
+}
+
 final class FinancialConnectionsAnalyticsClient {
 
     private let analyticsClient: AnalyticsClientV2
     private var additionalParameters: [String: Any] = [:]
+    weak var delegate: FinancialConnectionsAnalyticsClientDelegate?
 
     init(
         analyticsClient: AnalyticsClientV2 = AnalyticsClientV2(
@@ -110,6 +118,12 @@ extension FinancialConnectionsAnalyticsClient {
         eventName: String,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) {
+        FinancialConnectionsEvent
+            .events(fromError: error)
+            .forEach { event in
+                delegate?.analyticsClient(self, didReceiveEvent: event)
+            }
+
         var parameters: [String: Any] = [:]
         parameters["error"] = errorName
         if let stripeError = error as? StripeError,
@@ -161,7 +175,7 @@ extension FinancialConnectionsAnalyticsClient {
         additionalParameters["account_holder_id"] = manifest.accountholderToken
     }
 
-        static func paneFromViewController(
+    static func paneFromViewController(
         _ viewController: UIViewController?
     ) -> FinancialConnectionsSessionManifest.NextPane {
         switch viewController {

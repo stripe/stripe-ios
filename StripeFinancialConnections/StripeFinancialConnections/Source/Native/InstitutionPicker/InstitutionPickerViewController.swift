@@ -18,6 +18,9 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
         _ viewController: InstitutionPickerViewController
     )
+    func institutionPickerViewControllerDidSearch(
+        _ viewController: InstitutionPickerViewController
+    )
 }
 
 class InstitutionPickerViewController: UIViewController {
@@ -222,16 +225,37 @@ extension InstitutionPickerViewController {
                                 ],
                                 pane: .institutionPicker
                             )
+                        self.delegate?.institutionPickerViewControllerDidSearch(self)
                     case .failure(let error):
                         self.institutionSearchTableView.loadInstitutions([])
                         self.institutionSearchTableView.showError(true)
-                        self.dataSource
-                            .analyticsClient
-                            .logUnexpectedError(
-                                error,
-                                errorName: "SearchInstitutionsError",
-                                pane: .institutionPicker
-                            )
+
+                        if
+                            let error = error as? StripeError,
+                            case .apiError(let apiError) = error,
+                            apiError.type == .invalidRequestError,
+                            apiError.param == "client_secret",
+                            (apiError.message ?? "").contains("expired")
+                        {
+                            // Do not log for this case.
+                            //
+                            // This code fixes a a weird logging edge-case:
+                            // 1. Type an invalid keyword ("abcde") in the search that iOS
+                            //    will auto-correct
+                            // 2. While keyboard is still presented press to enter manual entry
+                            // 3. If merchant has manual entry handoff, we will call
+                            //    complete API but another search call will execute
+                            //    due to iOS auto-correct, which will fail because
+                            //    session is completed.
+                        } else {
+                            self.dataSource
+                                .analyticsClient
+                                .logUnexpectedError(
+                                    error,
+                                    errorName: "SearchInstitutionsError",
+                                    pane: .institutionPicker
+                                )
+                        }
                     }
                     self.searchBar.updateSearchingIndicator(false)
                 }
