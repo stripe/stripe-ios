@@ -66,6 +66,12 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         }
     }
 
+    // MARK: - UIViewController
+
+    override func viewWillAppear(_ animated: Bool) {
+        self.updateUI()
+    }
+
     // MARK: - Coordinators
 
     let documentUploader: DocumentUploaderProtocol

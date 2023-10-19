@@ -215,6 +215,9 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         }
     }
 
+    // If the VC has uploaded front and waiting to decide if should upload back
+    var isDecidingBack: Bool = false
+
     // MARK: Instance Properties
 
     let apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
@@ -288,7 +291,12 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        imageScanningSession.startIfNeeded(expectedClassification: .front)
+        if isDecidingBack {
+            // if True, the VC has just been popped due to user force confirmed front, continue scanning back
+            imageScanningSession.startScanning(expectedClassification: .back)
+        } else {
+            imageScanningSession.startIfNeeded(expectedClassification: .front)
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -367,10 +375,12 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     private func saveFrontAndDecideBack(
         frontImage: UIImage
     ) {
+        isDecidingBack = true
         sheetController?.saveDocumentFrontAndDecideBack(
             from: analyticsScreenName,
             documentUploader: documentUploader,
             onCompletion: { [weak self] isBackRequired in
+                self?.isDecidingBack = false
                 if isBackRequired {
                     self?.imageScanningSession.startScanning(
                         expectedClassification: DocumentSide.back
@@ -545,6 +555,7 @@ extension DocumentCaptureViewController: IdentityDataCollecting {
     func reset() {
         imageScanningSession.reset(to: .front)
         clearCollectedFields()
+        isDecidingBack = false
     }
 }
 
