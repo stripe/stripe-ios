@@ -59,7 +59,7 @@ extension STPPaymentMethod {
                 return STPImageLibrary.unknownCardCardImage()
             }
 
-            return STPImageLibrary.cardBrandImage(for: card.brand)
+            return STPImageLibrary.cardBrandImage(for: card.networks?.preferred?.toCardBrand ?? card.brand)
         case .iDEAL:
             return Image.pm_type_ideal.makeImage()
         case .USBankAccount:
@@ -76,7 +76,8 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodCellImage() -> UIImage {
         switch type {
         case .card:
-            return card?.brand.makeSavedPaymentMethodCellImage() ?? makeIcon()
+            let cardBrand = card?.networks?.preferred?.toCardBrand ?? card?.brand ?? .unknown
+            return cardBrand.makeSavedPaymentMethodCellImage()
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
@@ -99,7 +100,7 @@ extension STPPaymentMethodParams {
                 return STPImageLibrary.unknownCardCardImage()
             }
 
-            let brand = STPCardValidator.brand(forNumber: number)
+            let brand = card.networks?.preferred?.toCardBrand ?? STPCardValidator.brand(forNumber: number)
             return STPImageLibrary.cardBrandImage(for: brand)
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
@@ -194,5 +195,11 @@ extension STPPaymentMethodType {
         }
 
         return image.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
+    }
+}
+
+extension String {
+    var toCardBrand: STPCardBrand? {
+        return STPCard.brand(from: self)
     }
 }

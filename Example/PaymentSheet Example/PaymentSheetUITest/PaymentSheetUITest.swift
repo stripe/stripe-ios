@@ -907,7 +907,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Card brand choice drop down should be enabled
         XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistenceAndTap(timeout: 5))
         XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.swipeUp() // reset to optional selection for card brand
+        cardBrandChoiceDropdown.swipeUp() // Swipe to select Visa
         app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
@@ -955,9 +955,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // We should have selected Visa due to preferreedNetworks configuration API
         XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 2))
 
-        // We should have selected Visa
-        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
-
         // Clear card text field, should reset selected card brand
         numberField.tap()
         numberField.clearText()
@@ -981,6 +978,53 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.buttons["Pay €50.99"].tap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testCardBrandChoiceSavedCard() {
+        app.launchEnvironment = app.launchEnvironment.merging(["ENABLE_CBC": "true"]) { (_, new) in new }
+
+        // Currently only our French merchant is eligible for card brand choice
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
+        let numberField = app.textFields["Card number"]
+        let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
+
+        // Type full card number to start fetching card brands again
+        numberField.forceTapWhenHittableInTestCase(self)
+        app.typeText("4000002500001001")
+        app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
+        app.typeText("1228") // Expiry
+        app.typeText("123") // CVC
+        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("12345") // Postal
+
+        // Card brand choice drop down should be enabled
+        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
+        cardBrandChoiceDropdown.selectNextOption()
+        app.toolbars.buttons["Done"].tap()
+
+        // We should have selected cartes bancaires
+        XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistence(timeout: 5))
+
+        // Finish checkout
+        app.buttons["Pay €50.99"].tap()
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
+        // Saved card should show the cartes bancaires logo
+        XCTAssertTrue(app.images["card_cartes_bancaires"].waitForExistence(timeout: 5))
     }
 
     // This only tests the PaymentSheet + PaymentIntent flow.
@@ -2654,5 +2698,14 @@ extension XCUIElement {
 
         let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: stringValue.count)
         self.typeText(deleteString)
+    }
+}
+
+extension XCUIElement {
+    /// Scrolls a picker wheel up by one option.
+    func selectNextOption() {
+        let startCoord = self.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let endCoord = startCoord.withOffset(CGVector(dx: 0.0, dy: 30.0)) // 30pts = height of picker item
+        endCoord.tap()
     }
 }
