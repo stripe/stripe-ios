@@ -27,6 +27,8 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 
     var navigationController: UINavigationController { get }
 
+    var documentUploader: DocumentUploaderProtocol? { get }
+
     func transitionToNextScreen(
         skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
@@ -51,6 +53,12 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         sheetController: VerificationSheetControllerProtocol
     )
 
+    func transitionToErrorScreen(
+        sheetController: VerificationSheetControllerProtocol,
+        error: Error,
+        completion: @escaping () -> Void
+    )
+
     func replaceCurrentScreen(
         with viewController: UIViewController
     )
@@ -73,6 +81,8 @@ final class VerificationSheetFlowController: NSObject {
     weak var delegate: VerificationSheetFlowControllerDelegate?
 
     private(set) var isUsingWebView = false
+
+    private(set) var documentUploader: DocumentUploaderProtocol?
 
     init(
         brandLogo: UIImage
@@ -204,6 +214,21 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             }
         }
+    }
+
+    func transitionToErrorScreen(
+        sheetController: VerificationSheetControllerProtocol,
+        error: Error,
+        completion: @escaping () -> Void
+    ) {
+        self.transition(
+            to: ErrorViewController(
+                sheetController: sheetController,
+                error: .error(error)
+            ),
+            shouldAnimate: true,
+            completion: completion
+        )
     }
 
     /// Transitions to the given viewController by replacing the currently displayed view controller
@@ -570,7 +595,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             )
         }
 
-        let documentUploader = DocumentUploader(
+        // reinitalize documentUploader with new idDocumentType each time
+        documentUploader = DocumentUploader(
             imageUploader: IdentityImageUploader(
                 configuration: .init(from: staticContent.documentCapture),
                 apiClient: sheetController.apiClient,
@@ -588,7 +614,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 documentType: documentType,
                 requireLiveCapture: staticContent.documentCapture.requireLiveCapture,
                 sheetController: sheetController,
-                documentUploader: documentUploader
+                documentUploader: documentUploader!
             )
 
         case .success(let anyDocumentScanner):
@@ -597,7 +623,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 documentType: documentType,
                 sheetController: sheetController,
                 cameraSession: makeDocumentCaptureCameraSession(),
-                documentUploader: documentUploader,
+                documentUploader: documentUploader!,
                 anyDocumentScanner: anyDocumentScanner
             )
         }
