@@ -39,6 +39,18 @@ import Foundation
     public class func queryString(from parameters: [String: Any]) -> String {
         return query(parameters)
     }
+
+    // For apps linked on or after iOS 17 and aligned OS versions, `URL` automatically percent- and IDNA-encodes invalid
+    // characters to help create a valid URL. See https://developer.apple.com/documentation/foundation/url/3126806-init
+    @objc(queryStringURLSafeIOS17FromParameters:)
+    public class func queryStringURLSafeIOS17(from params: [String: Any]) -> String {
+        let encodedQuery = URLEncoder.queryString(from: params)
+        return if #available(iOS 17.0, *) {
+            encodedQuery.removingPercentEncoding!
+        } else {
+            encodedQuery
+        }
+    }
 }
 
 // MARK: -
