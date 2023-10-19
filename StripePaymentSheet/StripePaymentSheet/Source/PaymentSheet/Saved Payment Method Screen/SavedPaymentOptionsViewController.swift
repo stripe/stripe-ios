@@ -115,9 +115,8 @@ class SavedPaymentOptionsViewController: UIViewController {
             return .saved(paymentMethod: paymentMethod)
         }
     }
-    var savedPaymentMethods: [STPPaymentMethod] {
+    private(set) var savedPaymentMethods: [STPPaymentMethod] {
         didSet {
-            updateViewModels()
             updateUI()
         }
     }
@@ -190,7 +189,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.appearance = appearance
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-        updateViewModels()
+        updateUI()
     }
 
     required init?(coder: NSCoder) {
@@ -201,12 +200,11 @@ class SavedPaymentOptionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addAndPinSubview(stackView)
-        updateUI()
     }
 
     // MARK: - Private methods
 
-    private func updateViewModels() {
+    private func updateUI() {
         let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customerID)
 
         // Move default to front
@@ -232,9 +230,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         // Select default
         selectedViewModelIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod })
             ?? 1
-    }
 
-    private func updateUI() {
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
@@ -252,7 +248,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             shouldHideSEPA = true
         }
         if sepaMandateView.isHidden != shouldHideSEPA {
-            stackView.toggleArrangedSubview(sepaMandateView, shouldShow: !shouldHideSEPA, animated: true)
+            stackView.toggleArrangedSubview(sepaMandateView, shouldShow: !shouldHideSEPA, animated: isViewLoaded)
         }
     }
 
