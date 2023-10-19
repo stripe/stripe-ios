@@ -27,11 +27,8 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 
     var navigationController: UINavigationController { get }
 
-<<<<<<< HEAD
     var documentUploader: DocumentUploaderProtocol? { get }
-=======
     var visitedIndividualWelcomePage: Bool { get }
->>>>>>> ccen/butter2Back
 
     func transitionToNextScreen(
         skipTestMode: Bool,
