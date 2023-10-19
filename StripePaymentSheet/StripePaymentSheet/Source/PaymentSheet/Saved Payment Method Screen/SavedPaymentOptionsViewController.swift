@@ -238,15 +238,14 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     private func updateMandateView() {
-        guard let selectedViewModelIndex, let viewModel = viewModels.stp_boundSafeObject(at: selectedViewModelIndex) else {
-            return
-        }
-        let shouldHideSEPA: Bool
-        if case .saved(paymentMethod: let paymentMethod) = viewModel, paymentMethod.type == .SEPADebit {
-            shouldHideSEPA = false
-        } else {
-            shouldHideSEPA = true
-        }
+        let shouldHideSEPA: Bool = {
+            if let selectedViewModelIndex, let viewModel = viewModels.stp_boundSafeObject(at: selectedViewModelIndex),
+               case .saved(paymentMethod: let paymentMethod) = viewModel, paymentMethod.type == .SEPADebit {
+                // Only show SEPA if there's a selected PM and it's type is SEPADebit.
+                return false
+            }
+            return true
+        }()
         if sepaMandateView.isHidden != shouldHideSEPA {
             stackView.toggleArrangedSubview(sepaMandateView, shouldShow: !shouldHideSEPA, animated: isViewLoaded)
         }
