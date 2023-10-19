@@ -13,19 +13,35 @@ import StripeCoreTestUtils
 import XCTest
 
 class StubbedBackend {
-    static func stubSessions(paymentMethods: String) {
+    static func stubSessions(fileMock: FileMock,
+                             paymentMethods: String,
+                             requestCallback: ((URLRequest) -> Bool)? = nil,
+                             responseCallback: ((Data) -> Data)? = nil) {
+        let wrappedResponseCallback = wrappedResponseCaller(paymentMethods: paymentMethods,
+                                                            responseCallback: responseCallback)
         stubSessions(
-            fileMock: .elementsSessionsPaymentMethod_200,
-            responseCallback: { data in
-                return self.updatePaymentMethodDetail(
-                    data: data,
-                    variables: [
-                        "<paymentMethods>": paymentMethods,
-                        "<currency>": "\"usd\"",
-                    ]
-                )
-            }
+            fileMock: fileMock,
+            requestCallback: requestCallback,
+            responseCallback: wrappedResponseCallback
         )
+    }
+    static func wrappedResponseCaller(paymentMethods: String, responseCallback: ((Data) -> Data)? = nil) -> ((Data) -> Data) {
+        let dataTransformer = { data in
+            return self.updatePaymentMethodDetail(
+                data: data,
+                variables: [
+                    "<paymentMethods>": paymentMethods,
+                    "<currency>": "\"usd\"",
+                ]
+            )
+        }
+        guard let responseCallbackUnwrapped = responseCallback else {
+            return dataTransformer
+        }
+        return { data in
+            let transformedData = dataTransformer(data)
+            return responseCallbackUnwrapped(transformedData)
+        }
     }
 
     static func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
@@ -36,9 +52,16 @@ class StubbedBackend {
         }
         return template.data(using: .utf8)!
     }
-    static func stubSessions(fileMock: FileMock, responseCallback: ((Data) -> Data)? = nil) {
+
+    private static func stubSessions(fileMock: FileMock, requestCallback: ((URLRequest) -> Bool)? = nil, responseCallback: ((Data) -> Data)? = nil) {
         stub { urlRequest in
-            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
+            guard urlRequest.url?.absoluteString.contains("/v1/elements/sessions") != nil else {
+                return false
+            }
+            if let requestCallback = requestCallback {
+                return requestCallback(urlRequest)
+            }
+            return true
         } response: { _ in
             let mockResponseData = try! fileMock.data()
             let data = responseCallback?(mockResponseData) ?? mockResponseData
@@ -70,4 +93,14 @@ public class ClassForBundle {}
     case saved_payment_methods_withUSBank_200 = "MockFiles/saved_payment_methods_withUSBank_200"
 
     case elementsSessionsPaymentMethod_200 = "MockFiles/elements_sessions_paymentMethod_200"
+    case elementsSessionsLegacyCustomer_di_withSavedCardUSBank_200 = "MockFiles/elements_sessions_di_legacyCustomer_withSavedCardUSBank_200"
+    case elementsSessionsLegacyCustomer_di_withSavedCard_200 = "MockFiles/elements_sessions_di_legacyCustomer_withSavedCard_200"
+    case elementsSessionsLegacyCustomer_di_withSavedUSBank_200 = "MockFiles/elements_sessions_di_legacyCustomer_withSavedUSBank_200"
+    case elementsSessionsLegacyCustomer_di_withNoSavedPM_200 = "MockFiles/elements_sessions_di_legacyCustomer_withNoSavedPM_200"
+
+    case elementsSessionsLegacyCustomer_pi_withSavedCardUSBank_200 = "MockFiles/elements_sessions_pi_legacyCustomer_withSavedCardUSBank_200"
+    case elementsSessionsLegacyCustomer_pi_withSavedCard_200 = "MockFiles/elements_sessions_pi_legacyCustomer_withSavedCard_200"
+    case elementsSessionsLegacyCustomer_pi_withSavedUSBank_200 = "MockFiles/elements_sessions_pi_legacyCustomer_withSavedUSBank_200"
+    case elementsSessionsLegacyCustomer_pi_withNoSavedPM_200 = "MockFiles/elements_sessions_pi_legacyCustomer_withNoSavedPM_200"
+
 }

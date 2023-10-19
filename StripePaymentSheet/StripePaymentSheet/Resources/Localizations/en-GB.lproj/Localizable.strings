@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Cancel and pay another way";
 
 "Choose a payment method" = "Choose a payment method";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Confirm";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirm the payment in your bank's app within %@ to complete the purchase.";
 
 "Contact information" = "Contact information";
@@ -49,6 +55,8 @@
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Enter address manually";
+
+"FPX Bank" = "FPX Bank";
 
 "IBAN" = "IBAN";
 

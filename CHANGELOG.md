@@ -1,4 +1,4 @@
-## X.X.X
+## 23.17.2 2023-10-16
 ### PaymentsUI
 * [Fixed] An issue with `STPPaymentCardTextField`, where the card params were not updated after deleting an empty sub field.
 * [Fixed] Switched to Asset Catalogs and updated to the latest card brand logos.

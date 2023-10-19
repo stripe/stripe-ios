@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Če potrdite preusmeritev v storitev PayPal, pooblaščate podjetje %@, da bremeni vaš račun za PayPal s prihodnjimi plačili v skladu s pogoji podjetja.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Če potrdite preusmeritev v storitev Revolut Pay, pooblaščate podjetje %@, da bremeni vaš račun za Revolut Pay s prihodnjimi plačili v skladu s pogoji podjetja.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če nadaljujete postopek, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Če nadaljujete, pooblaščate podjetje %1$@, da bremeni vaš račun za Cash App s tem plačilom in prihodnjimi plačili v skladu s pogoji podjetja %2$@ do preklica tega pooblastila. To lahko kadar koli spremenite v nastavitvah aplikacije Cash App.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če shranite bančni račun za %@, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Prekliči ali plačaj na drugačen način";
 
 "Choose a payment method" = "Izberite način plačila";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Potrdi";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke ali aplikaciji za plačilo v %@, da zaključite nakup.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke %@, da zaključite nakup.";
 
 "Contact information" = "Podatki za stik";
@@ -49,6 +55,8 @@
 "EPS Bank" = "Banka EPS";
 
 "Enter address manually" = "Naslov vnesite ročno";
+
+"FPX Bank" = "Banka FPX";
 
 "IBAN" = "IBAN";
 

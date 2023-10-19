@@ -631,7 +631,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        controller.verifyAndTransition(simulateDelay: false)
+        exp = XCTestExpectation(description: "transition finished")
+        controller.verifyAndTransition(simulateDelay: false) {
+            self.exp.fulfill()
+        }
 
         XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
 
@@ -639,13 +642,22 @@ final class VerificationSheetControllerTest: XCTestCase {
             mockAPIClient.verifyUnverifyRequest.requestHistory.first,
             ["simulateDelay": false]
         )
+
+        mockAPIClient.verifyUnverifyRequest.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
+
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(controller.testModeReturnValue, IdentityVerificationSheet.VerificationFlowResult.flowCompleted)
     }
 
     func testVerifyAndTransitionWithDelay() throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        controller.verifyAndTransition(simulateDelay: true)
+        exp = XCTestExpectation(description: "transition finished")
+        controller.verifyAndTransition(simulateDelay: true) {
+            self.exp.fulfill()
+        }
 
         XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
 
@@ -653,13 +665,22 @@ final class VerificationSheetControllerTest: XCTestCase {
             mockAPIClient.verifyUnverifyRequest.requestHistory.first,
             ["simulateDelay": true]
         )
+
+        mockAPIClient.verifyUnverifyRequest.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
+
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(controller.testModeReturnValue, IdentityVerificationSheet.VerificationFlowResult.flowCompleted)
     }
 
     func testUnverifyAndTransitionWithoutDelay() throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        controller.unverifyAndTransition(simulateDelay: false)
+        exp = XCTestExpectation(description: "transition finished")
+        controller.unverifyAndTransition(simulateDelay: false) {
+            self.exp.fulfill()
+        }
 
         XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
 
@@ -667,6 +688,12 @@ final class VerificationSheetControllerTest: XCTestCase {
             mockAPIClient.verifyUnverifyRequest.requestHistory.first,
             ["simulateDelay": false]
         )
+
+        mockAPIClient.verifyUnverifyRequest.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
+
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(controller.testModeReturnValue, IdentityVerificationSheet.VerificationFlowResult.flowCompleted)
     }
 
     func testUnverifyAndTransitionWithDelay() throws {
@@ -674,7 +701,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         // Verify
-        controller.unverifyAndTransition(simulateDelay: true)
+        exp = XCTestExpectation(description: "transition finished")
+        controller.unverifyAndTransition(simulateDelay: true) {
+            self.exp.fulfill()
+        }
 
         XCTAssertEqual(mockAPIClient.verifyUnverifyRequest.requestHistory.count, 1)
 
@@ -682,6 +712,12 @@ final class VerificationSheetControllerTest: XCTestCase {
             mockAPIClient.verifyUnverifyRequest.requestHistory.first,
             ["simulateDelay": true]
         )
+
+        mockAPIClient.verifyUnverifyRequest.respondToRequests(with: .success(try VerificationPageDataMock.response200.make()))
+
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(controller.testModeReturnValue, IdentityVerificationSheet.VerificationFlowResult.flowCompleted)
     }
 
     func testGeneratePhoneOtp() throws {

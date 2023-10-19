@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Turpinot doties uz Paypal, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu Paypal konta summas par turpmākajiem maksājumiem.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Turpinot doties uz Revolut Pay, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu Revolut Pay konta summas par turpmākajiem maksājumiem.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Turpinot, jūs atļaujat %1$@ iekasēt no jūsu Cash App konta par šo un turpmākiem maksājumiem saskaņā ar %2$@ noteikumiem, līdz šī atļauja netiek atsaukta. To varat mainīt jebkurā laikā Cash App iestatījumos.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Saglabājot savu bankas kontu %@, jūs piekrītat apstiprināt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Atcelt vai maksāt citā veidā";
 
 "Choose a payment method" = "Izvēlēties maksājuma veidu";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Apstiprināt";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas vai maksājumu lietotnē %@, lai pabeigtu maksājumu.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas lietotnē %@, lai pabeigtu maksājumu.";
 
 "Contact information" = "Kontaktinformācija";
@@ -49,6 +55,8 @@
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ievadīt adresi manuāli";
+
+"FPX Bank" = "FPX banka";
 
 "IBAN" = "IBAN";
 

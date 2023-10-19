@@ -195,6 +195,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             dict["unactivated_payment_method_types"] = response["unactivated_payment_method_types"]
             dict["merchant_country"] = response["merchant_country"]
             dict["link_settings"] = response["link_settings"]
+            dict["legacy_customer"] = response["legacy_customer"]
+            dict["customer_error"] = response["customer_error"]
             return decodeSTPSetupIntentObject(fromAPIResponse: dict)
         } else {
             return decodeSTPSetupIntentObject(fromAPIResponse: response)

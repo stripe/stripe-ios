@@ -1,0 +1,81 @@
+{
+  "account_id": "acct_1HvTI7Lu5o3P18Zp",
+  "apple_pay_preference": "enabled",
+  "business_name": "Mobile Example Account",
+  "flags": {
+    "ece_apple_pay_payment_request_passthrough": false
+  },
+  "google_pay_preference": "enabled",
+  "legacy_customer": {
+    "default_payment_method": null,
+    "payment_methods": [
+      {
+        "id": "pm_654321654",
+        "object": "payment_method",
+        "billing_details": {
+          "address": {
+            "city": null,
+            "country": null,
+            "line1": null,
+            "line2": null,
+            "postal_code": null,
+            "state": null
+          },
+          "email": "test2@stripe.com",
+          "name": "test user",
+          "phone": null
+        },
+        "created": 1694550870,
+        "customer": "cus_Ocso99loZJWSXg",
+        "livemode": false,
+        "type": "us_bank_account",
+        "us_bank_account": {
+          "account_holder_type": "individual",
+          "account_type": "checking",
+          "bank_name": "STRIPE TEST BANK",
+          "financial_connections_account": "fca_123456789453354",
+          "fingerprint": "FF65654654654u",
+          "last4": "6789",
+          "linked_account": "fca_1NpdHwL000000000000",
+          "networks": {
+            "preferred": "ach",
+            "supported": [
+              "ach"
+            ]
+          },
+          "routing_number": "110000000",
+          "status_details": null
+        }
+      }
+    ]
+  },
+  "merchant_country": "US",
+  "merchant_currency": "usd",
+  "merchant_id": "acct_1234",
+  "merchant_logo_url": null,
+  "meta_pay_signed_container_context": null,
+  "order": null,
+  "ordered_payment_method_types_and_wallets": [
+      <paymentMethods>
+  ],
+  "payment_method_preference": {
+    "object": "payment_method_preference",
+    "country_code": "US",
+    "ordered_payment_method_types": [
+        <paymentMethods>
+    ],
+    "type": "deferred_intent"
+  },
+  "paypal_express_config": {
+    "client_id": null,
+    "paypal_merchant_id": null
+  },
+  "session_id": "elements_session_1WnzSkDmifQ",
+  "shipping_address_settings": {
+    "autocomplete_allowed": true
+  },
+  "unactivated_payment_method_types": [],
+  "unverified_payment_methods_on_domain": [
+    "apple_pay"
+  ]
+}

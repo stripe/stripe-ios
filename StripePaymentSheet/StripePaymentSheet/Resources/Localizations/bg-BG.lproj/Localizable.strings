@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Продължавайки към PayPal, разрешавате на %@ да таксува Вашия акаунт в PayPal при бъдещи плащания съгласно условията му.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Продължавайки към Revolut Pay, разрешавате на %@ да таксува Вашия акаунт в Revolut Pay при бъдещи плащания съгласно условията му.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продължавайки, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продължавайки, Вие упълномощавате %1$@ да дебитира Вашата сметка в Cash App за това плащане и за бъдещи плащания в съответствие с условията на %2$@, докато това упълномощаване не бъде оттеглено. Можете да промените това по всяко време в настройките на Cash App.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Като запазвате банковата си сметка за %@, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Анулиране или плащане по друг начин";
 
 "Choose a payment method" = "Избор на метод на плащане";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Потвърждаване";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Потвърдете плащането във Вашата банка или приложение за плащане в рамките на %@, за да завършите покупката.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Потвърдете плащането в приложението на Вашата банка в рамките на %@, за да завършите покупката.";
 
 "Contact information" = "Информация за контакт";
@@ -49,6 +55,8 @@
 "EPS Bank" = "Банка EPS";
 
 "Enter address manually" = "Ръчно въвеждане на адрес";
+
+"FPX Bank" = "Банка FPX";
 
 "IBAN" = "IBAN";
 

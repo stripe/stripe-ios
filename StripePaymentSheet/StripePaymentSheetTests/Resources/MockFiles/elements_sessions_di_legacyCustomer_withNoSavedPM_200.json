@@ -1,0 +1,43 @@
+{
+  "account_id": "acct_1HvTI7Lu5o3P18Zp",
+  "apple_pay_preference": "enabled",
+  "business_name": "Mobile Example Account",
+  "flags": {
+    "ece_apple_pay_payment_request_passthrough": false
+  },
+  "google_pay_preference": "enabled",
+  "legacy_customer": {
+    "default_payment_method": null,
+    "payment_methods": [
+    ]
+  },
+  "merchant_country": "US",
+  "merchant_currency": "usd",
+  "merchant_id": "acct_1234",
+  "merchant_logo_url": null,
+  "meta_pay_signed_container_context": null,
+  "order": null,
+  "ordered_payment_method_types_and_wallets": [
+      <paymentMethods>
+  ],
+  "payment_method_preference": {
+    "object": "payment_method_preference",
+    "country_code": "US",
+    "ordered_payment_method_types": [
+        <paymentMethods>
+    ],
+    "type": "deferred_intent"
+  },
+  "paypal_express_config": {
+    "client_id": null,
+    "paypal_merchant_id": null
+  },
+  "session_id": "elements_session_1WnzSkDmifQ",
+  "shipping_address_settings": {
+    "autocomplete_allowed": true
+  },
+  "unactivated_payment_method_types": [],
+  "unverified_payment_methods_on_domain": [
+    "apple_pay"
+  ]
+}

@@ -36,7 +36,10 @@ public enum PaymentSheetError: Error {
     // MARK: Loading errors
     case paymentIntentInTerminalState(status: STPPaymentIntentStatus)
     case setupIntentInTerminalState(status: STPSetupIntentStatus)
+    /// This error is used when failing to get saved payment methods from the public api /v1/payment_methods endpoint
     case fetchPaymentMethodsFailure
+    /// This error is used when failing to get saved payment methods from the private api elements/sessions
+    case fetchSavedPaymentMethodsViaElementsFailure(message: String)
 
     // MARK: Deferred intent errors
     case deferredIntentValidationFailed(message: String)
@@ -99,6 +102,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             return "setupIntentInTerminalState"
         case .fetchPaymentMethodsFailure:
             return "fetchPaymentMethodsFailure"
+        case .fetchSavedPaymentMethodsViaElementsFailure:
+            return "fetchSavedPaymentMethodsViaElementsFailure"
         case .deferredIntentValidationFailed:
             return "deferredIntentValidationFailed"
         case .linkSignUpNotRequired:
@@ -161,6 +166,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "PaymentSheet received a SetupIntent in a terminal state: \(status)"
             case .fetchPaymentMethodsFailure:
                 return "Failed to retrieve PaymentMethods for the customer"
+            case .fetchSavedPaymentMethodsViaElementsFailure:
+                return "Failed to retrieve saved PaymentMethods for the customer on elements/sessions"
             case .linkSignUpNotRequired:
                 return "Don't call sign up if not needed"
             case .noPaymentMethodTypesAvailable(intentPaymentMethods: let intentPaymentMethods):

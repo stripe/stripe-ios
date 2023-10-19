@@ -2,8 +2,6 @@
 
 require_relative 'release_common'
 
-verify_xcode_version
-
 # Get argument of new version number
 @version = @specified_version
 
