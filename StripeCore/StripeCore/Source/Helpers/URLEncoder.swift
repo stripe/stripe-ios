@@ -37,19 +37,20 @@ import Foundation
 
     @objc(queryStringFromParameters:)
     public class func queryString(from parameters: [String: Any]) -> String {
-        return query(parameters)
+        return query(parameters, encoder: escape)
     }
 
     // For apps linked on or after iOS 17 and aligned OS versions, `URL` automatically percent- and IDNA-encodes invalid
     // characters to help create a valid URL. See https://developer.apple.com/documentation/foundation/url/3126806-init
-    @objc(queryStringURLSafeIOS17FromParameters:)
-    public class func queryStringURLSafeIOS17(from params: [String: Any]) -> String {
-        let encodedQuery = URLEncoder.queryString(from: params)
-        return if #available(iOS 17.0, *) {
-            encodedQuery.removingPercentEncoding!
+    @objc(queryStringForURLFromParameters:)
+    public class func queryStringForURL(from params: [String: Any]) -> String {
+        let encoder = if #available(iOS 17.0, *) {
+            // don't escape here because URL init escapes in iOS 17
+            identity
         } else {
-            encodedQuery
+            escape
         }
+        return query(params, encoder: encoder)
     }
 }
 
@@ -70,7 +71,7 @@ struct Key {
 ///   - value: Value of the query component.
 ///
 /// - Returns: The percent-escaped, URL encoded query string components.
-private func queryComponents(fromKey key: String, value: Any) -> [(String, String)] {
+private func queryComponents(fromKey key: String, value: Any, encoder: (String) -> String) -> [(String, String)] {
     func unwrap<T>(_ any: T) -> Any {
         let mirror = Mirror(reflecting: any)
         guard mirror.displayStyle == .optional, let first = mirror.children.first else {
@@ -84,28 +85,28 @@ private func queryComponents(fromKey key: String, value: Any) -> [(String, Strin
     case let dictionary as [String: Any]:
         for nestedKey in dictionary.keys.sorted() {
             let value = dictionary[nestedKey]!
-            let escapedNestedKey = escape(nestedKey)
-            components += queryComponents(fromKey: "\(key)[\(escapedNestedKey)]", value: value)
+            let escapedNestedKey = encoder(nestedKey)
+            components += queryComponents(fromKey: "\(key)[\(escapedNestedKey)]", value: value, encoder: encoder)
         }
     case let array as [Any]:
         for (index, value) in array.enumerated() {
-            components += queryComponents(fromKey: "\(key)[\(index)]", value: value)
+            components += queryComponents(fromKey: "\(key)[\(index)]", value: value, encoder: encoder)
         }
     case let number as NSNumber:
         if number.isBool {
-            components.append((key, escape(number.boolValue ? "true" : "false")))
+            components.append((key, encoder(number.boolValue ? "true" : "false")))
         } else {
-            components.append((key, escape("\(number)")))
+            components.append((key, encoder("\(number)")))
         }
     case let bool as Bool:
-        components.append((key, escape(bool ? "true" : "false")))
+        components.append((key, encoder(bool ? "true" : "false")))
     case let set as Set<AnyHashable>:
         for value in Array(set) {
-            components += queryComponents(fromKey: "\(key)", value: value)
+            components += queryComponents(fromKey: "\(key)", value: value, encoder: encoder)
         }
     default:
         let unwrappedValue = unwrap(value)
-        components.append((key, escape("\(unwrappedValue)")))
+        components.append((key, encoder("\(unwrappedValue)")))
     }
     return components
 }
@@ -119,15 +120,17 @@ private func escape(_ string: String) -> String {
     string.addingPercentEncoding(withAllowedCharacters: URLQueryAllowed) ?? string
 }
 
-private func query(_ parameters: [String: Any]) -> String {
+private func query(_ parameters: [String: Any], encoder: (String) -> String) -> String {
     var components: [(String, String)] = []
 
     for key in parameters.keys.sorted(by: <) {
         let value = parameters[key]!
-        components += queryComponents(fromKey: escape(key), value: value)
+        components += queryComponents(fromKey: encoder(key), value: value, encoder: encoder)
     }
     return components.map { "\($0)=\($1)" }.joined(separator: "&")
 }
+
+private func identity(_ str: String) -> String { str }
 
 /// Creates a CharacterSet from RFC 3986 allowed characters.
 ///

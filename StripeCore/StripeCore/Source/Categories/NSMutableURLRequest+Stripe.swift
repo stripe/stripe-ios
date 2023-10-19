@@ -15,7 +15,7 @@ extension URLRequest {
             return
         }
         let urlString = url.absoluteString
-        let query = URLEncoder.queryStringURLSafeIOS17(from: parameters)
+        let query = URLEncoder.queryStringForURL(from: parameters)
         self.url = URL(string: urlString + (url.query != nil ? "&\(query)" : "?\(query)"))
     }
 
