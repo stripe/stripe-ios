@@ -12,6 +12,7 @@ protocol PartnerAuthDataSource: AnyObject {
     var institution: FinancialConnectionsInstitution { get }
     var manifest: FinancialConnectionsSessionManifest { get }
     var returnURL: String? { get }
+    var sharedPartnerAuthDataSource: SharedPartnerAuthDataSource { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var pendingAuthSession: FinancialConnectionsAuthSession? { get }
     var reduceManualEntryProminenceInErrors: Bool { get }
@@ -27,9 +28,16 @@ protocol PartnerAuthDataSource: AnyObject {
 
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
 
-    let institution: FinancialConnectionsInstitution
-    let manifest: FinancialConnectionsSessionManifest
-    let returnURL: String?
+    let sharedPartnerAuthDataSource: SharedPartnerAuthDataSource
+    var institution: FinancialConnectionsInstitution {
+        return sharedPartnerAuthDataSource.institution
+    }
+    var manifest: FinancialConnectionsSessionManifest {
+        return sharedPartnerAuthDataSource.manifest
+    }
+    var returnURL: String? {
+        return sharedPartnerAuthDataSource.returnURL
+    }
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -37,13 +45,9 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     var disableAuthSessionRetrieval: Bool {
         return manifest.features?["bank_connections_disable_defensive_auth_session_retrieval_on_complete"] == true
     }
-
-    // a "pending" auth session is a session which has started
-    // BUT the session is still yet-to-be authorized
-    //
-    // in other words, a `pendingAuthSession` is up for being
-    // cancelled unless the user successfully authorizes
-    private(set) var pendingAuthSession: FinancialConnectionsAuthSession?
+    var pendingAuthSession: FinancialConnectionsAuthSession? {
+        return sharedPartnerAuthDataSource.pendingAuthSession
+    }
 
     init(
         institution: FinancialConnectionsInstitution,
@@ -54,9 +58,15 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         analyticsClient: FinancialConnectionsAnalyticsClient,
         reduceManualEntryProminenceInErrors: Bool
     ) {
-        self.institution = institution
-        self.manifest = manifest
-        self.returnURL = returnURL
+        self.sharedPartnerAuthDataSource = SharedPartnerAuthDataSourceImplementation(
+            pane: .partnerAuth,
+            institution: institution,
+            manifest: manifest,
+            returnURL: returnURL,
+            apiClient: apiClient,
+            clientSecret: clientSecret,
+            analyticsClient: analyticsClient
+        )
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
@@ -68,53 +78,26 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             clientSecret: clientSecret,
             institutionId: institution.id
         ).chained { [weak self] (authSession: FinancialConnectionsAuthSession) in
-            self?.pendingAuthSession = authSession
+            self?.sharedPartnerAuthDataSource.pendingAuthSession = authSession
             return Promise(value: authSession)
         }
     }
 
-    func clearReturnURL(authSession: FinancialConnectionsAuthSession, authURL: String) -> Future<FinancialConnectionsAuthSession> {
-        let promise = Promise<FinancialConnectionsAuthSession>()
-
-        apiClient
-            .synchronize(
-                clientSecret: clientSecret,
-                returnURL: nil
-            )
-            .observe { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success:
-                    let copiedSession = FinancialConnectionsAuthSession(id: authSession.id,
-                                                                        flow: authSession.flow,
-                                                                        institutionSkipAccountSelection: authSession.institutionSkipAccountSelection,
-                                                                        nextPane: authSession.nextPane,
-                                                                        showPartnerDisclosure: authSession.showPartnerDisclosure,
-                                                                        skipAccountSelection: authSession.skipAccountSelection,
-                                                                        url: authURL,
-                                                                        isOauth: authSession.isOauth,
-                                                                        display: authSession.display)
-                    self.pendingAuthSession = copiedSession
-                    promise.fullfill(with: .success(copiedSession))
-                case .failure(let error):
-                    self.analyticsClient
-                        .logUnexpectedError(
-                            error,
-                            errorName: "SynchronizeClearReturnURLError",
-                            pane: .partnerAuth
-                        )
-                    promise.reject(with: error)
-                }
-            }
-
-        return promise
+    func clearReturnURL(
+        authSession: FinancialConnectionsAuthSession,
+        authURL: String
+    ) -> Future<FinancialConnectionsAuthSession> {
+        return sharedPartnerAuthDataSource.clearReturnURL(
+            authSession: authSession,
+            authURL: authURL
+        )
     }
 
     func cancelPendingAuthSessionIfNeeded() {
         guard let pendingAuthSession = pendingAuthSession else {
             return
         }
-        self.pendingAuthSession = nil
+        sharedPartnerAuthDataSource.pendingAuthSession = nil
         cancelAuthSession(pendingAuthSession)
             .observe { _ in
                 // we ignore the result because its not important
@@ -159,41 +142,15 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         eventName: String,
         authSessionId: String
     ) {
-        guard ShouldRecordAuthSessionEvent() else {
-            // on Stripe SDK Core analytics client we don't send events
-            // for simulator or tests, so don't send these either...
-            return
-        }
-
-        apiClient.recordAuthSessionEvent(
-            clientSecret: clientSecret,
-            authSessionId: authSessionId,
-            eventNamespace: "partner-auth-lifecycle",
-            eventName: eventName
+        return sharedPartnerAuthDataSource.recordAuthSessionEvent(
+            eventName: eventName,
+            authSessionId: authSessionId
         )
-        .observe { _ in
-            // we don't do anything with the event response
-        }
     }
 
     func retrieveAuthSession(
         _ authSession: FinancialConnectionsAuthSession
     ) -> Future<FinancialConnectionsAuthSession> {
-        return apiClient.retrieveAuthSession(
-            clientSecret: clientSecret,
-            authSessionId: authSession.id
-        ).chained { [weak self] (authSession: FinancialConnectionsAuthSession) in
-            // update the `pendingAuthSession` with the latest from the server
-            self?.pendingAuthSession = authSession
-            return Promise(value: authSession)
-        }
+        return sharedPartnerAuthDataSource.retrieveAuthSession(authSession)
     }
-}
-
-private func ShouldRecordAuthSessionEvent() -> Bool {
-    #if targetEnvironment(simulator)
-    return false
-    #else
-    return NSClassFromString("XCTest") == nil
-    #endif
 }
