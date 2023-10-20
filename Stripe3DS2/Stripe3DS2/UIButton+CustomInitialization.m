@@ -12,12 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation UIButton (CustomInitialization)
 
-static const CGFloat kDefaultButtonContentInset = (CGFloat)12.0;
+//static const CGFloat kDefaultButtonContentInset = (CGFloat)12.0;
 
 + (UIButton *)_stds_buttonWithTitle:(NSString * _Nullable)title customization:(STDSButtonCustomization * _Nullable)customization {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     button.clipsToBounds = YES;
-    button.contentEdgeInsets = UIEdgeInsetsMake(kDefaultButtonContentInset, 0, kDefaultButtonContentInset, 0);
+//    button.contentEdgeInsets = UIEdgeInsetsMake(kDefaultButtonContentInset, 0, kDefaultButtonContentInset, 0);
     [[self class] _stds_configureButton:button withTitle:title customization:customization];
     
     return button;

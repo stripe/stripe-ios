@@ -86,7 +86,7 @@ import Foundation
     class func countryCodeOrCurrentLocaleCountry(from nillableCode: String?) -> String {
         var countryCode = nillableCode
         if countryCode == nil {
-            countryCode = NSLocale.autoupdatingCurrent.regionCode
+            countryCode = NSLocale.autoupdatingCurrent.region?.identifier
         }
         return countryCode ?? ""
     }

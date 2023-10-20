@@ -43,11 +43,12 @@ import UIKit
 
     public var inputAccessoryView: UIView? {
         get {
-            return textFieldView.textField.inputAccessoryView
+//            return textFieldView.textField.inputAccessoryView
+            return nil
         }
 
         set {
-            textFieldView.textField.inputAccessoryView = newValue
+//            textFieldView.textField.inputAccessoryView = newValue
         }
     }
 

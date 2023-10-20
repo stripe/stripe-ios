@@ -185,7 +185,7 @@ class TextFieldView: UIView {
         textField.textContentType = viewModel.keyboardProperties.textContentType
         if viewModel.keyboardProperties.type != textField.keyboardType {
             textField.keyboardType = viewModel.keyboardProperties.type
-            textField.inputAccessoryView = textField.keyboardType.hasReturnKey ? nil : toolbar
+//            textField.inputAccessoryView = textField.keyboardType.hasReturnKey ? nil : toolbar
             textField.reloadInputViews()
         }
 
@@ -216,7 +216,7 @@ class TextFieldView: UIView {
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+//        super.traitCollectionDidChange(previousTraitCollection)
         updateUI(with: viewModel)
     }
 }

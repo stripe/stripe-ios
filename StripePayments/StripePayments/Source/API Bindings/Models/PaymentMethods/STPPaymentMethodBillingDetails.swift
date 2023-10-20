@@ -121,7 +121,7 @@ extension STPPaymentMethodBillingDetails {
     /// Convenience initializer for creating an `STPPaymentMethodBillingDetails` instance with a postal and country code
     @objc convenience init(
         postalCode: String,
-        countryCode: String? = Locale.autoupdatingCurrent.regionCode
+        countryCode: String? = Locale.autoupdatingCurrent.region?.identifier
     ) {
         self.init()
         let address = STPPaymentMethodAddress()

@@ -65,7 +65,7 @@ final class ManualEntryViewController: UIViewController {
             footerView: footerView
         )
         paneWithHeaderLayoutView.addTo(view: view)
-        paneWithHeaderLayoutView.scrollView.keyboardDismissMode = .onDrag
+//        paneWithHeaderLayoutView.scrollView.keyboardDismissMode = .onDrag
         stp_beginObservingKeyboardAndInsettingScrollView(paneWithHeaderLayoutView.scrollView, onChange: nil)
 
         adjustContinueButtonStateIfNeeded()

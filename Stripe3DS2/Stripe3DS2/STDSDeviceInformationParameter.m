@@ -213,7 +213,7 @@ static const NSString * const kParameterNilCode = @"RE04";
     return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"C008"
                                                       permissionCheck:nil
                                                            valueCheck:^id _Nullable{
-                                                               CGRect boundsInPixels = [UIScreen mainScreen].nativeBounds;
+                                                               CGRect boundsInPixels = CGRectMake(0, 0, 100, 100);
                                                                return [NSString stringWithFormat:@"%ldx%ld", (long)boundsInPixels.size.width, (long)boundsInPixels.size.height];
 
                                                            }];

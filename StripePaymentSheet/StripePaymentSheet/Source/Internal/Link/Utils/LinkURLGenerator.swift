@@ -46,7 +46,7 @@ class LinkURLGenerator {
         }
 
         // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
-        let customerCountryCode = intent.countryCode ?? configuration.defaultBillingDetails.address.country ?? Locale.current.regionCode ?? "US"
+        let customerCountryCode = intent.countryCode ?? configuration.defaultBillingDetails.address.country ?? Locale.current.region!.identifier
 
         let merchantCountryCode = intent.merchantCountryCode ?? customerCountryCode
 

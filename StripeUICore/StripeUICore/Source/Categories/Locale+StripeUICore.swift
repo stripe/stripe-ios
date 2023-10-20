@@ -19,7 +19,7 @@ import Foundation
         // Pull out the current country if needed
         var prepend: [T] = []
         if thisRegionFirst,
-           let regionCode = self.regionCode,
+           let regionCode = self.region?.identifier,
            let index = regionCollection.firstIndex(where: { $0.regionCode == regionCode }) {
             prepend = [mutableRegionCollection.remove(at: index)]
         }

@@ -315,7 +315,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("sofort").displayName, "Sofort")
         XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("upi").displayName, "UPI")
         XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("paypal").displayName, "PayPal")
-        if Locale.current.regionCode == "GB" {
+        if Locale.current.region!.identifier == "GB" {
             XCTAssertEqual(
                 PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay").displayName,
                 "Clearpay"

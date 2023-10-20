@@ -58,10 +58,10 @@ extension STPCountryPickerInputField {
 
         @_spi(STP) public let countries: [(code: String, displayName: String)] = {
 
-            let currentCountryCode = Locale.autoupdatingCurrent.regionCode
+            let currentCountryCode = Locale.autoupdatingCurrent.region?.identifier
             let locale = NSLocale.autoupdatingCurrent
 
-            let unsorted = Locale.isoRegionCodes.compactMap { (code) -> (String, String)? in
+            let unsorted = Locale.Region.isoRegions.map { $0.identifier }.compactMap { (code) -> (String, String)? in
                 let identifier = Locale.identifier(fromComponents: [
                     NSLocale.Key.countryCode.rawValue: code
                 ])

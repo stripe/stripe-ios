@@ -124,8 +124,8 @@ import Foundation
         case .payPal:
             return STPLocalizedString("PayPal", "Payment Method type brand name")
         case .afterpayClearpay:
-            return Locale.current.regionCode == "GB" || Locale.current.regionCode == "FR"
-                || Locale.current.regionCode == "ES" || Locale.current.regionCode == "IT"
+            return Locale.current.region!.identifier == "GB" || Locale.current.region!.identifier == "FR"
+                || Locale.current.region!.identifier == "ES" || Locale.current.region!.identifier == "IT"
                 ? STPLocalizedString("Clearpay", "Payment Method type brand name")
                 : STPLocalizedString("Afterpay", "Payment Method type brand name")
         case .blik:

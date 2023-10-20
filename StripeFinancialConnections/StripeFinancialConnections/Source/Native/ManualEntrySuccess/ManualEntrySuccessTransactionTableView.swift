@@ -56,7 +56,7 @@ final class ManualEntrySuccessTransactionTableView: UIView {
         verticalStackView.backgroundColor = .backgroundContainer
         verticalStackView.layer.cornerRadius = 5
         verticalStackView.layer.borderColor = UIColor.borderNeutral.cgColor
-        verticalStackView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
+        verticalStackView.layer.borderWidth = 1.0
         addAndPinSubview(verticalStackView)
     }
 
@@ -179,7 +179,7 @@ private func CreateTableView(rows: [[Label]]) -> UIView {
         columnTuple.stackView.insertArrangedSubview(separatorView, at: 1)
         columnTuple.stackView.setCustomSpacing(10, after: separatorView)
         NSLayoutConstraint.activate([
-            separatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+            separatorView.heightAnchor.constraint(equalToConstant: 1.0),
             separatorView.widthAnchor.constraint(equalTo: columnTuple.stackView.widthAnchor),
         ])
     }

@@ -204,7 +204,7 @@ import UIKit
     }
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+//        super.traitCollectionDidChange(previousTraitCollection)
         // CGColor's must be manually updated when the trait collection changes
         backgroundView.layer.borderColor = borderColor.cgColor
         separatorLayer.strokeColor = separatorColor.cgColor

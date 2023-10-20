@@ -74,7 +74,7 @@ public typealias STPRedirectContextPaymentIntentCompletionBlock = (String, Error
 /// @note You must retain this instance for the duration of the redirect flow.
 /// This class dismisses any presented view controller upon deallocation.
 /// See https://stripe.com/docs/sources/best-practices
-public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
+public class STPRedirectContext: NSObject,
     UIViewControllerTransitioningDelegate, STPSafariViewControllerDismissalDelegate
 {
 
@@ -274,7 +274,7 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
             lastKnownSafariVCURL = redirectURL
             let safariVC = SFSafariViewController(url: lastKnownSafariVCURL!)
             safariVC.transitioningDelegate = self
-            safariVC.delegate = self
+//            safariVC.delegate = self
             safariVC.modalPresentationStyle = .custom
             self.safariVC = safariVC
             presentingViewController.present(
@@ -393,17 +393,17 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate,
     }
 
     /// :nodoc:
-    @objc
-    public func safariViewController(
-        _ controller: SFSafariViewController,
-        initialLoadDidRedirectTo URL: URL
-    ) {
-        stpDispatchToMainThreadIfNecessary({
-            // This is only kept up to date during the "initial load", but we only need the value in
-            // `safariViewController:didCompleteInitialLoad:`, so that's fine.
-            self.lastKnownSafariVCURL = URL
-        })
-    }
+//    @objc
+//    public func safariViewController(
+//        _ controller: SFSafariViewController,
+//        initialLoadDidRedirectTo URL: URL
+//    ) {
+//        stpDispatchToMainThreadIfNecessary({
+//            // This is only kept up to date during the "initial load", but we only need the value in
+//            // `safariViewController:didCompleteInitialLoad:`, so that's fine.
+//            self.lastKnownSafariVCURL = URL
+//        })
+//    }
 
     // MARK: - STPSafariViewControllerDismissalDelegate -
     func safariViewControllerDidCompleteDismissal(_ controller: SFSafariViewController) {

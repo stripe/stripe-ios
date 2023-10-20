@@ -61,7 +61,7 @@ final class InstitutionSearchFooterView: UIView {
             topSeparatorView.topAnchor.constraint(equalTo: topAnchor, constant: Self.constantTopPadding),
             topSeparatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
             topSeparatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 24),
-            topSeparatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+            topSeparatorView.heightAnchor.constraint(equalToConstant: 1.0),
         ])
 
         if didSelect != nil {

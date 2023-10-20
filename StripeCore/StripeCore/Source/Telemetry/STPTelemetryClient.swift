@@ -113,11 +113,12 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     private var osVersion = UIDevice.current.systemVersion
 
     private var screenSize: String {
-        let screen = UIScreen.main
-        let screenRect = screen.bounds
+//        let screen = UIScreen.main
+//        let screenRect = screen.bounds
+        let screenRect = CGRect(x: 0, y: 0, width: 1024, height: 768)
         let width = screenRect.size.width
         let height = screenRect.size.height
-        let scale = screen.scale
+        let scale = 3.0
         return String(format: "%.0fw_%.0fh_%.0fr", width, height, scale)
     }
 

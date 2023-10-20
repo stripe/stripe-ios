@@ -43,7 +43,7 @@ extension NSDecimalNumber {
 
         let currencyLocaleIdentifier = Locale.availableIdentifiers.first(where: {
             let locale = Locale(identifier: $0)
-            return locale.currencyCode?.lowercased() == currency?.lowercased()
+            return locale.currency?.identifier.lowercased() == currency?.lowercased()
         })
 
         let currencyFormatter = NumberFormatter()

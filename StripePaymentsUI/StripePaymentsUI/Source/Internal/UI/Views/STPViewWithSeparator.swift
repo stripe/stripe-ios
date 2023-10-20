@@ -75,11 +75,6 @@ class STPViewWithSeparator: UIView {
     }
 
     func _currentPixelHeight() -> CGFloat {
-        let screen = window?.screen ?? UIScreen.main
-        if screen.nativeScale > 0 {
-            return 1.0 / screen.nativeScale
-        } else {
             return 0.5
-        }
     }
 }

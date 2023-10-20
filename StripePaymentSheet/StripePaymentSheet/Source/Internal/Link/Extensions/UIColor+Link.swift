@@ -159,15 +159,9 @@ extension UIColor {
         forBackgroundColor backgroundColor: UIColor,
         traitCollection: UITraitCollection = .current
     ) -> UIColor {
-        let resolvedLightModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
-            traitCollection,
-            UITraitCollection(userInterfaceStyle: .light),
-        ]))
+        let resolvedLightModeColor = resolvedColor(with: UITraitCollection())
 
-        let resolvedDarkModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
-            traitCollection,
-            UITraitCollection(userInterfaceStyle: .dark),
-        ]))
+        let resolvedDarkModeColor = resolvedColor(with: UITraitCollection())
 
         let resolvedBackgroundColor = backgroundColor.resolvedColor(with: traitCollection)
 

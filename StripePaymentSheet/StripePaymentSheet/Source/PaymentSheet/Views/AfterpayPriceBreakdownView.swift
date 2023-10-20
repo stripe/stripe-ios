@@ -33,8 +33,8 @@ class AfterpayPriceBreakdownView: UIView {
     }()
 
     private lazy var infoURL: URL? = {
-        let language = locale.languageCode?.lowercased() ?? "en"
-        let region = locale.regionCode?.uppercased() ?? "US"
+        let language = locale.language.languageCode?.identifier.lowercased() ?? "en"
+        let region = locale.region!.identifier.uppercased()
         let localeCode = "\(language)_\(region)"
         return URL(string: "https://static.afterpay.com/modal/\(localeCode).html")
     }()
@@ -164,7 +164,7 @@ class AfterpayPriceBreakdownView: UIView {
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+//        super.traitCollectionDidChange(previousTraitCollection)
         afterpayMarkImageView.tintColor = theme.colors.parentBackground.contrastingColor
     }
 }

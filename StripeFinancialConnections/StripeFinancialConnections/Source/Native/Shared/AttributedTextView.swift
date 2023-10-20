@@ -149,20 +149,20 @@ final class AttributedTextView: HitTestView {
 
 extension AttributedTextView: UITextViewDelegate {
 
-    func textView(
-        _ textView: UITextView,
-        shouldInteractWith URL: URL,
-        in characterRange: NSRange,
-        interaction: UITextItemInteraction
-    ) -> Bool {
-        if let linkAction = linkURLStringToAction[URL.absoluteString] {
-            linkAction(URL)
-            return false
-        } else {
-            assertionFailure("Expected every URL to have an action defined. keys:\(linkURLStringToAction); url:\(URL)")
-        }
-        return true
-    }
+//    func textView(
+//        _ textView: UITextView,
+//        shouldInteractWith URL: URL,
+//        in characterRange: NSRange,
+//        interaction: UITextItemInteraction
+//    ) -> Bool {
+//        if let linkAction = linkURLStringToAction[URL.absoluteString] {
+//            linkAction(URL)
+//            return false
+//        } else {
+//            assertionFailure("Expected every URL to have an action defined. keys:\(linkURLStringToAction); url:\(URL)")
+//        }
+//        return true
+//    }
 
     func textViewDidChangeSelection(_ textView: UITextView) {
         // disable the ability to select/copy the text as a way to improve UX

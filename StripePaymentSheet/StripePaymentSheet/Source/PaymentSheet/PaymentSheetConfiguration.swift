@@ -61,7 +61,7 @@ extension PaymentSheet {
             switch self {
             case .automatic:
                 // only enable the save checkbox by default for US
-                return Locale.current.regionCode == "US"
+                return Locale.current.region!.identifier == "US"
             case .requiresOptIn:
                 return false
             case .requiresOptOut:

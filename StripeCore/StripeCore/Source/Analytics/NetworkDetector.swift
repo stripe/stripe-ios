@@ -5,7 +5,9 @@
 //  Created by Nick Porter on 7/5/23.
 //
 
+#if canImport(CoreTelephony)
 import CoreTelephony
+#endif
 import Foundation
 import SystemConfiguration
 
@@ -31,6 +33,7 @@ class NetworkDetector {
             return "Wi-Fi"
         }
 
+#if canImport(CoreTelephony)
         let networkInfo = CTTelephonyNetworkInfo()
         let carrierType = networkInfo.serviceCurrentRadioAccessTechnology
 
@@ -48,7 +51,9 @@ class NetworkDetector {
         default:
             return "5G"
         }
-
+#else
+        return "Wi-Fi"
+#endif
     }
 
 }

@@ -1701,13 +1701,13 @@ public class STPPaymentHandler: NSObject {
                 {
                     let safariViewController = SFSafariViewController(url: fallbackURL)
                     safariViewController.modalPresentationStyle = .overFullScreen
-                    safariViewController.dismissButtonStyle = .close
+//                    safariViewController.dismissButtonStyle = .close
                     if context.responds(
                         to: #selector(STPAuthenticationContext.configureSafariViewController(_:))
                     ) {
                         context.configureSafariViewController?(safariViewController)
                     }
-                    safariViewController.delegate = self
+//                    safariViewController.delegate = self
                     self.safariViewController = safariViewController
                     presentingViewController.present(safariViewController, animated: true, completion: {
                       completion?(safariViewController)
@@ -2093,22 +2093,22 @@ public class STPPaymentHandler: NSObject {
     }
 }
 
-extension STPPaymentHandler: SFSafariViewControllerDelegate {
-    // MARK: - SFSafariViewControllerDelegate
-    /// :nodoc:
-    @objc
-    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        let context = currentAction?.authenticationContext
-        if context?.responds(
-            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
-        ) ?? false {
-            context?.authenticationContextWillDismiss?(controller)
-        }
-        safariViewController = nil
-        STPURLCallbackHandler.shared().unregisterListener(self)
-        _retrieveAndCheckIntentForCurrentAction()
-    }
-}
+//extension STPPaymentHandler: SFSafariViewControllerDelegate {
+//    // MARK: - SFSafariViewControllerDelegate
+//    /// :nodoc:
+//    @objc
+//    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+//        let context = currentAction?.authenticationContext
+//        if context?.responds(
+//            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
+//        ) ?? false {
+//            context?.authenticationContextWillDismiss?(controller)
+//        }
+//        safariViewController = nil
+//        STPURLCallbackHandler.shared().unregisterListener(self)
+//        _retrieveAndCheckIntentForCurrentAction()
+//    }
+//}
 
 /// :nodoc:
 @_spi(STP) extension STPPaymentHandler: STPURLCallbackListener {

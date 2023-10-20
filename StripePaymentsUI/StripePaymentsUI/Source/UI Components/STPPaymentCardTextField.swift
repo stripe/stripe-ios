@@ -229,18 +229,18 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     private var _inputAccessoryView: UIView?
     /// This behaves identically to setting the inputAccessoryView for each child text field.
-    @objc open override var inputAccessoryView: UIView? {
-        get {
-            _inputAccessoryView
-        }
-        set(inputAccessoryView) {
-            _inputAccessoryView = inputAccessoryView
-
-            for field in allFields {
-                field.inputAccessoryView = inputAccessoryView
-            }
-        }
-    }
+//    @objc open override var inputAccessoryView: UIView? {
+//        get {
+//            _inputAccessoryView
+//        }
+//        set(inputAccessoryView) {
+//            _inputAccessoryView = inputAccessoryView
+//
+//            for field in allFields {
+//                field.inputAccessoryView = inputAccessoryView
+//            }
+//        }
+//    }
     /// The curent brand image displayed in the receiver.
     @objc open private(set) var brandImage: UIImage?
     /// Whether or not the form currently contains a valid card number,
@@ -356,7 +356,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             if viewModel.postalCodeCountryCode == cCode {
                 return
             }
-            let countryCode = (cCode ?? Locale.autoupdatingCurrent.regionCode)
+            let countryCode = (cCode ?? Locale.autoupdatingCurrent.region?.identifier)
             viewModel.postalCodeCountryCode = countryCode
             updatePostalFieldPlaceholder()
 
@@ -419,7 +419,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 billingDetails = billingDetails ?? STPPaymentMethodBillingDetails()
                 let address = STPPaymentMethodAddress()
                 address.postalCode = postalCode
-                address.country = countryCode ?? Locale.autoupdatingCurrent.regionCode
+                address.country = countryCode ?? Locale.autoupdatingCurrent.region?.identifier
                 billingDetails!.address = address  // billingDetails will always be non-nil
             }
             return STPPaymentMethodParams(
@@ -837,7 +837,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         resetSubviewEditingTransitionState()
 
         viewModel.postalCodeRequested = true
-        countryCode = Locale.autoupdatingCurrent.regionCode
+        countryCode = Locale.autoupdatingCurrent.region?.identifier
 
         sizingField.formDelegate = nil
 
@@ -888,7 +888,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     static let placeholderGrayColor: UIColor = .systemGray2
 
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+//        super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection?.preferredContentSizeCategory
             != traitCollection.preferredContentSizeCategory
         {

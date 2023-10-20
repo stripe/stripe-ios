@@ -22,21 +22,21 @@ extension UIButton {
         // UIButton doesn't have support for directional edge insets. We should
         // apply insets depending on the layout direction.
         if self.effectiveUserInterfaceLayoutDirection == .leftToRight {
-            self.imageEdgeInsets = UIEdgeInsets(top: 0, left: -spacing, bottom: 0, right: spacing)
-            self.contentEdgeInsets = UIEdgeInsets(
-                top: edgeInsets.top,
-                left: edgeInsets.leading + spacing,
-                bottom: edgeInsets.bottom,
-                right: edgeInsets.trailing
-            )
+//            self.imageEdgeInsets = UIEdgeInsets(top: 0, left: -spacing, bottom: 0, right: spacing)
+//            self.contentEdgeInsets = UIEdgeInsets(
+//                top: edgeInsets.top,
+//                left: edgeInsets.leading + spacing,
+//                bottom: edgeInsets.bottom,
+//                right: edgeInsets.trailing
+//            )
         } else {
-            self.imageEdgeInsets = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: -spacing)
-            self.contentEdgeInsets = UIEdgeInsets(
-                top: edgeInsets.top,
-                left: edgeInsets.trailing,
-                bottom: edgeInsets.bottom,
-                right: edgeInsets.leading + spacing
-            )
+//            self.imageEdgeInsets = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: -spacing)
+//            self.contentEdgeInsets = UIEdgeInsets(
+//                top: edgeInsets.top,
+//                left: edgeInsets.trailing,
+//                bottom: edgeInsets.bottom,
+//                right: edgeInsets.leading + spacing
+//            )
         }
     }
 

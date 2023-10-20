@@ -176,7 +176,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             paymentMethodDetailsContainerView.layoutIfNeeded()
             newView.alpha = 0
 
-            UISelectionFeedbackGenerator().selectionChanged()
+//            UISelectionFeedbackGenerator().selectionChanged()
             // Fade the new one in and the old one out
             animateHeightChange {
                 self.paymentMethodDetailsContainerView.updateHeight()

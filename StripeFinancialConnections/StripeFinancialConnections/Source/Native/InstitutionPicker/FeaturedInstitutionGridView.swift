@@ -40,7 +40,7 @@ class FeaturedInstitutionGridView: UIView {
             bottom: 16,
             right: horizontalPadding
         )
-        collectionView.keyboardDismissMode = .onDrag
+//        collectionView.keyboardDismissMode = .onDrag
         let cellIdentifier = "\(FeaturedInstitutionGridCell.self)"
         collectionView.register(FeaturedInstitutionGridCell.self, forCellWithReuseIdentifier: cellIdentifier)
 

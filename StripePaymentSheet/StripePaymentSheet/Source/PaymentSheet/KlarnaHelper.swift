@@ -39,6 +39,6 @@ struct KlarnaHelper {
         // A list of countries Klarna supports "buy now" from
         // https://site-admin.stripe.com/docs/payments/klarna#payment-options
         let buyNowAvailable = ["AT", "BE", "DE", "IT", "NL", "ES", "SE", "CA", "AU", "PL", "PT", "CH"]
-        return buyNowAvailable.contains(locale.regionCode?.uppercased() ?? "US")
+        return buyNowAvailable.contains(locale.region!.identifier.uppercased())
     }
 }

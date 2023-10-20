@@ -196,7 +196,7 @@ extension DownloadManager {
     }
 
     func persistToMemory(_ imageData: Data, forImageName imageName: String) -> UIImage? {
-        guard let image = UIImage(data: imageData, scale: UIScreen.main.scale) else {
+        guard let image = UIImage(data: imageData, scale: 3.0) else {
             return nil
         }
         imageCacheSemaphore.wait()

@@ -44,7 +44,7 @@ import UIKit
     }
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+//        super.traitCollectionDidChange(previousTraitCollection)
         image = Self.makeImage(for: traitCollection, dynamicImage: dynamicImage, pairedColor: pairedColor)
     }
 }

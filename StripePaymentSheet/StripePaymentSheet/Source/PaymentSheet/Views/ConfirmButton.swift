@@ -134,7 +134,7 @@ class ConfirmButton: UIView {
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+//        super.traitCollectionDidChange(previousTraitCollection)
         self.buyButton.update(status: state, callToAction: callToAction, animated: false)
     }
 
@@ -360,7 +360,7 @@ class ConfirmButton: UIView {
         }
 
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            super.traitCollectionDidChange(previousTraitCollection)
+//            super.traitCollectionDidChange(previousTraitCollection)
             layer.borderColor = appearance.primaryButton.borderColor.cgColor
         }
 

@@ -181,7 +181,7 @@ class PollingViewController: UIViewController {
         isModalInPresentation = true
 
         // Height of the polling view controller is either the height of the parent, or the height of the screen (flow controller use case)
-        let height = parent?.view.frame.size.height ?? UIScreen.main.bounds.height
+        let height = parent?.view.frame.size.height ?? 100
         let stackView = UIStackView(arrangedSubviews: [formStackView])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
