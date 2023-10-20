@@ -800,6 +800,14 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
+        requestedRepairFlowWithInstitution institution: FinancialConnectionsInstitution
+    ) {
+        dataManager.institution = institution
+        pushPane(.bankAuthRepair, animated: true)
+    }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
     ) {
         pushPane(nextPane, animated: true)
@@ -957,12 +965,14 @@ private func CreatePaneViewController(
         if
             let coreAuthorizationId = dataManager.coreAuthorizationPendingNetworkingRepair,
             let consumerSession = dataManager.consumerSession,
-            let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first
+            let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first,
+            let institution = dataManager.institution
         {
             let bankAuthRepairDataSource = BankAuthRepairDataSourceImplementation(
                 coreAuthorizationId: coreAuthorizationId,
                 consumerSession: consumerSession,
                 selectedAccountId: selectedAccountId,
+                institution: institution,
                 manifest: dataManager.manifest,
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,

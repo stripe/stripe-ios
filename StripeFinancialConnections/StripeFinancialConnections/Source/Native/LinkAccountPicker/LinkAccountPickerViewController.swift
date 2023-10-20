@@ -33,6 +33,11 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
+        requestedRepairFlowWithInstitution institution: FinancialConnectionsInstitution
+    )
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
         didSetCoreAuthorizationPendingNetworkingRepair authorization: String
     )
 
@@ -260,15 +265,27 @@ final class LinkAccountPickerViewController: UIViewController {
                     )
                 )
             }
-        } else if let nextPane = nextPane {
-            if nextPane == .bankAuthRepair {
-                dataSource
-                    .analyticsClient
-                    .log(
-                        eventName: "click.repair_accounts",
-                        pane: .linkAccountPicker
+        } else if nextPane == .bankAuthRepair {
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: "click.repair_accounts",
+                    pane: .linkAccountPicker
+                )
+            if let institution = selectedAccountTuple.partnerAccount.institution {
+                delegate?.linkAccountPickerViewController(
+                    self,
+                    requestedRepairFlowWithInstitution: institution
+                )
+            } else {
+                delegate?.linkAccountPickerViewController(
+                    self,
+                    didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
+                        debugDescription: "LinkAccountPicker wanted to go to bank_auth_repair but there is no institution."
                     )
+                )
             }
+        } else if let nextPane = nextPane {
             delegate?.linkAccountPickerViewController(self, didRequestNextPane: nextPane)
         } else {
             delegate?.linkAccountPickerViewController(

@@ -34,6 +34,7 @@ final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
         coreAuthorizationId: String,
         consumerSession: ConsumerSessionData,
         selectedAccountId: String,
+        institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
         returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
@@ -49,8 +50,7 @@ final class BankAuthRepairDataSourceImplementation: BankAuthRepairDataSource {
         self.analyticsClient = analyticsClient
         self.sharedPartnerAuthDataSource = SharedPartnerAuthDataSourceImplementation(
             pane: .bankAuthRepair,
-            // TODO(kgaidis): FIX
-            institution: FinancialConnectionsInstitution(id: "", name: "", url: nil, icon: nil, logo: nil),
+            institution: institution,
             manifest: manifest,
             returnURL: returnURL,
             apiClient: apiClient,
