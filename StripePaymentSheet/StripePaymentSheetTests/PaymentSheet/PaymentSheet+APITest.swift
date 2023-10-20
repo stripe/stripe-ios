@@ -897,7 +897,7 @@ class PaymentSheetAPITest: XCTestCase {
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             true,
-            paymentMethodType: .stripe(.card),
+            paymentMethodType: .card,
             customer: .init(id: "", ephemeralKeySecret: "")
         )
 
@@ -920,7 +920,7 @@ class PaymentSheetAPITest: XCTestCase {
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
-            paymentMethodType: .stripe(.card),
+            paymentMethodType: .card,
             customer: .init(id: "", ephemeralKeySecret: "")
         )
 
@@ -943,7 +943,7 @@ class PaymentSheetAPITest: XCTestCase {
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
-            paymentMethodType: .stripe(.card),
+            paymentMethodType: .card,
             customer: nil
         )
 
@@ -957,7 +957,7 @@ class PaymentSheetAPITest: XCTestCase {
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
-            paymentMethodType: .stripe(.card),
+            paymentMethodType: .card,
             customer: nil
         )
 

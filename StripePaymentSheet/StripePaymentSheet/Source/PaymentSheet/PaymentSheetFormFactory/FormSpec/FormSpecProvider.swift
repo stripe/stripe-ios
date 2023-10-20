@@ -74,10 +74,13 @@ class FormSpecProvider {
         return decodedSuccessfully
     }
 
+    // TODO: Make this take an STPPaymentMethodType
     func formSpec(for paymentMethodType: String) -> FormSpec? {
         assert(!formSpecs.isEmpty, "formSpec(for:) was called before loading form specs JSON!")
         return formSpecs[paymentMethodType]
     }
+
+    // TODO: Make this take an STPPaymentMethodType
     func nextActionSpec(for paymentMethodType: String) -> FormSpec.NextActionSpec? {
         return formSpecs[paymentMethodType]?.nextActionSpec
     }

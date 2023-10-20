@@ -199,15 +199,14 @@ extension PaymentMethodTypeCollectionView {
         private static var widthCache = [String: (PaymentSheet.Appearance, CGFloat)]()
 
         class func minWidth(for paymentMethodType: PaymentSheet.PaymentMethodType, appearance: PaymentSheet.Appearance) -> CGFloat {
-            let paymentMethodTypeString = PaymentSheet.PaymentMethodType.string(from: paymentMethodType) ?? "unknown"
-            if let (cachedAppearance, cachedWidth) = widthCache[paymentMethodTypeString],
+            if let (cachedAppearance, cachedWidth) = widthCache[paymentMethodType.identifier],
                cachedAppearance == appearance {
                 return cachedWidth
             }
             sizingInstance.paymentMethodType = paymentMethodType
             sizingInstance.appearance = appearance
             let size = sizingInstance.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-            widthCache[paymentMethodTypeString] = (appearance, size.width)
+            widthCache[paymentMethodType.identifier] = (appearance, size.width)
             return size.width
         }
 
@@ -319,7 +318,7 @@ extension PaymentMethodTypeCollectionView {
             }
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []
-            accessibilityIdentifier = PaymentSheet.PaymentMethodType.string(from: paymentMethodType)
+            accessibilityIdentifier = paymentMethodType.identifier
         }
         private func updateImage(_ imageParam: UIImage) {
             var image = imageParam

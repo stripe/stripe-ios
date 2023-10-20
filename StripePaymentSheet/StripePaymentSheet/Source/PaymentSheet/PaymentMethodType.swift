@@ -18,7 +18,7 @@ extension PaymentSheet {
         case externalPayPal // TODO(yuki): Replace this when we support more EPMs
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
-        
+
         fileprivate init(from str: String) {
             if str == "external_paypal" {
                 self = .externalPayPal
@@ -28,49 +28,18 @@ extension PaymentSheet {
             }
         }
 
-        // I think this returns the Stripe PaymentMethod object type name i.e. a value in https://stripe.com/docs/api/payment_methods/object#payment_method_object-type
-        static func string(from type: PaymentMethodType) -> String? {
-            // TODO: can we delete this?
-            switch type {
-            case .externalPayPal:
-                return nil
-            case .stripe(let type):
-                return STPPaymentMethod.string(from: type)
-            }
-//            switch type {
-//            case .card:
-//                return STPPaymentMethod.string(from: .card)
-//            case .USBankAccount:
-//                return STPPaymentMethod.string(from: .USBankAccount)
-//            case .link:
-//                return STPPaymentMethod.string(from: .link)
-//            case .linkInstantDebit:
-//                return nil
-//            case .UPI:
-//                return STPPaymentMethod.string(from: .UPI)
-//            case .cashApp:
-//                return STPPaymentMethod.string(from: .cashApp)
-//            case .bacsDebit:
-//                return STPPaymentMethod.string(from: .bacsDebit)
-//            case .dynamic(let str):
-//                return str
-//            case .externalPayPal:
-//                return nil
-//            }
-        }
         var displayName: String {
-            if let stpPaymentMethodType = stpPaymentMethodType {
-                return stpPaymentMethodType.displayName
-            } else if case .externalPayPal = self {
+            switch self {
+            case .stripe(let paymentMethodType):
+                return paymentMethodType.displayName
+            case .externalPayPal:
                return STPPaymentMethodType.payPal.displayName
             }
-            assertionFailure()
-            return ""
         }
 
-        /// The identifier for the payment method type as it is represented on an intent
+        /// Returns the Stripe API value for the payment method type e.g. as it is represented on an Intent
+        /// - Note: `STPPaymentMethodType.unknown` returns "unknown".
         var identifier: String {
-            // TODO what is this?
             switch self {
             case .stripe(let paymentMethodType):
                 return paymentMethodType.identifier
@@ -143,19 +112,6 @@ extension PaymentSheet {
             case .externalPayPal:
                return false
             }
-        }
-
-        /// Basically just STPPaymentMethodType but returns nil if unknown..
-        var stpPaymentMethodType: STPPaymentMethodType? {
-            // TODO remove?
-            guard let stringForm = PaymentMethodType.string(from: self) else {
-                return nil
-            }
-            let paymentMethodType = STPPaymentMethod.type(from: stringForm)
-            guard paymentMethodType != .unknown else {
-                return nil
-            }
-            return paymentMethodType
         }
 
         /// Returns an ordered list of `PaymentMethodType`s to display to the customer in PaymentSheet.
@@ -312,13 +268,13 @@ extension PaymentSheet {
 
         /// Returns whether or not we can show a "☑️ Save for future use" checkbox to the customer
         func supportsSaveForFutureUseCheckbox() -> Bool {
-            guard let stpPaymentMethodType = stpPaymentMethodType else {
+            guard case let .stripe(paymentMethodType) = self else {
                 // At the time of writing, we only support cards and us bank accounts.
                 // These should both have an `stpPaymentMethodType`, so I'm avoiding handling this guard condition
                 return false
             }
             // This payment method and its requirements are hardcoded on the client
-            switch stpPaymentMethodType {
+            switch paymentMethodType {
             case .card, .USBankAccount:
                 return true
             default:
@@ -429,7 +385,6 @@ extension STPPaymentMethod {
 }
 
 extension STPPaymentMethodParams {
-
     var paymentSheetLabel: String {
         switch type {
         case .unknown:

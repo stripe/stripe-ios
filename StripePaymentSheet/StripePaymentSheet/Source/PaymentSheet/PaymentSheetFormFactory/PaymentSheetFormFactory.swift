@@ -180,7 +180,7 @@ class PaymentSheetFormFactory {
             return makeSwish()
         }
 
-        guard let spec = specFromJSONProvider() else {
+        guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
             assertionFailure("Failed to get form spec!")
             return FormElement(elements: [], theme: theme)
         }

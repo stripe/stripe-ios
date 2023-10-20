@@ -56,13 +56,15 @@ class IntentConfirmParams {
         }
     }
 
+    // TODO: Make conveneince init that takes STPPaymentMethodType
     convenience init(type: PaymentSheet.PaymentMethodType) {
-        if let paymentType = type.stpPaymentMethodType {
-            let params = STPPaymentMethodParams(type: paymentType)
+        switch type {
+        case .stripe(let paymentMethodType):
+            let params = STPPaymentMethodParams(type: paymentMethodType)
             self.init(params: params, type: type)
-        } else {
+        case .externalPayPal:
             let params = STPPaymentMethodParams(type: .unknown)
-            params.rawTypeString = PaymentSheet.PaymentMethodType.string(from: type)
+            params.rawTypeString = "external_paypal"
             self.init(params: params, type: type)
         }
     }
@@ -173,19 +175,6 @@ extension STPConfirmPaymentMethodOptions {
             usBankAccountOptions?.additionalAPIParameters["setup_future_usage"] = sfuValue
         default:
             return
-        }
-    }
-    func setSetupFutureUsageIfNecessary(
-        _ shouldSave: Bool,
-        paymentMethodType: PaymentSheet.PaymentMethodType,
-        customer: PaymentSheet.CustomerConfiguration?
-    ) {
-        if let bridgePaymentMethodType = paymentMethodType.stpPaymentMethodType {
-            setSetupFutureUsageIfNecessary(
-                shouldSave,
-                paymentMethodType: bridgePaymentMethodType,
-                customer: customer
-            )
         }
     }
 }

@@ -55,34 +55,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params?.paymentMethodType, .stripe(.SEPADebit))
     }
 
-    func testSpecFromJSONProvider() {
-        let e = expectation(description: "Loads form specs file")
-        let provider = FormSpecProvider()
-        provider.load { loaded in
-            XCTAssertTrue(loaded)
-            e.fulfill()
-        }
-        waitForExpectations(timeout: 1, handler: nil)
-        let configuration = PaymentSheet.Configuration()
-        let factory = PaymentSheetFormFactory(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: .paymentSheet(configuration),
-            paymentMethod: .stripe(.EPS)
-        )
-
-        guard let spec = factory.specFromJSONProvider(provider: provider) else {
-            XCTFail("Unable to load EPS Spec")
-            return
-        }
-
-        XCTAssertEqual(spec.fields.count, 5)
-        XCTAssertEqual(
-            spec.fields.first,
-            .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
-        )
-        XCTAssertEqual(spec.type, "eps")
-    }
-
     func testNameOverrideApiPathBySpec() {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.name = "someName"
@@ -1192,9 +1164,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             let factory = PaymentSheetFormFactory(
                 intent: intent,
                 configuration: .paymentSheet(configuration),
-                paymentMethod: PaymentSheet.PaymentMethodType(
-                    from: STPPaymentMethod.string(from: type)!
-                ),
+                paymentMethod: .stripe(type),
                 addressSpecProvider: specProvider
             )
 

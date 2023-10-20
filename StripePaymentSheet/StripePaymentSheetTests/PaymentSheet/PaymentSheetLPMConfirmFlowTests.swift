@@ -465,7 +465,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         }
 
         var intents: [(String, Intent)]
-        let paymentMethodTypes = [PaymentSheet.PaymentMethodType.string(from: paymentMethod)].compactMap { $0 }
+        let paymentMethodTypes = [paymentMethod.identifier].compactMap { $0 }
         switch intentKind {
         case .paymentIntent:
             let paymentIntent: STPPaymentIntent = try await {
