@@ -52,7 +52,7 @@ final class URLEncoderTest: XCTestCase {
                 "nonce_signature": "sig",
             ],
         ]
-        let result = URLEncoder.queryString(from: params)
+        let result = URLEncoder.queryStringForURL(from: params)
         XCTAssertEqual(
             result,
             "ios[certificates][0]=cert1&ios[certificates][1]=cert2&ios[nonce]=123mynonce&ios[nonce_signature]=sig"
