@@ -92,7 +92,7 @@ extension PaymentSheetFormFactory {
 
         if case .paymentSheet(let configuration) = configuration, isLinkEnabled {
             return LinkEnabledPaymentMethodElement(
-                type: .stripe(.card),
+                type: .card,
                 paymentMethodElement: cardFormElement,
                 configuration: configuration,
                 linkAccount: linkAccount,
