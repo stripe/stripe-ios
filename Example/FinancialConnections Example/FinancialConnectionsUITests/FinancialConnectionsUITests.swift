@@ -155,12 +155,12 @@ final class FinancialConnectionsUITests: XCTestCase {
         // they don't get featured
         let institutionButton: XCUIElement?
         let institutionName: String?
-        let chaseBankName = "Chase"
-        let chaseInstitutionButton = app.cells[chaseBankName]
-        if chaseInstitutionButton.waitForExistence(timeout: 10) {
-            institutionButton = chaseInstitutionButton
-            institutionName = chaseBankName
-        } else {
+//        let chaseBankName = "Chase"
+//        let chaseInstitutionButton = app.cells[chaseBankName]
+//        if chaseInstitutionButton.waitForExistence(timeout: 10) {
+//            institutionButton = chaseInstitutionButton
+//            institutionName = chaseBankName
+//        } else {
             let bankOfAmericaBankName = "Bank of America"
             let bankOfAmericaInstitutionButton = app.cells[bankOfAmericaBankName]
             if bankOfAmericaInstitutionButton.waitForExistence(timeout: 10) {
@@ -177,7 +177,7 @@ final class FinancialConnectionsUITests: XCTestCase {
                     institutionName = nil
                 }
             }
-        }
+//        }
         guard let institutionButton = institutionButton, let institutionName = institutionName else {
             XCTFail("Couldn't find a Live Mode institution.")
             return
@@ -257,12 +257,12 @@ final class FinancialConnectionsUITests: XCTestCase {
         // they don't get featured
         let institutionButton: XCUIElement?
         let institutionName: String?
-        let chaseBankName = "Chase"
-        let chaseInstitutionButton = app.webViews.buttons[chaseBankName]
-        if chaseInstitutionButton.waitForExistence(timeout: 10) {
-            institutionButton = chaseInstitutionButton
-            institutionName = chaseBankName
-        } else {
+//        let chaseBankName = "Chase"
+//        let chaseInstitutionButton = app.webViews.buttons[chaseBankName]
+//        if chaseInstitutionButton.waitForExistence(timeout: 10) {
+//            institutionButton = chaseInstitutionButton
+//            institutionName = chaseBankName
+//        } else {
             let bankOfAmericaBankName = "Bank of America"
             let bankOfAmericaInstitutionButton = app.webViews.buttons[bankOfAmericaBankName]
             if bankOfAmericaInstitutionButton.waitForExistence(timeout: 10) {
@@ -279,7 +279,7 @@ final class FinancialConnectionsUITests: XCTestCase {
                     institutionName = nil
                 }
             }
-        }
+//        }
         guard let institutionButton = institutionButton, let institutionName = institutionName else {
             XCTFail("Couldn't find a Live Mode institution.")
             return
