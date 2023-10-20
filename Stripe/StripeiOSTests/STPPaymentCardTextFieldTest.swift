@@ -179,6 +179,17 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         }
     }
 
+    func testSetCard_withCBCInfo() {
+        let sut = STPPaymentCardTextField()
+        let card = STPPaymentMethodCardParams()
+        let number = "424242"
+        card.number = number
+        card.networks = .init(preferred: "visa")
+        let params = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
+        sut.paymentMethodParams = params
+        XCTAssertEqual(sut.paymentMethodParams.card!.networks!.preferred, "visa")
+    }
+
     func testSetCard_numberAmex() {
         let sut = STPPaymentCardTextField()
         let card = STPPaymentMethodCardParams()
@@ -906,6 +917,26 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         XCTAssertEqual(sut.cvcField.text!.count, Int(0))
         XCTAssertNil(sut.currentFirstResponderField())
         XCTAssertFalse(sut.isValid)
+    }
+
+    func testUsesPreferredNetworks() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        let sut = STPPaymentCardTextField()
+        sut.cbcEnabledOverride = true
+        sut.preferredNetworks = [.visa]
+        let card = STPPaymentMethodCardParams()
+        card.number = "4973019750239993"
+        card.expMonth = 12
+        card.expYear = 43
+        card.cvc = "123"
+        let params = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
+        sut.paymentMethodParams = params
+        let exp = expectation(description: "Wait for CBC load")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            XCTAssertEqual(sut.viewModel.selectedBrand, .visa)
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 3.0)
     }
 }
 

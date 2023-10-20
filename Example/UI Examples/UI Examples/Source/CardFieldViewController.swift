@@ -31,7 +31,9 @@ class CardFieldViewController: UIViewController {
         cardField.borderWidth = 1.0
         cardField.textErrorColor = theme.errorColor
         cardField.postalCodeEntryEnabled = true
-        cardField.alwaysEnableCBC = alwaysEnableCBC
+        if alwaysEnableCBC {
+            cardField.cbcEnabledOverride = true
+        }
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .done, target: self, action: #selector(done))
         navigationController?.navigationBar.stp_theme = theme

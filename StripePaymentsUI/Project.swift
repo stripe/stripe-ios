@@ -16,6 +16,7 @@ let project = Project.stripeFramework(
             .project(target: "StripePaymentsObjcTestUtils", path: "//StripePayments"),
             .project(target: "StripePaymentsTestUtils", path: "//StripePayments"),
         ],
-        includesSnapshots: true
+        includesSnapshots: true,
+        usesStubs: true
     )
 )
