@@ -47,7 +47,7 @@ extension Array where Element == STPPaymentMethodType {
                 #endif
             } else {
                 uniquePMTypes.insert(pm)
-                pmTypes += [PaymentSheet.PaymentMethodType(from: paymentMethodString)]
+                pmTypes += [.stripe(pm)]
             }
         }
         return pmTypes

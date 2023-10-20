@@ -50,7 +50,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 return .stripe(.unknown)
             }
             if case let .saved(paymentMethod) = selectedPaymentOption {
-                return paymentMethod.paymentSheetPaymentMethodType()
+                return .stripe(paymentMethod.type)
             } else if case .applePay = selectedPaymentOption {
                 return .stripe(.card)
             } else {

@@ -106,9 +106,9 @@ extension STPPaymentMethodParams {
             let brand = card.networks?.preferred?.toCardBrand ?? STPCardValidator.brand(forNumber: number)
             return STPImageLibrary.cardBrandImage(for: brand)
         default:
-            // TODO: Refactor this.
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
-            return self.paymentSheetPaymentMethodType().makeImage(updateHandler: updateHandler)
+            // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
+            return PaymentSheet.PaymentMethodType.stripe(type).makeImage(updateHandler: updateHandler)
         }
     }
 }
