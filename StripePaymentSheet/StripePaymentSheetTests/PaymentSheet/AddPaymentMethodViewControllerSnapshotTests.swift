@@ -32,7 +32,7 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         )
         previousCustomerInput.saveForFutureUseCheckboxState = .selected
         // ...and the card doesn't show up *first* in the list (so we can exercise the code that switches to the previously entered pm form)...
-        let intent = Intent.paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["paypal", "card"]))
+        let intent = Intent.paymentIntent(STPFixtures.paymentIntent(paymentMethodTypes: ["paypal", "card", "cashapp"]))
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
         // ...and a "Save this card" checkbox...
         config.customer = .init(id: "id", ephemeralKeySecret: "ek")

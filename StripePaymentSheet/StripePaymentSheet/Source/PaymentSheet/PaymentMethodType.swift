@@ -67,8 +67,8 @@ extension PaymentSheet {
                 switch self {
                 case .externalPayPal:
                     return STPPaymentMethodType.payPal.makeImage(forDarkBackground: forDarkBackground)
-                default:
-                    return stpPaymentMethodType?.makeImage(forDarkBackground: forDarkBackground)
+                case .stripe(let paymentMethodType):
+                    return paymentMethodType.makeImage(forDarkBackground: forDarkBackground)
                 }
             }()
             // Next, try to download the image from the spec if possible

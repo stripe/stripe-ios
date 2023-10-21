@@ -36,7 +36,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // A Payment methods with a client-side asset and a form spec image URL...
         let loadExpectation = expectation(description: "Load form spec image")
         let clientImage = STPPaymentMethodType.cashApp.makeImage()!
-        let image = PaymentSheet.PaymentMethodType.cashApp.makeImage { image in
+        let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage { image in
             // ...should update to the form spec image
             XCTAssertNotEqual(image, clientImage)
             XCTAssertTrue(image.size.width > 1) // Sanity check
@@ -51,7 +51,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // A Payment methods with a client-side asset but without a form spec image URL...
         let e = expectation(description: "Load form spec image")
         e.isInverted = true
-        let usBankAccountImage = PaymentSheet.PaymentMethodType.USBankAccount.makeImage { _ in
+        let usBankAccountImage = PaymentSheet.PaymentMethodType.stripe(.USBankAccount).makeImage { _ in
             // This shouldn't be called
             XCTFail()
             e.fulfill()
@@ -71,7 +71,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         waitForExpectations(timeout: 10)
         // A Payment methods without a client-side asset...
         let loadExpectation = expectation(description: "Load form spec image")
-        let image = PaymentSheet.PaymentMethodType.dynamic("amazon_pay").makeImage { image in
+        let image = PaymentSheet.PaymentMethodType.stripe(.amazonPay).makeImage { image in
             // ...should update to the form spec image
             XCTAssertTrue(image.size.width > 1) // Sanity check
             loadExpectation.fulfill()

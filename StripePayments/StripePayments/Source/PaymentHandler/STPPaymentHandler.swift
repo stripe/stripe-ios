@@ -151,7 +151,7 @@ public class STPPaymentHandler: NSObject {
 
     private var formSpecPaymentHandler: FormSpecPaymentHandler?
 
-    @_spi(STP) public var _redirectShim: ((URL, URL?, Bool) -> Void)?
+    public var _redirectShim: ((URL, URL?, Bool) -> Void)?
 
     /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
     /// to authenticate the PaymentIntent.
