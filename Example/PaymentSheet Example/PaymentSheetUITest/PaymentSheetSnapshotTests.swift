@@ -53,6 +53,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         if !self.runAgainstLiveService {
             APIStubbedTestCase.stubAllOutgoingRequests()
         }
+        stubAllImageRequests()
     }
 
     public override func tearDown() {
@@ -1116,6 +1117,15 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             file: file,
             line: line
         )
+    }
+
+    private func stubAllImageRequests() {
+        // Just fail all image requests so that these snapshot tests only use hardcoded image assets
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v3/fingerprinted/img/payment-methods") ?? false
+        } response: { _ in
+            return HTTPStubsResponse(data: Data(), statusCode: 404, headers: nil)
+        }
     }
 
     private func stubNewCustomerResponse() {

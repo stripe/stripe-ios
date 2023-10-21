@@ -24,6 +24,63 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         return configuration
     }
 
+    // MARK: - Images
+    func testMakeImage_with_client_asset_and_form_spec() {
+        let e = expectation(description: "Load specs")
+        FormSpecProvider.shared.load { _ in
+            e.fulfill()
+        }
+        DownloadManager.sharedManager.resetDiskCache()
+        DownloadManager.sharedManager.resetMemoryCache()
+        waitForExpectations(timeout: 10)
+        // A Payment methods with a client-side asset and a form spec image URL...
+        let loadExpectation = expectation(description: "Load form spec image")
+        let clientImage = STPPaymentMethodType.cashApp.makeImage()!
+        let image = PaymentSheet.PaymentMethodType.cashApp.makeImage { image in
+            // ...should update to the form spec image
+            XCTAssertNotEqual(image, clientImage)
+            XCTAssertTrue(image.size.width > 1) // Sanity check
+            loadExpectation.fulfill()
+        }
+        // ...should default to the client-side asset
+        XCTAssertEqual(image, clientImage)
+        waitForExpectations(timeout: 10)
+    }
+
+    func testMakeImage_with_client_asset_but_no_form_spec() {
+        // A Payment methods with a client-side asset but without a form spec image URL...
+        let e = expectation(description: "Load form spec image")
+        e.isInverted = true
+        let usBankAccountImage = PaymentSheet.PaymentMethodType.USBankAccount.makeImage { _ in
+            // This shouldn't be called
+            XCTFail()
+            e.fulfill()
+        }
+        // ...should default to the client-side asset
+        XCTAssertEqual(usBankAccountImage, STPPaymentMethodType.USBankAccount.makeImage())
+        waitForExpectations(timeout: 1)
+    }
+
+    func testMakeImage_without_client_asset() {
+        DownloadManager.sharedManager.resetDiskCache()
+        DownloadManager.sharedManager.resetMemoryCache()
+        let e = expectation(description: "Load specs")
+        FormSpecProvider.shared.load { _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+        // A Payment methods without a client-side asset...
+        let loadExpectation = expectation(description: "Load form spec image")
+        let image = PaymentSheet.PaymentMethodType.dynamic("amazon_pay").makeImage { image in
+            // ...should update to the form spec image
+            XCTAssertTrue(image.size.width > 1) // Sanity check
+            loadExpectation.fulfill()
+        }
+        // ...should default to a blank placeholder image
+        XCTAssertEqual(image.size, .init(width: 1, height: 1))
+        waitForExpectations(timeout: 10)
+    }
+
     // MARK: - Cards
 
     /// Returns false, card not in `supportedPaymentMethods`

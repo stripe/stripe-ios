@@ -24,6 +24,10 @@ class FormSpecProvider {
         DispatchQueue(label: "com.stripe.Form.FormSpecProvider", qos: .userInitiated)
     }()
 
+    var isLoaded: Bool {
+        return !formSpecs.isEmpty
+    }
+
     /// Loads the JSON form spec from disk into memory
     func load(completion: ((Bool) -> Void)? = nil) {
         formSpecsUpdateQueue.async { [weak self] in
