@@ -109,10 +109,9 @@ public class STPImageLibrary: NSObject {
 
     class func brandImage(
         for brand: STPCardBrand,
-        template isTemplate: Bool,
+        template shouldUseTemplate: Bool,
         locale: Locale = .current
     ) -> UIImage {
-        var shouldUseTemplate = isTemplate
         var imageName: String?
         switch brand {
         case .amex:
@@ -130,12 +129,10 @@ public class STPImageLibrary: NSObject {
         case .cartesBancaires:
             imageName = shouldUseTemplate ? "stp_card_cartes_bancaires_template" : "stp_card_cartes_bancaires"
         case .unknown:
-            shouldUseTemplate = true
             imageName = "stp_card_unknown"
         case .visa:
             imageName = shouldUseTemplate ? "stp_card_visa_template" : "stp_card_visa"
         @unknown default:
-            shouldUseTemplate = true
             imageName = "stp_card_unknown"
         }
         let image = self.safeImageNamed(
