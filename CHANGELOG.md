@@ -1,3 +1,8 @@
+## x.x.x
+### PaymentsUI
+
+* [Fixed] And issue with `STPPaymentCardTextField` where the `paymentCardTextFieldDidEndEditing` delegate method was not called.
+
 ## 23.18.0 2023-10-23
 ### PaymentSheet
 * [Added] Saved SEPA payment methods are now displayed to the customer for reuse, similar to saved cards.
