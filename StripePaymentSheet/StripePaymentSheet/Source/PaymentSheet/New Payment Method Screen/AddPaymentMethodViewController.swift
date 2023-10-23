@@ -289,7 +289,7 @@ class AddPaymentMethodViewController: UIViewController {
             previousCustomerInput: previousCustomerInput,
             offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
             linkAccount: linkAccount,
-            cardBrandChoiceEligible: intent.cardBrandChoiceEligible
+            cardBrandChoiceEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled
         ).make()
         formElement.delegate = self
         return formElement
