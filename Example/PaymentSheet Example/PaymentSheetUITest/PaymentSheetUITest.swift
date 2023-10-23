@@ -845,8 +845,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testCardBrandChoice() throws {
-        app.launchEnvironment = app.launchEnvironment.merging(["ENABLE_CBC": "true"]) { (_, new) in new }
-
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -920,8 +918,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testCardBrandChoiceWithPreferredNetworks() throws {
-        app.launchEnvironment = app.launchEnvironment.merging(["ENABLE_CBC": "true"]) { (_, new) in new }
-
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -981,8 +977,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testCardBrandChoiceSavedCard() {
-        app.launchEnvironment = app.launchEnvironment.merging(["ENABLE_CBC": "true"]) { (_, new) in new }
-
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new

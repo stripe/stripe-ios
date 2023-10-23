@@ -161,6 +161,9 @@ extension PaymentSheet {
             }
         }
 
+        // TODO(porter) Remove for CBC GA
+        @_spi(STP) public var cbcEnabled: Bool = false
+
         /// Initializes a Configuration with default values
         public init() {}
 
