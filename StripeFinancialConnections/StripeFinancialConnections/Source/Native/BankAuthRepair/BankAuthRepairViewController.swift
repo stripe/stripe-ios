@@ -5,7 +5,6 @@
 //  Created by Krisjanis Gaidis on 9/26/23.
 //
 
-import AuthenticationServices
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -165,12 +164,5 @@ extension BankAuthRepairViewController: SharedPartnerAuthViewControllerDelegate 
         didReceiveError error: Error
     ) {
         delegate?.bankAuthRepairViewControllerDidRequestToGoBackToLinkAccountPicker(self)
-    }
-
-    func sharedPartnerAuthViewController(
-        _ viewController: SharedPartnerAuthViewController,
-        didReceiveTerminalError error: Error
-    ) {
-        delegate?.bankAuthRepairViewController(self, didReceiveTerminalError: error)
     }
 }

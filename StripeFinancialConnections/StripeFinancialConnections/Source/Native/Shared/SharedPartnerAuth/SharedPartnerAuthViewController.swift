@@ -43,11 +43,6 @@ protocol SharedPartnerAuthViewControllerDelegate: AnyObject {
         _ viewController: SharedPartnerAuthViewController,
         didReceiveError error: Error
     )
-
-    func sharedPartnerAuthViewController(
-        _ viewController: SharedPartnerAuthViewController,
-        didReceiveTerminalError error: Error
-    )
 }
 
 final class SharedPartnerAuthViewController: UIViewController {
@@ -62,9 +57,6 @@ final class SharedPartnerAuthViewController: UIViewController {
     private var continueStateView: ContinueStateView?
 
     private let dataSource: SharedPartnerAuthDataSource
-    private var institution: FinancialConnectionsInstitution {
-        return dataSource.institution
-    }
     private var webAuthenticationSession: ASWebAuthenticationSession?
     private var lastHandledAuthenticationSessionReturnUrl: URL?
     weak var delegate: SharedPartnerAuthViewControllerDelegate?
@@ -154,160 +146,6 @@ final class SharedPartnerAuthViewController: UIViewController {
         }
     }
 
-//    private func showErrorView(_ error: Error) {
-//        // all Partner Auth errors hide the back button
-//        // and all errors end up in user having to exit
-//        // PartnerAuth to try again
-//        navigationItem.hidesBackButton = true
-//
-//        let allowManualEntryInErrors = (dataSource.manifest.allowManualEntry && !dataSource.reduceManualEntryProminenceInErrors)
-//        let errorView: UIView?
-//        if let error = error as? StripeError,
-//            case .apiError(let apiError) = error,
-//            let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
-//            let institutionUnavailable = extraFields["institution_unavailable"] as? Bool,
-//            institutionUnavailable
-//        {
-//            let institutionIconView = InstitutionIconView(size: .large, showWarning: true)
-//            institutionIconView.setImageUrl(institution.icon?.default)
-//            let primaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
-//                title: String.Localized.select_another_bank,
-//                action: { [weak self] in
-//                    guard let self = self else { return }
-//                    self.delegate?.partnerAuthViewControllerUserDidSelectAnotherBank(self)
-//                }
-//            )
-//            if let expectedToBeAvailableAt = extraFields["expected_to_be_available_at"] as? TimeInterval {
-//                let expectedToBeAvailableDate = Date(timeIntervalSince1970: expectedToBeAvailableAt)
-//                let dateFormatter = DateFormatter()
-//                dateFormatter.timeStyle = .short
-//                let expectedToBeAvailableTimeString = dateFormatter.string(from: expectedToBeAvailableDate)
-//                errorView = ReusableInformationView(
-//                    iconType: .view(institutionIconView),
-//                    title: String(
-//                        format: STPLocalizedString(
-//                            "%@ is undergoing maintenance",
-//                            "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-//                        ),
-//                        institution.name
-//                    ),
-//                    subtitle: {
-//                        let beginningOfSubtitle: String = {
-//                            if IsToday(expectedToBeAvailableDate) {
-//                                return String(
-//                                    format: STPLocalizedString(
-//                                        "Maintenance is scheduled to end at %@.",
-//                                        "The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-//                                    ),
-//                                    expectedToBeAvailableTimeString
-//                                )
-//                            } else {
-//                                let dateFormatter = DateFormatter()
-//                                dateFormatter.dateStyle = .short
-//                                let expectedToBeAvailableDateString = dateFormatter.string(
-//                                    from: expectedToBeAvailableDate
-//                                )
-//                                return String(
-//                                    format: STPLocalizedString(
-//                                        "Maintenance is scheduled to end on %@ at %@.",
-//                                        "The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-//                                    ),
-//                                    expectedToBeAvailableDateString,
-//                                    expectedToBeAvailableTimeString
-//                                )
-//                            }
-//                        }()
-//                        let endOfSubtitle: String = {
-//                            if allowManualEntryInErrors {
-//                                return STPLocalizedString(
-//                                    "Please enter your bank details manually or select another bank.",
-//                                    "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-//                                )
-//                            } else {
-//                                return STPLocalizedString(
-//                                    "Please select another bank or try again later.",
-//                                    "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-//                                )
-//                            }
-//                        }()
-//                        return beginningOfSubtitle + " " + endOfSubtitle
-//                    }(),
-//                    primaryButtonConfiguration: primaryButtonConfiguration,
-//                    secondaryButtonConfiguration: allowManualEntryInErrors
-//                        ? ReusableInformationView.ButtonConfiguration(
-//                            title: String.Localized.enter_bank_details_manually,
-//                            action: { [weak self] in
-//                                guard let self = self else { return }
-//                                self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
-//                            }
-//                        ) : nil
-//                )
-//                dataSource.analyticsClient.logExpectedError(
-//                    error,
-//                    errorName: "InstitutionPlannedDowntimeError",
-//                    pane: .partnerAuth
-//                )
-//            } else {
-//                errorView = ReusableInformationView(
-//                    iconType: .view(institutionIconView),
-//                    title: String(
-//                        format: STPLocalizedString(
-//                            "%@ is currently unavailable",
-//                            "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-//                        ),
-//                        institution.name
-//                    ),
-//                    subtitle: {
-//                        if allowManualEntryInErrors {
-//                            return STPLocalizedString(
-//                                "Please enter your bank details manually or select another bank.",
-//                                "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-//                            )
-//                        } else {
-//                            return STPLocalizedString(
-//                                "Please select another bank or try again later.",
-//                                "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-//                            )
-//                        }
-//                    }(),
-//                    primaryButtonConfiguration: primaryButtonConfiguration,
-//                    secondaryButtonConfiguration: allowManualEntryInErrors
-//                        ? ReusableInformationView.ButtonConfiguration(
-//                            title: String.Localized.enter_bank_details_manually,
-//                            action: { [weak self] in
-//                                guard let self = self else { return }
-//                                self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
-//                            }
-//                        ) : nil
-//                )
-//                dataSource.analyticsClient.logExpectedError(
-//                    error,
-//                    errorName: "InstitutionUnplannedDowntimeError",
-//                    pane: dataSource.pane
-//                )
-//            }
-//        } else {
-//            dataSource.analyticsClient.logUnexpectedError(
-//                error,
-//                errorName: "PartnerAuthError",
-//                pane: dataSource.pane
-//            )
-//
-//            // if we didn't get specific errors back, we don't know
-//            // what's wrong, so show a generic error
-//            delegate?.sharedPartnerAuthViewController(self, didReceiveTerminalError: error)
-//            errorView = nil
-//
-//            // keep showing the loading view while we transition to
-//            // terminal error
-//            showEstablishingConnectionLoadingView(true)
-//        }
-//
-//        if let errorView = errorView {
-//            view.addAndPinSubviewToSafeArea(errorView)
-//        }
-//    }
-
     private func handleAuthSessionCompletionWithStatus(
         _ status: String,
         _ authSession: FinancialConnectionsAuthSession
@@ -323,14 +161,6 @@ final class SharedPartnerAuthViewController: UIViewController {
                 didSucceedWithAuthSession: authSession,
                 considerCallingAuthorize: true
             )
-
-//            if authSession.isOauthNonOptional {
-//                // for OAuth flows, we need to fetch OAuth results
-//                self.authorizeAuthSession(authSession)
-//            } else {
-//                // for legacy flows (non-OAuth), we do not need to fetch OAuth results, or call authorize
-//                self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authSession)
-//            }
         } else if status == "failure" {
             dataSource.recordAuthSessionEvent(
                 eventName: "failure",
@@ -338,16 +168,6 @@ final class SharedPartnerAuthViewController: UIViewController {
             )
 
             delegate?.sharedPartnerAuthViewController(self, didFailWithAuthSession: authSession)
-
-//            // cancel current auth session
-//            dataSource.cancelPendingAuthSessionIfNeeded()
-//
-//            // show a terminal error
-//            showErrorView(
-//                FinancialConnectionsSheetError.unknown(
-//                    debugDescription: "Shim returned a failure."
-//                )
-//            )
         } else {  // assume `status == cancel`
             self.checkIfAuthSessionWasSuccessful(
                 authSession: authSession,
@@ -359,18 +179,6 @@ final class SharedPartnerAuthViewController: UIViewController {
                             didCancelWithAuthSession: authSession,
                             statusWasReturned: true
                         )
-
-//                        self.dataSource.recordAuthSessionEvent(
-//                            eventName: "cancel",
-//                            authSessionId: authSession.id
-//                        )
-//
-//                        // cancel current auth session
-//                        self.dataSource.cancelPendingAuthSessionIfNeeded()
-//
-//                        // whether legacy or OAuth, we always go back
-//                        // if we got an explicit cancel from backend
-//                        self.navigateBack()
                     }
                 }
             )
@@ -400,18 +208,6 @@ final class SharedPartnerAuthViewController: UIViewController {
             didCancelWithAuthSession: authSession,
             statusWasReturned: false
         )
-
-//        // cancel current auth session because something went wrong
-//        dataSource.cancelPendingAuthSessionIfNeeded()
-//
-//        if authSession.isOauthNonOptional {
-//            // for OAuth institutions, we remain on the pre-pane,
-//            // but create a brand new auth session
-//             createAuthSession()
-//        } else {
-//            // for legacy (non-OAuth) institutions, we navigate back to InstitutionPickerViewController
-//            navigateBack()
-//        }
     }
 
     private func openInstitutionAuthenticationNativeRedirect(authSession: FinancialConnectionsAuthSession) {
@@ -426,15 +222,10 @@ final class SharedPartnerAuthViewController: UIViewController {
                 self,
                 didReceiveError: error
             )
-//            self.showErrorView(
-//                FinancialConnectionsSheetError.unknown(
-//                    debugDescription: "Malformed auth session url."
-//                )
-//            )
             return
         }
         self.continueStateView = ContinueStateView(
-            institutionImageUrl: self.institution.icon?.default,
+            institutionImageUrl: dataSource.institution.icon?.default,
             didSelectContinue: { [weak self] in
                 guard let self = self else { return }
                 self.dataSource.analyticsClient.log(
@@ -446,9 +237,9 @@ final class SharedPartnerAuthViewController: UIViewController {
                 self.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
             }
         )
-        self.view.addAndPinSubview(self.continueStateView!)
+        view.addAndPinSubview(self.continueStateView!)
 
-        self.subscribeToURLAndAppActiveNotifications()
+        subscribeToURLAndAppActiveNotifications()
         UIApplication.shared.open(url, options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: true]) { (success) in
             if success { return }
             // This means banking app is not installed
@@ -469,7 +260,6 @@ final class SharedPartnerAuthViewController: UIViewController {
                             self,
                             didReceiveError: error
                         )
-//                        self.showErrorView(error)
                     }
                 }
         }
@@ -624,10 +414,6 @@ final class SharedPartnerAuthViewController: UIViewController {
         }
     }
 
-//    private func navigateBack() {
-//        delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
-//    }
-
     func showEstablishingConnectionLoadingView(_ show: Bool) {
         showView(loadingView: establishingConnectionLoadingView, show: show)
     }
@@ -722,10 +508,6 @@ final class SharedPartnerAuthViewController: UIViewController {
                             // abstract auth handles calling `authorize`
                             considerCallingAuthorize: false
                         )
-//                        self.delegate?.partnerAuthViewController(
-//                            self,
-//                            didCompleteWithAuthSession: authSession
-//                        )
                     } else {
                         completionHandler(false)
                     }
