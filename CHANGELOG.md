@@ -1,4 +1,4 @@
-## X.Y.Z 2023-XX-YY
+## 23.18.0 2023-10-23
 ### PaymentSheet
 * [Added] Saved SEPA payment methods are now displayed to the customer for reuse, similar to saved cards.
 
