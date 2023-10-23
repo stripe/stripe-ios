@@ -2,6 +2,9 @@
 ### PaymentSheet
 * [Added] Saved SEPA payment methods are now displayed to the customer for reuse, similar to saved cards.
 
+### PaymentsUI
+* [Fixed] Fixed an issue where the unknown card icon would sometimes pick up the view's tint color.
+
 ## 23.17.2 2023-10-16
 ### PaymentsUI
 * [Fixed] An issue with `STPPaymentCardTextField`, where the card params were not updated after deleting an empty sub field.
