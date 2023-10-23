@@ -35,10 +35,6 @@ final class PartnerAuthViewController: UIViewController {
     }
     weak var delegate: PartnerAuthViewControllerDelegate?
 
-    private lazy var retrievingAccountsView: UIView = {
-        return buildRetrievingAccountsView()
-    }()
-
     init(dataSource: PartnerAuthDataSource) {
         self.dataSource = dataSource
         self.sharedPartnerAuthViewController = SharedPartnerAuthViewController(
@@ -240,7 +236,7 @@ final class PartnerAuthViewController: UIViewController {
     }
 
     private func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) {
-        showRetrievingAccountsView(true)
+        sharedPartnerAuthViewController.showConnectingToBankView(true)
         dataSource
             .authorizeAuthSession(authSession)
             .observe(on: .main) { [weak self] result in
@@ -258,10 +254,10 @@ final class PartnerAuthViewController: UIViewController {
                     // calling `showEstablishingConnectionLoadingView(false)` is
                     // defensive programming anyway
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-                        self?.showRetrievingAccountsView(false)
+                        self?.sharedPartnerAuthViewController.showConnectingToBankView(false)
                     }
                 case .failure(let error):
-                    self.showRetrievingAccountsView(false)  // important to come BEFORE showing error view so we avoid showing back button
+                    self.sharedPartnerAuthViewController.showConnectingToBankView(false) // important to come BEFORE showing error view so we avoid showing back button
                     self.showErrorView(error)
                     assert(self.navigationItem.hidesBackButton)
                 }
@@ -270,20 +266,6 @@ final class PartnerAuthViewController: UIViewController {
 
     private func navigateBack() {
         delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
-    }
-
-    private func showRetrievingAccountsView(_ show: Bool) {
-        showView(loadingView: retrievingAccountsView, show: show)
-    }
-
-    private func showView(loadingView: UIView, show: Bool) {
-        if loadingView.superview == nil {
-            view.addAndPinSubviewToSafeArea(loadingView)
-        }
-        view.bringSubviewToFront(loadingView)  // bring to front in-case something else is covering it
-
-        navigationItem.hidesBackButton = show
-        loadingView.isHidden = !show
     }
 }
 

@@ -169,7 +169,7 @@ final class SharedPartnerAuthViewController: UIViewController {
 
             delegate?.sharedPartnerAuthViewController(self, didFailWithAuthSession: authSession)
         } else {  // assume `status == cancel`
-            self.checkIfAuthSessionWasSuccessful(
+            checkIfAuthSessionWasSuccessful(
                 authSession: authSession,
                 completionHandler: { [weak self] isSuccess in
                     guard let self = self else { return }
@@ -240,7 +240,10 @@ final class SharedPartnerAuthViewController: UIViewController {
         view.addAndPinSubview(self.continueStateView!)
 
         subscribeToURLAndAppActiveNotifications()
-        UIApplication.shared.open(url, options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: true]) { (success) in
+        UIApplication.shared.open(
+            url,
+            options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: true]
+        ) { (success) in
             if success { return }
             // This means banking app is not installed
             self.clearStateAndUnsubscribeFromNotifications()
