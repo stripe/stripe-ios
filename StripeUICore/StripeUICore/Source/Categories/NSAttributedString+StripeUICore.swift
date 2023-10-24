@@ -17,4 +17,15 @@ extension NSAttributedString {
         })
     }
 
+    func switchAttachments(for traitCollection: UITraitCollection) -> NSAttributedString {
+        let mutable = NSMutableAttributedString(attributedString: self)
+        mutable.enumerateAttribute(.attachment, in: NSRange(location: 0, length: mutable.length), options: []) { attachment, range, _ in
+            guard let attachment = attachment as? NSTextAttachment else { return }
+            guard let asset = attachment.image?.imageAsset else { return }
+            attachment.image = asset.image(with: traitCollection)
+            mutable.replaceCharacters(in: range, with: NSAttributedString(attachment: attachment))
+        }
+        return mutable
+    }
+
 }
