@@ -68,15 +68,20 @@ class TextFieldView: UIView {
                 return
             }
             oldValue?.removeFromSuperview()
-            if let accessoryView = accessoryView {
+            
+            if let accessoryView = accessoryView as? PickerFieldView {
+                // Hack, disable the ability for the picker to take focus while it's being added as a sub view
+                // Occasionally the OS will attempt to call `becomeFirstResponder` on it, causing it to take focus
+                accessoryView.setCanBecomeFirstResponder(false)
                 accessoryContainerView.addAndPinSubview(accessoryView)
                 accessoryView.setContentHuggingPriority(.required, for: .horizontal)
                 // Don't have trailing padding when showing a picker view in the accessory view
-                if accessoryView is PickerFieldView {
-                    hStack.updateTrailingAnchor(constant: 0)
-                } else {
-                    hStack.updateTrailingAnchor(constant: -ElementsUI.contentViewInsets.trailing)
-                }
+                hStack.updateTrailingAnchor(constant: 0)
+                accessoryView.setCanBecomeFirstResponder(true)
+            } else if let accessoryView = accessoryView {
+                accessoryContainerView.addAndPinSubview(accessoryView)
+                accessoryView.setContentHuggingPriority(.required, for: .horizontal)
+                hStack.updateTrailingAnchor(constant: -ElementsUI.contentViewInsets.trailing)
             }
         }
     }

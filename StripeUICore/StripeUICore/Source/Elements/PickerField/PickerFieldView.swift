@@ -75,7 +75,8 @@ final class PickerFieldView: UIView {
     private let theme: ElementsUITheme
     // When a PickerFieldView is optional it's chevron is smaller and takes the color of placeholder text
     private let isOptional: Bool
-
+    private var _canBecomeFirstResponder = true
+        
     // MARK: - Public properties
     var displayText: NSAttributedString? {
         get {
@@ -189,10 +190,22 @@ final class PickerFieldView: UIView {
     }
 
     override func becomeFirstResponder() -> Bool {
+        if !_canBecomeFirstResponder {
+            return false
+        }
+        
         if super.becomeFirstResponder() {
             return true
         }
         return textField.becomeFirstResponder()
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return _canBecomeFirstResponder
+    }
+    
+    func setCanBecomeFirstResponder(_ value: Bool) {
+        _canBecomeFirstResponder = value
     }
 }
 
