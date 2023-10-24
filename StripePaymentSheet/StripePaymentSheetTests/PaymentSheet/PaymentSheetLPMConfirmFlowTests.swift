@@ -326,14 +326,14 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                     e.fulfill()
                     switch result {
                     case .failed(error: let error):
-                        XCTFail("❌ \(description): PaymentSheet.confirm failed - \(error)")
+                        XCTFail("❌ \(description): PaymentSheet.confirm failed - \(error.nonGenericDescription)")
                     case .canceled:
                         XCTFail()
                     case .completed:
                         print("✅ \(description): PaymentSheet.confirm completed")
                     }
                 }
-                await fulfillment(of: [e], timeout: 5)
+                await fulfillment(of: [e], timeout: 10)
             }
         }
     }
@@ -425,7 +425,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             ) { result, _  in
                 switch result {
                 case .failed(error: let error):
-                    XCTFail("❌ \(description): PaymentSheet.confirm failed - \(error)")
+                    XCTFail("❌ \(description): PaymentSheet.confirm failed - \(error.nonGenericDescription)")
                 case .canceled:
                     XCTAssertTrue(redirectShimCalled, "❌ \(description): PaymentSheet.confirm canceled")
                 case .completed:
@@ -543,7 +543,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 )
             }
             return [
-                ("PaymentIntent", .paymentIntent(paymentIntent)),
+                ("PaymentIntent w/ setup_future_usage", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
