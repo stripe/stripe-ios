@@ -193,7 +193,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         savedPaymentMethods: [STPPaymentMethod],
         configuration: Configuration,
         appearance: PaymentSheet.Appearance,
-        cbcEligible: Bool,
+        cbcEligible: Bool = false,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
