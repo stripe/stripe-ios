@@ -71,6 +71,12 @@ class TextFieldView: UIView {
             if let accessoryView = accessoryView {
                 accessoryContainerView.addAndPinSubview(accessoryView)
                 accessoryView.setContentHuggingPriority(.required, for: .horizontal)
+                // Don't have trailing padding when showing a picker view in the accessory view
+                if accessoryView is PickerFieldView {
+                    hStack.updateTrailingAnchor(constant: 0)
+                } else {
+                    hStack.updateTrailingAnchor(constant: -ElementsUI.contentViewInsets.trailing)
+                }
             }
         }
     }
