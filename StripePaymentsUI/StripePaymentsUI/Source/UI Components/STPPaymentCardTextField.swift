@@ -765,6 +765,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     private var isMidSubviewEditingTransitionInternal = false
     private var receivedUnmatchedShouldBeginEditing = false
     private var receivedUnmatchedShouldEndEditing = false
+    private var lastShouldBeginField: STPCardFieldType?
 
     let STPPaymentCardTextFieldDefaultPadding: CGFloat = 13
 
@@ -1906,7 +1907,13 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// :nodoc:
     @objc
     open func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        // On iOS 17 this delegate method gets called multiple times for the same field, this messes up our transition
+        // state, which in turn causes the paymentCardTextFieldDidEndEditing delegate method to not be called.
+        // To fix this, we keep track of the last field this delegate method was called for and ignore subsequent calls.
+        guard lastShouldBeginField != STPCardFieldType(rawValue: textField.tag) else { return true }
+
         getAndUpdateSubviewEditingTransitionState(fromCall: .shouldBegin)
+        lastShouldBeginField = STPCardFieldType(rawValue: textField.tag)
         return true
     }
 
@@ -2056,6 +2063,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             {
                 delegate?.paymentCardTextFieldDidEndEditing?(self)
             }
+
+            // Clear this when the whole field ends editing, so the next call to should begin is not ignored.
+            lastShouldBeginField = nil
         }
     }
 
