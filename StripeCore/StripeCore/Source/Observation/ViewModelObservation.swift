@@ -8,6 +8,7 @@
 import Foundation
 
 @_spi(STP) public typealias UpdateCallback = () -> Void
+@_spi(STP) public typealias ErrorUpdateCallback = (Error?) -> Void
 
 @_spi(STP) public protocol ObservableViewModel: AnyObject {
     var notifier: ViewModelObservationNotifier { get }
@@ -23,6 +24,26 @@ import Foundation
 
     func removeObserver(_ observer: AnyObject) {
         notifier.removeObserver(observer)
+    }
+}
+
+@_spi(STP) public protocol ObservableViewModelWithError: ObservableViewModel {
+    var error: Error? { get }
+    var errorNotifier: ViewModelObservationNotifier { get }
+
+    func addErrorObserver(_ observer: AnyObject, callback: @escaping ErrorUpdateCallback)
+    func removeErrorObserver(_ observer: AnyObject)
+}
+
+@_spi(STP) public extension ObservableViewModelWithError {
+    func addErrorObserver(_ observer: AnyObject, callback: @escaping ErrorUpdateCallback) {
+        errorNotifier.addObserver(observer) { [weak self] in
+            callback(self?.error)
+        }
+    }
+
+    func removeErrorObserver(_ observer: AnyObject) {
+        errorNotifier.removeObserver(observer)
     }
 }
 

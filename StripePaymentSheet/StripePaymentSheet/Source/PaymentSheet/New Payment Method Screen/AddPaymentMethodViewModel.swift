@@ -11,8 +11,9 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-class AddPaymentMethodViewModel: ObservableViewModel {
+class AddPaymentMethodViewModel: ObservableViewModelWithError {
     let notifier = ViewModelObservationNotifier()
+    let errorNotifier = ViewModelObservationNotifier()
 
     let intent: Intent
     let configuration: PaymentSheet.Configuration
@@ -39,7 +40,11 @@ class AddPaymentMethodViewModel: ObservableViewModel {
         }
     }
 
-    private(set) var error: Error?
+    private(set) var error: Error? {
+        didSet {
+            errorNotifier.notify()
+        }
+    }
 
     var paymentOption: PaymentOption? {
         if let linkEnabledElement = paymentMethodFormElement as? LinkEnabledPaymentMethodElement {
@@ -128,7 +133,8 @@ class AddPaymentMethodViewModel: ObservableViewModel {
             paymentMethod: paymentMethodTypeSelectorViewModel.selected,
             previousCustomerInput: previousCustomerInput,
             offerSaveToLinkWhenSupported: isLinkEnabled && !(linkAccount?.isRegistered ?? false),
-            linkAccount: linkAccount
+            linkAccount: linkAccount,
+            cardBrandChoiceEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled
         ).make()
         paymentMethodFormElement.delegate = self
 
@@ -165,7 +171,8 @@ class AddPaymentMethodViewModel: ObservableViewModel {
             paymentMethod: type,
             previousCustomerInput: previousCustomerInput,
             offerSaveToLinkWhenSupported: shouldOfferLinkSignup,
-            linkAccount: linkAccount
+            linkAccount: linkAccount,
+            cardBrandChoiceEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled
         ).make()
         formElement.delegate = self
         return formElement
@@ -181,7 +188,8 @@ class AddPaymentMethodViewModel: ObservableViewModel {
                 paymentMethod: .USBankAccount,
                 previousCustomerInput: previousCustomerInput,
                 offerSaveToLinkWhenSupported: shouldOfferLinkSignup,
-                linkAccount: linkAccount
+                linkAccount: linkAccount,
+                cardBrandChoiceEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled
             ).make()
 
             guard let formElement = formElement as? USBankAccountPaymentMethodElement else {
@@ -202,88 +210,88 @@ class AddPaymentMethodViewModel: ObservableViewModel {
     }
 
     func handleCollectBankAccount(from viewController: UIViewController) {
-        guard
-            let usBankAccountPaymentMethodElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement,
-            let name = usBankAccountPaymentMethodElement.name,
-            let email = usBankAccountPaymentMethodElement.email
-        else {
-            assertionFailure()
-            return
-        }
-
-        let params = STPCollectBankAccountParams.collectUSBankAccountParams(
-            with: name,
-            email: email
-        )
-        let client = STPBankAccountCollector()
-        let genericError = PaymentSheetError.accountLinkFailure
-
-        let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = {
-            [weak self]
-            result,
-            _,
-            error in
-            guard error == nil else {
-                self?.error = error
-                self?.notifier.notify()
-                return
-            }
-            guard let financialConnectionsResult = result else {
-                self?.error = genericError
-                self?.notifier.notify()
-                return
-            }
-
-            self?.error = nil
-            self?.notifier.notify()
-            switch financialConnectionsResult {
-            case .cancelled:
-                break
-            case .completed(let linkedBank):
-                usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
-            case .failed:
-                self?.error = genericError
-                self?.notifier.notify()
-            }
-        }
-        switch intent {
-        case .paymentIntent(let paymentIntent):
-            client.collectBankAccountForPayment(
-                clientSecret: paymentIntent.clientSecret,
-                returnURL: configuration.returnURL,
-                params: params,
-                from: viewController,
-                financialConnectionsCompletion: financialConnectionsCompletion
-            )
-        case .setupIntent(let setupIntent):
-            client.collectBankAccountForSetup(
-                clientSecret: setupIntent.clientSecret,
-                returnURL: configuration.returnURL,
-                params: params,
-                from: viewController,
-                financialConnectionsCompletion: financialConnectionsCompletion
-            )
-        case let .deferredIntent(elementsSession, intentConfig):
-            let amount: Int?
-            let currency: String?
-            switch intentConfig.mode {
-            case let .payment(amount: _amount, currency: _currency, _, _):
-                amount = _amount
-                currency = _currency
-            case let .setup(currency: _currency, _):
-                amount = nil
-                currency = _currency
-            }
-            client.collectBankAccountForDeferredIntent(
-                sessionId: elementsSession.sessionID,
-                returnURL: configuration.returnURL,
-                amount: amount,
-                currency: currency,
-                onBehalfOf: intentConfig.onBehalfOf,
-                from: viewController,
-                financialConnectionsCompletion: financialConnectionsCompletion
-            )
-        }
+        error = PaymentSheetError.accountLinkFailure
+//        guard
+//            let usBankAccountPaymentMethodElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement,
+//            let name = usBankAccountPaymentMethodElement.name,
+//            let email = usBankAccountPaymentMethodElement.email
+//        else {
+//            assertionFailure()
+//            return
+//        }
+//
+//        let params = STPCollectBankAccountParams.collectUSBankAccountParams(
+//            with: name,
+//            email: email
+//        )
+//        let client = STPBankAccountCollector()
+//        let genericError = PaymentSheetError.accountLinkFailure
+//
+//        let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = {
+//            [weak self]
+//            result,
+//            _,
+//            error in
+//            guard error == nil else {
+//                self?.error = error
+//                return
+//            }
+//            guard let financialConnectionsResult = result else {
+//                self?.error = genericError
+//                return
+//            }
+//
+//            self?.error = nil
+//            switch financialConnectionsResult {
+//            case .cancelled:
+//                break
+//            case .completed(let linkedBank):
+//                usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+//            case .failed:
+//                self?.error = genericError
+//            }
+//        }
+//        switch intent {
+//        case .paymentIntent(let paymentIntent):
+//            client.collectBankAccountForPayment(
+//                clientSecret: paymentIntent.clientSecret,
+//                returnURL: configuration.returnURL,
+//                onEvent: nil,
+//                params: params,
+//                from: viewController,
+//                financialConnectionsCompletion: financialConnectionsCompletion
+//            )
+//        case .setupIntent(let setupIntent):
+//            client.collectBankAccountForSetup(
+//                clientSecret: setupIntent.clientSecret,
+//                returnURL: configuration.returnURL,
+//                onEvent: nil,
+//                params: params,
+//                from: viewController,
+//                financialConnectionsCompletion: financialConnectionsCompletion
+//            )
+//        case let .deferredIntent(elementsSession, intentConfig):
+//            let amount: Int?
+//            let currency: String?
+//            switch intentConfig.mode {
+//            case let .payment(amount: _amount, currency: _currency, _, _):
+//                amount = _amount
+//                currency = _currency
+//            case let .setup(currency: _currency, _):
+//                amount = nil
+//                currency = _currency
+//            }
+//            client.collectBankAccountForDeferredIntent(
+//                sessionId: elementsSession.sessionID,
+//                returnURL: configuration.returnURL,
+//                onEvent: nil,
+//                amount: amount,
+//                currency: currency,
+//                onBehalfOf: intentConfig.onBehalfOf,
+//                from: viewController,
+//                financialConnectionsCompletion: financialConnectionsCompletion
+//            )
+//        }
     }
 }
 

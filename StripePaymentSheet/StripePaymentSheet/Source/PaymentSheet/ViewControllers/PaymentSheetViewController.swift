@@ -243,6 +243,10 @@ class PaymentSheetViewController: UIViewController {
         ])
 
         updateUI(animated: false)
+
+        addPaymentMethodViewModel.addErrorObserver(self) { [weak self] error in
+            self?.set(error: error)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
