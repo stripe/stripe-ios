@@ -159,7 +159,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName
             ),
-            appearance: configuration.appearance
+            appearance: configuration.appearance,
+            cbcEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled
         )
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,

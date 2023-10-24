@@ -90,6 +90,7 @@ class PaymentSheetViewController: UIViewController {
                 merchantDisplayName: configuration.merchantDisplayName
             ),
             appearance: configuration.appearance,
+            cbcEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled,
             delegate: self
         )
     }()
