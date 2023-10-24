@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 protocol PickerFieldViewDelegate: AnyObject {
     func didBeginEditing(_ pickerFieldView: PickerFieldView)
@@ -51,6 +52,9 @@ final class PickerFieldView: UIView {
         }
         let imageView = UIImageView(image: Image.icon_chevron_down.makeImage().withRenderingMode(.alwaysTemplate))
         imageView.setContentHuggingPriority(.required, for: .horizontal)
+        if isOptional {
+            imageView.image = imageView.image?.resized(to: 0.75)?.withRenderingMode(.alwaysTemplate)
+        }
         imageView.tintColor = isOptional ? theme.colors.placeholderText : theme.colors.textFieldText
         return imageView
     }()
@@ -69,6 +73,7 @@ final class PickerFieldView: UIView {
     private let shouldShowChevron: Bool
     private weak var delegate: PickerFieldViewDelegate?
     private let theme: ElementsUITheme
+    // When a PickerFieldView is optional it's chevron is smaller and takes the color of placeholder text
     private let isOptional: Bool
 
     // MARK: - Public properties
