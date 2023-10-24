@@ -51,7 +51,7 @@ final class PickerFieldView: UIView {
         }
         let imageView = UIImageView(image: Image.icon_chevron_down.makeImage().withRenderingMode(.alwaysTemplate))
         imageView.setContentHuggingPriority(.required, for: .horizontal)
-        imageView.tintColor = theme.colors.textFieldText
+        imageView.tintColor = isOptional ? theme.colors.placeholderText : theme.colors.textFieldText
         return imageView
     }()
     private lazy var hStackView: UIStackView = {
@@ -69,6 +69,7 @@ final class PickerFieldView: UIView {
     private let shouldShowChevron: Bool
     private weak var delegate: PickerFieldViewDelegate?
     private let theme: ElementsUITheme
+    private let isOptional: Bool
 
     // MARK: - Public properties
     var displayText: NSAttributedString? {
@@ -114,13 +115,15 @@ final class PickerFieldView: UIView {
         pickerView: UIView,
         delegate: PickerFieldViewDelegate,
         theme: ElementsUITheme,
-        hasPadding: Bool = true
+        hasPadding: Bool = true,
+        isOptional: Bool = false
     ) {
         self.label = label
         self.shouldShowChevron = shouldShowChevron
         self.pickerView = pickerView
         self.delegate = delegate
         self.theme = theme
+        self.isOptional = isOptional
         super.init(frame: .zero)
         addAndPinSubview(hStackView, directionalLayoutMargins: hasPadding ? ElementsUI.contentViewInsets : .zero)
 //      On Catalyst, add the picker view as a subview instead of an input view.

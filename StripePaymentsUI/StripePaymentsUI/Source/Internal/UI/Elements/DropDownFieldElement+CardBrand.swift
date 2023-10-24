@@ -19,7 +19,8 @@ extension DropdownFieldElement {
             defaultIndex: 0,
             label: nil,
             theme: theme,
-            hasPadding: hasPadding
+            hasPadding: hasPadding,
+            isOptional: true
         )
     }
 
