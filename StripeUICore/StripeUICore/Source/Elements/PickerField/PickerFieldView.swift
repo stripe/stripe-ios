@@ -157,6 +157,8 @@ final class PickerFieldView: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         layer.borderColor = theme.colors.border.cgColor
+        // Update the text attachment images for the attributed placeholder
+        textField.attributedPlaceholder = textField.attributedPlaceholder?.switchAttachments(for: .current)
     }
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
