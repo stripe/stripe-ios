@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 protocol PickerFieldViewDelegate: AnyObject {
     func didBeginEditing(_ pickerFieldView: PickerFieldView)
@@ -76,7 +76,7 @@ final class PickerFieldView: UIView {
     // When a PickerFieldView is optional it's chevron is smaller and takes the color of placeholder text
     private let isOptional: Bool
     private var _canBecomeFirstResponder = true
-        
+
     // MARK: - Public properties
     var displayText: NSAttributedString? {
         get {
@@ -193,17 +193,17 @@ final class PickerFieldView: UIView {
         if !_canBecomeFirstResponder {
             return false
         }
-        
+
         if super.becomeFirstResponder() {
             return true
         }
         return textField.becomeFirstResponder()
     }
-    
+
     override var canBecomeFirstResponder: Bool {
         return _canBecomeFirstResponder
     }
-    
+
     func setCanBecomeFirstResponder(_ value: Bool) {
         _canBecomeFirstResponder = value
     }

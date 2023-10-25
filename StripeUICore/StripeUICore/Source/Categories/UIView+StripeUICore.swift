@@ -91,7 +91,7 @@ import UIKit
         }
         return isFirstResponder ? self : nil
     }
-    
+
     func updateTrailingAnchor(constant: CGFloat) {
         if let superview = superview {
             for constraint in superview.constraints where constraint.firstItem === self || constraint.secondItem === self {

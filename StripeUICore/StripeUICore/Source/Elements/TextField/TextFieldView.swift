@@ -68,7 +68,7 @@ class TextFieldView: UIView {
                 return
             }
             oldValue?.removeFromSuperview()
-            
+
             if let accessoryView = accessoryView as? PickerFieldView {
                 // Hack, disable the ability for the picker to take focus while it's being added as a sub view
                 // Occasionally the OS will attempt to call `becomeFirstResponder` on it, causing it to take focus
