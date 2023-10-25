@@ -368,6 +368,8 @@ workflows:
         - scheme: AllStripeFrameworks
         - destination: $DEFAULT_TEST_DEVICE
         - configuration: Release
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 14,OS=16.4
     before_run:
     - prep_all
     meta:
@@ -381,7 +383,7 @@ workflows:
         - scheme: AllStripeFrameworks
         - destination: $DEFAULT_TEST_DEVICE
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12,OS=17.0
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 15,OS=17.0
     before_run:
     - prep_all
     meta:
