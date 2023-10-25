@@ -920,7 +920,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         // The brand state is CBC
         return self.viewModel.brandState.isCBC &&
         // And the CVC field isn't selected
-        STPCardFieldType(rawValue: focusedTextFieldForLayout?.intValue ?? 0) != .CVC &&
+        currentBrandImageFieldType != .CVC &&
         // And the card is not valid (we're not showing an error image)
         STPCardValidator.validationState(
             forNumber: viewModel.cardNumber ?? "",
@@ -947,22 +947,25 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             // Don't pop a menu outside the brand selector area
             return nil
         }
+        
+        if !self.viewModel.brandState.isCBC {
+            // Not doing CBC at the moment, don't return anything
+            return nil
+        }
 
         return UIContextMenuConfiguration(actionProvider: { _ in
-            if !self.viewModel.brandState.isCBC {
-                // Not doing CBC at the moment, don't return anything
-                return nil
-            }
             let action = { (action: UIAction) -> Void in
                 let brand = STPCard.brand(from: action.identifier.rawValue)
                 // Set the selected brand if a brand is selected
                 self.viewModel.selectedBrand = brand != .unknown ? brand : nil
                 self.updateImage(for: .number)
             }
+            let placeholderAction = UIAction(title: String.Localized.card_brand_dropdown_placeholder, attributes: .disabled, handler: action)
             let menu = UIMenu(children:
+                  [placeholderAction] +
                   self.viewModel.cardBrands.enumerated().map { (_, brand) in
                         let brandString = STPCard.string(from: brand)
-                        return UIAction(title: brandString, image: Self.brandImage(for: brand), identifier: .init(rawValue: brandString), state: self.viewModel.selectedBrand == brand ? .on : .off, handler: action)
+                        return UIAction(title: brandString, image: STPImageLibrary.unpaddedCardBrandImage(for: brand), identifier: .init(rawValue: brandString), state: self.viewModel.selectedBrand == brand ? .on : .off, handler: action)
                 }
             )
             return menu

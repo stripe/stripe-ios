@@ -75,6 +75,25 @@ public class STPImageLibrary: NSObject {
     {
         return self.brandImage(for: brand, template: false)
     }
+    
+    /// This returns an unpadded image for the specified card brand if available.
+    @_spi(STP) public class func unpaddedCardBrandImage(
+        for brand: STPCardBrand
+    )
+        -> UIImage
+    {
+        switch brand {
+        case .cartesBancaires:
+            return safeImageNamed("stp_card_unpadded_cartes_bancaires")
+        case .visa:
+            return safeImageNamed("stp_card_unpadded_visa")
+        case .amex, .mastercard, .discover, .JCB, .dinersClub, .unionPay, .unknown:
+            fallthrough
+        @unknown default:
+            return self.brandImage(for: brand, template: false)
+        }
+    }
+
 
     /// This returns the icon for an unselected brand when multiple card brands are available.
     @objc(cardBrandChoiceImage) public class func cardBrandChoiceImage()

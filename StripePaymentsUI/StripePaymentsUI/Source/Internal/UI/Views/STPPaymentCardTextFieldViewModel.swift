@@ -244,7 +244,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
 
     var cbcEnabledOverride: Bool? = {
         // TODO: Remove the default value of `false` once we release CBC
-        return false
+        return true
     }()
 
     var cbcEnabled: Bool {
