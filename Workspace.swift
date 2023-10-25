@@ -17,7 +17,7 @@ let allFrameworksTargets: [TargetReference] = [
 ]
 
 let allTestsTargets: [TestableTarget] = {
-    allFrameworksTargets.map { .init(target: .init(projectPath: $0.projectPath, target: "\($0.targetName)Tests")) } 
+    allFrameworksTargets.map { .init(target: .init(projectPath: $0.projectPath, target: "\($0.targetName)Tests")) }
     + [TestableTarget(target: .init(projectPath: "Stripe3DS2", target: "Stripe3DS2DemoUITests"))]
 }()
 
@@ -69,7 +69,7 @@ let workspace = Workspace(
                                     environment: [
                                         "FB_REFERENCE_IMAGE_DIR":
                                             "$(SOURCE_ROOT)/../Tests/ReferenceImages",
-                                        "STP_RECORD_SNAPSHOTS": "true"
+                                        "STP_RECORD_SNAPSHOTS": "true",
                                     ]
                                  ),
                                  expandVariableFromTarget: allFrameworksTargets.first
