@@ -357,14 +357,10 @@ workflows:
         machine_type_id: g2-m1.8core
   test-builds-xcode-143-release:
     steps:
-    - xcode-build-for-test@2:
+    - script@1:
         inputs:
-        - scheme: AllStripeFrameworks
-        - destination: generic/platform=iOS Simulator
-        - configuration: Release
-    - deploy-to-bitrise-io@2: {}
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 14,OS=16.4
+        - content: bundle exec ./ci_scripts/export_builds.rb
+        title: Export builds
     before_run:
     - prep_all
     meta:
