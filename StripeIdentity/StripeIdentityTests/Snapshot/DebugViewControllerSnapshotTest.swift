@@ -8,15 +8,10 @@
 import Foundation
 
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 @testable import StripeIdentity
 
-final class DebugViewControllerSnapshotTest: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
-
+final class DebugViewControllerSnapshotTest: STPSnapshotTestCase {
     func testViewIsConfigured() {
         let vc = DebugViewController(sheetController: VerificationSheetControllerMock())
 

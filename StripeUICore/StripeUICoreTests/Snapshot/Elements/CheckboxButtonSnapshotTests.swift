@@ -12,19 +12,14 @@ import UIKit
 
 @testable @_spi(STP) import StripeUICore
 
-class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
+class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
 
     let attributedLinkText: NSAttributedString = {
         let attributedText = NSMutableAttributedString(string: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum auctor justo sit amet luctus egestas. Sed id urna dolor.")
         attributedText.addAttributes([.link: URL(string: "https://stripe.com")!], range: NSRange(location: 0, length: 26))
         return attributedText
     }()
-
-    override func setUp() {
-        super.setUp()
-//        recordMode = true
-    }
-
+    
     func testShortText() {
         let checkbox = CheckboxButton(text: "Save this card for future [Merchant] payments")
         verify(checkbox)

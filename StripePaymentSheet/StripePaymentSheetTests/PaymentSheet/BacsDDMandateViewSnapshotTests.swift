@@ -11,13 +11,11 @@ import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentsTestUtils
 import SwiftUI
 import UIKit
+import StripeCoreTestUtils
+
 
 @MainActor
-class BacsDDMandateViewSnapshotTests: FBSnapshotTestCase {
-    override func setUp() {
-        super.setUp()
-//        self.recordMode = true
-    }
+class BacsDDMandateViewSnapshotTests: STPSnapshotTestCase {
 
     func testBacsDDMandateView() {
         let bacsView = BacsDDMandateView(email: "j.diaz@example.com", name: "Jane Diaz", sortCode: "10-88-00", accountNumber: "00012345", confirmAction: {}, cancelAction: {})

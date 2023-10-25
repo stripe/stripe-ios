@@ -11,15 +11,11 @@ import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentsTestUtils
 @_spi(STP)@testable import StripePaymentsUI
 import UIKit
+import StripeCoreTestUtils
 
 /* TODO(porter/yuki) Remove these? Commented out since we can't just disable within Xcode b/c of tuist
 @MainActor
-class PaymentMethodMessagingViewSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-//                self.recordMode = true
-    }
+class PaymentMethodMessagingViewSnapshotTests: STPSnapshotTestCase {
 
     /// - Note: This mock HTML should include all HTML tags the server can send down
     let mockHTML =

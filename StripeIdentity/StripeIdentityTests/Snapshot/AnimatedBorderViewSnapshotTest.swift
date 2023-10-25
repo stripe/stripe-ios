@@ -8,22 +8,17 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-final class AnimatedBorderViewSnapshotTest: FBSnapshotTestCase {
+final class AnimatedBorderViewSnapshotTest: STPSnapshotTestCase {
 
     let view: AnimatedBorderView = {
         let view = AnimatedBorderView()
         view.frame.size = CGSize(width: 300, height: 200)
         return view
     }()
-
-    override func setUp() {
-        super.setUp()
-
-        //        recordMode = true
-    }
 
     func testGradientThickBorder() {
         verifyView(

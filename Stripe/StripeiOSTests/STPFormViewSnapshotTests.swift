@@ -7,6 +7,7 @@
 //
 
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import Stripe
@@ -15,12 +16,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPFormViewSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
+class STPFormViewSnapshotTests: STPSnapshotTestCase {
 
     func testSingleInput() {
         let input = STPInputTextField(

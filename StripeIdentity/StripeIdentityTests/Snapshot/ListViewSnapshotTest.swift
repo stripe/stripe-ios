@@ -8,10 +8,11 @@
 
 import iOSSnapshotTestCase
 @_spi(STP) import StripeUICore
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-final class ListViewSnapshotTest: FBSnapshotTestCase {
+final class ListViewSnapshotTest: STPSnapshotTestCase {
     let listView = ListView()
 
     static let longText = "Some very long text that should wrap to multiple lines"
@@ -59,8 +60,6 @@ final class ListViewSnapshotTest: FBSnapshotTestCase {
         super.setUp()
 
         listView.tintColor = .systemBlue
-
-        //        recordMode = true
     }
 
     func testNoItems() {

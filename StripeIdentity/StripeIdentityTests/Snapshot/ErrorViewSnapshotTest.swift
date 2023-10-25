@@ -10,16 +10,12 @@ import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-class ErrorViewSnapshotTest: FBSnapshotTestCase {
+class ErrorViewSnapshotTest: STPSnapshotTestCase {
     let errorView = ErrorView()
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
 
     func testErrorView() {
         verifyView(

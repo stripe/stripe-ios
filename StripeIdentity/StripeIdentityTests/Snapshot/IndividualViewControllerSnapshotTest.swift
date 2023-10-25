@@ -7,19 +7,15 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-final class IndividualViewControllerSnapshotTest: FBSnapshotTestCase {
+final class IndividualViewControllerSnapshotTest: STPSnapshotTestCase {
     static let mockVerificationPageIdAndAddr = try! VerificationPageMock.typeDocumentRequireIdNumberAndAddress.make()
     static let mockVerificationPageId = try! VerificationPageMock.typeIdNumber.make()
     static let mockVerificationPageAddr = try! VerificationPageMock.typeAddress.make()
     static let mockVerificationPagePhone = try! VerificationPageMock.typePhone.make()
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
 
     func testViewIsConfiguredFromAPIIdAndAddr() {
         testWithResponse(reponse: IndividualViewControllerSnapshotTest.mockVerificationPageIdAndAddr)

@@ -12,12 +12,7 @@ import StripePaymentsTestUtils
 @_spi(STP)@testable import StripePaymentsUI
 @_spi(STP)@testable import StripeUICore
 
-class STPPaymentCardTextFieldSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-//        self.recordMode = true
-    }
+class STPPaymentCardTextFieldSnapshotTests: STPSnapshotTestCase {
 
     var paymentCardTextField: STPPaymentCardTextField {
         return STPPaymentCardTextField(frame: CGRect(x: 0, y: 0, width: 400, height: 50))

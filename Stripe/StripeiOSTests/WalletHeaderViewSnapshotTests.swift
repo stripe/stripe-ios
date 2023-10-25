@@ -14,12 +14,7 @@ import UIKit
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePaymentSheet
 
-class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        self.recordMode = true
-    }
+class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
 
     func testApplePayButton() {
         let headerView = PaymentSheetViewController.WalletHeaderView(

@@ -1,5 +1,5 @@
 //
-//  STPPaymentOptionsViewControllerLocalizationTests.swift
+//  STPPaymentOptionsViewControllerLocalizationSnapshotTests.swift
 //  StripeiOS Tests
 //
 //  Created by Brian Dorfman on 10/17/16.
@@ -7,6 +7,7 @@
 //
 
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -34,12 +35,7 @@ class MockSTPPaymentOptionsViewControllerDelegate: NSObject, STPPaymentOptionsVi
 
 }
 
-class STPPaymentOptionsViewControllerLocalizationTests: FBSnapshotTestCase {
-    override func setUp() {
-        super.setUp()
-
-        //        self.recordMode = true;
-    }
+class STPPaymentOptionsViewControllerLocalizationSnapshotTests: STPSnapshotTestCase {
 
     func performSnapshotTest(forLanguage language: String?) {
         let config = STPPaymentConfiguration()

@@ -12,11 +12,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
-final class PaymentSheetFormFactorySnapshotTest: FBSnapshotTestCase {
-    override func setUp() {
-        super.setUp()
-//        recordMode = true
-    }
+final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
 
     func testCard_AutomaticFields_NoDefaults() {
         let configuration = PaymentSheet.Configuration()

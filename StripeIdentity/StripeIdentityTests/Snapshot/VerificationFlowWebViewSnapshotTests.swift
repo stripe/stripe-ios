@@ -9,19 +9,18 @@
 import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
 import WebKit
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
 @available(iOS 14.3, *)
-final class VerificationFlowWebViewSnapshotTests: FBSnapshotTestCase {
+final class VerificationFlowWebViewSnapshotTests: STPSnapshotTestCase {
 
     private var verificationWebView: VerificationFlowWebView!
     private var didFinishLoadingExpectation: XCTestExpectation!
 
     override func setUp() {
         super.setUp()
-        //        recordMode = true
-
         // Reset expectation
         didFinishLoadingExpectation = XCTestExpectation(description: "WebView finished loading")
 

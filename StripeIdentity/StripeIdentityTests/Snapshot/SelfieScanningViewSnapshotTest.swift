@@ -12,8 +12,9 @@ import iOSSnapshotTestCase
 @_spi(STP) import StripeCameraCoreTestUtils
 
 @testable import StripeIdentity
+import StripeCoreTestUtils
 
-final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
+final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
     static let mockText = "A long line of text that should wrap to multiple lines"
     static let consentText =
         "Allow Stripe to use your images to improve our biometric verification technology. You can remove Stripe's permissions at any time by contacting Stripe. <a href='https://stripe.com'>Learn how Stripe uses data</a>"
@@ -25,12 +26,6 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
         mockCameraSession.mockImage = CapturedImageMock.backDriversLicense.image
         return mockCameraSession
     }()
-
-    override func setUp() {
-        super.setUp()
-
-        //        recordMode = true
-    }
 
     func testBlank() {
         verifyView(

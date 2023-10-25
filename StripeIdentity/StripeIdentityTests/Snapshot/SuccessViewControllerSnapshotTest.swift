@@ -8,18 +8,13 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-final class SuccessViewControllerSnapshotTest: FBSnapshotTestCase {
+final class SuccessViewControllerSnapshotTest: STPSnapshotTestCase {
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
-
-    override func setUp() {
-        super.setUp()
-
-//                recordMode = true
-    }
-
+    
     func testViewIsConfiguredFromAPI() {
         let vc = SuccessViewController(
             successContent: SuccessViewControllerSnapshotTest.mockVerificationPage.success,

@@ -8,6 +8,7 @@
 
 import iOSSnapshotTestCase
 @_spi(STP) import StripeUICore
+import StripeCoreTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -15,12 +16,7 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class CircularButtonSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
+class CircularButtonSnapshotTests: STPSnapshotTestCase {
 
     func testNormal() {
         let button = CircularButton(style: .close)

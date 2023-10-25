@@ -11,8 +11,9 @@ import iOSSnapshotTestCase
 @_spi(STP)@testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP)@testable import StripeUICore
+import StripeCoreTestUtils
 
-class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
+class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
     private let addressSpecProvider: AddressSpecProvider = {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
@@ -31,11 +32,6 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         var config = AddressViewController.Configuration()
         config.apiClient = .init(publishableKey: "pk_test_1234")
         return config
-    }
-
-    override func setUp() {
-        super.setUp()
-        //        self.recordMode = true
     }
 
     func testShippingAddressViewController() {

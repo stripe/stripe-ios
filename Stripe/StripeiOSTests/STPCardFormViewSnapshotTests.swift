@@ -7,6 +7,7 @@
 //
 
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -14,13 +15,8 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPCardFormViewSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
-
+class STPCardFormViewSnapshotTests: STPSnapshotTestCase {
+    
     func testEmpty() {
         let formView = STPCardFormView(billingAddressCollection: .automatic)
         formView.countryCode = "US"

@@ -8,12 +8,13 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCameraCoreTestUtils
 
 @testable import StripeIdentity
 
-final class DocumentScanningViewSnapshotTest: FBSnapshotTestCase {
+final class DocumentScanningViewSnapshotTest: STPSnapshotTestCase {
     // NOTE(mludowise): Snapshot tests don't seem to respect setting the overlay
     // layer's `compositingFilter` to "multiplyBlendMode". The result is the
     // resulting snapshot images all have a solid-opaque color for the overlay.
@@ -33,7 +34,6 @@ final class DocumentScanningViewSnapshotTest: FBSnapshotTestCase {
         scanningView.tintColor = .systemPink
 
         AnimatedBorderView.isAnimationEnabled = false
-        //        recordMode = true
     }
 
     override func tearDown() {
