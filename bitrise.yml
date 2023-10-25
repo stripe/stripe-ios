@@ -354,6 +354,7 @@ workflows:
     - xcode-build-for-test@2:
         inputs:
         - scheme: AllStripeFrameworks
+        - destination: $DEFAULT_TEST_DEVICE
     before_run:
     - prep_all
     meta:
@@ -365,6 +366,7 @@ workflows:
     - xcode-build-for-test@2:
         inputs:
         - scheme: AllStripeFrameworks
+        - destination: $DEFAULT_TEST_DEVICE
         - configuration: Release
     before_run:
     - prep_all
@@ -377,6 +379,7 @@ workflows:
     - xcode-build-for-test@2:
         inputs:
         - scheme: AllStripeFrameworks
+        - destination: $DEFAULT_TEST_DEVICE
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12,OS=17.0
     before_run:

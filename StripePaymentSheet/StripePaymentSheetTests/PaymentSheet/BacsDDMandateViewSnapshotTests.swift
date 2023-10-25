@@ -24,6 +24,7 @@ class BacsDDMandateViewSnapshotTests: STPSnapshotTestCase {
         window.rootViewController = vc
         window.makeKeyAndVisible()
 
-        STPSnapshotVerifyView(vc.view, identifier: nil, file: #filePath, line: #line)
+        // Shadow rendering isn't deterministic enough, give a slightly larger perPixelTolerance
+        STPSnapshotVerifyView(vc.view, identifier: nil, perPixelTolerance: 0.04, file: #filePath, line: #line)
     }
 }
