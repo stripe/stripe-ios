@@ -947,7 +947,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             // Don't pop a menu outside the brand selector area
             return nil
         }
-        
+
         if !self.viewModel.brandState.isCBC {
             // Not doing CBC at the moment, don't return anything
             return nil
