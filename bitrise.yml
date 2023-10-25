@@ -359,8 +359,8 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: bundle exec ./ci_scripts/export_builds.rb
-        title: Export builds
+        - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator"
+        title: Build release builds
     before_run:
     - prep_all
     meta:
