@@ -190,7 +190,7 @@ final class PickerFieldView: UIView {
     }
 
     override func becomeFirstResponder() -> Bool {
-        if !_canBecomeFirstResponder {
+        guard _canBecomeFirstResponder else {
             return false
         }
 
