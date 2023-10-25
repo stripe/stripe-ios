@@ -35,7 +35,7 @@ def read_skipped_tests(json_file)
   skipped_tests  
 end  
   
-def check_paymentsheet_test_sharding  
+def main  
   swift_files = []  
   test_classes = []  
   
@@ -70,11 +70,5 @@ def check_paymentsheet_test_sharding
   end  
   exit(exitcode)
 end  
-
-def check_all_snapshot_tests_in_snapshot_test_plans
-  skipped_tests1 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard1.xctestplan")  
-  skipped_tests2 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard2.xctestplan")  
-
-end
   
-check_paymentsheet_test_sharding
+main  
