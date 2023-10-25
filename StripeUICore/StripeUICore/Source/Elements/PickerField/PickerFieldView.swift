@@ -63,7 +63,11 @@ final class PickerFieldView: UIView {
             arrangedSubviews: [floatingPlaceholderTextFieldView ?? textField, chevronImageView].compactMap { $0 }
         )
         hStackView.alignment = .center
-        hStackView.spacing = 6
+        if isOptional {
+            hStackView.spacing = 3
+        } else {
+            hStackView.spacing = 6
+        }
         return hStackView
     }()
     private let pickerView: UIView
@@ -240,6 +244,10 @@ extension PickerFieldView: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         floatingPlaceholderTextFieldView?.updatePlaceholder()
         delegate?.didFinish(self, shouldAutoAdvance: true)
+    }
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return _canBecomeFirstResponder
     }
 }
 
