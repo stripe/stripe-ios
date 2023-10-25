@@ -366,8 +366,9 @@ workflows:
     - xcode-build-for-test@2:
         inputs:
         - scheme: AllStripeFrameworks
-        - destination: $DEFAULT_TEST_DEVICE
+        - destination: generic/platform=iOS Simulator
         - configuration: Release
+    - deploy-to-bitrise-io@2: {}
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 14,OS=16.4
     before_run:
@@ -381,7 +382,8 @@ workflows:
     - xcode-build-for-test@2:
         inputs:
         - scheme: AllStripeFrameworks
-        - destination: $DEFAULT_TEST_DEVICE
+        - destination: generic/platform=iOS Simulator
+    - deploy-to-bitrise-io@2: {}
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 15,OS=17.0
     before_run:
