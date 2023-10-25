@@ -1,6 +1,14 @@
-## X.Y.Z 2023-XX-YY
+## x.x.x
+### PaymentsUI
+
+* [Fixed] And issue with `STPPaymentCardTextField` where the `paymentCardTextFieldDidEndEditing` delegate method was not called.
+
+## 23.18.0 2023-10-23
 ### PaymentSheet
 * [Added] Saved SEPA payment methods are now displayed to the customer for reuse, similar to saved cards.
+
+### PaymentsUI
+* [Fixed] Fixed an issue where the unknown card icon would sometimes pick up the view's tint color.
 
 ## 23.17.2 2023-10-16
 ### PaymentsUI

@@ -108,7 +108,8 @@ import UIKit
             pickerView: pickerView,
             delegate: self,
             theme: theme,
-            hasPadding: hasPadding
+            hasPadding: hasPadding,
+            isOptional: isOptional
         )
         if disableDropdownWithSingleElement && items.count == 1 {
             pickerFieldView.isUserInteractionEnabled = false
@@ -119,6 +120,7 @@ import UIKit
     // MARK: - Private properties
     private var previouslySelectedIndex: Int
     private let disableDropdownWithSingleElement: Bool
+    private let isOptional: Bool
 
     /**
      - Parameters:
@@ -139,6 +141,7 @@ import UIKit
         theme: ElementsUITheme = .default,
         hasPadding: Bool = true,
         disableDropdownWithSingleElement: Bool = false,
+        isOptional: Bool = false,
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
         assert(!items.isEmpty, "`items` must contain at least one item")
@@ -147,6 +150,7 @@ import UIKit
         self.theme = theme
         self.items = items
         self.disableDropdownWithSingleElement = disableDropdownWithSingleElement
+        self.isOptional = isOptional
         self.didUpdate = didUpdate
         self.hasPadding = hasPadding
 
