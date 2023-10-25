@@ -13,7 +13,6 @@ let allFrameworksTargets: [TargetReference] = [
     .project(path: "StripeIdentity", target: "StripeIdentity"),
     .project(path: "StripeFinancialConnections", target: "StripeFinancialConnections"),
     .project(path: "Stripe3DS2", target: "Stripe3DS2"),
-    .project(path: "StripeLinkCore", target: "StripeLinkCore"),
 ]
 
 let allTestsTargets: [TestableTarget] = {
@@ -32,7 +31,6 @@ let workspace = Workspace(
         "StripeCore",
         "StripeFinancialConnections",
         "StripeIdentity",
-        "StripeLinkCore",
         "StripePayments",
         "StripePaymentsUI",
         "StripePaymentSheet",
@@ -86,7 +84,6 @@ let workspace = Workspace(
                 .project(path: "StripePaymentSheet", target: "StripePaymentSheet"),
                 .project(path: "StripeUICore", target: "StripeUICore"),
                 .project(path: "Stripe3DS2", target: "Stripe3DS2"),
-                .project(path: "StripeLinkCore", target: "StripeLinkCore"),
             ])
         ),
     ],
