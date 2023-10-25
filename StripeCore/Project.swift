@@ -9,5 +9,7 @@ let project = Project.stripeFramework(
         includesSnapshots: true,
         usesStubs: true
     ),
-    unitTestOptions: .testOptions(resources: "StripeCoreTests/Mock Files/**")
+    unitTestOptions: .testOptions(resources: "StripeCoreTests/Mock Files/**",
+                                  includesSnapshots: true,
+                                  usesStubs: true)
 )

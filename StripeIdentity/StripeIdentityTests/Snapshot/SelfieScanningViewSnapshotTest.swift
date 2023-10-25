@@ -11,8 +11,8 @@ import iOSSnapshotTestCase
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCameraCoreTestUtils
 
-@testable import StripeIdentity
 import StripeCoreTestUtils
+@testable import StripeIdentity
 
 final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
     static let mockText = "A long line of text that should wrap to multiple lines"

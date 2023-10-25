@@ -8,8 +8,8 @@
 //
 
 import iOSSnapshotTestCaseCore
-@testable import StripePaymentsUI
 import StripeCoreTestUtils
+@testable import StripePaymentsUI
 
 class STPViewWithSeparatorSnapshotTests: STPSnapshotTestCase {
 

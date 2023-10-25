@@ -9,7 +9,6 @@ import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
-import StripeCoreTestUtils
 
 import XCTest
 

@@ -8,9 +8,9 @@
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
+@testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
-@testable import StripePaymentsTestUtils
 
 final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
     override func setUp() {

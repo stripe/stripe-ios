@@ -16,7 +16,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPCardNumberInputTextFieldSnapshotTests: STPSnapshotTestCase {
-    
+
     func testEmpty() {
         let field = STPCardNumberInputTextField()
         field.sizeToFit()

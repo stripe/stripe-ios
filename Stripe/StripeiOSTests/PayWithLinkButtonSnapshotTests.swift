@@ -20,7 +20,7 @@ class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
 
     private let emailAddress = "customer@example.com"
     private let longEmailAddress = "long.customer.name@example.com"
-    
+
     func testDefault() {
         let sut = makeSUT()
         sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: false)

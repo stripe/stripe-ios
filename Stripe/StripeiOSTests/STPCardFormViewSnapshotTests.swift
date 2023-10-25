@@ -16,7 +16,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPCardFormViewSnapshotTests: STPSnapshotTestCase {
-    
+
     func testEmpty() {
         let formView = STPCardFormView(billingAddressCollection: .automatic)
         formView.countryCode = "US"

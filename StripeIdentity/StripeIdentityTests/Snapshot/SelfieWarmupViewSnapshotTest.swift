@@ -7,9 +7,9 @@
 
 import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable import StripeIdentity
 @_spi(STP) import StripeUICore
-import StripeCoreTestUtils
 
 class SelfieWarmupViewSnapshotTest: STPSnapshotTestCase {
 

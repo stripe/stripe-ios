@@ -8,9 +8,9 @@
 
 import Foundation
 import iOSSnapshotTestCase
-import StripeCoreTestUtils
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCameraCoreTestUtils
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 

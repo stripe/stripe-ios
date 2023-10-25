@@ -8,8 +8,8 @@
 
 import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
-import WebKit
 import StripeCoreTestUtils
+import WebKit
 
 @testable import StripeIdentity
 

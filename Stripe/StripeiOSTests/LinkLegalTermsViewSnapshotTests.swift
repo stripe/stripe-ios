@@ -7,8 +7,8 @@
 //
 
 import iOSSnapshotTestCase
-import UIKit
 import StripeCoreTestUtils
+import UIKit
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore

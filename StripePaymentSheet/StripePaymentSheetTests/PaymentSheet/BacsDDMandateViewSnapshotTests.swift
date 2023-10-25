@@ -11,8 +11,6 @@ import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentsTestUtils
 import SwiftUI
 import UIKit
-import StripeCoreTestUtils
-
 
 @MainActor
 class BacsDDMandateViewSnapshotTests: STPSnapshotTestCase {

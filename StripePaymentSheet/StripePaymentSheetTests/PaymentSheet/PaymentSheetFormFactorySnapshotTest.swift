@@ -8,8 +8,8 @@
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) @testable import StripeUICore
 @testable@_spi(STP) import StripePaymentsTestUtils
+@_spi(STP) @testable import StripeUICore
 import XCTest
 
 final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {

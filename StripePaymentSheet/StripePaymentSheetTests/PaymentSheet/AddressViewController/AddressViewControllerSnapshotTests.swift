@@ -8,10 +8,10 @@
 
 import iOSSnapshotTestCase
 @_spi(STP)@testable import StripeCore
+import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP)@testable import StripeUICore
-import StripeCoreTestUtils
 
 class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
     private let addressSpecProvider: AddressSpecProvider = {

@@ -21,7 +21,7 @@ final class STPGenericInputPickerFieldSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        
+
         field = STPGenericInputPickerField(dataSource: MockDataSource())
         field.placeholder = "Placeholder"
         field.sizeToFit()

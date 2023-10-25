@@ -58,7 +58,7 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
             subtitleHighlightRanges: [NSValue(range: NSRange(location: 0, length: 4))]
         ),
     ]
-    
+
     func testAutoCompleteViewController() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false

@@ -19,7 +19,7 @@ class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
         attributedText.addAttributes([.link: URL(string: "https://stripe.com")!], range: NSRange(location: 0, length: 26))
         return attributedText
     }()
-    
+
     func testShortText() {
         let checkbox = CheckboxButton(text: "Save this card for future [Merchant] payments")
         verify(checkbox)

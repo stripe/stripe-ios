@@ -14,7 +14,7 @@ import StripeCoreTestUtils
 
 final class SuccessViewControllerSnapshotTest: STPSnapshotTestCase {
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
-    
+
     func testViewIsConfiguredFromAPI() {
         let vc = SuccessViewController(
             successContent: SuccessViewControllerSnapshotTest.mockVerificationPage.success,

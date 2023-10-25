@@ -18,6 +18,7 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         let deviceModel = ProcessInfo.processInfo.environment["SIMULATOR_MODEL_IDENTIFIER"]!
         recordMode = ProcessInfo.processInfo.environment["STP_RECORD_SNAPSHOTS"] != nil
         if deviceModel != TEST_DEVICE_MODEL || UIDevice.current.systemVersion != TEST_DEVICE_OS_VERSION {
+            continueAfterFailure = false
             XCTFail("You must run snapshot tests on \(TEST_DEVICE_MODEL) running \(TEST_DEVICE_OS_VERSION). You are running these tests on a \(deviceModel) on \(UIDevice.current.systemVersion).")
         }
     }

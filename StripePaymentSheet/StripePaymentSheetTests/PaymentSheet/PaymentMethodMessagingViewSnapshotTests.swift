@@ -11,7 +11,6 @@ import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentsTestUtils
 @_spi(STP)@testable import StripePaymentsUI
 import UIKit
-import StripeCoreTestUtils
 
 /* TODO(porter/yuki) Remove these? Commented out since we can't just disable within Xcode b/c of tuist
 @MainActor
