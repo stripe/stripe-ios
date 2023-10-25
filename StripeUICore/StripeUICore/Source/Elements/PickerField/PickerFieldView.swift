@@ -200,10 +200,6 @@ final class PickerFieldView: UIView {
         return textField.becomeFirstResponder()
     }
 
-    override var canBecomeFirstResponder: Bool {
-        return _canBecomeFirstResponder
-    }
-
     func setCanBecomeFirstResponder(_ value: Bool) {
         _canBecomeFirstResponder = value
     }
