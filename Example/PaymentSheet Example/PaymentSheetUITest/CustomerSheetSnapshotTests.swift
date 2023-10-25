@@ -63,7 +63,6 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
-        FormSpecProvider.shared.load()
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
 //        self.recordMode = true
     }
