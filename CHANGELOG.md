@@ -1,7 +1,9 @@
 ## x.x.x
 ### PaymentsUI
-
 * [Fixed] And issue with `STPPaymentCardTextField` where the `paymentCardTextFieldDidEndEditing` delegate method was not called.
+
+### PaymentSheet
+* [Fixed] Fixed some payment method icons not updating to use the latest assets.
 
 ## 23.18.0 2023-10-23
 ### PaymentSheet
