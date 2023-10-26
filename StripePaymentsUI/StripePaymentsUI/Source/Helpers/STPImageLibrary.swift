@@ -87,7 +87,19 @@ public class STPImageLibrary: NSObject {
             return safeImageNamed("stp_card_unpadded_cartes_bancaires")
         case .visa:
             return safeImageNamed("stp_card_unpadded_visa")
-        case .amex, .mastercard, .discover, .JCB, .dinersClub, .unionPay, .unknown:
+        case .amex:
+            return safeImageNamed("stp_card_unpadded_amex")
+        case .mastercard:
+            return safeImageNamed("stp_card_unpadded_mastercard")
+        case .dinersClub:
+            return safeImageNamed("stp_card_unpadded_diners_club")
+        case .unionPay:
+            return safeImageNamed("stp_card_unpadded_unionpay")
+        case .discover:
+            return safeImageNamed("stp_card_unpadded_discover")
+        case .JCB:
+            return safeImageNamed("stp_card_unpadded_jcb")
+        case .unknown:
             fallthrough
         @unknown default:
             return self.brandImage(for: brand, template: false)
