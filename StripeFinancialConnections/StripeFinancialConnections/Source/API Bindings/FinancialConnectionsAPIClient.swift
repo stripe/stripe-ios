@@ -10,7 +10,10 @@ import Foundation
 
 protocol FinancialConnectionsAPIClient {
 
-    func synchronize(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize>
+    func synchronize(
+        clientSecret: String,
+        returnURL: String?
+    ) -> Future<FinancialConnectionsSynchronize>
 
     func fetchFinancialConnectionsAccounts(
         clientSecret: String,
@@ -161,7 +164,10 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         )
     }
 
-    func synchronize(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSynchronize> {
+    func synchronize(
+        clientSecret: String,
+        returnURL: String?
+    ) -> Future<FinancialConnectionsSynchronize> {
         let parameters: [String: Any] = [
             "expand": ["manifest.active_auth_session"],
             "client_secret": clientSecret,
@@ -194,7 +200,6 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList> {
         let parameters = [
             "client_secret": clientSecret,
-            "limit": "10",
         ]
         return self.get(
             resource: APIEndpointFeaturedInstitutions,
@@ -237,11 +242,11 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         clientSecret: String,
         authSessionId: String
     ) -> Future<FinancialConnectionsAuthSession> {
-        let body = [
+        let body: [String: Any] = [
             "client_secret": clientSecret,
             "id": authSessionId,
         ]
-        return self.post(resource: APIEndpointAuthSessionsRetrieve, object: body)
+        return self.post(resource: APIEndpointAuthSessionsRetrieve, parameters: body)
     }
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<

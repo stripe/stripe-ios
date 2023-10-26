@@ -193,9 +193,14 @@ final class FinancialConnectionsUITests: XCTestCase {
             app.fc_nativePrepaneContinueButton.tap()
 
             // check that the WebView loaded
+            var predicateString = "label CONTAINS '\(institutionName)'"
+            if institutionName == "Chase" {
+                // Chase does not contain the word "Chase" on their log-in page
+                predicateString = "label CONTAINS 'username' OR label CONTAINS 'password'"
+            }
             let institutionWebViewText = app.webViews
                 .staticTexts
-                .containing(NSPredicate(format: "label CONTAINS '\(institutionName)'"))
+                .containing(NSPredicate(format: predicateString))
                 .firstMatch
             XCTAssertTrue(institutionWebViewText.waitForExistence(timeout: 120.0))
 
@@ -300,9 +305,14 @@ final class FinancialConnectionsUITests: XCTestCase {
             prepaneContinueButton.tap()
 
             // check that the WebView loaded
+            var predicateString = "label CONTAINS '\(institutionName)'"
+            if institutionName == "Chase" {
+                // Chase does not contain the word "Chase" on their log-in page
+                predicateString = "label CONTAINS 'username' OR label CONTAINS 'password'"
+            }
             let institutionWebViewText = app.webViews
                 .staticTexts
-                .containing(NSPredicate(format: "label CONTAINS '\(institutionName)'"))
+                .containing(NSPredicate(format: predicateString))
                 .firstMatch
             XCTAssertTrue(institutionWebViewText.waitForExistence(timeout: 120.0))
         }

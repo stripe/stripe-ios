@@ -77,7 +77,10 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         let promise = Promise<FinancialConnectionsAuthSession>()
 
         apiClient
-            .synchronize(clientSecret: clientSecret, returnURL: nil)
+            .synchronize(
+                clientSecret: clientSecret,
+                returnURL: nil
+            )
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
@@ -94,6 +97,12 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
                     self.pendingAuthSession = copiedSession
                     promise.fullfill(with: .success(copiedSession))
                 case .failure(let error):
+                    self.analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "SynchronizeClearReturnURLError",
+                            pane: .partnerAuth
+                        )
                     promise.reject(with: error)
                 }
             }

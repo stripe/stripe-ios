@@ -46,7 +46,7 @@ class StubCustomerAdapter: CustomerAdapter {
     var canCreateSetupIntents: Bool = true
 }
 
-class CustomerSheetSnapshotTests: FBSnapshotTestCase {
+class CustomerSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
         string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
@@ -64,7 +64,6 @@ class CustomerSheetSnapshotTests: FBSnapshotTestCase {
         super.setUp()
 
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
-//        self.recordMode = true
     }
 
     public override func tearDown() {

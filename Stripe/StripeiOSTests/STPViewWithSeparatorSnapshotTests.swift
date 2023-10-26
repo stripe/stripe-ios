@@ -8,13 +8,10 @@
 //
 
 import iOSSnapshotTestCaseCore
+import StripeCoreTestUtils
 @testable import StripePaymentsUI
 
-class STPViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
-    override func setUp() {
-        super.setUp()
-//        self.recordMode = true
-    }
+class STPViewWithSeparatorSnapshotTests: STPSnapshotTestCase {
 
     func testDefaultAppearance() {
         let view = STPViewWithSeparator(frame: CGRect(x: 0.0, y: 0.0, width: 320.0, height: 44.0))

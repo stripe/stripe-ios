@@ -484,7 +484,7 @@ class CustomerSheetUITest: XCTestCase {
         try! fillCardData(app, cardNumber: "5555555555554444", postalEnabled: true)
         app.buttons["Save"].tap()
 
-        app.staticTexts["Apple Pay"].tap()
+        app.staticTexts["Apple Pay"].waitForExistenceAndTap()
         let confirmButton = app.buttons["Confirm"]
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
         // Don't tap!

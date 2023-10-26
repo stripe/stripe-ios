@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal을 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Revolut Pay를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 Revolut Pay 계정에 대금을 청구할 수 있습니다.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "계속하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "계속하면 이 승인이 취소될 때까지 %2$@의 약관에 따라 이 결제 및 향후 결제에 대해 %1$@이(가) Cash App 계좌에서 인출하도록 승인하는 것입니다. 이는 Cash App 설정에서 언제든지 변경할 수 있습니다.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 대해 귀하의 은행 계좌를 저장하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "취소 및 다른 방법으로 결제";
 
 "Choose a payment method" = "결제 방식 선택";
@@ -42,6 +46,8 @@
 
 "Confirm" = "확인";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 이내에 은행 또는 결제 앱에서 결제를 확인하여 구매를 완료하십시오.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ 이내에 은행 앱에서 결제를 확인하여 구매를 완료하십시오.";
 
 "Contact information" = "연락처 정보";
@@ -49,6 +55,8 @@
 "EPS Bank" = "EPS 은행";
 
 "Enter address manually" = "주소 직접 입력";
+
+"FPX Bank" = "FPX 은행";
 
 "IBAN" = "IBAN";
 

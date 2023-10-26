@@ -85,6 +85,8 @@ struct PlaygroundMainView: View {
                     }
 
                     Section {
+                        Toggle("Show Live Events", isOn: $viewModel.showLiveEvents)
+
                         Button(action: viewModel.didSelectClearCaches) {
                             Text("Clear Cache (requests, images etc.)")
                         }

@@ -8,10 +8,11 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-final class NSAttributedString_HTMLSnapshotTest: FBSnapshotTestCase {
+final class NSAttributedString_HTMLSnapshotTest: STPSnapshotTestCase {
     static let htmlText = """
         <h1>header 1</h1>
         <h2>header 2</h2>
@@ -53,8 +54,6 @@ final class NSAttributedString_HTMLSnapshotTest: FBSnapshotTestCase {
 
         // Test that link color matches tint color
         textView.tintColor = .systemPink
-
-//                recordMode = true
     }
 
     func testDefaultStyle() throws {

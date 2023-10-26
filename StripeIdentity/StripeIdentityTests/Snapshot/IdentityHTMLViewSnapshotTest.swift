@@ -8,18 +8,14 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 
 @testable @_spi(STP) import StripeIdentity
 
-final class IdentityHTMLViewSnapshotTest: FBSnapshotTestCase {
+final class IdentityHTMLViewSnapshotTest: STPSnapshotTestCase {
 
     let view = HTMLViewWithIconLabels()
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
 
     func testWithIconShortText() throws {
         try verifyView(

@@ -331,6 +331,20 @@ extension STPAnalyticsClient {
     }
 }
 
+// MARK: - Card Element Config
+extension STPAnalyticsClient {
+    @_spi(STP) public func logCardElementConfigLoadFailed() {
+        log(
+            analytic: GenericPaymentAnalytic(
+                event: .cardElementConfigLoadFailure,
+                paymentConfiguration: nil,
+                productUsage: productUsage,
+                additionalParams: [:]
+            )
+        )
+    }
+}
+
 /// An analytic specific to payments that serializes payment-specific
 /// information into its params.
 @_spi(STP) public protocol PaymentAnalytic: Analytic {

@@ -11,9 +11,14 @@ import UIKit
 
 protocol NativeFlowControllerDelegate: AnyObject {
 
-    func authFlow(
-        controller: NativeFlowController,
+    func nativeFlowController(
+        _ nativeFlowController: NativeFlowController,
         didFinish result: FinancialConnectionsSheet.Result
+    )
+
+    func nativeFlowController(
+        _ nativeFlowController: NativeFlowController,
+        didReceiveEvent event: FinancialConnectionsEvent
     )
 }
 
@@ -82,14 +87,9 @@ class NativeFlowController {
         )
 
         let showConfirmationAlert =
-            (navigationController.topViewController is AccountPickerViewController
-                || navigationController.topViewController is PartnerAuthViewController
-                || navigationController.topViewController is AttachLinkedPaymentAccountViewController
-                || navigationController.topViewController is NetworkingLinkSignupViewController
-                || navigationController.topViewController is NetworkingLinkStepUpVerificationViewController
-                || navigationController.topViewController is NetworkingLinkVerificationViewController
-                || navigationController.topViewController is NetworkingSaveToLinkVerificationViewController
-                || navigationController.topViewController is LinkAccountPickerViewController)
+            !(navigationController.topViewController is ConsentViewController
+                || navigationController.topViewController is SuccessViewController
+                || navigationController.topViewController is ManualEntrySuccessViewController)
 
         let finishClosingAuthFlow = { [weak self] in
             self?.closeAuthFlow()
@@ -270,9 +270,18 @@ extension NativeFlowController {
         customManualEntry: Bool = false,
         error closeAuthFlowError: Error? = nil  // user can also close AuthFlow while looking at an error screen
     ) {
+        if customManualEntry {
+            // if we don't display manual entry pane, and instead skip it
+            // we still want to log that we initiated manual entry
+            delegate?.nativeFlowController(
+                self,
+                didReceiveEvent: FinancialConnectionsEvent(name: .manualEntryInitiated)
+            )
+        }
+
         let finishAuthSession: (FinancialConnectionsSheet.Result) -> Void = { [weak self] result in
             guard let self = self else { return }
-            self.delegate?.authFlow(controller: self, didFinish: result)
+            self.delegate?.nativeFlowController(self, didFinish: result)
         }
 
         dataManager
@@ -296,6 +305,15 @@ extension NativeFlowController {
                         if !session.accounts.data.isEmpty || session.paymentAccount != nil
                             || session.bankAccountToken != nil
                         {
+                            self.delegate?.nativeFlowController(
+                                self,
+                                didReceiveEvent: FinancialConnectionsEvent(
+                                    name: .success,
+                                    metadata: FinancialConnectionsEvent.Metadata(
+                                        manualEntry: session.paymentAccount?.isManualEntry ?? false
+                                    )
+                                )
+                            )
                             self.logCompleteEvent(
                                 type: eventType,
                                 status: "completed",
@@ -318,6 +336,10 @@ extension NativeFlowController {
                                 )
                                 finishAuthSession(.failed(error: terminalError))
                             } else {
+                                self.delegate?.nativeFlowController(
+                                    self,
+                                    didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+                                )
                                 self.logCompleteEvent(
                                     type: eventType,
                                     status: "canceled"
@@ -327,6 +349,14 @@ extension NativeFlowController {
                         }
                     }
                 case .failure(let completeFinancialConnectionsSessionError):
+                    self.dataManager
+                        .analyticsClient
+                        .logUnexpectedError(
+                            completeFinancialConnectionsSessionError,
+                            errorName: "CompleteSessionError",
+                            pane: FinancialConnectionsAnalyticsClient
+                                .paneFromViewController(self.navigationController.topViewController)
+                        )
                     self.logCompleteEvent(
                         type: "error",
                         status: "failed",
@@ -385,6 +415,11 @@ extension NativeFlowController: ConsentViewControllerDelegate {
         _ viewController: ConsentViewController,
         didConsentWithManifest manifest: FinancialConnectionsSessionManifest
     ) {
+        delegate?.nativeFlowController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(name: .consentAcquired)
+        )
+
         dataManager.manifest = manifest
 
         pushPane(manifest.nextPane, animated: true)
@@ -403,6 +438,16 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
         _ viewController: InstitutionPickerViewController,
         didSelect institution: FinancialConnectionsInstitution
     ) {
+        delegate?.nativeFlowController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(
+                name: .institutionSelected,
+                metadata: FinancialConnectionsEvent.Metadata(
+                    institutionName: institution.name
+                )
+            )
+        )
+
         dataManager.institution = institution
 
         pushPane(.partnerAuth, animated: true)
@@ -412,6 +457,15 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
         _ viewController: InstitutionPickerViewController
     ) {
         pushPane(.manualEntry, animated: true)
+    }
+
+    func institutionPickerViewControllerDidSearch(
+        _ viewController: InstitutionPickerViewController
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(name: .searchInitiated)
+        )
     }
 }
 
@@ -435,6 +489,11 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
         _ viewController: PartnerAuthViewController,
         didCompleteWithAuthSession authSession: FinancialConnectionsAuthSession
     ) {
+        delegate?.nativeFlowController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(name: .institutionAuthorized)
+        )
+
         dataManager.authSession = authSession
 
         // This is a weird thing to do, but effectively we don't want to
@@ -449,6 +508,13 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
+    }
+
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
 }
 
@@ -487,6 +553,13 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
+    }
+
+    func accountPickerViewController(
+        _ viewController: AccountPickerViewController,
+        didReceiveEvent event: StripeCore.FinancialConnectionsEvent
+    ) {
+        delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
 }
 
@@ -665,6 +738,13 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
     ) {
         pushPane(.manualEntry, animated: true)
     }
+
+    func attachLinkedPaymentAccountViewController(
+        _ viewController: AttachLinkedPaymentAccountViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    ) {
+        delegate?.nativeFlowController(self, didReceiveEvent: event)
+    }
 }
 
 // MARK: - NetworkingLinkVerificationViewControllerDelegate
@@ -730,6 +810,13 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
+    }
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didReceiveEvent event: StripeCore.FinancialConnectionsEvent
+    ) {
+        delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
 }
 
@@ -882,6 +969,11 @@ private func CreatePaneViewController(
         assertionFailure("Not supported")
         viewController = nil
     case .manualEntry:
+        nativeFlowController.delegate?.nativeFlowController(
+            nativeFlowController,
+            didReceiveEvent: FinancialConnectionsEvent(name: .manualEntryInitiated)
+        )
+
         let dataSource = ManualEntryDataSourceImplementation(
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,

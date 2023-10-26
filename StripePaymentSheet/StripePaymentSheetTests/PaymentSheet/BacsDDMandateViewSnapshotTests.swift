@@ -13,11 +13,7 @@ import SwiftUI
 import UIKit
 
 @MainActor
-class BacsDDMandateViewSnapshotTests: FBSnapshotTestCase {
-    override func setUp() {
-        super.setUp()
-//        self.recordMode = true
-    }
+class BacsDDMandateViewSnapshotTests: STPSnapshotTestCase {
 
     func testBacsDDMandateView() {
         let bacsView = BacsDDMandateView(email: "j.diaz@example.com", name: "Jane Diaz", sortCode: "10-88-00", accountNumber: "00012345", confirmAction: {}, cancelAction: {})
@@ -28,6 +24,7 @@ class BacsDDMandateViewSnapshotTests: FBSnapshotTestCase {
         window.rootViewController = vc
         window.makeKeyAndVisible()
 
-        STPSnapshotVerifyView(vc.view, identifier: nil, file: #filePath, line: #line)
+        // Shadow rendering isn't deterministic enough, give a slightly larger perPixelTolerance
+        STPSnapshotVerifyView(vc.view, identifier: nil, perPixelTolerance: 0.04, file: #filePath, line: #line)
     }
 }

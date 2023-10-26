@@ -24,6 +24,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     func testReturningCustomerWithNoSavedCards() throws {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
 
         let loaded = expectation(description: "Loaded")
@@ -50,6 +51,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     func testReturningCustomerWithSingleSavedCard() throws {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
 
         let loaded = expectation(description: "Loaded")
@@ -77,6 +79,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     func testReturningCustomerWithCardAndUSBankAccount_onlyCards() throws {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\"")
 
         let loaded = expectation(description: "Loaded")
@@ -104,6 +107,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     func testReturningCustomerWithCardAndUSBankAccount() throws {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
 
         let loaded = expectation(description: "Loaded")

@@ -22,6 +22,10 @@ protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
     func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(
         _ viewController: AttachLinkedPaymentAccountViewController
     )
+    func attachLinkedPaymentAccountViewController(
+        _ viewController: AttachLinkedPaymentAccountViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 final class AttachLinkedPaymentAccountViewController: UIViewController {

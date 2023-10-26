@@ -23,3 +23,9 @@ extension StripeAPI {
         case phoneOtp = "phone_otp"
     }
 }
+
+extension StripeAPI.VerificationPageFieldType {
+    func supportsForceConfirm() -> Bool {
+        return self == .idDocumentFront || self == .idDocumentBack
+    }
+}

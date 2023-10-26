@@ -21,6 +21,10 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
         _ viewController: AccountPickerViewController,
         didReceiveTerminalError error: Error
     )
+    func accountPickerViewController(
+        _ viewController: AccountPickerViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 enum AccountPickerType {
@@ -84,7 +88,10 @@ final class AccountPickerViewController: UIViewController {
                         eventName: "click.link_accounts",
                         pane: .accountPicker
                     )
-
+                self.delegate?.accountPickerViewController(
+                    self,
+                    didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
+                )
                 self.didSelectLinkAccounts()
             },
             didSelectMerchantDataAccessLearnMore: { [weak self] in

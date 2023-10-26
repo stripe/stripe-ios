@@ -44,13 +44,13 @@ final class DebugViewController: IdentityFlowViewController {
         case .submit(let completeOption):
             switch completeOption {
             case .success:
-                self.sheetController?.verifyAndTransition(simulateDelay: false)
+                self.sheetController?.verifyAndTransition(simulateDelay: false, completion: {})
             case .failure:
-                self.sheetController?.unverifyAndTransition(simulateDelay: false)
+                self.sheetController?.unverifyAndTransition(simulateDelay: false, completion: {})
             case .successAsync:
-                self.sheetController?.verifyAndTransition(simulateDelay: true)
+                self.sheetController?.verifyAndTransition(simulateDelay: true, completion: {})
             case .failureAsync:
-                self.sheetController?.unverifyAndTransition(simulateDelay: true)
+                self.sheetController?.unverifyAndTransition(simulateDelay: true, completion: {})
             }
         case .cancelled:
             finishWithResult(result: .flowCanceled)

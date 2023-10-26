@@ -845,8 +845,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testCardBrandChoice() throws {
-        app.launchEnvironment = app.launchEnvironment.merging(["ENABLE_CBC": "true"]) { (_, new) in new }
-
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -907,7 +905,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Card brand choice drop down should be enabled
         XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistenceAndTap(timeout: 5))
         XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.swipeUp() // reset to optional selection for card brand
+        cardBrandChoiceDropdown.swipeUp() // Swipe to select Visa
         app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
@@ -920,8 +918,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testCardBrandChoiceWithPreferredNetworks() throws {
-        app.launchEnvironment = app.launchEnvironment.merging(["ENABLE_CBC": "true"]) { (_, new) in new }
-
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -955,9 +951,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // We should have selected Visa due to preferreedNetworks configuration API
         XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 2))
 
-        // We should have selected Visa
-        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
-
         // Clear card text field, should reset selected card brand
         numberField.tap()
         numberField.clearText()
@@ -981,6 +974,59 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.buttons["Pay €50.99"].tap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testCardBrandChoiceSavedCard() {
+        // Currently only our French merchant is eligible for card brand choice
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
+        let numberField = app.textFields["Card number"]
+        let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
+
+        // Type full card number to start fetching card brands again
+        numberField.forceTapWhenHittableInTestCase(self)
+        app.typeText("4000002500001001")
+        app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
+        app.typeText("1228") // Expiry
+        app.typeText("123") // CVC
+        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("12345") // Postal
+
+        // Card brand choice drop down should be enabled
+        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
+        cardBrandChoiceDropdown.selectNextOption()
+        app.toolbars.buttons["Done"].tap()
+
+        // We should have selected cartes bancaires
+        XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistence(timeout: 5))
+
+        // Finish checkout
+        app.buttons["Pay €50.99"].tap()
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
+        // Saved card should show the cartes bancaires logo
+        XCTAssertTrue(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.images["card_cartes_bancaires"].waitForExistence(timeout: 5))
+
+        let editButton = app.staticTexts["Edit"]
+        XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
+        editButton.tap()
+
+        // Saved card should show the edit icon since it is co-branded
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
     }
 
     // This only tests the PaymentSheet + PaymentIntent flow.
@@ -1229,6 +1275,78 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
+
+    func testSavedSEPADebitPaymentMethod_FlowController_ShowsMandate() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .new
+        settings.applePayEnabled = .off // disable Apple Pay
+        settings.mode = .setup
+        settings.allowsDelayedPMs = .on
+        loadPlayground(app, settings)
+
+        let paymentMethodButton = app.buttons["Payment method"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
+        paymentMethodButton.tap()
+
+        // Save SEPA
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else {
+            XCTFail("Couldn't find SEPA")
+            return
+        }
+        sepa.tap()
+
+        app.textFields["Full name"].tap()
+        app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
+        app.textFields["Address line 1"].tap()
+        app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+        app.textFields["ZIP"].tap()
+        app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        // Unfortunately, the next time you check out, Link is still selected by default.
+        // Select the saved SEPA PM to make it the default and make sure we can still check out successfully.
+        paymentMethodButton.tap()
+        app.buttons["••••3201"].waitForExistenceAndTap()
+        XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.exists)
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        // This time, expect SEPA to be pre-selected as the default
+        XCTAssertEqual(paymentMethodButton.label, "••••3201")
+        // Tapping confirm without presenting flowcontroller should show the mandate
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.waitForExistence(timeout: 1))
+        // Tapping out should cancel the payment
+        app.tap()
+        XCTAssertTrue(app.staticTexts["Payment canceled."].waitForExistence(timeout: 10.0))
+        // Tapping confirm again and hitting continue should confirm the payment
+        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        // If you present the flowcontroller and see the mandate...
+        app.buttons["••••3201"].waitForExistenceAndTap()
+        XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.exists)
+        // ...you shouldn't see the mandate again when you confirm
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 }
 
@@ -2582,5 +2700,14 @@ extension XCUIElement {
 
         let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: stringValue.count)
         self.typeText(deleteString)
+    }
+}
+
+extension XCUIElement {
+    /// Scrolls a picker wheel up by one option.
+    func selectNextOption() {
+        let startCoord = self.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let endCoord = startCoord.withOffset(CGVector(dx: 0.0, dy: 30.0)) // 30pts = height of picker item
+        endCoord.tap()
     }
 }

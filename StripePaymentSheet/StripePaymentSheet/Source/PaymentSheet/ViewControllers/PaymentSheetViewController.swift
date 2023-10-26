@@ -86,9 +86,11 @@ class PaymentSheetViewController: UIViewController {
                 customerID: configuration.customer?.id,
                 showApplePay: showApplePay,
                 showLink: showLink,
-                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                merchantDisplayName: configuration.merchantDisplayName
             ),
             appearance: configuration.appearance,
+            cbcEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled,
             delegate: self
         )
     }()

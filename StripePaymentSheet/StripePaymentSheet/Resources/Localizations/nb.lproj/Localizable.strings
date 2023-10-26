@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved å fortsette til PayPal, tillater du %@ å belaste PayPal-kontoen din for fremtidige betalinger i samsvar med vilkårene deres.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ved å fortsette til Revolut Pay, tillater du %@ å belaste Revolut Pay-kontoen din for fremtidige betalinger i samsvar med vilkårene deres.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å fortsette godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ved å fortsette, godkjenner du at %1$@ belaster Cash App-kontoen din for denne og fremtidige betalinger, i henhold til vilkårene fra %2$@, frem til autorisasjonen er tilbakekalt. Du kan når som helst endre dette i Cash App-innstillingene.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å lagre bankkontoen for %@ godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Avbryt og betal på en annen måte";
 
 "Choose a payment method" = "Velg en betalingsmetode";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Bekreft";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekreft betalingen i bankens app eller i betalingsapp innen %@ for å fullføre kjøpet.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Bekreft betalingen i bankens app innen %@ for å fullføre kjøpet.";
 
 "Contact information" = "Kontaktinformasjon";
@@ -49,6 +55,8 @@
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Skriv inn adresse manuelt";
+
+"FPX Bank" = "FPX Bank";
 
 "IBAN" = "IBAN";
 

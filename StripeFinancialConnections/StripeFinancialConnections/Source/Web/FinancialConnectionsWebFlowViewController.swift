@@ -12,9 +12,14 @@ import UIKit
 
 protocol FinancialConnectionsWebFlowViewControllerDelegate: AnyObject {
 
-    func financialConnectionsWebFlow(
-        viewController: FinancialConnectionsWebFlowViewController,
+    func webFlowViewController(
+        _ viewController: FinancialConnectionsWebFlowViewController,
         didFinish result: FinancialConnectionsSheet.Result
+    )
+
+    func webFlowViewController(
+        _ webFlowViewController: UIViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
     )
 }
 
@@ -124,7 +129,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
 extension FinancialConnectionsWebFlowViewController {
 
     private func notifyDelegate(result: FinancialConnectionsSheet.Result) {
-        delegate?.financialConnectionsWebFlow(viewController: self, didFinish: result)
+        delegate?.webFlowViewController(self, didFinish: result)
         delegate = nil  // prevent the delegate from being called again
     }
 
@@ -148,7 +153,7 @@ extension FinancialConnectionsWebFlowViewController {
                 case .success(.nativeCancelled):
                     self.fetchSession(userDidCancelInNative: true)
                 case .failure(let error):
-                    self.notifyDelegate(result: .failed(error: error))
+                    self.notifyDelegateOfFailure(error: error)
                 case .success(.redirect(url: let url)):
                     self.redirect(to: url)
                 }
@@ -182,8 +187,12 @@ extension FinancialConnectionsWebFlowViewController {
                         if !session.accounts.data.isEmpty || session.paymentAccount != nil
                             || session.bankAccountToken != nil
                         {
-                            self.notifyDelegate(result: .completed(session: session))
+                            self.notifyDelegateOfSuccess(session: session)
                         } else {
+                            self.delegate?.webFlowViewController(
+                                self,
+                                didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+                            )
                             self.notifyDelegate(result: .canceled)
                         }
                     } else if webCancelled {
@@ -193,13 +202,37 @@ extension FinancialConnectionsWebFlowViewController {
                             self.notifyDelegate(result: .canceled)
                         }
                     } else {
-                        self.notifyDelegate(result: .completed(session: session))
+                        self.notifyDelegateOfSuccess(session: session)
                     }
                 case .failure(let error):
                     self.loadingView.errorView.isHidden = false
                     self.fetchSessionError = error
                 }
             }
+    }
+
+    private func notifyDelegateOfSuccess(session: StripeAPI.FinancialConnectionsSession) {
+        delegate?.webFlowViewController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(
+                name: .success,
+                metadata: FinancialConnectionsEvent.Metadata(
+                    manualEntry: session.paymentAccount?.isManualEntry ?? false
+                )
+            )
+        )
+        notifyDelegate(result: .completed(session: session))
+    }
+
+    // all failures except custom manual entry failure
+    private func notifyDelegateOfFailure(error: Error) {
+        FinancialConnectionsEvent
+            .events(fromError: error)
+            .forEach { event in
+                delegate?.webFlowViewController(self, didReceiveEvent: event)
+            }
+
+        notifyDelegate(result: .failed(error: error))
     }
 }
 
@@ -233,7 +266,7 @@ private extension FinancialConnectionsWebFlowViewController {
 
     private func manuallyCloseWebFlowViewController() {
         if let fetchSessionError = fetchSessionError {
-            notifyDelegate(result: .failed(error: fetchSessionError))
+            notifyDelegateOfFailure(error: fetchSessionError)
         } else {
             notifyDelegate(result: .canceled)
         }

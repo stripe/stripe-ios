@@ -41,3 +41,92 @@ extension STPElementsSession {
         return elementsSession
     }
 }
+
+extension Intent {
+    static func _testValue() -> Intent {
+        return .paymentIntent(STPFixtures.paymentIntent())
+    }
+}
+
+extension STPPaymentMethod {
+    static func _testCard() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123card",
+            "type": "card",
+            "card": [
+                "last4": "4242",
+                "brand": "visa",
+            ],
+        ])!
+    }
+
+    static func _testUSBankAccount() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123",
+            "type": "us_bank_account",
+            "us_bank_account": [
+                "account_holder_type": "individual",
+                "account_type": "checking",
+                "bank_name": "STRIPE TEST BANK",
+                "fingerprint": "ickfX9sbxIyAlbuh",
+                "last4": "6789",
+                "networks": [
+                  "preferred": "ach",
+                  "supported": [
+                    "ach",
+                  ],
+                ] as [String: Any],
+                "routing_number": "110000000",
+            ] as [String: Any],
+        ])!
+    }
+
+    static func _testSEPA() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123",
+            "type": "sepa_debit",
+            "sepa_debit": [
+                "last4": "1234",
+            ],
+        ])!
+    }
+}
+
+extension PaymentSheet.Appearance {
+    static var _testMSPaintTheme: PaymentSheet.Appearance {
+        var appearance = PaymentSheet.Appearance()
+
+        // Customize the font
+        var font = PaymentSheet.Appearance.Font()
+        font.sizeScaleFactor = 0.85
+        font.base = UIFont(name: "AvenirNext-Regular", size: 12)!
+
+        appearance.cornerRadius = 0.0
+        appearance.borderWidth = 2.0
+        appearance.shadow = PaymentSheet.Appearance.Shadow(
+            color: .orange,
+            opacity: 0.5,
+            offset: CGSize(width: 0, height: 2),
+            radius: 4
+        )
+
+        // Customize the colors
+        var colors = PaymentSheet.Appearance.Colors()
+        colors.primary = .systemOrange
+        colors.background = .cyan
+        colors.componentBackground = .yellow
+        colors.componentBorder = .systemRed
+        colors.componentDivider = .black
+        colors.text = .red
+        colors.textSecondary = .orange
+        colors.componentText = .red
+        colors.componentPlaceholderText = .systemBlue
+        colors.icon = .green
+        colors.danger = .purple
+
+        appearance.font = font
+        appearance.colors = colors
+
+        return appearance
+    }
+}

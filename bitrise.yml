@@ -334,12 +334,6 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "5"
         - scheme: StripeUICore
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "5"
-        - scheme: StripeLinkCore
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
@@ -354,6 +348,7 @@ workflows:
     - xcode-build-for-test@2:
         inputs:
         - scheme: AllStripeFrameworks
+        - destination: $DEFAULT_TEST_DEVICE
     before_run:
     - prep_all
     meta:
@@ -362,10 +357,10 @@ workflows:
         machine_type_id: g2-m1.8core
   test-builds-xcode-143-release:
     steps:
-    - xcode-build-for-test@2:
+    - script@1:
         inputs:
-        - scheme: AllStripeFrameworks
-        - configuration: Release
+        - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
+        title: Build release builds
     before_run:
     - prep_all
     meta:
@@ -377,8 +372,10 @@ workflows:
     - xcode-build-for-test@2:
         inputs:
         - scheme: AllStripeFrameworks
+        - destination: generic/platform=iOS Simulator
+    - deploy-to-bitrise-io@2: {}
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12,OS=17.0
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 15,OS=17.0
     before_run:
     - prep_all
     meta:

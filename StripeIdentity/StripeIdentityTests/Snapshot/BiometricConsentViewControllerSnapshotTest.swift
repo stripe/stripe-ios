@@ -8,18 +8,13 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-final class BiometricConsentViewControllerSnapshotTest: FBSnapshotTestCase {
+final class BiometricConsentViewControllerSnapshotTest: STPSnapshotTestCase {
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
     static let mockVerificationPageNoConsentHeader = try! VerificationPageMock.response200NoConsentHeader.make()
-
-    override func setUp() {
-        super.setUp()
-
-//                recordMode = true
-    }
 
     func testViewIsConfiguredFromAPI() throws {
         let vc = try BiometricConsentViewController(

@@ -8,12 +8,13 @@
 
 import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 import UIKit
 
 @testable import StripeIdentity
 
-class HeaderViewSnapshotTest: FBSnapshotTestCase {
+class HeaderViewSnapshotTest: STPSnapshotTestCase {
     typealias IconViewModel = HeaderIconView.ViewModel
 
     let headerView = HeaderView()
@@ -24,11 +25,6 @@ class HeaderViewSnapshotTest: FBSnapshotTestCase {
 
     let plainHeaderBackgroundColor: UIColor = .white
     let bannerHeaderBackgroundColor: UIColor = .lightGray
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
 
     func testPlainHeaderShortTitle() {
         verifyView(

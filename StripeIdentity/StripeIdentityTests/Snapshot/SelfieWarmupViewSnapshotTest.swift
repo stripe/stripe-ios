@@ -7,15 +7,11 @@
 
 import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable import StripeIdentity
 @_spi(STP) import StripeUICore
 
-class SelfieWarmupViewSnapshotTest: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
+class SelfieWarmupViewSnapshotTest: STPSnapshotTestCase {
 
     func testSelfieWarmupView() {
         let view = SelfieWarmupView()

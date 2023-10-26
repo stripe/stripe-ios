@@ -42,7 +42,7 @@ extension PaymentSheet {
     }
 
     /// A class that presents the individual steps of a payment flow
-        public class FlowController {
+    public class FlowController {
         // MARK: - Public properties
         /// Contains details about a payment method that can be displayed to the customer
         public struct PaymentOptionDisplayData {
@@ -121,6 +121,7 @@ extension PaymentSheet {
         }
 
         private var isPresented = false
+        private(set) var didPresentAndContinue: Bool = false
 
         // MARK: - Initializer (Internal)
 
@@ -306,34 +307,58 @@ extension PaymentSheet {
 
             let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController, appearance: configuration.appearance)
 
-            PaymentSheet.confirm(
-                configuration: configuration,
-                authenticationContext: authenticationContext,
-                intent: intent,
-                paymentOption: paymentOption,
-                paymentHandler: paymentHandler,
-                isFlowController: true
-            ) { [intent, configuration] result, deferredIntentConfirmationType in
-                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
-                    isCustom: true,
-                    paymentMethod: paymentOption.analyticsValue,
-                    result: result,
-                    linkEnabled: intent.supportsLink,
-                    activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    linkSessionType: intent.linkPopupWebviewOption,
-                    currency: intent.currency,
-                    intentConfig: intent.intentConfig,
-                    deferredIntentConfirmationType: deferredIntentConfirmationType,
-                    paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
-                    error: result.error
-                )
+            guard didPresentAndContinue || viewController.selectedPaymentMethodType != .dynamic("sepa_debit") else {
+                // We're legally required to show the customer the SEPA mandate before every payment/setup
+                // In the edge case where the customer never opened the sheet, and thus never saw the mandate, we present the mandate directly
+                presentSEPAMandate()
+                return
+            }
+            confirm()
 
-                if case .completed = result, case .link = paymentOption {
-                    // Remember Link as default payment method for users who just created an account.
-                    CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
+            func presentSEPAMandate() {
+                let sepaMandateVC = SepaMandateViewController(configuration: configuration) { didAcceptMandate in
+                    presentingViewController.dismiss(animated: true) {
+                        if didAcceptMandate {
+                            confirm()
+                        } else {
+                            completion(.canceled)
+                        }
+                    }
                 }
+                let bottomSheet = Self.makeBottomSheetViewController(sepaMandateVC, configuration: configuration)
+                presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+            }
 
-                completion(result)
+            func confirm() {
+                PaymentSheet.confirm(
+                    configuration: configuration,
+                    authenticationContext: authenticationContext,
+                    intent: intent,
+                    paymentOption: paymentOption,
+                    paymentHandler: paymentHandler,
+                    isFlowController: true
+                ) { [intent, configuration] result, deferredIntentConfirmationType in
+                    STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
+                        isCustom: true,
+                        paymentMethod: paymentOption.analyticsValue,
+                        result: result,
+                        linkEnabled: intent.supportsLink,
+                        activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
+                        linkSessionType: intent.linkPopupWebviewOption,
+                        currency: intent.currency,
+                        intentConfig: intent.intentConfig,
+                        deferredIntentConfirmationType: deferredIntentConfirmationType,
+                        paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
+                        error: result.error
+                    )
+
+                    if case .completed = result, case .link = paymentOption {
+                        // Remember Link as default payment method for users who just created an account.
+                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
+                    }
+
+                    completion(result)
+                }
             }
         }
 
@@ -433,8 +458,12 @@ extension PaymentSheet {
 // MARK: - PaymentSheetFlowControllerViewControllerDelegate
 extension PaymentSheet.FlowController: PaymentSheetFlowControllerViewControllerDelegate {
     func paymentSheetFlowControllerViewControllerShouldClose(
-        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController
+        _ PaymentSheetFlowControllerViewController: PaymentSheetFlowControllerViewController,
+        didCancel: Bool
     ) {
+        if !didCancel {
+            self.didPresentAndContinue = true
+        }
         PaymentSheetFlowControllerViewController.dismiss(animated: true) {
             self.presentPaymentOptionsCompletion?()
             self.isPresented = false

@@ -133,6 +133,17 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         }
     }
 
+    func forceDocumentFrontAndDecideBack(from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName, onCompletion: @escaping (Bool) -> Void) {
+        // no-op
+    }
+
+    func forceDocumentBackAndTransition(
+        from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName,
+        completion: @escaping () -> Void
+    ) {
+        // no-op
+    }
+
     func saveSelfieFileDataAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         selfieUploader: SelfieUploaderProtocol,
@@ -152,11 +163,13 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     }
 
-    func verifyAndTransition(simulateDelay: Bool) {
+    func verifyAndTransition(simulateDelay: Bool, completion: @escaping () -> Void) {
+        testModeReturnResult = .flowCompleted
         completeOption = simulateDelay ? .successAsync : .success
     }
 
-    func unverifyAndTransition(simulateDelay: Bool) {
+    func unverifyAndTransition(simulateDelay: Bool, completion: @escaping () -> Void) {
+        testModeReturnResult = .flowCompleted
         completeOption = simulateDelay ? .failureAsync : .failure
     }
 

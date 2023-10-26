@@ -289,7 +289,7 @@ class AddPaymentMethodViewController: UIViewController {
             previousCustomerInput: previousCustomerInput,
             offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
             linkAccount: linkAccount,
-            cardBrandChoiceEligible: intent.cardBrandChoiceEligible
+            cardBrandChoiceEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled
         ).make()
         formElement.delegate = self
         return formElement
@@ -358,6 +358,7 @@ class AddPaymentMethodViewController: UIViewController {
             client.collectBankAccountForPayment(
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
+                onEvent: nil,
                 params: params,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
@@ -366,6 +367,7 @@ class AddPaymentMethodViewController: UIViewController {
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
+                onEvent: nil,
                 params: params,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
@@ -384,6 +386,7 @@ class AddPaymentMethodViewController: UIViewController {
             client.collectBankAccountForDeferredIntent(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
+                onEvent: nil,
                 amount: amount,
                 currency: currency,
                 onBehalfOf: intentConfig.onBehalfOf,

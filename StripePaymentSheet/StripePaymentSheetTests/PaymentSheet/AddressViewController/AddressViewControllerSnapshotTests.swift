@@ -8,11 +8,12 @@
 
 import iOSSnapshotTestCase
 @_spi(STP)@testable import StripeCore
+import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentSheet
-@_spi(STP)@testable import StripeUICore
 @testable import StripePaymentsTestUtils
+@_spi(STP)@testable import StripeUICore
 
-class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
+class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
     private let addressSpecProvider: AddressSpecProvider = {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
@@ -31,11 +32,6 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         var config = AddressViewController.Configuration()
         config.apiClient = .init(publishableKey: "pk_test_1234")
         return config
-    }
-
-    override func setUp() {
-        super.setUp()
-        //        self.recordMode = true
     }
 
     func testShippingAddressViewController() {
@@ -69,7 +65,7 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
         var configuration = configuration
-        configuration.appearance = PaymentSheetTestUtils.snapshotTestTheme
+        configuration.appearance = ._testMSPaintTheme
         let vc = AddressViewController(
             addressSpecProvider: addressSpecProvider,
             configuration: configuration,

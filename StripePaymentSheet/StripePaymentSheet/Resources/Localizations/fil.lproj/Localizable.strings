@@ -24,6 +24,8 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Sa pagpapatuloy sa PayPal, pinapayagan mo ang %@ na singilin ang iyong PayPal account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
 
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Sa pagpapatuloy sa Revolut Pay, pinapayagan mo ang %@ na singilin ang iyong Revolut Pay account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Sa pagpapatuloy, binibigyan mo ng awtorisasyon ang %1$@ na i-debit ang iyong Cash App account para sa pagbabayad na ito at sa mga pagbabayad sa hinaharap alinsunod sa mga tuntunin ng  %2$@, hanggang bawiin mo ang awtorisasyong ito. Maaari mong palitan ito sa anumang oras sa iyong Cash App Settings.";
@@ -34,6 +36,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pag-save ng iyong account sa bangko para sa %@ sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
 
+"CPF/CPNJ" = "CPF/CPNJ";
+
 "Cancel and pay another way" = "Kanselahin at magbayad sa ibang paraan";
 
 "Choose a payment method" = "Pumili ng pamamaraan ng pagbabayad";
@@ -42,6 +46,8 @@
 
 "Confirm" = "Kumpirmahin";
 
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa iyong bangko o app ng pagbabayad sa loob ng %@ para kumpletuhin ang pagbili.";
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa app ng iyong bangko sa loob ng %@ para kumpletuhin ang pagbili.";
 
 "Contact information" = "Impormasyon sa pakikipag-ugnayan";
@@ -49,6 +55,8 @@
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Manwal na ilagay ang address";
+
+"FPX Bank" = "FPX Bank";
 
 "IBAN" = "IBAN";
 
@@ -94,7 +102,7 @@
 
 "Remove Card" = "Alisin ang Kard";
 
-"Save" = "i-save";
+"Save" = "I-save";
 
 "Save a new payment method" = "I-save ang bagong paraan ng pagbabayad";
 

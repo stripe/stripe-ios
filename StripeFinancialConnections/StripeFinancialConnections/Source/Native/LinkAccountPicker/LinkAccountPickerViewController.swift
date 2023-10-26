@@ -35,6 +35,11 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
         _ viewController: LinkAccountPickerViewController,
         didReceiveTerminalError error: Error
     )
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 final class LinkAccountPickerViewController: UIViewController {
@@ -175,6 +180,11 @@ final class LinkAccountPickerViewController: UIViewController {
             didSelectAccount: selectedAccountTuple.partnerAccount
         )
 
+        self.delegate?.linkAccountPickerViewController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
+        )
+
         if nextPane == .success {
             let linkingAccountsLoadingView = LinkingAccountsLoadingView(
                 numberOfSelectedAccounts: 1,
@@ -194,6 +204,7 @@ final class LinkAccountPickerViewController: UIViewController {
                                 eventName: "click.link_accounts",
                                 pane: .linkAccountPicker
                             )
+
                         if let institution = institutionList.data.first {
                             self.delegate?.linkAccountPickerViewController(
                                 self,

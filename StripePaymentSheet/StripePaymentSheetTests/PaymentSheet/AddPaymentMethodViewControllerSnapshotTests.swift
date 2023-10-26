@@ -8,11 +8,11 @@
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
+@testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
-@testable import StripePaymentsTestUtils
 
-final class AddPaymentMethodViewControllerSnapshotTests: FBSnapshotTestCase {
+final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
     override func setUp() {
         super.setUp()
         let expectation = expectation(description: "Load specs")
@@ -22,7 +22,6 @@ final class AddPaymentMethodViewControllerSnapshotTests: FBSnapshotTestCase {
             }
         }
         waitForExpectations(timeout: 1)
-//        recordMode = true
     }
 
     func test_with_previous_customer_card_details_and_checkbox() {
