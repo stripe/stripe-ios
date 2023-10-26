@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 protocol PickerFieldViewDelegate: AnyObject {
@@ -51,6 +52,9 @@ final class PickerFieldView: UIView {
         }
         let imageView = UIImageView(image: Image.icon_chevron_down.makeImage().withRenderingMode(.alwaysTemplate))
         imageView.setContentHuggingPriority(.required, for: .horizontal)
+        if isOptional {
+            imageView.image = imageView.image?.resized(to: 0.75)?.withRenderingMode(.alwaysTemplate)
+        }
         imageView.tintColor = isOptional ? theme.colors.placeholderText : theme.colors.textFieldText
         return imageView
     }()
@@ -59,7 +63,11 @@ final class PickerFieldView: UIView {
             arrangedSubviews: [floatingPlaceholderTextFieldView ?? textField, chevronImageView].compactMap { $0 }
         )
         hStackView.alignment = .center
-        hStackView.spacing = 6
+        if isOptional {
+            hStackView.spacing = 3
+        } else {
+            hStackView.spacing = 6
+        }
         return hStackView
     }()
     private let pickerView: UIView
@@ -69,7 +77,9 @@ final class PickerFieldView: UIView {
     private let shouldShowChevron: Bool
     private weak var delegate: PickerFieldViewDelegate?
     private let theme: ElementsUITheme
+    // When a PickerFieldView is optional it's chevron is smaller and takes the color of placeholder text
     private let isOptional: Bool
+    private var _canBecomeFirstResponder = true
 
     // MARK: - Public properties
     var displayText: NSAttributedString? {
@@ -184,10 +194,18 @@ final class PickerFieldView: UIView {
     }
 
     override func becomeFirstResponder() -> Bool {
+        guard _canBecomeFirstResponder else {
+            return false
+        }
+
         if super.becomeFirstResponder() {
             return true
         }
         return textField.becomeFirstResponder()
+    }
+
+    func setCanBecomeFirstResponder(_ value: Bool) {
+        _canBecomeFirstResponder = value
     }
 }
 
@@ -226,6 +244,10 @@ extension PickerFieldView: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         floatingPlaceholderTextFieldView?.updatePlaceholder()
         delegate?.didFinish(self, shouldAutoAdvance: true)
+    }
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return _canBecomeFirstResponder
     }
 }
 
