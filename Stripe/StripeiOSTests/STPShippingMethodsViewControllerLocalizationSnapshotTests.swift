@@ -1,5 +1,5 @@
 //
-//  STPShippingMethodsViewControllerLocalizationTests.swift
+//  STPShippingMethodsViewControllerLocalizationSnapshotTests.swift
 //  StripeiOS Tests
 //
 //  Created by Ben Guo on 11/3/16.
@@ -7,6 +7,7 @@
 //
 
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -14,12 +15,7 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPShippingMethodsViewControllerLocalizationTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //                self.recordMode = true
-    }
+class STPShippingMethodsViewControllerLocalizationSnapshotTests: STPSnapshotTestCase {
 
     func performSnapshotTest(forLanguage language: String?) {
         STPLocalizationUtils.overrideLanguage(to: language)

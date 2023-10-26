@@ -8,8 +8,9 @@
 //
 
 import iOSSnapshotTestCaseCore
+import StripeCoreTestUtils
 
-class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
+class STPPaymentContextSnapshotTests: STPSnapshotTestCase {
     var customerContext: STPCustomerContext?
     var config: STPPaymentConfiguration?
     var hostViewController: UINavigationController?
@@ -27,8 +28,6 @@ class STPPaymentContextSnapshotTests: FBSnapshotTestCase {
 
         let viewController = UIViewController()
         hostViewController = stp_navigationControllerForSnapshotTest(withRootVC: viewController)
-
-//        self.recordMode = true
     }
 
     func buildPaymentContext() {

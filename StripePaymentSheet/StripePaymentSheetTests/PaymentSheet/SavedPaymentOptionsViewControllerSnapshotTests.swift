@@ -13,11 +13,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
 
-final class SavedPaymentOptionsViewControllerSnapshotTests: FBSnapshotTestCase {
-    override func setUp() {
-        super.setUp()
-//        recordMode = true
-    }
+final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func test_all_saved_pms_and_apple_pay_and_link_dark() {
         _test_all_saved_pms_and_apple_pay_and_link(darkMode: true)

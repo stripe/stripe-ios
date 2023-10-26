@@ -7,16 +7,11 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-final class PhoneOtpViewControllerSnapshotTest: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-
-        //        recordMode = true
-    }
+final class PhoneOtpViewControllerSnapshotTest: STPSnapshotTestCase {
 
     func testInputtingOTP() {
         verifyView(with: .InputtingOTP)

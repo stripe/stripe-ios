@@ -7,6 +7,7 @@
 //
 
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 import UIKit
 
 @testable@_spi(STP) import Stripe
@@ -16,12 +17,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
-class LinkLegalTermsViewSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
+class LinkLegalTermsViewSnapshotTests: STPSnapshotTestCase {
 
     func testDefault() {
         let sut = makeSUT()

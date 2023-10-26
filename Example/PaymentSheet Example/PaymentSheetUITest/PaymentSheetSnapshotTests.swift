@@ -16,7 +16,7 @@ import UIKit
 @_spi(STP)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
-class PaymentSheetSnapshotTests: FBSnapshotTestCase {
+class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
         string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
@@ -48,7 +48,6 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         configuration.returnURL = "mockReturnUrl"
 
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
-//                self.recordMode = true
 //                self.runAgainstLiveService = true
         if !self.runAgainstLiveService {
             APIStubbedTestCase.stubAllOutgoingRequests()

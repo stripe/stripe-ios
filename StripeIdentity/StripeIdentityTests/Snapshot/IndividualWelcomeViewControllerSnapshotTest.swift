@@ -7,16 +7,12 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-final class IndividualWelcomeViewControllerSnapshotTest: FBSnapshotTestCase {
+final class IndividualWelcomeViewControllerSnapshotTest: STPSnapshotTestCase {
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
-
-    override func setUp() {
-        super.setUp()
-//                recordMode = true
-    }
 
     func testViewIsConfiguredFromAPI() throws {
         let vc = try IndividualWelcomeViewController(

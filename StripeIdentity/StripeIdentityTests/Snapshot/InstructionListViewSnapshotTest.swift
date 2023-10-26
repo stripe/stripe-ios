@@ -8,11 +8,12 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 
 @testable import StripeIdentity
 
-final class InstructionListViewSnapshotTest: FBSnapshotTestCase {
+final class InstructionListViewSnapshotTest: STPSnapshotTestCase {
 
     let multiLineText =
         "Here's a string that spans multiple lines of text\nAnother line!\nAnother line!"
@@ -22,8 +23,6 @@ final class InstructionListViewSnapshotTest: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         ActivityIndicator.isAnimationEnabled = false
-
-        //        recordMode = true
     }
 
     override func tearDown() {

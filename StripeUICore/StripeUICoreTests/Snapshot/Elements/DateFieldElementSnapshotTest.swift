@@ -10,7 +10,7 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
-final class DateFieldElementSnapshotTest: FBSnapshotTestCase {
+final class DateFieldElementSnapshotTest: STPSnapshotTestCase {
 
     // Use consistent locale and timezone for consistent test results
     let locale_enUS = Locale(identifier: "en_US")
@@ -19,11 +19,6 @@ final class DateFieldElementSnapshotTest: FBSnapshotTestCase {
     // Mock dates
     let oct1_2021 = Date(timeIntervalSince1970: 1633046400)
     let oct3_2021 = Date(timeIntervalSince1970: 1633219200)
-
-    override func setUp() {
-        super.setUp()
-//        recordMode = true
-    }
 
     func testNoDefaultUnfocused() {
         let dateFieldElement = makeDateFieldElement()

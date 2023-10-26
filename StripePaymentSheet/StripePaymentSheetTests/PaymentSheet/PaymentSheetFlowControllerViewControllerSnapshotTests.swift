@@ -12,12 +12,7 @@ import StripeCoreTestUtils
 
 import XCTest
 
-final class PaymentSheetFlowControllerViewControllerSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-//        recordMode = true
-    }
+final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func testSavedScreen_card() {
         let paymentMethods = [

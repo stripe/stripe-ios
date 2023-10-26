@@ -15,6 +15,7 @@ let project = Project.stripeFramework(
             .project(target: "StripeCoreTestUtils", path: "//StripeCore"),
             .project(target: "StripeCameraCoreTestUtils", path: "//StripeCameraCore"),
         ],
-        includesSnapshots: true
+        includesSnapshots: true,
+        usesStubs: true
     )
 )

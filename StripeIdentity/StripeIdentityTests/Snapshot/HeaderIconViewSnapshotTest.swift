@@ -8,19 +8,15 @@
 
 import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 import UIKit
 
 @testable @_spi(STP) import StripeIdentity
 
-class HeaderIconViewSnapshotTest: FBSnapshotTestCase {
+class HeaderIconViewSnapshotTest: STPSnapshotTestCase {
     let iconView = HeaderIconView()
     let iconImage = SnapshotTestMockData.uiImage(image: .headerIcon)
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
 
     override func tearDown() {
         iconView.tintColor = nil

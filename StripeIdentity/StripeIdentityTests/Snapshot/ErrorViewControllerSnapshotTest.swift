@@ -7,15 +7,11 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-class ErrorViewControllerSnapshotTest: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-//        recordMode = true
-    }
+class ErrorViewControllerSnapshotTest: STPSnapshotTestCase {
 
     func testWithoutContinueButton() {
         testWithError(error: .init(backButtonText: "backButton", body: "body", continueButtonText: nil, requirement: .idDocumentFront, title: "title"))

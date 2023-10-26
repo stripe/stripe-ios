@@ -10,12 +10,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
 import XCTest
 
-final class SepaMandateViewControllerSnapshotTest: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-//        recordMode = true
-    }
+final class SepaMandateViewControllerSnapshotTest: STPSnapshotTestCase {
 
     func testView() {
         let configuration = PaymentSheet.Configuration._testValue_MostPermissive()

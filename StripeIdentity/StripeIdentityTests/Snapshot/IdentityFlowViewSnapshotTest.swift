@@ -8,12 +8,13 @@
 
 import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 import UIKit
 
 @testable import StripeIdentity
 
-class IdentityFlowViewSnapshotTest: FBSnapshotTestCase {
+class IdentityFlowViewSnapshotTest: STPSnapshotTestCase {
     let idFlowView = IdentityFlowView()
 
     let headerViewModel: HeaderView.ViewModel = .init(
@@ -28,11 +29,6 @@ class IdentityFlowViewSnapshotTest: FBSnapshotTestCase {
         label.text = "Here is a content view. Look at all this amazing content."
         return label
     }()
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
 
     func testFlowView_HeaderView() {
         verifyView(

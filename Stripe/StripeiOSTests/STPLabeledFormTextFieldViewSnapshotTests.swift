@@ -8,15 +8,10 @@
 //
 
 import iOSSnapshotTestCaseCore
+import StripeCoreTestUtils
 @testable @_spi(STP) import StripePaymentsUI
 
-class STPLabeledFormTextFieldViewSnapshotTests: FBSnapshotTestCase {
-    override func setUp() {
-        super.setUp()
-
-//        self.recordMode = true
-    }
-
+class STPLabeledFormTextFieldViewSnapshotTests: STPSnapshotTestCase {
     func testAppearance() {
         let formTextField = STPFormTextField()
         formTextField.placeholder = "A placeholder"
