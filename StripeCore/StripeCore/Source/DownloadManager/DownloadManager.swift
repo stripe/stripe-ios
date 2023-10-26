@@ -66,15 +66,16 @@ import UIKit
 
 // MARK: - Download management
 extension DownloadManager {
-    public func downloadImage(url: URL, updateHandler: UpdateImageHandler?) -> UIImage {
+    public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
         if updateHandler == nil {
-            return downloadImageBlocking(url: url)
+            return downloadImageBlocking(placeholder: placeholder, url: url)
         } else {
-            return downloadImageAsync(url: url, updateHandler: updateHandler)
+            return downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
         }
     }
 
-    func downloadImageBlocking(url: URL) -> UIImage {
+    func downloadImageBlocking(placeholder: UIImage?, url: URL) -> UIImage {
+        let placeholder = placeholder ?? imagePlaceHolder()
         let imageName = imageNameFromURL(url: url)
         if let image = cachedImageNamed(imageName) {
             return image
@@ -105,10 +106,11 @@ extension DownloadManager {
         }
         task.resume()
         blockingDownloadSemaphore.wait()
-        return blockingDownloadedImage ?? imagePlaceHolder()
+        return blockingDownloadedImage ?? placeholder
     }
 
-    func downloadImageAsync(url: URL, updateHandler: UpdateImageHandler?) -> UIImage {
+    func downloadImageAsync(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
+        let placeholder = placeholder ?? imagePlaceHolder()
         let imageName = imageNameFromURL(url: url)
         if let image = cachedImageNamed(imageName) {
             return image
@@ -145,14 +147,14 @@ extension DownloadManager {
         guard self.pendingRequests[imageName] == nil else {
             addUpdateHandlerWithoutLocking(updateHandler, forImageName: imageName)
             self.pendingRequestsSemaphore.signal()
-            return imagePlaceHolder()
+            return placeholder
         }
         self.pendingRequests[imageName] = task
         addUpdateHandlerWithoutLocking(updateHandler, forImageName: imageName)
         self.pendingRequestsSemaphore.signal()
         task.resume()
 
-        return imagePlaceHolder()
+        return placeholder
     }
 
     func imageNameFromURL(url: URL) -> String {

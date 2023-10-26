@@ -60,15 +60,18 @@ extension STPPaymentMethod {
             }
 
             return STPImageLibrary.cardBrandImage(for: card.networks?.preferred?.toCardBrand ?? card.brand)
-        case .iDEAL:
-            return Image.pm_type_ideal.makeImage()
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
             )
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
-            return type.makeImage()
+            // TODO: This only looks at client-side assets! 
+            let image = type.makeImage()
+            if image == nil {
+                assertionFailure()
+            }
+            return image ?? UIImage()
         }
     }
 
@@ -135,66 +138,60 @@ extension STPPaymentMethodType {
         }
     }
 
-    func makeImage(forDarkBackground: Bool = false) -> UIImage {
-        guard
-            let image: Image = {
-                switch self {
-                case .card:
-                    return .pm_type_card
-                case .iDEAL:
-                    return .pm_type_ideal
-                case .bancontact:
-                    return .pm_type_bancontact
-                case .SEPADebit:
-                    return .pm_type_sepa
-                case .EPS:
-                    return .pm_type_eps
-                case .giropay:
-                    return .pm_type_giropay
-                case .przelewy24:
-                    return .pm_type_p24
-                case .afterpayClearpay:
-                    return .pm_type_afterpay
-                case .sofort, .klarna:
-                    return .pm_type_klarna
-                case .affirm:
-                    return .pm_type_affirm
-                case .payPal:
-                    return .pm_type_paypal
-                case .AUBECSDebit:
-                    return .pm_type_aubecsdebit
-                case .USBankAccount, .linkInstantDebit:
-                    return .pm_type_us_bank
-                case .UPI:
-                    return .pm_type_upi
-                case .cashApp:
-                    return .pm_type_cashapp
-                case .revolutPay:
-                    return .pm_type_revolutpay
-                case .blik:
-                    return .pm_type_blik
-                case .bacsDebit:
-                    return .pm_type_us_bank
-                case .alipay:
-                    return .pm_type_alipay
-                case .OXXO:
-                    return .pm_type_oxxo
-                case .konbini:
-                    return .pm_type_konbini
-                case .boleto:
-                    return .pm_type_boleto
-                case .swish:
-                    return .pm_type_swish
-                default:
-                    return nil
-                }
-            }()
-        else {
-            assertionFailure()
-            return UIImage()
-        }
-
-        return image.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
+    func makeImage(forDarkBackground: Bool = false) -> UIImage? {
+        let image: Image? = {
+            switch self {
+            case .card:
+                return .pm_type_card
+            case .iDEAL:
+                return .pm_type_ideal
+            case .bancontact:
+                return .pm_type_bancontact
+            case .SEPADebit:
+                return .pm_type_sepa
+            case .EPS:
+                return .pm_type_eps
+            case .giropay:
+                return .pm_type_giropay
+            case .przelewy24:
+                return .pm_type_p24
+            case .afterpayClearpay:
+                return .pm_type_afterpay
+            case .sofort, .klarna:
+                return .pm_type_klarna
+            case .affirm:
+                return .pm_type_affirm
+            case .payPal:
+                return .pm_type_paypal
+            case .AUBECSDebit:
+                return .pm_type_aubecsdebit
+            case .USBankAccount, .linkInstantDebit:
+                return .pm_type_us_bank
+            case .UPI:
+                return .pm_type_upi
+            case .cashApp:
+                return .pm_type_cashapp
+            case .revolutPay:
+                return .pm_type_revolutpay
+            case .blik:
+                return .pm_type_blik
+            case .bacsDebit:
+                return .pm_type_us_bank
+            case .alipay:
+                return .pm_type_alipay
+            case .OXXO:
+                return .pm_type_oxxo
+            case .konbini:
+                return .pm_type_konbini
+            case .boleto:
+                return .pm_type_boleto
+            case .swish:
+                return .pm_type_swish
+            default:
+                return nil
+            }
+        }()
+        return image?.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
     }
 }
 
