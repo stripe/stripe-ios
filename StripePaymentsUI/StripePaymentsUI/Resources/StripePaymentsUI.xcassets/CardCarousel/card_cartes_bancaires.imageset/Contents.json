@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Carte Bancaire.svg",
+      "filename" : "cartesBancairesLight (1).svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "cartesBancairesDark (1).svg",
       "idiom" : "universal"
     }
   ],
