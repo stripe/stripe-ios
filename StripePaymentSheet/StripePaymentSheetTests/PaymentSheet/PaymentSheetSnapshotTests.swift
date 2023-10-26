@@ -1217,18 +1217,3 @@ fileprivate extension PaymentSheet.Appearance {
         return appearance
     }
 }
-
-public class ClassForBundle {}
-@_spi(STP) public enum FileMock: String, MockData {
-    public typealias ResponseType = StripeFile
-    public var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
-
-    case elementsSessionsPaymentMethod_200 = "MockFiles/elements_sessions_paymentMethod_200"
-    case elementsSessionsPaymentMethod_savedPM_200 = "MockFiles/elements_sessions_paymentMethod_savedPM_200"
-    case elementsSessionsPaymentMethod_link_200 = "MockFiles/elements_sessions_paymentMethod_link_200"
-
-    case customers_200 = "MockFiles/customers_200"
-
-    case saved_payment_methods_200 = "MockFiles/saved_payment_methods_200"
-    case saved_payment_methods_withCard_200 = "MockFiles/saved_payment_methods_withCard_200"
-}
