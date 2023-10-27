@@ -249,10 +249,7 @@ import AVKit
             return nil
         }
 
-        var isVirtualDevice: Bool?
-        if #available(iOS 13, *) {
-            isVirtualDevice = device.isVirtualDevice
-        }
+        let isVirtualDevice = device.isVirtualDevice
 
         return .init(
             exposureDuration: device.exposureDuration,
@@ -481,11 +478,7 @@ extension CameraSession.CameraPosition {
             return [.builtInTrueDepthCamera, .builtInWideAngleCamera]
 
         case .back:
-            if #available(iOS 13.0, *) {
-                return [.builtInDualCamera, .builtInDualWideCamera, .builtInWideAngleCamera]
-            } else {
-                return [.builtInDualCamera, .builtInWideAngleCamera]
-            }
+            return [.builtInTripleCamera, .builtInDualCamera, .builtInDualWideCamera, .builtInWideAngleCamera]
         }
     }
 

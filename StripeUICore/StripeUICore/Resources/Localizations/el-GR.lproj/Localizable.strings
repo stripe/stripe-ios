@@ -10,6 +10,8 @@
 
 "Area" = "Περιοχή";
 
+"BLIK code" = "Κωδικός BLIK";
+
 "BSB number" = "Αριθμός BSB";
 
 "Billing address is same as shipping" = "Η διεύθυνση τιμολόγησης είναι ίδια με τη διεύθυνση αποστολής";
@@ -37,6 +39,8 @@
 "District" = "Περιφέρεια";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Θέλετε να κλείσετε αυτή τη φόρμα;";
 
 "Done" = "Τέλος";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Αναζήτηση";
 
+"Select card brand (optional)" = "Επιλέξτε επωνυμία κάρτας (προαιρετικό)";
+
 "State" = "Πολιτεία";
 
 "Suburb" = "Προάστιο";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Χρησιμοποιήστε τον ρότορα για να προσπελάσετε τους συνδέσμους";
 
+"Your BLIK code is incomplete." = "Ο κωδικός σας BLIK είναι ελλιπής.";
+
+"Your BLIK code is invalid." = "Ο κωδικός σας BLIK δεν είναι έγκυρος.";
+
 "Your ZIP is incomplete." = "Ο ταχυδρομικός σας κώδικας είναι ελλιπής.";
 
 "Your email is invalid." = "Η διεύθυνση email σας δεν είναι έγκυρη.";
+
+"Your payment information will not be saved." = "Τα στοιχεία πληρωμής δε θα αποθηκευτούν.";
 
 "Your postal code is incomplete." = "Ο ταχυδρομικός κώδικάς σας είναι ελλιπής.";
 

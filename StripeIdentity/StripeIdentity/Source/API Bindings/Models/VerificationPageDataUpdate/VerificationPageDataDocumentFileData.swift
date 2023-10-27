@@ -43,5 +43,17 @@ extension StripeAPI {
         let passportScore: TwoDecimalFloat?
         /// Method of getting the document image
         let uploadMethod: FileUploadMethod
+        /// If true, force confirm from backend without actually checking the uploaded image.
+        private(set) var forceConfirm: Bool?
+
+    }
+}
+
+extension StripeAPI.VerificationPageDataDocumentFileData {
+    /// Copy the data with a different forceConfirm value
+    func withForceConfirm(_ forceConfirm: Bool) -> StripeAPI.VerificationPageDataDocumentFileData {
+        var copy = self
+        copy.forceConfirm = forceConfirm
+        return copy
     }
 }

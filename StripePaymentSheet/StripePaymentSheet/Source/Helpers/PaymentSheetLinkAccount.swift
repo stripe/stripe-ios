@@ -13,9 +13,15 @@ import UIKit
 
 protocol PaymentSheetLinkAccountInfoProtocol {
     var email: String { get }
+    var lastPM: LinkPMDisplayDetails? { get }
     var redactedPhoneNumber: String? { get }
     var isRegistered: Bool { get }
     var isLoggedIn: Bool { get }
+}
+
+struct LinkPMDisplayDetails {
+    let last4: String
+    let brand: STPCardBrand
 }
 
 class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
@@ -38,6 +44,13 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     private(set) var publishableKey: String?
 
     let email: String
+    var last4: String?
+    var lastBrand: STPCardBrand?
+
+    var lastPM: LinkPMDisplayDetails? {
+        let linkAccountService = LinkAccountService(cookieStore: cookieStore)
+        return linkAccountService.getLastPMDetails()
+    }
 
     var redactedPhoneNumber: String? {
         return currentSession?.redactedPhoneNumber
@@ -108,7 +121,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             DispatchQueue.main.async {
                 completion(
                     .failure(
-                        PaymentSheetError.unknown(debugDescription: "Don't call sign up if not needed")
+                        PaymentSheetError.linkSignUpNotRequired
                     )
                 )
             }
@@ -123,79 +136,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             consentAction: consentAction.rawValue,
             with: apiClient,
             cookieStore: cookieStore
-        ) { [weak self, email] result in
+        ) { [weak self] result in
             switch result {
             case .success(let signupResponse):
                 self?.currentSession = signupResponse.consumerSession
                 self?.publishableKey = signupResponse.publishableKey
-                self?.cookieStore.write(key: .lastSignupEmail, value: email)
-                completion(.success(()))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-
-    func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard case .requiresVerification = sessionState else {
-            DispatchQueue.main.async {
-                completion(.success(false))
-            }
-            return
-        }
-
-        guard let session = currentSession else {
-            assertionFailure()
-            DispatchQueue.main.async {
-                completion(
-                    .failure(
-                        PaymentSheetError.unknown(debugDescription: "Don't call verify if not needed")
-                    )
-                )
-            }
-            return
-        }
-
-        session.startVerification(
-            with: apiClient,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: publishableKey
-        ) { [weak self] result in
-            switch result {
-            case .success(let newSession):
-                self?.currentSession = newSession
-                completion(.success(newSession.hasStartedSMSVerification))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-
-    func verify(with oneTimePasscode: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard case .requiresVerification = sessionState,
-            hasStartedSMSVerification,
-            let session = currentSession
-        else {
-            assertionFailure()
-            DispatchQueue.main.async {
-                completion(
-                    .failure(
-                        PaymentSheetError.unknown(debugDescription: "Don't call verify if not needed")
-                    )
-                )
-            }
-            return
-        }
-
-        session.confirmSMSVerification(
-            with: oneTimePasscode,
-            with: apiClient,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: publishableKey
-        ) { [weak self] result in
-            switch result {
-            case .success(let verifiedSession):
-                self?.currentSession = verifiedSession
                 completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))
@@ -210,9 +155,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             assertionFailure()
             completion(
                 .failure(
-                    PaymentSheetError.unknown(
-                        debugDescription: "Linking account session without valid consumer session"
-                    )
+                    PaymentSheetError.linkingWithoutValidSession
                 )
             )
             return
@@ -233,7 +176,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         guard let session = currentSession else {
             assertionFailure()
             completion(
-                .failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session"))
+                .failure(PaymentSheetError.savingWithoutValidLinkSession)
             )
             return
         }
@@ -254,7 +197,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     ) {
         guard let session = currentSession else {
             assertionFailure()
-            completion(.failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session")))
+            completion(.failure(PaymentSheetError.savingWithoutValidLinkSession))
             return
         }
         retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
@@ -271,7 +214,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     ) {
         guard let session = currentSession else {
             assertionFailure()
-            completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
+            completion(.failure(PaymentSheetError.payingWithoutValidLinkSession))
             return
         }
 
@@ -289,9 +232,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             assertionFailure()
             return completion(
                 .failure(
-                    PaymentSheetError.unknown(
-                        debugDescription: "Deleting Link payment details without valid session"
-                    )
+                    PaymentSheetError.deletingWithoutValidLinkSession
                 )
             )
         }
@@ -315,9 +256,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             assertionFailure()
             return completion(
                 .failure(
-                    PaymentSheetError.unknown(
-                        debugDescription: "Updating Link payment details without valid session"
-                    )
+                    PaymentSheetError.updatingWithoutValidLinkSession
                 )
             )
         }
@@ -431,13 +370,13 @@ private extension PaymentSheetLinkAccount {
                     self?.currentSession = session.consumerSession
                     self?.publishableKey = session.publishableKey
                     completion(.success(()))
-                case .notFound(let errorMessage):
+                case .notFound(let message):
                     completion(
-                        .failure(PaymentSheetError.unknown(debugDescription: errorMessage))
+                        .failure(PaymentSheetError.linkLookupNotFound(serverErrorMessage: message))
                     )
                 case .noAvailableLookupParams:
                     completion(
-                        .failure(PaymentSheetError.unknown(debugDescription: "The client secret is missing"))
+                        .failure(PaymentSheetError.missingClientSecret)
                     )
                 }
             case .failure(let error):
@@ -551,5 +490,22 @@ private extension LinkSettings.FundingSource {
         case .bankAccount:
             return .bankAccount
         }
+    }
+}
+
+// MARK: UpdatePaymentDetailsParams
+
+struct UpdatePaymentDetailsParams {
+    enum DetailsType {
+        case card(expiryDate: CardExpiryDate, billingDetails: STPPaymentMethodBillingDetails? = nil)
+        // updating bank not supported
+    }
+
+    let isDefault: Bool?
+    let details: DetailsType?
+
+    init(isDefault: Bool? = nil, details: DetailsType? = nil) {
+        self.isDefault = isDefault
+        self.details = details
     }
 }

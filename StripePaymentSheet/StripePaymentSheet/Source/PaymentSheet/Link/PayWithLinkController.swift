@@ -6,20 +6,19 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 
 /// Standalone Link controller
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 final class PayWithLinkController {
 
-    typealias CompletionBlock = PaymentSheetResultCompletionBlock
+    typealias CompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 
     private let paymentHandler: STPPaymentHandler
 
-    private var completion: PaymentSheetResultCompletionBlock?
+    private var completion: CompletionBlock?
 
     private var selfRetainer: PayWithLinkController?
 
@@ -46,53 +45,42 @@ final class PayWithLinkController {
 
     func present(
         from presentingController: UIViewController,
-        completion: @escaping PaymentSheetResultCompletionBlock
+        completion: @escaping CompletionBlock
     ) {
         // Similarly to `PKPaymentAuthorizationController`, `LinkController` should retain
         // itself while presented.
         self.selfRetainer = self
         self.completion = completion
 
-        let payWithLinkViewController = PayWithLinkViewController(intent: intent, configuration: configuration)
-        payWithLinkViewController.payWithLinkDelegate = self
-        payWithLinkViewController.modalPresentationStyle = UIDevice.current.userInterfaceIdiom == .pad
-            ? .formSheet
-            : .overFullScreen
-
-        presentingController.present(payWithLinkViewController, animated: true)
+        let payWithLinkWebController = PayWithLinkWebController(intent: intent, configuration: configuration)
+        payWithLinkWebController.payWithLinkDelegate = self
+        payWithLinkWebController.present(over: presentingController)
     }
 
 }
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
-extension PayWithLinkController: PayWithLinkViewControllerDelegate {
+extension PayWithLinkController: PayWithLinkWebControllerDelegate {
 
-    func payWithLinkViewControllerDidConfirm(
-        _ payWithLinkViewController: PayWithLinkViewController,
+    func payWithLinkWebControllerDidComplete(
+        _ payWithLinkWebController: PayWithLinkWebController,
         intent: Intent,
-        with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult) -> Void
+        with paymentOption: PaymentOption
     ) {
         PaymentSheet.confirm(
             configuration: configuration,
-            authenticationContext: payWithLinkViewController,
+            authenticationContext: payWithLinkWebController,
             intent: intent,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
-            completion: completion
-        )
+            isFlowController: false
+        ) { result, deferredIntentConfirmationType in
+            self.completion?(result, deferredIntentConfirmationType)
+            self.selfRetainer = nil
+        }
     }
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
-        payWithLinkViewController.dismiss(animated: true)
-        completion?(.canceled)
-        selfRetainer = nil
-    }
-
-    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
-        payWithLinkViewController.dismiss(animated: true)
-        completion?(result)
+    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
+        completion?(.canceled, nil)
         selfRetainer = nil
     }
 

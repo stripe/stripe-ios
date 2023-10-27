@@ -73,7 +73,7 @@ extension STPAPIClient {
     ) {
         var params: [String: Any] = [
             "pii": [
-                "personal_id_number": pii
+                "personal_id_number": pii,
             ],
         ]
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
@@ -94,7 +94,7 @@ extension STPAPIClient {
     ) {
         var params: [String: Any] = [
             "pii": [
-                "ssn_last_4": ssnLast4
+                "ssn_last_4": ssnLast4,
             ],
         ]
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
@@ -230,7 +230,7 @@ extension STPAPIClient {
     public func createToken(forCVCUpdate cvc: String, completion: STPTokenCompletionBlock? = nil) {
         var params: [String: Any] = [
             "cvc_update": [
-                "cvc": cvc
+                "cvc": cvc,
             ],
         ]
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
@@ -303,7 +303,7 @@ extension STPAPIClient {
     ) {
         let endpoint = "\(APIEndpointSources)/\(identifier)"
         let parameters = [
-            "client_secret": secret
+            "client_secret": secret,
         ]
         APIRequest<STPSource>.getWith(
             self,
@@ -327,8 +327,6 @@ extension STPAPIClient {
     ///   - secret:      The client secret of the source. Cannot be nil.
     ///   - timeout:     The timeout for the polling operation, in seconds. Timeouts are capped at 5 minutes.
     ///   - completion:  The callback to run with the returned Source object, or an error.
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
     @objc(startPollingSourceWithId:clientSecret:timeout:completion:)
     public func startPollingSource(
         withId identifier: String,
@@ -353,8 +351,6 @@ extension STPAPIClient {
     /// `startPolling` will not be fired when `stopPolling` is called.
     /// - Parameter identifier:  The identifier of the source to be retrieved. Cannot be nil.
     @objc(stopPollingSourceWithId:)
-    @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
     public func stopPollingSource(withId identifier: String) {
         sourcePollersQueue?.async(execute: {
             let poller = self.sourcePollers?[identifier] as? STPSourcePoller
@@ -435,6 +431,22 @@ extension STPAPIClient {
         }
     }
 
+    /// Async helper version of `retrievePaymentIntent`
+    @_spi(STP) public func retrievePaymentIntent(
+        clientSecret: String,
+        expand: [String] = []
+    ) async throws -> STPPaymentIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            retrievePaymentIntent(withClientSecret: clientSecret, expand: expand) { paymentIntent, error in
+                guard let paymentIntent = paymentIntent else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                    return
+                }
+                continuation.resume(returning: paymentIntent)
+            }
+        }
+    }
+
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
     /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
@@ -464,6 +476,7 @@ extension STPAPIClient {
     ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
     ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    @objc(confirmPaymentIntentWithParams:expand:completion:)
     public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
         expand: [String]?,
@@ -525,7 +538,7 @@ extension STPAPIClient {
             endpoint: "\(APIEndpointPaymentIntents)/\(paymentIntentID)/source_cancel",
             additionalHeaders: authorizationHeader(using: publishableKeyOverride),
             parameters: [
-                "source": sourceID
+                "source": sourceID,
             ]
         ) { paymentIntent, _, responseError in
             completion(paymentIntent, responseError)
@@ -590,6 +603,22 @@ extension STPAPIClient {
             parameters: parameters
         ) { setupIntent, _, error in
             completion(setupIntent, error)
+        }
+    }
+
+    /// Async helper version of `retrieveSetupIntent`
+    @_spi(STP) public func retrieveSetupIntent(
+        clientSecret: String,
+        expand: [String] = []
+    ) async throws -> STPSetupIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            retrieveSetupIntent(withClientSecret: clientSecret, expand: expand) { setupIntent, error in
+                guard let setupIntent = setupIntent else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                    return
+                }
+                continuation.resume(returning: setupIntent)
+            }
         }
     }
 
@@ -675,7 +704,7 @@ extension STPAPIClient {
             endpoint: "\(APIEndpointSetupIntents)/\(setupIntentID)/source_cancel",
             additionalHeaders: authorizationHeader(using: publishableKeyOverride),
             parameters: [
-                "source": sourceID
+                "source": sourceID,
             ]
         ) { setupIntent, _, responseError in
             completion(setupIntent, responseError)
@@ -697,12 +726,21 @@ extension STPAPIClient {
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
+        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], completion: completion)
+    }
+
+    /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    func createPaymentMethod(
+        with paymentMethodParams: STPPaymentMethodParams,
+        additionalPaymentUserAgentValues: [String] = [],
+        completion: @escaping STPPaymentMethodCompletionBlock
+    ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
             with: _stored_configuration,
             paymentMethodType: paymentMethodParams.rawTypeString
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
-        parameters = Self.paramsAddingPaymentUserAgent(parameters)
+        parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: APIEndpointPaymentMethods,
@@ -717,10 +755,11 @@ extension STPAPIClient {
     /// - seealso: https://stripe.com/docs/api/payment_methods/create
     /// - Parameters:
     ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
+    ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     /// - Returns: the returned PaymentMethod object.
-    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams) async throws -> STPPaymentMethod {
+    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation({ continuation in
-            createPaymentMethod(with: paymentMethodParams) { paymentMethod, error in
+            createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
                 if let paymentMethod = paymentMethod {
                     continuation.resume(with: .success(paymentMethod))
                 } else {
@@ -784,7 +823,7 @@ extension STPAPIClient {
             endpoint: "\(APIEndpoint3DS2)/challenge_complete",
             additionalHeaders: authorizationHeader(using: publishableKeyOverride),
             parameters: [
-                "source": sourceID
+                "source": sourceID,
             ]
         ) { _, response, responseError in
             completion(response?.statusCode == 200, responseError)
@@ -938,6 +977,125 @@ extension STPAPIClient {
         ) { intent, _, error in
             completion(intent, error)
         }
+    }
+}
+
+extension STPAPIClient {
+    @_spi(STP) public func listPaymentMethods(
+        forCustomer customerID: String,
+        using ephemeralKeySecret: String,
+        types: [STPPaymentMethodType] = [.card],
+        completion: @escaping STPPaymentMethodsCompletionBlock
+    ) {
+        let header = authorizationHeader(using: ephemeralKeySecret)
+        // Unfortunately, this API only supports fetching saved pms for one type at a time
+        // Update 05/04/23: The API *does* now support fetching all PM types at once,
+        // but we're not using it because of pagination limitations.
+        // As an example, some unsupported PMs (such as SEPA) are saved once per payment,
+        // so a user with hundreds of SEPA payment methods would be stuck waiting for
+        // tens of requests.
+        var shared_allPaymentMethods = [STPPaymentMethod]()
+        var shared_lastError: Error?
+        let group = DispatchGroup()
+
+        for type in types {
+            group.enter()
+            let params = [
+                "customer": customerID,
+                "type": STPPaymentMethod.string(from: type),
+            ]
+            APIRequest<STPPaymentMethodListDeserializer>.getWith(
+                self,
+                endpoint: APIEndpointPaymentMethods,
+                additionalHeaders: header,
+                parameters: params as [String: Any]
+            ) { deserializer, _, error in
+                DispatchQueue.global(qos: .userInteractive).async(flags: .barrier) {
+                    // .barrier ensures we're the only thing writing to shared_ vars
+                    if let error = error {
+                        shared_lastError = error
+                    }
+                    if let paymentMethods = deserializer?.paymentMethods {
+                        shared_allPaymentMethods.append(contentsOf: paymentMethods)
+                    }
+                    group.leave()
+                }
+            }
+        }
+
+        group.notify(queue: DispatchQueue.main) {
+            completion(shared_allPaymentMethods, shared_lastError)
+        }
+    }
+
+    @_spi(STP) public func detachPaymentMethod(
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String,
+        completion: @escaping STPErrorBlock
+    ) {
+        let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
+        APIRequest<STPPaymentMethod>.post(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
+            parameters: [:]
+        ) { _, _, error in
+            completion(error)
+        }
+    }
+
+    @_spi(STP) public func attachPaymentMethod(
+        _ paymentMethodID: String,
+        customerID: String,
+        ephemeralKeySecret: String,
+        completion: @escaping STPErrorBlock
+    ) {
+        let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/attach"
+        APIRequest<STPPaymentMethod>.post(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
+            parameters: [
+                "customer": customerID,
+            ]
+        ) { _, _, error in
+            completion(error)
+        }
+    }
+
+    /// Retrieve a customer
+    /// - seealso: https://stripe.com/docs/api#retrieve_customer
+    @_spi(STP) public func retrieveCustomer(
+        _ customerID: String,
+        using ephemeralKey: String,
+        completion: @escaping STPCustomerCompletionBlock
+    ) {
+        let endpoint = "\(APIEndpointCustomers)/\(customerID)"
+        APIRequest<STPCustomer>.getWith(
+            self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKey),
+            parameters: [:]
+        ) { object, _, error in
+            completion(object, error)
+        }
+    }
+
+    /// Retrieve a customer
+    /// - seealso: https://stripe.com/docs/api#retrieve_customer
+    @_spi(STP) public func retrieveCustomer(
+        _ customerID: String,
+        using ephemeralKey: String
+    ) async throws -> STPCustomer {
+        try await withCheckedThrowingContinuation({ continuation in
+            self.retrieveCustomer(customerID, using: ephemeralKey) { customer, error in
+                guard let customer = customer else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericConnectionError())
+                    return
+                }
+                continuation.resume(returning: customer)
+            }
+        })
     }
 }
 

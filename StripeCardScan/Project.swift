@@ -27,6 +27,8 @@ let project = Project.stripeFramework(
         ],
         dependencies: [
             .project(target: "StripeCoreTestUtils", path: "//StripeCore"),
-        ]
+        ],
+        includesSnapshots: true,
+        usesStubs: true
     )
 )

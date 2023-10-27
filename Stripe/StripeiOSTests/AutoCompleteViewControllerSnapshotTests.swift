@@ -8,6 +8,7 @@
 
 import Foundation
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -16,7 +17,7 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
-class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
+class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
 
     private var configuration: AddressViewController.Configuration {
         return AddressViewController.Configuration()
@@ -58,12 +59,6 @@ class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
         ),
     ]
 
-    override func setUp() {
-        super.setUp()
-
-        //        self.recordMode = true
-    }
-
     func testAutoCompleteViewController() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
@@ -78,7 +73,6 @@ class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
         verify(vc.view)
     }
 
-    @available(iOS 13.0, *)
     func testAutoCompleteViewController_darkMode() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false

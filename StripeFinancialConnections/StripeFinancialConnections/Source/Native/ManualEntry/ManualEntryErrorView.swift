@@ -13,9 +13,9 @@ final class ManualEntryErrorView: UIView {
 
     init(text: String) {
         super.init(frame: .zero)
-        let errorLabelFont = UIFont.stripeFont(forTextStyle: .body)
+        let errorLabelFont = FinancialConnectionsFont.label(.large)
         let warningIconWidthAndHeight: CGFloat = 14
-        let warningIconInsets = (errorLabelFont.lineHeight - warningIconWidthAndHeight) / 2
+        let warningIconInsets = errorLabelFont.topPadding
         let warningIconImageView = UIImageView()
         warningIconImageView.image = Image.warning_triangle.makeImage()
             .withTintColor(.textCritical)
@@ -32,11 +32,14 @@ final class ManualEntryErrorView: UIView {
             warningIconImageView.heightAnchor.constraint(equalToConstant: warningIconWidthAndHeight),
         ])
 
-        let errorLabel = UILabel()
-        errorLabel.font = errorLabelFont
-        errorLabel.textColor = .textCritical
-        errorLabel.numberOfLines = 0
-        errorLabel.text = text
+        let errorLabel = AttributedTextView(
+            font: errorLabelFont,
+            boldFont: .label(.largeEmphasized),
+            linkFont: .label(.largeEmphasized),
+            textColor: .textCritical,
+            linkColor: .textCritical
+        )
+        errorLabel.setText(text)
         errorLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
         let horizontalStackView = UIStackView(

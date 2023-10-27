@@ -13,7 +13,7 @@ import Foundation
 public class STPConnectAccountCompanyParams: NSObject {
 
     /// The company’s primary address.
-    @objc public var address: STPConnectAccountAddress!
+    @objc public var address: STPConnectAccountAddress?
 
     /// The Kana variation of the company’s primary address (Japan only).
     @objc public var kanaAddress: STPConnectAccountAddress?

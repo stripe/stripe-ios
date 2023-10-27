@@ -16,7 +16,7 @@ import Stripe
 
 class STPShippingAddressViewControllerTest: XCTestCase {
     func testPrefilledBillingAddress_removeAddress() {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.requiredShippingAddressFields = Set<STPContactField>([.postalAddress])
 
         let address = STPAddress()
@@ -47,11 +47,11 @@ class STPShippingAddressViewControllerTest: XCTestCase {
 
     func testPrefilledBillingAddress_addAddressWithLimitedCountries() {
         // Zimbabwe does not require zip codes, while the default locale for tests (US) does
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW") as Locale) {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW")) {
             // Sanity checks
             XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
             XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
-            let config = STPFixtures.paymentConfiguration()
+            let config = STPPaymentConfiguration()
             config.requiredShippingAddressFields = Set<STPContactField>([.postalAddress])
             config.availableCountries = Set<String>(["CA", "BT"])
 
@@ -81,11 +81,11 @@ class STPShippingAddressViewControllerTest: XCTestCase {
 
     func testPrefilledBillingAddress_addAddress() {
         // Zimbabwe does not require zip codes, while the default locale for tests (US) does
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW") as Locale) {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW")) {
             // Sanity checks
             XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
             XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
-            let config = STPFixtures.paymentConfiguration()
+            let config = STPPaymentConfiguration()
             config.requiredShippingAddressFields = Set<STPContactField>([.postalAddress])
 
             let address = STPAddress()

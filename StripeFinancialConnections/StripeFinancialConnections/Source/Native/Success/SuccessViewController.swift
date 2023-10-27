@@ -10,13 +10,10 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol SuccessViewControllerDelegate: AnyObject {
-    func successViewControllerDidSelectLinkMoreAccounts(_ viewController: SuccessViewController)
     func successViewControllerDidSelectDone(_ viewController: SuccessViewController)
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class SuccessViewController: UIViewController {
 
     private let dataSource: SuccessDataSource
@@ -36,6 +33,7 @@ final class SuccessViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
 
+        let showSaveToLinkFailedNotice = (dataSource.saveToLinkWithStripeSucceeded == false)
         let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
             icon: .view(SuccessIconView()),
             title: STPLocalizedString(
@@ -44,7 +42,9 @@ final class SuccessViewController: UIViewController {
             ),
             subtitle: CreateSubtitleText(
                 businessName: dataSource.manifest.businessName,
-                isLinkingOneAccount: (dataSource.linkedAccounts.count == 1)
+                isLinkingOneAccount: (dataSource.linkedAccounts.count == 1),
+                isNetworkingUserFlow: dataSource.manifest.isNetworkingUserFlow,
+                saveToLinkWithStripeSucceeded: dataSource.saveToLinkWithStripeSucceeded
             ),
             contentView: SuccessBodyView(
                 institution: dataSource.institution,
@@ -54,6 +54,7 @@ final class SuccessViewController: UIViewController {
                 permissions: dataSource.manifest.permissions,
                 accountDisconnectionMethod: dataSource.manifest.accountDisconnectionMethod,
                 isEndUserFacing: dataSource.manifest.isEndUserFacing ?? false,
+                isNetworking: dataSource.manifest.isNetworkingUserFlow == true && dataSource.saveToLinkWithStripeSucceeded == true,
                 analyticsClient: dataSource.analyticsClient,
                 didSelectDisconnectYourAccounts: { [weak self] in
                     guard let self = self else { return }
@@ -61,7 +62,7 @@ final class SuccessViewController: UIViewController {
                         .analyticsClient
                         .log(
                             eventName: "click.disconnect_link",
-                            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
+                            pane: .success
                         )
                 },
                 didSelectMerchantDataAccessLearnMore: { [weak self] in
@@ -72,6 +73,8 @@ final class SuccessViewController: UIViewController {
                 }
             ),
             footerView: SuccessFooterView(
+                showFailedToLinkNotice: showSaveToLinkFailedNotice,
+                businessName: dataSource.manifest.businessName,
                 didSelectDone: { [weak self] footerView in
                     guard let self = self else { return }
                     // we NEVER set isLoading to `false` because
@@ -81,21 +84,10 @@ final class SuccessViewController: UIViewController {
                         .analyticsClient
                         .log(
                             eventName: "click.done",
-                            parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
+                            pane: .success
                         )
                     self.delegate?.successViewControllerDidSelectDone(self)
-                },
-                didSelectLinkAnotherAccount: dataSource.showLinkMoreAccountsButton
-                    ? { [weak self] in
-                        guard let self = self else { return }
-                        self.dataSource
-                            .analyticsClient
-                            .log(
-                                eventName: "click.link_another_account",
-                                parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.success.rawValue]
-                            )
-                        self.delegate?.successViewControllerDidSelectLinkMoreAccounts(self)
-                    } : nil
+                }
             )
         )
         paneWithHeaderLayoutView.addTo(view: view)
@@ -103,11 +95,40 @@ final class SuccessViewController: UIViewController {
         dataSource
             .analyticsClient
             .logPaneLoaded(pane: .success)
+
+        if showSaveToLinkFailedNotice {
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: "networking.save_to_link_failed_notice",
+                    pane: .success
+                )
+        }
     }
 }
 
-private func CreateSubtitleText(businessName: String?, isLinkingOneAccount: Bool) -> String {
-    if isLinkingOneAccount {
+private func CreateSubtitleText(
+    businessName: String?,
+    isLinkingOneAccount: Bool,
+    isNetworkingUserFlow: Bool?,
+    saveToLinkWithStripeSucceeded: Bool?
+) -> String {
+    if isNetworkingUserFlow == true && saveToLinkWithStripeSucceeded == true {
+        if let businessName = businessName {
+            return String(
+                format: STPLocalizedString(
+                    "Your account was successfully connected to %@ through Link.",
+                    "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."
+                ),
+                businessName
+            )
+        } else {
+            return STPLocalizedString(
+                "Your account was successfully connected to Link.",
+                "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments."
+            )
+        }
+    } else if isLinkingOneAccount {
         if let businessName = businessName {
             return String(
                 format: STPLocalizedString(

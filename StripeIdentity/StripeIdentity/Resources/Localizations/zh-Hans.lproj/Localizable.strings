@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "下一步将自动拍摄一些照片来验证是否是您本人";
+
 "Alternatively, you may manually upload a photo of your identity document." = "您也可以手动上传您的身份证件的照片。";
 
 "App Settings" = "应用设置";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "出生日期看似无效";
 
-"File Upload" = "文件上传";
-
-"File upload" = "文件上传";
-
 "Flip your driver's license over to the other side" = "将驾驶证翻到另一面";
 
 "Flip your identity card over to the other side" = "将身份证翻到另一面";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "驾驶证正面";
 
 "Front of identity card" = "身份证正面";
+
+"Get ready to take a selfie" = "准备好自拍";
 
 "Go Back" = "返回";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "个人身份证件号码";
 
 "Personal Information" = "个人信息";
+
+"Phone Number" = "电话号码";
+
+"Phone Verification" = "电话验证";
 
 "Photo Library" = "照片库";
 
@@ -127,6 +131,8 @@
 "Upload" = "上传";
 
 "Upload a Photo" = "上传一张照片";
+
+"Upload your photo ID" = "上传您的带照片身份证件";
 
 "Uploading back driver's license photo" = "正在上传驾驶证背面照片";
 

@@ -1,0 +1,15 @@
+{
+  "images" : [
+    {
+      "filename" : "vector (12).svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
+  }
+}

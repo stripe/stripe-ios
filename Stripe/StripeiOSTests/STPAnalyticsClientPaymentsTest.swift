@@ -13,6 +13,7 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsUI
 
 class STPAnalyticsClientPaymentsTest: XCTestCase {
     private var client: STPAnalyticsClient!
@@ -43,7 +44,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         let mockAnalytic = MockAnalytic()
         let payload = client.payload(from: mockAnalytic)
 
-        XCTAssertEqual(payload.count, 13)
+        XCTAssertEqual(payload.count, 14)
 
         // Verify event name is included
         XCTAssertEqual(payload["event"] as? String, mockAnalytic.event.rawValue)
@@ -160,7 +161,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
     }
 
     func testShippingVCAddsUsage() {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.requiredShippingAddressFields = [STPContactField.postalAddress]
         _ = STPShippingAddressViewController(
             configuration: config,

@@ -13,6 +13,9 @@ extension NSDecimalNumber {
     // This maps the currency code to the number of decimal digits.
     static let decimalCountSpecialCases = [
         "COP": 2,
+        "PKR": 2,
+        "LAK": 2,
+        "RSD": 2,
     ]
 
     @objc @_spi(STP) public class func stp_decimalNumber(

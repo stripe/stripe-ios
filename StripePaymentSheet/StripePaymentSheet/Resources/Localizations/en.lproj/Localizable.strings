@@ -19,12 +19,6 @@
 /* Text on a screen asking the user to approve a payment */
 "Approve payment" = "Approve payment";
 
-/* Title of confirmation prompt when removing a saved card. */
-"Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
-
-/* Title of confirmation prompt when removing a linked bank account. */
-"Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
-
 /* Text for back button */
 "Back" = "Back";
 
@@ -43,11 +37,11 @@
 /* Paypal mandate text */
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
+/* Revolut Pay mandate text */
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.";
+
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
-
-/* Mandate text displayed when paying via Link instant debit. */
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>.";
 
 /* Cash App mandate text */
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.";
@@ -67,39 +61,38 @@
 /* Button text on a screen asking the user to approve a payment */
 "Cancel and pay another way" = "Cancel and pay another way";
 
-/* Title for a button that allows the user to use a different email in the signup flow. */
-"Change email" = "Change email";
-
 /* TODO */
 "Choose a payment method" = "Choose a payment method";
 
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
 
-/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
-"Code sent" = "Code sent";
+/* A button used to confirm selecting a saved payment method */
+"Confirm" = "Confirm";
+
+/* Text for alert message when user needs to confirm payment in their banking app */
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
+
+/* Text for alert message when user needs to confirm payment in their banking app */
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirm the payment in your bank's app within %@ to complete the purchase.";
 
 /* Title for the contact information section */
 "Contact information" = "Contact information";
 
-/* Label for identifying the default payment method. */
-"Default" = "Default";
+/* Label for CPF/CPNJ (Brazil tax ID) field */
+"CPF/CPNJ" = "CPF/CPNJ";
 
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
 
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use Link to pay by default." = "Enter the code sent to %@ to use Link to pay by default.";
-
-/* Two factor authentication screen heading */
-"Enter your verification code" = "Enter your verification code";
-
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
 
-/* A text notice shown when the user selects a card that requires
-re-entering the security code (CVV/CVC). */
-"For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
+/* Select a bank dropdown for FPX */
+"FPX Bank" = "FPX Bank";
+
+/* Bacs Debit mandate text */
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.";
 
 /* Label for an IBAN field */
 "IBAN" = "IBAN";
@@ -107,17 +100,11 @@ re-entering the security code (CVV/CVC). */
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
 
-/* Title for a button that when tapped creates a Link account for the user. */
-"Join Link" = "Join Link";
-
-/* Title of the logout action. */
-"Log out of Link" = "Log out of Link";
+/* Title shown above a carousel containing the customer's payment methods */
+"Manage your payment methods" = "Manage your payment methods";
 
 /* Label for name on card field */
 "Name on card" = "Name on card";
-
-/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
-"Not %@?" = "Not %@?";
 
 /* Countdown timer text on a screen asking the user to approve a payment */
 "Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
@@ -151,23 +138,14 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
 
-/* Title shown above a section containing various payment options */
-"Pay using" = "Pay using";
-
-/* Pay with {payment method} */
-"Pay with %@" = "Pay with %@";
+/* Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'. */
+"Pay with Link" = "Pay with Link";
 
 /* US Bank Account copy title for Mobile payment element form */
 "Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
 
-/* Label for a section displaying payment details. */
-"Payment" = "Payment";
-
 /* Text on a screen that indicates a payment has failed */
 "Payment failed" = "Payment failed";
-
-/* Title for a section listing one or more payment methods. */
-"Payment methods" = "Payment methods";
 
 /* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
 "Please go back and select another payment method" = "Please go back and select another payment method";
@@ -184,17 +162,14 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. 'Remove VISA ending in 4242' */
 "Remove %1$@ ending in %2$@" = "Remove %1$@ ending in %2$@";
 
-/* Title for a button that when tapped removes a saved card. */
-"Remove card" = "Remove card";
-
 /* Title for confirmation alert to remove a card */
 "Remove Card" = "Remove Card";
 
-/* Title for a button that when tapped removes a linked bank account. */
-"Remove linked account" = "Remove linked account";
+/* A button used for saving a new payment method */
+"Save" = "Save";
 
-/* Label for a button that re-sends the a login code when tapped */
-"Resend code" = "Resend code";
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Save a new payment method" = "Save a new payment method";
 
 /* Title for address entry section */
 "Save address" = "Save address";
@@ -212,17 +187,11 @@ to be saved and used in future checkout sessions. */
 /* The label of a switch indicating whether to save the user's card for future payment */
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
 
-/* Title for the Link signup screen */
-"Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
+/* US Bank Account copy title for Mobile payment element form */
+"Save your bank account in just a few steps." = "Save your bank account in just a few steps.";
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
-
-/* Label for a button or menu item that sets a payment method as default when tapped. */
-"Set as default" = "Set as default";
-
-/* Label of a checkbox that when checked makes a payment method as the default one. */
-"Set as default payment method" = "Set as default payment method";
 
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 "Set up" = "Set up";
@@ -234,20 +203,14 @@ is not supported by the merchant */
 /* Accessibility label for an action or a button that shows a menu. */
 "Show menu" = "Show menu";
 
-/* Two factor authentication screen heading */
-"Sign in to your Link account" = "Sign in to your Link account";
-
 /* Error message when an error case happens when linking your account */
 "Something went wrong when linking your account.\nPlease try again later." = "Something went wrong when linking your account.\nPlease try again later.";
 
+/* Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@.";
+
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
-
-/* Accessibility hint to tell the user that they can tap to hide additional content. */
-"Tap to close" = "Tap to close";
-
-/* Accessibility hint to tell the user that they can tap to reveal additional content. */
-"Tap to expand" = "Tap to expand";
 
 /* An error message. */
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
@@ -255,30 +218,9 @@ is not supported by the merchant */
 /* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
 
-/* Error message shown when the user enters an expired verification code. */
-"The provided verification code has expired." = "The provided verification code has expired.";
-
-/* Error message shown when the user enters an incorrect verification code. */
-"The provided verification code is incorrect." = "The provided verification code is incorrect.";
-
-/* A text notice shown when the user selects an expired card. */
-"This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";
-
-/* Text of a label indicating that a payment method is the default. */
-"This is your default" = "This is your default";
-
-/* Error message shown when the user enters an incorrect verification code too many times. */
-"Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
-
-/* Label shown when a payment method cannot be used for the current transaction. */
-"Unavailable for this purchase" = "Unavailable for this purchase";
-
 /* Title for a button that when tapped, presents a screen for updating a card. Also
 the heading the screen itself. */
 "Update card" = "Update card";
-
-/* Two factor authentication screen heading */
-"Use your saved info to check out faster" = "Use your saved info to check out faster";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";

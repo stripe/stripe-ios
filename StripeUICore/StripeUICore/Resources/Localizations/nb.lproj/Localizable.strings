@@ -10,6 +10,8 @@
 
 "Area" = "Område";
 
+"BLIK code" = "BLIK-kode";
+
 "BSB number" = "BSB-nummer";
 
 "Billing address is same as shipping" = "Fakturaaddresse er samme som levering";
@@ -37,6 +39,8 @@
 "District" = "Distrikt";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Vil du lukke dette skjemaet?";
 
 "Done" = "Ferdig";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Søk";
 
+"Select card brand (optional)" = "Velg merkevare for kort (valgfritt)";
+
 "State" = "Stat";
 
 "Suburb" = "Forstad";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Bruk rotor for tilgang til lenker";
 
+"Your BLIK code is incomplete." = "BLIK-koden er ufullstendig.";
+
+"Your BLIK code is invalid." = "BLIK-koden er ugyldig.";
+
 "Your ZIP is incomplete." = "ZIP er ufullstendig.";
 
 "Your email is invalid." = "E-posten din er ugyldig.";
+
+"Your payment information will not be saved." = "Betalingsinformasjonen din lagres ikke.";
 
 "Your postal code is incomplete." = "Postnummeret er ufullstendig.";
 

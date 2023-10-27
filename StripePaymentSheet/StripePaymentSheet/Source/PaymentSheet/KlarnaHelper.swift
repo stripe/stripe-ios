@@ -16,12 +16,18 @@ struct KlarnaHelper {
     /// - Returns: the list of countries this PI can take payment from for Klarna.
     static func availableCountries(currency: String) -> [String] {
         let currencyToCountry = [
-            "eur": ["AT", "FI", "DE", "NL", "BE", "ES", "IT", "FR"],
+            "eur": ["AT", "FI", "DE", "NL", "BE", "ES", "IT", "FR", "GR", "IE", "PT"],
             "dkk": ["DK"],
             "nok": ["NO"],
             "sek": ["SE"],
             "gbp": ["GB"],
             "usd": ["US"],
+            "aud": ["AU"],
+            "cad": ["CA"],
+            "czk": ["CZ"],
+            "nzd": ["NZ"],
+            "pln": ["PL"],
+            "chf": ["CH"],
         ]
         return currencyToCountry[currency.lowercased()] ?? []
     }
@@ -32,7 +38,7 @@ struct KlarnaHelper {
     static func canBuyNow(locale: Locale = Locale.current) -> Bool {
         // A list of countries Klarna supports "buy now" from
         // https://site-admin.stripe.com/docs/payments/klarna#payment-options
-        let buyNowAvailable = ["AT", "BE", "DE", "IT", "NL", "ES", "SE"]
+        let buyNowAvailable = ["AT", "BE", "DE", "IT", "NL", "ES", "SE", "CA", "AU", "PL", "PT", "CH"]
         return buyNowAvailable.contains(locale.regionCode?.uppercased() ?? "US")
     }
 }

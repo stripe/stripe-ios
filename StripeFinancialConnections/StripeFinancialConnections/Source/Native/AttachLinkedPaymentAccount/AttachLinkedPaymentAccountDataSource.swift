@@ -14,6 +14,7 @@ protocol AttachLinkedPaymentAccountDataSource: AnyObject {
     var institution: FinancialConnectionsInstitution { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var authSessionId: String? { get }
+    var reduceManualEntryProminenceInErrors: Bool { get }
 
     func attachLinkedAccountIdToLinkAccountSession() -> Future<FinancialConnectionsPaymentAccountResource>
 }
@@ -27,6 +28,8 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
     private let linkedAccountId: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let authSessionId: String?
+    private let consumerSessionClientSecret: String?
+    let reduceManualEntryProminenceInErrors: Bool
 
     init(
         apiClient: FinancialConnectionsAPIClient,
@@ -35,7 +38,9 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
         institution: FinancialConnectionsInstitution,
         linkedAccountId: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
-        authSessionId: String?
+        authSessionId: String?,
+        consumerSessionClientSecret: String?,
+        reduceManualEntryProminenceInErrors: Bool
     ) {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
@@ -44,13 +49,15 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
         self.linkedAccountId = linkedAccountId
         self.analyticsClient = analyticsClient
         self.authSessionId = authSessionId
+        self.consumerSessionClientSecret = consumerSessionClientSecret
+        self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors
     }
 
     func attachLinkedAccountIdToLinkAccountSession() -> Future<FinancialConnectionsPaymentAccountResource> {
         return apiClient.attachLinkedAccountIdToLinkAccountSession(
             clientSecret: clientSecret,
             linkedAccountId: linkedAccountId,
-            consumerSessionClientSecret: nil  // used for Link
+            consumerSessionClientSecret: consumerSessionClientSecret  // used for Link
         )
     }
 }

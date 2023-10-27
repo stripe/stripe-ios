@@ -14,16 +14,21 @@ private enum Section {
     case main
 }
 
-@available(iOSApplicationExtension, unavailable)
 protocol InstitutionSearchTableViewDelegate: AnyObject {
     func institutionSearchTableView(
         _ tableView: InstitutionSearchTableView,
         didSelectInstitution institution: FinancialConnectionsInstitution
     )
-    func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView)
+    func institutionSearchTableView(
+        _ tableView: InstitutionSearchTableView,
+        didSelectManuallyAddYourAccountWithInstitutions institutions: [FinancialConnectionsInstitution]
+    )
+    func institutionSearchTableView(
+        _ tableView: InstitutionSearchTableView,
+        didScrollInstitutions institutions: [FinancialConnectionsInstitution]
+    )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class InstitutionSearchTableView: UIView {
 
     private let allowManualEntry: Bool
@@ -33,10 +38,15 @@ final class InstitutionSearchTableView: UIView {
         return allowManualEntry
             ? { [weak self] in
                 guard let self = self else { return }
-                self.delegate?.institutionSearchTableViewDidSelectManuallyAddYourAccount(self)
+                self.delegate?.institutionSearchTableView(
+                    self,
+                    didSelectManuallyAddYourAccountWithInstitutions: self.institutions
+                )
             } : nil
     }()
     weak var delegate: InstitutionSearchTableViewDelegate?
+    private var institutions: [FinancialConnectionsInstitution] = []
+    private var shouldLogScroll = true
 
     private lazy var tableFooterView: InstitutionSearchFooterView = {
         let title: String
@@ -109,7 +119,8 @@ final class InstitutionSearchTableView: UIView {
         tableView.backgroundColor = .customBackgroundColor
         tableView.separatorInset = .zero
         tableView.separatorStyle = .none
-        tableView.rowHeight = 54
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 54
         tableView.contentInset = UIEdgeInsets(
             // add extra inset at the top/bottom to show the cell-selected-state separators
             top: 1.0 / UIScreen.main.nativeScale,
@@ -177,6 +188,8 @@ final class InstitutionSearchTableView: UIView {
         showManualEntry: Bool? = nil
     ) {
         assertMainQueue()
+        self.institutions = institutions
+        shouldLogScroll = true
 
         var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
         snapshot.appendSections([Section.main])
@@ -227,11 +240,22 @@ final class InstitutionSearchTableView: UIView {
 
 // MARK: - UITableViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionSearchTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let institution = dataSource.itemIdentifier(for: indexPath) {
             delegate?.institutionSearchTableView(self, didSelectInstitution: institution)
+        }
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        // Every time the institutions change, we are open to sending the event again
+        if shouldLogScroll {
+            shouldLogScroll = false
+
+            delegate?.institutionSearchTableView(
+                self,
+                didScrollInstitutions: institutions
+            )
         }
     }
 }

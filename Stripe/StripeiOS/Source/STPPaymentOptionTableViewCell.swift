@@ -148,15 +148,9 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
     }
 
     func primaryColorForPaymentOption(withSelected selected: Bool) -> UIColor {
-        let fadedColor: UIColor = {
-            if #available(iOS 13.0, *) {
-                return UIColor(dynamicProvider: { _ in
-                    return self.theme.primaryForegroundColor.withAlphaComponent(0.6)
-                })
-            } else {
-                return theme.primaryForegroundColor.withAlphaComponent(0.6)
-            }
-        }()
+        let fadedColor: UIColor = UIColor(dynamicProvider: { _ in
+            return self.theme.primaryForegroundColor.withAlphaComponent(0.6)
+        })
 
         return (selected ? theme.accentColor : fadedColor)
     }
@@ -283,15 +277,9 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
 
         let primaryColor = selected ? theme.accentColor : theme.primaryForegroundColor
 
-        let secondaryColor: UIColor = {
-            if #available(iOS 13.0, *) {
-                return UIColor(dynamicProvider: { _ in
-                    return primaryColor.withAlphaComponent(0.6)
-                })
-            } else {
-                return primaryColor.withAlphaComponent(0.6)
-            }
-        }()
+        let secondaryColor = UIColor(dynamicProvider: { _ in
+            return primaryColor.withAlphaComponent(0.6)
+        })
 
         let attributes: [NSAttributedString.Key: Any] = [
             NSAttributedString.Key.foregroundColor: secondaryColor,

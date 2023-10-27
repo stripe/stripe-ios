@@ -17,6 +17,7 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+@testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
@@ -30,7 +31,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             description: "createPaymentIntentExpectation"
         )
         var retrievedClientSecret: String?
-        STPTestingAPIClient.shared().createPaymentIntent(withParams: nil) {
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) {
             (createdPIClientSecret, _) in
             if let createdPIClientSecret = createdPIClientSecret {
                 retrievedClientSecret = createdPIClientSecret
@@ -195,6 +196,10 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             boletoDisplayDetails: nil,
             verifyWithMicrodeposits: nil,
             cashAppRedirectToApp: nil,
+            payNowDisplayQrCode: nil,
+            konbiniDisplayDetails: nil,
+            promptPayDisplayQrCode: nil,
+            swishHandleRedirect: nil,
             allResponseFields: [:]
         )
         let setupIntent = STPSetupIntent(
@@ -206,6 +211,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             stripeDescription: nil,
             linkSettings: nil,
             livemode: false,
+            merchantCountryCode: "US",
             nextAction: action,
             orderedPaymentMethodTypes: [],
             paymentMethodID: "test",

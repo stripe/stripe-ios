@@ -10,6 +10,8 @@
 
 "Area" = "Khu vực";
 
+"BLIK code" = "Mã BLIK";
+
 "BSB number" = "Số BSB";
 
 "Billing address is same as shipping" = "Địa chỉ xuất hóa đơn giống địa chỉ chuyển hàng";
@@ -37,6 +39,8 @@
 "District" = "Quận/Huyện";
 
 "Do Si" = "Tỉnh/Thành phố";
+
+"Do you want to close this form?" = "Bạn có muốn đóng biểu mẫu này không?";
 
 "Done" = "Xong";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Tìm kiếm";
 
+"Select card brand (optional)" = "Chọn thương hiệu thẻ (tùy chọn)";
+
 "State" = "Tiểu bang";
 
 "Suburb" = "Ngoại ô";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Sử dụng rô-to để truy cập liên kết";
 
+"Your BLIK code is incomplete." = "Mã BLIK của quý vị chưa đầy đủ.";
+
+"Your BLIK code is invalid." = "Mã BLIK của quý vị không hợp lệ.";
+
 "Your ZIP is incomplete." = "Mã ZIP chưa đầy đủ.";
 
 "Your email is invalid." = "Email của quý vị không hợp lệ.";
+
+"Your payment information will not be saved." = "Thông tin thanh toán của bạn sẽ không lưu lại.";
 
 "Your postal code is incomplete." = "Mã bưu điện chưa đầy đủ.";
 

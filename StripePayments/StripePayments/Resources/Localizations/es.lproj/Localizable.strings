@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "Adeudo directo BECS (Australia)";
+"AU Direct Debit" = "Adeudo directo (Australia)";
 
 "Affirm" = "Affirm";
 
@@ -28,6 +28,8 @@
 
 "Klarna" = "Klarna";
 
+"Konbini" = "Konbini";
+
 "Link" = "Link";
 
 "NetBanking" = "NetBanking";
@@ -41,6 +43,8 @@
 "SEPA Debit" = "Adeudo SEPA";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Se agotó el tiempo de espera para autenticar el método de pago. Vuelve a intentarlo.";
 

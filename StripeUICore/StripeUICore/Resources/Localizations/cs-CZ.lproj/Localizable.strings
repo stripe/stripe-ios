@@ -10,6 +10,8 @@
 
 "Area" = "Oblast";
 
+"BLIK code" = "Kód BLIK";
+
 "BSB number" = "Číslo BSB";
 
 "Billing address is same as shipping" = "Fakturační adresa je stejná jako dodací";
@@ -37,6 +39,8 @@
 "District" = "Okrsek";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Chcete tento formulář zavřít?";
 
 "Done" = "Hotovo";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Hledat";
 
+"Select card brand (optional)" = "Vyberte značku karty (volitelné)";
+
 "State" = "Stát";
 
 "Suburb" = "Předměstí";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Přístup k odkazům pomocí rotoru";
 
+"Your BLIK code is incomplete." = "Váš kód BLIK je neúplný.";
+
+"Your BLIK code is invalid." = "Váš kód BLIK je neplatný.";
+
 "Your ZIP is incomplete." = "PSČ je neúplné.";
 
 "Your email is invalid." = "Váš e-mail je neplatný.";
+
+"Your payment information will not be saved." = "Vaše platební údaje nebudou uloženy.";
 
 "Your postal code is incomplete." = "Vaše poštovní směrovací číslo je neúplné.";
 

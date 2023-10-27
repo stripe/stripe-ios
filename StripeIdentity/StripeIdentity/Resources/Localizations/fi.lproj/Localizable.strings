@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Seuraavassa vaiheessa otetaan automaattisesti muutama kuva sen vahvistamiseksi, että kyseessä olet sinä";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Voit vaihtoehtoisesti ladata henkilöllisyysasiakirjan kuvan manuaalisesti.";
 
 "App Settings" = "Sovelluksen asetukset";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Syntymäaika ei näytä kelvolliselta";
 
-"File Upload" = "Tiedoston lataus";
-
-"File upload" = "Tiedoston lataus";
-
 "Flip your driver's license over to the other side" = "Käännä ajokortti toisinpäin";
 
 "Flip your identity card over to the other side" = "Käännä henkilökortti toisinpäin";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Ajokortin etupuoli";
 
 "Front of identity card" = "Henkilökortin etupuoli";
+
+"Get ready to take a selfie" = "Valmistaudu selfien ottoon";
 
 "Go Back" = "Siirry takaisin";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Henkilötunnus";
 
 "Personal Information" = "Henkilötiedot";
+
+"Phone Number" = "Puhelinnumero";
+
+"Phone Verification" = "Vahvistus puhelimella";
 
 "Photo Library" = "Kuvakirjasto";
 
@@ -127,6 +131,8 @@
 "Upload" = "Lataa";
 
 "Upload a Photo" = "Lataa kuva";
+
+"Upload your photo ID" = "Lataa kuvallinen henkilöllisyystodistus";
 
 "Uploading back driver's license photo" = "Ladataan ajokortin takapuolen kuvaa";
 

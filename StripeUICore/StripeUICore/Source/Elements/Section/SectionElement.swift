@@ -31,7 +31,7 @@ import UIKit
     }
     var viewModel: SectionViewModel {
         return ViewModel(
-            views: elements.map({ $0.view }),
+            views: elements.filter { !($0.view is HiddenElement.HiddenView) }.map({ $0.view }), // filter out hidden views to prevent showing the separator
             title: title,
             errorText: errorText,
             subLabel: subLabel,
@@ -100,5 +100,30 @@ extension SectionElement: ElementDelegate {
             sectionView.update(with: viewModel)
         }
         delegate?.didUpdate(element: self)
+    }
+}
+
+// MARK: HiddenElement
+
+extension SectionElement {
+    /// A simple container element where the element's view is hidden
+    /// Useful when an element is a part of a section but it's view is embeded into another element
+    /// E.g. card brand drop down embedded into the PAN textfield
+    @_spi(STP) public final class HiddenElement: ContainerElement {
+        final class HiddenView: UIView {}
+
+        weak public var delegate: ElementDelegate?
+        public lazy var view: UIView = {
+            return HiddenView(frame: .zero) // Hide the element's view
+        }()
+        public let elements: [Element]
+
+        public init?(_ element: Element?) {
+            guard let element = element else {
+                return nil
+            }
+            self.elements = [element]
+            element.delegate = self
+        }
     }
 }

@@ -5,6 +5,7 @@ require 'fileutils'
 require 'pathname'
 
 skip_snapshot_tests = false
+only_snapshot_tests = false
 use_cache = false
 build_scheme = nil
 device = nil
@@ -44,6 +45,10 @@ OptionParser.new do |opts|
 
   opts.on("--skip-snapshot-tests", "Don't run snapshot tests") do |s|
     skip_snapshot_tests = s
+  end
+
+  opts.on("--only-snapshot-tests", "Only run snapshot tests") do |s|
+    only_snapshot_tests = s
   end
 
   opts.on("--cache", "Use cached tests") do |s|
@@ -98,15 +103,11 @@ def discover_snapshot_tests
 end
 
 if skip_snapshot_tests
-  skip_tests += [
-    # Subset of tests that don't end with 'Snapshot(Test|Tests)'.
-    'StripeiOSTests/STPAddCardViewControllerLocalizationTests',
-    'StripeiOSTests/STPPaymentOptionsViewControllerLocalizationTests',
-    'StripeiOSTests/STPShippingAddressViewControllerLocalizationTests',
-    'StripeiOSTests/STPShippingMethodsViewControllerLocalizationTests'
-  ]
-
   skip_tests += discover_snapshot_tests()
+end
+
+if only_snapshot_tests
+  only_tests += discover_snapshot_tests()
 end
 
 destination_string = 'generic/platform=iOS Simulator'

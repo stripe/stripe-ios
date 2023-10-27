@@ -10,6 +10,8 @@
 
 "Area" = "Area";
 
+"BLIK code" = "Kode BLIK";
+
 "BSB number" = "Nomor BSB";
 
 "Billing address is same as shipping" = "Alamat tagihan sama dengan pengiriman";
@@ -37,6 +39,8 @@
 "District" = "Distrik";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Anda ingin menutup formulir ini?";
 
 "Done" = "Selesai";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Cari";
 
+"Select card brand (optional)" = "Pilih brand kartu (opsional)";
+
 "State" = "Negara Bagian";
 
 "Suburb" = "Suburb";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Gunakan rotor untuk mengakses tautan";
 
+"Your BLIK code is incomplete." = "Kode BLIK Anda tidak lengkap.";
+
+"Your BLIK code is invalid." = "Kode BLIK Anda tidak valid.";
+
 "Your ZIP is incomplete." = "ZIP Anda tidak lengkap.";
 
 "Your email is invalid." = "Email Anda tidak valid.";
+
+"Your payment information will not be saved." = "Informasi pembayaran Anda tidak akan disimpan.";
 
 "Your postal code is incomplete." = "Kode pos Anda tidak lengkap.";
 

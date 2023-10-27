@@ -10,6 +10,8 @@
 
 "Area" = "Área";
 
+"BLIK code" = "Código BLIK";
+
 "BSB number" = "Número de BSB";
 
 "Billing address is same as shipping" = "La dirección de facturación es la misma que la de envío.";
@@ -37,6 +39,8 @@
 "District" = "Distrito";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "¿Deseas cerrar este formulario?";
 
 "Done" = "¡Listo!";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Buscar";
 
+"Select card brand (optional)" = "Selecciona una marca de tarjeta (opcional)";
+
 "State" = "Estado";
 
 "Suburb" = "Suburbio";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Usa el rotor para acceder a los enlaces";
 
+"Your BLIK code is incomplete." = "Tu código BLIK está incompleto.";
+
+"Your BLIK code is invalid." = "El código BLIK no es válido.";
+
 "Your ZIP is incomplete." = "El código postal está incompleto.";
 
 "Your email is invalid." = "El correo electrónico no es válido.";
+
+"Your payment information will not be saved." = "Tus datos de pago no se guardarán.";
 
 "Your postal code is incomplete." = "El código postal está incompleto.";
 

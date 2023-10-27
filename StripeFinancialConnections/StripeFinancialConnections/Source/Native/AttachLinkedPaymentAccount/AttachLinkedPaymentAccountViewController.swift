@@ -10,11 +10,11 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
     func attachLinkedPaymentAccountViewController(
         _ viewController: AttachLinkedPaymentAccountViewController,
-        didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
+        didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
+        saveToLinkWithStripeSucceeded: Bool?
     )
     func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(
         _ viewController: AttachLinkedPaymentAccountViewController
@@ -22,9 +22,12 @@ protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
     func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(
         _ viewController: AttachLinkedPaymentAccountViewController
     )
+    func attachLinkedPaymentAccountViewController(
+        _ viewController: AttachLinkedPaymentAccountViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class AttachLinkedPaymentAccountViewController: UIViewController {
 
     private let dataSource: AttachLinkedPaymentAccountDataSource
@@ -48,7 +51,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
             } : nil
     }
     private var didSelectManualEntry: (() -> Void)? {
-        return dataSource.manifest.allowManualEntry
+        return (dataSource.manifest.allowManualEntry && !dataSource.reduceManualEntryProminenceInErrors)
             ? { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.attachLinkedPaymentAccountViewControllerDidSelectManualEntry(self)
@@ -92,6 +95,13 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                 guard let self = self else { return }
                 switch result {
                 case .success(let paymentAccountResource):
+                    var saveToLinkWithStripeSucceeded: Bool?
+                    if self.dataSource.manifest.isNetworkingUserFlow == true {
+                        if self.dataSource.manifest.accountholderIsLinkConsumer == true {
+                            saveToLinkWithStripeSucceeded = paymentAccountResource.networkingSuccessful
+                        }
+                    }
+
                     self.dataSource
                         .analyticsClient
                         .log(
@@ -99,12 +109,14 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                             parameters: [
                                 "duration": Date().timeIntervalSince(pollingStartDate).milliseconds,
                                 "authSessionId": self.dataSource.authSessionId ?? "unknown",
-                            ]
+                            ],
+                            pane: .attachLinkedPaymentAccount
                         )
 
                     self.delegate?.attachLinkedPaymentAccountViewController(
                         self,
-                        didFinishWithPaymentAccountResource: paymentAccountResource
+                        didFinishWithPaymentAccountResource: paymentAccountResource,
+                        saveToLinkWithStripeSucceeded: saveToLinkWithStripeSucceeded
                     )
                 // we don't remove `linkingAccountsLoadingView` on success
                 // because this is the last time the user will see this

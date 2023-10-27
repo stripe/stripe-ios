@@ -69,9 +69,11 @@ final class IdentityAnalyticsClient {
         case selfieCapture = "selfie"
         case success = "confirmation"
         case individual = "individual"
+        case phoneOtp = "phone_otp"
         case individual_welcome = "individual_welcome"
         case error = "error"
         case countryNotListed = "country_not_listed"
+        case debug = "debug"
     }
 
     /// Name of the scanner logged in scanning performance events
@@ -102,6 +104,9 @@ final class IdentityAnalyticsClient {
     /// The last screen transitioned to for `timeToScreen` analytic
     private(set) var timeToScreenFromScreen: ScreenName?
 
+    private(set) var blurScoreFront: Float?
+    private(set) var blurScoreBack: Float?
+
     init(
         verificationSessionId: String,
         analyticsClient: AnalyticsClientV2Protocol = IdentityAnalyticsClient.sharedAnalyticsClient
@@ -125,6 +130,14 @@ final class IdentityAnalyticsClient {
     /// Increments the number of times a scan was initiated for a selfie
     func countDidStartSelfieScan() {
         numSelfieScanAttempts += 1
+    }
+
+    func updateBlurScore(_ blurScore: Float, for side: DocumentSide) {
+        if side == .front {
+            blurScoreFront = blurScore
+        } else {
+            blurScoreBack = blurScore
+        }
     }
 
     private func logAnalytic(
@@ -261,6 +274,12 @@ final class IdentityAnalyticsClient {
         }
         if let bestFaceScore = sheetController.collectedData.face?.bestFaceScore {
             metadata["selfie_model_score"] = bestFaceScore.value
+        }
+        if let blurScoreFront = blurScoreFront {
+            metadata["doc_front_blur_score"] = blurScoreFront
+        }
+        if let blurScoreBack = blurScoreBack {
+            metadata["doc_back_blur_score"] = blurScoreBack
         }
 
         logAnalytic(.verificationSucceeded, metadata: metadata)

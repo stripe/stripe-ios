@@ -53,7 +53,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
     }
 
     func buildAddCardViewController() -> STPAddCardViewController? {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         let theme = STPTheme.defaultTheme
         let vc = STPAddCardViewController(
             configuration: config,
@@ -64,7 +64,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
     }
 
     func testPrefilledBillingAddress_removeAddress() {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.requiredBillingAddressFields = .postalCode
         let sut = STPAddCardViewController(
             configuration: config,
@@ -92,7 +92,7 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
     }
 
     func testPrefilledBillingAddress_viewDidLoadHappensBeforeSettingAddress() {
-        let config = STPFixtures.paymentConfiguration()
+        let config = STPPaymentConfiguration()
         config.requiredBillingAddressFields = .full
         let sut = STPAddCardViewController(
             configuration: config,
@@ -126,11 +126,11 @@ class STPAddCardViewControllerTest: APIStubbedTestCase {
 
     func testPrefilledBillingAddress_addAddress() {
         // Zimbabwe does not require zip codes, while the default locale for tests (US) does
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW") as Locale) {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW")) {
             // Sanity checks
             XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
             XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
-            let config = STPFixtures.paymentConfiguration()
+            let config = STPPaymentConfiguration()
             config.requiredBillingAddressFields = .postalCode
             let sut = STPAddCardViewController(
                 configuration: config,

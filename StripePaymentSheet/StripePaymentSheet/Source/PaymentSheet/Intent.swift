@@ -62,6 +62,15 @@ enum Intent {
         }
     }
 
+    var intentConfig: PaymentSheet.IntentConfiguration? {
+        switch self {
+        case .deferredIntent(_, let intentConfig):
+            return intentConfig
+        default:
+            return nil
+        }
+    }
+
     var currency: String? {
         switch self {
         case .paymentIntent(let pi):
@@ -109,5 +118,31 @@ enum Intent {
                 return true
             }
         }
+    }
+
+    var cardBrandChoiceEligible: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return (paymentIntent.cardBrandChoice?.eligible ?? false)
+        case .setupIntent, .deferredIntent: // TODO(porter) We will support SI and DI's later.
+            return false
+        }
+    }
+
+    var shouldDisableExternalPayPal: Bool {
+        let allResponseFields: [AnyHashable: Any]
+        switch self {
+        case .deferredIntent(elementsSession: let session, intentConfig: _):
+            allResponseFields = session.allResponseFields
+        case .paymentIntent(let intent):
+            allResponseFields = intent.allResponseFields
+        case .setupIntent(let intent):
+            allResponseFields = intent.allResponseFields
+        }
+        // Only disable external_paypal iff this flag is present and false
+        guard let flag = allResponseFields[jsonDict: "flags"]?["elements_enable_external_payment_method_paypal"] as? Bool else {
+            return false
+        }
+        return flag == false
     }
 }

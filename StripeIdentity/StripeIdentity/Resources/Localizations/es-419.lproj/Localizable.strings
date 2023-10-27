@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "En el siguiente paso, se tomarán automáticamente algunas fotos para verificar tu identidad.";
+
 "Alternatively, you may manually upload a photo of your identity document." = "También puedes subir una foto del documento de identidad manualmente.";
 
 "App Settings" = "Configuración de la aplicación";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "La fecha de nacimiento no parece válida.";
 
-"File Upload" = "Carga del archivo";
-
-"File upload" = "Carga del archivo";
-
 "Flip your driver's license over to the other side" = "Da vuelta tu licencia de conducir.";
 
 "Flip your identity card over to the other side" = "Da vuelta tu documento de identidad.";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Frente de la licencia de conducir";
 
 "Front of identity card" = "Frente del documento de identidad";
+
+"Get ready to take a selfie" = "Prepárate para hacerte la selfie";
 
 "Go Back" = "Volver";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Número de documento personal";
 
 "Personal Information" = "Información personal";
+
+"Phone Number" = "Número de teléfono";
+
+"Phone Verification" = "Verificación por teléfono";
 
 "Photo Library" = "Librería de fotos";
 
@@ -127,6 +131,8 @@
 "Upload" = "Cargar";
 
 "Upload a Photo" = "Cargar una foto";
+
+"Upload your photo ID" = "Carga tu documento de identidad con foto";
 
 "Uploading back driver's license photo" = "Cargando la foto del dorso de la licencia de conducir";
 

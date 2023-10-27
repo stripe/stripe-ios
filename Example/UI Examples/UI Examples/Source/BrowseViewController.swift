@@ -11,21 +11,17 @@ import SwiftUI
 import UIKit
 
 @testable import Stripe
+@_spi(STP) import StripePaymentsUI
 
 class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate,
     STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate
 {
 
     enum Demo: Int {
-        static var count: Int {
-            if #available(iOS 13.0.0, *) {
-                return 10 + 1
-            } else {
-                return 10
-            }
-        }
+        static var count: Int = 11
 
         case STPPaymentCardTextField
+        case STPPaymentCardTextFieldWithCBC
         case STPAddCardViewController
         case STPAddCardViewControllerWithAddress
         case STPPaymentOptionsViewController
@@ -41,6 +37,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         var title: String {
             switch self {
             case .STPPaymentCardTextField: return "Card Field"
+            case .STPPaymentCardTextFieldWithCBC: return "Card Field (CBC)"
             case .STPAddCardViewController: return "(Basic Integration) Card Form"
             case .STPAddCardViewControllerWithAddress: return "(Basic Integration) Card Form with Billing Address"
             case .STPPaymentOptionsViewController: return "Payment Option Picker"
@@ -57,6 +54,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         var detail: String {
             switch self {
             case .STPPaymentCardTextField: return "STPPaymentCardTextField"
+            case .STPPaymentCardTextFieldWithCBC: return "STPPaymentCardTextField"
             case .STPAddCardViewController: return "STPAddCardViewController"
             case .STPAddCardViewControllerWithAddress: return "STPAddCardViewController"
             case .STPPaymentOptionsViewController: return "STPPaymentOptionsViewController"
@@ -118,6 +116,13 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         case .STPPaymentCardTextField:
             let viewController = CardFieldViewController()
             viewController.theme = theme
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.navigationBar.stp_theme = theme
+            present(navigationController, animated: true, completion: nil)
+        case .STPPaymentCardTextFieldWithCBC:
+            let viewController = CardFieldViewController()
+            viewController.theme = theme
+            viewController.alwaysEnableCBC = true
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
@@ -195,13 +200,8 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                 rootViewController: self.themeViewController)
             present(navigationController, animated: true, completion: nil)
         case .SwiftUICardFormViewController:
-            if #available(iOS 13.0.0, *) {
-                let controller = UIHostingController(rootView: SwiftUICardFormView())
-                present(controller, animated: true, completion: nil)
-            } else {
-                // Fallback on earlier versions
-                assertionFailure()
-            }
+            let controller = UIHostingController(rootView: SwiftUICardFormView())
+            present(controller, animated: true, completion: nil)
         case .PaymentMethodMessagingView:
             let vc = PaymentMethodMessagingViewController()
             let navigationController = UINavigationController(rootViewController: vc)

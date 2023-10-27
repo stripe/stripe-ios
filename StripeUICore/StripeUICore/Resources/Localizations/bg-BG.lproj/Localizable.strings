@@ -10,6 +10,8 @@
 
 "Area" = "Район";
 
+"BLIK code" = "BLIK код";
+
 "BSB number" = "BSB номер";
 
 "Billing address is same as shipping" = "Адресът за фактуриране е същият като за доставка";
@@ -37,6 +39,8 @@
 "District" = "Окръг";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Искате ли да затворите този формуляр?";
 
 "Done" = "Готово";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Търсене";
 
+"Select card brand (optional)" = "Изберете марка на картата (по избор)";
+
 "State" = "Щат";
 
 "Suburb" = "Предградие";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Използване на ротор за достъп до връзки";
 
+"Your BLIK code is incomplete." = "Вашият BLIK код е непълен.";
+
+"Your BLIK code is invalid." = "Вашият BLIK код е невалиден.";
+
 "Your ZIP is incomplete." = "Вашият ZIP код е непълен.";
 
 "Your email is invalid." = "Вашият имейл е невалиден.";
+
+"Your payment information will not be saved." = "Вашата информация за плащане няма да бъде запазена.";
 
 "Your postal code is incomplete." = "Вашият пощенски код е непълен.";
 

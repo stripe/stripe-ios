@@ -76,6 +76,31 @@ public class STPImageLibrary: NSObject {
         return self.brandImage(for: brand, template: false)
     }
 
+    /// This returns an unpadded image for the specified card brand if available.
+    @_spi(STP) public class func unpaddedCardBrandImage(
+        for brand: STPCardBrand
+    )
+        -> UIImage
+    {
+        switch brand {
+        case .cartesBancaires:
+            return safeImageNamed("stp_card_unpadded_cartes_bancaires")
+        case .visa:
+            return safeImageNamed("stp_card_unpadded_visa")
+        case .amex, .mastercard, .discover, .JCB, .dinersClub, .unionPay, .unknown:
+            fallthrough
+        @unknown default:
+            return self.brandImage(for: brand, template: false)
+        }
+    }
+
+    /// This returns the icon for an unselected brand when multiple card brands are available.
+    @objc(cardBrandChoiceImage) public class func cardBrandChoiceImage()
+        -> UIImage
+    {
+        return self.safeImageNamed("stp_card_cbc", templateIfAvailable: false)
+    }
+
     /// This returns the appropriate icon for the specified card brand as a
     /// single color template that can be tinted
     @objc(templatedBrandImageForCardBrand:) public class func templatedBrandImage(
@@ -93,8 +118,7 @@ public class STPImageLibrary: NSObject {
     /// This returns a small icon indicating a card number error for the given card brand.
     @objc(errorImageForCardBrand:) public class func errorImage(for brand: STPCardBrand) -> UIImage
     {
-        let imageName = brand == .amex ? "stp_card_error_amex" : "stp_card_error"
-        return self.safeImageNamed(imageName)
+        return self.safeImageNamed("stp_card_error")
     }
 
     @_spi(STP) public class func bankIcon() -> UIImage {
@@ -103,10 +127,9 @@ public class STPImageLibrary: NSObject {
 
     class func brandImage(
         for brand: STPCardBrand,
-        template isTemplate: Bool,
+        template shouldUseTemplate: Bool,
         locale: Locale = .current
     ) -> UIImage {
-        var shouldUseTemplate = isTemplate
         var imageName: String?
         switch brand {
         case .amex:
@@ -124,12 +147,10 @@ public class STPImageLibrary: NSObject {
         case .cartesBancaires:
             imageName = shouldUseTemplate ? "stp_card_cartes_bancaires_template" : "stp_card_cartes_bancaires"
         case .unknown:
-            shouldUseTemplate = true
             imageName = "stp_card_unknown"
         case .visa:
             imageName = shouldUseTemplate ? "stp_card_visa_template" : "stp_card_visa"
         @unknown default:
-            shouldUseTemplate = true
             imageName = "stp_card_unknown"
         }
         let image = self.safeImageNamed(

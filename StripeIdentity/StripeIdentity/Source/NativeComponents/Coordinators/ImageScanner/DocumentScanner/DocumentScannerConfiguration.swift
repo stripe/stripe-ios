@@ -33,5 +33,11 @@ extension DocumentScanner {
         /// The amount of time the scanner should look for a barcode on the ID
         /// back before accepting images without a readable barcode
         let backIdCardBarcodeTimeout: TimeInterval
+
+        /// Threshold to determine if the image is blurry
+        let blurThreshold: Float
+
+        /// Padding value for the captured document image
+        let highResImageCorpPadding: CGFloat
     }
 }

@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "A few photos will be taken automatically on the next step to verify it's you";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Alternatively, you may manually upload a photo of your identity document.";
 
 "App Settings" = "App Settings";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Date of birth does not look valid";
 
-"File Upload" = "File Upload";
-
-"File upload" = "File upload";
-
 "Flip your driver's license over to the other side" = "Flip your driving licence over to the other side";
 
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Front of driving licence";
 
 "Front of identity card" = "Front of identity card";
+
+"Get ready to take a selfie" = "Get ready to take a selfie";
 
 "Go Back" = "Go Back";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Personal ID number";
 
 "Personal Information" = "Personal Information";
+
+"Phone Number" = "Phone Number";
+
+"Phone Verification" = "Phone Verification";
 
 "Photo Library" = "Photo Library";
 
@@ -127,6 +131,8 @@
 "Upload" = "Upload";
 
 "Upload a Photo" = "Upload a Photo";
+
+"Upload your photo ID" = "Upload your photo ID";
 
 "Uploading back driver's license photo" = "Uploading back driving licence photo";
 

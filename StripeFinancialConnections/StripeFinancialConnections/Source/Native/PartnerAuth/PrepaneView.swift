@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class PrepaneView: UIView {
 
     private let didSelectContinue: () -> Void
@@ -77,7 +76,6 @@ final class PrepaneView: UIView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateContentView(
     prepaneBodyModel: FinancialConnectionsOAuthPrepane.OauthPrepaneBody,
     prepanePartnerNoticeModel: FinancialConnectionsOAuthPrepane.OauthPrepanePartnerNotice?,
@@ -90,10 +88,10 @@ private func CreateContentView(
     prepaneBodyModel.entries?.forEach { entry in
         switch entry.content {
         case .text(let text):
-            let label = ClickableLabel(
-                font: .stripeFont(forTextStyle: .body),
-                boldFont: .stripeFont(forTextStyle: .bodyEmphasized),
-                linkFont: .stripeFont(forTextStyle: .bodyEmphasized),
+            let label = AttributedTextView(
+                font: .label(.large),
+                boldFont: .label(.largeEmphasized),
+                linkFont: .label(.largeEmphasized),
                 textColor: .textPrimary
             )
             label.setText(text, action: didSelectURL)
@@ -120,7 +118,6 @@ private func CreateContentView(
     return verticalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateFooterView(
     prepaneCtaModel: FinancialConnectionsOAuthPrepane.OauthPrepaneCTA,
     prepanePartnerNoticeModel: FinancialConnectionsOAuthPrepane.OauthPrepanePartnerNotice?,
@@ -134,6 +131,7 @@ private func CreateFooterView(
     NSLayoutConstraint.activate([
         continueButton.heightAnchor.constraint(equalToConstant: 56)
     ])
+    continueButton.accessibilityIdentifier = "prepane_continue_button"
 
     let footerStackView = UIStackView()
     footerStackView.axis = .vertical
@@ -152,7 +150,6 @@ private func CreateFooterView(
     return footerStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreatePartnerDisclosureView(
     partnerNoticeModel: FinancialConnectionsOAuthPrepane.OauthPrepanePartnerNotice,
     didSelectURL: @escaping (URL) -> Void
@@ -189,10 +186,10 @@ private func CreatePartnerDisclosureView(
 
     horizontalStackView.addArrangedSubview(
         {
-            let partnerDisclosureLabel = ClickableLabel(
-                font: .stripeFont(forTextStyle: .captionTight),
-                boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-                linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+            let partnerDisclosureLabel = AttributedTextView(
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
+                linkFont: .label(.smallEmphasized),
                 textColor: .textSecondary
             )
             partnerDisclosureLabel.setText(
@@ -210,7 +207,6 @@ private func CreatePartnerDisclosureView(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> PrepaneView {
@@ -264,7 +260,6 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
 }
 
 @available(iOS 14.0, *)
-@available(iOSApplicationExtension, unavailable)
 struct PrepaneView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {

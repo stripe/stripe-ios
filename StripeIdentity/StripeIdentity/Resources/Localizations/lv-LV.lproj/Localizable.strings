@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Nākamajā darbībā tiks automātiski uzņemti daži fotoattēli, lai pārbaudītu jūsu identitāti";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Vai arī varat manuāli augšupielādēt identifikācijas dokumenta fotoattēlu.";
 
 "App Settings" = "Lietotnes iestatījumi";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Dzimšanas datums neizskatās derīgs";
 
-"File Upload" = "Faila augšupielāde";
-
-"File upload" = "Faila augšupielāde";
-
 "Flip your driver's license over to the other side" = "Apgrieziet autovadītāja apliecību uz otru pusi";
 
 "Flip your identity card over to the other side" = "Apgrieziet identifikācijas karti uz otru pusi";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Autovadītāja apliecības priekšpuse";
 
 "Front of identity card" = "Identifikācijas kartes priekšpuse";
+
+"Get ready to take a selfie" = "Sagatavojieties uzņemt pašportretu";
 
 "Go Back" = "Doties atpakaļ";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Personas ID numurs";
 
 "Personal Information" = "Personas dati";
+
+"Phone Number" = "Tālruņa numurs";
+
+"Phone Verification" = "Tālruņa verifikācija";
 
 "Photo Library" = "Attēlu bibliotēka";
 
@@ -127,6 +131,8 @@
 "Upload" = "Augšupielādēt";
 
 "Upload a Photo" = "Augšupielādēt fotoattēlu";
+
+"Upload your photo ID" = "Augšupielādējiet savu ID dokumentu ar fotogrāfiju";
 
 "Uploading back driver's license photo" = "Augšupielādē autovadītāja apliecības aizmugurējo fotoattēlu";
 

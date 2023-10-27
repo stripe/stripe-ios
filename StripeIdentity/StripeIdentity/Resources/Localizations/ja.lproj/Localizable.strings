@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "次のステップで写真が数枚撮影され、本人確認が行われます。";
+
 "Alternatively, you may manually upload a photo of your identity document." = "または、身分証明書の写真を手動でアップロードすることもできます。";
 
 "App Settings" = "アプリの設定";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "生年月日が無効のようです";
 
-"File Upload" = "ファイルをアップロード";
-
-"File upload" = "ファイルのアップロード";
-
 "Flip your driver's license over to the other side" = "運転免許証を裏返してください";
 
 "Flip your identity card over to the other side" = "身分証明書を裏返してください";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "運転免許証の表面";
 
 "Front of identity card" = "身分証明書の表面";
+
+"Get ready to take a selfie" = "自撮り写真の撮影準備をする";
 
 "Go Back" = "戻る";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "身分証明書番号";
 
 "Personal Information" = "個人情報";
+
+"Phone Number" = "電話番号";
+
+"Phone Verification" = "電話番号の確認";
 
 "Photo Library" = "フォトライブラリー";
 
@@ -127,6 +131,8 @@
 "Upload" = "アップロード";
 
 "Upload a Photo" = "写真をアップロード";
+
+"Upload your photo ID" = "写真付き身分証明書をアップロードする";
 
 "Uploading back driver's license photo" = "運転免許証の裏面をアップロードしています";
 

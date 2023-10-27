@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "In de volgende stap worden er automatisch een paar foto's gemaakt om te verifiëren dat jij het bent";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Als alternatief kun je ook handmatig een foto van je identiteitsbewijs uploaden.";
 
 "App Settings" = "App-instellingen";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Geboortedatum lijkt ongeldig te zijn";
 
-"File Upload" = "Bestand uploaden";
-
-"File upload" = "Bestand uploaden";
-
 "Flip your driver's license over to the other side" = "Draai je rijbewijs om, zodat de andere kant zichtbaar is";
 
 "Flip your identity card over to the other side" = "Draai je identiteitskaart om, zodat de andere kant zichtbaar is";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Voorkant van rijbewijs";
 
 "Front of identity card" = "Voorkant van identiteitskaart";
+
+"Get ready to take a selfie" = "Maak je klaar om een selfie te nemen";
 
 "Go Back" = "Terug";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Persoonlijk identificatienummer";
 
 "Personal Information" = "Persoonlijke gegevens";
+
+"Phone Number" = "Telefoonnummer";
+
+"Phone Verification" = "Telefonische verificatie";
 
 "Photo Library" = "Fotobibliotheek";
 
@@ -127,6 +131,8 @@
 "Upload" = "Uploaden";
 
 "Upload a Photo" = "Een foto uploaden";
+
+"Upload your photo ID" = "Je identiteitsbewijs uploaden";
 
 "Uploading back driver's license photo" = "Foto van achterkant van rijbewijs uploaden";
 

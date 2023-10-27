@@ -12,10 +12,6 @@
 
 "Approve payment" = "Patvirtinti mokėjimą";
 
-"Are you sure you want to remove this card?" = "Ar tikrai norite pašalinti šią kortelę?";
-
-"Are you sure you want to remove this linked account?" = "Ar tikrai norite pašalinti šią susietą paskyrą?";
-
 "Back" = "Atgal";
 
 "Bank account" = "Banko sąskaita";
@@ -28,9 +24,9 @@
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pereidami į „PayPal“ leisite „%@“ nuskaityti mokestį nuo jūsų „PayPal“ sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
 
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pereidami į „Revolut Pay“ leisite %@ nuskaityti mokestį nuo jūsų „Revolut Pay“ sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
 
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Tęsdami įgaliojate „%1$@“ nurašyti mokestį nuo jūsų „Cash App“ sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal „%2$@“ sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti „Cash App“ nuostatose.";
 
@@ -40,39 +36,33 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Išsaugodami savo banko sąskaitą %@, sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
-"Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
+"CPF/CPNJ" = "CPF/CPNJ";
 
-"Change email" = "Pakeiskite el. paštą";
+"Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
 
 "Choose a payment method" = "Pasirinkite mokėjimo būdą";
 
 "Close card scanner" = "Išjungti kortelės skaitytuvą";
 
-"Code sent" = "Kodas išsiųstas";
+"Confirm" = "Patvirtinti";
+
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
+
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Patvirtinkite mokėjimą savo banko programėlėje per %@ ir užbaikite pirkimą.";
 
 "Contact information" = "Kontaktinė informacija";
-
-"Default" = "Numatytasis";
 
 "EPS Bank" = "EPS bankas";
 
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Įveskite kodą, išsiųstą numeriu %@, kad pagal numatytuosius nustatymus galėtumėte mokėti naudodami „Link“.";
-
-"Enter your verification code" = "Įveskite patvirtinimo kodą";
-
-"For security, please re-enter your card’s security code." = "Saugumo sumetimais dar kartą įveskite kortelės saugumo kodą.";
+"FPX Bank" = "FPX bankas";
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Prisijungti prie „Link“";
-
-"Log out of Link" = "Atsijungti nuo „Link“";
+"Manage your payment methods" = "Valdykite savo mokėjimo būdus";
 
 "Name on card" = "Ant kortelės nurodytas vardas ir pavardė";
-
-"Not %@?" = "Ne %@?";
 
 "Open your UPI app to approve your payment within %@" = "Atidarykite savo UPI programą mokėjimui patvirtinti per %@";
 
@@ -94,17 +84,11 @@
 
 "Pay over time with %@" = "Mokėkite vėliau naudodami %@";
 
-"Pay using" = "Mokėkite naudodami";
-
-"Pay with %@" = "Mokėti naudojant %@";
+"Pay with Link" = "Mokėti naudojant „Link“";
 
 "Pay with your bank account in just a few steps." = "Mokėkite naudodami savo banko sąskaitą vos keliais veiksmais.";
 
-"Payment" = "Mokėjimas";
-
 "Payment failed" = "Sumokėti nepavyko";
-
-"Payment methods" = "Mokėjimo būdai";
 
 "Please go back and select another payment method" = "Grįžkite atgal ir pasirinkite kitą mokėjimo būdą";
 
@@ -118,11 +102,9 @@
 
 "Remove Card" = "Šalinti kortelę";
 
-"Remove card" = "Pašalinti kortelę";
+"Save" = "Išsaugoti";
 
-"Remove linked account" = "Pašalinti susietą paskyrą";
-
-"Resend code" = "Pakartotinai siųsti kodą";
+"Save a new payment method" = "Išsaugoti naują mokėjimo būdą";
 
 "Save address" = "išsaugoti adresą";
 
@@ -134,13 +116,9 @@
 
 "Save this card for future %@ payments" = "Išsaugoti kortelę vėlesniems %@ mokėjimams";
 
-"Secure 1⁠-⁠click checkout" = "Saugus atsiskaitymas vienu spustelėjimu";
+"Save your bank account in just a few steps." = "Vos keliais veiksmais įrašykite savo banko sąskaitą.";
 
 "Select your payment method" = "Pasirinkite mokėjimo būdą";
-
-"Set as default" = "Nustatyti kaip numatytąjį";
-
-"Set as default payment method" = "Nustatyti kaip numatytąjį mokėjimo būdą";
 
 "Set up" = "Nustatyti";
 
@@ -148,31 +126,13 @@
 
 "Show menu" = "Rodyti meniu";
 
-"Sign in to your Link account" = "Prisijunkite prie savo „Link“ paskyros";
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Per 1–2 darbo dienas „Stripe“ į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip baigti įrašyti savo banko sąskaitą naudojant „%@“.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Po 1–2 darbo dienas „Stripe“ į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip užbaigti mokėjimą %@.";
 
-"Tap to close" = "Bakstelėkite, kad uždarytumėte";
-
-"Tap to expand" = "Bakstelėkite, kad išplėstumėte";
-
 "The IBAN you entered is incomplete." = "Įvedėte ne visą IBAN.";
 
-"The provided verification code has expired." = "Pateiktas patvirtinimo kodas nebegalioja.";
-
-"The provided verification code is incorrect." = "Nurodytas neteisingas patikrinimo kodas.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Ši kortelė nebegalioja. Atnaujinkite savo kortelės informaciją arba pasirinkite kitą mokėjimo būdą.";
-
-"This is your default" = "Tai jūsų numatytasis mokėjimo būdas";
-
-"Too many attempts. Please try again in a few minutes." = "Per daug bandymų. Bandykite dar kartą po kelių minučių.";
-
-"Unavailable for this purchase" = "Šiam pirkiniui nepasiekiama";
-
 "Update card" = "Atnaujinti kortelę";
-
-"Use your saved info to check out faster" = "Naudokite išsaugotą informaciją, kad atsiskaitytumėte greičiau";
 
 "Your IBAN should start with a two-letter country code." = "Jūsų IBAN turėtų prasidėti šalies kodu iš dviejų raidžių.";
 

@@ -10,6 +10,8 @@
 
 "Area" = "Apgabals";
 
+"BLIK code" = "BLIK kods";
+
 "BSB number" = "BSB numurs";
 
 "Billing address is same as shipping" = "Norēķinu adrese un piegādes adrese sakrīt";
@@ -37,6 +39,8 @@
 "District" = "Rajons";
 
 "Do Si" = "Province un pilsēta (Do Si)";
+
+"Do you want to close this form?" = "Vai vēlaties aizvērt šo formu?";
 
 "Done" = "Gatavs";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Meklēšana";
 
+"Select card brand (optional)" = "Atlasīt kartes zīmolu (pēc izvēles)";
+
 "State" = "Novads/štats";
 
 "Suburb" = "Priekšpilsēta";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Izmantot rotoru, lai piekļūtu saitēm";
 
+"Your BLIK code is incomplete." = "Jūsu BLIK kods nav pilnīgs.";
+
+"Your BLIK code is invalid." = "Jūsu BLIK kods nav derīgs.";
+
 "Your ZIP is incomplete." = "Pasta indekss nav pilnīgs.";
 
 "Your email is invalid." = "E-pasta adrese nav derīga.";
+
+"Your payment information will not be saved." = "Jūsu maksājuma informācija nav saglabāta.";
 
 "Your postal code is incomplete." = "Pasta indekss nav pilnīgs.";
 

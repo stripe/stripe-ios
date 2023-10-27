@@ -278,6 +278,21 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
     }
 
+    func testResetTimeoutDuringScanning() {
+        // Mock that existing sacnningState already found a desired classification
+        let vc = makeViewController(
+            state: .scanning(.front, .passport),
+            documentType: .passport
+        )
+
+        // Mock that scanner found non-desired classification
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: nil)
+
+        // verify imageScanningSession.startTimeoutTimer is reset and a new valid timer is set
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, true)
+    }
+
     func testSaveDataFrontAndTransition() {
         let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
 
@@ -804,13 +819,16 @@ extension DocumentCaptureViewControllerTest {
                 duration: 0
             ),
             cameraProperties: .init(
+                .init(
                 exposureDuration: CMTime(),
                 cameraDeviceType: .builtInDualCamera,
                 isVirtualDevice: nil,
                 lensPosition: 0,
                 exposureISO: 0,
                 isAdjustingFocus: !isHighQuality
-            )
+                )
+            ),
+            blurResult: .init(isBlurry: false, variance: 0.1)
         )
     }
 

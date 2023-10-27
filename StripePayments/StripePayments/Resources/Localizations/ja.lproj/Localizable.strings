@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "BECS ダイレクトデビット (オーストラリア)";
+"AU Direct Debit" = "AU ダイレクトデビット";
 
 "Affirm" = "Affirm";
 
@@ -28,6 +28,8 @@
 
 "Klarna" = "Klarna";
 
+"Konbini" = "コンビニ決済";
+
 "Link" = "Link";
 
 "NetBanking" = "ネットバンキング";
@@ -41,6 +43,8 @@
 "SEPA Debit" = "SEPA デビット";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "支払い方法の認証がタイムアウトしました。もう一度お試しください";
 

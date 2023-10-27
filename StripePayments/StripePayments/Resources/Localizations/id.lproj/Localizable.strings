@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "Debit Langsung BECS AU";
+"AU Direct Debit" = "Debit Langsung AU";
 
 "Affirm" = "Affirm";
 
@@ -28,6 +28,8 @@
 
 "Klarna" = "Klarna";
 
+"Konbini" = "Konbini";
+
 "Link" = "Link";
 
 "NetBanking" = "Internet Banking";
@@ -41,6 +43,8 @@
 "SEPA Debit" = "SEPA Debit";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Waktu autentikasi metode pembayaran Anda habis -- coba lagi";
 

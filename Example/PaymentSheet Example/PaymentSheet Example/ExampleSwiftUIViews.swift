@@ -6,7 +6,7 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-import StripePaymentSheet
+@_spi(PrivateBetaCustomerSheet) import StripePaymentSheet
 import SwiftUI
 
 struct ExamplePaymentButtonView: View {
@@ -41,16 +41,72 @@ struct ExamplePaymentStatusView: View {
             switch result {
             case .completed:
                 Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-                Text("Your order is confirmed!")
+                Text("Success!")
             case .failed(let error):
                 Image(systemName: "xmark.octagon.fill").foregroundColor(.red)
-                Text("Payment failed: \(error.localizedDescription)")
+                Text("Payment failed: \((error as NSError).debugDescription)")
+                    .font(.system(size: 12.0))
             case .canceled:
                 Image(systemName: "xmark.octagon.fill").foregroundColor(.orange)
                 Text("Payment canceled.")
             }
         }
         .accessibility(identifier: "Payment status view")
+    }
+}
+
+enum CustomerSheetStatusViewModel {
+    case selected(CustomerSheet.PaymentOptionSelection?)
+    case canceled(CustomerSheet.PaymentOptionSelection?)
+    case loaded(CustomerSheet.PaymentOptionSelection?)
+    case error(Error)
+}
+
+struct ExampleCustomerSheetPaymentMethodView: View {
+    let customerSheetStatusViewModel: CustomerSheetStatusViewModel
+
+    var body: some View {
+        HStack {
+            switch customerSheetStatusViewModel {
+            case .selected(let paymentOptionSelection):
+                PaymentOptionSelectionView(paymentOptionSelection: paymentOptionSelection)
+                Text("(Selected)")
+            case .canceled(let paymentOptionSelection):
+                PaymentOptionSelectionView(paymentOptionSelection: paymentOptionSelection)
+                Text("(Canceled)")
+            case .loaded(let paymentOptionSelection):
+                PaymentOptionSelectionView(paymentOptionSelection: paymentOptionSelection)
+                Text("(Loaded)")
+            case .error(let error):
+                Text("(Error)")
+                Image(systemName: "xmark.octagon.fill").foregroundColor(.red)
+                Text("Error: \((error as NSError).debugDescription)")
+                    .font(.system(size: 12.0))
+            }
+        }
+        .accessibility(identifier: "CustomerSheet status view")
+    }
+}
+
+struct PaymentOptionSelectionView: View {
+    let paymentOptionSelection: CustomerSheet.PaymentOptionSelection?
+    var body: some View {
+        HStack {
+            if let paymentOptionSelection = paymentOptionSelection {
+                switch paymentOptionSelection {
+                case .applePay(let paymentOptionDisplayData):
+                    Image(uiImage: paymentOptionDisplayData.image)
+                    Text(paymentOptionDisplayData.label)
+                case .paymentMethod(_, let paymentOptionDisplayData):
+                    Image(uiImage: paymentOptionDisplayData.image)
+                    Text(paymentOptionDisplayData.label)
+                @unknown default:
+                    fatalError("Need to account for this case")
+                }
+            } else {
+                Text("None")
+            }
+        }
     }
 }
 

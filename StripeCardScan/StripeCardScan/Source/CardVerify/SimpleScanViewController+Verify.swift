@@ -10,12 +10,8 @@ extension SimpleScanViewController {
 
         let activityIndicator = UIActivityIndicatorView()
 
-        if #available(iOS 13.0, *) {
-            activityIndicator.style = .large
-            activityIndicator.color = .white
-        } else {
-            activityIndicator.style = .whiteLarge
-        }
+        activityIndicator.style = .large
+        activityIndicator.color = .white
 
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()

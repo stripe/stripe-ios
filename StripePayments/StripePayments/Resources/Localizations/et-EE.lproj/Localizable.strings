@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "AU BECS-i otsekorraldus";
+"AU Direct Debit" = "AU otsekorraldus";
 
 "Affirm" = "Affirm";
 
@@ -28,6 +28,8 @@
 
 "Klarna" = "Klarna";
 
+"Konbini" = "Konbini";
+
 "Link" = "Link";
 
 "NetBanking" = "NetBanking";
@@ -41,6 +43,8 @@
 "SEPA Debit" = "SEPA deebet";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Makseviisi autentimise toiming aegus – proovige uuesti";
 

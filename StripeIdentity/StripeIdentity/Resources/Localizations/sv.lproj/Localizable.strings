@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Ett par foton kommer att tas automatiskt i nästa steg för att verifiera att det är du";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Du kan även manuellt ladda upp ett foto av din id-handling.";
 
 "App Settings" = "Appinställningar";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Födelsedatumet verkar inte vara giltig";
 
-"File Upload" = "Ladda upp fil";
-
-"File upload" = "Ladda upp fil";
-
 "Flip your driver's license over to the other side" = "Vänd på körkortet";
 
 "Flip your identity card over to the other side" = "Vänd på id-handlingen";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Framsida av körkort";
 
 "Front of identity card" = "Framsida av id-kort";
+
+"Get ready to take a selfie" = "Gör dig redo att ta en selfie";
 
 "Go Back" = "Gå tillbaka";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Personligt ID-nummer";
 
 "Personal Information" = "Personuppgifter";
+
+"Phone Number" = "Telefonnummer";
+
+"Phone Verification" = "Telefonverifiering";
 
 "Photo Library" = "Fotobibliotek";
 
@@ -127,6 +131,8 @@
 "Upload" = "Ladda upp";
 
 "Upload a Photo" = "Ladda upp en bild";
+
+"Upload your photo ID" = "Ladda upp ditt foto-id";
 
 "Uploading back driver's license photo" = "Laddar upp bild på körkortets baksida";
 

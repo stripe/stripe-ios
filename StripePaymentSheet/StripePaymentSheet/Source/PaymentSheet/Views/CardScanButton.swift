@@ -13,7 +13,6 @@ import CloudKit
 import UIKit
 
 extension UIButton {
-    @available(iOS 13, macCatalyst 14, *)
     static func makeCardScanButton(theme: ElementsUITheme = .default) -> UIButton {
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
         let iconConfig = UIImage.SymbolConfiguration(

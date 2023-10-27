@@ -37,7 +37,6 @@ final class PaneWithHeaderLayoutView {
     ) {
         self.paneWithCustomHeaderLayoutView = PaneWithCustomHeaderLayoutView(
             headerView: CreateHeaderView(icon: icon, title: title, subtitle: subtitle),
-            headerTopMargin: icon != nil ? 8 : 16,
             contentView: contentView,
             headerAndContentSpacing: headerAndContentSpacing,
             footerView: footerView
@@ -84,19 +83,23 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String?) -> UIV
     labelStackView.axis = .vertical
     labelStackView.spacing = 8
 
-    let titleLabel = UILabel()
-    titleLabel.font = .stripeFont(forTextStyle: .subtitle)
-    titleLabel.textColor = .textPrimary
-    titleLabel.numberOfLines = 0
-    titleLabel.text = title
+    let titleLabel = AttributedTextView(
+        font: .heading(.large),
+        boldFont: .heading(.large),
+        linkFont: .heading(.large),
+        textColor: .textPrimary
+    )
+    titleLabel.setText(title)
     labelStackView.addArrangedSubview(titleLabel)
 
     if let subtitle = subtitle {
-        let subtitleLabel = UILabel()
-        subtitleLabel.font = .stripeFont(forTextStyle: .body)
-        subtitleLabel.textColor = .textSecondary
-        subtitleLabel.numberOfLines = 0
-        subtitleLabel.text = subtitle
+        let subtitleLabel = AttributedTextView(
+            font: .body(.medium),
+            boldFont: .body(.mediumEmphasized),
+            linkFont: .body(.mediumEmphasized),
+            textColor: .textPrimary
+        )
+        subtitleLabel.setText(subtitle)
         labelStackView.addArrangedSubview(subtitleLabel)
     }
 

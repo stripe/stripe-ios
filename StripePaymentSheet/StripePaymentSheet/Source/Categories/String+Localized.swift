@@ -61,10 +61,12 @@ extension String.Localized {
         STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
     }
 
-    static var pay_with_payment_method: String {
-        // TODO(ramont): Re-translate this string as some of the existing translations
-        // contain punctuation or don't read as a sentence.
-        STPLocalizedString("Pay with %@", "Pay with {payment method}")
+    static var bank_account_sentence_case: String {
+        STPLocalizedString("Bank account", "Title for collected bank account information")
+    }
+
+    static var pay_with_link: String {
+        STPLocalizedString("Pay with Link", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
     }
 
     static var back: String {
@@ -166,10 +168,24 @@ extension String.Localized {
         )
     }
 
+    static var bacs_mandate_text: String {
+        STPLocalizedString(
+            "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.",
+            "Bacs Debit mandate text"
+        )
+    }
+
     static var cash_app_mandate_text: String {
         STPLocalizedString(
             "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.",
             "Cash App mandate text"
+        )
+    }
+
+    static var revolut_pay_mandate_text: String {
+        STPLocalizedString(
+            "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.",
+            "Revolut Pay mandate text"
         )
     }
 
@@ -185,5 +201,23 @@ extension String.Localized {
             "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.",
             "Paypal mandate text"
         )
+    }
+
+    static var blik_confirm_payment: String {
+        STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
+                           "Text for alert message when user needs to confirm payment in their banking app")
+    }
+
+    static var contact_information: String {
+        STPLocalizedString("Contact information", "Title for the contact information section")
+    }
+
+    static var paynow_confirm_payment: String {
+        STPLocalizedString("Confirm the payment in your bank or payment app within %@ to complete the purchase.",
+                           "Text for alert message when user needs to confirm payment in their banking app")
+    }
+
+    static var cpf_cpnj: String {
+        STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
     }
 }

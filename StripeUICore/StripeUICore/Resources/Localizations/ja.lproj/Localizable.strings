@@ -10,6 +10,8 @@
 
 "Area" = "地域";
 
+"BLIK code" = "BLIK コード";
+
 "BSB number" = "BSB 番号";
 
 "Billing address is same as shipping" = "請求先住所は配送先住所と同じ";
@@ -37,6 +39,8 @@
 "District" = "地区";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "このフォームを閉じてもよいですか？";
 
 "Done" = "完了";
 
@@ -92,6 +96,8 @@
 
 "Search" = "検索";
 
+"Select card brand (optional)" = "カードブランドを選択 (任意)";
+
 "State" = "都道府県";
 
 "Suburb" = "近郊";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "ローターを使用してリンクにアクセスします";
 
+"Your BLIK code is incomplete." = "BLIK コードの入力に不備があります。";
+
+"Your BLIK code is invalid." = "BLIK コードが無効です。";
+
 "Your ZIP is incomplete." = "郵便番号の入力に不備があります。";
 
 "Your email is invalid." = "メールアドレスが無効です。";
+
+"Your payment information will not be saved." = "支払い情報は保存されません。";
 
 "Your postal code is incomplete." = "郵便番号の入力に不備があります。";
 

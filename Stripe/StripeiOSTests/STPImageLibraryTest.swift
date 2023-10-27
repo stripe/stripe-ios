@@ -225,22 +225,10 @@ class STPImageLibraryTestSwift: XCTestCase {
     func testErrorImageForCardBrand() {
         for brand in Self.cardBrands {
             let image = STPImageLibrary.errorImage(for: brand)
-
-            switch brand {
-            case .amex:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed(
-                        "stp_card_error_amex",
-                        templateIfAvailable: false
-                    )
-                )
-            default:
-                STPAssertEqualImages(
-                    image,
-                    STPImageLibrary.safeImageNamed("stp_card_error", templateIfAvailable: false)
-                )
-            }
+            STPAssertEqualImages(
+                image,
+                STPImageLibrary.safeImageNamed("stp_card_error", templateIfAvailable: false)
+            )
         }
     }
 

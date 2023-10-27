@@ -37,31 +37,35 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_link = "icon-pm-link"
     case pm_type_upi = "icon-pm-upi"
     case pm_type_cashapp = "icon-pm-cashapp"
+    case pm_type_revolutpay = "icon-pm-revolutpay"
+    case pm_type_blik = "icon-pm-blik"
+    case pm_type_alipay = "icon-pm-alipay"
+    case pm_type_oxxo = "icon-pm-oxxo"
+    case pm_type_konbini = "icon-pm-konbini"
+    case pm_type_boleto = "icon-pm-boleto"
+    case pm_type_swish = "icon-pm-swish"
 
     // Icons/symbols
     case icon_checkmark = "icon_checkmark"
     case icon_chevron_left = "icon_chevron_left"
     case icon_lock = "icon_lock"
-    case icon_menu = "icon_menu"
-    case icon_menu_horizontal = "icon_menu_horizontal"
     case icon_plus = "icon_plus"
     case icon_x = "icon_x"
     case icon_x_standalone = "icon_x_standalone"
     case icon_chevron_left_standalone = "icon_chevron_left_standalone"
+    case icon_edit = "icon_edit"
 
     // Link
-    case back_button = "back_button"
-    case icon_cancel = "icon_cancel"
-    case icon_add_bordered = "icon_add_bordered"
     case link_logo = "link_logo"
-    case icon_link_success = "icon_link_success"
-    case icon_link_error = "icon_link_error"
+    case link_arrow = "link_arrow"
     case link_carousel_logo = "link_carousel_logo"
 
     // Affirm Images
     case affirm_copy = "affirm_mark"
-    case affirm_copy_dark = "affirm_mark_dark"
 
     // Polling / UPI
     case polling_error = "polling_error_icon"
+
+    // Mandates
+    case bacsdd_logo = "bacsdd_logo"
 }

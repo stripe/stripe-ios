@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 class ConsentFooterView: HitTestView {
 
     private let agreeButtonText: String
@@ -24,6 +23,7 @@ class ConsentFooterView: HitTestView {
         NSLayoutConstraint.activate([
             agreeButton.heightAnchor.constraint(equalToConstant: 56)
         ])
+        agreeButton.accessibilityIdentifier = "consent_agree_button"
         return agreeButton
     }()
 
@@ -39,10 +39,10 @@ class ConsentFooterView: HitTestView {
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
 
-        let termsAndPrivacyPolicyLabel = ClickableLabel(
-            font: UIFont.stripeFont(forTextStyle: .detail),
-            boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
-            linkFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+        let termsAndPrivacyPolicyLabel = AttributedTextView(
+            font: .body(.small),
+            boldFont: .body(.smallEmphasized),
+            linkFont: .body(.smallEmphasized),
             textColor: .textSecondary,
             alignCenter: true
         )
@@ -58,13 +58,13 @@ class ConsentFooterView: HitTestView {
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 20
+        verticalStackView.spacing = 24
 
         if let belowCtaText = belowCtaText {
-            let manuallyVerifyLabel = ClickableLabel(
-                font: UIFont.stripeFont(forTextStyle: .detail),
-                boldFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
-                linkFont: UIFont.stripeFont(forTextStyle: .detailEmphasized),
+            let manuallyVerifyLabel = AttributedTextView(
+                font: .body(.small),
+                boldFont: .body(.smallEmphasized),
+                linkFont: .body(.smallEmphasized),
                 textColor: .textSecondary,
                 alignCenter: true
             )
@@ -72,6 +72,7 @@ class ConsentFooterView: HitTestView {
                 belowCtaText,
                 action: didSelectURL
             )
+            manuallyVerifyLabel.accessibilityIdentifier = "consent_manually_verify_label"
             verticalStackView.addArrangedSubview(manuallyVerifyLabel)
             verticalStackView.setCustomSpacing(24, after: agreeButton)
         }
@@ -96,7 +97,6 @@ class ConsentFooterView: HitTestView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ConsentFooterView {
@@ -115,7 +115,6 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct ConsentFooterView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {

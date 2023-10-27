@@ -10,7 +10,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class BiometricConsentViewController: IdentityFlowViewController {
 
     private let htmlView = HTMLViewWithIconLabels()
@@ -82,26 +81,39 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             )
         )
 
-        return .init(
-            headerViewModel: .init(
-                backgroundColor: .systemBackground,
-                headerType: .banner(
-                    iconViewModel: .init(
-                        iconType: .brand,
-                        iconImage: brandLogo,
-                        iconImageContentMode: .scaleToFill
-                    )
+        if let consentTitle = consentContent.title {
+            return .init(
+                headerViewModel: .init(
+                    backgroundColor: .systemBackground,
+                    headerType: .banner(
+                        iconViewModel: .init(
+                            iconType: .brand,
+                            iconImage: brandLogo,
+                            iconImageContentMode: .scaleToFill
+                        )
+                    ),
+                    titleText: consentTitle
                 ),
-                titleText: consentContent.title
-            ),
-            contentViewModel: .init(
-                view: htmlView,
-                inset: .init(top: 16, leading: 16, bottom: 8, trailing: 16)
-            ),
-            buttons: buttons,
-            scrollViewDelegate: self,
-            flowViewDelegate: self
-        )
+                contentViewModel: .init(
+                    view: htmlView,
+                    inset: .init(top: 16, leading: 16, bottom: 8, trailing: 16)
+                ),
+                buttons: buttons,
+                scrollViewDelegate: self,
+                flowViewDelegate: self
+            )
+        } else {
+            return .init(
+                headerViewModel: nil,
+                contentViewModel: .init(
+                    view: htmlView,
+                    inset: .init(top: 16, leading: 16, bottom: 8, trailing: 16)
+                ),
+                buttons: buttons,
+                scrollViewDelegate: self,
+                flowViewDelegate: self
+            )
+        }
     }
 
     init(
@@ -117,20 +129,27 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         // display consent copy
         try htmlView.configure(
             with: .init(
-                iconText: [
-                    .init(
-                        image: Image.iconClock.makeImage().withTintColor(IdentityUI.iconColor),
-                        text: consentContent.timeEstimate,
-                        isTextHTML: false
-                    ),
-                ],
-                nonIconText: [
-                    .init(
-                        text: consentContent.privacyPolicy,
-                        isTextHTML: true
-                    ),
-                ],
-                bodyHtmlString: consentContent.body,
+                iconText: {
+                    if let timeEstimate = self.consentContent.timeEstimate {
+                        return [
+                            .init(
+                                image: Image.iconClock.makeImage().withTintColor(IdentityUI.iconColor),
+                                text: timeEstimate,
+                                isTextHTML: false
+                            ),
+                        ]
+                    } else {
+                        return []
+                    }
+                }(),
+                nonIconText: {
+                    if let privacyPolicy = self.consentContent.privacyPolicy {
+                        return [.init(text: privacyPolicy, isTextHTML: true)]
+                    } else {
+                        return []
+                    }
+                }(),
+                bodyHtmlString: self.consentContent.body,
                 didOpenURL: { [weak self] url in
                     self?.openInSafariViewController(url: url)
                 }
@@ -149,7 +168,6 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
 // MARK: - Private Helpers
 
-@available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController {
 
     fileprivate func updateUI() {
@@ -178,7 +196,6 @@ extension BiometricConsentViewController {
 
 // MARK: - IdentityDataCollecting
 
-@available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         return [.biometricConsent]
@@ -186,8 +203,6 @@ extension BiometricConsentViewController: IdentityDataCollecting {
 }
 
 // MARK: - UIScrollViewDelegate
-@available(iOS 13, *)
-@available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let scrolledToBottomYOffset = scrolledToBottomYOffset,
@@ -199,8 +214,6 @@ extension BiometricConsentViewController: UIScrollViewDelegate {
 }
 
 // MARK: - IdentityFlowViewDelegate
-@available(iOS 13, *)
-@available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: IdentityFlowViewDelegate {
     func scrollViewFullyLaiedOut(_ scrollView: UIScrollView) {
         guard scrolledToBottomYOffset == nil else {

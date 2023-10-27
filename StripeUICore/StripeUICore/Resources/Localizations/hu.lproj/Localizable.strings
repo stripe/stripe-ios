@@ -10,6 +10,8 @@
 
 "Area" = "Terület";
 
+"BLIK code" = "BLIK kód";
+
 "BSB number" = "BSB-szám";
 
 "Billing address is same as shipping" = "A számlázási cím megegyezik a szállítási címmel";
@@ -37,6 +39,8 @@
 "District" = "Kerület";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Bezárja ezt az űrlapot?";
 
 "Done" = "Kész";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Keresés";
 
+"Select card brand (optional)" = "Válassza ki a kártya márkáját (nem kötelező)";
+
 "State" = "Állam";
 
 "Suburb" = "Külváros";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Rotor használata a hivatkozások kezeléséhez";
 
+"Your BLIK code is incomplete." = "BLIK kódja hiányos.";
+
+"Your BLIK code is invalid." = "BLIK kódja érvénytelen.";
+
 "Your ZIP is incomplete." = "A ZIP hiányos.";
 
 "Your email is invalid." = "Érvénytelen e-mail-cím.";
+
+"Your payment information will not be saved." = "Fizetési adatai nem lesznek mentve.";
 
 "Your postal code is incomplete." = "Az irányítószám hiányos.";
 

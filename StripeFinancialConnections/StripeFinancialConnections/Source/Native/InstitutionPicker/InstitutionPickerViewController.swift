@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol InstitutionPickerViewControllerDelegate: AnyObject {
     func institutionPickerViewController(
         _ viewController: InstitutionPickerViewController,
@@ -19,9 +18,11 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
         _ viewController: InstitutionPickerViewController
     )
+    func institutionPickerViewControllerDidSearch(
+        _ viewController: InstitutionPickerViewController
+    )
 }
 
-@available(iOSApplicationExtension, unavailable)
 class InstitutionPickerViewController: UIViewController {
 
     // MARK: - Properties
@@ -142,17 +143,28 @@ class InstitutionPickerViewController: UIViewController {
 
 // MARK: - Data
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController {
 
     private func fetchFeaturedInstitutions(completionHandler: @escaping () -> Void) {
         assertMainQueue()
+        let fetchStartDate = Date()
         dataSource
             .fetchFeaturedInstitutions()
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let institutions):
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "search.feature_institutions_loaded",
+                            parameters: [
+                                "institutions": institutions.map({ $0.id }),
+                                "result_count": institutions.count,
+                                "duration": Date().timeIntervalSince(fetchStartDate).milliseconds,
+                            ],
+                            pane: .institutionPicker
+                        )
                     self.featuredInstitutionGridView.loadInstitutions(institutions)
                     self.dataSource
                         .analyticsClient
@@ -207,22 +219,43 @@ extension InstitutionPickerViewController {
                             .log(
                                 eventName: "search.succeeded",
                                 parameters: [
-                                    "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
                                     "query": searchQuery,
                                     "duration": Date().timeIntervalSince(lastInstitutionSearchFetchDate).milliseconds,
                                     "result_count": institutionList.data.count,
-                                ]
+                                ],
+                                pane: .institutionPicker
                             )
+                        self.delegate?.institutionPickerViewControllerDidSearch(self)
                     case .failure(let error):
                         self.institutionSearchTableView.loadInstitutions([])
                         self.institutionSearchTableView.showError(true)
-                        self.dataSource
-                            .analyticsClient
-                            .logUnexpectedError(
-                                error,
-                                errorName: "SearchInstitutionsError",
-                                pane: .institutionPicker
-                            )
+
+                        if
+                            let error = error as? StripeError,
+                            case .apiError(let apiError) = error,
+                            apiError.type == .invalidRequestError,
+                            apiError.param == "client_secret",
+                            (apiError.message ?? "").contains("expired")
+                        {
+                            // Do not log for this case.
+                            //
+                            // This code fixes a a weird logging edge-case:
+                            // 1. Type an invalid keyword ("abcde") in the search that iOS
+                            //    will auto-correct
+                            // 2. While keyboard is still presented press to enter manual entry
+                            // 3. If merchant has manual entry handoff, we will call
+                            //    complete API but another search call will execute
+                            //    due to iOS auto-correct, which will fail because
+                            //    session is completed.
+                        } else {
+                            self.dataSource
+                                .analyticsClient
+                                .logUnexpectedError(
+                                    error,
+                                    errorName: "SearchInstitutionsError",
+                                    pane: .institutionPicker
+                                )
+                        }
                     }
                     self.searchBar.updateSearchingIndicator(false)
                 }
@@ -237,7 +270,6 @@ extension InstitutionPickerViewController {
 
 // MARK: - InstitutioNSearchBarDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
 
     func institutionSearchBar(_ searchBar: InstitutionSearchBar, didChangeText text: String) {
@@ -248,7 +280,6 @@ extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
 
 // MARK: - UIGestureRecognizerDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -259,7 +290,6 @@ extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
 
 // MARK: - FeaturedInstitutionGridViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
 
     func featuredInstitutionGridView(
@@ -269,9 +299,9 @@ extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
         dataSource.analyticsClient.log(
             eventName: "search.featured_institution_selected",
             parameters: [
-                "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
                 "institution_id": institution.id,
-            ]
+            ],
+            pane: .institutionPicker
         )
         didSelectInstitution(institution)
     }
@@ -279,7 +309,6 @@ extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
 
 // MARK: - InstitutionSearchTableViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
 
     func institutionSearchTableView(
@@ -289,21 +318,47 @@ extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
         dataSource.analyticsClient.log(
             eventName: "search.search_result_selected",
             parameters: [
-                "pane": FinancialConnectionsSessionManifest.NextPane.institutionPicker.rawValue,
                 "institution_id": institution.id,
-            ]
+            ],
+            pane: .institutionPicker
         )
         didSelectInstitution(institution)
     }
 
-    func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView) {
+    func institutionSearchTableView(
+        _ tableView: InstitutionSearchTableView,
+        didSelectManuallyAddYourAccountWithInstitutions institutions: [FinancialConnectionsInstitution]
+    ) {
+        dataSource
+            .analyticsClient
+            .log(
+                eventName: "click.manual_entry",
+                parameters: [
+                    "institution_ids": institutions.map({ $0.id }),
+                ],
+                pane: .institutionPicker
+            )
         delegate?.institutionPickerViewControllerDidSelectManuallyAddYourAccount(self)
+    }
+
+    func institutionSearchTableView(
+        _ tableView: InstitutionSearchTableView,
+        didScrollInstitutions institutions: [FinancialConnectionsInstitution]
+    ) {
+        dataSource
+            .analyticsClient
+            .log(
+                eventName: "search.scroll",
+                parameters: [
+                    "institution_ids": institutions.map({ $0.id })
+                ],
+                pane: .institutionPicker
+            )
     }
 }
 
 // MARK: - Constants
 
-@available(iOSApplicationExtension, unavailable)
 extension InstitutionPickerViewController {
     enum Constants {
         static let queryDelay = TimeInterval(0.2)
@@ -325,7 +380,7 @@ private func CreateMainView(
         ]
     )
     verticalStackView.axis = .vertical
-    verticalStackView.spacing = 16
+    verticalStackView.spacing = (searchBar == nil) ? 24 : 16
     return verticalStackView
 }
 
@@ -344,7 +399,7 @@ private func CreateHeaderView(
     verticalStackView.spacing = 24
     verticalStackView.isLayoutMarginsRelativeArrangement = true
     verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 16,
+        top: 8,
         leading: 24,
         bottom: 0,
         trailing: 24
@@ -353,12 +408,15 @@ private func CreateHeaderView(
 }
 
 private func CreateHeaderTitleLabel() -> UIView {
-    let headerTitleLabel = UILabel()
-    headerTitleLabel.textColor = .textPrimary
-    headerTitleLabel.font = .stripeFont(forTextStyle: .subtitle)
-    headerTitleLabel.text = STPLocalizedString(
-        "Select your bank",
-        "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America)."
+    let headerTitleLabel = AttributedLabel(
+        font: .heading(.large),
+        textColor: .textPrimary
+    )
+    headerTitleLabel.setText(
+        STPLocalizedString(
+            "Select your bank",
+            "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America)."
+        )
     )
     return headerTitleLabel
 }

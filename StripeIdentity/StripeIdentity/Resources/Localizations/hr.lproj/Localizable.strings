@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "U sljedećem koraku automatski će se snimiti nekoliko fotografija kako bi se potvrdilo da ste to vi";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Umjesto toga možete ručno prenijeti fotografiju svog osobnog dokumenta.";
 
 "App Settings" = "Postavke aplikacije";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Datum rođenja ne izgleda ispravno";
 
-"File Upload" = "Učitavanje datoteke";
-
-"File upload" = "Postavljanje datoteke";
-
 "Flip your driver's license over to the other side" = "Okrenite svoju vozačku dozvolu na drugu stranu";
 
 "Flip your identity card over to the other side" = "Okrenite svoju osobnu iskaznicu na drugu stranu";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Prednja strana vozačke dozvole";
 
 "Front of identity card" = "Prednja strana osobne iskaznice";
+
+"Get ready to take a selfie" = "Pripremite se za snimanje selfija";
 
 "Go Back" = "Vrati se natrag";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Osobni identifikacijski broj";
 
 "Personal Information" = "Osobni podaci";
+
+"Phone Number" = "Telefonski broj";
+
+"Phone Verification" = "Provjera uz pomoć telefona";
 
 "Photo Library" = "Biblioteka fotografija";
 
@@ -127,6 +131,8 @@
 "Upload" = "Učitaj";
 
 "Upload a Photo" = "Učitaj fotografiju";
+
+"Upload your photo ID" = "Učitajte svoj identifikacijski dokument s fotografijom";
 
 "Uploading back driver's license photo" = "Učitavanje fotografije stražnje strane vozačke dozvole";
 

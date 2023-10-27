@@ -10,6 +10,8 @@
 
 "Area" = "Zonă";
 
+"BLIK code" = "Cod BLIK";
+
 "BSB number" = "Număr BSB";
 
 "Billing address is same as shipping" = "Adresa de facturare este la fel cu cea de expediere";
@@ -37,6 +39,8 @@
 "District" = "District";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Doriți să închideți acest formular?";
 
 "Done" = "Efectuat";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Căutare";
 
+"Select card brand (optional)" = "Selectare marcă card (opțional)";
+
 "State" = "Stat";
 
 "Suburb" = "Suburbie";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Utilizați rotorul pentru a accesa linkurile";
 
+"Your BLIK code is incomplete." = "Codul dvs. BLIK nu este complet.";
+
+"Your BLIK code is invalid." = "Codul dvs. BLIK nu este valid.";
+
 "Your ZIP is incomplete." = "Codul dvs. poștal nu este complet.";
 
 "Your email is invalid." = "E-mailul dvs. nu este valid.";
+
+"Your payment information will not be saved." = "Informațiile dvs. de plată nu vor fi salvate.";
 
 "Your postal code is incomplete." = "Codul dvs. poștal nu este complet.";
 

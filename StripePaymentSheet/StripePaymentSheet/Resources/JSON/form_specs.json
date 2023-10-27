@@ -752,6 +752,60 @@
         }
     },
     {
+        "type": "amazon_pay",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-5694f2030b236ad5410b5b7e52bb538c.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-f932bc37514fd6dd1f66006767287085.svg",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-9e42e4498e0bee515c423ef66010852f.png",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-d3ef2eeefed43cea1f969c3a2a4118d8.svg"
+            },
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+          "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "alma",
+        "async": false,
+        "selector_icon": {
+          "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-9adee7a095478e23c76054e7fcb4c275.png",
+          "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-e4cbf3b2cec6b09cb0fd10d404fbbf44.svg",
+          "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-41fe66ba84194788e98548aa6e749c79.png",
+          "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-74fb7ea51cccf2e1dd530f308bed9c60.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+          "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },   
+    {
         "type": "mobilepay",
         "async": false,
         "fields": [],
@@ -806,5 +860,170 @@
             "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp@3x-a89c5d8d0651cae2a511bb49a6be1cfc.png",
             "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp-981164a833e417d28a8ac2684fda2324.svg"
         }
+    },
+    {
+      "type": "grabpay",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay@3x-e54da1d788668a5909e4801d5c243198.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay-97ee78fdbbf1890bdf19986e997e685d.svg"
+      },
+      "fields": []
+    },
+    {
+      "type": "fpx",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx@3x-305453711338125d9cb4f86ff866ba6a.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx.svg"
+      },
+      "fields": [
+        {
+          "type": "selector",
+          "translation_id": "upe.labels.fpx.bank",
+        "items": [
+          {
+            "display_text": "Affin Bank",
+            "api_value": "affin_bank"
+          },
+          {
+            "display_text": "Alliance Bank",
+            "api_value": "alliance_bank"
+          },
+          {
+            "display_text": "AmBank",
+            "api_value": "ambank"
+          },
+          {
+            "display_text": "Bank Islam",
+            "api_value": "bank_islam"
+          },
+          {
+            "display_text": "Bank Muamalat",
+            "api_value": "bank_muamalat"
+          },
+          {
+            "display_text": "Bank Rakyat",
+            "api_value": "bank_rakyat"
+          },
+          {
+            "display_text": "BSN",
+            "api_value": "bsn"
+          },
+          {
+            "display_text": "CIMB Clicks",
+            "api_value": "cimb"
+          },
+          {
+            "display_text": "Hong Leong Bank",
+            "api_value": "hong_leong_bank"
+          },
+          {
+            "display_text": "HSBC BANK",
+            "api_value": "hsbc"
+          },
+          {
+            "display_text": "KFH",
+            "api_value": "kfh"
+          },
+          {
+            "display_text": "Maybank2E",
+            "api_value": "maybank2e"
+          },
+          {
+            "display_text": "Maybank2U",
+            "api_value": "maybank2u"
+          },
+          {
+            "display_text": "OCBC Bank",
+            "api_value": "ocbc"
+          },
+          {
+            "display_text": "Public Bank",
+            "api_value": "public_bank"
+          },
+          {
+            "display_text": "RHB Bank",
+            "api_value": "rhb"
+          },
+          {
+            "display_text": "Standard Chartered",
+            "api_value": "standard_chartered"
+          },
+          {
+            "display_text": "UOB Bank",
+            "api_value": "uob"
+          }
+        ],
+          "api_path": {
+            "v1": "fpx[bank]"
+          }
+        },
+        {
+          "type": "placeholder",
+          "for": "billing_address"
+        }
+      ],
+      "next_action_spec": {
+        "confirm_response_status_specs": {
+          "requires_action": {
+            "type": "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs": {
+          "succeeded": {
+            "type": "finished"
+          },
+          "requires_action": {
+            "type": "canceled"
+          }
+        }
+      }
+    },
+    {
+      "type": "alipay",
+      "async": false,
+      "fields": []
+    },
+    {
+      "type": "paynow",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow@3x-06fb143923e8492b0d3fe379ad6692a9.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow-b25acf96aac928b13e6206afb8982444.svg",
+        "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark@3x-d49fe128abf7fe78fdfa939c445ca2cc.png",
+        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark-d700c844535c608fd5fd4048f6a21146.svg"
+      },
+      "fields": []
+    },
+    {
+      "type": "promptpay",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/promptpay.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay-8bc83c76f38f2a4d3a5f64b6229450dd.svg",
+        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay_dark-dfd2904083152023d89a8300f04a666f.svg"
+      },
+      "fields": [
+        {
+          "type": "placeholder",
+          "for": "name"
+        },
+        {
+          "type": "email",
+          "api_path": {
+            "v1": "billing_details[email]"
+          }
+        },
+        {
+          "type": "placeholder",
+          "for": "phone"
+        },
+        {
+          "type": "placeholder",
+          "for": "billing_address"
+        }
+      ]
     }
+
 ]

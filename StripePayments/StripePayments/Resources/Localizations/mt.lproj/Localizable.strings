@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "Debitu Dirett BECS AU";
+"AU Direct Debit" = "Debitu Dirett AU";
 
 "Affirm" = "Affirm";
 
@@ -28,6 +28,8 @@
 
 "Klarna" = "Klarna";
 
+"Konbini" = "Konbini";
+
 "Link" = "Link";
 
 "NetBanking" = "NetBanking";
@@ -41,6 +43,8 @@
 "SEPA Debit" = "Debitu SEPA";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Skada l-ħin tal-awtentikazzjoni tal-metodu tal-ħlas tiegħek -- erġa' pprova";
 

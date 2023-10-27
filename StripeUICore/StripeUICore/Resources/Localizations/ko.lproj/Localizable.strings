@@ -10,6 +10,8 @@
 
 "Area" = "지역";
 
+"BLIK code" = "BLIK 코드";
+
 "BSB number" = "BSB 번호";
 
 "Billing address is same as shipping" = "청구 주소가 배송 주소와 동일함";
@@ -37,6 +39,8 @@
 "District" = "지구";
 
 "Do Si" = "도시";
+
+"Do you want to close this form?" = "이 양식을 닫으시겠습니까?";
 
 "Done" = "완료";
 
@@ -92,6 +96,8 @@
 
 "Search" = "검색";
 
+"Select card brand (optional)" = "카드 브랜드 선택(선택 사항)";
+
 "State" = "주";
 
 "Suburb" = "교외";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "링크 액세스에 로터 사용";
 
+"Your BLIK code is incomplete." = "BLIK 코드가 불완전합니다.";
+
+"Your BLIK code is invalid." = "BLIK 코드가 유효하지 않습니다.";
+
 "Your ZIP is incomplete." = "우편번호가 불완전합니다.";
 
 "Your email is invalid." = "이메일이 잘못되었습니다.";
+
+"Your payment information will not be saved." = "귀하의 결제 정보가 저장되지 않습니다.";
 
 "Your postal code is incomplete." = "우편번호가 불완전합니다.";
 

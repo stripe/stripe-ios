@@ -105,7 +105,6 @@ class IdentityFlowViewController: UIViewController {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension IdentityFlowViewController {
     func openInSafariViewController(url: URL) {
         guard url.scheme == "http" || url.scheme == "https" else {

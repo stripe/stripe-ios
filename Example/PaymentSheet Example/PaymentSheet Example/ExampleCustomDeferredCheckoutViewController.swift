@@ -5,12 +5,8 @@
 //  Created by Nick Porter on 3/27/23.
 //
 // This is an example of an integration using PaymentSheet.FlowController where you collect payment details before creating an Intent.
-//  ⚠️🏗 This integration is in private beta. Please email us at mobile-deferred-intents-beta@stripe.com if you're interested in participating!
 
-//  Note: Do not import Stripe using `@_spi(ExperimentalPaymentSheetDecouplingAPI)` in production.
-//  This exposes internal functionality which may cause unexpected behavior if used directly.
-// TODO(porter) Remove ExperimentalPaymentSheetDecouplingAPI usage before GA
-@_spi (ExperimentalPaymentSheetDecouplingAPI) import StripePaymentSheet
+import StripePaymentSheet
 import UIKit
 
 // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
@@ -48,8 +44,8 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
-        ) { [weak self] paymentMethodID, shouldSavePaymentMethod, intentCreationCallback in
-            self?.serverSideConfirmHandler(paymentMethodID, shouldSavePaymentMethod, intentCreationCallback)
+        ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+            self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
         }
     }
 
@@ -315,6 +311,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
+            "customer_id": paymentSheetFlowController.configuration.customer?.id,
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])

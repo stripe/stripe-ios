@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Câteva fotografii vor fi efectuate automat la următorul pas pentru a verifica dacă sunteți dvs.";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Alternativ, puteți încărca manual o fotografie a documentului dvs. de identitate.";
 
 "App Settings" = "Setările aplicației";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Data nașterii pare a nu fi validă";
 
-"File Upload" = "Încărcare fișier";
-
-"File upload" = "Încărcare fișier";
-
 "Flip your driver's license over to the other side" = "Întoarceți permisul de conducere pe partea cealaltă";
 
 "Flip your identity card over to the other side" = "Întoarceți cartea de identitate pe partea cealaltă";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Partea frontală a permisului de conducere";
 
 "Front of identity card" = "Partea frontală a cărții de identitate";
+
+"Get ready to take a selfie" = "Pregătiți-vă pentru a efectua un selfie";
 
 "Go Back" = "Înapoi";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Număr de identificare personal";
 
 "Personal Information" = "Informații cu caracter personal";
+
+"Phone Number" = "Număr de telefon";
+
+"Phone Verification" = "Verificare număr de telefon";
 
 "Photo Library" = "Galerie foto";
 
@@ -127,6 +131,8 @@
 "Upload" = "Încărcare";
 
 "Upload a Photo" = "Încărcați o fotografie";
+
+"Upload your photo ID" = "Încărcați documentul de identitate cu fotografie";
 
 "Uploading back driver's license photo" = "Se încarcă fotografia verso-ului permisului de conducere";
 

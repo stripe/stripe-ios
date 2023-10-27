@@ -69,7 +69,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             }
             switch paymentMethodType {
             case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount,
-                .cashApp:
+                    .cashApp, .payPal, .revolutPay:
                 return .makeWithInferredValues()
             default: break
             }
@@ -82,7 +82,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     private var _mandateData: STPMandateDataParams?
 
     internal var _paymentMethodType: STPPaymentMethodType?
-    internal var paymentMethodType: STPPaymentMethodType? {
+    @_spi(STP) public var paymentMethodType: STPPaymentMethodType? {
         if let type = _paymentMethodType {
             return type
         }

@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Sekančiame žingsnyje, siekiant patvirtinti jūsų tapatybę, bus padarytos kelios jūsų nuotraukos";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Arba galite patys įkelti tapatybės dokumento nuotrauką.";
 
 "App Settings" = "Programos nustatymai";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Gimimo data neatrodo tinkama";
 
-"File Upload" = "Failo įkėlimas";
-
-"File upload" = "Failo įkėlimas";
-
 "Flip your driver's license over to the other side" = "Apverskite vairuotojo pažymėjimą kita puse";
 
 "Flip your identity card over to the other side" = "Apverskite asmens tapatybės kortelę kita puse";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Vairuotojo pažymėjimo priekinė pusė";
 
 "Front of identity card" = "Asmens tapatybės kortelės priekinė pusė";
+
+"Get ready to take a selfie" = "Pasiruoškite nusifotografuoti";
 
 "Go Back" = "Atgal";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Asmens kodas";
 
 "Personal Information" = "Asmeninė informacija";
+
+"Phone Number" = "Telefono numeris";
+
+"Phone Verification" = "Telefono patvirtinimas";
 
 "Photo Library" = "Nuotraukų biblioteka";
 
@@ -127,6 +131,8 @@
 "Upload" = "Įkelti";
 
 "Upload a Photo" = "Įkelti nuotrauką";
+
+"Upload your photo ID" = "Įkelkite savo asmens dokumento nuotrauką";
 
 "Uploading back driver's license photo" = "Įkeliama vairuotojo pažymėjimo galinės pusės nuotrauka";
 

@@ -11,13 +11,16 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class MerchantDataAccessView: HitTestView {
 
     init(
         isStripeDirect: Bool,
         businessName: String?,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+        isNetworking: Bool,
+        font: FinancialConnectionsFont,
+        boldFont: FinancialConnectionsFont,
+        alignCenter: Bool,
         didSelectLearnMore: @escaping () -> Void
     ) {
         super.init(frame: .zero)
@@ -29,20 +32,20 @@ final class MerchantDataAccessView: HitTestView {
                 "Data accessible to Stripe:",
                 "This text is a lead-up to a disclosure that lists all of the bank data that Stripe will have access to. For example, the full text may read 'Data accessible to Stripe: Account details, transactions.'"
             )
-            leadingString = "**\(localizedLeadingString)**"
+            leadingString = localizedLeadingString
         } else {
             if let businessName = businessName {
                 let localizedLeadingString = STPLocalizedString(
                     "Data accessible to %@:",
                     "This text is a lead-up to a disclosure that lists all of the bank data that a merchant (ex. Coca-Cola) will have access to. For example, the full text may read 'Data accessible to Coca-Cola: Account details, transactions.'"
                 )
-                leadingString = "**\(String(format: localizedLeadingString, businessName))**"
+                leadingString = String(format: localizedLeadingString, businessName)
             } else {
                 let localizedLeadingString = STPLocalizedString(
                     "Data accessible to this business:",
                     "This text is a lead-up to a disclosure that lists all of the bank data that a business will have access to. For example, the full text may read 'Data accessible to this business: Account details, transactions.'"
                 )
-                leadingString = "**\(localizedLeadingString)**"
+                leadingString = localizedLeadingString
             }
         }
 
@@ -64,7 +67,16 @@ final class MerchantDataAccessView: HitTestView {
         let learnMoreString = "[\(String.Localized.learn_more)](\(learnMoreUrlString))"
 
         let finalString: String
-        if isStripeDirect {
+        if isNetworking {
+            let localizedPermissionFullString = String(
+                format: STPLocalizedString(
+                    "%@ through Link.",
+                    "A sentence that describes what users banking data is accessible to Link. For example, the full sentence may say 'Account details, transactions, balances through Link.'"
+                ),
+                permissionString
+            )
+            finalString = "\(leadingString) \(localizedPermissionFullString) \(learnMoreString)"
+        } else if isStripeDirect {
             finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
         } else {
             let localizedPermissionFullString = String(
@@ -77,11 +89,12 @@ final class MerchantDataAccessView: HitTestView {
             finalString = "\(leadingString) \(localizedPermissionFullString) \(learnMoreString)"
         }
 
-        let label = ClickableLabel(
-            font: .stripeFont(forTextStyle: .captionTight),
-            boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-            textColor: .textSecondary
+        let label = AttributedTextView(
+            font: font,
+            boldFont: boldFont,
+            linkFont: boldFont,
+            textColor: .textSecondary,
+            alignCenter: alignCenter
         )
         label.setText(
             finalString,
@@ -165,7 +178,6 @@ private func LocalizedStringFromPermission(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
 
     let isStripeDirect: Bool
@@ -177,6 +189,10 @@ private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
             isStripeDirect: isStripeDirect,
             businessName: businessName,
             permissions: permissions,
+            isNetworking: false,
+            font: .body(.small),
+            boldFont: .body(.smallEmphasized),
+            alignCenter: Bool.random(),
             didSelectLearnMore: {}
         )
     }
@@ -184,84 +200,76 @@ private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: MerchantDataAccessView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct MerchantDataAccessView_Previews: PreviewProvider {
     static var previews: some View {
-        VStack(spacing: 20) {
-            MerchantDataAccessViewUIViewRepresentable(
-                isStripeDirect: true,
-                businessName: nil,
-                permissions: [.accountNumbers]
-            )
-            .frame(height: 30)
+        ScrollView {
+            VStack(spacing: 20) {
+                Group {
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: true,
+                        businessName: nil,
+                        permissions: [.accountNumbers]
+                    )
 
-            MerchantDataAccessViewUIViewRepresentable(
-                isStripeDirect: false,
-                businessName: "Rocket Rides",
-                permissions: [.accountNumbers]
-            )
-            .frame(height: 30)
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: false,
+                        businessName: "Rocket Rides",
+                        permissions: [.accountNumbers]
+                    )
 
-            MerchantDataAccessViewUIViewRepresentable(
-                isStripeDirect: false,
-                businessName: nil,
-                permissions: [.accountNumbers]
-            )
-            .frame(height: 30)
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: false,
+                        businessName: nil,
+                        permissions: [.accountNumbers]
+                    )
 
-            MerchantDataAccessViewUIViewRepresentable(
-                isStripeDirect: false,
-                businessName: "Rocket Rides",
-                permissions: [.accountNumbers]
-            )
-            .frame(height: 30)
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: false,
+                        businessName: "Rocket Rides",
+                        permissions: [.accountNumbers]
+                    )
 
-            MerchantDataAccessViewUIViewRepresentable(
-                isStripeDirect: false,
-                businessName: "Rocket Rides",
-                permissions: [.accountNumbers, .paymentMethod]
-            )
-            .frame(height: 30)
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: false,
+                        businessName: "Rocket Rides",
+                        permissions: [.accountNumbers, .paymentMethod]
+                    )
 
-            MerchantDataAccessViewUIViewRepresentable(
-                isStripeDirect: false,
-                businessName: "Rocket Rides",
-                permissions: [.transactions, .ownership]
-            )
-            .frame(height: 50)
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: false,
+                        businessName: "Rocket Rides",
+                        permissions: [.transactions, .ownership]
+                    )
 
-            MerchantDataAccessViewUIViewRepresentable(
-                isStripeDirect: false,
-                businessName: "Rocket Rides",
-                permissions: [.transactions, .ownership, .balances]
-            )
-            .frame(height: 50)
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: false,
+                        businessName: "Rocket Rides",
+                        permissions: [.transactions, .ownership, .balances]
+                    )
 
-            MerchantDataAccessViewUIViewRepresentable(
-                isStripeDirect: false,
-                businessName: "Rocket Rides",
-                permissions: [.accountNumbers, .paymentMethod, .transactions, .ownership, .balances]
-            )
-            .frame(height: 50)
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: false,
+                        businessName: "Rocket Rides",
+                        permissions: [.accountNumbers, .paymentMethod, .transactions, .ownership, .balances]
+                    )
 
-            MerchantDataAccessViewUIViewRepresentable(
-                isStripeDirect: false,
-                businessName: "Rocket Rides",
-                permissions: [.unparsable]
-            )
-            .frame(height: 30)
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: false,
+                        businessName: "Rocket Rides",
+                        permissions: [.unparsable]
+                    )
 
-            MerchantDataAccessViewUIViewRepresentable(
-                isStripeDirect: true,
-                businessName: nil,
-                permissions: []
-            )
-            .frame(height: 30)
+                    MerchantDataAccessViewUIViewRepresentable(
+                        isStripeDirect: true,
+                        businessName: nil,
+                        permissions: []
+                    )
+                }
+                .frame(height: 60)
+                .padding(.horizontal)
+            }
         }
-        .padding()
-        .padding()
-        .padding()
-        .padding()
+
     }
 }
 

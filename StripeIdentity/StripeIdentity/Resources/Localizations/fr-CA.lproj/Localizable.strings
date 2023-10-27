@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "À l'étape suivante, nous allons prendre automatiquement quelques photos afin de vérifier votre identité";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Vous pouvez également téléverser manuellement une photo de votre pièce d'identité.";
 
 "App Settings" = "Paramètres de l'application";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "La date de naissance ne semble pas valide";
 
-"File Upload" = "Téléversement de fichier";
-
-"File upload" = "Téléversement de fichier";
-
 "Flip your driver's license over to the other side" = "Retournez votre permis de conduire";
 
 "Flip your identity card over to the other side" = "Retournez votre carte d'identité";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Recto du permis de conduire";
 
 "Front of identity card" = "Recto de la carte d'identité";
+
+"Get ready to take a selfie" = "Préparez-vous à vous prendre en photo";
 
 "Go Back" = "Retour";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Numéro d'identification personnel";
 
 "Personal Information" = "Données personnelles";
+
+"Phone Number" = "Numéro de téléphone";
+
+"Phone Verification" = "Vérification du numéro de téléphone";
 
 "Photo Library" = "Bibliothèque de photos";
 
@@ -127,6 +131,8 @@
 "Upload" = "Téléverser";
 
 "Upload a Photo" = "Téléverser une photo";
+
+"Upload your photo ID" = "Téléverser votre pièce d'identité avec photo";
 
 "Uploading back driver's license photo" = "Téléversement de la photo du verso du permis de conduire";
 

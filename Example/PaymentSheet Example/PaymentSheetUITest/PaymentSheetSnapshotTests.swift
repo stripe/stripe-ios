@@ -13,10 +13,10 @@ import StripeCoreTestUtils
 import UIKit
 
 @_spi(STP)@testable import StripeCore
-@_spi(STP) @_spi(ExperimentalPaymentSheetDecouplingAPI) @testable import StripePaymentSheet
+@_spi(STP)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
-class PaymentSheetSnapshotTests: FBSnapshotTestCase {
+class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
         string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
@@ -48,11 +48,11 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         configuration.returnURL = "mockReturnUrl"
 
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
-//                self.recordMode = true
 //                self.runAgainstLiveService = true
         if !self.runAgainstLiveService {
             APIStubbedTestCase.stubAllOutgoingRequests()
         }
+        stubAllImageRequests()
     }
 
     public override func tearDown() {
@@ -432,6 +432,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         preparePaymentSheet(
+            customer: "guest",
             automaticPaymentMethods: false,
             useLink: true
         )
@@ -445,6 +446,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         preparePaymentSheet(
+            customer: "guest",
             appearance: .snapshotTestTheme,
             automaticPaymentMethods: false,
             useLink: true
@@ -459,6 +461,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         preparePaymentSheet(
+            customer: "guest",
             automaticPaymentMethods: false,
             useLink: true
         )
@@ -475,6 +478,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         appearance.colors.componentBackground = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.00)
         appearance.borderWidth = 0.0
         preparePaymentSheet(
+            customer: "guest",
             appearance: appearance,
             automaticPaymentMethods: false,
             useLink: true
@@ -489,7 +493,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubNewCustomerResponse()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
-                                                            confirmHandler: confirmHandler(_:_:))
+                                                            confirmHandler: confirmHandler(_:_:_:))
 
         preparePaymentSheet(intentConfig: intentConfig)
         presentPaymentSheet(darkMode: false)
@@ -502,7 +506,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubCustomers()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
-                                                            confirmHandler: confirmHandler(_:_:))
+                                                            confirmHandler: confirmHandler(_:_:_:))
 
         preparePaymentSheet(
             automaticPaymentMethods: false,
@@ -874,6 +878,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
 
     }
+
     private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
         var template = String(data: data, encoding: .utf8)!
         for (templateKey, templateValue) in variables {
@@ -948,6 +953,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             )
         } else {
             prepareMockPaymentSheet(appearance: appearance,
+                                    customer: customer,
                                     applePayEnabled: applePayEnabled,
                                     intentConfig: intentConfig)
         }
@@ -1002,7 +1008,9 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             StripeAPI.defaultPublishableKey = publishableKey
 
             var config = self.configuration
-            config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+            if customer != "guest" {
+                config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+            }
             config.appearance = appearance
 
             if !applePayEnabled {
@@ -1022,10 +1030,13 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     }
 
     private func prepareMockPaymentSheet(appearance: PaymentSheet.Appearance,
+                                         customer: String,
                                          applePayEnabled: Bool = true,
                                          intentConfig: PaymentSheet.IntentConfiguration? = nil) {
         var config = self.configuration
-        config.customer = .init(id: "nobody", ephemeralKeySecret: "test")
+        if customer != "guest" {
+            config.customer = .init(id: "nobody", ephemeralKeySecret: "test")
+        }
         config.appearance = appearance
         config.apiClient = stubbedAPIClient()
         if !applePayEnabled {
@@ -1049,8 +1060,14 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             testWindow.overrideUserInterfaceStyle = .dark
         }
         testWindow.rootViewController = navController
-
-        paymentSheet.present(from: vc, completion: { _ in })
+        // Wait a turn of the runloop for the RVC to attach to the window, then present PaymentSheet
+        DispatchQueue.main.async {
+            self.paymentSheet.present(from: vc) { result in
+                if case let .failed(error) = result {
+                    XCTFail("Presentation failed: \(error)")
+                }
+            }
+        }
 
         // Payment sheet usually takes anywhere between 50ms-200ms (but once in a while 2-3 seconds).
         // to present with the expected content. When the sheet is presented, it initially shows a loading screen,
@@ -1101,6 +1118,15 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         )
     }
 
+    private func stubAllImageRequests() {
+        // Just fail all image requests so that these snapshot tests only use hardcoded image assets
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v3/fingerprinted/img/payment-methods") ?? false
+        } response: { _ in
+            return HTTPStubsResponse(data: Data(), statusCode: 404, headers: nil)
+        }
+    }
+
     private func stubNewCustomerResponse() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
@@ -1123,17 +1149,25 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             },
             fileMock: .saved_payment_methods_200
         )
+        stubPaymentMethods(
+            stubRequestCallback: { urlRequest in
+                return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+                    && urlRequest.url?.absoluteString.contains("type=sepa_debit") ?? false
+            },
+            fileMock: .saved_payment_methods_200
+        )
         stubCustomers()
     }
 
-    func confirmHandler(_ paymentMethodID: String,
+    func confirmHandler(_ paymentMethod: STPPaymentMethod,
+                        _ shouldSavePaymentMethod: Bool,
                         _ intentCreationCallback: (Result<String, Error>) -> Void) {
         // no-op
     }
 
 }
 
-private extension PaymentSheet.Appearance {
+fileprivate extension PaymentSheet.Appearance {
     static var snapshotTestTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
 

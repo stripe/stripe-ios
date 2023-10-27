@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Fil-pass li jmiss se niġbdu ftit ritratti awtomatikament biex nivverifikaw li int min qed tgħid li int";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Inkella tista' ttella' ritratt tad-dokument tal-identità tiegħek int stess.";
 
 "App Settings" = "Settings tal-App";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Id-data tat-twelid ma tidhirx li hija tajba";
 
-"File Upload" = "Tlugħ tal-Fajl";
-
-"File upload" = "Tella' fajl";
-
 "Flip your driver's license over to the other side" = "Dawwar il-liċenzja tas-sewqan tiegħek";
 
 "Flip your identity card over to the other side" = "Aqleb il-kard tal-identità tiegħek għan-naħa l-oħra";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "In-naħa ta' quddiem tal-liċenzja tas-sewqan";
 
 "Front of identity card" = "In-naħa ta' quddiem tal-karta tal-identità";
+
+"Get ready to take a selfie" = "Ħejji ruħek għall-istessu";
 
 "Go Back" = "Mur Lura";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "In-numru tal-ID personali";
 
 "Personal Information" = "Dettalji personali";
+
+"Phone Number" = "Numru tal-Mowbajl";
+
+"Phone Verification" = "Verifika bil-Mowbajl";
 
 "Photo Library" = "Ġabra tar-Ritratti";
 
@@ -127,6 +131,8 @@
 "Upload" = "Tella'";
 
 "Upload a Photo" = "Tella' Ritratt";
+
+"Upload your photo ID" = "Tella' d-dokument tal-identità b'ritratt tiegħek";
 
 "Uploading back driver's license photo" = "Qed ittella' r-ritratt tan-naħa ta' wara tal-liċenzja tas-sewqan";
 

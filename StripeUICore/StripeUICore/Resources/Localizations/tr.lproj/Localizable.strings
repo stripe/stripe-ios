@@ -10,6 +10,8 @@
 
 "Area" = "Bölge";
 
+"BLIK code" = "BLIK kodu";
+
 "BSB number" = "BSB numarası";
 
 "Billing address is same as shipping" = "Faturalama adresi, gönderim adresiyle aynı";
@@ -37,6 +39,8 @@
 "District" = "İlçe";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Bu formu kapatmak istiyor musunuz?";
 
 "Done" = "Tamam";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Ara";
 
+"Select card brand (optional)" = "Kart markasını seçin (isteğe bağlı)";
+
 "State" = "Eyalet";
 
 "Suburb" = "Banliyö";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Linklere erişmek için rotoru kullanın.";
 
+"Your BLIK code is incomplete." = "BLIK kodunuz eksik.";
+
+"Your BLIK code is invalid." = "BLIK kodunuz geçersiz.";
+
 "Your ZIP is incomplete." = "Posta kodunuz eksik.";
 
 "Your email is invalid." = "E-postanız geçersiz.";
+
+"Your payment information will not be saved." = "Ödeme bilgileriniz kaydedilmeyecek.";
 
 "Your postal code is incomplete." = "Posta kodunuz eksik.";
 

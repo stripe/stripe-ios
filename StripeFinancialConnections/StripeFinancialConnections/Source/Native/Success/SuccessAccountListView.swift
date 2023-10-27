@@ -9,7 +9,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class SuccessAccountListView: UIView {
 
     private let maxNumberOfAccountsListedBeforeShowingOnlyAccountCount = 4
@@ -31,10 +30,11 @@ final class SuccessAccountListView: UIView {
 }
 
 private func CreateAccountCountView(institution: FinancialConnectionsInstitution, numberOfAccounts: Int) -> UIView {
-    let numberOfAccountsLabel = UILabel()
+    let numberOfAccountsLabel = AttributedLabel(
+        font: .label(.mediumEmphasized),
+        textColor: .textSecondary
+    )
     numberOfAccountsLabel.textAlignment = .right
-    numberOfAccountsLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
-    numberOfAccountsLabel.textColor = .textSecondary
     numberOfAccountsLabel.text = String(
         format: STPLocalizedString(
             "%d accounts",
@@ -45,7 +45,7 @@ private func CreateAccountCountView(institution: FinancialConnectionsInstitution
 
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
-            CreateIconWithLabelView(instituion: institution, text: institution.name),
+            CreateIconWithLabelView(institution: institution, text: institution.name),
             numberOfAccountsLabel,
         ]
     )
@@ -79,15 +79,16 @@ private func CreateAccountRowView(
 
     horizontalStackView.addArrangedSubview(
         CreateIconWithLabelView(
-            instituion: institution,
+            institution: institution,
             text: account.name
         )
     )
 
     if let displayableAccountNumbers = account.displayableAccountNumbers {
-        let displayableAccountNumberLabel = UILabel()
-        displayableAccountNumberLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
-        displayableAccountNumberLabel.textColor = .textSecondary
+        let displayableAccountNumberLabel = AttributedLabel(
+            font: .label(.mediumEmphasized),
+            textColor: .textSecondary
+        )
         displayableAccountNumberLabel.text = "••••\(displayableAccountNumbers)"
         // compress `account.name` instead of account number if text is long
         displayableAccountNumberLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
@@ -97,13 +98,14 @@ private func CreateAccountRowView(
     return horizontalStackView
 }
 
-private func CreateIconWithLabelView(instituion: FinancialConnectionsInstitution, text: String) -> UIView {
+private func CreateIconWithLabelView(institution: FinancialConnectionsInstitution, text: String) -> UIView {
     let institutionIconView = InstitutionIconView(size: .small)
-    institutionIconView.setImageUrl(instituion.icon?.default)
+    institutionIconView.setImageUrl(institution.icon?.default)
 
-    let label = UILabel()
-    label.font = .stripeFont(forTextStyle: .captionEmphasized)
-    label.textColor = .textPrimary
+    let label = AttributedLabel(
+        font: .label(.mediumEmphasized),
+        textColor: .textPrimary
+    )
     label.text = text
     label.translatesAutoresizingMaskIntoConstraints = false
     label.setContentHuggingPriority(.defaultHigh, for: .horizontal)

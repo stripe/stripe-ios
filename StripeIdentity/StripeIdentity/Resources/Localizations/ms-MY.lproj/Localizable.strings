@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Beberapa foto akan diambil secara automatik pada langkah seterusnya untuk menentusahkan andalah orangnya";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Sebagai alternatif, anda boleh memuat naik foto dokumen pengenalan anda secara manual.";
 
 "App Settings" = "Tetapan Aplikasi";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Tarikh lahir tampaknya tidak sah";
 
-"File Upload" = "Muat Naik Fail";
-
-"File upload" = "Muat naik fail";
-
 "Flip your driver's license over to the other side" = "Terbalikkan lesen memandu anda ke sebelah satu lagi";
 
 "Flip your identity card over to the other side" = "Terbalikkan kad pengenalan anda ke sebelah satu lagi";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Bahagian hadapan lesen memandu";
 
 "Front of identity card" = "Bahagian hadapan kad pengenalan";
+
+"Get ready to take a selfie" = "Bersedia untuk mengambil swafoto";
 
 "Go Back" = "Undur";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Nombor ID peribadi";
 
 "Personal Information" = "Maklumat Peribadi";
+
+"Phone Number" = "Nombor Telefon";
+
+"Phone Verification" = "Penentusahan Telefon";
 
 "Photo Library" = "Pustaka Foto";
 
@@ -127,6 +131,8 @@
 "Upload" = "Muat Naik";
 
 "Upload a Photo" = "Muat Naik Foto";
+
+"Upload your photo ID" = "Muat naik ID berfoto anda";
 
 "Uploading back driver's license photo" = "Foto bahagian belakang lesen memandu sedang dimuat naik";
 

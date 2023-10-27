@@ -32,7 +32,8 @@ class AddPaymentMethodViewController: UIViewController {
     lazy var paymentMethodTypes: [PaymentSheet.PaymentMethodType] = {
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: intent,
-            configuration: configuration
+            configuration: configuration,
+            logAvailability: true
         )
         assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         return paymentMethodTypes
@@ -45,9 +46,13 @@ class AddPaymentMethodViewController: UIViewController {
             return linkEnabledElement.makePaymentOption()
         }
 
-        var params = IntentConfirmParams(type: selectedPaymentMethodType)
-        params = paymentMethodFormElement.applyDefaults(params: params)
+        let params = IntentConfirmParams(type: selectedPaymentMethodType)
+        params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
+            // TODO(yuki): Hack to support external_paypal
+            if selectedPaymentMethodType == .externalPayPal {
+                return .externalPayPal(confirmParams: params)
+            }
             return .new(confirmParams: params)
         }
         return nil
@@ -136,6 +141,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
+            isPaymentSheet: true,
             delegate: self
         )
         return view
@@ -165,13 +171,12 @@ class AddPaymentMethodViewController: UIViewController {
         self.previousCustomerInput = previousCustomerInput
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-        self.view.backgroundColor = configuration.appearance.colors.background
     }
 
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = configuration.appearance.colors.background
 
         let stackView = UIStackView(arrangedSubviews: [
             paymentMethodTypesView, paymentMethodDetailsContainerView,
@@ -279,11 +284,12 @@ class AddPaymentMethodViewController: UIViewController {
 
         let formElement = PaymentSheetFormFactory(
             intent: intent,
-            configuration: configuration,
+            configuration: .paymentSheet(configuration),
             paymentMethod: type,
             previousCustomerInput: previousCustomerInput,
             offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
-            linkAccount: linkAccount
+            linkAccount: linkAccount,
+            cardBrandChoiceEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled
         ).make()
         formElement.delegate = self
         return formElement
@@ -298,6 +304,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
         }
         updateUI()
+        sendEventToSubviews(.viewDidAppear, from: view)
     }
 
     func didTapCallToActionButton(behavior: OverrideableBuyButtonBehavior, from viewController: UIViewController) {
@@ -322,11 +329,7 @@ class AddPaymentMethodViewController: UIViewController {
             email: email
         )
         let client = STPBankAccountCollector()
-        let errorText = STPLocalizedString(
-            "Something went wrong when linking your account.\nPlease try again later.",
-            "Error message when an error case happens when linking your account"
-        )
-        let genericError = PaymentSheetError.unknown(debugDescription: errorText)
+        let genericError = PaymentSheetError.accountLinkFailure
 
         let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = {
             result,
@@ -355,6 +358,7 @@ class AddPaymentMethodViewController: UIViewController {
             client.collectBankAccountForPayment(
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
+                onEvent: nil,
                 params: params,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
@@ -363,12 +367,32 @@ class AddPaymentMethodViewController: UIViewController {
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
+                onEvent: nil,
                 params: params,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .deferredIntent:
-            fatalError("TODO(DeferredIntent): Support ACHv2")
+        case let .deferredIntent(elementsSession, intentConfig):
+            let amount: Int?
+            let currency: String?
+            switch intentConfig.mode {
+            case let .payment(amount: _amount, currency: _currency, _, _):
+                amount = _amount
+                currency = _currency
+            case let .setup(currency: _currency, _):
+                amount = nil
+                currency = _currency
+            }
+            client.collectBankAccountForDeferredIntent(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: amount,
+                currency: currency,
+                onBehalfOf: intentConfig.onBehalfOf,
+                from: viewController,
+                financialConnectionsCompletion: financialConnectionsCompletion
+            )
         }
     }
 }

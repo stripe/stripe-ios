@@ -1,4 +1,4 @@
-"AU BECS Direct Debit" = "AU BECS tiesioginis debetas";
+"AU Direct Debit" = "AU tiesioginis debetas";
 
 "Affirm" = "Affirm";
 
@@ -28,6 +28,8 @@
 
 "Klarna" = "Klarna";
 
+"Konbini" = "Konbini";
+
 "Link" = "\"Link\"";
 
 "NetBanking" = "NetBanking";
@@ -41,6 +43,8 @@
 "SEPA Debit" = "SEPA debetas";
 
 "Sofort" = "Sofort";
+
+"Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Baigėsi mokėjimo būdui autentifikuoti skirtas laikas, bandykite dar kartą";
 

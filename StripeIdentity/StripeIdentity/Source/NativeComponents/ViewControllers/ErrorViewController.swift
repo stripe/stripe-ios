@@ -18,6 +18,55 @@ final class ErrorViewController: IdentityFlowViewController {
 
     private let errorView = ErrorView()
     let model: Model
+    private var isSaving: Bool = false {
+        didSet {
+            self.updateButtons()
+        }
+    }
+    private var isFirstViewController: Bool = false
+    var buttonViewModels: [IdentityFlowView.ViewModel.Button] {
+        var buttons: [IdentityFlowView.ViewModel.Button] = []
+        switch model {
+        case .inputError(let inputError):
+            guard let backButtonText = inputError.backButtonText else {
+                fallthrough
+            }
+
+            if let continueButtonText = inputError.continueButtonText, inputError.requirement.supportsForceConfirm() {
+                buttons.append(
+                    .init(
+                        text: continueButtonText,
+                        state: isSaving ? .loading : .enabled,
+                        isPrimary: false,
+                        didTap: {
+                            self.didTapContinueButton(requirementToForceCofirm: inputError.requirement)
+                        }
+                    )
+                )
+            }
+            buttons.append(
+                .init(
+                    text: backButtonText,
+                    state: isSaving ? .disabled : .enabled,
+                    isPrimary: true,
+                    didTap: self.didTapBackButton
+                )
+            )
+        case .error:
+            buttons.append(
+                .init(
+                    text: isFirstViewController ? String.Localized.close : STPLocalizedString(
+                        "Go Back",
+                        "Button to go back to the previous screen"
+                    ),
+                    state: .enabled,
+                    isPrimary: true,
+                    didTap: self.didTapBackButton
+                )
+            )
+        }
+        return buttons
+    }
 
     init(
         sheetController: VerificationSheetControllerProtocol,
@@ -49,35 +98,27 @@ final class ErrorViewController: IdentityFlowViewController {
         // This error screen will be the first screen in the navigation
         // stack if the only screen before it is the loading screen. The loading
         // screen will be removed from the stack after the animation has finished.
-        let isFirstViewController =
+        isFirstViewController =
             navigationController?.viewControllers.first === self
             || (navigationController?.viewControllers.first is LoadingViewController
                 && navigationController?.viewControllers.stp_boundSafeObject(at: 1) === self)
+        updateButtons()
+    }
 
+    private func updateButtons() {
         configure(
             backButtonTitle: String.Localized.error,
             viewModel: .init(
                 headerViewModel: nil,
                 contentViewModel: .init(view: errorView, inset: .zero),
-                buttons: [
-                    .init(
-                        text: model.buttonText(
-                            isFirstViewController: isFirstViewController
-                        ),
-                        state: .enabled,
-                        isPrimary: true,
-                        didTap: { [weak self] in
-                            self?.didTapButton()
-                        }
-                    ),
-                ]
+                buttons: buttonViewModels
             )
         )
     }
 }
 
 extension ErrorViewController {
-    fileprivate func didTapButton() {
+    fileprivate func didTapBackButton() {
         // If this is the only view in the stack, dismiss the nav controller
         guard navigationController?.viewControllers.first !== self else {
             dismiss(animated: true, completion: nil)
@@ -104,6 +145,29 @@ extension ErrorViewController {
             // Go back to the previous view
             navigationController?.popViewController(animated: true)
         }
+    }
+
+    fileprivate func didTapContinueButton(requirementToForceCofirm: StripeAPI.VerificationPageFieldType) {
+        self.isSaving = true
+        if requirementToForceCofirm == .idDocumentFront {
+            self.sheetController?.forceDocumentFrontAndDecideBack(from: .error) { isBackRequired in
+                self.isSaving = false
+                if isBackRequired {
+                    // popTo either Upload or Capture screen without resetting to continue from back
+                    self.sheetController?.flowController.popToScreen(
+                        withField: .idDocumentFront,
+                        shouldResetViewController: false
+                    )
+                }
+               // otherwise already checkSubmitAndTransition
+            }
+        } else if requirementToForceCofirm == .idDocumentBack {
+            self.sheetController?.forceDocumentBackAndTransition(from: .error) {
+                self.isSaving = false
+            }
+        }
+        // no other values possible, only idDocumentFront and idDocumentBack supports forceConfirm
+
     }
 
     fileprivate func logError(filePath: StaticString, line: UInt) {

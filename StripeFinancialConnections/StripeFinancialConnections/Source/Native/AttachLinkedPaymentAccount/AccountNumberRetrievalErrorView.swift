@@ -75,7 +75,6 @@ final class AccountNumberRetrievalErrorView: UIView {
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewRepresentable {
 
     let institutionName: String
@@ -86,7 +85,9 @@ private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewReprese
             institution: FinancialConnectionsInstitution(
                 id: "123",
                 name: institutionName,
-                url: nil
+                url: nil,
+                icon: nil,
+                logo: nil
             ),
             didSelectAnotherBank: {},
             didSelectEnterBankDetailsManually: didSelectEnterBankDetailsManually
@@ -96,7 +97,6 @@ private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewReprese
     func updateUIView(_ uiView: AccountNumberRetrievalErrorView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct AccountNumberRetrievalErrorView_Previews: PreviewProvider {
     static var previews: some View {
         AccountNumberRetrievalErrorViewUIViewRepresentable(

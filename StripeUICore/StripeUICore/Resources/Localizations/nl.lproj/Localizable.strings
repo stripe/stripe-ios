@@ -10,6 +10,8 @@
 
 "Area" = "Regio";
 
+"BLIK code" = "BLIK-code";
+
 "BSB number" = "BSB-nummer";
 
 "Billing address is same as shipping" = "Factuuradres is hetzelfde als het verzendadres";
@@ -37,6 +39,8 @@
 "District" = "District";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Wil je dit formulier sluiten?";
 
 "Done" = "Gereed";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Zoeken";
 
+"Select card brand (optional)" = "Merk van betaalkaart selecteren (optioneel)";
+
 "State" = "Staat";
 
 "Suburb" = "Voorstad";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Gebruik de rotor om een link te openen";
 
+"Your BLIK code is incomplete." = "Je BLIK-code is onvolledig.";
+
+"Your BLIK code is invalid." = "Je BLIK-code is ongeldig.";
+
 "Your ZIP is incomplete." = "Je ZIP is onvolledig.";
 
 "Your email is invalid." = "Je e-mailadres is ongeldig.";
+
+"Your payment information will not be saved." = "Je betaalgegevens worden niet opgeslagen.";
 
 "Your postal code is incomplete." = "Je postcode is onvolledig.";
 

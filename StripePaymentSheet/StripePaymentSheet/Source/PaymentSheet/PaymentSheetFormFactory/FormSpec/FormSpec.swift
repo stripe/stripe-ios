@@ -262,6 +262,7 @@ extension FormSpec {
         case ideal_bank = "upe.labels.ideal.bank"
         case eps_bank =  "upe.labels.eps.bank"
         case p24_bank = "upe.labels.p24.bank"
+        case fpx_bank = "upe.labels.fpx.bank"
 
         case nameLabel_given = "upe.labels.name.given"
         case nameLabel_family = "upe.labels.name.family"
@@ -276,6 +277,8 @@ extension FormSpec {
                 return STPLocalizedString("EPS Bank", "Label title for EPS Bank")
             case .p24_bank:
                 return STPLocalizedString("Przelewy24 Bank", "Label title for Przelewy24 Bank")
+            case .fpx_bank:
+                return STPLocalizedString("FPX Bank", "Select a bank dropdown for FPX")
 
             case .nameLabel_given:
                 return String.Localized.given_name

@@ -11,7 +11,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol PartnerAuthViewControllerDelegate: AnyObject {
     func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController)
@@ -21,9 +20,12 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
         _ viewController: PartnerAuthViewController,
         didCompleteWithAuthSession authSession: FinancialConnectionsAuthSession
     )
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class PartnerAuthViewController: UIViewController {
 
     /**
@@ -113,10 +115,19 @@ final class PartnerAuthViewController: UIViewController {
                     self?.didSelectURLInTextFromBackend(url)
                 },
                 didSelectContinue: { [weak self] in
+                    guard let self = self else { return }
+                    self.dataSource.analyticsClient.log(
+                        eventName: "click.prepane.continue",
+                        parameters: [
+                            "requires_native_redirect": authSession.requiresNativeRedirect
+                        ],
+                        pane: .partnerAuth
+                    )
+
                     if authSession.requiresNativeRedirect {
-                        self?.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
+                        self.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
                     } else {
-                        self?.openInstitutionAuthenticationWebView(authSession: authSession)
+                        self.openInstitutionAuthenticationWebView(authSession: authSession)
                     }
                 }
             )
@@ -146,6 +157,7 @@ final class PartnerAuthViewController: UIViewController {
         // PartnerAuth to try again
         navigationItem.hidesBackButton = true
 
+        let allowManualEntryInErrors = (dataSource.manifest.allowManualEntry && !dataSource.reduceManualEntryProminenceInErrors)
         let errorView: UIView?
         if let error = error as? StripeError,
             case .apiError(let apiError) = error,
@@ -203,7 +215,7 @@ final class PartnerAuthViewController: UIViewController {
                             }
                         }()
                         let endOfSubtitle: String = {
-                            if dataSource.manifest.allowManualEntry {
+                            if allowManualEntryInErrors {
                                 return STPLocalizedString(
                                     "Please enter your bank details manually or select another bank.",
                                     "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
@@ -218,7 +230,7 @@ final class PartnerAuthViewController: UIViewController {
                         return beginningOfSubtitle + " " + endOfSubtitle
                     }(),
                     primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: dataSource.manifest.allowManualEntry
+                    secondaryButtonConfiguration: allowManualEntryInErrors
                         ? ReusableInformationView.ButtonConfiguration(
                             title: String.Localized.enter_bank_details_manually,
                             action: { [weak self] in
@@ -243,7 +255,7 @@ final class PartnerAuthViewController: UIViewController {
                         institution.name
                     ),
                     subtitle: {
-                        if dataSource.manifest.allowManualEntry {
+                        if allowManualEntryInErrors {
                             return STPLocalizedString(
                                 "Please enter your bank details manually or select another bank.",
                                 "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
@@ -256,7 +268,7 @@ final class PartnerAuthViewController: UIViewController {
                         }
                     }(),
                     primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: dataSource.manifest.allowManualEntry
+                    secondaryButtonConfiguration: allowManualEntryInErrors
                         ? ReusableInformationView.ButtonConfiguration(
                             title: String.Localized.enter_bank_details_manually,
                             action: { [weak self] in
@@ -293,8 +305,10 @@ final class PartnerAuthViewController: UIViewController {
         }
     }
 
-    private func handleAuthSessionCompletionWithStatus(_ status: String, _ authSession: FinancialConnectionsAuthSession)
-    {
+    private func handleAuthSessionCompletionWithStatus(
+        _ status: String,
+        _ authSession: FinancialConnectionsAuthSession
+    ) {
         if status == "success" {
             self.dataSource.recordAuthSessionEvent(
                 eventName: "success",
@@ -324,17 +338,25 @@ final class PartnerAuthViewController: UIViewController {
                 )
             )
         } else {  // assume `status == cancel`
-            self.dataSource.recordAuthSessionEvent(
-                eventName: "cancel",
-                authSessionId: authSession.id
+            self.checkIfAuthSessionWasSuccessful(
+                authSession: authSession,
+                completionHandler: { [weak self] isSuccess in
+                    guard let self = self else { return }
+                    if !isSuccess {
+                        self.dataSource.recordAuthSessionEvent(
+                            eventName: "cancel",
+                            authSessionId: authSession.id
+                        )
+
+                        // cancel current auth session
+                        self.dataSource.cancelPendingAuthSessionIfNeeded()
+
+                        // whether legacy or OAuth, we always go back
+                        // if we got an explicit cancel from backend
+                        self.navigateBack()
+                    }
+                }
             )
-
-            // cancel current auth session
-            self.dataSource.cancelPendingAuthSessionIfNeeded()
-
-            // whether legacy or OAuth, we always go back
-            // if we got an explicit cancel from backend
-            self.navigateBack()
         }
     }
 
@@ -344,38 +366,28 @@ final class PartnerAuthViewController: UIViewController {
     ) {
         if authSession.isOauthNonOptional {
             // on "manual cancels" (for OAuth) we log retry event:
-            self.dataSource.recordAuthSessionEvent(
+            dataSource.recordAuthSessionEvent(
                 eventName: "retry",
                 authSessionId: authSession.id
             )
         } else {
             // on "manual cancels" (for Legacy) we log cancel event:
-            self.dataSource.recordAuthSessionEvent(
+            dataSource.recordAuthSessionEvent(
                 eventName: "cancel",
                 authSessionId: authSession.id
             )
         }
 
-        if let error = error {
-            self.dataSource
-                .analyticsClient
-                .logUnexpectedError(
-                    error,
-                    errorName: "ASWebAuthenticationSessionError",
-                    pane: .partnerAuth
-                )
-        }
-
         // cancel current auth session because something went wrong
-        self.dataSource.cancelPendingAuthSessionIfNeeded()
+        dataSource.cancelPendingAuthSessionIfNeeded()
 
         if authSession.isOauthNonOptional {
             // for OAuth institutions, we remain on the pre-pane,
             // but create a brand new auth session
-            self.createAuthSession()
+            createAuthSession()
         } else {
             // for legacy (non-OAuth) institutions, we navigate back to InstitutionPickerViewController
-            self.navigateBack()
+            navigateBack()
         }
     }
 
@@ -395,6 +407,10 @@ final class PartnerAuthViewController: UIViewController {
             institutionImageUrl: self.institution.icon?.default,
             didSelectContinue: { [weak self] in
                 guard let self = self else { return }
+                self.dataSource.analyticsClient.log(
+                    eventName: "click.apptoapp.continue",
+                    pane: .partnerAuth
+                )
                 self.continueStateView?.removeFromSuperview()
                 self.continueStateView = nil
                 self.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
@@ -465,17 +481,51 @@ final class PartnerAuthViewController: UIViewController {
                     return
                 }
                 self.lastHandledAuthenticationSessionReturnUrl = returnUrl
+
                 if let returnUrl = returnUrl,
                     returnUrl.scheme == "stripe",
                     let urlComponsents = URLComponents(url: returnUrl, resolvingAgainstBaseURL: true),
                     let status = urlComponsents.queryItems?.first(where: { $0.name == "status" })?.value
                 {
+                    self.logUrlReceived(returnUrl, status: status, authSessionId: authSession.id)
                     self.handleAuthSessionCompletionWithStatus(status, authSession)
                 }
                 // we did NOT get a `status` back from the backend,
                 // so assume a "cancel"
                 else {
-                    self.handleAuthSessionCompletionWithNoStatus(authSession, error)
+                    self.logUrlReceived(returnUrl, status: nil, authSessionId: authSession.id)
+
+                    if let error = error {
+                        if
+                            (error as NSError).domain == ASWebAuthenticationSessionErrorDomain,
+                            (error as NSError).code == ASWebAuthenticationSessionError.canceledLogin.rawValue
+                        {
+                            self.dataSource
+                                .analyticsClient
+                                .log(
+                                    eventName: "secure_webview_cancel",
+                                    pane: .partnerAuth
+                                )
+                        } else {
+                            self.dataSource
+                                .analyticsClient
+                                .logUnexpectedError(
+                                    error,
+                                    errorName: "ASWebAuthenticationSessionError",
+                                    pane: .partnerAuth
+                                )
+                        }
+                    }
+
+                    self.checkIfAuthSessionWasSuccessful(
+                        authSession: authSession,
+                        completionHandler: { [weak self] isSuccess in
+                            guard let self = self else { return }
+                            if !isSuccess {
+                                self.handleAuthSessionCompletionWithNoStatus(authSession, error)
+                            }
+                        }
+                    )
                 }
 
                 self.webAuthenticationSession = nil
@@ -488,6 +538,10 @@ final class PartnerAuthViewController: UIViewController {
 
         if #available(iOS 13.4, *) {
             if !webAuthenticationSession.canStart {
+                dataSource.recordAuthSessionEvent(
+                    eventName: "ios-browser-cant-start",
+                    authSessionId: authSession.id
+                )
                 // navigate back to bank picker so user can try again
                 //
                 // this may be an odd way to handle an issue, but trying again
@@ -499,6 +553,10 @@ final class PartnerAuthViewController: UIViewController {
         }
 
         if !webAuthenticationSession.start() {
+            dataSource.recordAuthSessionEvent(
+                eventName: "ios-browser-did-not-start",
+                authSessionId: authSession.id
+            )
             // navigate back to bank picker so user can try again
             //
             // this may be an odd way to handle an issue, but trying again
@@ -507,9 +565,26 @@ final class PartnerAuthViewController: UIViewController {
             navigateBack()
         } else {
             // we successfully launched the secure web browser
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: "auth_session.opened",
+                    parameters: [
+                        "browser": "ASWebAuthenticationSession",
+                        "auth_session_id": authSession.id,
+                        "flow": authSession.flow?.rawValue ?? "null",
+                    ],
+                    pane: .partnerAuth
+                )
+
             if authSession.isOauthNonOptional {
                 dataSource.recordAuthSessionEvent(
                     eventName: "oauth-launched",
+                    authSessionId: authSession.id
+                )
+            } else {
+                dataSource.recordAuthSessionEvent(
+                    eventName: "legacy-launched",
                     authSessionId: authSession.id
                 )
             }
@@ -598,30 +673,115 @@ final class PartnerAuthViewController: UIViewController {
             }
         )
     }
+
+    // There are edge-cases where redirect links don't work properly.
+    // Check the auth session in-case the auth session was successful.
+    private func checkIfAuthSessionWasSuccessful(
+        authSession: FinancialConnectionsAuthSession,
+        completionHandler: @escaping (_ isSuccess: Bool) -> Void
+    ) {
+        guard !dataSource.disableAuthSessionRetrieval else {
+            // if auth session retrieval is disabled, go to the default case
+            completionHandler(false)
+            return
+        }
+
+        showEstablishingConnectionLoadingView(true)
+        dataSource
+            .retrieveAuthSession(authSession)
+            .observe { [weak self] result in
+                guard let self = self else { return }
+                self.showEstablishingConnectionLoadingView(false)
+
+                self.dataSource
+                    .analyticsClient
+                    .log(
+                        eventName: "auth_session.retrieved",
+                        parameters: [
+                            "auth_session_id": authSession.id,
+                            "next_pane": (try? result.get())?.nextPane.rawValue ?? "null",
+                        ],
+                        pane: .partnerAuth
+                    )
+
+                switch result {
+                case .success(let authSession):
+                    if authSession.nextPane != .partnerAuth {
+                        completionHandler(true)
+                        self.dataSource.recordAuthSessionEvent(
+                            eventName: "success",
+                            authSessionId: authSession.id
+                        )
+                        // abstract auth handles calling `authorize`
+                        self.delegate?.partnerAuthViewController(
+                            self,
+                            didCompleteWithAuthSession: authSession
+                        )
+                    } else {
+                        completionHandler(false)
+                    }
+                case .failure(let error):
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            error,
+                            errorName: "RetrieveAuthSessionError",
+                            pane: .partnerAuth
+                        )
+                    completionHandler(false)
+                }
+            }
+    }
+
+    private func logUrlReceived(
+        _ url: URL?,
+        status: String?,
+        authSessionId: String
+    ) {
+        dataSource
+            .analyticsClient
+            .log(
+                eventName: "auth_session.url_received",
+                parameters: [
+                    "status": status ?? "null",
+                    "url": url?.absoluteString ?? "null",
+                    "auth_session_id": authSessionId,
+                ],
+                pane: .partnerAuth
+            )
+    }
 }
 
 // MARK: - STPURLCallbackListener
 
-@available(iOSApplicationExtension, unavailable)
 extension PartnerAuthViewController: STPURLCallbackListener {
 
     private func handleAuthSessionCompletionFromNativeRedirect(_ url: URL) {
         assertMainQueue()
 
-        guard let authSession = dataSource.pendingAuthSession else { return }
-        guard var urlComponsents = URLComponents(url: url, resolvingAgainstBaseURL: true) else { return }
+        guard let authSession = dataSource.pendingAuthSession else {
+            return
+        }
+        guard var urlComponsents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            dataSource.recordAuthSessionEvent(
+                eventName: "native-app-to-app-failed-to-resolve-url",
+                authSessionId: authSession.id
+            )
+            return
+        }
         urlComponsents.query = url.fragment
 
-        guard
+        if
             let status = urlComponsents.queryItems?.first(where: { $0.name == "code" })?.value,
             let authSessionId = urlComponsents.queryItems?.first(where: { $0.name == "authSessionId" })?.value,
             authSessionId == dataSource.pendingAuthSession?.id
-        else {
-            self.handleAuthSessionCompletionWithNoStatus(authSession, nil)
-            return
+        {
+            logUrlReceived(url, status: status, authSessionId: authSession.id)
+            handleAuthSessionCompletionWithStatus(status, authSession)
+        } else {
+            logUrlReceived(url, status: nil, authSessionId: authSession.id)
+            handleAuthSessionCompletionWithNoStatus(authSession, nil)
         }
-
-        handleAuthSessionCompletionWithStatus(status, authSession)
     }
 
     func handleURLCallback(_ url: URL) -> Bool {
@@ -635,7 +795,6 @@ extension PartnerAuthViewController: STPURLCallbackListener {
 
 // MARK: - Authentication restart helpers
 
-@available(iOSApplicationExtension, unavailable)
 private extension PartnerAuthViewController {
 
     private func subscribeToURLAndAppActiveNotifications() {
@@ -699,25 +858,42 @@ private extension PartnerAuthViewController {
     private func handleAuthSessionCompletionFromNativeRedirectIfNeeded() {
         assertMainQueue()
 
-        guard UIApplication.shared.applicationState == .active,
-            let url = unprocessedReturnURL
-        else {
+        guard UIApplication.shared.applicationState == .active else {
             /**
              When we get url callback the app might not be in foreground state.
              If we then proceed with authorization network request might fail as we will be doing background networking without special permission..
              */
             return
         }
-        handleAuthSessionCompletionFromNativeRedirect(url)
-        clearStateAndUnsubscribeFromNotifications()
+        if let url = unprocessedReturnURL {
+            if let authSession = dataSource.pendingAuthSession {
+                dataSource.recordAuthSessionEvent(
+                    eventName: "native-app-to-app-redirect-url-received",
+                    authSessionId: authSession.id
+                )
+            }
+            handleAuthSessionCompletionFromNativeRedirect(url)
+            clearStateAndUnsubscribeFromNotifications()
+        } else if let authSession = dataSource.pendingAuthSession {
+            self.checkIfAuthSessionWasSuccessful(
+                authSession: authSession,
+                completionHandler: { [weak self] isSuccess in
+                    if isSuccess {
+                        self?.clearStateAndUnsubscribeFromNotifications()
+                    } else {
+                        // the default case is to not do anything
+                        // user can press "Continue" to re-start
+                        // app-to-app
+                    }
+                }
+            )
+        }
     }
 }
 
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
 /// :nodoc:
-@available(iOS 13, *)
-@available(iOSApplicationExtension, unavailable)
 extension PartnerAuthViewController: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {

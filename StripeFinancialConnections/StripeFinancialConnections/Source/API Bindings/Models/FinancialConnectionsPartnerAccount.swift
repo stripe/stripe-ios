@@ -18,6 +18,9 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let supportedPaymentMethodTypes: [FinancialConnectionsPaymentMethodType]
     let allowSelection: Bool?
     let allowSelectionMessage: String?
+    let status: String?
+    let institution: FinancialConnectionsInstitution?
+    let nextPaneOnSelection: FinancialConnectionsSessionManifest.NextPane?
 
     var allowSelectionNonOptional: Bool {
         return allowSelection ?? true
@@ -29,11 +32,6 @@ struct FinancialConnectionsPartnerAccount: Decodable {
             return nil
         }
     }
-}
-
-struct FinancialConnectionsDisabledPartnerAccount {
-    let account: FinancialConnectionsPartnerAccount
-    let disableReason: String
 }
 
 struct FinancialConnectionsAuthSessionAccounts: Decodable {

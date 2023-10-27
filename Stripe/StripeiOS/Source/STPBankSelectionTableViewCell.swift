@@ -73,17 +73,10 @@ class STPBankSelectionTableViewCell: UITableViewCell {
         contentView.addSubview(titleLabel)
 
         // Loading indicator
-        var activityIndicator: UIActivityIndicatorView?
-        if #available(iOS 13.0, *) {
-            activityIndicator = UIActivityIndicatorView(style: .medium)
-        } else {
-            activityIndicator = UIActivityIndicatorView(style: .gray)
-        }
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
         self.activityIndicator = activityIndicator
         self.activityIndicator?.hidesWhenStopped = true
-        if let activityIndicator = activityIndicator {
-            contentView.addSubview(activityIndicator)
-        }
+        contentView.addSubview(activityIndicator)
     }
 
     override func layoutSubviews() {

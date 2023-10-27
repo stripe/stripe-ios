@@ -33,7 +33,6 @@ struct MLModelUnexpectedOutputError: Error {
 extension MLModelUnexpectedOutputError {
     /// Convenience method to creating an `unexpectedOutput` from feature observations
     /// - Parameter observations: The observations that were returned from the ML model.
-    @available(iOS 13.0, *)
     init(
         observations: [VNCoreMLFeatureValueObservation]
     ) {

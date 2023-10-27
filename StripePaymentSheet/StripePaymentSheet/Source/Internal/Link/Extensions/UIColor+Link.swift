@@ -24,6 +24,11 @@ extension UIColor {
     /// Use it as accent color on small UI elements or text links.
     static let linkBrandDark: UIColor = UIColor(red: 0.020, green: 0.659, blue: 0.498, alpha: 1.0)
 
+    /// Level 600 variant of Link brand color.
+    ///
+    /// Use for separator bars over the Link brand color.
+    static let linkBrand600: UIColor = UIColor(red: 0.102, green: 0.773, blue: 0.608, alpha: 1.0)
+
     /// Main background color.
     static let linkBackground: UIColor = .dynamic(
         light: .white,
@@ -150,7 +155,6 @@ extension UIColor {
     ///   - backgroundColor: Background color.
     ///   - traitCollection: The base traits to use when resolving the color information.
     /// - Returns: Resolved color that offers the highest contrast ratio.
-    @available(iOS 13.0, *)
     func resolvedContrastingColor(
         forBackgroundColor backgroundColor: UIColor,
         traitCollection: UITraitCollection = .current

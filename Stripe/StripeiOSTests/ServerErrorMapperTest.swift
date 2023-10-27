@@ -24,7 +24,7 @@ class ServerErrorMapperTest: XCTestCase {
             ServerErrorMapper.mobileErrorMessage(
                 from: serverErrorMessage,
                 httpResponse: HTTPURLResponse()
-            )!.hasPrefix("No valid API key provided. Set `STPAPIClient.shared()")
+            )!.hasPrefix("No valid API key provided. Set `STPAPIClient.shared")
         )
     }
 
@@ -35,7 +35,7 @@ class ServerErrorMapperTest: XCTestCase {
             ServerErrorMapper.mobileErrorMessage(
                 from: serverErrorMessage,
                 httpResponse: HTTPURLResponse()
-            )!.hasPrefix("No valid API key provided. Set `STPAPIClient.shared()")
+            )!.hasPrefix("No valid API key provided. Set `STPAPIClient.shared")
         )
     }
 

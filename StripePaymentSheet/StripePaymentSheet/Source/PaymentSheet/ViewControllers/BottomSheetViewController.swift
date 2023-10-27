@@ -254,8 +254,6 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 }
 
 // MARK: - PaymentSheetAuthenticationContext
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension BottomSheetViewController: PaymentSheetAuthenticationContext {
 
     func authenticationPresentingViewController() -> UIViewController {
@@ -281,17 +279,18 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         completion()
     }
 
-    func presentPollingVCForAction(_ action: STPPaymentHandlerActionParams) {
-        let pollingVC = PollingViewController(currentAction: action,
-                                                      appearance: self.appearance)
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+        let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
+                                                      appearance: self.appearance, safariViewController: safariViewController)
         pushContentViewController(pollingVC)
     }
 
-    func dismiss(_ authenticationViewController: UIViewController) {
+    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
         guard contentViewController is BottomSheet3DS2ViewController || contentViewController is PollingViewController else {
             return
         }
         _ = popContentViewController()
+        completion?()
     }
 }
 
@@ -320,8 +319,6 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
 }
 
 // MARK: - BottomSheet3DS2ViewControllerDelegate
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension BottomSheetViewController: BottomSheet3DS2ViewControllerDelegate {
     func bottomSheet3DS2ViewControllerDidCancel(
         _ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController

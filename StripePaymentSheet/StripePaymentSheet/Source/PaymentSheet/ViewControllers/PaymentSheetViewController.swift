@@ -17,7 +17,7 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewController,
         with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult) -> Void
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
     func paymentSheetViewControllerDidFinish(
         _ paymentSheetViewController: PaymentSheetViewController,
@@ -80,17 +80,17 @@ class PaymentSheetViewController: UIViewController {
         let showApplePay = !shouldShowWalletHeader && isApplePayEnabled
         let showLink = !shouldShowWalletHeader && isLinkEnabled
 
-        let autoSelectsDefaultPaymentMethod = !shouldShowWalletHeader
-
         return SavedPaymentOptionsViewController(
             savedPaymentMethods: savedPaymentMethods,
             configuration: .init(
                 customerID: configuration.customer?.id,
                 showApplePay: showApplePay,
                 showLink: showLink,
-                autoSelectDefaultBehavior: autoSelectsDefaultPaymentMethod ? .defaultFirst : .none
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                merchantDisplayName: configuration.merchantDisplayName
             ),
             appearance: configuration.appearance,
+            cbcEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled,
             delegate: self
         )
     }()
@@ -249,7 +249,8 @@ class PaymentSheetViewController: UIViewController {
             paymentMethod: mode.analyticsValue,
             linkEnabled: intent.supportsLink,
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-            currency: intent.currency
+            currency: intent.currency,
+            intentConfig: intent.intentConfig
         )
     }
 
@@ -321,17 +322,11 @@ class PaymentSheetViewController: UIViewController {
                 "Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc."
             )
         case .selectingSaved:
-            headerLabel.isHidden = false
-            headerLabel.text =
-                shouldShowWalletHeader && intent.isPaymentIntent
-                ? STPLocalizedString(
-                    "Pay using",
-                    "Title shown above a section containing various payment options"
-                )
-                : STPLocalizedString(
-                    "Select your payment method",
-                    "Title shown above a carousel containing the customer's payment methods"
-                )
+            headerLabel.isHidden = shouldShowWalletHeader
+            headerLabel.text = STPLocalizedString(
+                "Select your payment method",
+                "Title shown above a carousel containing the customer's payment methods"
+            )
         }
 
         // Content
@@ -422,6 +417,7 @@ class PaymentSheetViewController: UIViewController {
 
     @objc
     private func didTapBuyButton() {
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped)
         switch mode {
         case .addingNew:
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
@@ -444,7 +440,7 @@ class PaymentSheetViewController: UIViewController {
         }
     }
 
-    private func pay(with paymentOption: PaymentOption) {
+    func pay(with paymentOption: PaymentOption) {
         view.endEditing(true)
         isPaymentInFlight = true
         // Clear any errors
@@ -453,8 +449,7 @@ class PaymentSheetViewController: UIViewController {
 
         // Confirm the payment with the payment option
         let startTime = NSDate.timeIntervalSinceReferenceDate
-        self.delegate?.paymentSheetViewControllerShouldConfirm(self, with: paymentOption) {
-            result in
+        self.delegate?.paymentSheetViewControllerShouldConfirm(self, with: paymentOption) { result, deferredIntentConfirmationType in
             let elapsedTime = NSDate.timeIntervalSinceReferenceDate - startTime
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
@@ -465,7 +460,12 @@ class PaymentSheetViewController: UIViewController {
                     result: result,
                     linkEnabled: self.intent.supportsLink,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
-                    currency: self.intent.currency
+                    linkSessionType: self.intent.linkPopupWebviewOption,
+                    currency: self.intent.currency,
+                    intentConfig: self.intent.intentConfig,
+                    deferredIntentConfirmationType: deferredIntentConfirmationType,
+                    paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
+                    error: result.error
                 )
 
                 self.isPaymentInFlight = false
@@ -544,7 +544,8 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     ) {
         STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(
             isCustom: false,
-            paymentMethod: paymentMethodSelection.analyticsValue
+            paymentMethod: paymentMethodSelection.analyticsValue,
+            intentConfig: intent.intentConfig
         )
         if case .add = paymentMethodSelection {
             mode = .addingNew

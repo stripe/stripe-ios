@@ -23,7 +23,7 @@ protocol TextFieldViewDelegate: AnyObject {
 @objc(STP_Internal_TextFieldView)
 class TextFieldView: UIView {
     weak var delegate: TextFieldViewDelegate?
-    private lazy var toolbar = DoneButtonToolbar(delegate: self)
+    private lazy var toolbar = DoneButtonToolbar(delegate: self, theme: viewModel.theme)
     var text: String {
         return textField.text ?? ""
     }
@@ -68,9 +68,20 @@ class TextFieldView: UIView {
                 return
             }
             oldValue?.removeFromSuperview()
-            if let accessoryView = accessoryView {
+
+            if let accessoryView = accessoryView as? PickerFieldView {
+                // Hack, disable the ability for the picker to take focus while it's being added as a sub view
+                // Occasionally the OS will attempt to call `becomeFirstResponder` on it, causing it to take focus
+                accessoryView.setCanBecomeFirstResponder(false)
                 accessoryContainerView.addAndPinSubview(accessoryView)
                 accessoryView.setContentHuggingPriority(.required, for: .horizontal)
+                // Don't have trailing padding when showing a picker view in the accessory view
+                hStack.updateTrailingAnchor(constant: 0)
+                accessoryView.setCanBecomeFirstResponder(true)
+            } else if let accessoryView = accessoryView {
+                accessoryContainerView.addAndPinSubview(accessoryView)
+                accessoryView.setContentHuggingPriority(.required, for: .horizontal)
+                hStack.updateTrailingAnchor(constant: -ElementsUI.contentViewInsets.trailing)
             }
         }
     }
@@ -198,7 +209,7 @@ class TextFieldView: UIView {
             textField.accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
             layer.borderColor = viewModel.theme.colors.border.cgColor
-            textField.textColor = isUserInteractionEnabled ? viewModel.theme.colors.textFieldText : .tertiaryLabel
+            textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
             errorIconView.alpha = 0
             textField.accessibilityValue = viewModel.attributedText.string
         }

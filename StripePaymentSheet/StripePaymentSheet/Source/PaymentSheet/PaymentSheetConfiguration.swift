@@ -16,7 +16,6 @@ import UIKit
 extension PaymentSheet {
 
     /// Style options for colors in PaymentSheet
-    @available(iOS 13.0, *)
     public enum UserInterfaceStyle: Int {
 
         /// (default) PaymentSheet will automatically switch between standard and dark mode compatible colors based on device settings
@@ -112,7 +111,6 @@ extension PaymentSheet {
         /// The color styling to use for PaymentSheet UI
         /// Default value is SheetStyle.automatic
         /// @see SheetStyle
-        @available(iOS 13.0, *)
         public var style: UserInterfaceStyle {  // stored properties can't be marked @available which is why this uses the styleRawValue private var
             get {
                 return UserInterfaceStyle(rawValue: styleRawValue)!
@@ -127,7 +125,6 @@ extension PaymentSheet {
         public var customer: CustomerConfiguration?
 
         /// Your customer-facing business name.
-        /// This is used to display a "Pay \(merchantDisplayName)" line item in the Apple Pay sheet
         /// The default value is the name of your app, using CFBundleDisplayName or CFBundleName
         public var merchantDisplayName: String = Bundle.displayName ?? ""
 
@@ -153,6 +150,20 @@ extension PaymentSheet {
         /// If `name` and `line1` are populated, it's also [attached to the PaymentIntent](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping) during payment.
         public var shippingDetails: () -> AddressViewController.AddressDetails? = { return nil }
 
+        /// The list of preferred networks that should be used to process payments made with a co-branded card.
+        /// This value will only be used if your user hasn't selected a network themselves.
+        @_spi(STP)
+        public var preferredNetworks: [STPCardBrand]? {
+            didSet {
+                guard let preferredNetworks = preferredNetworks else { return }
+                assert(Set<STPCardBrand>(preferredNetworks).count == preferredNetworks.count,
+                       "preferredNetworks must not contain any duplicate card brands")
+            }
+        }
+
+        // TODO(porter) Remove for CBC GA
+        @_spi(STP) public var cbcEnabled: Bool = false
+
         /// Initializes a Configuration with default values
         public init() {}
 
@@ -164,6 +175,21 @@ extension PaymentSheet {
         /// If `never` is used for a required field for the Payment Method used during checkout,
         /// you **must** provide an appropriate value as part of `defaultBillingDetails`.
         public var billingDetailsCollectionConfiguration = BillingDetailsCollectionConfiguration()
+
+        /// Optional configuration to display a custom message when a saved payment method is removed.
+        public var removeSavedPaymentMethodMessage: String?
+
+        /// Configuration for external payment methods.
+        @_spi(ExternalPaymentMethodsPrivateBeta)
+        public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
+
+        /// By default, PaymentSheet will use a dynamic ordering that optimizes payment method display for the customer.
+        /// You can override the default order in which payment methods are displayed in PaymentSheet with a list of payment method types.
+        /// See https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for the list of valid types.  You may also pass external payment methods.
+        /// - Example: ["card", "external_paypal", "klarna"]
+        /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
+        @_spi(ExternalPaymentMethodsPrivateBeta)
+        public var paymentMethodOrder: [String]?
     }
 
     /// Configuration related to the Stripe Customer
@@ -233,7 +259,7 @@ extension PaymentSheet {
             /// ```
             /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
             public let authorizationResultHandler:
-                ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+            ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
 
             /// Initializes the ApplePayConfiguration Handlers.
             public init(
@@ -369,5 +395,32 @@ extension PaymentSheet {
         ///
         /// If `false` (the default), those values will only be used to prefill the corresponding fields in the form.
         public var attachDefaultsToPaymentMethod = false
+    }
+
+    @_spi(ExternalPaymentMethodsPrivateBeta)
+    public struct ExternalPaymentMethodConfiguration {
+        public init(externalPaymentMethods: [String], externalPaymentMethodConfirmHandler: @escaping PaymentSheet.ExternalPaymentMethodConfiguration.ExternalPaymentMethodConfirmHandler) {
+            self.externalPaymentMethods = externalPaymentMethods
+            self.externalPaymentMethodConfirmHandler = externalPaymentMethodConfirmHandler
+        }
+
+        /// A list of external payment methods to display in PaymentSheet.
+        /// e.g. ["external_paypal"].
+        public var externalPaymentMethods: [String] = []
+
+        /// - Parameter externalPaymentMethodType: The external payment method to confirm payment with.  e.g. "external_paypal"
+        /// - Parameter billingDetails: An object containing any billing details you've configured PaymentSheet to collect.
+        /// - Parameter completion: Call this after payment has completed, passing the result of the payment.
+        /// - Returns: The result of the attempt to confirm payment using the given external payment method.
+        public typealias ExternalPaymentMethodConfirmHandler = (
+            _ externalPaymentMethodType: String,
+            _ billingDetails: STPPaymentMethodBillingDetails,
+            _ completion: @escaping ((PaymentSheetResult) -> Void)
+        ) -> Void
+
+        /// This handler is called when the customer confirms the payment using an external payment method.
+        /// Your implementation should complete the payment and call the `completion` paramter with the result.
+        /// - Note: This is always called on the main thread.
+        public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
     }
 }

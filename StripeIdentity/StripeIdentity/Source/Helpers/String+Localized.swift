@@ -83,11 +83,18 @@ extension String.Localized {
         )
     }
 
+    static var upload_your_photo_id: String {
+        STPLocalizedString(
+            "Upload your photo ID",
+            "Title of document upload screen"
+        )
+    }
+
     // MARK: - Camera Capturing
 
-    static var file_upload_button: String {
+    static var upload_a_photo: String {
         STPLocalizedString(
-            "File Upload",
+            "Upload a Photo",
             "Button that opens file upload screen"
         )
     }
@@ -147,4 +154,28 @@ extension String.Localized {
             "Error text displayed to the user when the device's camera is not available"
         )
     }
+
+    // MARK: - Phone
+    static var phoneNumber: String {
+        STPLocalizedString(
+            "Phone Number",
+            "Section title for collection phone number"
+        )
+    }
+
+    // MARK: - Selfie
+    static var selfieWarmupTitle: String {
+        STPLocalizedString(
+            "Get ready to take a selfie",
+            "Title for selfie warmup page"
+        )
+    }
+
+    static var selfieWarmupBody: String {
+        STPLocalizedString(
+            "A few photos will be taken automatically on the next step to verify it's you",
+            "Body for selfie warmup page"
+        )
+    }
+
 }

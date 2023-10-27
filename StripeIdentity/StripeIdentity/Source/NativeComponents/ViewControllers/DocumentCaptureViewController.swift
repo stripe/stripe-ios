@@ -12,7 +12,6 @@ import AVKit
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class DocumentCaptureViewController: IdentityFlowViewController {
 
     typealias DocumentImageScanningSession = ImageScanningSession<
@@ -149,7 +148,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             if !apiConfig.requireLiveCapture {
                 models.append(
                     .init(
-                        text: .Localized.file_upload_button,
+                        text: .Localized.upload_a_photo,
                         isPrimary: false,
                         didTap: { [weak self] in
                             self?.transitionToFileUpload()
@@ -170,7 +169,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case .cameraError:
             return [
                 .init(
-                    text: .Localized.file_upload_button,
+                    text: .Localized.upload_a_photo,
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
                     }
@@ -179,7 +178,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case .timeout(let documentSide):
             return [
                 .init(
-                    text: .Localized.file_upload_button,
+                    text: .Localized.upload_a_photo,
                     isPrimary: false,
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
@@ -215,6 +214,9 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             return nil
         }
     }
+
+    // If the VC has uploaded front and waiting to decide if should upload back
+    var isDecidingBack: Bool = false
 
     // MARK: Instance Properties
 
@@ -289,7 +291,12 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        imageScanningSession.startIfNeeded(expectedClassification: .front)
+        if isDecidingBack {
+            // if True, the VC has just been popped due to user force confirmed front, continue scanning back
+            imageScanningSession.startScanning(expectedClassification: .back)
+        } else {
+            imageScanningSession.startIfNeeded(expectedClassification: .front)
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -368,10 +375,12 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     private func saveFrontAndDecideBack(
         frontImage: UIImage
     ) {
+        isDecidingBack = true
         sheetController?.saveDocumentFrontAndDecideBack(
             from: analyticsScreenName,
             documentUploader: documentUploader,
             onCompletion: { [weak self] isBackRequired in
+                self?.isDecidingBack = false
                 if isBackRequired {
                     self?.imageScanningSession.startScanning(
                         expectedClassification: DocumentSide.back
@@ -404,7 +413,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
 // MARK: - ImageScanningSessionDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentCaptureViewController: ImageScanningSessionDelegate {
     typealias ExpectedClassificationType = DocumentSide
 
@@ -499,6 +507,12 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         exifMetadata: CameraExifMetadata?,
         expectedClassification documentSide: DocumentSide
     ) {
+        // If scanningState matches, but scannerOutputOptional is nil, it means the previous frame
+        // is a match, but the current frame is not match, reset the timer.
+        if case let .scanning(_, scanningState?) = imageScanningSession.state, scanningState.matchesDocument(type: documentType, side: documentSide) && scannerOutputOptional == nil {
+            imageScanningSession.startTimeoutTimer(expectedClassification: documentSide)
+        }
+
         // If this isn't the classification we're looking for, update the state
         // to display a different message to the user
         guard let scannerOutput = scannerOutputOptional,
@@ -517,6 +531,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             exifMetadata: exifMetadata,
             method: .autoCapture
         )
+        sheetController?.analyticsClient.updateBlurScore(scannerOutput.blurResult.variance, for: documentSide)
 
         imageScanningSession.setStateScanned(
             expectedClassification: documentSide,
@@ -527,7 +542,6 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
 
 // MARK: - IdentityDataCollecting
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentCaptureViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         // Note: Always include the document back, even if the document type
@@ -541,6 +555,7 @@ extension DocumentCaptureViewController: IdentityDataCollecting {
     func reset() {
         imageScanningSession.reset(to: .front)
         clearCollectedFields()
+        isDecidingBack = false
     }
 }
 

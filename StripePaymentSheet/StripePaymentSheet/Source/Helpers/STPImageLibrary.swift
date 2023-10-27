@@ -27,9 +27,6 @@ class PaymentSheetImageLibrary {
     /// This returns the appropriate icon for the affirm logo
     @objc
     public class func affirmLogo() -> UIImage {
-        if isDarkMode(){
-            return Image.affirm_copy_dark.makeImage()
-        }
         return Image.affirm_copy.makeImage()
     }
 
@@ -80,7 +77,7 @@ class PaymentSheetImageLibrary {
 
 extension STPCardBrand {
     /// Returns a borderless image of the card brand's logo
-    func makeCarouselImage() -> UIImage {
+    func makeSavedPaymentMethodCellImage() -> UIImage {
         let imageName: String
         switch self {
         case .JCB:

@@ -2,8 +2,6 @@
 
 require_relative 'release_common'
 
-verify_xcode_version
-
 # Get argument of new version number
 @version = @specified_version
 
@@ -118,7 +116,7 @@ def propose_release
     new_dir_file = File.join_if_safe(temp_dir, "new_directories_#{@version}.txt")
     File.open(new_dir_file, 'w') { |file| file.puts new_dirs }
 
-    rputs "Complete the pull request checklist at #{pr.html_url} and the above docs PR"
+    rputs "Complete the pull request checklist at #{pr.html_url}"
     rputs "For a list of new directories since tag #{prev_release_tag}, `cat #{new_dir_file}`"
     notify_user
   end

@@ -10,6 +10,8 @@
 
 "Area" = "Območje";
 
+"BLIK code" = "Koda BLIK";
+
 "BSB number" = "Številka BSB";
 
 "Billing address is same as shipping" = "Naslov za obračunavanje je isti kot dostavni naslov";
@@ -37,6 +39,8 @@
 "District" = "Okrožje";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Ali želite zapreti ta obrazec?";
 
 "Done" = "Dokončano";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Išči";
 
+"Select card brand (optional)" = "Izberite blagovno znamko kartice (neobvezno)";
+
 "State" = "Zvezna država";
 
 "Suburb" = "Predmestje";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Uporabite rotor za dostop do povezav";
 
+"Your BLIK code is incomplete." = "Vaša koda BLIK ni popolna.";
+
+"Your BLIK code is invalid." = "Vaša koda BLIK ni veljavna.";
+
 "Your ZIP is incomplete." = "Vaša poštna številka ni popolna.";
 
 "Your email is invalid." = "Vaš e-poštni naslov ni veljaven.";
+
+"Your payment information will not be saved." = "Vaši podatki o plačilo ne bodo shranjeni.";
 
 "Your postal code is incomplete." = "Vaša poštna številka ni popolna.";
 

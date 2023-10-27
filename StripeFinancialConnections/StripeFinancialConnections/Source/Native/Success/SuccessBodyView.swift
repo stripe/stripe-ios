@@ -10,7 +10,6 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 final class SuccessBodyView: HitTestView {
 
     init(
@@ -21,6 +20,7 @@ final class SuccessBodyView: HitTestView {
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod?,
         isEndUserFacing: Bool,
+        isNetworking: Bool,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         didSelectDisconnectYourAccounts: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping () -> Void
@@ -41,6 +41,7 @@ final class SuccessBodyView: HitTestView {
                         isStripeDirect: isStripeDirect,
                         businessName: businessName,
                         permissions: permissions,
+                        isNetworking: isNetworking,
                         didSelectLearnMore: didSelectMerchantDataAccessLearnMore
                     )
                 )
@@ -63,7 +64,6 @@ final class SuccessBodyView: HitTestView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateInformationBoxView(
     accountsListView: UIView,
     dataDisclosureView: UIView
@@ -88,11 +88,11 @@ private func CreateInformationBoxView(
     return informationBoxVerticalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateDataAccessDisclosureView(
     isStripeDirect: Bool,
     businessName: String?,
     permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+    isNetworking: Bool,
     didSelectLearnMore: @escaping () -> Void
 ) -> UIView {
     let separatorView = UIView()
@@ -109,6 +109,10 @@ private func CreateDataAccessDisclosureView(
                 isStripeDirect: isStripeDirect,
                 businessName: businessName,
                 permissions: permissions,
+                isNetworking: isNetworking,
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
+                alignCenter: false,
                 didSelectLearnMore: didSelectLearnMore
             ),
         ]
@@ -118,7 +122,6 @@ private func CreateDataAccessDisclosureView(
     return verticalStackView
 }
 
-@available(iOSApplicationExtension, unavailable)
 private func CreateDisconnectAccountLabel(
     isLinkingOneAccount: Bool,
     accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod,
@@ -147,10 +150,10 @@ private func CreateDisconnectAccountLabel(
         isEndUserFacing: isEndUserFacing
     )
 
-    let disconnectAccountLabel = ClickableLabel(
-        font: .stripeFont(forTextStyle: .captionTight),
-        boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+    let disconnectAccountLabel = AttributedTextView(
+        font: .body(.small),
+        boldFont: .body(.smallEmphasized),
+        linkFont: .body(.smallEmphasized),
         textColor: .textSecondary
     )
     disconnectAccountLabel.setText(

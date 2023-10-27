@@ -12,14 +12,15 @@ import UIKit
  NOTE: If you change the name of this class, make sure to also change it FinancialConnectionsSDKAvailability file
  */
 @_spi(STP)
-@available(iOSApplicationExtension, unavailable)
 public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInterface {
+
     required public init() {}
 
     public func presentFinancialConnectionsSheet(
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        onEvent: ((StripeCore.FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
@@ -28,6 +29,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
             returnURL: returnURL
         )
         financialConnectionsSheet.apiClient = apiClient
+        financialConnectionsSheet.onEvent = onEvent
         // Captures self explicitly until the callback is invoked
         financialConnectionsSheet.present(
             from: presentingViewController,

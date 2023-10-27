@@ -140,7 +140,7 @@ class FloatingPlaceholderTextFieldView: UIView {
 
     public func updatePlaceholder(animated: Bool = true) {
         enum Position { case up, down }
-        let isEmpty = textField.text?.isEmpty ?? true
+        let isEmpty = textField.attributedText?.string.isEmpty ?? true
         let position: Position = textField.isEditing || !isEmpty ? .up : .down
         let scale = position == .up ? Constants.Placeholder.scale : 1.0
         let transform = CGAffineTransform.identity.scaledBy(x: scale, y: scale)

@@ -7,6 +7,7 @@
 //
 
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -14,12 +15,7 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class AfterpayPriceBreakdownViewSnapshotTests: FBSnapshotTestCase {
-    override func setUp() {
-        super.setUp()
-//                recordMode = true
-    }
-
+class AfterpayPriceBreakdownViewSnapshotTests: STPSnapshotTestCase {
     func embedInRenderableView(
         _ priceBreakdownView: AfterpayPriceBreakdownView,
         width: Int,
@@ -39,7 +35,7 @@ class AfterpayPriceBreakdownViewSnapshotTests: FBSnapshotTestCase {
     }
 
     func testClearpayInMultiRow() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_GB") as Locale) { [self] in
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_GB")) { [self] in
             let priceBreakdownView = AfterpayPriceBreakdownView(amount: 1000, currency: "GBP")
             let containingView = embedInRenderableView(priceBreakdownView, width: 320, height: 50)
 

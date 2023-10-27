@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Es faran unes quantes fotos automàticament al següent pas per verificar que sou vosaltres";
+
 "Alternatively, you may manually upload a photo of your identity document." = "També podeu pujar manualment una foto del document d'identitat.";
 
 "App Settings" = "Configuració de l'aplicació";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "La data de naixement no és vàlida";
 
-"File Upload" = "Carrega fitxers";
-
-"File upload" = "Càrrega de fitxer";
-
 "Flip your driver's license over to the other side" = "Gireu el permís de conduir perquè se'n vegi l'altra cara";
 
 "Flip your identity card over to the other side" = "Gireu el document d'identitat perquè se'n vegi l'altra cara";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Anvers del permís de conduir";
 
 "Front of identity card" = "Anvers del document d'identitat";
+
+"Get ready to take a selfie" = "Prepareu-vos per fer-vos l'autofoto";
 
 "Go Back" = "Enrere";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Número d'identificació personal";
 
 "Personal Information" = "Dades personals";
+
+"Phone Number" = "Número de telèfon";
+
+"Phone Verification" = "Verificació del telèfon";
 
 "Photo Library" = "Biblioteca de fotos";
 
@@ -127,6 +131,8 @@
 "Upload" = "Carrega";
 
 "Upload a Photo" = "Carrega una foto";
+
+"Upload your photo ID" = "Carregueu la vostra ID amb foto";
 
 "Uploading back driver's license photo" = "S'està carregant la foto del revers del permís de conduir";
 

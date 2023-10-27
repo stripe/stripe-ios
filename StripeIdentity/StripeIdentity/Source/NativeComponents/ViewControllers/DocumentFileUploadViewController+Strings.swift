@@ -8,7 +8,6 @@
 
 import Foundation
 
-@available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController {
     var instructionText: String {
         switch documentType {

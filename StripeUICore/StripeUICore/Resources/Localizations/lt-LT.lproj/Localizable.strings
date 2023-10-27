@@ -10,6 +10,8 @@
 
 "Area" = "Sritis";
 
+"BLIK code" = "BLIK kodas";
+
 "BSB number" = "BSB numeris";
 
 "Billing address is same as shipping" = "Atsiskaitymo ir siuntimo adresai vienodi";
@@ -37,6 +39,8 @@
 "District" = "Rajonas";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Ar norite uždaryti šią formą?";
 
 "Done" = "Atlikta";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Paieška";
 
+"Select card brand (optional)" = "Pasirinkite kortelės prekės ženklą (neprivaloma)";
+
 "State" = "Valstija";
 
 "Suburb" = "Priemiestis";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Naudoti pasukimo ratuką prieigai prie saitų";
 
+"Your BLIK code is incomplete." = "Jūsų BLIK kodas neišsamus.";
+
+"Your BLIK code is invalid." = "Jūsų BLIK kodas netinkamas.";
+
 "Your ZIP is incomplete." = "Neišsamus jūsų pašto kodas.";
 
 "Your email is invalid." = "Jūsų el. paštas yra neteisingas.";
+
+"Your payment information will not be saved." = "Jūsų mokėjimo informacija nebus įrašyta.";
 
 "Your postal code is incomplete." = "Pašto kodas neišsamus.";
 

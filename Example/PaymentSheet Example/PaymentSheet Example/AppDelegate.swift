@@ -28,8 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             // Delete cookies before running UI tests
             PaymentSheet.resetCustomer()
-
-            PaymentSheetTestPlayground.paymentSheetPlaygroundSettings = PaymentSheetPlaygroundSettings.defaultValues()
         }
         #endif
 
@@ -38,7 +36,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: UISceneSession Lifecycle
 
-    @available(iOS 13.0, *)
     func application(
         _ application: UIApplication,
         configurationForConnecting connectingSceneSession: UISceneSession,
@@ -50,7 +47,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
 
-    @available(iOS 13.0, *)
     func application(
         _ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>
     ) {

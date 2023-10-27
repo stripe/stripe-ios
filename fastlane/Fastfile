@@ -46,7 +46,6 @@ platform :ios do
       sh("./ci_scripts/test.rb --build-only --scheme 'UI Examples'")
       sh("./ci_scripts/test.rb --build-only --scheme 'Non-Card Payment Examples'")
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
-      sh("./ci_scripts/test.rb --build-only --scheme 'LocalizationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'PaymentSheet Example'")
       sh("./ci_scripts/test.rb --build-only --scheme 'AppClipExample'")
     end
@@ -75,7 +74,7 @@ platform :ios do
 
   private_lane :legacy_tests do |options|
     # TODO(bmelts): would be nice to read these from modules.yaml
-    schemes = %w[StripeiOS StripePayments StripePaymentsUI StripePaymentSheet StripeCameraCore StripeCore StripeUICore StripeApplePay StripeCardScan StripeLinkCore]
+    schemes = %w[StripeiOS StripePayments StripePaymentsUI StripePaymentSheet StripeCameraCore StripeCore StripeUICore StripeApplePay StripeCardScan]
     Dir.chdir('..') do
       schemes.each do |scheme|
         sh("./ci_scripts/test.rb --scheme '#{scheme}' --device '#{options[:device]}' --version #{options[:version]} --skip-snapshot-tests --retry-on-failure")

@@ -15,12 +15,7 @@ import UIKit
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePaymentSheet
 
-class ConfirmButtonSnapshotTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-        //        self.recordMode = true
-    }
+class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     func testConfirmButton() {
         let confirmButton = ConfirmButton(style: .stripe, callToAction: .setup, didTap: {})

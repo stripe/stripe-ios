@@ -11,6 +11,7 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 
 class STPAnalyticsClientPaymentSheetTest: XCTestCase {
@@ -132,7 +133,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             result: .completed,
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            linkSessionType: .ephemeral,
+            currency: "USD",
+            deferredIntentConfirmationType: nil
         )
 
         let event4 = XCTestExpectation(description: "mc_custom_payment_applepay_failure")
@@ -143,7 +146,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             result: .failed(error: PaymentSheetError.unknown(debugDescription: "Error")),
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            linkSessionType: .ephemeral,
+            currency: "USD",
+            deferredIntentConfirmationType: nil
         )
 
         let event5 = XCTestExpectation(description: "mc_custom_paymentoption_applepay_select")
@@ -177,8 +182,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let payload = client.payload(from: analytic, apiClient: apiClient)
 
         // verify
-        XCTAssertEqual(15, payload.count)
+        XCTAssertEqual(16, payload.count)
         XCTAssertNotNil(payload["device_type"] as? String)
+        XCTAssertEqual("Wi-Fi", payload["network_type"] as? String)
         // In xctest, this is the version of Xcode
         XCTAssertNotNil(payload["app_version"] as? String)
         XCTAssertEqual("none", payload["ocr_type"] as? String)
@@ -193,6 +199,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertNil(payload["ui_usage_level"])
         XCTAssertTrue(payload["apple_pay_enabled"] as? Bool ?? false)
         XCTAssertEqual("legacy", payload["pay_var"] as? String)
+        XCTAssertNil(payload["link_session_type"] as? String)
         XCTAssertEqual(STPAPIClient.STPSDKVersion, payload["bindings_version"] as? String)
         XCTAssertEqual("testVal", payload["testKey"] as? String)
         XCTAssertEqual("X", payload["install"] as? String)
@@ -223,7 +230,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             result: .completed,
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            linkSessionType: .ephemeral,
+            currency: "USD",
+            deferredIntentConfirmationType: nil
         )
 
         let duration = client.lastPayload?["duration"] as? TimeInterval

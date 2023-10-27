@@ -104,9 +104,10 @@ private func CreateTableTitleView(title: String) -> UIView {
         iconImageView.heightAnchor.constraint(equalToConstant: 16),
     ])
 
-    let titleLabel = UILabel()
-    titleLabel.font = .stripeFont(forTextStyle: .monospaced)
-    titleLabel.textColor = .textSecondary
+    let titleLabel = AttributedLabel(
+        font: .code(.largeEmphasized),
+        textColor: .textSecondary
+    )
     titleLabel.numberOfLines = 0
     titleLabel.text = title
 
@@ -218,9 +219,10 @@ private func CreateColumnView(
     verticalStackView.alignment = alignment
 
     // Title
-    let titleLabel = UILabel()
-    titleLabel.font = .stripeFont(forTextStyle: .monospaced)
-    titleLabel.textColor = .textSecondary
+    let titleLabel = AttributedLabel(
+        font: .code(.largeEmphasized),
+        textColor: .textSecondary
+    )
     titleLabel.text = title
     titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     verticalStackView.addArrangedSubview(titleLabel)
@@ -229,10 +231,11 @@ private func CreateColumnView(
     // Rows
     var rowViews: [UIView] = []
     for label in rowLabels {
-        let rowLabel = UILabel()
-        rowLabel.font = .stripeFont(forTextStyle: .monospaced)
+        let rowLabel = AttributedLabel(
+            font: .code(.largeEmphasized),
+            textColor: label.isHighlighted ? .textBrand : .textPrimary
+        )
         rowLabel.numberOfLines = 0
-        rowLabel.textColor = label.isHighlighted ? .textBrand : .textPrimary
         rowLabel.text = label.title
         rowLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         rowLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
@@ -250,7 +253,6 @@ private func CreateColumnView(
 
 import SwiftUI
 
-@available(iOSApplicationExtension, unavailable)
 private struct ManualEntrySuccessTransactionTableViewUIViewRepresentable: UIViewRepresentable {
 
     let microdepositVerificationMethod: MicrodepositVerificationMethod
@@ -266,7 +268,6 @@ private struct ManualEntrySuccessTransactionTableViewUIViewRepresentable: UIView
     func updateUIView(_ uiView: ManualEntrySuccessTransactionTableView, context: Context) {}
 }
 
-@available(iOSApplicationExtension, unavailable)
 struct ManualEntrySuccessTransactionTableView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {

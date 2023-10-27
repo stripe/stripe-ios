@@ -10,6 +10,8 @@
 
 "Area" = "Piirkond";
 
+"BLIK code" = "BLIK-kood";
+
 "BSB number" = "BSB-number";
 
 "Billing address is same as shipping" = "Arveldusaadress on sama mis tarneaadress";
@@ -37,6 +39,8 @@
 "District" = "Regioon";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Kas soovite selle vormi sulgeda?";
 
 "Done" = "Valmis";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Otsing";
 
+"Select card brand (optional)" = "Valige kaardi kaubamärk (valikuline)";
+
 "State" = "Osariik";
 
 "Suburb" = "Eeslinn";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Kasutage linkidele juurdepääsuks rootorit";
 
+"Your BLIK code is incomplete." = "Teie BLIK-kood on puudulik.";
+
+"Your BLIK code is invalid." = "Teie BLIK-kood on kehtetu.";
+
 "Your ZIP is incomplete." = "Teie sihtnumber on puudulik.";
 
 "Your email is invalid." = "Teie meiliaadress on kehtetu.";
+
+"Your payment information will not be saved." = "Teie makseteavet ei salvestata.";
 
 "Your postal code is incomplete." = "Sihtnumber on puudulik.";
 

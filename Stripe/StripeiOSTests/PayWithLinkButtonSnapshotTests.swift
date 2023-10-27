@@ -16,15 +16,10 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
+class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
 
     private let emailAddress = "customer@example.com"
     private let longEmailAddress = "long.customer.name@example.com"
-
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
 
     func testDefault() {
         let sut = makeSUT()
@@ -74,6 +69,12 @@ class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
         verify(sut)
     }
 
+    func testRegistered_withCardInfo() {
+        let sut = PayWithLinkButton()
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true, lastPM: .init(last4: "3155", brand: .visa))
+        verify(sut)
+    }
+
     func verify(
         _ sut: UIView,
         identifier: String? = nil,
@@ -91,14 +92,16 @@ extension PayWithLinkButtonSnapshotTests {
     fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
         let redactedPhoneNumber: String?
+        let lastPM: LinkPMDisplayDetails?
         let isRegistered: Bool
         let isLoggedIn: Bool
     }
 
-    fileprivate func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
+    fileprivate func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails? = nil) -> LinkAccountStub {
         return LinkAccountStub(
             email: email,
             redactedPhoneNumber: "+1********55",
+            lastPM: lastPM,
             isRegistered: isRegistered,
             isLoggedIn: false
         )

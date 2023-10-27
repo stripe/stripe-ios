@@ -9,6 +9,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 import UIKit
 
 /// STPAPIClient extensions to manage PIN on Stripe Issuing cards

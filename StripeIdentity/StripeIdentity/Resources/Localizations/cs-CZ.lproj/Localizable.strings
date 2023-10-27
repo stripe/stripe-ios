@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "V dalším kroku se automaticky pořídí několik fotografií, aby se ověřilo, že jste to vy.";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Můžete také ručně nahrát fotografii dokladu totožnosti.";
 
 "App Settings" = "Nastavení aplikace";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Datum narození nevypadá jako platný údaj";
 
-"File Upload" = "Nahrávání souboru";
-
-"File upload" = "Nahrávání souboru";
-
 "Flip your driver's license over to the other side" = "Převraťte řidičský průkaz na druhou stranu";
 
 "Flip your identity card over to the other side" = "Převraťte průkaz totožnosti na druhou stranu";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Přední strana řidičského průkazu";
 
 "Front of identity card" = "Přední strana průkazu totožnosti";
+
+"Get ready to take a selfie" = "Připravte se na pořízení selfie";
 
 "Go Back" = "Zpět";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Osobní identifikační číslo";
 
 "Personal Information" = "Osobní informace";
+
+"Phone Number" = "Telefonní číslo";
+
+"Phone Verification" = "Telefonické ověření";
 
 "Photo Library" = "Knihovna fotek";
 
@@ -127,6 +131,8 @@
 "Upload" = "Nahrát";
 
 "Upload a Photo" = "Nahrát fotografii";
+
+"Upload your photo ID" = "Nahrajte svou fotografii";
 
 "Uploading back driver's license photo" = "Nahrávání fotografie ze zadní strany řidičského průkazu";
 

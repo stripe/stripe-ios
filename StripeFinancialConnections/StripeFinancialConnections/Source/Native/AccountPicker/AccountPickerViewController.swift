@@ -10,7 +10,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
@@ -22,6 +21,10 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
         _ viewController: AccountPickerViewController,
         didReceiveTerminalError error: Error
     )
+    func accountPickerViewController(
+        _ viewController: AccountPickerViewController,
+        didReceiveEvent event: FinancialConnectionsEvent
+    )
 }
 
 enum AccountPickerType {
@@ -29,7 +32,6 @@ enum AccountPickerType {
     case radioButton
 }
 
-@available(iOSApplicationExtension, unavailable)
 final class AccountPickerViewController: UIViewController {
 
     private let dataSource: AccountPickerDataSource
@@ -61,7 +63,7 @@ final class AccountPickerViewController: UIViewController {
             } : nil
     }
     private var didSelectManualEntry: (() -> Void)? {
-        return dataSource.manifest.allowManualEntry
+        return (dataSource.manifest.allowManualEntry && !dataSource.reduceManualEntryProminenceInErrors)
             ? { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.accountPickerViewControllerDidSelectManualEntry(self)
@@ -84,9 +86,12 @@ final class AccountPickerViewController: UIViewController {
                     .analyticsClient
                     .log(
                         eventName: "click.link_accounts",
-                        parameters: ["pane": FinancialConnectionsSessionManifest.NextPane.accountPicker.rawValue]
+                        pane: .accountPicker
                     )
-
+                self.delegate?.accountPickerViewController(
+                    self,
+                    didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
+                )
                 self.didSelectLinkAccounts()
             },
             didSelectMerchantDataAccessLearnMore: { [weak self] in
@@ -135,6 +140,7 @@ final class AccountPickerViewController: UIViewController {
                     let accounts = accountsPayload.data
                     let shouldSkipAccountSelection = accountsPayload.skipAccountSelection ?? self.dataSource.authSession.skipAccountSelection ?? false
                     if !accounts.isEmpty {
+                        // the API is expected to never return 0 accounts
                         self.dataSource
                             .analyticsClient
                             .log(
@@ -142,7 +148,8 @@ final class AccountPickerViewController: UIViewController {
                                 parameters: [
                                     "duration": Date().timeIntervalSince(pollingStartDate).milliseconds,
                                     "authSessionId": self.dataSource.authSession.id,
-                                ]
+                                ],
+                                pane: .accountPicker
                             )
                     }
                     self.dataSource
@@ -284,11 +291,10 @@ final class AccountPickerViewController: UIViewController {
             // select all accounts
             dataSource.updateSelectedAccounts(enabledAccounts)
         case .radioButton:
-            if enabledAccounts.count == 1 {
-                // select the one (and only) available account
-                dataSource.updateSelectedAccounts(enabledAccounts)
-            } else {  // accounts.count >= 2
-                // don't select any accounts (...let the user decide which one)
+            if let firstAccount = enabledAccounts.first {
+                dataSource.updateSelectedAccounts([firstAccount])
+            } else {
+                // defensive programming; it should never happen that we have 0 accounts
                 dataSource.updateSelectedAccounts([])
             }
         }
@@ -351,24 +357,83 @@ final class AccountPickerViewController: UIViewController {
                 }
             }
     }
+
+    private func logAccountSelectOrDeselect(selectedAccounts: [FinancialConnectionsPartnerAccount]) {
+        let isSelect: Bool? // false when deselected, and nil when event shouldn't be sent
+        let accountId: String?
+        switch accountPickerType {
+        case .radioButton:
+            // user deselected an account by selecting the same row
+            if selectedAccounts.isEmpty {
+                isSelect = false
+                accountId = dataSource.selectedAccounts.first?.id
+            }
+            // user selected a new account
+            else {
+                isSelect = true
+                accountId = selectedAccounts.first?.id
+            }
+        case .checkbox:
+            // if user selects or deselects more than two accounts at the same time, we assume user pressed
+            // "All accounts" which we have decided to exclude due to V3 changes
+            let pressedAllAccountsButton = (abs(selectedAccounts.count - dataSource.selectedAccounts.count) >= 2)
+            if !pressedAllAccountsButton {
+                if selectedAccounts.count > dataSource.selectedAccounts.count {
+                    // selected a new, additional account
+                    isSelect = true
+                    accountId = selectedAccounts
+                        .filter({ newSelectedAccount in
+                            return !dataSource.selectedAccounts.contains(where: { $0.id == newSelectedAccount.id })
+                        })
+                        .first?
+                        .id
+                }
+                // selectedAccounts.count < dataSource.selectedAccounts.count
+                else {
+                    // deselected an account
+                    isSelect = false
+                    accountId = dataSource.selectedAccounts
+                        .filter({ oldSelectedAccount in
+                            return !selectedAccounts.contains(where: { $0.id == oldSelectedAccount.id })
+                        })
+                        .first?
+                        .id
+                }
+            } else {
+                isSelect = nil
+                accountId = nil
+            }
+        }
+        if let isSelect = isSelect, let accountId = accountId {
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: isSelect ? "click.account_picker.account_selected" : "click.account_picker.account_unselected",
+                    parameters: [
+                        "account": accountId,
+                        "is_single_account": dataSource.manifest.singleAccount,
+                    ],
+                    pane: .accountPicker
+                )
+        }
+    }
 }
 
 // MARK: - AccountPickerSelectionViewDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
 
     func accountPickerSelectionView(
         _ view: AccountPickerSelectionView,
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     ) {
+        logAccountSelectOrDeselect(selectedAccounts: selectedAccounts)
         dataSource.updateSelectedAccounts(selectedAccounts)
     }
 }
 
 // MARK: - AccountPickerDataSourceDelegate
 
-@available(iOSApplicationExtension, unavailable)
 extension AccountPickerViewController: AccountPickerDataSourceDelegate {
     func accountPickerDataSource(
         _ dataSource: AccountPickerDataSource,

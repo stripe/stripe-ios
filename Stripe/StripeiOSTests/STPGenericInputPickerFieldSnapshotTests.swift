@@ -7,6 +7,7 @@
 //
 
 import iOSSnapshotTestCase
+import StripeCoreTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -14,13 +15,12 @@ import iOSSnapshotTestCase
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-final class STPGenericInputPickerFieldSnapshotTests: FBSnapshotTestCase {
+final class STPGenericInputPickerFieldSnapshotTests: STPSnapshotTestCase {
 
     private var field: STPGenericInputPickerField!
 
     override func setUp() {
         super.setUp()
-        //        recordMode = true
 
         field = STPGenericInputPickerField(dataSource: MockDataSource())
         field.placeholder = "Placeholder"

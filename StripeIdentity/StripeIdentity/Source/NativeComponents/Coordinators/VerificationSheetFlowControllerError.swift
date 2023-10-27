@@ -19,8 +19,12 @@ enum VerificationSheetFlowControllerError: Error {
     case missingSelfieConfig
     /// Attempted to open a URL that could not be constructed from the given string
     case malformedURL(String)
+    /// The server did not include "phoneOtp" , but 'phone_otp' is a missing field
+    case missingPhoneOtpContent
     /// An unknown error occurred elsewhere in the stack
     case unknown(Error)
+    /// No documentUploader found
+    case noDocumentUploader
 }
 
 extension VerificationSheetFlowControllerError: LocalizedError {
@@ -51,10 +55,18 @@ extension VerificationSheetFlowControllerError: AnalyticLoggableError {
             payload = [
                 "type": "missing_selfie"
             ]
+        case .missingPhoneOtpContent:
+            payload = [
+                "type": "missing_phone_otp"
+            ]
         case .malformedURL(let value):
             payload = [
                 "type": "malformed_url",
                 "value": value,
+            ]
+        case .noDocumentUploader:
+            payload = [
+                "type": "no_document_uploader"
             ]
         case .unknown(let error):
             return error.serializeForLogging()

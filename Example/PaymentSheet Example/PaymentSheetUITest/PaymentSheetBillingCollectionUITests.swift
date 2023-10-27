@@ -7,7 +7,7 @@
 
 import XCTest
 
-final class PaymentSheetBillingCollectionUITests: XCTestCase {
+class PaymentSheetBillingCollectionUITestCase: XCTestCase {
     var app: XCUIApplication!
 
     override func setUpWithError() throws {
@@ -17,43 +17,44 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         app = XCUIApplication()
         app.launchEnvironment = ["UITesting": "true"]
-        app.launch()
     }
 
-    private var cardInfoField: XCUIElement { app.staticTexts["Card information"] }
-    private var contactInfoField: XCUIElement { app.staticTexts["Contact information"] }
-    private var fullNameField: XCUIElement { app.textFields["Full name"] }
-    private var nameOnCardField: XCUIElement { app.textFields["Name on card"] }
-    private var emailField: XCUIElement { app.textFields["Email"] }
-    private var phoneField: XCUIElement { app.textFields["Phone"] }
-    private var billingAddressField: XCUIElement { app.staticTexts["Billing address"] }
-    private var countryField: XCUIElement { app.textFields["Country or region"] }
-    private var line1Field: XCUIElement { app.textFields["Address line 1"] }
-    private var line2Field: XCUIElement { app.textFields["Address line 2"] }
-    private var cityField: XCUIElement { app.textFields["City"] }
-    private var stateField: XCUIElement { app.textFields["State"] }
-    private var zipField: XCUIElement { app.textFields["ZIP"] }
-    private var checkoutButton: XCUIElement { app.buttons["Checkout (Complete)"] }
-    private var payButton: XCUIElement { app.buttons["Pay $50.99"] }
-    private var successText: XCUIElement { app.alerts.staticTexts["Success!"] }
-    private var okButton: XCUIElement { app.alerts.scrollViews.otherElements.buttons["OK"] }
+    var cardInfoField: XCUIElement { app.staticTexts["Card information"] }
+    var contactInfoField: XCUIElement { app.staticTexts["Contact information"] }
+    var fullNameField: XCUIElement { app.textFields["Full name"] }
+    var nameOnCardField: XCUIElement { app.textFields["Name on card"] }
+    var emailField: XCUIElement { app.textFields["Email"] }
+    var phoneField: XCUIElement { app.textFields["Phone"] }
+    var billingAddressField: XCUIElement { app.staticTexts["Billing address"] }
+    var countryField: XCUIElement { app.textFields["Country or region"] }
+    var line1Field: XCUIElement { app.textFields["Address line 1"] }
+    var line2Field: XCUIElement { app.textFields["Address line 2"] }
+    var cityField: XCUIElement { app.textFields["City"] }
+    var stateField: XCUIElement { app.textFields["State"] }
+    var zipField: XCUIElement { app.textFields["ZIP"] }
+    var checkoutButton: XCUIElement { app.buttons["Present PaymentSheet"] }
+    var payButton: XCUIElement { app.buttons["Pay $50.99"] }
+    var successText: XCUIElement { app.staticTexts["Success!"] }
+}
 
+class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUITestCase {
     func testCard_AutomaticFields_NoDefaults() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.attachDefaults = .off
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "guestmode",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "automatic_payment_methods": "off",
-                "link": "off",
-                "attach_defaults": "off",
-                "collect_name": "auto",
-                "collect_email": "auto",
-                "collect_phone": "auto",
-                "collect_address": "auto",
-            ]
+            settings
         )
         checkoutButton.tap()
 
@@ -64,26 +65,26 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
         // Complete payment
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testCard_AllFields_WithDefaults() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress = .on
+        settings.attachDefaults = .on
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .always
+        settings.collectAddress = .full
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "guestmode",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "automatic_payment_methods": "off",
-                "link": "off",
-                "default_billing_address": "on",
-                "attach_defaults": "on",
-                "collect_name": "always",
-                "collect_email": "always",
-                "collect_phone": "always",
-                "collect_address": "full",
-            ]
+            settings
         )
         checkoutButton.tap()
 
@@ -113,26 +114,26 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
         // Complete payment
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testCard_OnlyCardInfo_WithDefaults() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress = .on
+        settings.attachDefaults = .on
+        settings.collectName = .never
+        settings.collectEmail = .never
+        settings.collectPhone = .never
+        settings.collectAddress = .never
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "guestmode",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "automatic_payment_methods": "off",
-                "link": "off",
-                "default_billing_address": "on",
-                "attach_defaults": "on",
-                "collect_name": "never",
-                "collect_email": "never",
-                "collect_phone": "never",
-                "collect_address": "never",
-            ]
+            settings
         )
         checkoutButton.tap()
 
@@ -162,26 +163,27 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
         // Complete payment
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
-
+}
+class PaymentSheetBillingCollectionBankTests: PaymentSheetBillingCollectionUITestCase {
     func testUSBankAccount_AutomaticFields_NoDefaults() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.allowsDelayedPMs = .on
+        settings.linkEnabled = .off
+        settings.attachDefaults = .off
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "automatic_payment_methods": "off",
-                "allows_delayed_pms": "true",
-                "link": "off",
-                "attach_defaults": "off",
-                "collect_name": "auto",
-                "collect_email": "auto",
-                "collect_phone": "auto",
-                "collect_address": "auto",
-            ]
+            settings
         )
         checkoutButton.tap()
 
@@ -222,23 +224,24 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
     }
 
     func testUSBankAccount_AutomaticFields_WithDefaults() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.allowsDelayedPMs = .on
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress = .on
+        settings.attachDefaults = .on
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "automatic_payment_methods": "off",
-                "allows_delayed_pms": "true",
-                "link": "off",
-                "default_billing_address": "on",
-                "attach_defaults": "on",
-                "collect_name": "auto",
-                "collect_email": "auto",
-                "collect_phone": "auto",
-                "collect_address": "auto",
-            ]
+            settings
         )
         checkoutButton.tap()
 
@@ -269,23 +272,24 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
     }
 
     func testUSBankAccount_AllFields_WithDefaults() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.allowsDelayedPMs = .on
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress = .on
+        settings.attachDefaults = .on
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .always
+        settings.collectAddress = .full
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "automatic_payment_methods": "off",
-                "allows_delayed_pms": "true",
-                "link": "off",
-                "default_billing_address": "on",
-                "attach_defaults": "on",
-                "collect_name": "always",
-                "collect_email": "always",
-                "collect_phone": "always",
-                "collect_address": "full",
-            ]
+            settings
         )
         checkoutButton.tap()
 
@@ -315,23 +319,24 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
     }
 
     func testUSBankAccount_NoFields_WithDefaults() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.allowsDelayedPMs = .on
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress = .on
+        settings.attachDefaults = .on
+        settings.collectName = .never
+        settings.collectEmail = .never
+        settings.collectPhone = .never
+        settings.collectAddress = .never
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "automatic_payment_methods": "off",
-                "allows_delayed_pms": "true",
-                "link": "off",
-                "default_billing_address": "on",
-                "attach_defaults": "on",
-                "collect_name": "never",
-                "collect_email": "never",
-                "collect_phone": "never",
-                "collect_address": "never",
-            ]
+            settings
         )
         checkoutButton.tap()
 
@@ -359,23 +364,24 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         // no pay button tap because linked account is stubbed/fake in UI test
     }
-
+}
+class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITestCase {
     func testUPI_AutomaticFields() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .IN
+        settings.currency = .inr
+        settings.defaultBillingAddress = .off
+        settings.attachDefaults = .off
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "merchant_country_code": "IN",
-                "currency": "INR",
-                "default_billing_address": "off",
-                "attach_defaults": "off",
-                "collect_name": "auto",
-                "collect_email": "auto",
-                "collect_phone": "auto",
-                "collect_address": "auto",
-            ]
+            settings
         )
-
         checkoutButton.tap()
 
         let payButton = app.buttons["Pay ₹50.99"]
@@ -401,25 +407,24 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testUPI_AllFields_NoDefaults() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .IN
+        settings.currency = .inr
+        settings.defaultBillingAddress = .off
+        settings.attachDefaults = .off
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .always
+        settings.collectAddress = .full
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "merchant_country_code": "IN",
-                "currency": "INR",
-                "default_billing_address": "off",
-                "attach_defaults": "off",
-                "collect_name": "always",
-                "collect_email": "always",
-                "collect_phone": "always",
-                "collect_address": "full",
-            ]
+            settings
         )
-
         checkoutButton.tap()
 
         let payButton = app.buttons["Pay ₹50.99"]
@@ -479,23 +484,23 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testUPI_AllFields_WithDefaults() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .IN
+        settings.currency = .inr
+        settings.defaultBillingAddress = .on
+        settings.attachDefaults = .on
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .always
+        settings.collectAddress = .full
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "merchant_country_code": "IN",
-                "currency": "INR",
-                "default_billing_address": "on",
-                "attach_defaults": "on",
-                "collect_name": "always",
-                "collect_email": "always",
-                "collect_phone": "always",
-                "collect_address": "full",
-            ]
+            settings
         )
 
         checkoutButton.tap()
@@ -524,23 +529,23 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testUPI_SomeFields_WithDefaults() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .IN
+        settings.currency = .inr
+        settings.defaultBillingAddress = .on
+        settings.attachDefaults = .on
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .never
+        settings.collectAddress = .never
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "new",
-                "merchant_country_code": "IN",
-                "currency": "INR",
-                "default_billing_address": "on",
-                "attach_defaults": "on",
-                "collect_name": "always",
-                "collect_email": "always",
-                "collect_phone": "never",
-                "collect_address": "never",
-            ]
+            settings
         )
 
         checkoutButton.tap()
@@ -569,29 +574,29 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         payButton.tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testLpm_Afterpay_AutomaticFields_WithDefaultAddress() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.merchantCountryCode = .US
+        settings.currency = .usd
+        settings.applePayEnabled = .off
+        settings.shippingInfo = .onWithDefaults
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.attachDefaults = .off
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "guestmode",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "shipping": "on w/ defaults",
-                "automatic_payment_methods": "off",
-                "link": "off",
-                "attach_defaults": "off",
-                "collect_name": "auto",
-                "collect_email": "auto",
-                "collect_phone": "auto",
-                "collect_address": "auto",
-            ]
+            settings
         )
 
-        let shippingButton = app.buttons["Shipping address"]
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
@@ -631,33 +636,32 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         // Complete payment
         payButton.tap()
-        let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
+        let authorizeButton = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
         authorizeButton.waitForExistenceAndTap(timeout: 10.0)
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testLpm_Afterpay_AllFields_WithDefaults() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.shippingInfo = .onWithDefaults
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress =  .on
+        settings.attachDefaults =  .on
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .always
+        settings.collectAddress = .full
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "guestmode",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "shipping": "on w/ defaults",
-                "automatic_payment_methods": "off",
-                "link": "off",
-                "default_billing_address": "on",
-                "attach_defaults": "on",
-                "collect_name": "always",
-                "collect_email": "always",
-                "collect_phone": "always",
-                "collect_address": "full",
-            ]
+            settings
         )
 
-        let shippingButton = app.buttons["Shipping address"]
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
@@ -687,33 +691,32 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         // Complete payment
         payButton.tap()
-        let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
+        let authorizeButton = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
         authorizeButton.waitForExistenceAndTap(timeout: 10.0)
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testLpm_Afterpay_MinimalFields_WithDefaults() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.shippingInfo = .onWithDefaults
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress =  .on
+        settings.attachDefaults =  .on
+        settings.collectName = .never
+        settings.collectEmail = .never
+        settings.collectPhone = .never
+        settings.collectAddress = .never
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "guestmode",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "shipping": "on w/ defaults",
-                "automatic_payment_methods": "off",
-                "link": "off",
-                "default_billing_address": "on",
-                "attach_defaults": "on",
-                "collect_name": "never",
-                "collect_email": "never",
-                "collect_phone": "never",
-                "collect_address": "never",
-            ]
+            settings
         )
 
-        let shippingButton = app.buttons["Shipping address"]
+        let shippingButton = app.buttons["Address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
 
@@ -743,29 +746,29 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
 
         // Complete payment
         payButton.tap()
-        let authorizeButton = app.links["AUTHORIZE TEST PAYMENT"]
+        let authorizeButton = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
         authorizeButton.waitForExistenceAndTap(timeout: 10.0)
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        okButton.tap()
     }
 
     func testLpm_Klarna_AutomaticFields() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.attachDefaults = .off
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "guestmode",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "automatic_payment_methods": "off",
-                "link": "off",
-                "attach_defaults": "off",
-                "collect_name": "auto",
-                "collect_email": "auto",
-                "collect_phone": "auto",
-                "collect_address": "auto",
-            ]
+            settings
         )
+
         checkoutButton.tap()
 
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna"))
@@ -794,23 +797,25 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
     }
 
     func testLpm_Klarna_AllFields_WithDefaults() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress = .on
+        settings.attachDefaults = .on
+        settings.collectName = .always
+        settings.collectEmail = .always
+        settings.collectPhone = .always
+        settings.collectAddress = .full
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "guestmode",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "automatic_payment_methods": "off",
-                "link": "off",
-                "default_billing_address": "on",
-                "attach_defaults": "on",
-                "collect_name": "always",
-                "collect_email": "always",
-                "collect_phone": "always",
-                "collect_address": "full",
-            ]
+            settings
         )
+
         checkoutButton.tap()
 
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna"))
@@ -832,23 +837,24 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
     }
 
     func testLpm_Klarna_MinimalFields_WithDefaults() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.defaultBillingAddress = .on
+        settings.attachDefaults = .on
+        settings.collectName = .never
+        settings.collectEmail = .never
+        settings.collectPhone = .never
+        settings.collectAddress = .never
         loadPlayground(
             app,
-            settings: [
-                "customer_mode": "guestmode",
-                "currency": "USD",
-                "merchant_country_code": "US",
-                "apple_pay": "off",
-                "automatic_payment_methods": "off",
-                "link": "off",
-                "default_billing_address": "on",
-                "attach_defaults": "on",
-                "collect_name": "never",
-                "collect_email": "never",
-                "collect_phone": "never",
-                "collect_address": "never",
-            ]
+            settings
         )
+
         checkoutButton.tap()
 
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "klarna"))
@@ -866,6 +872,130 @@ final class PaymentSheetBillingCollectionUITests: XCTestCase {
         XCTAssertFalse(zipField.exists)
 
         // Just check the button is enabled, confirming a payment with Klarna is flaky.
+        XCTAssertTrue(payButton.isEnabled)
+    }
+
+    func testBlik_AutomaticFields() throws {
+
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .FR
+        settings.currency = .pln
+        settings.defaultBillingAddress = .off
+        settings.attachDefaults = .off
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
+        loadPlayground(
+            app,
+            settings
+        )
+        checkoutButton.tap()
+
+        let payButton = app.buttons["Pay PLN 50.99"]
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "BLIK"))
+        cell.tap()
+
+        XCTAssertFalse(emailField.exists)
+        XCTAssertFalse(fullNameField.exists)
+        XCTAssertFalse(phoneField.exists)
+        XCTAssertFalse(billingAddressField.exists)
+        XCTAssertFalse(countryField.exists)
+        XCTAssertFalse(line1Field.exists)
+        XCTAssertFalse(line2Field.exists)
+        XCTAssertFalse(cityField.exists)
+        XCTAssertFalse(stateField.exists)
+        XCTAssertFalse(zipField.exists)
+
+        XCTAssertFalse(payButton.isEnabled)
+        let blik_code = app.textFields["BLIK code"]
+        blik_code.tap()
+        blik_code.typeText("123456")
+        blik_code.typeText(XCUIKeyboardKey.return.rawValue)
+
+        payButton.tap()
+
+        // in test mode polling is auto approved in 10 seconds
+        XCTAssertTrue(successText.waitForExistence(timeout: 25.0))
+    }
+
+    func testLpm_AmazonPay_AutomaticFields() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .usd
+        settings.merchantCountryCode = .US
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.attachDefaults = .off
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
+        loadPlayground(
+            app,
+            settings
+        )
+
+        checkoutButton.tap()
+
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "amazon_pay"))
+        cell.tap()
+
+        XCTAssertFalse(emailField.exists)
+        XCTAssertFalse(fullNameField.exists)
+        XCTAssertFalse(phoneField.exists)
+        XCTAssertFalse(phoneField.exists)
+        XCTAssertFalse(billingAddressField.exists)
+        XCTAssertFalse(app.textFields["Country"].exists)
+        XCTAssertFalse(line1Field.exists)
+        XCTAssertFalse(line2Field.exists)
+        XCTAssertFalse(cityField.exists)
+        XCTAssertFalse(stateField.exists)
+        XCTAssertFalse(zipField.exists)
+
+        // Just check the button is enabled
+        XCTAssertTrue(payButton.isEnabled)
+    }
+
+    func testLpm_Alma_AutomaticFields() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.currency = .eur
+        settings.merchantCountryCode = .FR
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.attachDefaults = .off
+        settings.collectName = .automatic
+        settings.collectEmail = .automatic
+        settings.collectPhone = .automatic
+        settings.collectAddress = .automatic
+        loadPlayground(
+            app,
+            settings
+        )
+
+        checkoutButton.tap()
+
+        let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "alma"))
+        cell.tap()
+
+        XCTAssertFalse(emailField.exists)
+        XCTAssertFalse(fullNameField.exists)
+        XCTAssertFalse(phoneField.exists)
+        XCTAssertFalse(phoneField.exists)
+        XCTAssertFalse(billingAddressField.exists)
+        XCTAssertFalse(app.textFields["Country"].exists)
+        XCTAssertFalse(line1Field.exists)
+        XCTAssertFalse(line2Field.exists)
+        XCTAssertFalse(cityField.exists)
+        XCTAssertFalse(stateField.exists)
+        XCTAssertFalse(zipField.exists)
+
+        // Just check the button is enabled
+        var payButton: XCUIElement { app.buttons["Pay €50.99"] }
         XCTAssertTrue(payButton.isEnabled)
     }
 }

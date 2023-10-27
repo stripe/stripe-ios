@@ -1,3 +1,5 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "Järgmises etapis tehakse automaatselt mõned fotod, et kinnitada, et see olete teie";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Samuti võite oma isikut tõendava dokumendi foto käsitsi üles laadida.";
 
 "App Settings" = "Rakenduse sätted";
@@ -26,10 +28,6 @@
 
 "Date of birth does not look valid" = "Sünnikuupäev ei näi olevat õige";
 
-"File Upload" = "Faili üleslaadimine";
-
-"File upload" = "Faili üleslaadimine";
-
 "Flip your driver's license over to the other side" = "Pöörake juhiluba ümber";
 
 "Flip your identity card over to the other side" = "Pöörake ID-kaart ümber";
@@ -41,6 +39,8 @@
 "Front of driver's license" = "Juhiloa esikülg";
 
 "Front of identity card" = "ID-kaardi esikülg";
+
+"Get ready to take a selfie" = "Valmistuge tegema selfit";
 
 "Go Back" = "Mine tagasi";
 
@@ -67,6 +67,10 @@
 "Personal ID number" = "Isikukood";
 
 "Personal Information" = "Isikuteave";
+
+"Phone Number" = "Telefoninumber";
+
+"Phone Verification" = "Telefoni kinnitus";
 
 "Photo Library" = "Fototeek";
 
@@ -127,6 +131,8 @@
 "Upload" = "Üleslaadimine";
 
 "Upload a Photo" = "Laadi foto üles";
+
+"Upload your photo ID" = "Laadige üles fotoga isikut tõendav dokument";
 
 "Uploading back driver's license photo" = "Juhiloa tagakülje foto üleslaadimine";
 

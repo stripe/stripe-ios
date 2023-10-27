@@ -10,6 +10,8 @@
 
 "Area" = "Kawasan";
 
+"BLIK code" = "Kod BLIK";
+
 "BSB number" = "Nombor BSB";
 
 "Billing address is same as shipping" = "Alamat pengebilan sama dengan alamat penghantaran";
@@ -37,6 +39,8 @@
 "District" = "Daerah";
 
 "Do Si" = "Do Si";
+
+"Do you want to close this form?" = "Adakah anda ingin menutup borang ini?";
 
 "Done" = "Selesai";
 
@@ -92,6 +96,8 @@
 
 "Search" = "Cari";
 
+"Select card brand (optional)" = "Pilih jenama kad (opsyenal)";
+
 "State" = "Negeri";
 
 "Suburb" = "Pinggir Bandar";
@@ -112,9 +118,15 @@
 
 "Use rotor to access links" = "Gunakan rotor untuk mengakses pautan";
 
+"Your BLIK code is incomplete." = "Kod BLIK anda tidak lengkap.";
+
+"Your BLIK code is invalid." = "Kod BLIK anda tidak sah.";
+
 "Your ZIP is incomplete." = "Kod ZIP anda tidak lengkap.";
 
 "Your email is invalid." = "E-mel anda tidak sah.";
+
+"Your payment information will not be saved." = "Maklumat pembayaran anda tidak akan disimpan.";
 
 "Your postal code is incomplete." = "Poskod anda tidak lengkap.";
 

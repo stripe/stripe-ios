@@ -155,4 +155,36 @@ class STPBinRangeTest: XCTestCase {
         XCTAssertEqual(binRange?.brand, .visa)
         XCTAssertEqual(binRange?.panLength, 16)
     }
+
+    func testMostSpecificBinRangePrefersKnownBrand() {
+        // 624478 is a real world case that returns ranges for UnionPay and NYCE, the latter being handled as unknown.
+        let mockedRanges = [
+            STPBINRange(
+                panLength: 16,
+                brand: .unionPay,
+                accountRangeLow: "6244780000000000",
+                accountRangeHigh: "6244789999999999",
+                country: "HK"
+            ),
+            STPBINRange(
+                panLength: 16,
+                brand: .unknown,
+                accountRangeLow: "6244780000000000",
+                accountRangeHigh: "6244789999999999",
+                country: "CN"
+            ),
+        ]
+
+        STPBINController.shared.sRetrievedRanges["624478"] = mockedRanges
+        STPBINController.shared.sAllRanges += mockedRanges
+
+        let binRange = STPBINController.shared.mostSpecificBINRange(forNumber: "624478")
+        XCTAssertEqual(binRange.accountRangeLow, "6244780000000000")
+        XCTAssertEqual(binRange.accountRangeHigh, "6244789999999999")
+        XCTAssertEqual(binRange.brand, .unionPay)
+
+        // Cleanup added values to avoid issues caused by singleton state.
+        STPBINController.shared.sRetrievedRanges["624478"] = nil
+        STPBINController.shared.sAllRanges = STPBINController.STPBINRangeInitialRanges
+    }
 }
