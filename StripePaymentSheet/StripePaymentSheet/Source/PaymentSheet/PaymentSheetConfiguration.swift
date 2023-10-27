@@ -349,7 +349,12 @@ extension PaymentSheet {
         public var phone: String?
 
         /// Initializes billing details
-        public init() { }
+        public init(address: PaymentSheet.Address = Address(), email: String? = nil, name: String? = nil, phone: String? = nil) {
+            self.address = address
+            self.email = email
+            self.name = name
+            self.phone = phone
+        }
     }
 
     /// Configuration for how billing details are collected during checkout.

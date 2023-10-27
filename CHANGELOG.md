@@ -1,6 +1,8 @@
 ## x.x.x
-### PaymentsUI
+### PaymentSheet
+* [Fixed] Added a public initializer for `PaymentSheet.BillingDetails`.
 
+### PaymentsUI
 * [Fixed] And issue with `STPPaymentCardTextField` where the `paymentCardTextFieldDidEndEditing` delegate method was not called.
 
 ## 23.18.0 2023-10-23
