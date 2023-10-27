@@ -347,11 +347,9 @@ extension PaymentSheet {
 
         /// The customer's phone number without formatting (e.g. 5551234567)
         public var phone: String?
-        
+
         /// Initializes billing details
-        public init() {
-            
-        }
+        public init() { }
     }
 
     /// Configuration for how billing details are collected during checkout.

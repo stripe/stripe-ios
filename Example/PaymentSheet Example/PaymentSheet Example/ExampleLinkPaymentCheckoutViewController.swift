@@ -18,7 +18,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
     let backendCheckoutUrl = "https://abundant-elderly-universe.glitch.me/checkout"  // An example backend endpoint
     let confirmEndpoint = "https://abundant-elderly-universe.glitch.me/confirm_intent"
     private var token = 0
-    
+
     let billingDetails: PaymentSheet.BillingDetails = {
         var billingDetails = PaymentSheet.BillingDetails()
         billingDetails.email = "testsekfljaed@example.com"
