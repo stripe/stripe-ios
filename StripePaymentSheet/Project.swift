@@ -23,5 +23,6 @@ let project = Project.stripeFramework(
         ],
         includesSnapshots: true,
         usesStubs: true
-    )
+    ),
+    useHostedTestApp: true
 )

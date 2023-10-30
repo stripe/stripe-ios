@@ -78,30 +78,30 @@ class PaymentSheetImageLibrary {
 extension STPCardBrand {
     /// Returns a borderless image of the card brand's logo
     func makeSavedPaymentMethodCellImage() -> UIImage {
-        let imageName: String
+        let image: Image
         switch self {
         case .JCB:
-            imageName = "card_jcb"
+            image = .carousel_card_jcb
         case .visa:
-            imageName = "card_visa"
+            image = .carousel_card_visa
         case .amex:
-            imageName = "card_amex"
+            image = .carousel_card_amex
         case .mastercard:
-            imageName = "card_mastercard"
+            image = .carousel_card_mastercard
         case .discover:
-            imageName = "card_discover"
+            image = .carousel_card_discover
         case .dinersClub:
-            imageName = "card_diners"
+            image = .carousel_card_diners
         case .unionPay:
-            imageName = "card_unionpay"
+            image = .carousel_card_unionpay
         case .cartesBancaires:
-            imageName = "card_cartes_bancaires"
+            image = .carousel_card_cartes_bancaires
         case .unknown:
-            imageName = "card_unknown"
+            image = .carousel_card_unknown
         @unknown default:
-            imageName = "card_unknown"
+            image = .carousel_card_unknown
         }
-        let brandImage = STPImageLibrary.safeImageNamed(imageName, templateIfAvailable: false)
+        let brandImage = image.makeImage()
         // Don't allow tint colors to change the brand images.
         return brandImage.withRenderingMode(.alwaysOriginal)
     }

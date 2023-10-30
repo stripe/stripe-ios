@@ -115,7 +115,8 @@ extension Project {
         testUtilsOptions: TestOptions? = nil,
         objcTestUtilsOptions: TestOptions? = nil,
         unitTestOptions: TestOptions? = nil,
-        uiTestOptions: TestOptions? = nil
+        uiTestOptions: TestOptions? = nil,
+        useHostedTestApp: Bool = false
     ) -> Project {
         return Project(
             name: name,
@@ -139,7 +140,8 @@ extension Project {
                 testUtilsOptions: testUtilsOptions,
                 objcTestUtilsOptions: objcTestUtilsOptions,
                 unitTestOptions: unitTestOptions,
-                uiTestOptions: uiTestOptions
+                uiTestOptions: uiTestOptions,
+                useHostedTestApp: useHostedTestApp
             ),
             schemes: makeSchemes(
                 name: name,
@@ -202,7 +204,8 @@ extension Project {
         testUtilsOptions: TestOptions?,
         objcTestUtilsOptions: TestOptions?,
         unitTestOptions: TestOptions?,
-        uiTestOptions: TestOptions?
+        uiTestOptions: TestOptions?,
+        useHostedTestApp: Bool
     ) -> [Target] {
         var targets = [Target]()
         targets.append(
@@ -237,7 +240,7 @@ extension Project {
                     headers: .headers(
                         public: "\(name)TestUtils/\(name)TestUtils.h"
                     ),
-                    dependencies: makeTestDependencies(name: name, usesObjcTestUtils: (objcTestUtilsOptions != nil), testOptions: testUtilsOptions),
+                    dependencies: makeTestDependencies(name: name, usesObjcTestUtils: (objcTestUtilsOptions != nil), testOptions: testUtilsOptions, useHostedTestApp: useHostedTestApp),
                     settings: testUtilsOptions.settings
                 )
             )
@@ -255,7 +258,7 @@ extension Project {
                     headers: .headers(
                         public: "\(name)ObjcTestUtils/**/*.h"
                     ),
-                    dependencies: makeTestDependencies(name: name, testOptions: objcTestUtilsOptions),
+                    dependencies: makeTestDependencies(name: name, testOptions: objcTestUtilsOptions, useHostedTestApp: useHostedTestApp),
                     settings: objcTestUtilsOptions.settings
                 )
             )
@@ -276,7 +279,8 @@ extension Project {
                     dependencies: makeTestDependencies(
                         name: name,
                         includeUtils: testUtilsOptions != nil,
-                        testOptions: unitTestOptions
+                        testOptions: unitTestOptions,
+                        useHostedTestApp: useHostedTestApp
                     ),
                     settings: unitTestOptions.settings
                 )
@@ -298,11 +302,27 @@ extension Project {
                     dependencies: makeTestDependencies(
                         name: name,
                         includeUtils: testUtilsOptions != nil,
-                        testOptions: uiTestOptions
+                        testOptions: uiTestOptions,
+                        useHostedTestApp: useHostedTestApp
                     ),
                     settings: uiTestOptions.settings
                 )
             )
+        }
+        if useHostedTestApp {
+            targets.append(Target(
+                name: "\(name)TestHostApp",
+                platform: .iOS,
+                product: .app,
+                bundleId: "com.stripe.StripeiOSTestHostApp",
+                infoPlist: "../Stripe/StripeiOSTestHostApp/Info.plist",
+                sources: "../Stripe/StripeiOSTestHostApp/*.swift",
+                resources: "../Stripe/StripeiOSTestHostApp/Resources/**",
+                settings: .stripeTargetSettings(
+                    baseXcconfigFilePath: "//BuildConfigurations/StripeiOS Tests"
+                )
+            )
+           )
         }
         return targets
     }
@@ -311,7 +331,8 @@ extension Project {
         name: String,
         includeUtils: Bool = false,
         usesObjcTestUtils: Bool = false,
-        testOptions: TestOptions
+        testOptions: TestOptions,
+        useHostedTestApp: Bool
     ) -> [TargetDependency] {
         var dependencies: [TargetDependency] = [
             .xctest,
@@ -335,6 +356,9 @@ extension Project {
                 .package(product: "OHHTTPStubs"),
                 .package(product: "OHHTTPStubsSwift"),
             ]
+        }
+        if useHostedTestApp {
+            dependencies.append(.target(name: "\(name)TestHostApp"))
         }
         return dependencies + testOptions.dependencies
     }
