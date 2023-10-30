@@ -58,7 +58,20 @@ enum Image: String, CaseIterable, ImageMaker {
     // Link
     case link_logo = "link_logo"
     case link_arrow = "link_arrow"
-    case link_carousel_logo = "link_carousel_logo"
+
+    // Carousel
+    case carousel_applepay
+    case carousel_card_amex
+    case carousel_card_cartes_bancaires
+    case carousel_card_diners
+    case carousel_card_discover
+    case carousel_card_jcb
+    case carousel_card_mastercard
+    case carousel_card_unionpay
+    case carousel_card_unknown
+    case carousel_card_visa
+    case carousel_link
+    case carousel_sepa
 
     // Affirm Images
     case affirm_copy = "affirm_mark"
