@@ -5,7 +5,7 @@
 * [Fixed] PaymentSheet no longer displays saved cards that originated from Apple Pay or Google Pay.
 
 ### PaymentsUI
-* [Fixed] And issue with `STPPaymentCardTextField` where the `paymentCardTextFieldDidEndEditing` delegate method was not called.
+* [Fixed] Fixed an issue with `STPPaymentCardTextField` where the `paymentCardTextFieldDidEndEditing` delegate method was not called.
 
 ## 23.18.0 2023-10-23
 ### PaymentSheet
