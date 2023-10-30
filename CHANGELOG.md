@@ -1,4 +1,4 @@
-## x.x.x
+## 23.18.1 2023-10-30
 ### PaymentSheet
 * [Fixed] Added a public initializer for `PaymentSheet.BillingDetails`.
 * [Fixed] Fixed some payment method icons not updating to use the latest assets.
