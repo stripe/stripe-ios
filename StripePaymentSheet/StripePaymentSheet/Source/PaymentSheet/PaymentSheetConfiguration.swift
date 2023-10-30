@@ -347,6 +347,14 @@ extension PaymentSheet {
 
         /// The customer's phone number without formatting (e.g. 5551234567)
         public var phone: String?
+
+        /// Initializes billing details
+        public init(address: PaymentSheet.Address = Address(), email: String? = nil, name: String? = nil, phone: String? = nil) {
+            self.address = address
+            self.email = email
+            self.name = name
+            self.phone = phone
+        }
     }
 
     /// Configuration for how billing details are collected during checkout.

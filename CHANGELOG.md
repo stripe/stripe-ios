@@ -1,7 +1,11 @@
 ## x.x.x
-### PaymentsUI
+### PaymentSheet
+* [Fixed] Added a public initializer for `PaymentSheet.BillingDetails`.
+* [Fixed] Fixed some payment method icons not updating to use the latest assets.
+* [Fixed] PaymentSheet no longer displays saved cards that originated from Apple Pay or Google Pay.
 
-* [Fixed] And issue with `STPPaymentCardTextField` where the `paymentCardTextFieldDidEndEditing` delegate method was not called.
+### PaymentsUI
+* [Fixed] Fixed an issue with `STPPaymentCardTextField` where the `paymentCardTextFieldDidEndEditing` delegate method was not called.
 
 ## 23.18.0 2023-10-23
 ### PaymentSheet
