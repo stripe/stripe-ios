@@ -32,8 +32,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
     }
 
     private func executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: String) {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
 
@@ -106,8 +105,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
     }
 
     private func executeNativeNetworkingTestModeSignInFlowTest(emailAddress: String) {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
 

@@ -313,9 +313,11 @@ private func PresentFinancialConnectionsSheet(
 
     STPAPIClient.shared.publishableKey = publishableKey
 
+    let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
     let financialConnectionsSheet = FinancialConnectionsSheet(
         financialConnectionsSessionClientSecret: clientSecret,
-        returnURL: "financial-connections-example://redirect"
+        // disable app-to-app for UI tests
+        returnURL: isUITest ? nil : "financial-connections-example://redirect"
     )
     financialConnectionsSheet.onEvent = onEvent
     financialConnectionsSheet.present(

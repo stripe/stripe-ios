@@ -26,8 +26,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     func testDataTestModeOAuthNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundDataFlowButton.tap()
@@ -55,8 +54,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     func testPaymentTestModeLegacyNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundPaymentFlowButton.tap()
@@ -87,8 +85,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     func testPaymentTestModeManualEntryNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundPaymentFlowButton.tap()
@@ -138,8 +135,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     // note that this does NOT complete the Auth Flow, but its a decent check on
     // whether live mode is ~working
     func testDataLiveModeOAuthNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundDataFlowButton.tap()
@@ -236,8 +232,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     // note that this does NOT complete the Auth Flow, but its a decent check on
     // whether live mode is ~working
     func testDataLiveModeOAuthWebAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundDataFlowButton.tap()
@@ -335,8 +330,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     func testSearchInLiveModeNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundPaymentFlowButton.tap()
