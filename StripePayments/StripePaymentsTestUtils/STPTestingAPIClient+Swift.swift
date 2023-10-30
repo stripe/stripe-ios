@@ -9,6 +9,7 @@ import Foundation
 @_exported import StripePaymentsObjcTestUtils
 
 extension STPTestingAPIClient {
+    static let STPTestingBackendURL = "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/"
     public static var shared: STPTestingAPIClient {
         return .shared()
     }
@@ -105,5 +106,41 @@ extension STPTestingAPIClient {
                 continuation.resume(returning: clientSecret)
             }
         }
+    }
+
+    // MARK: - /create_ephemeral_key
+
+    struct CreateEphemeralKeyResponse: Decodable {
+        let ephemeralKeySecret: String
+        let customer: String
+    }
+
+    func fetchCustomerAndEphemeralKey(
+        customerID: String? = nil,
+        merchantCountry: String? = "us"
+    ) async throws -> CreateEphemeralKeyResponse {
+        let params = [
+            "customer_id": customerID,
+            "account": merchantCountry,
+        ]
+        return try await makeRequest(endpoint: "create_ephemeral_key", params: params)
+    }
+
+    // MARK: - Helpers
+
+    fileprivate func makeRequest<ResponseType: Decodable>(
+        endpoint: String,
+        params: [String: String?]
+    ) async throws -> ResponseType {
+        let session = URLSession(configuration: sessionConfig)
+        let url = URL(string: STPTestingAPIClient.STPTestingBackendURL + endpoint)!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try! JSONSerialization.data(withJSONObject: params)
+        let (data, _) = try await session.data(for: request)
+        let jsonDecoder = JSONDecoder()
+        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try jsonDecoder.decode(ResponseType.self, from: data)
     }
 }

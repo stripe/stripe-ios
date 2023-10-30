@@ -19,6 +19,13 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
     let confirmEndpoint = "https://abundant-elderly-universe.glitch.me/confirm_intent"
     private var token = 0
 
+    let billingDetails: PaymentSheet.BillingDetails = {
+        var billingDetails = PaymentSheet.BillingDetails()
+        billingDetails.email = "test@example.com"
+        billingDetails.phone = "+15551232414567"
+        return billingDetails
+    }()
+
     private func loadBackend() {
         token += 1
         let thisToken = token
@@ -47,9 +54,9 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                                 self?.handleDeferredIntent(intentCreationCallback: intentCreationCallback)
                             }
 
-                    self.linkPaymentController = LinkPaymentController(intentConfiguration: intentConfiguration, returnURL: returnURL)
+                    self.linkPaymentController = LinkPaymentController(intentConfiguration: intentConfiguration, returnURL: returnURL, billingDetails: self.billingDetails)
                 } else {
-                    self.linkPaymentController = LinkPaymentController(paymentIntentClientSecret: paymentIntentClientSecret, returnURL: returnURL)
+                    self.linkPaymentController = LinkPaymentController(paymentIntentClientSecret: paymentIntentClientSecret, returnURL: returnURL, billingDetails: self.billingDetails)
                 }
 
                 self.updateButtons()
