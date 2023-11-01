@@ -366,7 +366,18 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
 /// :nodoc:
 extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
     func paymentOptionCellDidSelectEdit(_ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
-        // TODO(porter) PaymentSheet CBC update support
+        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
+              case .saved(let paymentMethod) = viewModels[indexPath.row]
+        else {
+            assertionFailure()
+            return
+        }
+
+        let editVc = UpdateCardViewController(paymentOptionCell: paymentOptionCell,
+                                              paymentMethod: paymentMethod,
+                                              appearance: appearance)
+        editVc.delegate = self
+        self.bottomSheetController?.pushContentViewController(editVc)
     }
 
     func paymentOptionCellDidSelectRemove(
@@ -421,6 +432,13 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         alertController.addAction(cancel)
         alertController.addAction(alert)
         present(alertController, animated: true, completion: nil)
+    }
+}
+
+// MARK: - UpdateCardViewControllerDelegate
+extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
+    func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
+        // TODO(porter) Implement removal
     }
 }
 

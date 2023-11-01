@@ -72,6 +72,7 @@ import UIKit
         let validationState: ValidationState
         let accessoryView: UIView?
         let shouldShowClearButton: Bool
+        let isEditable: Bool
         let theme: ElementsUITheme
     }
 
@@ -92,6 +93,7 @@ import UIKit
             validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
             accessoryView: configuration.accessoryView(for: text, theme: theme),
             shouldShowClearButton: configuration.shouldShowClearButton,
+            isEditable: configuration.isEditable,
             theme: theme
         )
     }

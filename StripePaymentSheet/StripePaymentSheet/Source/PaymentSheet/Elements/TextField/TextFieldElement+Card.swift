@@ -289,3 +289,32 @@ extension TextFieldElement {
         }
     }
 }
+
+// MARK: Last four configuration
+extension TextFieldElement {
+    struct LastFourConfiguration: TextFieldElementConfiguration {
+        let label = String.Localized.card_brand
+        let lastFour: String
+        let isEditable = false
+        let cardBrandDropDown: DropdownFieldElement
+
+        private var lastFourFormatted: String {
+            "•••• •••• •••• \(lastFour)"
+        }
+
+        init(lastFour: String, cardBrandDropDown: DropdownFieldElement) {
+            self.lastFour = lastFour
+            self.cardBrandDropDown = cardBrandDropDown
+        }
+
+        func makeDisplayText(for text: String) -> NSAttributedString {
+            return NSAttributedString(string: lastFourFormatted)
+        }
+
+        func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
+            // Re-use same logic from PANConfiguration for accessory view
+            return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown)
+                                            .accessoryView(for: lastFourFormatted, theme: theme)
+        }
+    }
+}

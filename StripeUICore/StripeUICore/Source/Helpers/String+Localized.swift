@@ -333,4 +333,12 @@ import Foundation
     static var card_brand_dropdown_placeholder: String {
         STPLocalizedString("Select card brand (optional)", "Message when a user is selecting a card brand in a dropdown")
     }
+
+    static var card_brand: String {
+        STPLocalizedString("Card brand", "Label an input field to update card brand")
+    }
+
+    static var remove_card: String {
+        STPLocalizedString("Remove card", "Label on a button for removing a card")
+    }
 }
