@@ -1,19 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "brand_stripe.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "brand_stripe@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "brand_stripe@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "brand_stripe.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

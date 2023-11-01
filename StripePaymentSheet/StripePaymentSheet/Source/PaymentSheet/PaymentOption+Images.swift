@@ -36,14 +36,14 @@ extension PaymentOption {
     func makeSavedPaymentMethodCellImage(for view: UIView) -> UIImage {
         switch self {
         case .applePay:
-            return makeIcon(for: view.traitCollection, updateImageHandler: nil)
+            return Image.carousel_applepay.makeImage(template: false)
         case .saved(let paymentMethod):
             return paymentMethod.makeSavedPaymentMethodCellImage()
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
         case .link:
-            return Image.link_carousel_logo.makeImage(template: true)
+            return Image.carousel_link.makeImage(template: false)
         case .externalPayPal:
             assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")
             return Image.pm_type_paypal.makeImage()
@@ -86,8 +86,9 @@ extension STPPaymentMethod {
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
             )
         case .SEPADebit:
-            // The insets are used to make it appear the same size as the other saved PM cells
-            return makeIcon().withAlignmentRectInsets(.init(top: -9, left: -9, bottom: -9, right: -9))
+            return Image.carousel_sepa.makeImage().withRenderingMode(.alwaysOriginal)
+        case .link:
+            return Image.carousel_link.makeImage().withRenderingMode(.alwaysOriginal)
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()

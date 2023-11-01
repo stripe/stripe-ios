@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "stp_card_unpadded_mastercard.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

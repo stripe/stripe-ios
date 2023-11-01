@@ -203,6 +203,14 @@ class STPImageLibraryTestSwift: XCTestCase {
         }
     }
 
+    func testUnpaddedImageForCardBrands() {
+        for brand in STPCardBrand.allCases {
+            let image = STPImageLibrary.unpaddedCardBrandImage(for: brand)
+            // Assert image exists
+            XCTAssert(image.size != .zero)
+        }
+    }
+
     func testCVCImageForCardBrand() {
         for brand in Self.cardBrands {
             let image = STPImageLibrary.cvcImage(for: brand)

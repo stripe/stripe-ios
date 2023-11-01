@@ -199,10 +199,15 @@ final class PaymentSheetLoader {
                 using: ephemeralKey,
                 types: savedPaymentMethodTypes
             ) { paymentMethods, error in
-                guard let paymentMethods = paymentMethods, error == nil else {
+                guard var paymentMethods, error == nil else {
                     let error = error ?? PaymentSheetError.fetchPaymentMethodsFailure
                     continuation.resume(throwing: error)
                     return
+                }
+                // Remove cards that originated from Apple or Google Pay
+                paymentMethods = paymentMethods.filter { paymentMethod in
+                    let isAppleOrGooglePay = paymentMethod.type == .card && [.applePay, .googlePay].contains(paymentMethod.card?.wallet?.type)
+                    return !isAppleOrGooglePay
                 }
                 continuation.resume(returning: paymentMethods)
             }

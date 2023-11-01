@@ -26,8 +26,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     func testDataTestModeOAuthNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundDataFlowButton.tap()
@@ -55,8 +54,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     func testPaymentTestModeLegacyNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundPaymentFlowButton.tap()
@@ -87,8 +85,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     func testPaymentTestModeManualEntryNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundPaymentFlowButton.tap()
@@ -138,8 +135,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     // note that this does NOT complete the Auth Flow, but its a decent check on
     // whether live mode is ~working
     func testDataLiveModeOAuthNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundDataFlowButton.tap()
@@ -236,8 +232,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     // note that this does NOT complete the Auth Flow, but its a decent check on
     // whether live mode is ~working
     func testDataLiveModeOAuthWebAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundDataFlowButton.tap()
@@ -335,8 +330,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     func testSearchInLiveModeNativeAuthFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = XCUIApplication.fc_launch()
 
         app.fc_playgroundCell.tap()
         app.fc_playgroundPaymentFlowButton.tap()
@@ -357,7 +351,23 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(bankOfAmericaSearchRow.waitForExistence(timeout: 120.0))
         bankOfAmericaSearchRow.tap()
 
-        XCTAssert(app.fc_nativePrepaneContinueButton.exists) // check that prepane was opened
+        // ...at this point the bank is either:
+        // 1. active, which means prepane is visible
+        // 2. under maintenance, which means an 'error' screen is visible
+
+        // (1) bank is NOT under maintenance
+        if app.fc_nativePrepaneContinueButton_noWait.waitForExistence(timeout: 60) {
+            // do nothing...prepane is there
+        }
+        // (2) bank IS under maintenance
+        else {
+            // check that we see a maintenance error
+            let errorViewText = app
+                .textViews
+                .containing(NSPredicate(format: "label CONTAINS 'unavailable' OR label CONTAINS 'maintenance' OR label CONTAINS 'scheduled'"))
+                .firstMatch
+            XCTAssertTrue(errorViewText.waitForExistence(timeout: 10))
+        }
 
         let backButton = app.navigationBars["fc_navigation_bar"].buttons["Back"]
         XCTAssertTrue(backButton.waitForExistence(timeout: 60.0))
