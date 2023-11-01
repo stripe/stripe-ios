@@ -153,7 +153,6 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
 extension PaymentMethodTypeCollectionView {
     class PaymentTypeCell: UICollectionViewCell, EventHandler {
         static let reuseIdentifier = "PaymentTypeCell"
-        // TODO: Why does this default to something?
         var paymentMethodType: PaymentSheet.PaymentMethodType = .stripe(.card) {
             didSet {
                 update()

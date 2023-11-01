@@ -61,11 +61,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
             configuration: .paymentSheet(configuration),
-            paymentMethod: .stripe(.card)
+            paymentMethod: .stripe(.iDEAL) // We use iDEAL because it has a LUXE form spec
         )
-        // TODO: Used to be "mock_payment_method" but now it's .stripe(.card)
         let name = factory.makeName(apiPath: "custom_location[name]")
-        let params = IntentConfirmParams(type: .stripe(.card))
+        let params = IntentConfirmParams(type: .stripe(.iDEAL))
 
         let updatedParams = name.updateParams(params: params)
 
@@ -75,13 +74,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 as! String,
             "someName"
         )
-        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .card)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .iDEAL)
 
         // Using the params as previous customer input...
         let name_with_previous_customer_input = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
             configuration: .paymentSheet(configuration),
-            paymentMethod: .stripe(.card),
+            paymentMethod: .stripe(.iDEAL),
             previousCustomerInput: updatedParams
         ).makeName(apiPath: "custom_location[name]")
         // ...should result in a valid element filled out with the previous customer input

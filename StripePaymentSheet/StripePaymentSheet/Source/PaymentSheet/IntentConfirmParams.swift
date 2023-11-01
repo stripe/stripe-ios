@@ -25,7 +25,6 @@ class IntentConfirmParams {
     }
 
     let paymentMethodParams: STPPaymentMethodParams
-    // TODO: Make this STPPaymentMethodType
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions
 
@@ -56,7 +55,6 @@ class IntentConfirmParams {
         }
     }
 
-    // TODO: Make conveneince init that takes STPPaymentMethodType
     convenience init(type: PaymentSheet.PaymentMethodType) {
         switch type {
         case .stripe(let paymentMethodType):
