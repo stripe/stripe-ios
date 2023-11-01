@@ -10,6 +10,13 @@ import XCTest
 
 extension XCUIApplication {
 
+    static func fc_launch() -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchEnvironment = ["UITesting": "true"]
+        app.launch()
+        return app
+    }
+
     // MARK: - Example App Helpers
 
     var fc_playgroundCell: XCUIElement {
@@ -44,13 +51,13 @@ extension XCUIApplication {
 
     var fc_playgroundShowAuthFlowButton: XCUIElement {
         let showAuthFlowButton = buttons["Show Auth Flow"]
-        XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0), "\(#function) waiting failed")
+        XCTAssertTrue(showAuthFlowButton.waitForExistence(timeout: 60.0), "Failed to press Playground App show auth flow button - \(#function) waiting failed")
         return showAuthFlowButton
     }
 
     var fc_playgroundSuccessAlertView: XCUIElement {
         let playgroundSuccessAlertView = alerts["Success"]
-        XCTAssertTrue(playgroundSuccessAlertView.waitForExistence(timeout: 60.0), "\(#function) waiting failed")
+        XCTAssertTrue(playgroundSuccessAlertView.waitForExistence(timeout: 60.0), "Failed to show Playground App success alert - \(#function) waiting failed")
         return playgroundSuccessAlertView
     }
 
@@ -58,7 +65,7 @@ extension XCUIApplication {
 
     var fc_nativeConsentAgreeButton: XCUIElement {
         let consentAgreeButton = buttons["consent_agree_button"]
-        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0), "\(#function) waiting failed")  // glitch app can take time to lload
+        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0), "Failed to open Consent pane - \(#function) waiting failed")  // glitch app can take time to lload
         return consentAgreeButton
     }
 
@@ -69,19 +76,19 @@ extension XCUIApplication {
 
     var fc_nativePrepaneContinueButton: XCUIElement {
         let prepaneContinueButton = fc_nativePrepaneContinueButton_noWait
-        XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0), "\(#function) waiting failed")
+        XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0), "Failed to open Partner Auth Prepane - \(#function) waiting failed")
         return prepaneContinueButton
     }
 
     var fc_nativeAccountPickerLinkAccountsButton: XCUIElement {
         let accountPickerLinkAccountsButton = buttons["account_picker_link_accounts_button"]
-        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "\(#function) waiting failed")  // wait for accounts to fetch
+        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "Failed to open Account Picker pane - \(#function) waiting failed")  // wait for accounts to fetch
         return accountPickerLinkAccountsButton
     }
 
     var fc_nativeSuccessDoneButton: XCUIElement {
         let successDoneButton = buttons["success_done_button"]
-        XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "\(#function) waiting failed")  // wait for accounts to link
+        XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link
         return successDoneButton
     }
 

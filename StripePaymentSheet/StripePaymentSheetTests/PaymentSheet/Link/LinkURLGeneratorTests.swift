@@ -61,7 +61,7 @@ class LinkURLGeneratorTests: XCTestCase {
         let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
                                            publishableKey: config.apiClient.publishableKey!,
                                            paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
-                                           merchantInfo: LinkURLParams.MerchantInfo(businessName: "xctest", country: "US"),
+                                           merchantInfo: LinkURLParams.MerchantInfo(businessName: "StripePaymentSheetTestHostApp", country: "US"),
                                            customerInfo: LinkURLParams.CustomerInfo(country: "US", email: nil),
                                            paymentInfo: LinkURLParams.PaymentInfo(currency: "USD", amount: 100),
                                            experiments: [:],
