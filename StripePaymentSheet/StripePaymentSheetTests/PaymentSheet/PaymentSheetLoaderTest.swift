@@ -5,8 +5,8 @@
 //  Created by Yuki Tokuhiro on 6/24/23.
 //
 
-@testable @_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeCoreTestUtils
+@testable @_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 import XCTest
 

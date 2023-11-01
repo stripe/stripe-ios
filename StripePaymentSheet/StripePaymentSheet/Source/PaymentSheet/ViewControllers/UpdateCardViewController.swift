@@ -78,7 +78,7 @@ final class UpdateCardViewController: UIViewController {
     private lazy var cardBrandDropDown: DropdownFieldElement = {
         let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }) ?? []
         let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands), theme: appearance.asElementsTheme)
-        
+
         // pre-select current card brand
         if let currentCardBrand = paymentMethod.card?.networks?.preferred?.toCardBrand,
            let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == "\(currentCardBrand.rawValue)" }) {
