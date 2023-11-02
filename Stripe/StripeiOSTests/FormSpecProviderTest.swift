@@ -43,7 +43,7 @@ class FormSpecProviderTest: XCTestCase {
             return
         }
         XCTAssertEqual(selector.apiPath?["v1"], "ideal[bank]")
-        XCTAssertEqual(selector.items.count, 11)
+        XCTAssertEqual(selector.items.count, 15)
     }
 
     func testLoadJsonCanOverwriteLoadedSpecs() throws {
