@@ -150,20 +150,12 @@
                       "api_value": "bunq"
                     },
                     {
-                      "display_text": "Handelsbanken",
-                      "api_value": "handelsbanken"
-                    },
-                    {
                       "display_text": "ING Bank",
                       "api_value": "ing"
                     },
                     {
                       "display_text": "Knab",
                       "api_value": "knab"
-                    },
-                    {
-                      "display_text": "Moneyou",
-                      "api_value": "moneyou"
                     },
                     {
                       "display_text": "N26",
