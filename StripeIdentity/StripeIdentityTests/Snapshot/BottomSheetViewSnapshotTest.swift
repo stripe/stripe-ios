@@ -11,10 +11,11 @@ import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
+import StripeCoreTestUtils
 
 @testable import StripeIdentity
 
-class BottomSheetViewSnapshotTest: FBSnapshotTestCase {
+final class BottomSheetViewSnapshotTest: STPSnapshotTestCase {
     let bottomSheetView = try! BottomSheetView(
         content: .init(bottomsheetId: "bottomsheet_id", title: "bottomsheet title", lines: [
             .init(icon: .camera, title: "camera line title", content: "camera line content"),
@@ -23,11 +24,6 @@ class BottomSheetViewSnapshotTest: FBSnapshotTestCase {
         didTapClose: {},
         didOpenURL: { _ in }
     )
-
-    override func setUp() {
-        super.setUp()
-//                recordMode = true
-    }
 
     func testBottomSheetView () {
         bottomSheetView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
