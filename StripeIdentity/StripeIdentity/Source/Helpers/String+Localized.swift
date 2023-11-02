@@ -178,4 +178,12 @@ extension String.Localized {
         )
     }
 
+    // MARK: - DocumentFileUpload
+    static var fileUploadInstructionText: String {
+        STPLocalizedString(
+            "Please upload images of the front and back of your identity card",
+            "Instructions for uploading images of identity card"
+        )
+    }
+
 }
