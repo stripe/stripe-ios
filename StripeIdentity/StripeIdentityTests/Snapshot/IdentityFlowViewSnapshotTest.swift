@@ -30,11 +30,6 @@ class IdentityFlowViewSnapshotTest: STPSnapshotTestCase {
         return label
     }()
 
-    override func setUp() {
-        super.setUp()
-        //        recordMode = true
-    }
-
     func testFlowView_HeaderView() throws {
         try verifyView(
             with: .init(
