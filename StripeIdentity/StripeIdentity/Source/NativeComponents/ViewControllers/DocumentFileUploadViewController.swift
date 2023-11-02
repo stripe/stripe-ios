@@ -40,9 +40,6 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     let instructionListView = InstructionListView()
 
-    /// The document type selected by the user
-    let documentType: DocumentType
-
     /// If the image must come from a live camera feed
     let requireLiveCapture: Bool
 
@@ -96,8 +93,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 onTap: nil
             ),
         ]
-
-        if documentType.hasBack && sheetController?.collectedData.idDocumentFront != nil {
+        if sheetController?.collectedData.idDocumentFront != nil {
             items.append(
                 .init(
                     text: listItemText(for: .back),
@@ -115,7 +111,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             )
         }
 
-        return .init(instructionText: instructionText, listViewModel: .init(items: items))
+        return .init(instructionText: String.Localized.fileUploadInstructionText, listViewModel: .init(items: items))
     }
 
     var buttonState: IdentityFlowView.ViewModel.Button.State {
@@ -132,7 +128,6 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     // MARK: - Init
 
     init(
-        documentType: DocumentType,
         requireLiveCapture: Bool,
         sheetController: VerificationSheetControllerProtocol,
         documentUploader: DocumentUploaderProtocol,
@@ -140,7 +135,6 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             .shared,
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
     ) {
-        self.documentType = documentType
         self.requireLiveCapture = requireLiveCapture
         self.documentUploader = documentUploader
         self.cameraPermissionsManager = cameraPermissionsManager

@@ -194,9 +194,6 @@ final class IdentityAnalyticsClient {
     ) -> [String: Any] {
         var metadata: [String: Any] = [:]
 
-        if let idDocumentType = sheetController.collectedData.idDocumentType {
-            metadata["scan_type"] = idDocumentType.rawValue
-        }
         if let verificationPage = try? sheetController.verificationPageResponse?.get() {
             metadata["require_selfie"] = verificationPage.requirements.missing.contains(.face)
             metadata["from_fallback_url"] = verificationPage.unsupportedClient
@@ -290,12 +287,10 @@ final class IdentityAnalyticsClient {
         screenName: ScreenName,
         sheetController: VerificationSheetControllerProtocol
     ) {
-        var metadata: [String: Any] = [
+        let metadata: [String: Any] = [
             "screen_name": screenName.rawValue
         ]
-        if let idDocumentType = sheetController.collectedData.idDocumentType {
-            metadata["scan_type"] = idDocumentType.rawValue
-        }
+
         logAnalytic(.screenAppeared, metadata: metadata)
     }
 
@@ -307,9 +302,6 @@ final class IdentityAnalyticsClient {
         line: UInt = #line
     ) {
         var metadata: [String: Any] = [:]
-        if let idDocumentType = sheetController.collectedData.idDocumentType {
-            metadata["scan_type"] = idDocumentType.rawValue
-        }
         metadata["error"] = AnalyticsClientV2.serialize(
             error: error,
             filePath: filePath,
@@ -323,26 +315,19 @@ final class IdentityAnalyticsClient {
         sheetController: VerificationSheetControllerProtocol,
         isGranted: Bool?
     ) {
-        var metadata: [String: Any] = [:]
-        if let idDocumentType = sheetController.collectedData.idDocumentType {
-            metadata["scan_type"] = idDocumentType.rawValue
-        }
-
         let eventName: EventName =
             (isGranted == true) ? .cameraPermissionGranted : .cameraPermissionDenied
 
-        logAnalytic(eventName, metadata: metadata)
+        logAnalytic(eventName, metadata: [:])
     }
 
     /// Logs an event when document capture times out
     func logDocumentCaptureTimeout(
-        idDocumentType: DocumentType,
         documentSide: DocumentSide
     ) {
         logAnalytic(
             .documentCaptureTimeout,
             metadata: [
-                "scan_type": idDocumentType.rawValue,
                 "side": documentSide.rawValue,
             ]
         )
@@ -409,7 +394,6 @@ final class IdentityAnalyticsClient {
 
     /// Logs the time it takes to upload an image along with its file size and compression quality
     func logImageUpload(
-        idDocumentType: DocumentType?,
         timeToUpload: TimeInterval,
         compressionQuality: CGFloat,
         fileId: String,
@@ -417,16 +401,13 @@ final class IdentityAnalyticsClient {
         fileSizeBytes: Int
     ) {
         // NOTE: File size is logged in kB
-        var metadata: [String: Any] = [
+        let metadata: [String: Any] = [
             "value": timeToUpload.milliseconds,
             "id": fileId,
             "compression_quality": compressionQuality,
             "file_name": fileName,
             "file_size": fileSizeBytes / 1024,
         ]
-        if let idDocumentType = idDocumentType {
-            metadata["scan_type"] = idDocumentType.rawValue
-        }
 
         logAnalytic(.imageUpload, metadata: metadata)
     }

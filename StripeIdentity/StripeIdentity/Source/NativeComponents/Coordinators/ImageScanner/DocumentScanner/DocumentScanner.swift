@@ -141,20 +141,16 @@ extension IDDetectorOutput.Classification {
     /// scanner's desired classification.
     ///
     /// - Parameters:
-    ///   - type: The desired document type
     ///   - side: The desired document side
     ///
     /// - Returns: True if this classification matches the desired classification.
     func matchesDocument(
-        type: DocumentType,
         side: DocumentSide
     ) -> Bool {
-        switch (type, side, self) {
-        case (.drivingLicense, .front, .idCardFront),
-            (.idCard, .front, .idCardFront),
-            (.drivingLicense, .back, .idCardBack),
-            (.idCard, .back, .idCardBack),
-            (.passport, _, .passport):
+        switch (side, self) {
+        case (.front, .idCardFront),
+            (.front, .passport),
+            (.back, .idCardBack):
             return true
         default:
             return false

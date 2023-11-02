@@ -71,7 +71,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                     scanningViewModel: .videoPreview(
                         imageScanningSession.cameraSession,
                         animateBorder: foundClassification?.matchesDocument(
-                            type: documentType,
                             side: documentSide
                         ) ?? false
                     ),
@@ -204,8 +203,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case .scanning(let side, _),
             .scanned(let side, _):
             return titleText(for: side)
-        case .saving where documentType == .passport:
-            return titleText(for: .front)
         case .saving(let side, _):
             return titleText(for: side)
         case .noCameraAccess,
@@ -221,7 +218,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     // MARK: Instance Properties
 
     let apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
-    let documentType: DocumentType
     private var feedbackGenerator: UINotificationFeedbackGenerator?
 
     // MARK: Coordinators
@@ -232,13 +228,11 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     init(
         apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
-        documentType: DocumentType,
         documentUploader: DocumentUploaderProtocol,
         imageScanningSession: DocumentImageScanningSession,
         sheetController: VerificationSheetControllerProtocol
     ) {
         self.apiConfig = apiConfig
-        self.documentType = documentType
         self.documentUploader = documentUploader
         self.imageScanningSession = imageScanningSession
         super.init(sheetController: sheetController, analyticsScreenName: .documentCapture)
@@ -247,7 +241,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     convenience init(
         apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
-        documentType: DocumentType,
         initialState: State = .initial,
         sheetController: VerificationSheetControllerProtocol,
         cameraSession: CameraSessionProtocol,
@@ -260,7 +253,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     ) {
         self.init(
             apiConfig: apiConfig,
-            documentType: documentType,
             documentUploader: documentUploader,
             imageScanningSession: DocumentImageScanningSession(
                 initialState: initialState,
@@ -360,7 +352,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         guard let sheetController = sheetController else { return }
 
         let uploadVC = DocumentFileUploadViewController(
-            documentType: documentType,
             requireLiveCapture: apiConfig.requireLiveCapture,
             sheetController: sheetController,
             documentUploader: documentUploader,
@@ -461,7 +452,6 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         didTimeoutForClassification documentSide: DocumentSide
     ) {
         sheetController?.analyticsClient.logDocumentCaptureTimeout(
-            idDocumentType: documentType,
             documentSide: documentSide
         )
     }
@@ -509,14 +499,14 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
     ) {
         // If scanningState matches, but scannerOutputOptional is nil, it means the previous frame
         // is a match, but the current frame is not match, reset the timer.
-        if case let .scanning(_, scanningState?) = imageScanningSession.state, scanningState.matchesDocument(type: documentType, side: documentSide) && scannerOutputOptional == nil {
+        if case let .scanning(_, scanningState?) = imageScanningSession.state, scanningState.matchesDocument(side: documentSide) && scannerOutputOptional == nil {
             imageScanningSession.startTimeoutTimer(expectedClassification: documentSide)
         }
 
         // If this isn't the classification we're looking for, update the state
         // to display a different message to the user
         guard let scannerOutput = scannerOutputOptional,
-            scannerOutput.isHighQuality(matchingDocumentType: documentType, side: documentSide)
+            scannerOutput.isHighQuality(side: documentSide)
         else {
             imageScanningSession.updateScanningState(
                 scannerOutputOptional?.idDetectorOutput.classification
