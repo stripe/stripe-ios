@@ -589,23 +589,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         staticContent: StripeAPI.VerificationPage,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
-        // Show error if we haven't collected document type
-        guard let documentType = sheetController.collectedData.idDocumentType else {
-            return ErrorViewController(
-                sheetController: sheetController,
-                error: .error(
-                    VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType])
-                )
-            )
-        }
-
         // reinitalize documentUploader with new idDocumentType each time
         let documentUploader = DocumentUploader(
             imageUploader: IdentityImageUploader(
                 configuration: .init(from: staticContent.documentCapture),
                 apiClient: sheetController.apiClient,
-                analyticsClient: sheetController.analyticsClient,
-                idDocumentType: documentType
+                analyticsClient: sheetController.analyticsClient
             )
         )
         self.documentUploader = documentUploader
@@ -616,7 +605,6 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
             // Return document upload screen if we can't load models for auto-capture
             return DocumentFileUploadViewController(
-                documentType: documentType,
                 requireLiveCapture: staticContent.documentCapture.requireLiveCapture,
                 sheetController: sheetController,
                 documentUploader: documentUploader
@@ -625,7 +613,6 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         case .success(let anyDocumentScanner):
             return DocumentCaptureViewController(
                 apiConfig: staticContent.documentCapture,
-                documentType: documentType,
                 sheetController: sheetController,
                 cameraSession: makeDocumentCaptureCameraSession(),
                 documentUploader: documentUploader,
@@ -659,8 +646,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     imageUploader: IdentityImageUploader(
                         configuration: .init(from: selfiePageConfig),
                         apiClient: sheetController.apiClient,
-                        analyticsClient: sheetController.analyticsClient,
-                        idDocumentType: nil
+                        analyticsClient: sheetController.analyticsClient
                     )
                 ),
                 anyFaceScanner: anyFaceScanner
