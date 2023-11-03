@@ -1,3 +1,7 @@
+## X.Y.Z 2023-y-z
+### CustomerSheet
+* [Fixed] CustomerSheet no longer displays saved cards that originated from Apple Pay or Google Pay.
+
 ## 23.18.1 2023-10-30
 ### PaymentSheet
 * [Fixed] Added a public initializer for `PaymentSheet.BillingDetails`.
