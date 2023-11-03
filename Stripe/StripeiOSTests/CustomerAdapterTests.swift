@@ -42,7 +42,6 @@ class CustomerAdapterTests: APIStubbedTestCase {
         key: CustomerEphemeralKey,
         paymentMethodType: String,
         paymentMethodJSONs: [[AnyHashable: Any]],
-        expectedCount: Int,
         apiClient: STPAPIClient
     ) {
         stub { urlRequest in
