@@ -93,7 +93,7 @@ class InstitutionPickerViewController: UIViewController {
 
         view.addAndPinSubview(loadingView)
         view.addAndPinSubviewToSafeArea(
-            CreateMainView(
+            createMainView(
                 searchBar: (dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
                 contentContainerView: contentContainerView
             )
@@ -350,7 +350,7 @@ extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
             .log(
                 eventName: "search.scroll",
                 parameters: [
-                    "institution_ids": institutions.map({ $0.id })
+                    "institution_ids": institutions.map({ $0.id }),
                 ],
                 pane: .institutionPicker
             )
@@ -367,13 +367,13 @@ extension InstitutionPickerViewController {
 
 // MARK: - Helpers
 
-private func CreateMainView(
+private func createMainView(
     searchBar: UIView?,
     contentContainerView: UIView
 ) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
-            CreateHeaderView(
+            createHeaderView(
                 searchBar: searchBar
             ),
             contentContainerView,
@@ -384,12 +384,12 @@ private func CreateMainView(
     return verticalStackView
 }
 
-private func CreateHeaderView(
+private func createHeaderView(
     searchBar: UIView?
 ) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
-            CreateHeaderTitleLabel()
+            createHeaderTitleLabel(),
         ]
     )
     if let searchBar = searchBar {
@@ -407,7 +407,7 @@ private func CreateHeaderView(
     return verticalStackView
 }
 
-private func CreateHeaderTitleLabel() -> UIView {
+private func createHeaderTitleLabel() -> UIView {
     let headerTitleLabel = AttributedLabel(
         font: .heading(.large),
         textColor: .textPrimary
