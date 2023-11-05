@@ -160,17 +160,20 @@ final class PaymentSheetLoader {
             intent = .paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
         case .setupIntentClientSecret(let clientSecret):
             let setupIntent: STPSetupIntent
+            let elementsSession: STPElementsSession
             do {
-                setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret)
-            } catch {
+                (setupIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret)
+            } catch let error {
+                analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 // Fallback to regular retrieve SI when retrieve SI with preferences fails
                 setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
+                elementsSession = .makeBackupElementsSession(with: setupIntent)
             }
             guard ![.succeeded, .canceled].contains(setupIntent.status) else {
                 // Error if the SetupIntent is in a terminal state
                 throw PaymentSheetError.setupIntentInTerminalState(status: setupIntent.status)
             }
-            intent = .setupIntent(setupIntent)
+            intent = .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
 
         case .deferredIntent(let intentConfig):
             let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig)

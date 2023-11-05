@@ -16,39 +16,6 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPIntentWithPreferencesTest: XCTestCase {
-    private let paymentIntentClientSecret =
-        "pi_1H5J4RFY0qyl6XeWFTpgue7g_secret_1SS59M0x65qWMaX2wEB03iwVE"
-    private let setupIntentClientSecret =
-        "seti_1GGCuIFY0qyl6XeWVfbQK6b3_secret_GnoX2tzX2JpvxsrcykRSVna2lrYLKew"
-
-    func testSetupIntentWithPreferences() async {
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-
-        do {
-            let setupIntentWithPreferences = try await client.retrieveSetupIntentWithPreferences(withClientSecret: setupIntentClientSecret)
-            // Check required SI fields
-            XCTAssertEqual(setupIntentWithPreferences.stripeID, "seti_1GGCuIFY0qyl6XeWVfbQK6b3")
-            XCTAssertEqual(
-                setupIntentWithPreferences.clientSecret,
-                self.setupIntentClientSecret
-            )
-            XCTAssertEqual(setupIntentWithPreferences.status, .requiresPaymentMethod)
-            XCTAssertEqual(
-                setupIntentWithPreferences.paymentMethodTypes,
-                STPPaymentMethod.types(from: ["card"])
-            )
-            // Check for ordered payment method types
-            XCTAssertNotNil(setupIntentWithPreferences.orderedPaymentMethodTypes)
-            XCTAssertEqual(
-                setupIntentWithPreferences.orderedPaymentMethodTypes,
-                [STPPaymentMethodType.card]
-            )
-        } catch {
-            print(error)
-            XCTFail()
-        }
-    }
-
     // MARK: PaymentSheet.IntentConfiguration+elementsSessionPayload tests
 
     func testElementsSessionPayload_Payment() throws {

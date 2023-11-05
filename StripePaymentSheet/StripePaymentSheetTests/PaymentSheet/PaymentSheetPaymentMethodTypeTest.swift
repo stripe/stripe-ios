@@ -317,30 +317,9 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testSetupIntentRecommendedPaymentMethodTypes() {
-        let setupIntent = constructSI(paymentMethodTypes: [
-            "card", "us_bank_account", "klarna", "futurePaymentMethod",
-        ])!
-        let intent = Intent.setupIntent(setupIntent)
-        let types = intent.recommendedPaymentMethodTypes
-
-        XCTAssertEqual(types[0], .card)
-        XCTAssertEqual(types[1], .USBankAccount)
-        XCTAssertEqual(types[2], .klarna)
-        XCTAssertEqual(types[3], .unknown)
-    }
-
-    func testSetupIntentRecommendedPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {
-        let setupIntent = constructSI(
-            paymentMethodTypes: ["card", "us_bank_account", "klarna", "futurePaymentMethod"],
-            orderedPaymentMethodTypes: ["card", "klarna", "us_bank_account", "futurePaymentMethod"]
-        )!
-        let intent = Intent.setupIntent(setupIntent)
-        let types = intent.recommendedPaymentMethodTypes
-
-        XCTAssertEqual(types[0], .card)
-        XCTAssertEqual(types[1], .klarna)
-        XCTAssertEqual(types[2], .USBankAccount)
-        XCTAssertEqual(types[3], .unknown)
+        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.card, .USBankAccount])
+        let intent = Intent.setupIntent(elementsSession: ._testValue(paymentMethodTypes: ["klarna", "card"]), setupIntent: setupIntent)
+        XCTAssertEqual(intent.recommendedPaymentMethodTypes, [.klarna, .card])
     }
 
     func testPaymentIntentFilteredPaymentMethodTypes() {
@@ -381,8 +360,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testSetupIntentFilteredPaymentMethodTypes() {
-        let setupIntent = constructSI(paymentMethodTypes: ["card", "cashapp"])!
-        let intent = Intent.setupIntent(setupIntent)
+        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.card, .cashApp])
+        let intent = Intent.setupIntent(elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"]), setupIntent: setupIntent)
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
         let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
@@ -394,8 +373,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testSetupIntentFilteredPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {
-        let setupIntent = constructSI(paymentMethodTypes: ["card", "klarna", "p24"])!
-        let intent = Intent.setupIntent(setupIntent)
+        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.card, .klarna, .przelewy24])
+        let intent = Intent.setupIntent(elementsSession: ._testValue(paymentMethodTypes: ["card", "klarna", "przelewy24"]), setupIntent: setupIntent)
         let configuration = PaymentSheet.Configuration()
         let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: intent,
@@ -406,7 +385,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testUnknownPMTypeIsUnsupported() {
-        let setupIntent = constructSI(paymentMethodTypes: ["luxe_bucks"])!
+        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.unknown])
         let paymentMethod = STPPaymentMethod.type(from: "luxe_bucks")
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
@@ -415,7 +394,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: paymentMethod,
                 configuration: configuration,
-                intent: Intent.setupIntent(setupIntent)
+                intent: Intent.setupIntent(elementsSession: ._testCardValue(), setupIntent: setupIntent)
             ),
             .notSupported
         )
@@ -536,33 +515,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 .contains(PaymentSheet.PaymentMethodType.externalPayPal)
         )
     }
-
-    private func constructSI(
-        paymentMethodTypes: [String],
-        orderedPaymentMethodTypes: [String]? = nil
-    ) -> STPSetupIntent? {
-        var apiResponse: [AnyHashable: Any] = [
-            "id": "123",
-            "client_secret": "sec",
-            "status": "requires_payment_method",
-            "created": 1652736692.0,
-            "payment_method_types": paymentMethodTypes,
-            "livemode": false,
-        ]
-        if let orderedPaymentMethodTypes = orderedPaymentMethodTypes {
-            apiResponse["ordered_payment_method_types"] = orderedPaymentMethodTypes
-        }
-        guard
-            let stpSetupIntent = STPSetupIntent.decodeSTPSetupIntentObject(
-                fromAPIResponse: apiResponse
-            )
-        else {
-            XCTFail("Failed to decode")
-            return nil
-        }
-        return stpSetupIntent
-    }
-
 }
 
 extension STPFixtures {

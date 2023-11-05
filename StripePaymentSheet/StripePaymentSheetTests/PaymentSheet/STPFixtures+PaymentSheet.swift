@@ -57,6 +57,15 @@ extension Intent {
     static func _testValue() -> Intent {
         return _testPaymentIntent(paymentMethodTypes: [.card])
     }
+
+    static func _testSetupIntent(
+        paymentMethodTypes: [STPPaymentMethodType] = [.card]
+    ) -> Intent {
+        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: paymentMethodTypes)
+        let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes)
+        return .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
+    }
 }
 
 extension STPPaymentMethod {

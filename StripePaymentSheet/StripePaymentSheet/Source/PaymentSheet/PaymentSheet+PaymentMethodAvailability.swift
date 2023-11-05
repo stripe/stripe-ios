@@ -89,7 +89,7 @@ extension Intent: PaymentMethodRequirementProvider {
             }
 
             return reqs
-        case let .setupIntent(setupIntent):
+        case let .setupIntent(_, setupIntent):
             var reqs = [PaymentMethodTypeRequirement]()
 
             // valid us bank verification method

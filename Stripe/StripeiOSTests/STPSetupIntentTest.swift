@@ -46,18 +46,7 @@ class STPSetupIntentTest: XCTestCase {
 
     func testDecodedObjectFromAPIResponseMapping() {
         let setupIntentJson = STPTestUtils.jsonNamed("SetupIntent")!
-        let orderedPaymentJson = ["card", "ideal", "sepa_debit"]
-        let setupIntentResponse = [
-            "setup_intent": setupIntentJson,
-            "ordered_payment_method_types": orderedPaymentJson,
-        ] as [String: Any]
-        let unactivatedPaymentMethodTypes = ["sepa_debit"]
-        let response = [
-            "payment_method_preference": setupIntentResponse,
-            "unactivated_payment_method_types": unactivatedPaymentMethodTypes,
-        ] as [String: Any]
-
-        guard let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: response) else { XCTFail(); return }
+        guard let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: setupIntentJson) else { XCTFail(); return }
 
         XCTAssertEqual(setupIntent.stripeID, "seti_123456789")
         XCTAssertEqual(setupIntent.clientSecret, "seti_123456789_secret_123456789")
@@ -92,7 +81,5 @@ class STPSetupIntentTest: XCTestCase {
         XCTAssertEqual(setupIntent.lastSetupError?.message, "The latest attempt to set up the payment method has failed because authentication failed.")
         XCTAssertNotNil(setupIntent.lastSetupError?.paymentMethod)
         XCTAssertEqual(setupIntent.lastSetupError?.type, STPSetupIntentLastSetupErrorType.invalidRequest)
-
-        XCTAssertEqual(setupIntent.unactivatedPaymentMethodTypes, [.SEPADebit])
     }
 }

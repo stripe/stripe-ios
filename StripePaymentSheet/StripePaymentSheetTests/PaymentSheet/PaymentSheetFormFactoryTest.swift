@@ -1198,7 +1198,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testEPSDoesntHideCardCheckbox() {
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
-        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card, .EPS])
+        _ = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card, .EPS])
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .EPS]),
             configuration: .paymentSheet(configuration),
@@ -1439,7 +1439,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
             configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
             return PaymentSheetFormFactory(
-                intent: isSettingUp ? .setupIntent(STPFixtures.setupIntent()) : ._testValue(),
+                intent: isSettingUp ? ._testSetupIntent() : ._testValue(),
                 configuration: .paymentSheet(configuration),
                 paymentMethod: .stripe(.card),
                 previousCustomerInput: previousCustomerInput

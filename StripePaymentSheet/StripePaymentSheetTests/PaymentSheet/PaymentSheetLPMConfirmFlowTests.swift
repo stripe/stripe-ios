@@ -562,7 +562,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, paymentMethodID: paymentMethod.stripeId, customerID: customer, confirm: true, otherParams: paramsForServerSideConfirmation)
             }
             return [
-                ("SetupIntent", .setupIntent(setupIntent)),
+                ("SetupIntent", .setupIntent(elementsSession: ._testCardValue(), setupIntent: setupIntent)),
                 ("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
