@@ -21,6 +21,7 @@ final class UpdateCardViewController: UIViewController {
     private let appearance: PaymentSheet.Appearance
     private let paymentMethod: STPPaymentMethod
     private let paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
+    private let configuration: SavedPaymentOptionsViewController.Configuration
 
     weak var delegate: UpdateCardViewControllerDelegate?
 
@@ -65,8 +66,8 @@ final class UpdateCardViewController: UIViewController {
         apperanceCopy.primaryButton.textColor = appearance.colors.danger
         apperanceCopy.primaryButton.borderColor = .clear
         apperanceCopy.primaryButton.shadow = .init(color: .clear, opacity: 0.0, offset: .zero, radius: 0.0)
-        return ConfirmButton(callToAction: .custom(title: .Localized.remove_card), appearance: apperanceCopy) {
-            // TODO(porter) Remove card
+        return ConfirmButton(callToAction: .custom(title: .Localized.remove_card), appearance: apperanceCopy) { [weak self] in
+            self?.removeCard()
         }
     }()
 
@@ -99,9 +100,13 @@ final class UpdateCardViewController: UIViewController {
     }()
 
     // MARK: Overrides
-    init(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell, paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance) {
+    init(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
+         paymentMethod: STPPaymentMethod,
+         configuration: SavedPaymentOptionsViewController.Configuration,
+         appearance: PaymentSheet.Appearance) {
         self.paymentOptionCell = paymentOptionCell
         self.paymentMethod = paymentMethod
+        self.configuration = configuration
         self.appearance = appearance
 
         super.init(nibName: nil, bundle: nil)
@@ -137,6 +142,30 @@ final class UpdateCardViewController: UIViewController {
     private func dismiss() {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
         _ = bottomVc.popContentViewController()
+    }
+    
+    private func removeCard() {
+        let alert = UIAlertAction(
+            title: String.Localized.remove, style: .destructive
+        ) { [weak self] (_) in
+            guard let self = self else { return }
+            self.delegate?.didRemove(paymentOptionCell: self.paymentOptionCell)
+            self.dismiss()
+        }
+        let cancel = UIAlertAction(
+            title: String.Localized.cancel,
+            style: .cancel, handler: nil
+        )
+
+        let alertController = UIAlertController(
+            title: paymentMethod.removalMessage.title,
+            message: configuration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
+            preferredStyle: .alert
+        )
+
+        alertController.addAction(cancel)
+        alertController.addAction(alert)
+        present(alertController, animated: true, completion: nil)
     }
 
 }
