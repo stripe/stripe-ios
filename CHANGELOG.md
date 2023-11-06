@@ -1,4 +1,7 @@
 ## X.Y.Z 2023-y-z
+### PaymentSheet
+* [Fixed] Visual bug when re-presenting payment sheet
+
 ### CustomerSheet
 * [Fixed] CustomerSheet no longer displays saved cards that originated from Apple Pay or Google Pay.
 
