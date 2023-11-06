@@ -77,11 +77,8 @@ final class CardSection: ContainerElement {
         var cardBrandDropDown: PaymentMethodElementWrapper<DropdownFieldElement>?
         if cardBrandChoiceEligible {
             cardBrandDropDown = PaymentMethodElementWrapper(DropdownFieldElement.makeCardBrandDropdown(theme: theme)) { field, params in
-                guard let cardBrandCaseIndex = Int(field.selectedItem.rawData),
-                      let cardBrand: STPCardBrand = .init(rawValue: cardBrandCaseIndex) else {
-                    return params
-                }
-
+                let cardBrand = STPCard.brand(from: field.selectedItem.rawData)
+                guard cardBrand != .unknown else { return params }
                 cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: STPCardBrandUtilities.apiValue(from: cardBrand))
                 return params
             }
@@ -194,7 +191,7 @@ final class CardSection: ContainerElement {
                 if !hadBrands,
                    let preferredNetworks = self?.preferredNetworks,
                    let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
-                   let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == "\(brandToSelect.rawValue)" }) {
+                   let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) {
                     cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
                 }
 

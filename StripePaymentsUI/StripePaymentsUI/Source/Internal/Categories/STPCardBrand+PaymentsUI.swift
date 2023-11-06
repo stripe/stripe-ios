@@ -40,7 +40,7 @@ extension STPCardBrand: Comparable {
             pickerDisplayName: displayText,
             labelDisplayName: brandIconAttributedString(theme: theme, maxWidth: maxWidth),
             accessibilityValue: brandName,
-            rawData: "\(self.rawValue)"
+            rawData: STPCardBrandUtilities.apiValue(from: self)
         )
     }
 }
