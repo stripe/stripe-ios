@@ -386,7 +386,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
     ) {
         removePaymentMethod(paymentOptionCell: paymentOptionCell)
     }
-    
+
     private func removePaymentMethod(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
             guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
                   case .saved(let paymentMethod) = viewModels[indexPath.row]

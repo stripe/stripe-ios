@@ -143,7 +143,7 @@ final class UpdateCardViewController: UIViewController {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
         _ = bottomVc.popContentViewController()
     }
-    
+
     private func removeCard() {
         let alert = UIAlertAction(
             title: String.Localized.remove, style: .destructive
