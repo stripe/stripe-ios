@@ -9,6 +9,7 @@
 
 import Stripe
 import StripeCoreTestUtils
+@testable import StripePaymentsTestUtils
 
 class STPPaymentMethodFunctionalTest: XCTestCase {
     override func setUp() {
@@ -81,6 +82,43 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+    }
+    
+    func testUpdateCardPaymentMethod() async throws {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        
+        // A hardcoded test Customer
+        let testCustomerID = "cus_OvxoV32SLyBXgi"
+
+        // Create a new EK for the Customer
+        let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
+        
+        // Create a new payment method
+        let paymentMethod = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
+        
+        // Preferred network and metadata should be nil
+        XCTAssertNil(paymentMethod.card?.networks?.preferred)
+        XCTAssertNil(paymentMethod.metadata?["test_key"])
+        
+        // Update the preferred network and metadata for the card
+        let card = STPPaymentMethodCardParams()
+        card.networks = .init(preferred: "visa")
+        
+        let params = STPPaymentMethodParams(
+            card: card,
+            billingDetails: nil,
+            metadata: [
+                "test_key": "updated_test_value",
+            ])
+        
+        let updatedPaymentMethod = try await client.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId,
+                                                         with: params,
+                                                         using: customerAndEphemeralKey.ephemeralKeySecret,
+                                                         additionalPaymentUserAgentValues: [])
+        
+        // Verify
+        XCTAssertEqual("visa", updatedPaymentMethod.card?.networks?.preferred)
+        XCTAssertEqual("updated_test_value", updatedPaymentMethod.metadata?["test_key"])
     }
 
     func testCreateBacsPaymentMethod() {
@@ -168,4 +206,5 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         }
         waitForExpectations(timeout: 5, handler: nil)
     }
+    
 }

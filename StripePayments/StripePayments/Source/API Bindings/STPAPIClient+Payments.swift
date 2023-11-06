@@ -768,6 +768,53 @@ extension STPAPIClient {
             }
         })
     }
+    
+    /// Updates a PaymentMethod object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/payment_methods/update
+    /// - Parameters:
+    ///   - paymentMethodId: Identifier of the payment method to be updated
+    ///   - paymentMethodParams: The `STPPaymentMethodParams` to pass to `/v1/payment_methods/update`.  Cannot be nil.
+    ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    ///   - completion: The callback to run with the returned PaymentMethod object, or an error.
+    public func updatePaymentMethod(paymentMethodId: String,
+                                    with paymentMethodParams: STPPaymentMethodParams,
+                                    using ephemeralKeySecret: String,
+                                    additionalPaymentUserAgentValues: [String],
+                                    completion: @escaping STPPaymentMethodCompletionBlock) {
+        STPAnalyticsClient.sharedClient.logPaymentMethodUpdateAttempt(
+            with: _stored_configuration,
+            paymentMethodType: paymentMethodParams.rawTypeString
+        )
+        var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
+        parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
+        APIRequest<STPPaymentMethod>.post(
+            with: self,
+            endpoint: "\(APIEndpointPaymentMethods)/\(paymentMethodId)",
+            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
+            parameters: parameters
+        ) { paymentMethod, _, error in
+            completion(paymentMethod, error)
+        }
+    }
+    
+    /// Updates a PaymentMethod object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/payment_methods/update
+    /// - Parameters:
+    ///   - paymentMethodId: Identifier of the payment method to be updated
+    ///   - paymentMethodParams: The `STPPaymentMethodParams` to pass to `/v1/payment_methods/update`.  Cannot be nil.
+    ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    ///   - completion: The callback to run with the returned PaymentMethod object, or an error.
+    public func updatePaymentMethod(paymentMethodId: String, with paymentMethodParams: STPPaymentMethodParams, using ephemeralKeySecret: String, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
+        return try await withCheckedThrowingContinuation({ continuation in
+            updatePaymentMethod(paymentMethodId: paymentMethodId, with: paymentMethodParams, using: ephemeralKeySecret, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
+                if let paymentMethod = paymentMethod {
+                    continuation.resume(with: .success(paymentMethod))
+                } else {
+                    continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                }
+            }
+        })
+    }
 }
 
 // MARK: - ThreeDS2
