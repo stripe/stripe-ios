@@ -177,8 +177,9 @@ extension UpdateCardViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
-        let selectedBrand = cardBrandDropDown.selectedItem.rawData
-        let currentCardBrand = STPCard.brand(from: paymentMethod.card?.networks?.preferred ?? "").rawValue
-        updateButton.update(state: selectedBrand != "\(currentCardBrand)" && selectedBrand != "-1" ? .enabled : .disabled)
+        let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand
+        let currentCardBrand = STPCard.brand(from: paymentMethod.card?.networks?.preferred ?? "")
+        let shouldBeEnabled = selectedBrand != currentCardBrand && selectedBrand != .unknown
+        updateButton.update(state: shouldBeEnabled ? .enabled : .disabled)
     }
 }
