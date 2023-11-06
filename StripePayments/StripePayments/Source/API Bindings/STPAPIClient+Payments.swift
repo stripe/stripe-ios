@@ -768,7 +768,7 @@ extension STPAPIClient {
             }
         })
     }
-    
+
     /// Updates a PaymentMethod object with the provided params object.
     /// - seealso: https://stripe.com/docs/api/payment_methods/update
     /// - Parameters:
@@ -796,7 +796,7 @@ extension STPAPIClient {
             completion(paymentMethod, error)
         }
     }
-    
+
     /// Updates a PaymentMethod object with the provided params object.
     /// - seealso: https://stripe.com/docs/api/payment_methods/update
     /// - Parameters:

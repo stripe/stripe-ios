@@ -58,7 +58,7 @@ extension STPAnalyticsClient {
             )
         )
     }
-    
+
     func logPaymentMethodUpdateAttempt(
         with configuration: NSObject?,
         paymentMethodType: String?
