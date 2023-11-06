@@ -53,11 +53,11 @@ extension VerificationSheetFlowControllerError: AnalyticLoggableError {
             ]
         case .missingSelfieConfig:
             payload = [
-                "type": "missing_selfie"
+                "type": "missing_selfie",
             ]
         case .missingPhoneOtpContent:
             payload = [
-                "type": "missing_phone_otp"
+                "type": "missing_phone_otp",
             ]
         case .malformedURL(let value):
             payload = [
@@ -66,7 +66,7 @@ extension VerificationSheetFlowControllerError: AnalyticLoggableError {
             ]
         case .noDocumentUploader:
             payload = [
-                "type": "no_document_uploader"
+                "type": "no_document_uploader",
             ]
         case .unknown(let error):
             return error.serializeForLogging()

@@ -21,21 +21,13 @@ extension STPAnalyticsClient {
     }
 
     func logImageSelectorIconDownloadedIfNeeded(paymentMethod: PaymentSheet.PaymentMethodType) {
-        guard case .dynamic(let name) = paymentMethod else {
-            return
-        }
-        self.logPaymentSheetEvent(event: .luxeImageSelectorIconDownloaded, params: ["payment_method": name])
+        self.logPaymentSheetEvent(event: .luxeImageSelectorIconDownloaded, params: ["payment_method": paymentMethod.identifier])
     }
+
     func logImageSelectorIconFromBundleIfNeeded(paymentMethod: PaymentSheet.PaymentMethodType) {
-        guard case .dynamic(let name) = paymentMethod else {
-            return
-        }
-        self.logPaymentSheetEvent(event: .luxeImageSelectorIconFromBundle, params: ["payment_method": name])
+        self.logPaymentSheetEvent(event: .luxeImageSelectorIconFromBundle, params: ["payment_method": paymentMethod.identifier])
     }
     func logImageSelectorIconNotFoundIfNeeded(paymentMethod: PaymentSheet.PaymentMethodType) {
-        guard case .dynamic(let name) = paymentMethod else {
-            return
-        }
-        self.logPaymentSheetEvent(event: .luxeImageSelectorIconNotFound, params: ["payment_method": name])
+        self.logPaymentSheetEvent(event: .luxeImageSelectorIconNotFound, params: ["payment_method": paymentMethod.identifier])
     }
 }

@@ -78,6 +78,7 @@ class FormSpecProvider {
         assert(!formSpecs.isEmpty, "formSpec(for:) was called before loading form specs JSON!")
         return formSpecs[paymentMethodType]
     }
+
     func nextActionSpec(for paymentMethodType: String) -> FormSpec.NextActionSpec? {
         return formSpecs[paymentMethodType]?.nextActionSpec
     }

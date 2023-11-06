@@ -36,7 +36,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // A Payment methods with a client-side asset and a form spec image URL...
         let loadExpectation = expectation(description: "Load form spec image")
         let clientImage = STPPaymentMethodType.cashApp.makeImage()!
-        let image = PaymentSheet.PaymentMethodType.cashApp.makeImage { image in
+        let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage { image in
             // ...should update to the form spec image
             XCTAssertNotEqual(image, clientImage)
             XCTAssertTrue(image.size.width > 1) // Sanity check
@@ -51,7 +51,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // A Payment methods with a client-side asset but without a form spec image URL...
         let e = expectation(description: "Load form spec image")
         e.isInverted = true
-        let usBankAccountImage = PaymentSheet.PaymentMethodType.USBankAccount.makeImage { _ in
+        let usBankAccountImage = PaymentSheet.PaymentMethodType.stripe(.USBankAccount).makeImage { _ in
             // This shouldn't be called
             XCTFail()
             e.fulfill()
@@ -71,7 +71,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         waitForExpectations(timeout: 10)
         // A Payment methods without a client-side asset...
         let loadExpectation = expectation(description: "Load form spec image")
-        let image = PaymentSheet.PaymentMethodType.dynamic("amazon_pay").makeImage { image in
+        let image = PaymentSheet.PaymentMethodType.stripe(.amazonPay).makeImage { image in
             // ...should update to the form spec image
             XCTAssertTrue(image.size.width > 1) // Sanity check
             loadExpectation.fulfill()
@@ -130,7 +130,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     func testSupportsAdding_inSupportedList_urlConfiguredRequired() {
         XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("ideal"),
+                paymentMethod: .iDEAL,
                 configuration: makeConfiguration(hasReturnURL: true),
                 intent: .paymentIntent(STPFixtures.makePaymentIntent()),
                 supportedPaymentMethods: [.iDEAL]
@@ -143,7 +143,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     func testSupportsAdding_inSupportedList_urlConfiguredRequiredButNotProvided() {
         XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("ideal"),
+                paymentMethod: .iDEAL,
                 configuration: makeConfiguration(),
                 intent: .paymentIntent(STPFixtures.makePaymentIntent()),
                 supportedPaymentMethods: [.iDEAL]
@@ -158,7 +158,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_missingShipping() {
         XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
+                paymentMethod: .afterpayClearpay,
                 configuration: makeConfiguration(hasReturnURL: true),
                 intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
                 supportedPaymentMethods: [.afterpayClearpay]
@@ -171,7 +171,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_missingURL() {
         XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
+                paymentMethod: .afterpayClearpay,
                 configuration: makeConfiguration(hasReturnURL: false),
                 intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
                 supportedPaymentMethods: [.afterpayClearpay]
@@ -185,7 +185,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // Afterpay should be supported if PI has shipping...
         XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
+                paymentMethod: .afterpayClearpay,
                 configuration: makeConfiguration(hasReturnURL: true),
                 intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: true)),
                 supportedPaymentMethods: [.afterpayClearpay]
@@ -197,7 +197,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         config.allowsPaymentMethodsRequiringShippingAddress = true
         XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay"),
+                paymentMethod: .afterpayClearpay,
                 configuration: config,
                 intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
                 supportedPaymentMethods: [.afterpayClearpay]
@@ -208,35 +208,24 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     // MARK: - SEPA family
 
-    let sepaFamily = [
-        PaymentSheet.PaymentMethodType.dynamic("sepa_debit"),
-        PaymentSheet.PaymentMethodType.dynamic("ideal"),
-        PaymentSheet.PaymentMethodType.dynamic("bancontact"),
-        PaymentSheet.PaymentMethodType.dynamic("sofort"),
-    ]
+    let sepaFamily: [STPPaymentMethodType] = [.SEPADebit, .iDEAL, .bancontact, .sofort]
 
     func testCanAddSEPAFamily() {
         // iDEAL and bancontact can be added if returnURL provided
-        let sepaFamilySynchronous = [
-            PaymentSheet.PaymentMethodType.dynamic("ideal"),
-            PaymentSheet.PaymentMethodType.dynamic("bancontact"),
-        ]
+        let sepaFamilySynchronous: [STPPaymentMethodType] = [.iDEAL, .bancontact]
         for pm in sepaFamilySynchronous {
             XCTAssertEqual(
                 PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: pm,
                     configuration: makeConfiguration(hasReturnURL: true),
                     intent: .paymentIntent(STPFixtures.makePaymentIntent()),
-                    supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
+                    supportedPaymentMethods: sepaFamily.map { $0 }
                 ),
                 .supported
             )
         }
 
-        let sepaFamilyAsynchronous = [
-            PaymentSheet.PaymentMethodType.dynamic("sofort"),
-            PaymentSheet.PaymentMethodType.dynamic("sepa_debit"),
-        ]
+        let sepaFamilyAsynchronous: [STPPaymentMethodType] = [.sofort, .SEPADebit]
         // ...SEPA and sofort also need allowsDelayedPaymentMethod:
         for pm in sepaFamilyAsynchronous {
             var config = makeConfiguration(hasReturnURL: true)
@@ -245,7 +234,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                     paymentMethod: pm,
                     configuration: config,
                     intent: .paymentIntent(STPFixtures.makePaymentIntent()),
-                    supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
+                    supportedPaymentMethods: sepaFamily.map { $0 }
                 ),
                 .missingRequirements([.userSupportsDelayedPaymentMethods])
             )
@@ -255,7 +244,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                     paymentMethod: pm,
                     configuration: config,
                     intent: .paymentIntent(STPFixtures.makePaymentIntent()),
-                    supportedPaymentMethods: sepaFamily.map { $0.stpPaymentMethodType! }
+                    supportedPaymentMethods: sepaFamily.map { $0 }
                 ),
                 .supported
             )
@@ -308,196 +297,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         }
     }
 
-    func testInit() {
-        XCTAssertEqual(PaymentSheet.PaymentMethodType(from: "card"), .card)
-        XCTAssertEqual(PaymentSheet.PaymentMethodType(from: "us_bank_account"), .USBankAccount)
-        XCTAssertEqual(PaymentSheet.PaymentMethodType(from: "link"), .link)
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType(from: "mock_payment_method"),
-            .dynamic("mock_payment_method")
-        )
-    }
-
-    func testString() {
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.string(from: .card), "card")
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.string(from: .USBankAccount),
-            "us_bank_account"
-        )
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.string(from: .link), "link")
-        XCTAssertNil(PaymentSheet.PaymentMethodType.string(from: .linkInstantDebit))
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.string(from: .dynamic("mock_payment_method")),
-            "mock_payment_method"
-        )
-    }
-
     func testDisplayName() {
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("card").displayName, "Card")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.card.displayName, "Card")
-
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("us_bank_account").displayName,
-            "US Bank Account"
-        )
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.USBankAccount.displayName, "US Bank Account")
-
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.link.displayName, "Link")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("link").displayName, "Link")
-
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("alipay").displayName, "Alipay")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("ideal").displayName, "iDEAL")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("fpx").displayName, "FPX")
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("sepa_debit").displayName,
-            "SEPA Debit"
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("au_becs_debit").displayName,
-            "AU Direct Debit"
-        )
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("grabpay").displayName, "GrabPay")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("giropay").displayName, "giropay")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("eps").displayName, "EPS")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("p24").displayName, "Przelewy24")
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("bancontact").displayName,
-            "Bancontact"
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("netbanking").displayName,
-            "NetBanking"
-        )
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("oxxo").displayName, "OXXO")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("sofort").displayName, "Sofort")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("upi").displayName, "UPI")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("paypal").displayName, "PayPal")
-        if Locale.current.regionCode == "GB" {
-            XCTAssertEqual(
-                PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay").displayName,
-                "Clearpay"
-            )
-        } else {
-            XCTAssertEqual(
-                PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay").displayName,
-                "Afterpay"
-            )
-        }
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("blik").displayName, "BLIK")
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("wechat_pay").displayName,
-            "WeChat Pay"
-        )
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("boleto").displayName, "Boleto")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("link").displayName, "Link")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("klarna").displayName, "Klarna")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("affirm").displayName, "Affirm")
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("").displayName, "")
-    }
-
-    func testSTPPaymentMethodType() {
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.card.stpPaymentMethodType, .card)
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("card").stpPaymentMethodType, .card)
-
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.USBankAccount.stpPaymentMethodType,
-            .USBankAccount
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("us_bank_account").stpPaymentMethodType,
-            .USBankAccount
-        )
-
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.linkInstantDebit.stpPaymentMethodType,
-            .linkInstantDebit
-        )
-
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.link.stpPaymentMethodType, .link)
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("link").stpPaymentMethodType, .link)
-
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("alipay").stpPaymentMethodType,
-            .alipay
-        )
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("ideal").stpPaymentMethodType, .iDEAL)
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("fpx").stpPaymentMethodType, .FPX)
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("sepa_debit").stpPaymentMethodType,
-            .SEPADebit
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("au_becs_debit").stpPaymentMethodType,
-            .AUBECSDebit
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("grabpay").stpPaymentMethodType,
-            .grabPay
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("giropay").stpPaymentMethodType,
-            .giropay
-        )
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("eps").stpPaymentMethodType, .EPS)
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("p24").stpPaymentMethodType,
-            .przelewy24
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("bancontact").stpPaymentMethodType,
-            .bancontact
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("netbanking").stpPaymentMethodType,
-            .netBanking
-        )
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("oxxo").stpPaymentMethodType, .OXXO)
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("sofort").stpPaymentMethodType,
-            .sofort
-        )
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("upi").stpPaymentMethodType, .UPI)
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("paypal").stpPaymentMethodType,
-            .payPal
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("afterpay_clearpay").stpPaymentMethodType,
-            .afterpayClearpay
-        )
-        XCTAssertEqual(PaymentSheet.PaymentMethodType.dynamic("blik").stpPaymentMethodType, .blik)
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("wechat_pay").stpPaymentMethodType,
-            .weChatPay
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("boleto").stpPaymentMethodType,
-            .boleto
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("klarna").stpPaymentMethodType,
-            .klarna
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.dynamic("affirm").stpPaymentMethodType,
-            .affirm
-        )
-        XCTAssertNil(PaymentSheet.PaymentMethodType.dynamic("doesNotExist").stpPaymentMethodType)
-    }
-
-    func testConvertingNonDynamicTypes() {
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.card.stpPaymentMethodType,
-            PaymentSheet.PaymentMethodType.dynamic("card").stpPaymentMethodType
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.USBankAccount.stpPaymentMethodType,
-            PaymentSheet.PaymentMethodType.dynamic("us_bank_account").stpPaymentMethodType
-        )
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.link.stpPaymentMethodType,
-            PaymentSheet.PaymentMethodType.dynamic("link").stpPaymentMethodType
-        )
+        XCTAssertEqual(PaymentSheet.PaymentMethodType.stripe(.card).displayName, "Card")
     }
 
     func testPaymentIntentRecommendedPaymentMethodTypes() {
@@ -506,13 +307,12 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             orderedPaymentMethodTypes: ["card", "klarna", "us_bank_account", "futurePaymentMethod"]
         )!
         let intent = Intent.paymentIntent(paymentIntent)
-        let types = PaymentSheet.PaymentMethodType.recommendedPaymentMethodTypes(from: intent)
+        let types = intent.recommendedPaymentMethodTypes
 
         XCTAssertEqual(types[0], .card)
-        XCTAssertEqual(types[1], .dynamic("klarna"))
+        XCTAssertEqual(types[1], .klarna)
         XCTAssertEqual(types[2], .USBankAccount)
-        XCTAssertEqual(types[3], .dynamic("futurePaymentMethod"))
-
+        XCTAssertEqual(types[3], .unknown)
     }
 
     func testPaymentIntentRecommendedPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {
@@ -520,12 +320,12 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             "card", "us_bank_account", "klarna", "futurePaymentMethod",
         ])!
         let intent = Intent.paymentIntent(paymentIntent)
-        let types = PaymentSheet.PaymentMethodType.recommendedPaymentMethodTypes(from: intent)
+        let types = intent.recommendedPaymentMethodTypes
 
         XCTAssertEqual(types[0], .card)
         XCTAssertEqual(types[1], .USBankAccount)
-        XCTAssertEqual(types[2], .dynamic("klarna"))
-        XCTAssertEqual(types[3], .dynamic("futurePaymentMethod"))
+        XCTAssertEqual(types[2], .klarna)
+        XCTAssertEqual(types[3], .unknown)
     }
 
     func testSetupIntentRecommendedPaymentMethodTypes() {
@@ -533,12 +333,12 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             "card", "us_bank_account", "klarna", "futurePaymentMethod",
         ])!
         let intent = Intent.setupIntent(setupIntent)
-        let types = PaymentSheet.PaymentMethodType.recommendedPaymentMethodTypes(from: intent)
+        let types = intent.recommendedPaymentMethodTypes
 
         XCTAssertEqual(types[0], .card)
         XCTAssertEqual(types[1], .USBankAccount)
-        XCTAssertEqual(types[2], .dynamic("klarna"))
-        XCTAssertEqual(types[3], .dynamic("futurePaymentMethod"))
+        XCTAssertEqual(types[2], .klarna)
+        XCTAssertEqual(types[3], .unknown)
     }
 
     func testSetupIntentRecommendedPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {
@@ -547,12 +347,12 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             orderedPaymentMethodTypes: ["card", "klarna", "us_bank_account", "futurePaymentMethod"]
         )!
         let intent = Intent.setupIntent(setupIntent)
-        let types = PaymentSheet.PaymentMethodType.recommendedPaymentMethodTypes(from: intent)
+        let types = intent.recommendedPaymentMethodTypes
 
         XCTAssertEqual(types[0], .card)
-        XCTAssertEqual(types[1], .dynamic("klarna"))
+        XCTAssertEqual(types[1], .klarna)
         XCTAssertEqual(types[2], .USBankAccount)
-        XCTAssertEqual(types[3], .dynamic("futurePaymentMethod"))
+        XCTAssertEqual(types[3], .unknown)
     }
 
     func testPaymentIntentFilteredPaymentMethodTypes() {
@@ -569,10 +369,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types.count, 3)
-        XCTAssertEqual(types[0], .card)
-        XCTAssertEqual(types[1], .dynamic("klarna"))
-        XCTAssertEqual(types[2], .dynamic("p24"))
+        XCTAssertEqual(types, [.stripe(.card), .stripe(.klarna), .stripe(.przelewy24)])
     }
 
     func testPaymentIntentFilteredPaymentMethodTypes_withUnfulfilledRequirements() {
@@ -587,8 +384,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types.count, 1)
-        XCTAssertEqual(types[0], .card)
+        XCTAssertEqual(types, [.stripe(.card)])
     }
 
     func testPaymentIntentFilteredPaymentMethodTypes_withSetupFutureUsage() {
@@ -606,8 +402,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types.count, 2)
-        XCTAssertEqual(types, [.card, .cashApp])
+        XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp)])
     }
 
     func testSetupIntentFilteredPaymentMethodTypes() {
@@ -620,8 +415,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types.count, 2)
-        XCTAssertEqual(types, [.card, .cashApp])
+        XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp)])
     }
 
     func testSetupIntentFilteredPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {
@@ -633,14 +427,13 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types.count, 1)
-        XCTAssertEqual(types[0], .card)
+        XCTAssertEqual(types, [.stripe(.card)])
     }
 
     func testUnknownPMTypeIsUnsupported() {
         let paymentIntent = constructPI(paymentMethodTypes: ["luxe_bucks"])!
         let setupIntent = constructSI(paymentMethodTypes: ["luxe_bucks"])!
-        let paymentMethod = PaymentSheet.PaymentMethodType.dynamic("luxe_bucks")
+        let paymentMethod = STPPaymentMethod.type(from: "luxe_bucks")
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
 
@@ -650,7 +443,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 configuration: configuration,
                 intent: Intent.setupIntent(setupIntent)
             ),
-            .missingRequirements([.unsupportedForSetup])
+            .notSupported
         )
 
         XCTAssertEqual(
@@ -659,7 +452,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 configuration: configuration,
                 intent: Intent.paymentIntent(paymentIntent)
             ),
-            .missingRequirements([.unsupported])
+            .notSupported
         )
     }
 
@@ -695,42 +488,42 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         configuration.paymentMethodOrder = ["card", "external_paypal"]
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["card"]),
-            ["card", "external_paypal"].map({ .init(from: $0 ) })
+            [.stripe(.card), .externalPayPal]
         )
         configuration.paymentMethodOrder = ["external_paypal", "card"]
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["card"]),
-            ["external_paypal", "card"].map({ .init(from: $0 ) })
+            [.externalPayPal, .stripe(.card)]
         )
         // Omitted PMs are ordered afterwards in their original order
         configuration.paymentMethodOrder = ["card", "external_paypal"]
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            ["card", "external_paypal", "ideal", "bancontact"].map({ .init(from: $0 ) })
+            [.stripe(.card), .externalPayPal, .stripe(.iDEAL), .stripe(.bancontact)]
         )
         // Invalid PM types are ignored
         configuration.paymentMethodOrder = ["foo", "card", "bar", "external_paypal", "zoo"]
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            ["card", "external_paypal", "ideal", "bancontact"].map({ .init(from: $0 ) })
+            [.stripe(.card), .externalPayPal, .stripe(.iDEAL), .stripe(.bancontact)]
         )
         // Duplicate PMs are ignored
         configuration.paymentMethodOrder = ["card", "card", "external_paypal", "card"]
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            ["card", "external_paypal", "ideal", "bancontact"].map({ .init(from: $0 ) })
+            [.stripe(.card), .externalPayPal, .stripe(.iDEAL), .stripe(.bancontact)]
         )
         // Empty paymentMethodOrder -> uses default ordering on the Intent
         configuration.paymentMethodOrder = []
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            ["ideal", "card", "bancontact", "external_paypal"].map({ .init(from: $0 ) })
+            [.stripe(.iDEAL), .stripe(.card), .stripe(.bancontact), .externalPayPal]
         )
         // Nil paymentMethodOrder -> uses default ordering on the Intent
         configuration.paymentMethodOrder = nil
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            ["ideal", "card", "bancontact", "external_paypal"].map({ .init(from: $0 ) })
+            [.stripe(.iDEAL), .stripe(.card), .stripe(.bancontact), .externalPayPal]
         )
     }
 

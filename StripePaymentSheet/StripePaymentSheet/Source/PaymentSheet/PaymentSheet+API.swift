@@ -45,7 +45,7 @@ extension PaymentSheet {
     ) {
         // First, handle any client-side required actions:
         if case let .new(confirmParams) = paymentOption,
-           confirmParams.paymentMethodType == .bacsDebit {
+           confirmParams.paymentMethodType == .stripe(.bacsDebit) {
             // MARK: - Bacs Debit
             // Display the Bacs Debit mandate view
             let mandateView = BacsDDMandateView(email: confirmParams.paymentMethodParams.billingDetails?.email ?? "",

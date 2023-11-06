@@ -21,7 +21,7 @@ extension STPAnalyticsClient {
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [
-                    "token_type": tokenType ?? "unknown"
+                    "token_type": tokenType ?? "unknown",
                 ]
             )
         )
@@ -37,7 +37,7 @@ extension STPAnalyticsClient {
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [
-                    "source_type": sourceType ?? "unknown"
+                    "source_type": sourceType ?? "unknown",
                 ]
             )
         )
@@ -53,7 +53,7 @@ extension STPAnalyticsClient {
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [
-                    "source_type": paymentMethodType ?? "unknown"
+                    "source_type": paymentMethodType ?? "unknown",
                 ]
             )
         )
@@ -88,7 +88,7 @@ extension STPAnalyticsClient {
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [
-                    "source_type": paymentMethodType ?? "unknown"
+                    "source_type": paymentMethodType ?? "unknown",
                 ]
             )
         )
@@ -104,7 +104,7 @@ extension STPAnalyticsClient {
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [
-                    "source_type": paymentMethodType ?? "unknown"
+                    "source_type": paymentMethodType ?? "unknown",
                 ]
             )
         )
@@ -124,7 +124,7 @@ extension STPAnalyticsClient {
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [
-                    "intent_id": intentID
+                    "intent_id": intentID,
                 ],
                 error: error
             )
@@ -141,7 +141,7 @@ extension STPAnalyticsClient {
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [
-                    "intent_id": intentID
+                    "intent_id": intentID,
                 ]
             )
         )
@@ -157,7 +157,7 @@ extension STPAnalyticsClient {
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [
-                    "intent_id": intentID
+                    "intent_id": intentID,
                 ]
             )
         )
@@ -173,7 +173,7 @@ extension STPAnalyticsClient {
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [
-                    "intent_id": intentID
+                    "intent_id": intentID,
                 ]
             )
         )
@@ -243,7 +243,7 @@ extension STPAnalyticsClient {
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [
-                    "intent_id": intentID
+                    "intent_id": intentID,
                 ]
             )
         )
@@ -278,7 +278,7 @@ extension STPAnalyticsClient {
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [
-                    "intent_id": intentID
+                    "intent_id": intentID,
                 ],
                 error: error
             )
@@ -329,7 +329,7 @@ extension STPAnalyticsClient {
             analytic: GenericAnalytic(
                 event: .cardScanSucceeded,
                 params: [
-                    "duration": NSNumber(value: round(duration))
+                    "duration": NSNumber(value: round(duration)),
                 ]
             )
         )
@@ -340,7 +340,7 @@ extension STPAnalyticsClient {
             analytic: GenericAnalytic(
                 event: .cardScanCancelled,
                 params: [
-                    "duration": NSNumber(value: round(duration))
+                    "duration": NSNumber(value: round(duration)),
                 ]
             )
         )

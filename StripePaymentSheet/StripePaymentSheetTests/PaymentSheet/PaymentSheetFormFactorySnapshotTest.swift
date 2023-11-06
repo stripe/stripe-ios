@@ -246,7 +246,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
 
         let configuration = PaymentSheet.Configuration()
         let factory = factory(
-            for: .dynamic("afterpay_clearpay"),
+            for: .afterpayClearpay,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -263,7 +263,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
         let factory = factory(
-            for: .dynamic("afterpay_clearpay"),
+            for: .afterpayClearpay,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -292,7 +292,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
         let factory = factory(
-            for: .dynamic("afterpay_clearpay"),
+            for: .afterpayClearpay,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -309,7 +309,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.phone = .never
         configuration.billingDetailsCollectionConfiguration.address = .never
         let factory = factory(
-            for: .dynamic("afterpay_clearpay"),
+            for: .afterpayClearpay,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -322,7 +322,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
 
         let configuration = PaymentSheet.Configuration()
         let factory = factory(
-            for: .dynamic("klarna"),
+            for: .klarna,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -339,7 +339,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
         let factory = factory(
-            for: .dynamic("klarna"),
+            for: .klarna,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -368,7 +368,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
         let factory = factory(
-            for: .dynamic("klarna"),
+            for: .klarna,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -385,7 +385,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         configuration.billingDetailsCollectionConfiguration.phone = .never
         configuration.billingDetailsCollectionConfiguration.address = .never
         let factory = factory(
-            for: .dynamic("klarna"),
+            for: .klarna,
             configuration: configuration)
         let formElement = factory.make()
         let view = formElement.view
@@ -412,14 +412,14 @@ extension PaymentSheetFormFactorySnapshotTest {
     }
 
     private func factory(
-        for paymentMethodType: PaymentSheet.PaymentMethodType,
+        for paymentMethodType: STPPaymentMethodType,
         configuration: PaymentSheet.Configuration
     ) -> PaymentSheetFormFactory {
-        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [paymentMethodType.stpPaymentMethodType!])
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [paymentMethodType])
         return PaymentSheetFormFactory(
             intent: .paymentIntent(paymentIntent),
             configuration: .paymentSheet(configuration),
-            paymentMethod: paymentMethodType,
+            paymentMethod: .stripe(paymentMethodType),
             addressSpecProvider: usAddressSpecProvider()
         )
     }
