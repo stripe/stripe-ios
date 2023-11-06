@@ -14,7 +14,7 @@ import StripePayments
 ///
 /// Most errors do not originate from PaymentSheet itself; instead, they come from the Stripe API
 /// or other SDK components like STPPaymentHandler, PassKit (Apple Pay), etc.
-public enum PaymentSheetError: Error {
+public enum PaymentSheetError: Error, LocalizedError {
 
     /// An unknown error.
     case unknown(debugDescription: String)
@@ -53,8 +53,7 @@ public enum PaymentSheetError: Error {
     case failedToCreateLinkSession
     case linkNotAuthorized
 
-    /// Localized description of the error
-    public var localizedDescription: String {
+    public var errorDescription: String? {
         return NSError.stp_unexpectedErrorMessage()
     }
 }
