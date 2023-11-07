@@ -68,7 +68,7 @@ extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
 extension Intent: PaymentMethodRequirementProvider {
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         switch self {
-        case let .paymentIntent(paymentIntent):
+        case let .paymentIntent(_, paymentIntent):
             var reqs = [PaymentMethodTypeRequirement]()
             // Shipping address
             if let shippingInfo = paymentIntent.shipping {

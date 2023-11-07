@@ -106,7 +106,7 @@ extension PaymentSheet {
         case let .new(confirmParams):
             switch intent {
             // MARK: ↪ PaymentIntent
-            case .paymentIntent(let paymentIntent):
+            case .paymentIntent(_, let paymentIntent):
                 let params = makePaymentIntentParams(
                     confirmPaymentMethodType: .new(
                         params: confirmParams.paymentMethodParams,
@@ -162,7 +162,7 @@ extension PaymentSheet {
         case let .saved(paymentMethod):
             switch intent {
             // MARK: ↪ PaymentIntent
-            case .paymentIntent(let paymentIntent):
+            case .paymentIntent(_, let paymentIntent):
                 let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod), paymentIntent: paymentIntent, configuration: configuration)
 
                 paymentHandler.confirmPayment(
@@ -202,7 +202,7 @@ extension PaymentSheet {
         case .link(let confirmOption):
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams) -> Void = { paymentMethodParams in
                 switch intent {
-                case .paymentIntent(let paymentIntent):
+                case .paymentIntent(_, let paymentIntent):
                     let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                     paymentIntentParams.paymentMethodParams = paymentMethodParams
                     paymentIntentParams.returnURL = configuration.returnURL
@@ -250,7 +250,7 @@ extension PaymentSheet {
                 mandateCustomerAcceptanceParams.type = .online
                 let mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
                 switch intent {
-                case .paymentIntent(let paymentIntent):
+                case .paymentIntent(_, let paymentIntent):
                     let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                     paymentIntentParams.paymentMethodId = paymentMethod.stripeId
                     paymentIntentParams.returnURL = configuration.returnURL

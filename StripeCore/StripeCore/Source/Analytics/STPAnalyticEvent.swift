@@ -177,4 +177,7 @@ import Foundation
     // MARK: - PaymentSheet checkout
     case paymentSheetCarouselPaymentMethodTapped = "mc_carousel_payment_method_tapped"
     case paymentSheetConfirmButtonTapped = "mc_confirm_button_tapped"
+
+    // MARK: - v1/elements/session
+    case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
 }
