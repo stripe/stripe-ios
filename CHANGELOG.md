@@ -1,3 +1,7 @@
+## X.Y.Z 2023-y-z
+### PaymentSheet
+* [Fixed] Visual bug where re-presenting PaymentSheet wouldn't show a spinner while it reloads.
+
 ## 23.18.2 2023-11-06
 ### CustomerSheet
 * [Fixed] CustomerSheet no longer displays saved cards that originated from Apple Pay or Google Pay.
