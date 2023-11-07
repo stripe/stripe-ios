@@ -125,7 +125,6 @@ public class PaymentSheet {
             } else {
                 completion(status)
             }
-            self.bottomSheetViewController.contentStack = [self.loadingViewController]
             self.completion = nil
         }
         self.completion = completion
@@ -186,7 +185,7 @@ public class PaymentSheet {
                 completion(.failed(error: error))
             }
         }
-
+        self.bottomSheetViewController.contentStack = [self.loadingViewController]
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
 
