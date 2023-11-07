@@ -1,4 +1,4 @@
-## X.Y.Z 2023-y-z
+## 23.18.2 2023-11-06
 ### CustomerSheet
 * [Fixed] CustomerSheet no longer displays saved cards that originated from Apple Pay or Google Pay.
 
