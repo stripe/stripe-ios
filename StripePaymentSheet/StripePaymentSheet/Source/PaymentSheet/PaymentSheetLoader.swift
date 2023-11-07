@@ -174,10 +174,16 @@ final class PaymentSheetLoader {
                 throw PaymentSheetError.setupIntentInTerminalState(status: setupIntent.status)
             }
             intent = .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
-
         case .deferredIntent(let intentConfig):
-            let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig)
-            intent = .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
+            do {
+                let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig)
+                intent = .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
+            } catch let error {
+                analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                // Fallback to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
+                let paymentMethodTypes = intentConfig.paymentMethodTypes?.map { STPPaymentMethod.type(from: $0) } ?? [.card]
+                intent = .deferredIntent(elementsSession: .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes), intentConfig: intentConfig)
+            }
         }
         // Ensure that there's at least 1 payment method type available for the intent and configuration.
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
