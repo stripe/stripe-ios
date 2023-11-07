@@ -81,7 +81,7 @@ final class UpdateCardViewController: UIViewController {
 
         // pre-select current card brand
         if let currentCardBrand = paymentMethod.card?.networks?.preferred?.toCardBrand,
-           let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == "\(currentCardBrand.rawValue)" }) {
+           let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
             cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
         }
 
