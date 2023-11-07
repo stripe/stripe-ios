@@ -136,6 +136,57 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loaded], timeout: 2)
     }
 
+    func testApplePayKillSwitchOff() throws {
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubSessions(replacementDictionary: [
+            "<paymentMethods>": "\"card\", \"us_bank_account\"",
+            "<currency>": "\"usd\"",
+            "\"apple_pay_preference\": \"disabled\"": "\"apple_pay_preference\": \"enabled\"",
+        ])
+
+        let loaded = expectation(description: "Loaded")
+        PaymentSheetLoader.load(
+            mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+            configuration: self.configuration(apiClient: stubbedAPIClient())
+        ) { result in
+            switch result {
+            case .success(let intent, _, _):
+                XCTAssertEqual(intent.isApplePayEnabled, true)
+                loaded.fulfill()
+            case .failure(let error):
+                XCTFail(error.nonGenericDescription)
+            }
+        }
+        wait(for: [loaded], timeout: 2)
+    }
+
+    func testApplePayKillSwitchOn() throws {
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubSessions(replacementDictionary: [
+            "<paymentMethods>": "\"card\", \"us_bank_account\"",
+            "<currency>": "\"usd\""
+        ])
+
+        let loaded = expectation(description: "Loaded")
+        PaymentSheetLoader.load(
+            mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+            configuration: self.configuration(apiClient: stubbedAPIClient())
+        ) { result in
+            switch result {
+            case .success(let intent, _, _):
+                XCTAssertEqual(intent.isApplePayEnabled, false)
+                loaded.fulfill()
+            case .failure(let error):
+                XCTFail(error.nonGenericDescription)
+            }
+        }
+        wait(for: [loaded], timeout: 2)
+    }
+
     func testPaymentSheetLoadPaymentIntentFallback() {
         // If v1/elements/session fails to load...
         stub { urlRequest in

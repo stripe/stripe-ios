@@ -34,6 +34,8 @@ final class STPElementsSession: NSObject {
     /// Card brand choice settings for the merchant.
     let cardBrandChoice: STPCardBrandChoice?
 
+    let isApplePayEnabled: Bool
+
     let allResponseFields: [AnyHashable: Any]
 
     private init(
@@ -45,7 +47,8 @@ final class STPElementsSession: NSObject {
         merchantCountryCode: String?,
         linkSettings: LinkSettings?,
         paymentMethodSpecs: [[AnyHashable: Any]]?,
-        cardBrandChoice: STPCardBrandChoice?
+        cardBrandChoice: STPCardBrandChoice?,
+        isApplePayEnabled: Bool
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -56,6 +59,7 @@ final class STPElementsSession: NSObject {
         self.linkSettings = linkSettings
         self.paymentMethodSpecs = paymentMethodSpecs
         self.cardBrandChoice = cardBrandChoice
+        self.isApplePayEnabled = isApplePayEnabled
         super.init()
     }
 
@@ -85,7 +89,8 @@ final class STPElementsSession: NSObject {
             merchantCountryCode: nil,
             linkSettings: nil,
             paymentMethodSpecs: nil,
-            cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:])
+            cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
+            isApplePayEnabled: true
         )
     }
 }
@@ -104,6 +109,8 @@ extension STPElementsSession: STPAPIResponseDecodable {
         // Optional fields:
         let unactivatedPaymentMethodTypeStrings = dict["unactivated_payment_method_types"] as? [String] ?? []
         let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: dict["card_brand_choice"] as? [AnyHashable: Any])
+        let applePayPreference = dict["apple_pay_preference"] as? String ?? ""
+        let isApplePayEnabled = applePayPreference != "disabled"
 
         return self.init(
             allResponseFields: dict,
@@ -116,7 +123,8 @@ extension STPElementsSession: STPAPIResponseDecodable {
                 fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]
             ),
             paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]],
-            cardBrandChoice: cardBrandChoice
+            cardBrandChoice: cardBrandChoice,
+            isApplePayEnabled: isApplePayEnabled
         )
     }
 }

@@ -145,7 +145,9 @@ public class PaymentSheet {
             switch result {
             case .success(let intent, let savedPaymentMethods, let isLinkEnabled):
                 // Set the PaymentSheetViewController as the content of our bottom sheet
-                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePay != nil
+                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay()
+                    && self.configuration.applePay != nil
+                    && intent.isApplePayEnabled
 
                 let presentPaymentSheetVC = { (justVerifiedLinkOTP: Bool) in
                     let paymentSheetVC = PaymentSheetViewController(

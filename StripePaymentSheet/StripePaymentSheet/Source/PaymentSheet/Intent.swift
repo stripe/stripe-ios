@@ -133,4 +133,15 @@ enum Intent {
         }
         return flag == false
     }
+
+    var isApplePayEnabled: Bool {
+        switch self {
+        case .paymentIntent(let elementSession, _):
+            return elementSession.isApplePayEnabled
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.isApplePayEnabled
+        case .setupIntent(_):
+            return true
+        }
+    }
 }

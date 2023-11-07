@@ -27,6 +27,17 @@ class StubbedBackend {
             }
         )
     }
+    static func stubSessions(replacementDictionary: [String: String]) {
+        stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: replacementDictionary
+                )
+            }
+        )
+    }
 
     static func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
         var template = String(data: data, encoding: .utf8)!
