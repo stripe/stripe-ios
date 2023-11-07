@@ -302,9 +302,12 @@ extension STPAPIClient {
         responseCompletion completion: @escaping (STPSource?, HTTPURLResponse?, Error?) -> Void
     ) {
         let endpoint = "\(APIEndpointSources)/\(identifier)"
-        let parameters = [
-            "client_secret": secret,
-        ]
+        var parameters = ["client_secret": secret]
+        
+        if publishableKeyIsUserKey {
+            parameters["client_secret"] = nil
+        }
+        
         APIRequest<STPSource>.getWith(
             self,
             endpoint: endpoint,
@@ -552,13 +555,21 @@ extension STPAPIClient {
 extension STPAPIClient {
 
     func setupIntentEndpoint(from secret: String) -> String {
-        assert(
-            STPSetupIntentConfirmParams.isClientSecretValid(secret),
-            "`secret` format does not match expected client secret formatting."
-        )
-        let identifier = STPSetupIntent.id(fromClientSecret: secret) ?? ""
-
-        return "\(APIEndpointSetupIntents)/\(identifier)"
+        if publishableKeyIsUserKey {
+            assert(
+                secret.hasPrefix("seti_"),
+                "`secret` format does not match expected identifer formatting."
+            )
+            return "\(APIEndpointSetupIntents)/\(secret)"
+        } else {
+            assert(
+                STPSetupIntentConfirmParams.isClientSecretValid(secret),
+                "`secret` format does not match expected client secret formatting."
+            )
+            let identifier = STPSetupIntent.id(fromClientSecret: secret) ?? ""
+            
+            return "\(APIEndpointSetupIntents)/\(identifier)"
+        }
     }
 
     /// Retrieves the SetupIntent object using the given secret. - seealso: https://stripe.com/docs/api/setup_intents/retrieve
@@ -591,6 +602,9 @@ extension STPAPIClient {
 
         let endpoint = setupIntentEndpoint(from: secret)
         var parameters: [String: Any] = ["client_secret": secret]
+        if publishableKeyIsUserKey {
+            parameters["client_secret"] = nil
+        }
         if let expand = expand,
             !expand.isEmpty
         {
@@ -667,8 +681,13 @@ extension STPAPIClient {
             paymentMethodType: setupIntentParams.paymentMethodParams?.rawTypeString
         )
 
-        let endpoint = setupIntentEndpoint(from: setupIntentParams.clientSecret) + "/confirm"
+        let endpoint = setupIntentEndpoint(from: setupIntentParams.stripeId ?? "") + "/confirm"
         var params = STPFormEncoder.dictionary(forObject: setupIntentParams)
+        
+        if publishableKeyIsUserKey {
+            params["client_secret"] = nil
+        }
+        
         if var sourceParamsDict = params[SourceDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
             sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict)

@@ -44,6 +44,11 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
 
     /// The client secret of the SetupIntent. Required.
     @objc public var clientSecret: String
+    
+    @objc public var stripeId: String? {
+        return STPSetupIntent.id(fromClientSecret: clientSecret)
+    }
+    
     /// Provide a supported `STPPaymentMethodParams` object, and Stripe will create a
     /// PaymentMethod during PaymentIntent confirmation.
     /// @note alternative to `paymentMethodId`
