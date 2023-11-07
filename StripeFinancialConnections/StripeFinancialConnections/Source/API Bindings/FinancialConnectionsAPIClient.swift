@@ -189,7 +189,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         let parameters = [
-            "client_secret": clientSecret
+            "client_secret": clientSecret,
         ]
         return self.post(
             resource: APIEndpointConsentAcquired,
@@ -329,7 +329,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         let body = [
-            "client_secret": clientSecret
+            "client_secret": clientSecret,
         ]
         return self.post(resource: APIEndpointLinkMoreAccounts, object: body)
     }
@@ -339,7 +339,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         terminalError: String?
     ) -> Future<StripeAPI.FinancialConnectionsSession> {
         var body: [String: Any] = [
-            "client_secret": clientSecret
+            "client_secret": clientSecret,
         ]
         body["terminal_error"] = terminalError
         return self.post(resource: APIEndpointComplete, parameters: body)
@@ -411,7 +411,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         consumerSessionClientSecret: String? = nil
     ) -> Future<FinancialConnectionsPaymentAccountResource> {
         var body: [String: Any] = [
-            "client_secret": clientSecret
+            "client_secret": clientSecret,
         ]
         if let accountNumber = accountNumber, let routingNumber = routingNumber {
             body["type"] = "bank_account"
@@ -422,7 +422,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         } else if let linkedAccountId = linkedAccountId {
             body["type"] = "linked_account"
             body["linked_account"] = [
-                "id": linkedAccountId
+                "id": linkedAccountId,
             ]
             body["consumer_session_client_secret"] = consumerSessionClientSecret  // optional for Link
         } else {

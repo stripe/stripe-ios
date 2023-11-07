@@ -72,6 +72,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     private var contentViewController: BottomSheetContentViewController {
         didSet(oldContentViewController) {
+            guard self.contentViewController !== oldContentViewController else {
+                return
+            }
             // Remove the old VC
             oldContentViewController.view.removeFromSuperview()
             oldContentViewController.removeFromParent()

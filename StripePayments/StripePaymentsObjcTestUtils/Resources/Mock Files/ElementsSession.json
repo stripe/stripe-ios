@@ -195,5 +195,5 @@
   "shipping_address_settings": {
     "autocomplete_allowed": true
   },
-  "unactivated_payment_method_types": ["cashapp"]
+  "unactivated_payment_method_types": []
 }

@@ -27,28 +27,24 @@ public extension STPFixtures {
 
     static func paymentIntent(
         paymentMethodTypes: [String],
-        orderedPaymentMethodTypes: [String]? = nil,
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
         currency: String = "usd",
         status: STPPaymentIntentStatus = .requiresPaymentMethod
     ) -> STPPaymentIntent {
-        var apiResponse: [AnyHashable: Any?] = [
+        var apiResponse: [AnyHashable: Any] = [
             "id": "123",
             "client_secret": "sec",
-            "amount": 10,
+            "amount": 2345,
             "currency": currency,
             "status": STPPaymentIntentStatus.string(from: status),
             "livemode": false,
             "created": 1652736692.0,
             "payment_method_types": paymentMethodTypes,
-            "setup_future_usage": setupFutureUsage.stringValue,
         ]
-        if let orderedPaymentMethodTypes = orderedPaymentMethodTypes {
-            apiResponse["ordered_payment_method_types"] = orderedPaymentMethodTypes
+        if let setupFutureUsage = setupFutureUsage.stringValue {
+            apiResponse["setup_future_usage"] = setupFutureUsage
         }
-        return STPPaymentIntent.decodeSTPPaymentIntentObject(
-            fromAPIResponse: apiResponse as [AnyHashable: Any]
-        )!
+        return STPPaymentIntent.decodedObject(fromAPIResponse: apiResponse)!
     }
 }
 

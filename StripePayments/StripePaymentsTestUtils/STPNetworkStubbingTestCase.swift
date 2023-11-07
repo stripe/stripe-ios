@@ -7,16 +7,16 @@
 //
 
 import OHHTTPStubs
-import XCTest
 @testable@_spi(STP) import StripeCore
+import XCTest
 
 /// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run with `recordingMode = YES` and save it to disk. When run with `recordingMode = NO`, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
 /// ⚠️ Warning: `STPAPIClient`s created before `setUp` is called are not recorded!
-@objc(STPNetworkStubbingTestCase) public class STPNetworkStubbingTestCase: XCTestCase {
+@objc(STPNetworkStubbingTestCase) open class STPNetworkStubbingTestCase: XCTestCase {
     /// Set this to YES to record all traffic during this test. The test will then fail, to remind you to set this back to NO before pushing.
-    var recordingMode = false
+    open var recordingMode = false
 
-    public override func setUp() {
+    open override func setUp() {
         super.setUp()
 
         // Set the STPTestingAPIClient to use the sharedURLSessionConfig so that we can intercept requests from it too
@@ -131,7 +131,7 @@ import XCTest
         }
     }
 
-    public override func tearDown() {
+    open override func tearDown() {
         super.tearDown()
         // Additional calls to `setFileNamingBlock` will be ignored if you don't do this
         SWHttpTrafficRecorder.shared().stopRecording()

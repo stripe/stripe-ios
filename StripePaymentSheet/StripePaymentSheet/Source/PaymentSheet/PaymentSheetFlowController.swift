@@ -34,7 +34,7 @@ extension PaymentSheet {
             case .new(confirmParams: let confirmParams):
                 return confirmParams.paymentMethodType.identifier
             case .link:
-                return PaymentSheet.PaymentMethodType.link.identifier
+                return STPPaymentMethodType.link.identifier
             case .externalPayPal:
                 return "external_paypal"
             }
@@ -307,7 +307,7 @@ extension PaymentSheet {
 
             let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController, appearance: configuration.appearance)
 
-            guard didPresentAndContinue || viewController.selectedPaymentMethodType != .dynamic("sepa_debit") else {
+            guard didPresentAndContinue || viewController.selectedPaymentMethodType != .stripe(.SEPADebit) else {
                 // We're legally required to show the customer the SEPA mandate before every payment/setup
                 // In the edge case where the customer never opened the sheet, and thus never saw the mandate, we present the mandate directly
                 presentSEPAMandate()

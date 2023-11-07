@@ -7,7 +7,7 @@
 
 import Foundation
 @_spi(STP) @testable import StripeCore
-import StripePayments
+@_spi(STP) import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 
@@ -43,8 +43,28 @@ extension STPElementsSession {
 }
 
 extension Intent {
+    static func _testPaymentIntent(
+        paymentMethodTypes: [STPPaymentMethodType],
+        setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
+        currency: String = "usd"
+    ) -> Intent {
+        let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
+        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, currency: currency)
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes)
+        return .paymentIntent(elementsSession: elementsSession, paymentIntent: paymentIntent)
+    }
+
     static func _testValue() -> Intent {
-        return .paymentIntent(STPFixtures.paymentIntent())
+        return _testPaymentIntent(paymentMethodTypes: [.card])
+    }
+
+    static func _testSetupIntent(
+        paymentMethodTypes: [STPPaymentMethodType] = [.card]
+    ) -> Intent {
+        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: paymentMethodTypes)
+        let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes)
+        return .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
     }
 }
 

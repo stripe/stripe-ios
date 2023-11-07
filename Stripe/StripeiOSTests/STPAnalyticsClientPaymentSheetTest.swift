@@ -13,6 +13,7 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+@_spi(STP)@testable import StripePaymentsTestUtils
 
 class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     private var client: STPAnalyticsClient!
@@ -95,7 +96,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertTrue(client.productUsage.contains("PaymentSheet"))
 
         _ = PaymentSheet.FlowController(
-            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            intent: .paymentIntent(elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()), paymentIntent: STPFixtures.paymentIntent()),
             savedPaymentMethods: [],
             isLinkEnabled: false,
             configuration: PaymentSheet.Configuration()

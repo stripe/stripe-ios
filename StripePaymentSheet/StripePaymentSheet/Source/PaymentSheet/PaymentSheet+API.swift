@@ -45,7 +45,7 @@ extension PaymentSheet {
     ) {
         // First, handle any client-side required actions:
         if case let .new(confirmParams) = paymentOption,
-           confirmParams.paymentMethodType == .bacsDebit {
+           confirmParams.paymentMethodType == .stripe(.bacsDebit) {
             // MARK: - Bacs Debit
             // Display the Bacs Debit mandate view
             let mandateView = BacsDDMandateView(email: confirmParams.paymentMethodParams.billingDetails?.email ?? "",
@@ -106,7 +106,7 @@ extension PaymentSheet {
         case let .new(confirmParams):
             switch intent {
             // MARK: ↪ PaymentIntent
-            case .paymentIntent(let paymentIntent):
+            case .paymentIntent(_, let paymentIntent):
                 let params = makePaymentIntentParams(
                     confirmPaymentMethodType: .new(
                         params: confirmParams.paymentMethodParams,
@@ -124,7 +124,7 @@ extension PaymentSheet {
                     }
                 )
             // MARK: ↪ SetupIntent
-            case .setupIntent(let setupIntent):
+            case .setupIntent(_, let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
                     confirmPaymentMethodType: .new(
                         params: confirmParams.paymentMethodParams,
@@ -162,7 +162,7 @@ extension PaymentSheet {
         case let .saved(paymentMethod):
             switch intent {
             // MARK: ↪ PaymentIntent
-            case .paymentIntent(let paymentIntent):
+            case .paymentIntent(_, let paymentIntent):
                 let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod), paymentIntent: paymentIntent, configuration: configuration)
 
                 paymentHandler.confirmPayment(
@@ -173,7 +173,7 @@ extension PaymentSheet {
                     }
                 )
             // MARK: ↪ SetupIntent
-            case .setupIntent(let setupIntent):
+            case .setupIntent(_, let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
                     confirmPaymentMethodType: .saved(paymentMethod),
                     setupIntent: setupIntent,
@@ -202,7 +202,7 @@ extension PaymentSheet {
         case .link(let confirmOption):
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams) -> Void = { paymentMethodParams in
                 switch intent {
-                case .paymentIntent(let paymentIntent):
+                case .paymentIntent(_, let paymentIntent):
                     let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                     paymentIntentParams.paymentMethodParams = paymentMethodParams
                     paymentIntentParams.returnURL = configuration.returnURL
@@ -214,7 +214,7 @@ extension PaymentSheet {
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
-                case .setupIntent(let setupIntent):
+                case .setupIntent(_, let setupIntent):
                     let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                     setupIntentParams.paymentMethodParams = paymentMethodParams
                     setupIntentParams.returnURL = configuration.returnURL
@@ -250,7 +250,7 @@ extension PaymentSheet {
                 mandateCustomerAcceptanceParams.type = .online
                 let mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
                 switch intent {
-                case .paymentIntent(let paymentIntent):
+                case .paymentIntent(_, let paymentIntent):
                     let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                     paymentIntentParams.paymentMethodId = paymentMethod.stripeId
                     paymentIntentParams.returnURL = configuration.returnURL
@@ -263,7 +263,7 @@ extension PaymentSheet {
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
-                case .setupIntent(let setupIntent):
+                case .setupIntent(_, let setupIntent):
                     let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                     setupIntentParams.paymentMethodID = paymentMethod.stripeId
                     setupIntentParams.returnURL = configuration.returnURL

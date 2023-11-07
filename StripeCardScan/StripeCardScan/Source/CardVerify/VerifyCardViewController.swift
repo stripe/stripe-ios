@@ -217,7 +217,7 @@ class VerifyCardViewController: SimpleScanViewController {
             self.verifyDelegate?.verifyViewControllerDidFinish(
                 self,
                 verificationFramesData: verificationFramesData,
-                scannedCard: ScannedCard(pan: number)
+                scannedCard: ScannedCard(scannedCard: card)
             )
         }
     }

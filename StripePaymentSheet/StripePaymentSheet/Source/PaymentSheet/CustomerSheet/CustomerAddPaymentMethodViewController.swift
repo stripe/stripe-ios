@@ -48,7 +48,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }()
 
     var overrideActionButtonBehavior: OverrideableBuyButtonBehavior? {
-        if selectedPaymentMethodType == .USBankAccount {
+        if selectedPaymentMethodType == .stripe(.USBankAccount) {
             if let paymentOption = paymentOption,
                case .new = paymentOption {
                 return nil // already have PaymentOption
@@ -75,7 +75,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
 
     var bottomNoticeAttributedString: NSAttributedString? {
-        if selectedPaymentMethodType == .USBankAccount {
+        if selectedPaymentMethodType == .stripe(.USBankAccount) {
             if let usBankPaymentMethodElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement {
                 return usBankPaymentMethodElement.mandateString
             }
@@ -84,7 +84,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
 
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
-        if selectedPaymentMethodType == .USBankAccount,
+        if selectedPaymentMethodType == .stripe(.USBankAccount),
            let usBankAccountFormElement = usBankAccountFormElement {
             return usBankAccountFormElement
         }
@@ -148,7 +148,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-        if paymentMethodTypes == [.card] {
+        if paymentMethodTypes == [.stripe(.card)] {
             paymentMethodTypesView.isHidden = true
         } else {
             paymentMethodTypesView.isHidden = false
@@ -194,7 +194,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         }
     }
     private func updateFormElement() {
-        if selectedPaymentMethodType == .USBankAccount,
+        if selectedPaymentMethodType == .stripe(.USBankAccount),
            let usBankAccountFormElement = usBankAccountFormElement {
             paymentMethodFormElement = usBankAccountFormElement
         } else {

@@ -11,13 +11,6 @@ import StripeCore
 @_spi(STP) import StripeUICore
 
 extension PaymentSheetFormFactory {
-    func specFromJSONProvider(provider: FormSpecProvider = FormSpecProvider.shared) -> FormSpec? {
-        guard let paymentMethodType = PaymentSheet.PaymentMethodType.string(from: paymentMethod) else {
-            return nil
-        }
-        return provider.formSpec(for: paymentMethodType)
-    }
-
     func makeFormElementFromSpec(
         spec: FormSpec,
         additionalElements: [Element] = []

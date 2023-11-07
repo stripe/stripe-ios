@@ -33,14 +33,14 @@ final class LinkEnabledPaymentMethodElement: Element {
         return stackView
     }()
 
-    let paymentMethodType: PaymentSheet.PaymentMethodType
+    let paymentMethodType: STPPaymentMethodType
 
     let paymentMethodElement: PaymentMethodElement
 
     let inlineSignupElement: LinkInlineSignupElement
 
     init(
-        type: PaymentSheet.PaymentMethodType,
+        type: STPPaymentMethodType,
         paymentMethodElement: PaymentMethodElement,
         configuration: PaymentSheet.Configuration,
         linkAccount: PaymentSheetLinkAccount?,
@@ -59,7 +59,7 @@ final class LinkEnabledPaymentMethodElement: Element {
     }
 
     func makePaymentOption() -> PaymentOption? {
-        guard let params = updateParams(params: .init(type: paymentMethodType)) else {
+        guard let params = updateParams(params: .init(type: .stripe(paymentMethodType))) else {
             return nil
         }
 

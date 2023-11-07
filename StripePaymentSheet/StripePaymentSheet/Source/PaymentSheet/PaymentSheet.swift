@@ -185,7 +185,7 @@ public class PaymentSheet {
                 completion(.failed(error: error))
             }
         }
-
+        self.bottomSheetViewController.contentStack = [self.loadingViewController]
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
 
@@ -218,18 +218,20 @@ public class PaymentSheet {
     /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> Void)?
 
+    /// Loading View Controller
+    lazy var loadingViewController = LoadingViewController(
+        delegate: self,
+        appearance: configuration.appearance,
+        isTestMode: configuration.apiClient.isTestmode,
+        loadingViewHeight: 244
+    )
+
     /// The STPPaymentHandler instance
-        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
+    lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
 
     /// The parent view controller to present
-        lazy var bottomSheetViewController: BottomSheetViewController = {
+    lazy var bottomSheetViewController: BottomSheetViewController = {
         let isTestMode = configuration.apiClient.isTestmode
-        let loadingViewController = LoadingViewController(
-            delegate: self,
-            appearance: configuration.appearance,
-            isTestMode: isTestMode,
-            loadingViewHeight: 244
-        )
 
         let vc = BottomSheetViewController(
             contentViewController: loadingViewController,

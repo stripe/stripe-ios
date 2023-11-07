@@ -143,10 +143,15 @@ open class StripeCustomerAdapter: CustomerAdapter {
                 using: customerEphemeralKey.ephemeralKeySecret,
                 types: savedPaymentMethodTypes
             ) { paymentMethods, error in
-                guard let paymentMethods = paymentMethods, error == nil else {
+                guard var paymentMethods, error == nil else {
                     let error = error ?? PaymentSheetError.unexpectedResponseFromStripeAPI // TODO: make a better default error
                     continuation.resume(throwing: error)
                     return
+                }
+                // Remove cards that originated from Apple or Google Pay
+                paymentMethods = paymentMethods.filter { paymentMethod in
+                    let isAppleOrGooglePay = paymentMethod.type == .card && [.applePay, .googlePay].contains(paymentMethod.card?.wallet?.type)
+                    return !isAppleOrGooglePay
                 }
                 continuation.resume(with: .success(paymentMethods))
             }

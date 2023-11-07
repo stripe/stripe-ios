@@ -436,12 +436,12 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
-            guard let fetchedSetupIntent = await fetchSetupIntent(clientSecret: clientSecret) else {
+            guard let (fetchedSetupIntent, fetchedElementsSession) = await fetchSetupIntent(clientSecret: clientSecret) else {
                 self.processingInFlight = false
                 self.updateUI()
                 return
             }
-            let setupIntent = Intent.setupIntent(fetchedSetupIntent)
+            let setupIntent = Intent.setupIntent(elementsSession: fetchedElementsSession, setupIntent: fetchedSetupIntent)
 
             guard let setupIntent = await self.confirm(intent: setupIntent, paymentOption: paymentOption),
                   let paymentMethod = setupIntent.paymentMethod else {
@@ -481,15 +481,14 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         return clientSecret
     }
 
-    private func fetchSetupIntent(clientSecret: String) async -> STPSetupIntent? {
-        var setupIntent: STPSetupIntent?
+    private func fetchSetupIntent(clientSecret: String) async -> (STPSetupIntent, STPElementsSession)? {
         do {
-            setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret)
+            return try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret)
         } catch {
             STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
             self.error = error
         }
-        return setupIntent
+        return nil
     }
 
     func confirm(intent: Intent?, paymentOption: PaymentOption) async -> STPSetupIntent? {
