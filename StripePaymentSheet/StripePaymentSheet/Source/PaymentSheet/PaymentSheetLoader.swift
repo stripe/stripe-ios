@@ -174,10 +174,18 @@ final class PaymentSheetLoader {
                 throw PaymentSheetError.setupIntentInTerminalState(status: setupIntent.status)
             }
             intent = .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
-
         case .deferredIntent(let intentConfig):
-            let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig)
-            intent = .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
+            do {
+                let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig)
+                intent = .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
+            } catch let error as NSError where error == NSError.stp_genericFailedToParseResponseError() {
+                // Most errors are useful and should be reported back to the merchant to help them debug their integration (e.g. bad connection, unknown parameter, invalid api key).
+                // If we get `stp_genericFailedToParseResponseError`, it means the request succeeded but we couldn't parse the response.
+                // In this case, fall back to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
+                analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                let paymentMethodTypes = intentConfig.paymentMethodTypes?.map { STPPaymentMethod.type(from: $0) } ?? [.card]
+                intent = .deferredIntent(elementsSession: .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes), intentConfig: intentConfig)
+            }
         }
         // Ensure that there's at least 1 payment method type available for the intent and configuration.
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
