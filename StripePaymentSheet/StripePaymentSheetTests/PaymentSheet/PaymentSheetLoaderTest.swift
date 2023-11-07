@@ -19,6 +19,35 @@ final class PaymentSheetLoaderTest: XCTestCase {
         return config
     }()
 
+    func testPaymentSheetLoadWithPaymentIntent() async throws {
+        let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
+        let types = ["ideal", "card", "bancontact", "sofort"]
+        let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
+        // Given a PaymentIntent client secret...
+        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration) { result in
+            expectation.fulfill()
+            switch result {
+            case .success(let intent, let paymentMethods, _):
+                // ...PaymentSheet should successfully load
+                guard case let .paymentIntent(elementsSession, paymentIntent) = intent else {
+                    XCTFail()
+                    return
+                }
+                // Sanity check that the ElementsSession object contain the types in the PI
+                XCTAssertEqual(
+                    Set(elementsSession.orderedPaymentMethodTypes.map { $0.identifier }),
+                    Set(types)
+                )
+                // Sanity check the PI matches the one we fetched
+                XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
+                XCTAssertEqual(paymentMethods, [])
+            case .failure(let error):
+                XCTFail(error.nonGenericDescription)
+            }
+        }
+        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
     func testPaymentSheetLoadWithSetupIntent() async throws {
         let expectation = XCTestExpectation(description: "Retrieve Setup Intent With Preferences")
         let types = ["ideal", "card", "bancontact", "sofort"]
@@ -37,9 +66,11 @@ final class PaymentSheetLoaderTest: XCTestCase {
                 XCTAssertEqual(paymentMethods, [])
                 expectation.fulfill()
             case .failure(let error):
+                XCTFail()
                 print(error)
             }
         }
+        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testPaymentSheetLoadWithSetupIntentAttachedPaymentMethod() {

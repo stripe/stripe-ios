@@ -488,7 +488,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             }
 
             intents = [
-                ("PaymentIntent", .paymentIntent(paymentIntent)),
+                ("PaymentIntent", .paymentIntent(elementsSession: ._testCardValue(), paymentIntent: paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
             ]
             guard paymentMethod != .stripe(.blik) else {
@@ -546,7 +546,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 )
             }
             return [
-                ("PaymentIntent w/ setup_future_usage", .paymentIntent(paymentIntent)),
+                ("PaymentIntent w/ setup_future_usage", .paymentIntent(elementsSession: ._testCardValue(), paymentIntent: paymentIntent)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]

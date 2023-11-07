@@ -11,20 +11,11 @@ import Foundation
 
 class STPElementsSessionTest: XCTestCase {
 
-    // MARK: - Description Tests
-    func testDescription() {
-        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-
-        XCTAssertNotNil(elementsSession)
-        let desc = elementsSession.description
-        XCTAssertTrue(desc.contains(NSStringFromClass(type(of: elementsSession).self)))
-        XCTAssertGreaterThan((desc.count), 500, "Custom description should be long")
-    }
-
     // MARK: - STPAPIResponseDecodable Tests
     func testDecodedObjectFromAPIResponseMapping() {
-        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["unactivated_payment_method_types"] = ["cashapp"]
+        elementsSessionJson["card_brand_choice"] = ["eligible": true]
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
 
         XCTAssertEqual(
@@ -50,6 +41,7 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.countryCode, "US")
         XCTAssertEqual(elementsSession.merchantCountryCode, "US")
         XCTAssertNotNil(elementsSession.paymentMethodSpecs)
+        XCTAssertEqual(elementsSession.cardBrandChoice?.eligible, true)
+        XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
     }
-
 }

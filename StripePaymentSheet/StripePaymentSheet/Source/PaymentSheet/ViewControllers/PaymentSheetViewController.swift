@@ -140,7 +140,7 @@ class PaymentSheetViewController: UIViewController {
             }
 
             switch intent {
-            case .paymentIntent(let paymentIntent):
+            case .paymentIntent(_, let paymentIntent):
                 return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
             case .setupIntent:
                 return .setup

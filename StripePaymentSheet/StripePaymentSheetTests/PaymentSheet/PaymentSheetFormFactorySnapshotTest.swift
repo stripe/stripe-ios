@@ -415,9 +415,8 @@ extension PaymentSheetFormFactorySnapshotTest {
         for paymentMethodType: STPPaymentMethodType,
         configuration: PaymentSheet.Configuration
     ) -> PaymentSheetFormFactory {
-        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [paymentMethodType])
         return PaymentSheetFormFactory(
-            intent: .paymentIntent(paymentIntent),
+            intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]),
             configuration: .paymentSheet(configuration),
             paymentMethod: .stripe(paymentMethodType),
             addressSpecProvider: usAddressSpecProvider()

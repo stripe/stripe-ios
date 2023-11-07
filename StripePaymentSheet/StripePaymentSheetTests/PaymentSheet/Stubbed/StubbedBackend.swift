@@ -75,4 +75,5 @@ public class ClassForBundle {}
     case elementsSessionsPaymentMethod_link_200 = "MockFiles/elements_sessions_paymentMethod_link_200"
 
     case customers_200 = "MockFiles/customers_200"
+    case payment_intents_200 = "MockFiles/payment_intents_200"
 }
