@@ -178,9 +178,11 @@ final class PaymentSheetLoader {
             do {
                 let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig)
                 intent = .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
-            } catch let error {
+            } catch let error as NSError where error == NSError.stp_genericFailedToParseResponseError() {
+                // Most errors are useful and should be reported back to the merchant to help them debug their integration (e.g. bad connection, unknown parameter, invalid api key).
+                // If we get `stp_genericFailedToParseResponseError`, it means the request succeeded but we couldn't parse the response.
+                // In this case, fall back to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
                 analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
-                // Fallback to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
                 let paymentMethodTypes = intentConfig.paymentMethodTypes?.map { STPPaymentMethod.type(from: $0) } ?? [.card]
                 intent = .deferredIntent(elementsSession: .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes), intentConfig: intentConfig)
             }
