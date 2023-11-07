@@ -76,4 +76,5 @@ public class ClassForBundle {}
 
     case customers_200 = "MockFiles/customers_200"
     case payment_intents_200 = "MockFiles/payment_intents_200"
+    case setup_intents_200 = "MockFiles/setup_intents_200"
 }

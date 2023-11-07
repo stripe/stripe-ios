@@ -56,7 +56,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     func testCreatePaymentRequest_SetupIntent() {
-        let intent = Intent.setupIntent(STPFixtures.setupIntent())
+        let intent = Intent.setupIntent(elementsSession: ._testCardValue(), setupIntent: STPFixtures.setupIntent())
         let deferredIntent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .setup(currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)

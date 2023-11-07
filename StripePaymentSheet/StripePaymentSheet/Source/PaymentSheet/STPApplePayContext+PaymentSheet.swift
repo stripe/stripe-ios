@@ -46,7 +46,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         switch intent {
         case .paymentIntent(_, let paymentIntent):
             completion(paymentIntent.clientSecret, nil)
-        case .setupIntent(let setupIntent):
+        case .setupIntent(_, let setupIntent):
             completion(setupIntent.clientSecret, nil)
         case .deferredIntent(_, let intentConfig):
             guard let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) else {

@@ -363,7 +363,7 @@ class AddPaymentMethodViewController: UIViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .setupIntent(let setupIntent):
+        case .setupIntent(_, let setupIntent):
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,

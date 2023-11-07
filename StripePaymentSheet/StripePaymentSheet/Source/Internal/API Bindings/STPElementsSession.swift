@@ -61,10 +61,25 @@ final class STPElementsSession: NSObject {
 
     /// Returns a "best effort" STPElementsSessions object to be used as a last resort fallback if the endpoint failed to return a response or we failed to parse it.
     static func makeBackupElementsSession(with paymentIntent: STPPaymentIntent) -> STPElementsSession {
-        return STPElementsSession(
+        return makeBackupElementsSession(
             allResponseFields: paymentIntent.allResponseFields,
+            paymentMethodTypes: paymentIntent.paymentMethodTypes.map { STPPaymentMethodType.init(rawValue: $0.intValue) ?? .unknown }
+        )
+    }
+
+    static func makeBackupElementsSession(with setupIntent: STPSetupIntent) -> STPElementsSession {
+        return makeBackupElementsSession(
+            allResponseFields: setupIntent.allResponseFields,
+            paymentMethodTypes: setupIntent.paymentMethodTypes.map { STPPaymentMethodType.init(rawValue: $0.intValue) ?? .unknown }
+        )
+    }
+
+    /// Returns a "best effort" STPElementsSessions object to be used as a last resort fallback if the endpoint failed to return a response or we failed to parse it.
+    static func makeBackupElementsSession(allResponseFields: [AnyHashable: Any], paymentMethodTypes: [STPPaymentMethodType]) -> STPElementsSession {
+        return STPElementsSession(
+            allResponseFields: allResponseFields,
             sessionID: UUID().uuidString,
-            orderedPaymentMethodTypes: paymentIntent.paymentMethodTypes.map { STPPaymentMethodType.init(rawValue: $0.intValue) ?? .unknown },
+            orderedPaymentMethodTypes: paymentMethodTypes,
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,

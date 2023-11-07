@@ -124,7 +124,7 @@ extension PaymentSheet {
                     }
                 )
             // MARK: ↪ SetupIntent
-            case .setupIntent(let setupIntent):
+            case .setupIntent(_, let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
                     confirmPaymentMethodType: .new(
                         params: confirmParams.paymentMethodParams,
@@ -173,7 +173,7 @@ extension PaymentSheet {
                     }
                 )
             // MARK: ↪ SetupIntent
-            case .setupIntent(let setupIntent):
+            case .setupIntent(_, let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
                     confirmPaymentMethodType: .saved(paymentMethod),
                     setupIntent: setupIntent,
@@ -214,7 +214,7 @@ extension PaymentSheet {
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
-                case .setupIntent(let setupIntent):
+                case .setupIntent(_, let setupIntent):
                     let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                     setupIntentParams.paymentMethodParams = paymentMethodParams
                     setupIntentParams.returnURL = configuration.returnURL
@@ -263,7 +263,7 @@ extension PaymentSheet {
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
-                case .setupIntent(let setupIntent):
+                case .setupIntent(_, let setupIntent):
                     let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                     setupIntentParams.paymentMethodID = paymentMethod.stripeId
                     setupIntentParams.returnURL = configuration.returnURL
