@@ -41,6 +41,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
                 // Sanity check the PI matches the one we fetched
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
                 XCTAssertEqual(paymentMethods, [])
+                XCTAssertTrue(intent.isApplePayEnabled)
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
             }
@@ -64,6 +65,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
                     Set(expected)
                 )
                 XCTAssertEqual(paymentMethods, [])
+                XCTAssertTrue(setupIntent.isApplePayEnabled)
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail()
@@ -128,6 +130,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
                         XCTFail()
                         return
                     }
+                    XCTAssertTrue(intent.isApplePayEnabled)
                 case .failure(let error):
                     XCTFail("Test case at index \(index) failed: \(error)")
                     print(error)

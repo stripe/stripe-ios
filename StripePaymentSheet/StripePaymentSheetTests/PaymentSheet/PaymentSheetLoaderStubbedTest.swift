@@ -141,9 +141,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(replacementDictionary: [
-            "<paymentMethods>": "\"card\", \"us_bank_account\"",
-            "<currency>": "\"usd\"",
-            "\"apple_pay_preference\": \"disabled\"": "\"apple_pay_preference\": \"enabled\"",
+            "<paymentMethods>": #""card", "us_bank_account""#,
+            "<currency>": #""usd""#,
         ])
 
         let loaded = expectation(description: "Loaded")
@@ -167,8 +166,9 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(replacementDictionary: [
-            "<paymentMethods>": "\"card\", \"us_bank_account\"",
-            "<currency>": "\"usd\"",
+            "<paymentMethods>": #""card", "us_bank_account""#,
+            "<currency>": #""usd""#,
+            #""apple_pay_preference": "enabled""#: #""apple_pay_preference": "disabled""#
         ])
 
         let loaded = expectation(description: "Loaded")
