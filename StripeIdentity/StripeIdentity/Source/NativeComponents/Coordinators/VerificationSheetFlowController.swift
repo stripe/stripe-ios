@@ -54,6 +54,11 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         sheetController: VerificationSheetControllerProtocol
     )
 
+    func transitionToDocumentCaptureScreen(
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol
+    )
+
     func transitionToErrorScreen(
         sheetController: VerificationSheetControllerProtocol,
         error: Error,
@@ -200,6 +205,39 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 self.transition(
                     to: self.makeSelfieCaptureViewController(
                         faceScannerResult: result,
+                        staticContent: staticContent,
+                        sheetController: sheetController
+                    ),
+                    shouldAnimate: true,
+                    completion: {}
+                )
+            } catch {
+                self.transition(
+                    to: ErrorViewController(
+                        sheetController: sheetController,
+                        error: .error(error)
+                    ),
+                    shouldAnimate: true,
+                    completion: {}
+                )
+            }
+        }
+    }
+
+    func transitionToDocumentCaptureScreen(
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol
+    ) {
+        return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) {
+            [weak self] result in
+            guard let self = self else { return }
+
+            let staticContent: StripeAPI.VerificationPage
+            do {
+                staticContent = try staticContentResult.get()
+                self.transition(
+                    to: self.makeDocumentCaptureViewController(
+                        documentScannerResult: result,
                         staticContent: staticContent,
                         sheetController: sheetController
                     ),
@@ -412,9 +450,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     sheetController: sheetController
                 )
             )
-        case .docSelectionDestination:
+        case .documentWarmupDestination:
             return completion(
-                makeDocumentTypeSelectViewController(
+                makeDocumentWarmupViewController(
                     sheetController: sheetController,
                     staticContent: staticContent
                 )
@@ -565,12 +603,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         }
     }
 
-    func makeDocumentTypeSelectViewController(
+    func makeDocumentWarmupViewController(
         sheetController: VerificationSheetControllerProtocol,
         staticContent: StripeAPI.VerificationPage
     ) -> UIViewController {
         do {
-            return try DocumentTypeSelectViewController(
+            return try DocumentWarmupViewController(
                 sheetController: sheetController,
                 staticContent: staticContent.documentSelect
             )
@@ -775,16 +813,8 @@ extension Set<StripeAPI.VerificationPageFieldType> {
     func nextDestination(collectedData: StripeAPI.VerificationPageCollectedData) -> IdentityTopLevelDestination {
         if self.contains(.biometricConsent) {
             return .consentDestination
-        } else if self.contains(.idDocumentType) {
-            return .docSelectionDestination
         } else if !self.isDisjoint(with: [.idDocumentFront, .idDocumentBack]) {
-            if let unwrappedDocumentType = collectedData.idDocumentType {
-                // if idDocumentType is collected, continue capture this type
-                return .documentCaptureDestination(documentType: unwrappedDocumentType)
-            } else {
-                // if idDocumentType is not collected, this is a session started half way, reacapture document type
-                return .docSelectionDestination
-            }
+            return .documentWarmupDestination
         } else if self.contains(.face) {
             return .selfieCaptureDestination
         } else if !self.isDisjoint(with: [.name, .dob]) {

@@ -1,6 +1,9 @@
 /* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "A few photos will be taken automatically on the next step to verify it's you";
 
+/* Title for accepted types of ids */
+"Accepted forms of ID" = "Accepted forms of ID";
+
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Alternatively, you may manually upload a photo of your identity document.";
 
@@ -49,6 +52,9 @@
    Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity card" = "Front of identity card";
 
+/* Title for document front warmup page */
+"Get ready to scan your photo ID" = "Get ready to scan your photo ID";
+
 /* Title for selfie warmup page */
 "Get ready to take a selfie" = "Get ready to take a selfie";
 
@@ -61,9 +67,6 @@
 /* Label for ID number section */
 "ID Number" = "ID Number";
 
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
-"ID Type" = "ID Type";
-
 /* Label for the ID field to collect individual CPF for Brazilian ID */
 "Individual CPF" = "Individual CPF";
 
@@ -72,6 +75,9 @@
 
 /* Status while screen is loading */
 "Loading" = "Loading";
+
+/* Body for selfie warmup page */
+"Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
 
 /* Label for the ID field to collect NRIC or FIN for Singaporean ID */
 "NRIC or FIN" = "NRIC or FIN";

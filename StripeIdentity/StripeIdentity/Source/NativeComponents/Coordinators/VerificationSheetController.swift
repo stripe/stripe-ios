@@ -114,6 +114,9 @@ protocol VerificationSheetControllerProtocol: AnyObject {
 
     /// Transition to SelfieCaptureViewController without any API request
     func transitionToSelfieCapture()
+
+    /// Transition to SelfieCaptureViewController without any API request
+    func transitionToDocumentCapture()
 }
 
 final class VerificationSheetController: VerificationSheetControllerProtocol {
@@ -509,6 +512,19 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
 
         flowController.transitionToSelfieCaptureScreen(
+            staticContentResult: verificationPageResponse,
+            sheetController: self
+        )
+    }
+
+    /// Transition to SelfieCaptureViewController without any API request
+    func transitionToDocumentCapture() {
+        guard let verificationPageResponse = verificationPageResponse else {
+            assertionFailure("verificationPageResponse is nil")
+            return
+        }
+
+        flowController.transitionToDocumentCaptureScreen(
             staticContentResult: verificationPageResponse,
             sheetController: self
         )
