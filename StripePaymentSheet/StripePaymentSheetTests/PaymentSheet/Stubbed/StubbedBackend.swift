@@ -14,18 +14,15 @@ import XCTest
 
 class StubbedBackend {
     static func stubSessions(paymentMethods: String) {
-        stubSessions(replacementDictionary: [
-            "<paymentMethods>": paymentMethods,
-            "<currency>": "\"usd\"",
-        ])
-    }
-    static func stubSessions(replacementDictionary: [String: String]) {
         stubSessions(
             fileMock: .elementsSessionsPaymentMethod_200,
             responseCallback: { data in
                 return self.updatePaymentMethodDetail(
                     data: data,
-                    variables: replacementDictionary
+                    variables: [
+                        "<paymentMethods>": paymentMethods,
+                        "<currency>": "\"usd\"",
+                    ]
                 )
             }
         )

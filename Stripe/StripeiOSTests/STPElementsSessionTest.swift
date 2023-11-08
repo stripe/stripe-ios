@@ -42,6 +42,15 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.merchantCountryCode, "US")
         XCTAssertNotNil(elementsSession.paymentMethodSpecs)
         XCTAssertEqual(elementsSession.cardBrandChoice?.eligible, true)
+        XCTAssertTrue(elementsSession.isApplePayEnabled)
         XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_applePayPreferenceDisabled() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["apple_pay_preference"] = ["disabled"]
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertFalse(elementsSession.isApplePayEnabled)
     }
 }
