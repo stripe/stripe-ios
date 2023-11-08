@@ -145,26 +145,12 @@ final class UpdateCardViewController: UIViewController {
     }
 
     private func removeCard() {
-        let alert = UIAlertAction(
-            title: String.Localized.remove, style: .destructive
-        ) { [weak self] (_) in
+        let alertController = UIAlertController.removeAlertController(paymentMethod: paymentMethod, configuration: configuration) { [weak self] in
             guard let self = self else { return }
             self.delegate?.didRemove(paymentOptionCell: self.paymentOptionCell)
             self.dismiss()
         }
-        let cancel = UIAlertAction(
-            title: String.Localized.cancel,
-            style: .cancel, handler: nil
-        )
 
-        let alertController = UIAlertController(
-            title: paymentMethod.removalMessage.title,
-            message: configuration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
-            preferredStyle: .alert
-        )
-
-        alertController.addAction(cancel)
-        alertController.addAction(alert)
         present(alertController, animated: true, completion: nil)
     }
 

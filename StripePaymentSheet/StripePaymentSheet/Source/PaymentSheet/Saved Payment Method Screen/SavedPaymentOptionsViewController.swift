@@ -384,7 +384,19 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
     func paymentOptionCellDidSelectRemove(
         _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     ) {
-        removePaymentMethod(paymentOptionCell: paymentOptionCell)
+        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
+              case .saved(let paymentMethod) = viewModels[indexPath.row]
+        else {
+            assertionFailure()
+            return
+        }
+
+        let alertController = UIAlertController.removeAlertController(paymentMethod: paymentMethod, configuration: configuration) { [weak self] in
+            guard let self = self else { return }
+            self.removePaymentMethod(paymentOptionCell: paymentOptionCell)
+        }
+
+        present(alertController, animated: true, completion: nil)
     }
 
     private func removePaymentMethod(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
@@ -464,5 +476,34 @@ extension STPPaymentMethod {
             assertionFailure()
             return (title: "", message: "")
         }
+    }
+}
+
+// MARK: UIAlertController extension
+
+extension UIAlertController {
+    static func removeAlertController(paymentMethod: STPPaymentMethod,
+                            configuration: SavedPaymentOptionsViewController.Configuration,
+                            completion: @escaping () -> Void) -> UIAlertController {
+        let alert = UIAlertAction(
+            title: String.Localized.remove, style: .destructive
+        ) { (_) in
+            completion()
+        }
+        let cancel = UIAlertAction(
+            title: String.Localized.cancel,
+            style: .cancel, handler: nil
+        )
+
+        let alertController = UIAlertController(
+            title: paymentMethod.removalMessage.title,
+            message: configuration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
+            preferredStyle: .alert
+        )
+
+        alertController.addAction(cancel)
+        alertController.addAction(alert)
+
+        return alertController
     }
 }
