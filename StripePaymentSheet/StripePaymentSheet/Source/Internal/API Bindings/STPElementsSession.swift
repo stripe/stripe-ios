@@ -102,15 +102,16 @@ extension STPElementsSession: STPAPIResponseDecodable {
         guard let dict = response,
               let paymentMethodPrefDict = dict["payment_method_preference"] as? [AnyHashable: Any],
               let paymentMethodTypeStrings = paymentMethodPrefDict["ordered_payment_method_types"] as? [String],
-              let sessionID = dict["session_id"] as? String
+              let sessionID = dict["session_id"] as? String,
+              let applePayPreference = dict["apple_pay_preference"] as? String
         else {
             return nil
         }
+        let isApplePayEnabled = applePayPreference != "disabled"
+
         // Optional fields:
         let unactivatedPaymentMethodTypeStrings = dict["unactivated_payment_method_types"] as? [String] ?? []
         let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: dict["card_brand_choice"] as? [AnyHashable: Any])
-        let applePayPreference = dict["apple_pay_preference"] as? String
-        let isApplePayEnabled = applePayPreference != "disabled"
 
         return self.init(
             allResponseFields: dict,
