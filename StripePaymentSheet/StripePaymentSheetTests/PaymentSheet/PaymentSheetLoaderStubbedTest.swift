@@ -168,7 +168,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(replacementDictionary: [
             "<paymentMethods>": "\"card\", \"us_bank_account\"",
-            "<currency>": "\"usd\""
+            "<currency>": "\"usd\"",
         ])
 
         let loaded = expectation(description: "Loaded")

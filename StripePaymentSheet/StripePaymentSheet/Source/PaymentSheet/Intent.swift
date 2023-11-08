@@ -140,7 +140,7 @@ enum Intent {
             return elementSession.isApplePayEnabled
         case .deferredIntent(let elementsSession, _):
             return elementsSession.isApplePayEnabled
-        case .setupIntent(_):
+        case .setupIntent:
             return true
         }
     }
