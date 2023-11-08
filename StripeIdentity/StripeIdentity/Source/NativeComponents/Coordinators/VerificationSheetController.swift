@@ -112,10 +112,10 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     /// Override return result for testMode
     func overrideTestModeReturnValue(result: IdentityVerificationSheet.VerificationFlowResult)
 
-    /// Transition to SelfieCaptureViewController without any API request
+    /// Transition to DocumentCaptureViewController without any API request
     func transitionToSelfieCapture()
 
-    /// Transition to SelfieCaptureViewController without any API request
+    /// Transition to DocumentCaptureViewController without any API request
     func transitionToDocumentCapture()
 }
 
@@ -517,7 +517,6 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         )
     }
 
-    /// Transition to SelfieCaptureViewController without any API request
     func transitionToDocumentCapture() {
         guard let verificationPageResponse = verificationPageResponse else {
             assertionFailure("verificationPageResponse is nil")
