@@ -29,7 +29,7 @@ extension DropdownFieldElement {
             pickerDisplayName: NSAttributedString(string: .Localized.card_brand_dropdown_placeholder),
             labelDisplayName: STPCardBrand.unknown.brandIconAttributedString(theme: theme, maxWidth: maxWidth),
             accessibilityValue: .Localized.card_brand_dropdown_placeholder,
-            rawData: "-1",
+            rawData: STPCardBrandUtilities.apiValue(from: .unknown),
             isPlaceholder: true
         )
 

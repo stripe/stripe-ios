@@ -36,6 +36,11 @@ import UIKit
     var defaultValue: String? { get }
 
     /**
+      - Note: If false, this textfield is disabled, defaults to true.
+     */
+    var isEditable: Bool { get }
+
+    /**
      Validate the text.
      
      - Parameter isOptional: Whether or not the text field's value is optional.
@@ -100,6 +105,10 @@ public extension TextFieldElementConfiguration {
     // Hide clear button by default
     var shouldShowClearButton: Bool {
         return false
+    }
+
+    var isEditable: Bool {
+        return true
     }
 
     func makeDisplayText(for text: String) -> NSAttributedString {

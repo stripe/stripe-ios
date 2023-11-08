@@ -209,7 +209,7 @@ class TextFieldView: UIView {
             textField.accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
             layer.borderColor = viewModel.theme.colors.border.cgColor
-            textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
+            textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled || !viewModel.isEditable)
             errorIconView.alpha = 0
             textField.accessibilityValue = viewModel.attributedText.string
         }
@@ -235,6 +235,11 @@ class TextFieldView: UIView {
 // MARK: - UITextFieldDelegate
 
 extension TextFieldView: UITextFieldDelegate {
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return viewModel.isEditable
+    }
+
     @objc func textDidChange() {
         // If the text updates to non-empty, ensure the clear button is visible
         if let text = textField.text, !text.isEmpty, viewModel.shouldShowClearButton {

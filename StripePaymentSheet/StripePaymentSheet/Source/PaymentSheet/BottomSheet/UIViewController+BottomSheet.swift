@@ -37,4 +37,17 @@ extension UIViewController {
 
         present(viewControllerToPresent, animated: true, completion: completion)
     }
+
+    var bottomSheetController: BottomSheetViewController? {
+        var current: UIViewController? = self
+        while current != nil {
+            if let bottomSheetController = current as? BottomSheetViewController {
+                return bottomSheetController
+            }
+
+            current = current?.parent
+        }
+
+        return nil
+    }
 }
