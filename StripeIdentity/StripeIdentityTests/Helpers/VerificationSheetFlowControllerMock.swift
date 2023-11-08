@@ -78,6 +78,13 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
         // no-op
     }
 
+    func transitionToDocumentCaptureScreen(
+        staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol
+    ) {
+        // no-op
+    }
+
     func transitionToErrorScreen(
         sheetController: StripeIdentity.VerificationSheetControllerProtocol,
         error: Error,

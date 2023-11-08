@@ -24,6 +24,7 @@ import Foundation
     case iconWarning92 = "icon_warning_92"
     case iconCamera = "icon_camera"
     case iconSelfieWarmup = "icon_selfie_warmup"
+    case iconIdFront = "icon_id_front"
     case iconCloud = "icon_cloud"
     case iconDocument = "icon_document"
     case iconLock = "icon_lock"
