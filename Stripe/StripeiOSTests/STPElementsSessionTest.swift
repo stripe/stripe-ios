@@ -48,7 +48,7 @@ class STPElementsSessionTest: XCTestCase {
 
     func testDecodedObjectFromAPIResponseMapping_applePayPreferenceDisabled() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
-        elementsSessionJson["apple_pay_preference"] = ["disabled"]
+        elementsSessionJson["apple_pay_preference"] = "disabled"
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
 
         XCTAssertFalse(elementsSession.isApplePayEnabled)
