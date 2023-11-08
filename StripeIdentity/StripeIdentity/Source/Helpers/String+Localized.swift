@@ -186,4 +186,26 @@ extension String.Localized {
         )
     }
 
+    // MARK: - DocumentWarmup
+    static var documentFrontWarmupTitle: String {
+        STPLocalizedString(
+            "Get ready to scan your photo ID",
+            "Title for document front warmup page"
+        )
+    }
+
+    static var documentFrontWarmupBody: String {
+        STPLocalizedString(
+            "Make sure you're in a well lit space.",
+            "Body for selfie warmup page"
+        )
+    }
+
+    static var acceptFormsOfId: String {
+        STPLocalizedString(
+            "Accepted forms of ID",
+            "Title for accepted types of ids"
+        )
+    }
+
 }
