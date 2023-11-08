@@ -12,7 +12,7 @@ import UIKit
 class PlaygroundViewController: UIViewController {
 
     // Constants
-    let baseURL = "https://narrow-aged-reaper.glitch.me"
+    let baseURL = "https://stripe-mobile-identity-verification-playground.glitch.me"
     let verifyEndpoint = "/create-verification-session"
 
     // Outlets
