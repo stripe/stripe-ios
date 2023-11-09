@@ -483,8 +483,8 @@ extension STPPaymentMethod {
 
 extension UIAlertController {
     static func makeRemoveAlertController(paymentMethod: STPPaymentMethod,
-                                      configuration: SavedPaymentOptionsViewController.Configuration,
-                                      completion: @escaping () -> Void) -> UIAlertController {
+                                          configuration: SavedPaymentOptionsViewController.Configuration,
+                                          completion: @escaping () -> Void) -> UIAlertController {
         let alert = UIAlertAction(
             title: String.Localized.remove, style: .destructive
         ) { (_) in
