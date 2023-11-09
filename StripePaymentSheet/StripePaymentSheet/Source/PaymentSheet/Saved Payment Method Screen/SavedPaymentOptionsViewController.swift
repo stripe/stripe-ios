@@ -391,7 +391,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             return
         }
 
-        let alertController = UIAlertController.removeAlertController(paymentMethod: paymentMethod, configuration: configuration) { [weak self] in
+        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod, configuration: configuration) { [weak self] in
             guard let self = self else { return }
             self.removePaymentMethod(paymentOptionCell: paymentOptionCell)
         }
@@ -482,7 +482,7 @@ extension STPPaymentMethod {
 // MARK: UIAlertController extension
 
 extension UIAlertController {
-    static func removeAlertController(paymentMethod: STPPaymentMethod,
+    static func makeRemoveAlertController(paymentMethod: STPPaymentMethod,
                                       configuration: SavedPaymentOptionsViewController.Configuration,
                                       completion: @escaping () -> Void) -> UIAlertController {
         let alert = UIAlertAction(

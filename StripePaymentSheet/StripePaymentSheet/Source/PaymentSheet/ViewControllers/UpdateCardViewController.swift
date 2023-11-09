@@ -145,7 +145,7 @@ final class UpdateCardViewController: UIViewController {
     }
 
     private func removeCard() {
-        let alertController = UIAlertController.removeAlertController(paymentMethod: paymentMethod, configuration: configuration) { [weak self] in
+        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod, configuration: configuration) { [weak self] in
             guard let self = self else { return }
             self.delegate?.didRemove(paymentOptionCell: self.paymentOptionCell)
             self.dismiss()
