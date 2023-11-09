@@ -31,24 +31,12 @@ final class STPElementsSession: NSObject {
     /// A map describing payment method types form specs.
     let paymentMethodSpecs: [[AnyHashable: Any]]?
 
+    /// Card brand choice settings for the merchant.
+    let cardBrandChoice: STPCardBrandChoice?
+
+    let isApplePayEnabled: Bool
+
     let allResponseFields: [AnyHashable: Any]
-
-    /// :nodoc:
-    @objc public override var description: String {
-        let props: [String] = [
-            // Object
-            String(format: "%@: %p", NSStringFromClass(STPElementsSession.self), self),
-            "sessionID = \(sessionID)",
-            "orderedPaymentMethodTypes = \(String(describing: orderedPaymentMethodTypes))",
-            "unactivatedPaymentMethodTypes = \(String(describing: unactivatedPaymentMethodTypes))",
-            "linkSettings = \(String(describing: linkSettings))",
-            "countryCode = \(String(describing: countryCode))",
-            "merchantCountryCode = \(String(describing: merchantCountryCode))",
-            "paymentMethodSpecs = \(String(describing: paymentMethodSpecs))",
-        ]
-
-        return "<\(props.joined(separator: "; "))>"
-    }
 
     private init(
         allResponseFields: [AnyHashable: Any],
@@ -58,7 +46,9 @@ final class STPElementsSession: NSObject {
         countryCode: String?,
         merchantCountryCode: String?,
         linkSettings: LinkSettings?,
-        paymentMethodSpecs: [[AnyHashable: Any]]?
+        paymentMethodSpecs: [[AnyHashable: Any]]?,
+        cardBrandChoice: STPCardBrandChoice?,
+        isApplePayEnabled: Bool
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -68,13 +58,47 @@ final class STPElementsSession: NSObject {
         self.merchantCountryCode = merchantCountryCode
         self.linkSettings = linkSettings
         self.paymentMethodSpecs = paymentMethodSpecs
+        self.cardBrandChoice = cardBrandChoice
+        self.isApplePayEnabled = isApplePayEnabled
         super.init()
+    }
+
+    /// Returns a "best effort" STPElementsSessions object to be used as a last resort fallback if the endpoint failed to return a response or we failed to parse it.
+    static func makeBackupElementsSession(with paymentIntent: STPPaymentIntent) -> STPElementsSession {
+        return makeBackupElementsSession(
+            allResponseFields: paymentIntent.allResponseFields,
+            paymentMethodTypes: paymentIntent.paymentMethodTypes.map { STPPaymentMethodType.init(rawValue: $0.intValue) ?? .unknown }
+        )
+    }
+
+    static func makeBackupElementsSession(with setupIntent: STPSetupIntent) -> STPElementsSession {
+        return makeBackupElementsSession(
+            allResponseFields: setupIntent.allResponseFields,
+            paymentMethodTypes: setupIntent.paymentMethodTypes.map { STPPaymentMethodType.init(rawValue: $0.intValue) ?? .unknown }
+        )
+    }
+
+    /// Returns a "best effort" STPElementsSessions object to be used as a last resort fallback if the endpoint failed to return a response or we failed to parse it.
+    static func makeBackupElementsSession(allResponseFields: [AnyHashable: Any], paymentMethodTypes: [STPPaymentMethodType]) -> STPElementsSession {
+        return STPElementsSession(
+            allResponseFields: allResponseFields,
+            sessionID: UUID().uuidString,
+            orderedPaymentMethodTypes: paymentMethodTypes,
+            unactivatedPaymentMethodTypes: [],
+            countryCode: nil,
+            merchantCountryCode: nil,
+            linkSettings: nil,
+            paymentMethodSpecs: nil,
+            cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
+            isApplePayEnabled: true
+        )
     }
 }
 
 // MARK: - STPAPIResponseDecodable
 extension STPElementsSession: STPAPIResponseDecodable {
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+        // Required fields:
         guard let dict = response,
               let paymentMethodPrefDict = dict["payment_method_preference"] as? [AnyHashable: Any],
               let paymentMethodTypeStrings = paymentMethodPrefDict["ordered_payment_method_types"] as? [String],
@@ -82,9 +106,13 @@ extension STPElementsSession: STPAPIResponseDecodable {
         else {
             return nil
         }
+        // Optional fields:
         let unactivatedPaymentMethodTypeStrings = dict["unactivated_payment_method_types"] as? [String] ?? []
+        let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: dict["card_brand_choice"] as? [AnyHashable: Any])
+        let applePayPreference = dict["apple_pay_preference"] as? String
+        let isApplePayEnabled = applePayPreference != "disabled"
 
-        return STPElementsSession(
+        return self.init(
             allResponseFields: dict,
             sessionID: sessionID,
             orderedPaymentMethodTypes: paymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
@@ -94,7 +122,9 @@ extension STPElementsSession: STPAPIResponseDecodable {
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]
             ),
-            paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]]
-        ) as? Self
+            paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]],
+            cardBrandChoice: cardBrandChoice,
+            isApplePayEnabled: isApplePayEnabled
+        )
     }
 }

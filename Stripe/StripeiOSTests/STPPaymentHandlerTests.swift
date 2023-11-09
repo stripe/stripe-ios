@@ -206,14 +206,10 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             stripeID: "test",
             clientSecret: "test",
             created: Date(),
-            countryCode: "US",
             customerID: nil,
             stripeDescription: nil,
-            linkSettings: nil,
             livemode: false,
-            merchantCountryCode: "US",
             nextAction: action,
-            orderedPaymentMethodTypes: [],
             paymentMethodID: "test",
             paymentMethod: nil,
             paymentMethodOptions: nil,
@@ -221,8 +217,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             status: .requiresAction,
             usage: .none,
             lastSetupError: nil,
-            allResponseFields: [:],
-            unactivatedPaymentMethodTypes: []
+            allResponseFields: [:]
         )
 
         // We expect this request to retry a few times with exponential backoff before calling the completion handler.

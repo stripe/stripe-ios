@@ -23,7 +23,7 @@ extension Intent {
 
     var callToAction: ConfirmButton.CallToActionType {
         switch self {
-        case .paymentIntent(let paymentIntent):
+        case .paymentIntent(_, let paymentIntent):
             return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
         case .setupIntent:
             return .setup
@@ -38,48 +38,18 @@ extension Intent {
     }
 
     var linkFundingSources: Set<LinkSettings.FundingSource>? {
-        switch self {
-        case .paymentIntent(let paymentIntent):
-            return paymentIntent.linkSettings?.fundingSources
-        case .setupIntent(let setupIntent):
-            return setupIntent.linkSettings?.fundingSources
-        case .deferredIntent(let elementsSession, _):
-            return elementsSession.linkSettings?.fundingSources
-        }
+        return elementsSession.linkSettings?.fundingSources
     }
 
     var linkPopupWebviewOption: LinkSettings.PopupWebviewOption {
-        return {
-            switch self {
-            case .paymentIntent(let paymentIntent):
-                return paymentIntent.linkSettings?.popupWebviewOption
-            case .setupIntent(let setupIntent):
-                return setupIntent.linkSettings?.popupWebviewOption
-            case .deferredIntent(let elementsSession, _):
-                return elementsSession.linkSettings?.popupWebviewOption
-            }
-        }() ?? .shared
+        return elementsSession.linkSettings?.popupWebviewOption ?? .shared
     }
 
     var countryCode: String? {
-        switch self {
-        case .paymentIntent(let paymentIntent):
-            return paymentIntent.countryCode
-        case .setupIntent(let setupIntent):
-            return setupIntent.countryCode
-        case .deferredIntent(let elementsSession, _):
-            return elementsSession.countryCode
-        }
+        return elementsSession.countryCode
     }
 
     var merchantCountryCode: String? {
-        switch self {
-        case .paymentIntent(let paymentIntent):
-            return paymentIntent.merchantCountryCode
-        case .setupIntent(let setupIntent):
-            return setupIntent.merchantCountryCode
-        case .deferredIntent(let elementsSession, _):
-            return elementsSession.merchantCountryCode
-        }
+        return elementsSession.merchantCountryCode
     }
 }

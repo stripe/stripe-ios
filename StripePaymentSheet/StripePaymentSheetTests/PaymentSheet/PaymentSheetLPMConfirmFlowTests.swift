@@ -488,7 +488,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             }
 
             intents = [
-                ("PaymentIntent", .paymentIntent(paymentIntent)),
+                ("PaymentIntent", .paymentIntent(elementsSession: ._testCardValue(), paymentIntent: paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
             ]
             guard paymentMethod != .stripe(.blik) else {
@@ -546,7 +546,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 )
             }
             return [
-                ("PaymentIntent w/ setup_future_usage", .paymentIntent(paymentIntent)),
+                ("PaymentIntent w/ setup_future_usage", .paymentIntent(elementsSession: ._testCardValue(), paymentIntent: paymentIntent)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
@@ -562,7 +562,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, paymentMethodID: paymentMethod.stripeId, customerID: customer, confirm: true, otherParams: paramsForServerSideConfirmation)
             }
             return [
-                ("SetupIntent", .setupIntent(setupIntent)),
+                ("SetupIntent", .setupIntent(elementsSession: ._testCardValue(), setupIntent: setupIntent)),
                 ("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]

@@ -29,6 +29,9 @@ Section header for address fields */
 /* Button title to cancel action in an alert */
 "Cancel" = "Cancel";
 
+/* Label an input field to update card brand */
+"Card brand" = "Card brand";
+
 /* Caption for City field on address form */
 "City" = "City";
 
@@ -145,6 +148,9 @@ Label of an address field */
 
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 "Remove bank account ending in %@" = "Remove bank account ending in %@";
+
+/* Label on a button for removing a card */
+"Remove card" = "Remove card";
 
 /* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
 "Search" = "Search";
