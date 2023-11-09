@@ -7,7 +7,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension CustomerSheet {
-    static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
+    static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
 }
 
 extension Array where Element == STPPaymentMethodType {

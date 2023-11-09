@@ -28,15 +28,22 @@ class FormSpecProvider {
         return !formSpecs.isEmpty
     }
 
+    var hasLoadedFromDisk: Bool = false
+
     /// Loads the JSON form spec from disk into memory
     func load(completion: ((Bool) -> Void)? = nil) {
         formSpecsUpdateQueue.async { [weak self] in
+            if self?.hasLoadedFromDisk == true {
+                completion?(true)
+                return
+            }
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             do {
                 let data = try Data(contentsOf: formSpecsURL)
                 let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
                 self?.formSpecs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map { ($0.type, $0) })
+                self?.hasLoadedFromDisk = true
                 completion?(true)
             } catch {
                 completion?(false)

@@ -2,6 +2,10 @@
 ### Apple Pay
 * [Fixed] STPApplePayContext initializer returns nil in more cases where the request is invalid. 
 
+### CustomerSheet
+* [Added] Saved SEPA payment methods are now displayed to the customer for reuse, similar to saved cards.
+
+
 ## 23.18.3 2023-11-28
 ### PaymentSheet
 * [Fixed] Visual bug where re-presenting PaymentSheet wouldn't show a spinner while it reloads.

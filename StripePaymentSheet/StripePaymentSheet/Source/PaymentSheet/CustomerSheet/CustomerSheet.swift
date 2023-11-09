@@ -167,10 +167,28 @@ extension CustomerSheet {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentOption()
                 async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet()
-                let (paymentMethods, selectedPaymentMethod, elementSesssion) = try await (paymentMethodsResult, selectedPaymentMethodResult, elementsSessionResult)
-                completion(.success((paymentMethods, selectedPaymentMethod, elementSesssion)))
+
+                // Ensure local specs are loaded prior to the ones from elementSession
+                await loadFormSpecs()
+
+                let (paymentMethods, selectedPaymentMethod, elementSession) = try await (paymentMethodsResult, selectedPaymentMethodResult, elementsSessionResult)
+
+                // Override with specs from elementSession
+                _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)
+
+                completion(.success((paymentMethods, selectedPaymentMethod, elementSession)))
             } catch {
                 completion(.failure(error))
+            }
+        }
+    }
+
+    func loadFormSpecs() async {
+        await withCheckedContinuation { continuation in
+            Task {
+                FormSpecProvider.shared.load { _ in
+                    continuation.resume()
+                }
             }
         }
     }
