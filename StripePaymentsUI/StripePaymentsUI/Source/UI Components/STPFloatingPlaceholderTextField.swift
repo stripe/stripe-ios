@@ -16,7 +16,7 @@ import UIKit
     struct LayoutConstants {
         static let defaultHeight: CGFloat = 40
 
-        static let horizontalMargin: CGFloat = 11
+        static let horizontalMargin: CGFloat = 0
         static let horizontalSpacing: CGFloat = 4
 
         static let floatingPlaceholderScale: CGFloat = 0.75

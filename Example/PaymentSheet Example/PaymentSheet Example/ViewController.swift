@@ -14,6 +14,11 @@ class ViewController: UIViewController {
     @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {
 
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.performSegue(withIdentifier: "showSwiftUIExample", sender: nil)
+    }
 
     @IBSegueAction func showSwiftUIExample(_ coder: NSCoder) -> UIViewController? {
         return UIHostingController(coder: coder, rootView: ExampleSwiftUIPaymentSheet())
