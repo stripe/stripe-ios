@@ -165,9 +165,11 @@ extension XCTestCase {
         let addressLine1 = context.textFields["Address line 1"]
         addressLine1.forceTapWhenHittableInTestCase(self)
         app.typeText("123 Main")
+        context.buttons["Return"].tap()
 
-        let city = context.textFields["City"]
-        city.forceTapWhenHittableInTestCase(self)
+        // Skip address 2
+        context.buttons["Return"].tap()
+
         app.typeText("San Francisco")
         context.buttons["Return"].tap()
 
