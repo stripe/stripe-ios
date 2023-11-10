@@ -8,15 +8,17 @@
 
 import Stripe
 import UIKit
+@_spi(STP) import StripePaymentsUI
 
 class CardFormViewController: UIViewController {
-
+    var alwaysEnableCBC: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Card Form"
         view.backgroundColor = .systemBackground
 
-        let cardForm = STPCardFormView()
+        let cardForm = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: alwaysEnableCBC ? true : nil)
         cardForm.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(cardForm)
 

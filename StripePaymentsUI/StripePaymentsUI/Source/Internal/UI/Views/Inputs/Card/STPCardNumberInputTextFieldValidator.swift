@@ -77,9 +77,23 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
 
     init(
         inputMode: STPCardNumberInputTextField.InputMode = .standard,
-        cardBrand: STPCardBrand? = nil
+        cardBrand: STPCardBrand? = nil,
+        cbcEnabledOverride: Bool? = false // TODO: For now, we'll always disable CBC. Set this to default to `nil` instead of `false` when we release CBC.
     ) {
         self.inputMode = inputMode
         self.overridenCardBrand = cardBrand
+        self.cbcEnabledOverride = cbcEnabledOverride
     }
+    
+    // MARK: Card brand choice
+    // Optionally override CBC as always disabled or always enabled
+    let cbcEnabledOverride: Bool?
+    
+    var cbcEnabled: Bool {
+        // TODO: This should come from the card element endpoint
+        return cbcEnabledOverride ?? false
+    }
+    
+    // User's list of preferred networks (set in STPCardFormView)
+    var preferredNetworks: [STPCardBrand]?
 }

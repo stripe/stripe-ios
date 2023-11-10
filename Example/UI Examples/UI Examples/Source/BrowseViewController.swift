@@ -18,7 +18,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 {
 
     enum Demo: Int {
-        static var count: Int = 11
+        static var count: Int = 13
 
         case STPPaymentCardTextField
         case STPPaymentCardTextFieldWithCBC
@@ -29,10 +29,10 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         case STPShippingInfoViewController
         case STPAUBECSFormViewController
         case STPCardFormViewController
-        case ChangeTheme
-        // SwiftUI Values
+        case STPCardFormViewControllerCBC
         case SwiftUICardFormViewController
         case PaymentMethodMessagingView
+        case ChangeTheme
 
         var title: String {
             switch self {
@@ -45,9 +45,10 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             case .STPShippingInfoViewController: return "Shipping Info Form"
             case .STPAUBECSFormViewController: return "AU BECS Form"
             case .STPCardFormViewController: return "Card Form"
-            case .ChangeTheme: return "Change Theme"
+            case .STPCardFormViewControllerCBC: return "Card Form (CBC)"
             case .SwiftUICardFormViewController: return "Card Form (SwiftUI)"
             case .PaymentMethodMessagingView: return "Payment Method Messaging View"
+            case .ChangeTheme: return "Change Theme"
             }
         }
 
@@ -62,9 +63,10 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             case .STPShippingInfoViewController: return "STPShippingInfoViewController"
             case .STPAUBECSFormViewController: return "STPAUBECSFormViewController"
             case .STPCardFormViewController: return "STPCardFormViewController"
-            case .ChangeTheme: return ""
+            case .STPCardFormViewControllerCBC: return "STPCardFormViewController (CBC)"
             case .SwiftUICardFormViewController: return "STPCardFormView.Representable"
             case .PaymentMethodMessagingView: return "PaymentMethodMessagingView"
+            case .ChangeTheme: return ""
             }
         }
     }
@@ -84,6 +86,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         tableView.tableFooterView = UIView()
         tableView.rowHeight = 60
         navigationController?.navigationBar.isTranslucent = false
+        self.tableView(tableView, didSelectRowAt: .init(row: Demo.STPCardFormViewControllerCBC.rawValue, section: 0))
     }
 
     // MARK: UITableViewDelegate
@@ -192,6 +195,12 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             present(navigationController, animated: true, completion: nil)
         case .STPCardFormViewController:
             let viewController = CardFormViewController()
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.navigationBar.stp_theme = theme
+            present(navigationController, animated: true, completion: nil)
+        case .STPCardFormViewControllerCBC:
+            let viewController = CardFormViewController()
+            viewController.alwaysEnableCBC = true
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)

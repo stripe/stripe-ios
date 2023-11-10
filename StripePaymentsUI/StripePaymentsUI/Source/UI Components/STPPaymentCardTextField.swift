@@ -921,7 +921,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         return self.viewModel.brandState.isCBC &&
         // And the CVC field isn't selected
         currentBrandImageFieldType != .CVC &&
-        // And the card is not valid (we're not showing an error image)
+        // And the card is not invalid (we're not showing an error image)
         STPCardValidator.validationState(
             forNumber: viewModel.cardNumber ?? "",
             validatingCardBrand: true
@@ -945,11 +945,6 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         targetRect.size.width += self.cbcIndicatorRect(forBounds: self.bounds).width
         if !targetRect.contains(location) {
             // Don't pop a menu outside the brand selector area
-            return nil
-        }
-
-        if !self.viewModel.brandState.isCBC {
-            // Not doing CBC at the moment, don't return anything
             return nil
         }
 

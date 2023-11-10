@@ -47,12 +47,20 @@ import UIKit
     private var centeringPadding: UIEdgeInsets {
         return UIEdgeInsets(
             top: 0,
-            left: centerHorizontally ? Self.iconPadding.right : 0,
+            left: 0,
             bottom: Self.iconPadding.top,
             right: 0
         )
     }
 
+    lazy var cbcIndicatorView: UIImageView = {
+        let view = UIImageView(image: Image.icon_chevron_down.makeImage(template: true))
+        view.tintColor = .placeholderText
+        return view
+    }()
+    
+    var cbcIndicatorSizeConstraint: NSLayoutConstraint?
+    
     /// Card brand to display.
     @_spi(STP) public var cardBrand: STPCardBrand = .unknown {
         didSet {
@@ -63,9 +71,17 @@ import UIKit
     /// If `true`, the view will display the CVC hint icon instead of the card brand image.
     let showCVC: Bool
 
-    /// If `true`, will center the card brand icon horizontally in the containing view
-    let centerHorizontally: Bool
-
+    /// If `true`, show a CBC indicator arrow
+    var showCBC: Bool = false {
+        didSet {
+            cbcIndicatorView.isHidden = !showCBC
+            self.cbcIndicatorSizeConstraint?.constant = showCBC ? 9.0 : 0
+            self.invalidateIntrinsicContentSize()
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+    }
+    
     @_spi(STP) public override var intrinsicContentSize: CGSize {
         return size(for: Self.targetIconSize)
     }
@@ -84,9 +100,10 @@ import UIKit
             / (Self.legacyIconSize.height - Self.iconPadding.top - Self.iconPadding.bottom)
         // We could adapt this for multiple screens, but probably not worth it (better solution is to remove padding from images)
         let screenScale = UIScreen.main.scale
+        let extraWidth = showCBC ? 9.0 : 0
         return CGSize(
             width: (round(Self.legacyIconSize.width * scaleX * screenScale) / screenScale)
-                + padding.right + padding.left,
+            + padding.right + padding.left + extraWidth,
             height: (round(Self.legacyIconSize.height * scaleY * screenScale) / screenScale)
                 + padding.top + padding.bottom
         )
@@ -101,18 +118,22 @@ import UIKit
 
     /// Creates and returns an initialized card brand view.
     /// - Parameter showCVC: Whether or not to show the CVC hint icon instead of the card brand image.
-    /// - Parameter centerHorizontally: Whether or not the card icon should be centered horizontally
     @_spi(STP) public init(
-        showCVC: Bool = false,
-        centerHorizontally: Bool = false
+        showCVC: Bool = false
     ) {
         self.showCVC = showCVC
-        self.centerHorizontally = centerHorizontally
         super.init(frame: .zero)
 
         addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(cbcIndicatorView)
+        cbcIndicatorView.translatesAutoresizingMaskIntoConstraints = false
 
+        cbcIndicatorView.isHidden = true
+        let cbcIndicatorSizeConstraint = cbcIndicatorView.widthAnchor.constraint(equalToConstant: 0)
+        cbcIndicatorSizeConstraint.priority = .required
+        
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: centeringPadding.top),
             self.bottomAnchor.constraint(
@@ -124,11 +145,23 @@ import UIKit
                 constant: centeringPadding.left
             ),
             imageView.rightAnchor.constraint(
+                equalTo: cbcIndicatorView.leftAnchor,
+                constant: centeringPadding.right
+            ),
+            cbcIndicatorView.rightAnchor.constraint(
                 equalTo: self.rightAnchor,
                 constant: centeringPadding.right
             ),
+            cbcIndicatorView.centerYAnchor.constraint(
+                equalTo: self.centerYAnchor
+            ),
+            cbcIndicatorView.heightAnchor.constraint(
+                equalToConstant: 9.0
+            ),
+            cbcIndicatorSizeConstraint
         ])
-
+        
+        self.cbcIndicatorSizeConstraint = cbcIndicatorSizeConstraint
         updateIcon()
     }
 

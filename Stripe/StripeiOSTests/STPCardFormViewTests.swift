@@ -83,8 +83,6 @@ class STPCardFormViewTests: XCTestCase {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK")) {
             let cardForm = STPCardFormView(
                 billingAddressCollection: .automatic,
-                includeCardScanning: false,
-                mergeBillingFields: false,
                 style: .standard,
                 postalCodeRequirement: .upe,
                 prefillDetails: nil
@@ -97,8 +95,6 @@ class STPCardFormViewTests: XCTestCase {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US")) {
             let cardForm = STPCardFormView(
                 billingAddressCollection: .automatic,
-                includeCardScanning: false,
-                mergeBillingFields: false,
                 style: .standard,
                 postalCodeRequirement: .upe,
                 prefillDetails: nil
@@ -111,8 +107,6 @@ class STPCardFormViewTests: XCTestCase {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US")) {
             let cardForm = STPCardFormView(
                 billingAddressCollection: .automatic,
-                includeCardScanning: false,
-                mergeBillingFields: false,
                 style: .standard,
                 postalCodeRequirement: .upe,
                 prefillDetails: nil,
@@ -132,8 +126,6 @@ class STPCardFormViewTests: XCTestCase {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US")) {
             let cardForm = STPCardFormView(
                 billingAddressCollection: .automatic,
-                includeCardScanning: false,
-                mergeBillingFields: false,
                 style: .standard,
                 postalCodeRequirement: .upe,
                 prefillDetails: prefillDeatils,
