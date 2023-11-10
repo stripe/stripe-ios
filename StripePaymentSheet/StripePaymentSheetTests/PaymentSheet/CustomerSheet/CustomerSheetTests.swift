@@ -20,6 +20,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let stubbedAPIClient = stubbedAPIClient()
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\"")
 
         let configuration = CustomerSheet.Configuration()
@@ -47,6 +48,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let stubbedAPIClient = stubbedAPIClient()
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\"")
 
         let configuration = CustomerSheet.Configuration()
@@ -75,6 +77,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let stubbedAPIClient = stubbedAPIClient()
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"us_bank_account\"")
 
         let configuration = CustomerSheet.Configuration()
@@ -104,6 +107,8 @@ class CustomerSheetTests: APIStubbedTestCase {
         let stubbedAPIClient = stubbedAPIClient()
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
 
         let configuration = CustomerSheet.Configuration()
@@ -123,6 +128,36 @@ class CustomerSheetTests: APIStubbedTestCase {
             XCTAssertEqual(paymentMethods.count, 2)
             XCTAssertEqual(paymentMethods[0].type, .card)
             XCTAssertEqual(paymentMethods[1].type, .USBankAccount)
+            XCTAssert(selectedPaymentMethod == nil)
+            loadPaymentMethodInfo.fulfill()
+        }
+        wait(for: [loadPaymentMethodInfo], timeout: 5.0)
+    }
+
+    func testLoadPaymentMethodInfo_cardAndSepa() throws {
+        let stubbedAPIClient = stubbedAPIClient()
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
+        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withSepa_200, pmType: "sepa_debit")
+        StubbedBackend.stubSessions(paymentMethods: "\"card\", \"sepa_debit\"")
+
+        let configuration = CustomerSheet.Configuration()
+        let customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+            .init(customerId: "cus_123", ephemeralKeySecret: "ek_456")
+        }, setupIntentClientSecretProvider: {
+            return "si_789"
+        }, apiClient: stubbedAPIClient)
+
+        let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
+        let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
+        customerSheet.loadPaymentMethodInfo { result in
+            guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
+                XCTFail()
+                return
+            }
+            XCTAssertEqual(paymentMethods.count, 2)
+            XCTAssertEqual(paymentMethods[0].type, .card)
+            XCTAssertEqual(paymentMethods[1].type, .SEPADebit)
             XCTAssert(selectedPaymentMethod == nil)
             loadPaymentMethodInfo.fulfill()
         }

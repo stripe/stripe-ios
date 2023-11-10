@@ -68,6 +68,7 @@ public class ClassForBundle {}
     case saved_payment_methods_200 = "MockFiles/saved_payment_methods_200"
     case saved_payment_methods_withCard_200 = "MockFiles/saved_payment_methods_withCard_200"
     case saved_payment_methods_withUSBank_200 = "MockFiles/saved_payment_methods_withUSBank_200"
+    case saved_payment_methods_withSepa_200 = "MockFiles/saved_payment_methods_withSepa_200"
 
     case elementsSessionsPaymentMethod_200 = "MockFiles/elements_sessions_paymentMethod_200"
 
