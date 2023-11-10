@@ -352,6 +352,113 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
+    func testSEPADebit_only() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testSEPADebit_card() {
+        stubSessions(paymentMethods: "\"sepa_debit\", \"card\"")
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testCard_SEPADebit() {
+        stubSessions(paymentMethods: "\"card\", \"sepa_debit\"")
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testSEPADebit_only_dark() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testSEPADebit_card_dark() {
+        stubSessions(paymentMethods: "\"sepa_debit\", \"card\"")
+
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testCard_SEPADebit_dark() {
+        stubSessions(paymentMethods: "\"card\", \"sepa_debit\"")
+
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: true)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testSEPADebit_bdcc_0000() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .automatic)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+    func testSEPADebit_bdcc_0200() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .always,
+                                                         email: .automatic,
+                                                         address: .automatic)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testSEPADebit_bdcc_0002() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .automatic,
+                                                         email: .automatic,
+                                                         address: .full)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testSEPADebit_bdcc_0202() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
+                                                         phone: .always,
+                                                         email: .automatic,
+                                                         address: .full)
+        let configuration = configuration(billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testSEPADebit_bdcc_1111() {
+        stubSessions(paymentMethods: "\"sepa_debit\"")
+        let bdcc = billingDetailsCollectionConfiguration(name: .never,
+                                                         phone: .never,
+                                                         email: .never,
+                                                         address: .never,
+                                                         attachDefaultsToPaymentMethod: true)
+        let configuration = configuration(defaultBillingDetails: billingDetails(),
+                                          billingDetailsCollectionConfiguration: bdcc)
+
+        prepareCS(configuration: configuration)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
     func stubbedPaymentMethod() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
