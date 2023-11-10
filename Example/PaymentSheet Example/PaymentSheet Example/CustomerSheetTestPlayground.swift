@@ -38,6 +38,13 @@ struct CustomerSheetTestPlayground: View {
                             }.buttonStyle(.bordered)
                         }
                         SettingView(setting: $playgroundController.settings.customerMode)
+                        SettingPickerView(setting: Binding(
+                            get: { playgroundController.settings.merchantCountryCode },
+                            set: { newValue in
+                                //If we change to a new country, default to a new customer
+                                playgroundController.settings.customerMode = .new
+                                playgroundController.settings.merchantCountryCode = newValue
+                            }))
                         TextField("CustomerId", text: customerIdBinding)
                     }
                     Group {

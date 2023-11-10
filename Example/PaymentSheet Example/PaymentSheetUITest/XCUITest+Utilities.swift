@@ -147,6 +147,36 @@ extension XCTestCase {
         // This is only an artifact in the (test) native version of the flow
         hackDismissKeyboardText.tap()
     }
+    func fillSepaData(_ app: XCUIApplication,
+                        container: XCUIElement? = nil) throws {
+        let context = container ?? app
+        let nameField = context.textFields["Full name"]
+        nameField.forceTapWhenHittableInTestCase(self)
+        app.typeText("John Doe")
+
+        let emailField = context.textFields["Email"]
+        emailField.forceTapWhenHittableInTestCase(self)
+        app.typeText("test@example.com")
+
+        let ibanField = context.textFields["IBAN"]
+        ibanField.forceTapWhenHittableInTestCase(self)
+        app.typeText("DE89370400440532013000")
+
+        let addressLine1 = context.textFields["Address line 1"]
+        addressLine1.forceTapWhenHittableInTestCase(self)
+        app.typeText("123 Main")
+
+        let city = context.textFields["City"]
+        city.forceTapWhenHittableInTestCase(self)
+        app.typeText("San Francisco")
+        context.buttons["Return"].tap()
+
+        context.pickerWheels.element.adjust(toPickerWheelValue: "California")
+        context.buttons["Done"].tap()
+
+        app.typeText("94016")
+        context.buttons["Done"].tap()
+    }
 
     func waitToDisappear(_ target: Any?) {
         let exists = NSPredicate(format: "exists == 0")

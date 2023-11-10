@@ -99,6 +99,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var applePay: ApplePay
     var headerTextForSelectionScreen: String?
     var defaultBillingAddress: DefaultBillingAddress
+    var merchantCountryCode: MerchantCountry
     var autoreload: Autoreload
 
     var attachDefaults: BillingDetailsAttachDefaults
@@ -116,6 +117,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    applePay: .on,
                                                    headerTextForSelectionScreen: nil,
                                                    defaultBillingAddress: .off,
+                                                   merchantCountryCode: .US,
                                                    autoreload: .on,
                                                    attachDefaults: .off,
                                                    collectName: .automatic,
