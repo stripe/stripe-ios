@@ -41,7 +41,7 @@ struct CustomerSheetTestPlayground: View {
                         SettingPickerView(setting: Binding(
                             get: { playgroundController.settings.merchantCountryCode },
                             set: { newValue in
-                                //If we change to a new country, default to a new customer
+                                // If we change to a new country, default to a new customer
                                 playgroundController.settings.customerMode = .new
                                 playgroundController.settings.merchantCountryCode = newValue
                             }))

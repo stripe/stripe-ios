@@ -148,7 +148,7 @@ extension XCTestCase {
         hackDismissKeyboardText.tap()
     }
     func fillSepaData(_ app: XCUIApplication,
-                        container: XCUIElement? = nil) throws {
+                      container: XCUIElement? = nil) throws {
         let context = container ?? app
         let nameField = context.textFields["Full name"]
         nameField.forceTapWhenHittableInTestCase(self)
