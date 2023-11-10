@@ -111,6 +111,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
         // Expect 1 call per PM: cards
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethodsJSON, apiClient: apiClient)
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: [], apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "sepa_debit", paymentMethodJSONs: [], apiClient: apiClient)
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
         let sut = StripeCustomerAdapter(customerEphemeralKeyProvider: ekm.getEphemeralKey, apiClient: apiClient)
@@ -130,6 +131,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethods_cardJSON, apiClient: apiClient)
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: expectedPaymentMethods_usbankJSON, apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "sepa_debit", paymentMethodJSONs: [], apiClient: apiClient)
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
         let sut = StripeCustomerAdapter(customerEphemeralKeyProvider: ekm.getEphemeralKey,
@@ -147,6 +149,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         // Expect 1 call per PM: cards
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: expectedPaymentMethodsJSON, apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "sepa_debit", paymentMethodJSONs: [], apiClient: apiClient)
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: [], apiClient: apiClient)
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
@@ -229,6 +232,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
 
         // ...fetching the customer's payment methods...
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "card", paymentMethodJSONs: [savedCardJSON, savedApplePayCardJSON], apiClient: apiClient)
+        stubListPaymentMethods(key: exampleKey, paymentMethodType: "sepa_debit", paymentMethodJSONs: [], apiClient: apiClient)
         stubListPaymentMethods(key: exampleKey, paymentMethodType: "us_bank_account", paymentMethodJSONs: [], apiClient: apiClient)
 
         let ekm = MockEphemeralKeyEndpoint(exampleKey)
