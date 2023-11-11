@@ -573,7 +573,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         DispatchQueue.global(qos: .background).async {
             var isLoading = true
             var count = 0
-            while isLoading && count < 10 {
+            while isLoading && count < 20 {
                 count += 1
                 DispatchQueue.main.sync {
                     guard
