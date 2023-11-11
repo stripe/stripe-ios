@@ -57,7 +57,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     )!
 
     private var cs: CustomerSheet!
-    let semaphore = DispatchSemaphore(value: 1)
+
     private var window: UIWindow {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
         window.isHidden = false
@@ -80,8 +80,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testNoSavedPMs() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration())
         presentCS(darkMode: false)
@@ -89,8 +87,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testNoSavedPMsDarkMode() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration())
         presentCS(darkMode: true)
@@ -98,8 +94,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testNoSavedPMsCustomAppearance() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(appearance: .snapshotTestTheme))
         presentCS(darkMode: false)
@@ -107,8 +101,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testOnlyApplePay() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(applePayEnabled: true))
         presentCS(darkMode: false)
@@ -116,8 +108,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testOnlyApplePayDarkMode() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(applePayEnabled: true))
         presentCS(darkMode: true)
@@ -125,8 +115,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testOnlyApplePayCustomAppearance() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(applePayEnabled: true, appearance: .snapshotTestTheme))
         presentCS(darkMode: false)
@@ -141,8 +129,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     /// 1 == .never
     /// 2 == (always || full)
     func testBillingDetailsCollection_0000() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
@@ -154,8 +140,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_1000() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .never,
                                                          phone: .automatic,
@@ -167,8 +151,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_2000() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .always,
                                                          phone: .automatic,
@@ -180,8 +162,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0100() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .never,
@@ -193,8 +173,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0200() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .never,
@@ -206,8 +184,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0010() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
@@ -219,8 +195,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0020() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
@@ -232,8 +206,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0001() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
@@ -245,8 +217,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_0002() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
@@ -258,8 +228,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_2222() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .always,
                                                          phone: .always,
@@ -271,8 +239,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testBillingDetailsCollection_2222_withDefaults() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .always,
                                                          phone: .always,
@@ -285,32 +251,24 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testUSBankAccount_only() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"us_bank_account\"")
         prepareCS(configuration: configuration())
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
     func testUSBankAccount_card() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"us_bank_account\", \"card\"")
         prepareCS(configuration: configuration())
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
     func testCard_USBankAccount() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
         prepareCS(configuration: configuration())
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
     func testUSBankAccount_only_dark() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"us_bank_account\"")
 
         prepareCS(configuration: configuration())
@@ -318,8 +276,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testUSBankAccount_card_dark() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"us_bank_account\", \"card\"")
 
         prepareCS(configuration: configuration())
@@ -327,8 +283,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testCard_USBankAccount_dark() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
 
         prepareCS(configuration: configuration())
@@ -336,8 +290,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testUSBankAccount_bdcc_0000() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"us_bank_account\"")
 
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
@@ -351,8 +303,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testUSBankAccount_bdcc_0200() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"us_bank_account\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .always,
@@ -365,8 +315,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testUSBankAccount_bdcc_0002() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"us_bank_account\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
@@ -379,8 +327,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testUSBankAccount_bdcc_0202() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"us_bank_account\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .always,
@@ -393,8 +339,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testUSBankAccount_bdcc_1111() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"us_bank_account\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .never,
                                                          phone: .never,
@@ -409,32 +353,24 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testSEPADebit_only() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"sepa_debit\"")
         prepareCS(configuration: configuration())
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
     func testSEPADebit_card() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"sepa_debit\", \"card\"")
         prepareCS(configuration: configuration())
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
     func testCard_SEPADebit() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\", \"sepa_debit\"")
         prepareCS(configuration: configuration())
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
     func testSEPADebit_only_dark() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"sepa_debit\"")
 
         prepareCS(configuration: configuration())
@@ -442,8 +378,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testSEPADebit_card_dark() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"sepa_debit\", \"card\"")
 
         prepareCS(configuration: configuration())
@@ -451,8 +385,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testCard_SEPADebit_dark() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\", \"sepa_debit\"")
 
         prepareCS(configuration: configuration())
@@ -461,8 +393,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testSEPADebit_bdcc_0000() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"sepa_debit\"")
 
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
@@ -476,8 +406,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
     func testSEPADebit_bdcc_0200() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"sepa_debit\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .always,
@@ -491,8 +419,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testSEPADebit_bdcc_0002() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"sepa_debit\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .automatic,
@@ -506,8 +432,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testSEPADebit_bdcc_0202() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"sepa_debit\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .automatic,
                                                          phone: .always,
@@ -521,8 +445,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testSEPADebit_bdcc_1111() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"sepa_debit\"")
         let bdcc = billingDetailsCollectionConfiguration(name: .never,
                                                          phone: .never,
@@ -549,8 +471,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testOneSavedCardPM() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = [stubbedPaymentMethod()]
@@ -560,8 +480,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testOneSavedCardPMDarkMode() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = [stubbedPaymentMethod()]
@@ -571,8 +489,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testOneSavedCardPMCustomApperance() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = [stubbedPaymentMethod()]
@@ -582,8 +498,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testManySavedPMs() {
-        semaphore.wait()
-        defer { semaphore.signal() }
         stubSessions(paymentMethods: "\"card\"")
         let customerAdapter = StubCustomerAdapter()
         customerAdapter.paymentMethods = Array(repeating: stubbedPaymentMethod(), count: 20)
@@ -659,7 +573,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         DispatchQueue.global(qos: .background).async {
             var isLoading = true
             var count = 0
-            while isLoading && count < 10 {
+            while isLoading && count < 20 {
                 count += 1
                 DispatchQueue.main.sync {
                     guard
