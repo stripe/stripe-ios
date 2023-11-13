@@ -336,7 +336,6 @@ extension PaymentSheet.PaymentOption {
         case .applePay:
             return .applePay
         case .new, .external:
-            // TODO(yuki|EPMs): Add analytics for EPMs - probably new AnalyticsPaymentMethodType .external(String) case
             return .newPM
         case .saved:
             return .savedPM
@@ -367,7 +366,8 @@ extension PaymentSheet.Configuration {
         payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description
         payload["appearance"] = appearance.analyticPayload
         payload["billing_details_collection_configuration"] = billingDetailsCollectionConfiguration.analyticPayload
-
+        // Only grab the first 10 as a safeguard, since `externalPaymentMethods` is configured by the merchant and theoretically ~unbounded
+        payload["external_payment_methods"] = externalPaymentMethodConfiguration?.externalPaymentMethods.prefix(10)
         return payload
     }
 }
