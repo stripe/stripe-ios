@@ -58,6 +58,9 @@ extension CustomerSheet {
 
         /// Optional configuration to display a custom message when a saved payment method is removed.
         public var removeSavedPaymentMethodMessage: String?
+        
+        // TODO(porter) Remove for CBC GA
+        @_spi(STP) public var cbcEnabled: Bool = false
 
         public init () {
         }

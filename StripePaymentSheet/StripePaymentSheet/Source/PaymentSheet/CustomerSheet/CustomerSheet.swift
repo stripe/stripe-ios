@@ -111,11 +111,13 @@ public class CustomerSheet {
         }
         loadPaymentMethodInfo { result in
             switch result {
-            case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let merchantSupportedPaymentMethodTypes)):
+            case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
+                let merchantSupportedPaymentMethodTypes = self.customerAdapter.canCreateSetupIntents ? elementsSession.orderedPaymentMethodTypes : [.card]
                 self.present(from: presentingViewController,
                              savedPaymentMethods: savedPaymentMethods,
                              selectedPaymentMethodOption: selectedPaymentMethodOption,
-                             merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes)
+                             merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
+                             cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
             case .failure(let error):
                 csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
                 DispatchQueue.main.async {
@@ -130,7 +132,8 @@ public class CustomerSheet {
     func present(from presentingViewController: UIViewController,
                  savedPaymentMethods: [STPPaymentMethod],
                  selectedPaymentMethodOption: CustomerPaymentOption?,
-                 merchantSupportedPaymentMethodTypes: [STPPaymentMethodType]) {
+                 merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
+                 cbcEligible: Bool) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
             loadSpecsPromise.resolve(with: ())
@@ -145,6 +148,7 @@ public class CustomerSheet {
                                                                                     configuration: self.configuration,
                                                                                     customerAdapter: self.customerAdapter,
                                                                                     isApplePayEnabled: isApplePayEnabled,
+                                                                                    cbcEligible: self.configuration.cbcEnabled && cbcEligible,
                                                                                     csCompletion: self.csCompletion,
                                                                                     delegate: self)
                 self.bottomSheetViewController.contentStack = [savedPaymentSheetVC]
@@ -157,26 +161,18 @@ public class CustomerSheet {
 }
 
 extension CustomerSheet {
-    func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, [STPPaymentMethodType]), Error>) -> Void) {
+    func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
         Task {
             do {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentOption()
-                async let merchantSupportedPaymentMethodTypes = try self.retrieveMerchantSupportedPaymentMethodTypes()
-                let (paymentMethods, selectedPaymentMethod, elementSesssion) = try await (paymentMethodsResult, selectedPaymentMethodResult, merchantSupportedPaymentMethodTypes)
+                async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet()
+                let (paymentMethods, selectedPaymentMethod, elementSesssion) = try await (paymentMethodsResult, selectedPaymentMethodResult, elementsSessionResult)
                 completion(.success((paymentMethods, selectedPaymentMethod, elementSesssion)))
             } catch {
                 completion(.failure(error))
             }
         }
-    }
-
-    func retrieveMerchantSupportedPaymentMethodTypes() async throws -> [STPPaymentMethodType] {
-        guard customerAdapter.canCreateSetupIntents else {
-            return [.card]
-        }
-        let elementSession = try await configuration.apiClient.retrieveElementsSessionForCustomerSheet()
-        return elementSession.orderedPaymentMethodTypes
     }
 }
 

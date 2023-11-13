@@ -26,6 +26,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let isApplePayEnabled: Bool
     let configuration: CustomerSheet.Configuration
     let customerAdapter: CustomerAdapter
+    let cbcEligible: Bool
 
     // MARK: - Writable Properties
     weak var delegate: CustomerSavedPaymentMethodsViewControllerDelegate?
@@ -45,6 +46,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         return CustomerAddPaymentMethodViewController(
             configuration: configuration,
             paymentMethodTypes: paymentMethodTypes,
+            cbcEligible: cbcEligible,
             delegate: self)
     }()
     private var cachedClientSecret: String?
@@ -86,6 +88,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 showApplePay: showApplePay
             ),
             appearance: configuration.appearance,
+            cbcEligible: cbcEligible,
             delegate: self
         )
     }()
@@ -123,6 +126,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         configuration: CustomerSheet.Configuration,
         customerAdapter: CustomerAdapter,
         isApplePayEnabled: Bool,
+        cbcEligible: Bool,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
     ) {
@@ -132,6 +136,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.configuration = configuration
         self.customerAdapter = customerAdapter
         self.isApplePayEnabled = isApplePayEnabled
+        self.cbcEligible = cbcEligible
         self.csCompletion = csCompletion
         self.delegate = delegate
         if Self.shouldShowPaymentMethodCarousel(savedPaymentMethods: savedPaymentMethods, isApplePayEnabled: isApplePayEnabled) {
@@ -574,6 +579,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.addPaymentMethodViewController = CustomerAddPaymentMethodViewController(
             configuration: configuration,
             paymentMethodTypes: paymentMethodTypes,
+            cbcEligible: cbcEligible,
             delegate: self)
         cachedClientSecret = nil
     }
