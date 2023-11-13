@@ -214,7 +214,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             addressSpecProvider: .shared,
             offerSaveToLinkWhenSupported: false,
             linkAccount: nil,
-            cardBrandChoiceEligible: configuration.cbcEnabled,
+            cardBrandChoiceEligible: cbcEligible,
             supportsLinkCard: false,
             isPaymentIntent: false,
             currency: nil,
