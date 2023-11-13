@@ -254,7 +254,9 @@ extension PaymentSheet {
                 presentPaymentOptionsCompletion = completion
             }
 
-            self.viewController.cvcRecollectionEnabled = configuration.isCVCRecollectionEnabledCallback()
+            if let isCVCRecollectionEnabledCallback = intent.intentConfig?.isCVCRecollectionEnabledCallback {
+                self.viewController.cvcRecollectionEnabled = isCVCRecollectionEnabledCallback()
+            }
 
             let showPaymentOptions: () -> Void = { [weak self] in
                 guard let self = self else { return }

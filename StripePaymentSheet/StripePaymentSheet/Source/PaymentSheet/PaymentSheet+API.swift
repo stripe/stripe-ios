@@ -383,7 +383,8 @@ extension PaymentSheet {
                                              paymentHandler: STPPaymentHandler,
                                              authenticationContext: STPAuthenticationContext,
                                              completion: @escaping ((IntentConfirmParams?) -> Void)) {
-        guard configuration.isCVCRecollectionEnabledCallback(),
+        guard let isCVCRecollectionEnabledCallback = intent.intentConfig?.isCVCRecollectionEnabledCallback,
+              isCVCRecollectionEnabledCallback(),
               paymentMethod.type == .card,
               confirmParams == nil else {
             completion(confirmParams)

@@ -7,11 +7,13 @@
 // This is an example of an integration using PaymentSheet.FlowController where you collect payment details before creating an Intent.
 
 @_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
+//@_spi(STP) import StripeCore
 import UIKit
 
 // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
-private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
-
+//private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
+private let baseUrl = "https://lake-ancient-gondola.glitch.me"
+//private let baseUrl = "http://127.0.0.1:4242"
 class ExampleCustomDeferredCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
     @IBOutlet weak var paymentMethodButton: UIButton!
@@ -43,10 +45,13 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     private var intentConfig: PaymentSheet.IntentConfiguration {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
-                                    setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
-        ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+                                    setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil),
+                     confirmHandler: { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
             self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
-        }
+        },
+                     isCVCRecollectionEnabledCallback: {
+            self.shouldRecollectCVC()
+        })
     }
 
     private var currencyFormatter: NumberFormatter {
@@ -273,7 +278,6 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
                 configuration.allowsDelayedPaymentMethods = true
-                configuration.cvcRecollectionEnabled = true
 
                 DispatchQueue.main.async {
                     PaymentSheet.FlowController.create(
@@ -298,7 +302,9 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
 
         task.resume()
     }
-
+    func shouldRecollectCVC() -> Bool {
+        return Int(self.hotDogStepper.value) > 2
+    }
     func confirmIntent(paymentMethodID: String,
                        shouldSavePaymentMethod: Bool,
                        completion: @escaping (Result<String, Error>) -> Void) {
@@ -313,7 +319,8 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
-            "customer_id": paymentSheetFlowController.configuration.customer?.id
+            "customer_id": paymentSheetFlowController.configuration.customer?.id,
+            "should_recollect_cvc" : self.shouldRecollectCVC()
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
