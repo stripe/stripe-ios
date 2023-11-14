@@ -85,7 +85,6 @@ struct CustomerSheetTestPlayground: View {
         } set: { newCountry in
             // Reset customer id if country changes
             if playgroundController.settings.merchantCountryCode.rawValue != newCountry.rawValue {
-                playgroundController.settings.customerId = nil
                 playgroundController.settings.customerMode = .new
             }
             playgroundController.settings.merchantCountryCode = newCountry
