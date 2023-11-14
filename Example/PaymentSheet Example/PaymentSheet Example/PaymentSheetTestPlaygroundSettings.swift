@@ -222,6 +222,11 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             }
         }
     }
+    enum RequireCVCRecollectionEnabled: String, PickerEnum {
+        static let enumName: String = "Require CVC Recollection"
+        case on
+        case off
+    }
 
     var uiStyle: UIStyle
     var mode: Mode
@@ -243,6 +248,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var autoreload: Autoreload
     var externalPayPalEnabled: ExternalPayPalEnabled
     var preferredNetworksEnabled: PreferredNetworksEnabled
+    var requireCVCRecollection: RequireCVCRecollectionEnabled
 
     var attachDefaults: BillingDetailsAttachDefaults
     var collectName: BillingDetailsName
@@ -271,6 +277,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             autoreload: .on,
             externalPayPalEnabled: .off,
             preferredNetworksEnabled: .off,
+            requireCVCRecollection: .off,
             attachDefaults: .off,
             collectName: .automatic,
             collectEmail: .automatic,
@@ -279,7 +286,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"
-
     static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
     static var endpointSelectorEndpoint: String {
         return "\(baseEndpoint)/endpoints"

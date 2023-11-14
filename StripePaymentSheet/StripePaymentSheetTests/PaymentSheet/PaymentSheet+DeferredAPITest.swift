@@ -54,7 +54,7 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
     }
 
     func testSetParamsForDashboardApp_new() {
-        let params = PaymentSheet.setParamsForDashboardApp(confirmType: .saved(createValidSavedPaymentMethod()),
+        let params = PaymentSheet.setParamsForDashboardApp(confirmType: .saved(createValidSavedPaymentMethod(), paymentOptions: nil),
                                                            paymentIntentParams: .init(),
                                                            paymentIntent: STPFixtures.makePaymentIntent(),
                                                            configuration: configuration)

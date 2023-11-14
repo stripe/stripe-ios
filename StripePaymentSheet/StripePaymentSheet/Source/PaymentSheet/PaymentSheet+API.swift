@@ -55,7 +55,7 @@ extension PaymentSheet {
                                                 confirmAction: {
                 // If confirmed, dismiss the MandateView and complete the transaction:
                 authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
-                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, paymentHandler: paymentHandler, completion: completion)
+                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, intentConfirmParams: nil, paymentHandler: paymentHandler, completion: completion)
             }, cancelAction: {
                 // Dismiss the MandateView and return to PaymentSheet
                 authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
@@ -65,9 +65,50 @@ extension PaymentSheet {
             let hostingController = UIHostingController(rootView: mandateView)
             hostingController.isModalInPresentation = true
             authenticationContext.authenticationPresentingViewController().present(hostingController, animated: true)
+        } else if case let .saved(paymentMethod) = paymentOption,
+                  paymentMethod.type == .card,
+                  let isCVCRecollectionEnabledCallback = intent.intentConfig?.isCVCRecollectionEnabledCallback,
+                  isCVCRecollectionEnabledCallback() {
+            let presentingViewController = authenticationContext.authenticationPresentingViewController()
+
+            guard presentingViewController.presentedViewController == nil else {
+                assertionFailure("presentingViewController is already presenting a view controller")
+                completion(.failed(error: PaymentSheetError.alreadyPresented), nil)
+                return
+            }
+            let preConfirmationViewController = PreConfirmationViewController(
+                paymentMethod: paymentMethod,
+                intent: intent,
+                configuration: configuration,
+                onCompletion: { vc, intentConfirmParams in
+                    vc.dismiss(animated: true)
+                    confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, intentConfirmParams: intentConfirmParams, paymentHandler: paymentHandler, completion: completion)
+                },
+                onCancel: { vc in
+                    vc.dismiss(animated: true)
+                    DispatchQueue.main.async {
+                        completion(.canceled, nil)
+                    }
+                })
+
+            let presentPreConfirmationViewController: () -> Void = {
+                // Set the PaymentSheetViewController as the content of our bottom sheet
+                let bottomSheetVC = Self.makeBottomSheetViewController(
+                    preConfirmationViewController,
+                    configuration: configuration,
+                    didCancelNative3DS2: {
+                        paymentHandler.cancel3DS2ChallengeFlow()
+                    }
+                )
+                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance) {
+                    preConfirmationViewController.didFinishPresenting()
+                }
+            }
+            presentPreConfirmationViewController()
+
         } else {
             // MARK: - No local actions
-            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, paymentHandler: paymentHandler, completion: completion)
+            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, intentConfirmParams: nil, paymentHandler: paymentHandler, completion: completion)
         }
     }
 
@@ -76,6 +117,7 @@ extension PaymentSheet {
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         paymentOption: PaymentOption,
+        intentConfirmParams: IntentConfirmParams?,
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool = false,
         paymentMethodID: String? = nil,
@@ -163,7 +205,7 @@ extension PaymentSheet {
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(_, let paymentIntent):
-                let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod), paymentIntent: paymentIntent, configuration: configuration)
+                let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: nil), paymentIntent: paymentIntent, configuration: configuration)
 
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
@@ -175,7 +217,7 @@ extension PaymentSheet {
             // MARK: ↪ SetupIntent
             case .setupIntent(_, let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
-                    confirmPaymentMethodType: .saved(paymentMethod),
+                    confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: nil),
                     setupIntent: setupIntent,
                     configuration: configuration
                 )
@@ -189,7 +231,7 @@ extension PaymentSheet {
             // MARK: ↪ Deferred Intent
             case .deferredIntent(_, let intentConfig):
                 handleDeferredIntentConfirmation(
-                    confirmType: .saved(paymentMethod),
+                    confirmType: .saved(paymentMethod, paymentOptions: intentConfirmParams?.confirmPaymentMethodOptions),
                     configuration: configuration,
                     intentConfig: intentConfig,
                     authenticationContext: authenticationContext,
@@ -277,7 +319,7 @@ extension PaymentSheet {
                     )
                 case .deferredIntent(_, let intentConfig):
                     handleDeferredIntentConfirmation(
-                        confirmType: .saved(paymentMethod),
+                        confirmType: .saved(paymentMethod, paymentOptions: nil),
                         configuration: configuration,
                         intentConfig: intentConfig,
                         authenticationContext: authenticationContext,
@@ -386,6 +428,21 @@ extension PaymentSheet {
     }
 
     // MARK: - Helper methods
+    static func makeBottomSheetViewController(
+        _ contentViewController: BottomSheetContentViewController,
+        configuration: Configuration,
+        didCancelNative3DS2: @escaping (() -> Void)
+    ) -> BottomSheetViewController {
+        let sheet = BottomSheetViewController(
+            contentViewController: contentViewController,
+            appearance: configuration.appearance,
+            isTestMode: configuration.apiClient.isTestmode,
+            didCancelNative3DS2: didCancelNative3DS2
+        )
+
+        configuration.style.configure(sheet)
+        return sheet
+    }
 
     static func makeShippingParams(for paymentIntent: STPPaymentIntent, configuration: PaymentSheet.Configuration)
         -> STPPaymentIntentShippingDetailsParams?
@@ -400,7 +457,7 @@ extension PaymentSheet {
     }
 
     enum ConfirmPaymentMethodType {
-        case saved(STPPaymentMethod)
+        case saved(STPPaymentMethod, paymentOptions: STPConfirmPaymentMethodOptions?)
         /// - paymentMethod: Pass this if you created a PaymentMethod already (e.g. for the deferred flow).
         case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, shouldSave: Bool)
         var shouldSave: Bool {
@@ -423,10 +480,11 @@ extension PaymentSheet {
         let shouldSave: Bool
         let paymentMethodType: STPPaymentMethodType
         switch confirmPaymentMethodType {
-        case .saved(let paymentMethod):
+        case .saved(let paymentMethod, let paymentMethodOptions):
             shouldSave = false
             paymentMethodType = paymentMethod.type
             params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
+            params.paymentMethodOptions = paymentMethodOptions
             params.paymentMethodId = paymentMethod.stripeId
         case let .new(paymentMethodParams, paymentMethodoptions, paymentMethod, _shouldSave):
             shouldSave = _shouldSave
@@ -470,7 +528,7 @@ extension PaymentSheet {
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
         switch confirmPaymentMethodType {
-        case let .saved(paymentMethod):
+        case let .saved(paymentMethod, _):
             params = STPSetupIntentConfirmParams(
                 clientSecret: setupIntent.clientSecret,
                 paymentMethodType: paymentMethod.type

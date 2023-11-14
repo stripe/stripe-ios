@@ -19,7 +19,7 @@ struct PaymentSheetTestPlayground: View {
 
     @ViewBuilder
     var clientSettings: some View {
-        SettingView(setting: $playgroundController.settings.uiStyle)
+        SettingView(setting: uiStyle)
         SettingView(setting: $playgroundController.settings.shippingInfo)
         SettingView(setting: $playgroundController.settings.applePayEnabled)
         SettingView(setting: $playgroundController.settings.applePayButtonType)
@@ -29,6 +29,21 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
         SettingView(setting: $playgroundController.settings.autoreload)
+        if playgroundController.settings.uiStyle == .flowController &&
+            playgroundController.settings.integrationType == .deferred_csc {
+            SettingView(setting: $playgroundController.settings.requireCVCRecollection)
+        }
+    }
+
+    var uiStyle: Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
+        Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
+            return playgroundController.settings.uiStyle
+        } set: { newValue in
+            if newValue != .flowController {
+                playgroundController.settings.requireCVCRecollection = .off
+            }
+            playgroundController.settings.uiStyle = newValue
+        }
     }
 
     var body: some View {
@@ -63,7 +78,7 @@ struct PaymentSheetTestPlayground: View {
                                 })
                         }
                         SettingView(setting: $playgroundController.settings.mode)
-                        SettingPickerView(setting: $playgroundController.settings.integrationType)
+                        SettingPickerView(setting: integrationType)
                         SettingView(setting: customerModeBinding)
                         TextField("CustomerId", text: customerIdBinding)
                             .disabled(true)
@@ -106,6 +121,17 @@ struct PaymentSheetTestPlayground: View {
             Divider()
             PaymentSheetButtons()
                 .environmentObject(playgroundController)
+        }
+    }
+
+    var integrationType: Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
+        Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
+            return playgroundController.settings.integrationType
+        } set: { newValue in
+            if newValue != .deferred_csc {
+                playgroundController.settings.requireCVCRecollection = .off
+            }
+            playgroundController.settings.integrationType = newValue
         }
     }
 
