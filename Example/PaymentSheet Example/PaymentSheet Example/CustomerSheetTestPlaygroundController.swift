@@ -136,7 +136,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
                 // This should be a block that fetches this from your server
                 .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
             }, setupIntentClientSecretProvider: {
-                return try await self.backend.createSetupIntent(customerId: customerId)
+                return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
             })
         case .createAndAttach:
             customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
@@ -296,8 +296,9 @@ class CustomerSheetBackend {
         task.resume()
     }
 
-    func createSetupIntent(customerId: String) async throws -> String {
+    func createSetupIntent(customerId: String, merchantCountryCode: String) async throws -> String {
         let body = [ "customer_id": customerId,
+                     "merchant_country_code": merchantCountryCode
         ] as [String: Any]
         let url = URL(string: "\(endpoint)/create_setup_intent")!
         let session = URLSession.shared

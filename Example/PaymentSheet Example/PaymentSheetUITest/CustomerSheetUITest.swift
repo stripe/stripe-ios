@@ -660,6 +660,148 @@ class CustomerSheetUITest: XCTestCase {
         let last4Selectedlabel = app.staticTexts["(Selected)"]
         XCTAssertTrue(last4Selectedlabel.waitForExistence(timeout: 10.0))
     }
+    
+    // MARK: - Card Brand Choice tests
+    
+    func testCardBrandChoice() throws {
+        app.launch()
+        app.staticTexts["CustomerSheet (test playground)"].tap()
+        
+        // Change to French merchant
+        let predicate = NSPredicate(format: "label BEGINSWITH[cd] 'MerchantCountry'")
+        app.buttons.element(matching: predicate).waitForExistenceAndTap(timeout: 5)
+        app.buttons["FR"].waitForExistenceAndTap(timeout: 5)
+        
+        // Use a new customer each time
+        app.buttons["new"].tap()
+        
+        let button = app.buttons["Payment method"]
+        XCTAssertTrue(button.waitForExistence(timeout: 5))
+        button.forceTapElement()
+
+        app.staticTexts["+ Add"].tap()
+
+        let cardBrandTextField = app.textFields["Select card brand (optional)"]
+        let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
+        // Card brand choice textfield/dropdown should not be visible
+        XCTAssertFalse(cardBrandTextField.waitForExistence(timeout: 2))
+
+        let numberField = app.textFields["Card number"]
+        numberField.tap()
+        // Enter 8 digits to start fetching card brand
+        numberField.typeText("49730197")
+
+        // Card brand choice drop down should be enabled
+        cardBrandTextField.tap()
+        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
+        cardBrandChoiceDropdown.swipeUp()
+        app.toolbars.buttons["Cancel"].tap()
+
+        // We should still have no selected card brand
+        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 5))
+
+        // Select Visa from the CBC dropdown
+        cardBrandTextField.tap()
+        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
+        cardBrandChoiceDropdown.swipeUp()
+        app.toolbars.buttons["Done"].tap()
+
+        // We should have selected Visa
+        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
+
+        // Clear card text field, should reset selected card brand
+        numberField.tap()
+        numberField.clearText()
+
+        // We should reset to showing unknown in the textfield for card brand
+        XCTAssertFalse(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 5))
+
+        // Type full card number to start fetching card brands again
+        numberField.forceTapWhenHittableInTestCase(self)
+        app.typeText("4000002500001001")
+        app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5)
+        app.typeText("1228") // Expiry
+        app.typeText("123") // CVC
+        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("12345") // Postal
+
+        // Card brand choice drop down should be enabled
+        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
+        cardBrandChoiceDropdown.swipeUp() // Swipe to select Visa
+        app.toolbars.buttons["Done"].tap()
+
+        // We should have selected Visa
+        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
+
+        // Finish saving card
+        app.buttons["Save"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap(timeout: 5)
+        let completeText = app.staticTexts["Complete"]
+        XCTAssertTrue(completeText.waitForExistence(timeout: 5))
+    }
+
+    func testCardBrandChoiceSavedCard() {
+        // Currently only our French merchant is eligible for card brand choice
+        app.launch()
+        app.staticTexts["CustomerSheet (test playground)"].tap()
+        
+        // Use a new customer each time
+        app.buttons["new"].tap()
+        
+        // Change to French merchant
+        let predicate = NSPredicate(format: "label BEGINSWITH[cd] 'MerchantCountry'")
+        app.buttons.element(matching: predicate).waitForExistenceAndTap(timeout: 5)
+        app.buttons["FR"].waitForExistenceAndTap(timeout: 5)
+        
+        let button = app.buttons["Payment method"]
+        XCTAssertTrue(button.waitForExistence(timeout: 5))
+        button.forceTapElement()
+
+        app.staticTexts["+ Add"].tap()
+        
+        let numberField = app.textFields["Card number"]
+        let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
+
+        // Type full card number to start fetching card brands again
+        numberField.forceTapWhenHittableInTestCase(self)
+        app.typeText("4000002500001001")
+        app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5)
+        app.typeText("1228") // Expiry
+        app.typeText("123") // CVC
+        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("12345") // Postal
+
+        // Card brand choice drop down should be enabled
+        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
+        cardBrandChoiceDropdown.selectNextOption()
+        app.toolbars.buttons["Done"].tap()
+
+        // We should have selected cartes bancaires
+        XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistence(timeout: 5))
+
+        // Finish saving card
+        app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Confirm"].waitForExistenceAndTap(timeout: 5)
+        let completeText = app.staticTexts["Complete"]
+        XCTAssertTrue(completeText.waitForExistence(timeout: 5))
+
+        // Reload w/ same customer
+        app.buttons["Reload"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap(timeout: 5)
+        // Saved card should show the cartes bancaires logo
+        XCTAssertTrue(app.staticTexts["••••1001"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: 5))
+
+        let editButton = app.staticTexts["Edit"]
+        XCTAssertTrue(editButton.waitForExistence(timeout: 5))
+        editButton.tap()
+
+        // Saved card should show the edit icon since it is co-branded
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
+        // TODO(porter) Verify card is removed once it is implemented
+    }
 
     func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
         let selectButton = app.staticTexts[buttonLabel]

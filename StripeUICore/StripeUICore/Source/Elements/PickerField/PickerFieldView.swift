@@ -194,7 +194,7 @@ final class PickerFieldView: UIView {
     }
 
     override func becomeFirstResponder() -> Bool {
-        guard _canBecomeFirstResponder else {
+        guard _canBecomeFirstResponder, isUserInteractionEnabled else {
             return false
         }
 
