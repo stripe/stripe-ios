@@ -114,7 +114,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     let savedPaymentMethodsConfiguration: CustomerSheet.Configuration
     let customerAdapter: CustomerAdapter
     let cbcEligible: Bool
-    
+
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex else {
             return nil

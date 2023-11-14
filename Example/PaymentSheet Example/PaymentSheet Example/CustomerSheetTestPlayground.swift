@@ -78,7 +78,7 @@ struct CustomerSheetTestPlayground: View {
                 .environmentObject(playgroundController)
         }
     }
-    
+
     var merchantCountryBinding: Binding<CustomerSheetTestPlaygroundSettings.MerchantCountry> {
         Binding<CustomerSheetTestPlaygroundSettings.MerchantCountry> {
             return playgroundController.settings.merchantCountryCode

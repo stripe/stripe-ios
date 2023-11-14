@@ -660,21 +660,21 @@ class CustomerSheetUITest: XCTestCase {
         let last4Selectedlabel = app.staticTexts["(Selected)"]
         XCTAssertTrue(last4Selectedlabel.waitForExistence(timeout: 10.0))
     }
-    
+
     // MARK: - Card Brand Choice tests
-    
+
     func testCardBrandChoice() throws {
         app.launch()
         app.staticTexts["CustomerSheet (test playground)"].tap()
-        
+
         // Change to French merchant
         let predicate = NSPredicate(format: "label BEGINSWITH[cd] 'MerchantCountry'")
         app.buttons.element(matching: predicate).waitForExistenceAndTap(timeout: 5)
         app.buttons["FR"].waitForExistenceAndTap(timeout: 5)
-        
+
         // Use a new customer each time
         app.buttons["new"].tap()
-        
+
         let button = app.buttons["Payment method"]
         XCTAssertTrue(button.waitForExistence(timeout: 5))
         button.forceTapElement()
@@ -745,21 +745,21 @@ class CustomerSheetUITest: XCTestCase {
         // Currently only our French merchant is eligible for card brand choice
         app.launch()
         app.staticTexts["CustomerSheet (test playground)"].tap()
-        
+
         // Use a new customer each time
         app.buttons["new"].tap()
-        
+
         // Change to French merchant
         let predicate = NSPredicate(format: "label BEGINSWITH[cd] 'MerchantCountry'")
         app.buttons.element(matching: predicate).waitForExistenceAndTap(timeout: 5)
         app.buttons["FR"].waitForExistenceAndTap(timeout: 5)
-        
+
         let button = app.buttons["Payment method"]
         XCTAssertTrue(button.waitForExistence(timeout: 5))
         button.forceTapElement()
 
         app.staticTexts["+ Add"].tap()
-        
+
         let numberField = app.textFields["Card number"]
         let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
 
