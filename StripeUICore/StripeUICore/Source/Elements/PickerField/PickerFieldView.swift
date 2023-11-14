@@ -194,6 +194,9 @@ final class PickerFieldView: UIView {
     }
 
     override func becomeFirstResponder() -> Bool {
+        // Prevents unwanted invocation of the picker's `becomeFirstResponder` method.
+        // Sometimes, when the picker is added as a subview or when its `isUserInteractionEnabled` is toggled,
+        // the operating system mistakenly calls `becomeFirstResponder`, causing the drop-down to display unintentionally.
         guard _canBecomeFirstResponder, isUserInteractionEnabled else {
             return false
         }
