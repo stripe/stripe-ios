@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
+@testable import StripePaymentSheet
 import XCTest
 
 class STPCardBrandChoiceTest: XCTestCase {

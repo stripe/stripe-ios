@@ -5,8 +5,9 @@
 //  Created by Nick Porter on 2/16/23.
 //
 
-import Foundation
+import XCTest
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentSheet
 
 class STPElementsSessionTest: XCTestCase {
