@@ -120,7 +120,7 @@ class PhoneNumberTests: XCTestCase {
             number: "1234567890",
             country: "MX",
             format: .international,
-            formattedNumber: "+52 12 3456 7890"
+            formattedNumber: "+52 123 456 7890"
           ),
         ]
 
