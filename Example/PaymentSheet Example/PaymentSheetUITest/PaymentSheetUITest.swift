@@ -1030,8 +1030,12 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         // Remove this card
         XCTAssertTrue(app.buttons["Remove card"].waitForExistenceAndTap(timeout: 5))
+        let confirmRemoval = app.alerts.buttons["Remove"]
+        XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 5))
+        confirmRemoval.tap()
 
-        // TODO(porter) Verify card is removed once it is implemented
+        // Card should be removed
+        XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
     }
 
     // This only tests the PaymentSheet + PaymentIntent flow.

@@ -375,6 +375,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
 
         let editVc = UpdateCardViewController(paymentOptionCell: paymentOptionCell,
                                               paymentMethod: paymentMethod,
+                                              configuration: configuration,
                                               appearance: appearance)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
@@ -389,10 +390,23 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             assertionFailure()
             return
         }
-        let viewModel = viewModels[indexPath.row]
-        let alert = UIAlertAction(
-            title: String.Localized.remove, style: .destructive
-        ) { (_) in
+
+        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod, configuration: configuration) { [weak self] in
+            guard let self = self else { return }
+            self.removePaymentMethod(paymentOptionCell: paymentOptionCell)
+        }
+
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func removePaymentMethod(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
+            guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
+                  case .saved(let paymentMethod) = viewModels[indexPath.row]
+            else {
+                assertionFailure()
+                return
+            }
+            let viewModel = viewModels[indexPath.row]
             self.viewModels.remove(at: indexPath.row)
             // the deletion needs to be in a performBatchUpdates so we make sure it is completed
             // before potentially leaving edit mode (which triggers a reload that may collide with
@@ -418,27 +432,12 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                 )
             }
         }
-        let cancel = UIAlertAction(
-            title: String.Localized.cancel,
-            style: .cancel, handler: nil
-        )
-
-        let alertController = UIAlertController(
-            title: paymentMethod.removalMessage.title,
-            message: configuration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
-            preferredStyle: .alert
-        )
-
-        alertController.addAction(cancel)
-        alertController.addAction(alert)
-        present(alertController, animated: true, completion: nil)
-    }
 }
 
 // MARK: - UpdateCardViewControllerDelegate
 extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
     func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
-        // TODO(porter) Implement removal
+        removePaymentMethod(paymentOptionCell: paymentOptionCell)
     }
 }
 
@@ -477,5 +476,34 @@ extension STPPaymentMethod {
             assertionFailure()
             return (title: "", message: "")
         }
+    }
+}
+
+// MARK: UIAlertController extension
+
+extension UIAlertController {
+    static func makeRemoveAlertController(paymentMethod: STPPaymentMethod,
+                                          configuration: SavedPaymentOptionsViewController.Configuration,
+                                          completion: @escaping () -> Void) -> UIAlertController {
+        let alert = UIAlertAction(
+            title: String.Localized.remove, style: .destructive
+        ) { (_) in
+            completion()
+        }
+        let cancel = UIAlertAction(
+            title: String.Localized.cancel,
+            style: .cancel, handler: nil
+        )
+
+        let alertController = UIAlertController(
+            title: paymentMethod.removalMessage.title,
+            message: configuration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
+            preferredStyle: .alert
+        )
+
+        alertController.addAction(cancel)
+        alertController.addAction(alert)
+
+        return alertController
     }
 }
