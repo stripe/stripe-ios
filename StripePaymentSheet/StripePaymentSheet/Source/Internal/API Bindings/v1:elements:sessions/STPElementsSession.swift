@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 /// The response returned by v1/elements/sessions
 final class STPElementsSession: NSObject {
