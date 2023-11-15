@@ -583,7 +583,7 @@ extension PlaygroundController {
             "should_save_payment_method": shouldSavePaymentMethod,
             "mode": intentConfig.mode.requestBody,
             "return_url": configuration.returnURL ?? "",
-            "customer": customerID ?? ""
+            "customer": customerID ?? "",
         ] as [String: Any]
 
         isLoading = true
