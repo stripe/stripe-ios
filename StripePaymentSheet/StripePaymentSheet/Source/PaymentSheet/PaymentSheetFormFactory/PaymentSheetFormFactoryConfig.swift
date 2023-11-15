@@ -80,9 +80,8 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.preferredNetworks
-        case .customerSheet:
-            // TODO(porter) Support CBC in CustomerSheet
-            return nil
+        case .customerSheet(let config):
+            return config.preferredNetworks
         }
     }
 }
