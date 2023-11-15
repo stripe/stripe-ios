@@ -718,7 +718,20 @@ class CustomerSheetUITest: XCTestCase {
 
         // Saved card should show the edit icon since it is co-branded
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
-        // TODO(porter) Verify card is removed once it is implemented
+
+        // Remove this card
+        XCTAssertTrue(app.buttons["Remove card"].waitForExistenceAndTap(timeout: 5))
+        let confirmRemoval = app.alerts.buttons["Remove"]
+        XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 5))
+        confirmRemoval.tap()
+
+        // Verify card is removed
+        app.buttons["Done"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Close"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Reload"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Payment method"].waitForExistenceAndTap(timeout: 5)
+        // Card is no longer saved
+        XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: 5))
     }
 
     func testCardBrandChoiceWithPreferredNetworks() throws {
