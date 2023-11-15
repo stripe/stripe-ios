@@ -531,11 +531,7 @@ extension PlaygroundController {
             intentCreationCallback(.success(PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT))
             return
         case .deferred_csc:
-            if settings.integrationType == .deferred_csc {
-                DispatchQueue.global(qos: .background).async {
-                    intentCreationCallback(.success(self.clientSecret!))
-                }
-            }
+            deferredIntentCreationForCSC(paymentMethod, shouldSavePaymentMethod, intentCreationCallback)
             return
         case .deferred_mc, .deferred_ssc:
             break
@@ -577,12 +573,60 @@ extension PlaygroundController {
             intentCreationCallback(.success(clientSecret))
         })
     }
+
+    func deferredIntentCreationForCSC(_ paymentMethod: STPPaymentMethod,
+                                      _ shouldSavePaymentMethod: Bool,
+                                      _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        let body = [
+            "payment_method_id": paymentMethod.stripeId,
+            "merchant_country_code": settings.merchantCountryCode.rawValue,
+            "should_save_payment_method": shouldSavePaymentMethod,
+            "mode": intentConfig.mode.requestBody,
+            "return_url": configuration.returnURL ?? "",
+            "customer": customerID ?? ""
+        ] as [String: Any]
+
+        isLoading = true
+        makeRequest(with: checkoutEndpoint, body: body, completionHandler: { data, response, error in
+            guard
+                error == nil,
+                let data = data,
+                let json = try? JSONDecoder().decode([String: String].self, from: data),
+                (response as? HTTPURLResponse)?.statusCode != 400
+            else {
+                print(error as Any)
+                DispatchQueue.main.async {
+                    var errorMessage = "An error occurred communicating with the example backend."
+                    if let data = data,
+                       let json = try? JSONDecoder().decode([String: String].self, from: data),
+                       let jsonError = json["error"] {
+                        errorMessage = jsonError
+                    }
+                    let error = NSError(domain: "com.stripe.paymentsheetplayground", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+                    self.isLoading = false
+                    intentCreationCallback(.failure(error))
+                }
+                return
+            }
+
+            guard let clientSecret = json["intentClientSecret"] else {
+                intentCreationCallback(.failure(NSError(domain: "com.stripe.paymentsheetplayground", code: 0, userInfo: [NSLocalizedDescriptionKey: "intentClientSecret not returned in payload"])))
+                self.isLoading = false
+                return
+            }
+            intentCreationCallback(.success(clientSecret))
+            self.isLoading = false
+        })
+    }
 }
 
 extension PaymentSheet.IntentConfiguration.Mode {
     var requestBody: String {
         switch self {
-        case .payment:
+        case .payment(_, _, let setupFutureUsage, _ ):
+            if case .offSession = setupFutureUsage {
+                return "payment_with_setup"
+            }
             return "payment"
         case .setup:
             return "setup"
