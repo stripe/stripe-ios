@@ -43,7 +43,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             configuration: configuration,
             authenticationContext: self,
             intent: intent,
-            paymentOption: .externalPayPal(confirmParams: .init(type: .externalPayPal)),
+            paymentOption: .external(paymentMethod: .makeExternalPaypal(), billingDetails: .init()),
             paymentHandler: .shared()
         ) { result, analyticsConfirmType in
             e.fulfill()
@@ -95,7 +95,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         paymentMethodForm.getTextFieldElement("ZIP")?.setText("12345") ?? XCTFail()
 
         // Simulate customer tapping "Buy" - generate params from the form and confirm payment
-        guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: .externalPayPal)) else {
+        guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: .external(.makeExternalPaypal()))) else {
             XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
             return
         }
@@ -103,7 +103,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             configuration: configuration,
             authenticationContext: self,
             intent: intent,
-            paymentOption: .externalPayPal(confirmParams: intentConfirmParams),
+            paymentOption: .external(paymentMethod: .makeExternalPaypal(), billingDetails: intentConfirmParams.paymentMethodParams.nonnil_billingDetails),
             paymentHandler: .shared()
         ) { _, _ in }
         await fulfillment(of: [externalConfirmHandlerCalled], timeout: 5)
@@ -125,7 +125,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
                 configuration: configuration,
                 authenticationContext: self,
                 intent: intent,
-                paymentOption: .externalPayPal(confirmParams: .init(type: .externalPayPal)),
+                paymentOption: .external(paymentMethod: .makeExternalPaypal(), billingDetails: .init()),
                 paymentHandler: .shared()
             ) { result, analyticsConfirmType in
                 e.fulfill()
@@ -171,12 +171,8 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         XCTAssertEqual(paymentMethodTypes, [.stripe(.payPal)])
     }
 
-    func testDontShowPaypalIfFlag() {
-
-    }
-
     func makeForm(intent: Intent, configuration: PaymentSheet.Configuration) -> PaymentMethodElement {
-        let formFactory = PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: .externalPayPal)
+        let formFactory = PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: .external(.makeExternalPaypal()))
         let paymentMethodForm = formFactory.make()
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
         view.addAndPinSubview(paymentMethodForm.view) // This gets rid of distracting autolayout warnings in the logs

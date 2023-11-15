@@ -440,42 +440,42 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         configuration.paymentMethodOrder = ["card", "external_paypal"]
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["card"]),
-            [.stripe(.card), .externalPayPal]
+            [.stripe(.card), .external(.makeExternalPaypal())]
         )
         configuration.paymentMethodOrder = ["external_paypal", "card"]
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["card"]),
-            [.externalPayPal, .stripe(.card)]
+            [.external(.makeExternalPaypal()), .stripe(.card)]
         )
         // Omitted PMs are ordered afterwards in their original order
         configuration.paymentMethodOrder = ["card", "external_paypal"]
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            [.stripe(.card), .externalPayPal, .stripe(.iDEAL), .stripe(.bancontact)]
+            [.stripe(.card), .external(.makeExternalPaypal()), .stripe(.iDEAL), .stripe(.bancontact)]
         )
         // Invalid PM types are ignored
         configuration.paymentMethodOrder = ["foo", "card", "bar", "external_paypal", "zoo"]
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            [.stripe(.card), .externalPayPal, .stripe(.iDEAL), .stripe(.bancontact)]
+            [.stripe(.card), .external(.makeExternalPaypal()), .stripe(.iDEAL), .stripe(.bancontact)]
         )
         // Duplicate PMs are ignored
         configuration.paymentMethodOrder = ["card", "card", "external_paypal", "card"]
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            [.stripe(.card), .externalPayPal, .stripe(.iDEAL), .stripe(.bancontact)]
+            [.stripe(.card), .external(.makeExternalPaypal()), .stripe(.iDEAL), .stripe(.bancontact)]
         )
         // Empty paymentMethodOrder -> uses default ordering on the Intent
         configuration.paymentMethodOrder = []
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            [.stripe(.iDEAL), .stripe(.card), .stripe(.bancontact), .externalPayPal]
+            [.stripe(.iDEAL), .stripe(.card), .stripe(.bancontact), .external(.makeExternalPaypal())]
         )
         // Nil paymentMethodOrder -> uses default ordering on the Intent
         configuration.paymentMethodOrder = nil
         XCTAssertEqual(
             callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            [.stripe(.iDEAL), .stripe(.card), .stripe(.bancontact), .externalPayPal]
+            [.stripe(.iDEAL), .stripe(.card), .stripe(.bancontact), .external(.makeExternalPaypal())]
         )
     }
 
@@ -500,19 +500,19 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // If `elements_enable_external_payment_method_paypal` is false, we should hide external_paypal
         XCTAssertFalse(
             callFilteredPaymentMethodTypes(with: ["elements_enable_external_payment_method_paypal": false])
-                .contains(PaymentSheet.PaymentMethodType.externalPayPal)
+                .contains(PaymentSheet.PaymentMethodType.external(.makeExternalPaypal()))
         )
 
         // If `elements_enable_external_payment_method_paypal` is true, we should show external_paypal
         XCTAssertTrue(
             callFilteredPaymentMethodTypes(with: ["elements_enable_external_payment_method_paypal": true])
-                .contains(PaymentSheet.PaymentMethodType.externalPayPal)
+                .contains(PaymentSheet.PaymentMethodType.external(.makeExternalPaypal()))
         )
 
         // If `elements_enable_external_payment_method_paypal` is not present, we should show external_paypal
         XCTAssertTrue(
             callFilteredPaymentMethodTypes(with: [:])
-                .contains(PaymentSheet.PaymentMethodType.externalPayPal)
+                .contains(PaymentSheet.PaymentMethodType.external(.makeExternalPaypal()))
         )
     }
 }

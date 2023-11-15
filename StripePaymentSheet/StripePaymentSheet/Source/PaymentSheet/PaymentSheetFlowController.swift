@@ -23,7 +23,7 @@ extension PaymentSheet {
         case saved(paymentMethod: STPPaymentMethod)
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
-        case externalPayPal(confirmParams: IntentConfirmParams) // TODO(yuki): Rewrite this when we support more EPMs
+        case external(paymentMethod: ExternalPaymentMethod, billingDetails: STPPaymentMethodBillingDetails)
 
         var paymentMethodTypeAnalyticsValue: String? {
             switch self {
@@ -35,8 +35,8 @@ extension PaymentSheet {
                 return confirmParams.paymentMethodType.identifier
             case .link:
                 return STPPaymentMethodType.link.identifier
-            case .externalPayPal:
-                return "external_paypal"
+            case .external(let paymentMethod, _):
+                return paymentMethod.type
             }
         }
     }
@@ -62,8 +62,8 @@ extension PaymentSheet {
                     label = confirmParams.paymentSheetLabel
                 case .link(let option):
                     label = option.paymentSheetLabel
-                case .externalPayPal:
-                    label = STPPaymentMethodType.payPal.displayName
+                case .external(let PaymentMethod, _):
+                    label = PaymentMethod.localizedLabel
                 }
             }
         }

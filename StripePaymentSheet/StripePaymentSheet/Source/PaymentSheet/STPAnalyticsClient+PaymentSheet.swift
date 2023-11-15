@@ -335,7 +335,8 @@ extension PaymentSheet.PaymentOption {
         switch self {
         case .applePay:
             return .applePay
-        case .new, .externalPayPal:
+        case .new, .external:
+            // TODO(yuki|EPMs): Add analytics for EPMs - probably new AnalyticsPaymentMethodType .external(String) case
             return .newPM
         case .saved:
             return .savedPM
