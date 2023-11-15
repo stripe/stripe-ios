@@ -362,7 +362,6 @@ extension PlaygroundController {
         paymentSheet = nil
         lastPaymentResult = nil
         isLoading = true
-        let settingsToLoad = self.settings
 
         let customer: String = {
             switch settings.customerMode {
@@ -374,7 +373,87 @@ extension PlaygroundController {
                 return "returning"
             }
         }()
+        if settings.integrationType == .deferred_csc &&
+            settings.uiStyle == .flowController {
+            loadBackendForDeferredCSC(customer: customer, settings: settings)
+        } else {
+            loadBackendIntentFirst(customer: customer, settings: settings)
+        }
+    }
 
+    func loadBackendForDeferredCSC(customer: String, settings settingsToLoad: PaymentSheetTestPlaygroundSettings) {
+        let body = [
+            "customer": customer,
+            "merchant_country_code": settings.merchantCountryCode.rawValue,
+        ] as [String: Any]
+        makeRequest(with: PaymentSheetTestPlaygroundSettings.initDeferredEndpoint, body: body) { data, response, error in
+            if settingsToLoad != self.settings {
+                DispatchQueue.main.async {
+                    self.load()
+                }
+                return
+            }
+            guard
+                error == nil,
+                let data = data,
+                let json = try? JSONDecoder().decode([String: String].self, from: data),
+                (response as? HTTPURLResponse)?.statusCode != 400
+            else {
+                print(error as Any)
+                DispatchQueue.main.async {
+                    var errorMessage = "An error occurred communicating with the example backend."
+                    if let data = data,
+                       let json = try? JSONDecoder().decode([String: String].self, from: data),
+                       let jsonError = json["error"] {
+                        errorMessage = jsonError
+                    }
+                    let error = NSError(domain: "com.stripe.paymentsheetplayground", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+                    self.lastPaymentResult = .failed(error: error)
+                    self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
+                }
+                return
+            }
+            self.ephemeralKey = json["customerEphemeralKeySecret"]
+            self.customerID = json["customerId"]
+            self.amount = Int(json["amount"] ?? "")
+            STPAPIClient.shared.publishableKey = json["publishableKey"]
+
+            DispatchQueue.main.async {
+                if self.settings.customerMode == .new && self.newCustomerID == nil {
+                    self.newCustomerID = self.customerID
+                }
+                self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
+                self.addressDetails = nil
+
+                let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
+                    self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
+                    switch result {
+                    case .failure(let error):
+                        print(error as Any)
+                    case .success(let manualFlow):
+                        self.paymentSheetFlowController = manualFlow
+                    }
+                    // If the completed load state doesn't represent the current state, reload again
+                    if settingsToLoad != self.settings {
+                        DispatchQueue.main.async {
+                            self.load()
+                        }
+                        return
+                    }
+                }
+                PaymentSheet.FlowController.create(
+                    intentConfiguration: self.intentConfig,
+                    configuration: self.configuration,
+                    completion: completion
+                )
+            }
+        }
+    }
+
+    func loadBackendIntentFirst(customer: String, settings settingsToLoad: PaymentSheetTestPlaygroundSettings) {
+        let settingsToLoad = self.settings
         let body = [
             "customer": customer,
             "currency": settings.currency.rawValue,
@@ -468,12 +547,14 @@ extension PlaygroundController {
                             )
                         }
 
-                    case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
+                    case .deferred_ssc, .deferred_mc, .deferred_mp:
                         PaymentSheet.FlowController.create(
                             intentConfiguration: self.intentConfig,
                             configuration: self.configuration,
                             completion: completion
                         )
+                    case .deferred_csc:
+                        assertionFailure("Handled in: loadBackendForDeferredCSC")
                     }
                 }
             }
@@ -531,11 +612,7 @@ extension PlaygroundController {
             intentCreationCallback(.success(PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT))
             return
         case .deferred_csc:
-            if settings.integrationType == .deferred_csc {
-                DispatchQueue.global(qos: .background).async {
-                    intentCreationCallback(.success(self.clientSecret!))
-                }
-            }
+            deferredIntentCreationForCSC(paymentMethod, shouldSavePaymentMethod, intentCreationCallback)
             return
         case .deferred_mc, .deferred_ssc:
             break
@@ -577,12 +654,60 @@ extension PlaygroundController {
             intentCreationCallback(.success(clientSecret))
         })
     }
+
+    func deferredIntentCreationForCSC(_ paymentMethod: STPPaymentMethod,
+                                      _ shouldSavePaymentMethod: Bool,
+                                      _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+        let body = [
+            "payment_method_id": paymentMethod.stripeId,
+            "merchant_country_code": settings.merchantCountryCode.rawValue,
+            "should_save_payment_method": shouldSavePaymentMethod,
+            "mode": intentConfig.mode.requestBody,
+            "return_url": configuration.returnURL ?? "",
+            "customer": customerID ?? ""
+        ] as [String: Any]
+
+        isLoading = true
+        makeRequest(with: checkoutEndpoint, body: body, completionHandler: { data, response, error in
+            guard
+                error == nil,
+                let data = data,
+                let json = try? JSONDecoder().decode([String: String].self, from: data),
+                (response as? HTTPURLResponse)?.statusCode != 400
+            else {
+                print(error as Any)
+                DispatchQueue.main.async {
+                    var errorMessage = "An error occurred communicating with the example backend."
+                    if let data = data,
+                       let json = try? JSONDecoder().decode([String: String].self, from: data),
+                       let jsonError = json["error"] {
+                        errorMessage = jsonError
+                    }
+                    let error = NSError(domain: "com.stripe.paymentsheetplayground", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+                    self.isLoading = false
+                    intentCreationCallback(.failure(error))
+                }
+                return
+            }
+
+            guard let clientSecret = json["intentClientSecret"] else {
+                intentCreationCallback(.failure(NSError(domain: "com.stripe.paymentsheetplayground", code: 0, userInfo: [NSLocalizedDescriptionKey: "intentClientSecret not returned in payload"])))
+                self.isLoading = false
+                return
+            }
+            intentCreationCallback(.success(clientSecret))
+            self.isLoading = false
+        })
+    }
 }
 
 extension PaymentSheet.IntentConfiguration.Mode {
     var requestBody: String {
         switch self {
-        case .payment:
+        case .payment(_, _, let setupFutureUsage, _ ):
+            if case .offSession = setupFutureUsage {
+                return "payment_with_setup"
+            }
             return "payment"
         case .setup:
             return "setup"

@@ -288,6 +288,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static var confirmEndpoint: String {
         return "\(baseEndpoint)/confirm_intent"
     }
+    static var initDeferredEndpoint: String {
+        return "\(baseEndpoint)/init_deferred"
+    }
 
     var base64Data: String {
         let jsonData = try! JSONEncoder().encode(self)
