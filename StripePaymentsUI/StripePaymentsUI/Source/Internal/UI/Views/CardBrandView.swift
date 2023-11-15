@@ -58,11 +58,11 @@ import UIKit
         view.tintColor = .placeholderText
         return view
     }()
-    
+
     var cbcIndicatorSizeConstraint: NSLayoutConstraint?
-    
+
     /// Card brand to display.
-    @_spi(STP) public var cardBrand: STPCardBrand = .unknown {
+    var cardBrandState: STPCBCController.BrandState = .unknown {
         didSet {
             updateIcon()
         }
@@ -72,16 +72,18 @@ import UIKit
     let showCVC: Bool
 
     /// If `true`, show a CBC indicator arrow
-    var showCBC: Bool = false {
+    var isShowingCBCIndicator: Bool = false {
         didSet {
-            cbcIndicatorView.isHidden = !showCBC
-            self.cbcIndicatorSizeConstraint?.constant = showCBC ? 9.0 : 0
-            self.invalidateIntrinsicContentSize()
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
+            if oldValue != isShowingCBCIndicator {
+                // Gross, but we need to reach up to our top nested UIStackView to relayout with the new intrinsicContentSize:
+                self.superview?.superview?.setNeedsLayout()
+                self.invalidateIntrinsicContentSize()
+                cbcIndicatorView.isHidden = !isShowingCBCIndicator
+                self.cbcIndicatorSizeConstraint?.constant = isShowingCBCIndicator ? 9.0 : 0
+            }
         }
     }
-    
+
     @_spi(STP) public override var intrinsicContentSize: CGSize {
         return size(for: Self.targetIconSize)
     }
@@ -100,7 +102,7 @@ import UIKit
             / (Self.legacyIconSize.height - Self.iconPadding.top - Self.iconPadding.bottom)
         // We could adapt this for multiple screens, but probably not worth it (better solution is to remove padding from images)
         let screenScale = UIScreen.main.scale
-        let extraWidth = showCBC ? 9.0 : 0
+        let extraWidth = isShowingCBCIndicator ? 9.0 : 0
         return CGSize(
             width: (round(Self.legacyIconSize.width * scaleX * screenScale) / screenScale)
             + padding.right + padding.left + extraWidth,
@@ -126,14 +128,14 @@ import UIKit
 
         addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         addSubview(cbcIndicatorView)
         cbcIndicatorView.translatesAutoresizingMaskIntoConstraints = false
 
         cbcIndicatorView.isHidden = true
         let cbcIndicatorSizeConstraint = cbcIndicatorView.widthAnchor.constraint(equalToConstant: 0)
         cbcIndicatorSizeConstraint.priority = .required
-        
+
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: centeringPadding.top),
             self.bottomAnchor.constraint(
@@ -158,9 +160,9 @@ import UIKit
             cbcIndicatorView.heightAnchor.constraint(
                 equalToConstant: 9.0
             ),
-            cbcIndicatorSizeConstraint
+            cbcIndicatorSizeConstraint,
         ])
-        
+
         self.cbcIndicatorSizeConstraint = cbcIndicatorSizeConstraint
         updateIcon()
     }
@@ -173,12 +175,15 @@ import UIKit
 
     /// Updates the card brand, optionally animating the transition.
     /// - Parameters:
-    ///   - newBrand: New card brand.
+    ///   - newBrandState: New card brand state.
     ///   - animated: Whether or not to animate the transition.
-    func setCardBrand(_ newBrand: STPCardBrand, animated: Bool) {
-        let canAnimateTransition = imageView.image != self.image(for: newBrand)
+    func setCardBrand(_ newBrandState: STPCBCController.BrandState, animated: Bool) {
+        let newImage = image(for: newBrandState)
+        
+        // Image has changed and we're not switching between unknown option states
+        let canAnimateTransition = imageView.image != newImage && !(self.cardBrandState == .unknownMultipleOptions && newBrandState == .unknown) && !(self.cardBrandState == .unknown && newBrandState == .unknownMultipleOptions)
 
-        self.cardBrand = newBrand
+        self.cardBrandState = newBrandState
 
         if animated && canAnimateTransition {
             performTransitionAnimation()
@@ -188,7 +193,7 @@ import UIKit
     // MARK: - Private Methods
 
     private func updateIcon() {
-        imageView.image = image(for: cardBrand)
+        imageView.image = image(for: cardBrandState)
     }
 
     private func performTransitionAnimation() {
@@ -210,17 +215,25 @@ import UIKit
         let animationGroup = CAAnimationGroup()
         animationGroup.animations = [scaleAnimation, opacityAnimation]
 
-        self.layer.add(animationGroup, forKey: "transition")
+        self.imageView.layer.add(animationGroup, forKey: "transition")
     }
 
     /// Returns the most appropriate icon/image for the given card brand.
     /// - Parameter cardBrand: Card brand
     /// - Returns: Image.
-    private func image(for cardBrand: STPCardBrand) -> UIImage {
+    private func image(for brandState: STPCBCController.BrandState) -> UIImage {
         if showCVC {
-            return STPImageLibrary.cvcImage(for: cardBrand)
-        } else {
-            return STPImageLibrary.cardBrandImage(for: cardBrand)
+            return STPImageLibrary.cvcImage(for: brandState.brand)
+        }
+        switch brandState {
+        case .brand(let brand):
+            return STPImageLibrary.cardBrandImage(for: brand)
+        case .cbcBrandSelected(let brand):
+            return STPImageLibrary.cardBrandImage(for: brand)
+        case .unknown:
+            return STPImageLibrary.cardBrandImage(for: .unknown)
+        case .unknownMultipleOptions:
+            return STPImageLibrary.cardBrandChoiceImage()
         }
     }
 

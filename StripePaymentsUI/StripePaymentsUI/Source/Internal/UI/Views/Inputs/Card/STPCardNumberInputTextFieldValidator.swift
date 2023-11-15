@@ -18,17 +18,22 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
     }
 
     private var overridenCardBrand: STPCardBrand?
-    var cardBrand: STPCardBrand {
+    var cardBrandState: STPCBCController.BrandState {
         if let overridenCardBrand = overridenCardBrand {
-            return overridenCardBrand
+            return .brand(overridenCardBrand)
         }
+        
+        if cbcController.cbcEnabled {
+            return cbcController.brandState
+        }
+        
         guard let inputValue = inputValue,
             STPBINController.shared.hasBINRanges(forPrefix: inputValue)
         else {
             return .unknown
         }
 
-        return STPCardValidator.brand(forNumber: inputValue)
+        return .brand(STPCardValidator.brand(forNumber: inputValue))
     }
 
     override public var inputValue: String? {
@@ -72,8 +77,11 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                     validationState = .processing
                 }
             }
+            cbcController.cardNumber = inputValue
         }
     }
+    
+    let cbcController = STPCBCController()
 
     init(
         inputMode: STPCardNumberInputTextField.InputMode = .standard,
@@ -82,18 +90,6 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
     ) {
         self.inputMode = inputMode
         self.overridenCardBrand = cardBrand
-        self.cbcEnabledOverride = cbcEnabledOverride
+        self.cbcController.cbcEnabledOverride = cbcEnabledOverride
     }
-    
-    // MARK: Card brand choice
-    // Optionally override CBC as always disabled or always enabled
-    let cbcEnabledOverride: Bool?
-    
-    var cbcEnabled: Bool {
-        // TODO: This should come from the card element endpoint
-        return cbcEnabledOverride ?? false
-    }
-    
-    // User's list of preferred networks (set in STPCardFormView)
-    var preferredNetworks: [STPCardBrand]?
 }

@@ -133,7 +133,7 @@ class STPCardFormViewTests: XCTestCase {
             )
 
             XCTAssertEqual(cardForm.numberField.text, prefillDeatils.formattedLast4)
-            XCTAssertEqual(cardForm.numberField.cardBrand, prefillDeatils.cardBrand)
+            XCTAssertEqual(cardForm.numberField.cardBrandState.brand, prefillDeatils.cardBrand)
             XCTAssertEqual(cardForm.expiryField.text, prefillDeatils.formattedExpiry)
             XCTAssertEqual(cardForm.cvcField.cardBrand, prefillDeatils.cardBrand)
         }

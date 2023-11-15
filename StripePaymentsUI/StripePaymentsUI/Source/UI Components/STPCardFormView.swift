@@ -195,6 +195,12 @@ public class STPCardFormView: STPFormView {
             cardParams.expMonth = NSNumber(value: monthInt)
             cardParams.expYear = NSNumber(value: yearInt)
 
+            // If CBC is enabled, set the selected card brand
+            if let cardValidator = (numberField.validator as? STPCardNumberInputTextFieldValidator),
+                let selectedBrand = cardValidator.cbcController.selectedBrand {
+                cardParams.networks = STPPaymentMethodCardNetworksParams(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
+            }
+            
             return STPPaymentMethodParams(
                 card: cardParams,
                 billingDetails: billingDetails,
@@ -217,7 +223,14 @@ public class STPCardFormView: STPFormView {
                 if let cvc = card.cvc {
                     cvcField.text = cvc
                 }
+                // If a card brand is explicitly selected, retain that information
+                if let preferredBrandString = card.networks?.preferred,
+                   let cardValidator = (numberField.validator as? STPCardNumberInputTextFieldValidator)
+                    {
+                    cardValidator.cbcController.selectedBrand = STPPaymentMethodCard.brand(from: preferredBrandString)
+                }
             }
+
             billingAddressSubForm.billingDetails = newValue?.billingDetails
             // MUST be called after setting field values
             _bindedPaymentMethodParams = newValue
@@ -383,7 +396,7 @@ public class STPCardFormView: STPFormView {
                 sectionView.insetFooterLabel = true
             }
         }
-        
+
         hideShadow = true
         // manually call the didSet behavior of hideShadow since that's not triggered in initializers
         sectionViews.forEach { (sectionView) in
@@ -454,7 +467,7 @@ public class STPCardFormView: STPFormView {
         }
 
         if textField == numberField {
-            cvcField.cardBrand = numberField.cardBrand
+            cvcField.cardBrand = numberField.cardBrandState.brand
         } else if textField == countryField {
             let countryChanged = textField.inputValue != countryCode
 
@@ -538,7 +551,7 @@ public class STPCardFormView: STPFormView {
             return false
         }
     }
-    
+
     // MARK: CBC
     /// The list of preferred networks that should be used to process
     /// payments made with a co-branded card if your user hasn't selected a

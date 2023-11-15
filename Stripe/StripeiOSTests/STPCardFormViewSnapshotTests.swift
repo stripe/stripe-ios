@@ -118,5 +118,43 @@ class STPCardFormViewSnapshotTests: STPSnapshotTestCase {
 
         STPSnapshotVerifyView(formView)
     }
+    
+    func testCBC() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        let formView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
+        formView.countryCode = "US"
+        formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
+        formView.numberField.text = "4973019750239993"
+        formView.numberField.textDidChange()
+        formView.cvcField.text = "123"
+        formView.cvcField.textDidChange()
+        formView.postalCodeField.text = "12345"
+        let exp = expectation(description: "Wait for CBC load")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.STPSnapshotVerifyView(formView)
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 3.0)
+    }
+    
+    func testCBCPreselectVisa() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        let formView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
+        formView.countryCode = "US"
+        formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
+
+        formView.numberField.text = "4973019750239993"
+        formView.numberField.textDidChange()
+        formView.cvcField.text = "123"
+        formView.cvcField.textDidChange()
+        formView.postalCodeField.text = "12345"
+        formView.preferredNetworks = [.visa]
+        let exp = expectation(description: "Wait for CBC load")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.STPSnapshotVerifyView(formView)
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 3.0)
+    }
 
 }

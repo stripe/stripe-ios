@@ -7,12 +7,12 @@
 //
 
 import Stripe
-import UIKit
 @_spi(STP) import StripePaymentsUI
+import UIKit
 
 class CardFormViewController: UIViewController {
     var alwaysEnableCBC: Bool = false
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Card Form"
