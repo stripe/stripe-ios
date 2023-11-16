@@ -53,7 +53,8 @@ class STPCBCController {
 
     func fetchCardBrands() {
         // Only fetch card brands if we have at least 8 digits in the pan
-        guard let cardNumber = cardNumber,
+        guard cbcEnabled,
+              let cardNumber = cardNumber,
               cardNumber.count >= 8 else {
             // Clear any previously fetched card brands from the dropdown
             if self.cardBrands != Set<STPCardBrand>() {
