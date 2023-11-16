@@ -68,20 +68,21 @@ final class HTMLTextView: UIView {
 
     // Check if htmlText is <ul></ul>, if so, return the <li> within, return nil otherwise
     fileprivate func tryParseUl(htmlString: String) -> [String]? {
-        let range = NSRange(htmlString.startIndex..<htmlString.endIndex, in: htmlString)
-        let regex = try? NSRegularExpression(pattern: "<ul>.*</ul>", options: .dotMatchesLineSeparators)
-        if regex?.firstMatch(in: htmlString, options: [], range: range) == nil {
+        let trimmedHtmlString = htmlString.trimmingCharacters(in: .whitespacesAndNewlines)
+        let range = NSRange(trimmedHtmlString.startIndex..<trimmedHtmlString.endIndex, in: trimmedHtmlString)
+        let regex = try? NSRegularExpression(pattern: "^<ul>.*</ul>$", options: .dotMatchesLineSeparators)
+        if regex?.firstMatch(in: trimmedHtmlString, options: [], range: range) == nil {
             return nil
         }
 
         // Extract list items
         var items: [String] = []
         let itemRegex = try? NSRegularExpression(pattern: "<li>(.*?)</li>", options: .dotMatchesLineSeparators)
-        let matches = itemRegex?.matches(in: htmlString, options: [], range: range) ?? []
+        let matches = itemRegex?.matches(in: trimmedHtmlString, options: [], range: range) ?? []
 
         for match in matches {
-            if let range = Range(match.range(at: 1), in: htmlString) {
-                items.append(String(htmlString[range]))
+            if let range = Range(match.range(at: 1), in: trimmedHtmlString) {
+                items.append(String(trimmedHtmlString[range]))
             }
         }
         return items
