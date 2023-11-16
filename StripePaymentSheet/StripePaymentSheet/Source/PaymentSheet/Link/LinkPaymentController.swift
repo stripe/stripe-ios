@@ -149,7 +149,7 @@ import UIKit
                                                    customerName: configuration.defaultBillingDetails.name,
                                                    customerEmailAddress: configuration.defaultBillingDetails.email,
                                                    additionalParameteres: parameters) { [weak self] linkAccountSession, error in
-                    self?.generateManifest(continuation: continuation, error: error, linkAccountSession: linkAccountSession)
+                    self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                 }
             case .setupIntentClientSecret(let clientSecret):
                 guard let setupIntentId = STPSetupIntent.id(fromClientSecret: clientSecret) else {
@@ -162,7 +162,7 @@ import UIKit
                                                    customerName: configuration.defaultBillingDetails.name,
                                                    customerEmailAddress: configuration.defaultBillingDetails.email,
                                                    additionalParameteres: parameters) { [weak self] linkAccountSession, error in
-                    self?.generateManifest(continuation: continuation, error: error, linkAccountSession: linkAccountSession)
+                    self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                 }
             case .deferredIntent(let intentConfiguration):
                 let amount: Int?
@@ -183,7 +183,7 @@ import UIKit
                         onBehalfOf: intentConfiguration.onBehalfOf,
                         additionalParameters: ["product": "instant_debits"]
                     ) { [weak self] linkAccountSession, error in
-                        self?.generateManifest(continuation: continuation, error: error, linkAccountSession: linkAccountSession)
+                        self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                     }
             }
         }
@@ -216,6 +216,7 @@ import UIKit
 
     private func generateManifest(continuation: CheckedContinuation<Manifest, Swift.Error>,
                                   error: Swift.Error?,
+                                  emailAddress: String?,
                                   linkAccountSession: LinkAccountSession?) {
         if let error = error {
             continuation.resume(throwing: error)
@@ -227,7 +228,7 @@ import UIKit
             return
         }
 
-        configuration.apiClient.generatedLinkAccountSessionManifest(with: linkAccountSession.clientSecret) { result in
+        configuration.apiClient.generatedLinkAccountSessionManifest(with: linkAccountSession.clientSecret, emailAddress: emailAddress) { result in
             switch result {
             case .success(let manifest):
                 continuation.resume(returning: manifest)
