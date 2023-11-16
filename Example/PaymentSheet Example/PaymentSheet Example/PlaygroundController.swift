@@ -468,7 +468,16 @@ extension PlaygroundController {
                             )
                         }
 
-                    case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
+                    case .deferred_ssc, .deferred_mc, .deferred_mp:
+                        PaymentSheet.FlowController.create(
+                            intentConfiguration: self.intentConfig,
+                            configuration: self.configuration,
+                            completion: completion
+                        )
+                    case .deferred_csc:
+                        // Disregard the newly created client secret.
+                        // New intent will be created in deferredIntentCreationForCSC
+                        self.clientSecret = nil
                         PaymentSheet.FlowController.create(
                             intentConfiguration: self.intentConfig,
                             configuration: self.configuration,
@@ -608,14 +617,15 @@ extension PlaygroundController {
                 }
                 return
             }
-
-            guard let clientSecret = json["intentClientSecret"] else {
-                intentCreationCallback(.failure(NSError(domain: "com.stripe.paymentsheetplayground", code: 0, userInfo: [NSLocalizedDescriptionKey: "intentClientSecret not returned in payload"])))
+            DispatchQueue.main.async {
+                guard let clientSecret = json["intentClientSecret"] else {
+                    intentCreationCallback(.failure(NSError(domain: "com.stripe.paymentsheetplayground", code: 0, userInfo: [NSLocalizedDescriptionKey: "intentClientSecret not returned in payload"])))
+                    self.isLoading = false
+                    return
+                }
+                intentCreationCallback(.success(clientSecret))
                 self.isLoading = false
-                return
             }
-            intentCreationCallback(.success(clientSecret))
-            self.isLoading = false
         })
     }
 }
