@@ -200,7 +200,7 @@ public class STPCardFormView: STPFormView {
                 let selectedBrand = cardValidator.cbcController.selectedBrand {
                 cardParams.networks = STPPaymentMethodCardNetworksParams(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
             }
-            
+
             return STPPaymentMethodParams(
                 card: cardParams,
                 billingDetails: billingDetails,
@@ -227,7 +227,7 @@ public class STPCardFormView: STPFormView {
                 if let preferredBrandString = card.networks?.preferred,
                    let cardValidator = (numberField.validator as? STPCardNumberInputTextFieldValidator)
                     {
-                    cardValidator.cbcController.selectedBrand = STPPaymentMethodCard.brand(from: preferredBrandString)
+                    cardValidator.cbcController.selectedBrand = STPCard.brand(from: preferredBrandString)
                 }
             }
 

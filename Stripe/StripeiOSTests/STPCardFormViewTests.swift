@@ -138,6 +138,28 @@ class STPCardFormViewTests: XCTestCase {
             XCTAssertEqual(cardForm.cvcField.cardBrand, prefillDeatils.cardBrand)
         }
     }
+    
+    func testCBCWithPreferredNetwork() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "5555552500001001"
+        cardParams.expYear = 2080
+        cardParams.expMonth = 12
+        cardParams.cvc = "123"
+        cardParams.networks = .init(preferred: "cartes_bancaires")
+        let billingDetails = STPPaymentMethodBillingDetails(postalCode: "12345", countryCode: "US")
+        let paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: billingDetails, metadata: nil)
+        cardFormView.cardParams = paymentMethodParams
+        XCTAssertEqual(cardFormView.cardParams?.card?.number, cardParams.number)
+        let exp = expectation(description: "Wait for CBC load")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            XCTAssertEqual(cardFormView.cardParams?.card?.networks?.preferred, "cartes_bancaires")
+            XCTAssertEqual(cardFormView.numberField.cardBrandState.brand, .cartesBancaires)
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 3.0)
+    }
 
     // MARK: Functional Tests
     // If these fail it's _possibly_ because the returned error formats have changed

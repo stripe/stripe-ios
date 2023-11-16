@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// A controller to handle CBC state
 /// Update the `cardNumber` as the card number changes. Brands will be fetched and returned via the `updateHandler()` automatically.
@@ -19,15 +19,15 @@ class STPCBCController {
             fetchCardBrands()
         }
     }
-    
+
     var updateHandler: (() -> Void)?
-    
+
     /// Initialize an STPCBCController.
     /// updateHandler: A block that will be called when the list of available brands updates. Use this to update your UI.
     init(updateHandler: (() -> Void)? = nil) {
         self.updateHandler = updateHandler
     }
-    
+
     var selectedBrand: STPCardBrand? {
         didSet {
             self.updateHandler?()
@@ -79,7 +79,7 @@ class STPCBCController {
             }
         }
     }
-    
+
     var cbcEnabledOverride: Bool? = {
         // TODO: Remove the default value of `false` once we release CBC
         return false
@@ -106,7 +106,7 @@ class STPCBCController {
                 return true
             }
         }
-        
+
         var brand: STPCardBrand {
             switch self {
             case .brand(let brand):
@@ -136,7 +136,7 @@ class STPCBCController {
             return .brand(STPCardValidator.brand(forNumber: cardNumber ?? ""))
         }
     }
-    
+
     var contextMenuConfiguration: UIContextMenuConfiguration {
         return UIContextMenuConfiguration(actionProvider: { _ in
             let action = { (action: UIAction) -> Void in

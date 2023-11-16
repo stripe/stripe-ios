@@ -91,35 +91,35 @@ class STPPaymentMethodCardTest: XCTestCase {
     }
 
     func testBrandFromString() {
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "visa"), .visa)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "VISA"), .visa)
+        XCTAssertEqual(STPCard.brand(from: "visa"), .visa)
+        XCTAssertEqual(STPCard.brand(from: "VISA"), .visa)
 
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "amex"), .amex)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "AMEX"), .amex)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "american_express"), .amex)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "AMERICAN_EXPRESS"), .amex)
+        XCTAssertEqual(STPCard.brand(from: "amex"), .amex)
+        XCTAssertEqual(STPCard.brand(from: "AMEX"), .amex)
+        XCTAssertEqual(STPCard.brand(from: "american_express"), .amex)
+        XCTAssertEqual(STPCard.brand(from: "AMERICAN_EXPRESS"), .amex)
 
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "mastercard"), .mastercard)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "MASTERCARD"), .mastercard)
+        XCTAssertEqual(STPCard.brand(from: "mastercard"), .mastercard)
+        XCTAssertEqual(STPCard.brand(from: "MASTERCARD"), .mastercard)
 
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "discover"), .discover)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "DISCOVER"), .discover)
+        XCTAssertEqual(STPCard.brand(from: "discover"), .discover)
+        XCTAssertEqual(STPCard.brand(from: "DISCOVER"), .discover)
 
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "jcb"), .JCB)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "JCB"), .JCB)
+        XCTAssertEqual(STPCard.brand(from: "jcb"), .JCB)
+        XCTAssertEqual(STPCard.brand(from: "JCB"), .JCB)
 
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "diners"), .dinersClub)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "DINERS"), .dinersClub)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "diners_club"), .dinersClub)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "DINERS_CLUB"), .dinersClub)
+        XCTAssertEqual(STPCard.brand(from: "diners"), .dinersClub)
+        XCTAssertEqual(STPCard.brand(from: "DINERS"), .dinersClub)
+        XCTAssertEqual(STPCard.brand(from: "diners_club"), .dinersClub)
+        XCTAssertEqual(STPCard.brand(from: "DINERS_CLUB"), .dinersClub)
 
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "unionpay"), .unionPay)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "UNIONPAY"), .unionPay)
+        XCTAssertEqual(STPCard.brand(from: "unionpay"), .unionPay)
+        XCTAssertEqual(STPCard.brand(from: "UNIONPAY"), .unionPay)
 
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "unknown"), .unknown)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "UNKNOWN"), .unknown)
+        XCTAssertEqual(STPCard.brand(from: "unknown"), .unknown)
+        XCTAssertEqual(STPCard.brand(from: "UNKNOWN"), .unknown)
 
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "garbage"), .unknown)
-        XCTAssertEqual(STPPaymentMethodCard.brand(from: "GARBAGE"), .unknown)
+        XCTAssertEqual(STPCard.brand(from: "garbage"), .unknown)
+        XCTAssertEqual(STPCard.brand(from: "GARBAGE"), .unknown)
     }
 }

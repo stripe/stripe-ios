@@ -22,11 +22,11 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
         if let overridenCardBrand = overridenCardBrand {
             return .brand(overridenCardBrand)
         }
-        
+
         if cbcController.cbcEnabled {
             return cbcController.brandState
         }
-        
+
         guard let inputValue = inputValue,
             STPBINController.shared.hasBINRanges(forPrefix: inputValue)
         else {
@@ -80,7 +80,7 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
             cbcController.cardNumber = inputValue
         }
     }
-    
+
     let cbcController = STPCBCController()
 
     init(

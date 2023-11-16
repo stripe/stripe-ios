@@ -7,8 +7,8 @@
 //
 
 import OHHTTPStubs
-import XCTest
 @testable@_spi(STP) import StripeCore
+import XCTest
 
 /// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run with `recordingMode = YES` and save it to disk. When run with `recordingMode = NO`, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
 /// ⚠️ Warning: `STPAPIClient`s created before `setUp` is called are not recorded!

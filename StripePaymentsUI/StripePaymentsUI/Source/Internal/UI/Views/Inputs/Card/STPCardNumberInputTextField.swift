@@ -37,7 +37,7 @@ import UIKit
             (validator as? STPCardNumberInputTextFieldValidator)?.cbcController.preferredNetworks = newValue
         }
     }
-    
+
     open override func menuAttachmentPoint(for configuration: UIContextMenuConfiguration) -> CGPoint {
         let pointInBrandImageView = CGPoint(x: brandImageView.bounds.midX, y: brandImageView.bounds.maxY)
         return self.convert(pointInBrandImageView, from: brandImageView)
@@ -65,7 +65,7 @@ import UIKit
     ) {
         let validator = STPCardNumberInputTextFieldValidator(
             inputMode: inputMode,
-            cardBrand: prefillDetails?.cardBrand, 
+            cardBrand: prefillDetails?.cardBrand,
             cbcEnabledOverride: cbcEnabledOverride
         )
         // Don't format for panLocked input mode
@@ -117,7 +117,6 @@ import UIKit
         accessibilityIdentifier = "Card number"
         placeholder = STPLocalizedString("Card number", "Label for card number entry text field")
     }
-
 
     func updateRightView() {
         switch validator.validationState {

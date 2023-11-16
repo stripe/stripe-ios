@@ -118,7 +118,7 @@ class STPCardFormViewSnapshotTests: STPSnapshotTestCase {
 
         STPSnapshotVerifyView(formView)
     }
-    
+
     func testCBC() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let formView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
@@ -136,7 +136,7 @@ class STPCardFormViewSnapshotTests: STPSnapshotTestCase {
         }
         waitForExpectations(timeout: 3.0)
     }
-    
+
     func testCBCPreselectVisa() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let formView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)

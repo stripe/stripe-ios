@@ -179,7 +179,7 @@ import UIKit
     ///   - animated: Whether or not to animate the transition.
     func setCardBrand(_ newBrandState: STPCBCController.BrandState, animated: Bool) {
         let newImage = image(for: newBrandState)
-        
+
         // Image has changed and we're not switching between unknown option states
         let canAnimateTransition = imageView.image != newImage && !(self.cardBrandState == .unknownMultipleOptions && newBrandState == .unknown) && !(self.cardBrandState == .unknown && newBrandState == .unknownMultipleOptions)
 

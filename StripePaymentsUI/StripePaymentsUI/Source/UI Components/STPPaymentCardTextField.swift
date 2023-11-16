@@ -492,7 +492,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
             // If a card brand is explicitly selected, retain that information
             if let preferredBrandString = callersCardParams.card?.networks?.preferred {
-                viewModel.cbcController.selectedBrand = STPPaymentMethodCard.brand(from: preferredBrandString)
+                viewModel.cbcController.selectedBrand = STPCard.brand(from: preferredBrandString)
             }
 
             setText(desiredCardParams.number, inField: .number)

@@ -21,7 +21,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     init(brandUpdateHandler: @escaping () -> Void) {
         self.cbcController = STPCBCController(updateHandler: brandUpdateHandler)
     }
-    
+
     private var _cardNumber: String?
     @objc dynamic var cardNumber: String? {
         get {
@@ -112,9 +112,9 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             )
         }
     }
-    
+
     let cbcController: STPCBCController
-    
+
     @objc dynamic var brand: STPCardBrand {
         switch cbcController.brandState {
         case .brand(let brand):
