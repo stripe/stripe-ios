@@ -65,6 +65,7 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.mode)
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
                         SettingView(setting: $playgroundController.settings.customerMode)
+                        TextField("CustomerId", text: customerIdBinding)
                         SettingPickerView(setting: $playgroundController.settings.currency)
                         SettingPickerView(setting: $playgroundController.settings.merchantCountryCode)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
@@ -113,7 +114,13 @@ struct PaymentSheetTestPlayground: View {
         } set: { newString in
             playgroundController.settings.customCtaLabel = (newString != "") ? newString : nil
         }
-
+    }
+    var customerIdBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customerId ?? ""
+        } set: { newString in
+            playgroundController.settings.customerId = (newString != "") ? newString : nil
+        }
     }
 }
 
