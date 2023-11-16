@@ -47,7 +47,7 @@ final class NSAttributedString_HTMLSnapshotTest: STPSnapshotTestCase {
           <li>List Item</li>
         </ul>
         """
-    
+
     let textView = UITextView()
 
     // Pick a font that supports italic
@@ -86,14 +86,14 @@ final class NSAttributedString_HTMLSnapshotTest: STPSnapshotTestCase {
             )
         )
     }
-    
+
     func testDefaultStyleForUlText() throws {
         try verifyView(
             htmlString: NSAttributedString_HTMLSnapshotTest.htmlTextWithUl,
             style: .default
         )
     }
-    
+
     func testCustomStyleForUlText() throws {
         try verifyView(
             htmlString: NSAttributedString_HTMLSnapshotTest.htmlTextWithUl,
