@@ -59,7 +59,10 @@ struct IdentityUI {
     static let iconColor = UIColor.systemGray
     static let darkIconColor = UIColor.label
 
-    static let htmlLineTextColor = UIColor(red: 0.408, green: 0.451, blue: 0.522, alpha: 1)
+    static let htmlLineTextColor = UIColor.dynamic(
+        light: UIColor(red: 0.408, green: 0.451, blue: 0.522, alpha: 1),
+        dark: UIColor(red: 0.922, green: 0.933, blue: 0.945, alpha: 1)
+    )
 
     // MARK: Separator
 
