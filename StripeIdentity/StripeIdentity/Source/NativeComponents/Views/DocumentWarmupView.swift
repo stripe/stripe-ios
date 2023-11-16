@@ -62,7 +62,7 @@ class DocumentWarmupView: UIView {
     init(staticContent: StripeAPI.VerificationPageStaticContentDocumentSelectPage) {
         super.init(frame: .zero)
         installViews()
-        bindAcceptTypesOfId(allowList: Array(staticContent.idDocumentTypeAllowlist.keys.map { value in
+        bindAcceptTypesOfId(allowList: Array(staticContent.idDocumentTypeAllowlist.keys.compactMap { value in
             if value == "driving_license" {
                 return String.Localized.driverLicense
             } else if value == "id_card" {
@@ -70,7 +70,7 @@ class DocumentWarmupView: UIView {
             } else if value == "passport" {
                 return String.Localized.passport
             } else {
-                return ""
+                return nil
             }
         }))
     }

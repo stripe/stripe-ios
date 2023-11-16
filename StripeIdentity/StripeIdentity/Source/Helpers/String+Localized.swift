@@ -232,7 +232,7 @@ extension String.Localized {
     static var driverLicense: String {
         STPLocalizedString(
             "driver's license",
-            "dirver's license"
+            "driver's license"
         )
     }
 

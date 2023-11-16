@@ -234,7 +234,7 @@ extension IdentityFlowView {
         buttonTopContentView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            // Constrain buttonTop top of bottons
+            // Constrain buttonTop top of buttons
             buttonTopContentView.centerXAnchor.constraint(equalTo: centerXAnchor),
             buttonTopContentView.bottomAnchor.constraint(equalTo: buttonBackgroundView.topAnchor, constant: -Style.buttonTopBottomPadding),
             // Constrain buttons to bottom

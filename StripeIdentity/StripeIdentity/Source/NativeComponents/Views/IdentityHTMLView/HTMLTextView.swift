@@ -136,7 +136,7 @@ final class HTMLTextView: UIView {
         // NOTE: `traitCollectionDidChange` is called off the main thread when the app backgrounds
         DispatchQueue.main.async { [weak self] in
             do {
-                // Recompute attributed text with updated font sizes
+                // Reconfigure to compute attributed text with updated font sizes
                 try self?.configure(with: viewModel)
             } catch {
                 // Ignore errors thrown. This means the font size won't update,
