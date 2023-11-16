@@ -70,7 +70,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case guest
         case new
         case returning
-        case id
     }
 
     enum Currency: String, PickerEnum {

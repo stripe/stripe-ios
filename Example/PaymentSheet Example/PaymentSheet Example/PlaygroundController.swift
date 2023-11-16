@@ -187,16 +187,14 @@ class PlaygroundController: ObservableObject {
         }
     }
 
-    var customer: String {
+    var customerIdOrType: String {
         switch settings.customerMode {
         case .guest:
             return "guest"
         case .new:
-            return "new"
+            return settings.customerId ?? "new"
         case .returning:
             return "returning"
-        case .id:
-            return self.settings.customerId ?? ""
         }
     }
 
@@ -374,7 +372,7 @@ extension PlaygroundController {
         let settingsToLoad = self.settings
 
         let body = [
-            "customer": customer,
+            "customer": customerIdOrType,
             "currency": settings.currency.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
@@ -417,7 +415,6 @@ extension PlaygroundController {
                 self.clientSecret = json["intentClientSecret"]
                 self.ephemeralKey = json["customerEphemeralKeySecret"]
                 self.settings.customerId = json["customerId"]
-                self.settings.customerMode = .id
                 self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
                 self.amount = Int(json["amount"] ?? "")
                 STPAPIClient.shared.publishableKey = json["publishableKey"]
