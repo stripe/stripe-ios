@@ -86,7 +86,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         tableView.tableFooterView = UIView()
         tableView.rowHeight = 60
         navigationController?.navigationBar.isTranslucent = false
-        self.tableView(tableView, didSelectRowAt: .init(row: Demo.STPCardFormViewControllerCBC.rawValue, section: 0))
     }
 
     // MARK: UITableViewDelegate

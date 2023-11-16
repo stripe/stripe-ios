@@ -138,7 +138,7 @@ class STPCardFormViewTests: XCTestCase {
             XCTAssertEqual(cardForm.cvcField.cardBrand, prefillDeatils.cardBrand)
         }
     }
-    
+
     func testCBCWithPreferredNetwork() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
