@@ -34,8 +34,6 @@ class HeaderIconView: UIView {
         static let baseIconLength: CGFloat = 32
         static let cornerRadius: CGFloat = 8
 
-        static let plusIconTintColor: UIColor = .label
-
         static let shadowConfig = ShadowConfiguration(
             shadowColor: .black,
             shadowOffset: CGSize(width: 0, height: 2),
@@ -91,11 +89,10 @@ class HeaderIconView: UIView {
     // MARK: Views
     private let baseIconView: ShadowedCorneredImageView = ShadowedCorneredImageView()
 
-    private let plusIconView: UIImageView = {
+    private let ellipsisIconView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .center
-        imageView.tintColor = Styling.plusIconTintColor
-        imageView.image = Image.iconAdd.makeImage(template: true)
+        imageView.image = Image.iconEllipsis.makeImage(template: false)
         return imageView
     }()
 
@@ -149,10 +146,10 @@ class HeaderIconView: UIView {
 
         switch viewModel.iconType {
         case .brand:
-            plusIconView.isHidden = false
+            ellipsisIconView.isHidden = false
             stripeIconView.isHidden = false
         case .plain:
-            plusIconView.isHidden = true
+            ellipsisIconView.isHidden = true
             stripeIconView.isHidden = true
         }
 
@@ -175,7 +172,7 @@ class HeaderIconView: UIView {
 extension HeaderIconView {
     fileprivate func installViews() {
         stackView.addArrangedSubview(baseIconView)
-        stackView.addArrangedSubview(plusIconView)
+        stackView.addArrangedSubview(ellipsisIconView)
         stackView.addArrangedSubview(stripeIconView)
         addSubview(stackView)
     }

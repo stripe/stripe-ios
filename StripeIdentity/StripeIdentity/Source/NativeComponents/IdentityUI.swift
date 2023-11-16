@@ -16,7 +16,7 @@ struct IdentityUI {
     // MARK: Font
 
     static var titleFont: UIFont {
-        preferredFont(forTextStyle: .title1, weight: .medium)
+        preferredFont(forTextStyle: .title1, weight: .bold)
     }
 
     static var instructionsFont: UIFont {
@@ -58,6 +58,8 @@ struct IdentityUI {
 
     static let iconColor = UIColor.systemGray
     static let darkIconColor = UIColor.label
+
+    static let htmlLineTextColor = UIColor(red: 0.408, green: 0.451, blue: 0.522, alpha: 1)
 
     // MARK: Separator
 

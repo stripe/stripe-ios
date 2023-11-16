@@ -19,8 +19,16 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
         flowViewModel = .init(
             headerViewModel: nil,
             contentView: DocumentWarmupView(staticContent: staticContent),
-            buttonText: String.Localized.continue,
+            buttonText: String.Localized.imReady,
             state: .enabled,
+            buttonTopContentViewModel: .init(
+                text: String.Localized.documentFrontWarmupBody,
+                style: .plainText(
+                    font: IdentityUI.instructionsFont,
+                    textColor: IdentityUI.textColor
+                ),
+                didOpenURL: { _ in }
+            ),
             didTapButton: {
                 sheetController.transitionToDocumentCapture()
             }

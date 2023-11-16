@@ -13,10 +13,11 @@ import UIKit
 final class HTMLViewWithIconLabels: UIView {
 
     struct Styling {
-        static let iconTextSpacing: CGFloat = 8
+        static let iconTextSpacing: CGFloat = 16
         static let verticalIconTextSpacing: CGFloat = 12
         static let stackViewSpacing: CGFloat = 16
         static let separatorVerticalSpacing: CGFloat = 24
+        static let baseIconLenght: CGFloat = 20
 
         private static let iconLabelTextStyle = UIFont.TextStyle.caption1
         private static let nonIconLabelTextStyle = UIFont.TextStyle.caption1

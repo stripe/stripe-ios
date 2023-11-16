@@ -20,8 +20,6 @@ class DocumentWarmupView: UIView {
         )
         static let warmupIconImageSpacing: CGFloat = 27
         static let warmupTitleSpacing: CGFloat = 12
-        static let warmupBodySpacing: CGFloat = 34
-        static let acceptIdsContainerPadding: CGFloat = 10
     }
 
     private let stackView: UIStackView = {
@@ -51,38 +49,30 @@ class DocumentWarmupView: UIView {
         return label
     }()
 
-    private let documentWarmupBodyLabel: UILabel = {
+    private let acceptedIds: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = IdentityUI.instructionsFont
         label.adjustsFontForContentSizeCategory = true
-        label.text = String.Localized.documentFrontWarmupBody
-        label.textColor = IdentityUI.secondaryLabelColor
-        return label
-    }()
-
-    private let accepedIdContainer: UIView = {
-        let uiView = UIView()
-        uiView.layer.borderWidth = 1.0
-        uiView.layer.borderColor = IdentityUI.separatorColor.cgColor
-        uiView.layer.cornerRadius = 12
-        return uiView
-    }()
-
-    private let acceptedIds: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = IdentityUI.instructionsFont
-        label.adjustsFontForContentSizeCategory = true
-        label.textColor = IdentityUI.secondaryLabelColor
+        label.textColor = IdentityUI.textColor
         return label
     }()
 
     init(staticContent: StripeAPI.VerificationPageStaticContentDocumentSelectPage) {
         super.init(frame: .zero)
         installViews()
-        bindAcceptTypesOfId(allowList: Array(staticContent.idDocumentTypeAllowlist.values))
+        bindAcceptTypesOfId(allowList: Array(staticContent.idDocumentTypeAllowlist.keys.map { value in
+            if value == "driving_license" {
+                return String.Localized.driverLicense
+            } else if value == "id_card" {
+                return String.Localized.governmentIssuedId
+            } else if value == "passport" {
+                return String.Localized.passport
+            } else {
+                return ""
+            }
+        }))
     }
 
     required init?(coder: NSCoder) {
@@ -90,11 +80,7 @@ class DocumentWarmupView: UIView {
     }
 
     private func bindAcceptTypesOfId(allowList: [String]) {
-        acceptedIds.text = String.Localized.acceptFormsOfId + "\n" + (allowList.map { "• " + $0 }.joined(separator: "\n"))
-        accepedIdContainer.addAndPinSubview(
-            acceptedIds,
-            insets: .init(top: Styling.acceptIdsContainerPadding, leading: Styling.acceptIdsContainerPadding, bottom: Styling.acceptIdsContainerPadding, trailing: Styling.acceptIdsContainerPadding)
-        )
+        acceptedIds.text = String.Localized.acceptFormsOfId + " " + (allowList.map { $0 }.joined(separator: ", ")) + "."
     }
 
     private func installViews() {
@@ -102,12 +88,10 @@ class DocumentWarmupView: UIView {
 
         stackView.addArrangedSubview(documentWarmupIconImageView)
         stackView.addArrangedSubview(documentWarmupTitleLabel)
-        stackView.addArrangedSubview(documentWarmupBodyLabel)
-        stackView.addArrangedSubview(accepedIdContainer)
+        stackView.addArrangedSubview(acceptedIds)
 
         stackView.setCustomSpacing(Styling.warmupIconImageSpacing, after: documentWarmupIconImageView)
         stackView.setCustomSpacing(Styling.warmupTitleSpacing, after: documentWarmupTitleLabel)
-        stackView.setCustomSpacing(Styling.warmupBodySpacing, after: documentWarmupBodyLabel)
 
     }
 

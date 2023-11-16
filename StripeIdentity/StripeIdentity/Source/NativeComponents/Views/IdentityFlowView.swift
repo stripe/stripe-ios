@@ -35,7 +35,7 @@ class IdentityFlowView: UIView {
         )
         static let stackViewSpacing: CGFloat = 8
 
-        static let privacyPolicyBottomPadding: CGFloat = 16
+        static let buttonTopBottomPadding: CGFloat = 16
 
         static func buttonConfiguration(isPrimary: Bool) -> Button.Configuration {
             return isPrimary ? .identityPrimary() : .identitySecondary()
@@ -76,7 +76,7 @@ class IdentityFlowView: UIView {
         let headerViewModel: HeaderView.ViewModel?
         let contentViewModel: Content
         let buttons: [Button]
-        var privacyPolicyModel: HTMLTextView.ViewModel?
+        var buttonTopContentViewModel: HTMLTextView.ViewModel?
         var scrollViewDelegate: UIScrollViewDelegate?
         var flowViewDelegate: IdentityFlowViewDelegate?
     }
@@ -114,7 +114,7 @@ class IdentityFlowView: UIView {
         return buttonBackgroundView
     }()
 
-    private let privacyPolicyView = HTMLTextView()
+    private let buttonTopContentView = HTMLTextView()
 
     private var flowViewDelegate: IdentityFlowViewDelegate?
 
@@ -151,7 +151,7 @@ class IdentityFlowView: UIView {
         configureHeaderView(with: viewModel.headerViewModel)
         configureContentView(with: viewModel.contentViewModel)
         configureButtons(with: viewModel.buttons)
-        try configurePrivacyAndPolicy(with: viewModel.privacyPolicyModel)
+        try configureButtonTop(with: viewModel.buttonTopContentViewModel)
         flowViewDelegate = viewModel.flowViewDelegate
         if let scrollViewDelegate = viewModel.scrollViewDelegate {
             scrollView.delegate = scrollViewDelegate
@@ -221,7 +221,7 @@ extension IdentityFlowView {
 
         // Arrange container stack view: scroll + button
         addAndPinSubview(scrollView)
-        addSubview(privacyPolicyView)
+        addSubview(buttonTopContentView)
         addSubview(buttonBackgroundView)
         buttonBackgroundView.addAndPinSubviewToSafeArea(
             buttonStackView,
@@ -231,12 +231,12 @@ extension IdentityFlowView {
 
     fileprivate func installConstraints() {
         buttonBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        privacyPolicyView.translatesAutoresizingMaskIntoConstraints = false
+        buttonTopContentView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            // Constrain privacy and policies to top of bottons
-            privacyPolicyView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            privacyPolicyView.bottomAnchor.constraint(equalTo: buttonBackgroundView.topAnchor, constant: -Style.privacyPolicyBottomPadding),
+            // Constrain buttonTop top of bottons
+            buttonTopContentView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            buttonTopContentView.bottomAnchor.constraint(equalTo: buttonBackgroundView.topAnchor, constant: -Style.buttonTopBottomPadding),
             // Constrain buttons to bottom
             buttonBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
             buttonBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -322,12 +322,12 @@ extension IdentityFlowView {
         }
     }
 
-    fileprivate func configurePrivacyAndPolicy(with privacyPolicyModel: HTMLTextView.ViewModel?) throws {
-        privacyPolicyView.isHidden = true
-        if let privacyPolicyModel = privacyPolicyModel {
+    fileprivate func configureButtonTop(with viewModel: HTMLTextView.ViewModel?) throws {
+        buttonTopContentView.isHidden = true
+        if let viewModel = viewModel {
             do {
-                try privacyPolicyView.configure(with: privacyPolicyModel)
-                privacyPolicyView.isHidden = false
+                try buttonTopContentView.configure(with: viewModel)
+                buttonTopContentView.isHidden = false
             } catch {
                 throw error
             }
@@ -336,9 +336,10 @@ extension IdentityFlowView {
 
     static func privacyPolicyLineContentStyle() -> HTMLStyle {
         let boldFont = IdentityUI.preferredFont(forTextStyle: UIFont.TextStyle.caption1, weight: .bold)
+        let contentColor = IdentityUI.htmlLineTextColor
         return .init(
             bodyFont: IdentityUI.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
-            bodyColor: IdentityUI.secondaryLabelColor,
+            bodyColor: contentColor,
             h1Font: boldFont,
             h2Font: boldFont,
             h3Font: boldFont,
@@ -346,7 +347,8 @@ extension IdentityFlowView {
             h5Font: boldFont,
             h6Font: boldFont,
             isLinkUnderlined: true,
-            shouldCenterText: false
+            shouldCenterText: false,
+            linkColor: contentColor
         )
     }
 }
@@ -357,6 +359,7 @@ extension IdentityFlowView.ViewModel {
         contentView: UIView,
         buttonText: String,
         state: Button.State = .enabled,
+        buttonTopContentViewModel: HTMLTextView.ViewModel? = nil,
         didTapButton: @escaping () -> Void
     ) {
         self.init(
@@ -369,7 +372,8 @@ extension IdentityFlowView.ViewModel {
                     isPrimary: true,
                     didTap: didTapButton
                 ),
-            ]
+            ],
+            buttonTopContentViewModel: buttonTopContentViewModel
         )
     }
 

@@ -66,13 +66,53 @@ final class HTMLTextView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // Check if htmlText is <ul></ul>, if so, return the <li> within, return nil otherwise
+    fileprivate func tryParseUl(htmlString: String) -> [String]? {
+        let range = NSRange(htmlString.startIndex..<htmlString.endIndex, in: htmlString)
+        let regex = try? NSRegularExpression(pattern: "<ul>.*</ul>", options: .dotMatchesLineSeparators)
+        if regex?.firstMatch(in: htmlString, options: [], range: range) == nil {
+            return nil
+        }
+
+        // Extract list items
+        var items: [String] = []
+        let itemRegex = try? NSRegularExpression(pattern: "<li>(.*?)</li>", options: .dotMatchesLineSeparators)
+        let matches = itemRegex?.matches(in: htmlString, options: [], range: range) ?? []
+
+        for match in matches {
+            if let range = Range(match.range(at: 1), in: htmlString) {
+                items.append(String(htmlString[range]))
+            }
+        }
+        return items
+    }
+
     func configure(with viewModel: ViewModel) throws {
+
         switch viewModel.style {
         case .html(let makeStyle):
-            textView.attributedText = try NSAttributedString(
-                htmlText: viewModel.text,
-                style: makeStyle()
-            )
+            let htmlStyle = makeStyle()
+            // NSAttributedString cannot properly render CSS with <ul> and <li>, build a plain string instead
+            if let parsedListItems = tryParseUl(htmlString: viewModel.text) {
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineHeightMultiple = htmlStyle.lineHeightMultiple
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .paragraphStyle: paragraphStyle
+                ]
+                textView.attributedText = NSAttributedString(string: parsedListItems.map { "• " + $0 }.joined(separator: "\n"), attributes: attributes)
+                textView.textColor = htmlStyle.bodyColor
+                textView.font = htmlStyle.bodyFont
+            } else {
+                textView.attributedText = try NSAttributedString.createHtmlString(
+                    htmlText: viewModel.text,
+                    style: htmlStyle
+                )
+                if let linkColor = htmlStyle.linkColor {
+                    textView.linkTextAttributes = [
+                        .foregroundColor: linkColor
+                    ]
+                }
+            }
         case .plainText(let font, let textColor):
             textView.text = viewModel.text
             textView.font = font
@@ -88,8 +128,7 @@ final class HTMLTextView: UIView {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        guard let viewModel = viewModel,
-            case .html(let makeStyle) = viewModel.style
+        guard let viewModel = viewModel, case .html = viewModel.style
         else {
             return
         }
@@ -98,10 +137,7 @@ final class HTMLTextView: UIView {
         DispatchQueue.main.async { [weak self] in
             do {
                 // Recompute attributed text with updated font sizes
-                self?.textView.attributedText = try NSAttributedString(
-                    htmlText: viewModel.text,
-                    style: makeStyle()
-                )
+                try self?.configure(with: viewModel)
             } catch {
                 // Ignore errors thrown. This means the font size won't update,
                 // but the text should still display if an error wasn't already

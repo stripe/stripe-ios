@@ -88,7 +88,7 @@ extension NSAttributedString_HTMLSnapshotTest {
         file: StaticString = #filePath,
         line: UInt = #line
     ) throws {
-        let attributedText = try NSAttributedString(htmlText: htmlString, style: style)
+        let attributedText = try NSAttributedString.createHtmlString(htmlText: htmlString, style: style)
         textView.attributedText = attributedText
         textView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
         STPSnapshotVerifyView(textView, file: file, line: line)

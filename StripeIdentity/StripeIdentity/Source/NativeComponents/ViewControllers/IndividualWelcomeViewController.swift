@@ -47,7 +47,7 @@ final class IndividualWelcomeViewController: IdentityFlowViewController {
                     }
                 ),
             ],
-            privacyPolicyModel: .init(
+            buttonTopContentViewModel: .init(
                 text: welcomeContent.privacyPolicy,
                 style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
                 didOpenURL: { url in

@@ -2,7 +2,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "A few photos will be taken automatically on the next step to verify it's you";
 
 /* Title for accepted types of ids */
-"Accepted forms of ID" = "Accepted forms of ID";
+"Accepted forms of ID include" = "Accepted forms of ID include";
 
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Alternatively, you may manually upload a photo of your identity document.";
@@ -42,6 +42,9 @@
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Date of birth does not look valid";
 
+/* dirver's license */
+"driver's license" = "driver's license";
+
 /* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
 
@@ -61,8 +64,14 @@
 /* Button to go back to the previous screen */
 "Go Back" = "Go Back";
 
+/* id issued by government */
+"government-issued photo ID" = "government-issued photo ID";
+
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Hold still, scanning";
+
+/* Ready button text on warmup screen */
+"I'm ready" = "I'm ready";
 
 /* Label for ID number section */
 "ID Number" = "ID Number";
@@ -81,6 +90,9 @@
 
 /* Label for the ID field to collect NRIC or FIN for Singaporean ID */
 "NRIC or FIN" = "NRIC or FIN";
+
+/* passport */
+"passport" = "passport";
 
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Personal ID number";

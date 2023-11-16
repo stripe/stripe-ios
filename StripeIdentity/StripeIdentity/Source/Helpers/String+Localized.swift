@@ -203,8 +203,36 @@ extension String.Localized {
 
     static var acceptFormsOfId: String {
         STPLocalizedString(
-            "Accepted forms of ID",
+            "Accepted forms of ID include",
             "Title for accepted types of ids"
+        )
+    }
+
+    static var imReady: String {
+        STPLocalizedString(
+            "I'm ready",
+            "Ready button text on warmup screen"
+        )
+    }
+
+    static var passport: String {
+        STPLocalizedString(
+            "passport",
+            "passport"
+        )
+    }
+
+    static var governmentIssuedId: String {
+        STPLocalizedString(
+            "government-issued photo ID",
+            "id issued by government"
+        )
+    }
+
+    static var driverLicense: String {
+        STPLocalizedString(
+            "driver's license",
+            "dirver's license"
         )
     }
 
