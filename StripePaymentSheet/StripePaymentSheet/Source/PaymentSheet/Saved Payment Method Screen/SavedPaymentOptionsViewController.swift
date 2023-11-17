@@ -20,6 +20,10 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didSelectRemove(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
+    func didSelectUpdate(
+        viewController: SavedPaymentOptionsViewController,
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+        updateCardParams: STPPaymentMethodCardParams) async -> Result<STPPaymentMethod, Error>
 }
 
 /// For internal SDK use only
@@ -438,6 +442,34 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
 extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
     func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
         removePaymentMethod(paymentOptionCell: paymentOptionCell)
+    }
+    
+    func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
+                   updateCardParams: STPPaymentMethodCardParams) async -> Result<STPPaymentMethod, Error> {
+        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
+              case .saved = viewModels[indexPath.row],
+              let delegate = delegate
+        else {
+            assertionFailure()
+            return .failure(PaymentSheetError.unknown(debugDescription: "TODO"))
+        }
+        
+        let viewModel = viewModels[indexPath.row]
+        let result = await delegate.didSelectUpdate(viewController: self,
+                                                    paymentMethodSelection: viewModel,
+                                                    updateCardParams: updateCardParams)
+        
+        switch result {
+        case .success(let updatedPaymentMethod):
+            let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
+            viewModels[indexPath.row] = updatedViewModel
+            collectionView.reloadItems(at: [indexPath])
+        case .failure:
+            // let UpdateCardViewController handle the failure
+            break
+        }
+        
+        return result
     }
 }
 

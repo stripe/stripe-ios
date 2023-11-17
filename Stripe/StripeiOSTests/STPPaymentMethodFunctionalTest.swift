@@ -112,9 +112,9 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
             ])
 
         let updatedPaymentMethod = try await client.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId,
-                                                         with: params,
-                                                         using: customerAndEphemeralKey.ephemeralKeySecret,
-                                                         additionalPaymentUserAgentValues: [])
+                                                                        with: params,
+                                                                        using: customerAndEphemeralKey.ephemeralKeySecret,
+                                                                        additionalPaymentUserAgentValues: [])
 
         // Verify
         XCTAssertEqual("visa", updatedPaymentMethod.card?.networks?.preferred)

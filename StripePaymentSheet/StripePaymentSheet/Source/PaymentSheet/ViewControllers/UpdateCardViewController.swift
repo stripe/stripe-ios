@@ -13,6 +13,9 @@ import UIKit
 
 protocol UpdateCardViewControllerDelegate: AnyObject {
     func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
+    
+    func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
+                   updateCardParams: STPPaymentMethodCardParams) async -> Result<STPPaymentMethod, Error>
 }
 
 /// For internal SDK use only
@@ -55,8 +58,10 @@ final class UpdateCardViewController: UIViewController {
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update_card), appearance: appearance, didTap: {
-            // TODO(porter) Update card
+        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update_card), appearance: appearance, didTap: {  [weak self] in
+            Task {
+                await self?.updateCard()
+            }
         })
     }()
 
@@ -152,6 +157,31 @@ final class UpdateCardViewController: UIViewController {
         }
 
         present(alertController, animated: true, completion: nil)
+    }
+    
+    private func updateCard() async {
+        guard let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand, let delegate = delegate else { return }
+        
+        updateButton.update(state: .processing)
+        
+        // Create the update card params
+        let updateCardParams = STPPaymentMethodCardParams()
+        updateCardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
+        
+        // Make the API request to update the payment method
+        let updateResult = await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateCardParams: updateCardParams)
+        
+        // Handle the reuslt of the update API reqeust
+        switch updateResult {
+        case .success:
+            updateButton.update(state: .succeeded)
+            dismiss()
+        case .failure(let failure):
+            // TODO(porter) Handle error
+            updateButton.update(state: .enabled)
+            print(failure)
+            break
+        }
     }
 
 }
