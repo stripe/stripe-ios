@@ -66,6 +66,7 @@ struct PaymentSheetTestPlayground: View {
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
                         SettingView(setting: customerModeBinding)
                         TextField("CustomerId", text: customerIdBinding)
+                            .disabled(true)
                         SettingPickerView(setting: $playgroundController.settings.currency)
                         SettingPickerView(setting: $playgroundController.settings.merchantCountryCode)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
