@@ -206,15 +206,20 @@ extension STPAPIClient {
 
     func generatedLinkAccountSessionManifest(
         with clientSecret: String,
+        emailAddress: String?,
         completion: @escaping (Result<Manifest, Error>) -> Void
     ) {
+        var params: [String: AnyHashable] = [
+            "client_secret": clientSecret,
+            "fullscreen": true,
+            "hide_close_button": true,
+        ]
+        if let emailAddress = emailAddress, !emailAddress.isEmpty {
+            params["account_holder_email"] = emailAddress
+        }
         let future: Future<Manifest> = self.post(
             resource: "link_account_sessions/generate_hosted_url",
-            parameters: [
-                "client_secret": clientSecret,
-                "fullscreen": true,
-                "hide_close_button": true,
-            ]
+            parameters: params
         )
         future.observe { result in
             switch result {
