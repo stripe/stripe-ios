@@ -252,7 +252,7 @@ final class SelfieScanningView: UIView {
 
             do {
                 consentCheckboxButton.setAttributedText(
-                    try NSAttributedString(
+                    try NSAttributedString.createHtmlString(
                         htmlText: consentText,
                         style: Styling.consentHTMLStyle
                     )
@@ -276,7 +276,7 @@ final class SelfieScanningView: UIView {
 
             do {
                 consentCheckboxButton.setAttributedText(
-                    try NSAttributedString(
+                    try NSAttributedString.createHtmlString(
                         htmlText: consentText,
                         style: Styling.consentHTMLStyle
                     )

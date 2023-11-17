@@ -14,7 +14,7 @@ final class BottomSheetView: UIView {
 
     private static let bottomSheetLinePadding: CGFloat = 16
     private static let bottomSheetLineContentPadding: CGFloat = 4
-    private static let bottomSheetLineLabelTextStyle = UIFont.TextStyle.caption1
+    private static let bottomSheetLineLabelTextStyle = UIFont.TextStyle.body
     private static let bottomSheetCloseButtonInsets = NSDirectionalEdgeInsets(
         top: 8,
         leading: 16,
@@ -22,6 +22,8 @@ final class BottomSheetView: UIView {
         trailing: 16
     )
     private static let bottomSheetPadding: CGFloat = 24
+    private static let bottomSheetLineTitleSize: CGFloat = 14
+    private static let bottomSheetLineContentSize: CGFloat = 14
 
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -160,8 +162,8 @@ final class BottomSheetView: UIView {
             }
 
             let lineTitleContent = UILabel()
-            lineTitleContent.font = IdentityUI.identityElementsUITheme.fonts.subheadlineBold
-            lineTitleContent.textColor = IdentityUI.secondaryLabelColor
+            lineTitleContent.font = IdentityUI.identityElementsUITheme.fonts.subheadlineBold.withSize(BottomSheetView.bottomSheetLineTitleSize)
+            lineTitleContent.textColor = IdentityUI.textColor
             lineTitleContent.text = line.title
 
             let lineContentHTMLTextView = HTMLTextView()
@@ -203,10 +205,11 @@ final class BottomSheetView: UIView {
     }
 
     private static func bottomSheetLineContentStyle() -> HTMLStyle {
-        let boldFont = IdentityUI.preferredFont(forTextStyle: BottomSheetView.bottomSheetLineLabelTextStyle, weight: .bold)
+        let boldFont = IdentityUI.preferredFont(forTextStyle: BottomSheetView.bottomSheetLineLabelTextStyle, weight: .bold).withSize(bottomSheetLineContentSize)
+        let contentColor = IdentityUI.textColor
         return .init(
-            bodyFont: IdentityUI.preferredFont(forTextStyle: BottomSheetView.bottomSheetLineLabelTextStyle),
-            bodyColor: IdentityUI.secondaryLabelColor,
+            bodyFont: IdentityUI.preferredFont(forTextStyle: BottomSheetView.bottomSheetLineLabelTextStyle).withSize(bottomSheetLineContentSize),
+            bodyColor: contentColor,
             h1Font: boldFont,
             h2Font: boldFont,
             h3Font: boldFont,
@@ -214,7 +217,9 @@ final class BottomSheetView: UIView {
             h5Font: boldFont,
             h6Font: boldFont,
             isLinkUnderlined: true,
-            shouldCenterText: false
+            shouldCenterText: false,
+            linkColor: contentColor,
+            lineHeightMultiple: 1.2
         )
     }
 

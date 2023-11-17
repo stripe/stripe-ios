@@ -15,6 +15,7 @@ import Foundation
     @_spi(STP) public typealias BundleLocator = StripeIdentityBundleLocator
 
     case iconAdd = "icon_add"
+    case iconEllipsis = "icon_ellipsis"
     case iconCheckmark = "icon_checkmark"
     case iconCheckmark92 = "icon_checkmark_92"
     case iconClock = "icon_clock"

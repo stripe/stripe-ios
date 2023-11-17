@@ -128,6 +128,8 @@ extension IconLabelHTMLView {
                 equalTo: textView.leadingAnchor,
                 constant: -Styling.iconTextSpacing
             ),
+            iconView.heightAnchor.constraint(equalToConstant: Styling.baseIconLenght),
+            iconView.widthAnchor.constraint(equalToConstant: Styling.baseIconLenght),
             textView.topAnchor.constraint(equalTo: topAnchor),
             textView.trailingAnchor.constraint(equalTo: trailingAnchor),
             textView.bottomAnchor.constraint(equalTo: bottomAnchor),

@@ -114,7 +114,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 inset: .init(top: Style.contentTopPadding, leading: Style.contentHorizontalPadding, bottom: Style.contentBottomPadding, trailing: Style.contentHorizontalPadding)
             ),
             buttons: buttons,
-            privacyPolicyModel: .init(
+            buttonTopContentViewModel: .init(
                 text: consentContent.privacyPolicy,
                 style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
                 didOpenURL: { [weak self] url in
