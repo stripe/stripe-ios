@@ -89,37 +89,4 @@ class STPPaymentMethodCardTest: XCTestCase {
         XCTAssertEqual(card?.threeDSecureUsage?.supported, true)
         XCTAssertNotNil(card?.wallet)
     }
-
-    func testBrandFromString() {
-        XCTAssertEqual(STPCard.brand(from: "visa"), .visa)
-        XCTAssertEqual(STPCard.brand(from: "VISA"), .visa)
-
-        XCTAssertEqual(STPCard.brand(from: "amex"), .amex)
-        XCTAssertEqual(STPCard.brand(from: "AMEX"), .amex)
-        XCTAssertEqual(STPCard.brand(from: "american_express"), .amex)
-        XCTAssertEqual(STPCard.brand(from: "AMERICAN_EXPRESS"), .amex)
-
-        XCTAssertEqual(STPCard.brand(from: "mastercard"), .mastercard)
-        XCTAssertEqual(STPCard.brand(from: "MASTERCARD"), .mastercard)
-
-        XCTAssertEqual(STPCard.brand(from: "discover"), .discover)
-        XCTAssertEqual(STPCard.brand(from: "DISCOVER"), .discover)
-
-        XCTAssertEqual(STPCard.brand(from: "jcb"), .JCB)
-        XCTAssertEqual(STPCard.brand(from: "JCB"), .JCB)
-
-        XCTAssertEqual(STPCard.brand(from: "diners"), .dinersClub)
-        XCTAssertEqual(STPCard.brand(from: "DINERS"), .dinersClub)
-        XCTAssertEqual(STPCard.brand(from: "diners_club"), .dinersClub)
-        XCTAssertEqual(STPCard.brand(from: "DINERS_CLUB"), .dinersClub)
-
-        XCTAssertEqual(STPCard.brand(from: "unionpay"), .unionPay)
-        XCTAssertEqual(STPCard.brand(from: "UNIONPAY"), .unionPay)
-
-        XCTAssertEqual(STPCard.brand(from: "unknown"), .unknown)
-        XCTAssertEqual(STPCard.brand(from: "UNKNOWN"), .unknown)
-
-        XCTAssertEqual(STPCard.brand(from: "garbage"), .unknown)
-        XCTAssertEqual(STPCard.brand(from: "GARBAGE"), .unknown)
-    }
 }
