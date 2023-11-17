@@ -27,9 +27,6 @@ class PlaygroundController: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var lastPaymentResult: PaymentSheetResult?
 
-    // Other
-    var newCustomerID: String? // Stores the new customer returned from the backend for reuse
-
     var applePayConfiguration: PaymentSheet.ApplePayConfiguration? {
         let buttonType: PKPaymentButtonType = {
             switch settings.applePayButtonType {
@@ -88,7 +85,7 @@ class PlaygroundController: ObservableObject {
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
-        if let customerID = customerID,
+        if let customerID = self.settings.customerId,
            let ephemeralKey = ephemeralKey,
            settings.customerMode != .guest {
             return PaymentSheet.CustomerConfiguration(
@@ -190,6 +187,17 @@ class PlaygroundController: ObservableObject {
         }
     }
 
+    var customerIdOrType: String {
+        switch settings.customerMode {
+        case .guest:
+            return "guest"
+        case .new:
+            return settings.customerId ?? "new"
+        case .returning:
+            return "returning"
+        }
+    }
+
     var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration? {
         guard settings.externalPayPalEnabled == .on else {
             return nil
@@ -218,7 +226,6 @@ class PlaygroundController: ObservableObject {
 
     var clientSecret: String?
     var ephemeralKey: String?
-    var customerID: String?
     var paymentMethodTypes: [String]?
     var amount: Int?
     var checkoutEndpoint: String = PaymentSheetTestPlaygroundSettings.defaultCheckoutEndpoint
@@ -257,7 +264,7 @@ class PlaygroundController: ObservableObject {
         self.currentlyRenderedSettings = .defaultValues()
 
         $settings.sink { newValue in
-            if newValue.autoreload == .on {
+            if !self.isLoading && newValue.autoreload == .on {
                 self.load()
             }
         }.store(in: &subscribers)
@@ -364,19 +371,8 @@ extension PlaygroundController {
         isLoading = true
         let settingsToLoad = self.settings
 
-        let customer: String = {
-            switch settings.customerMode {
-            case .guest:
-                return "guest"
-            case .new:
-                return newCustomerID ?? "new"
-            case .returning:
-                return "returning"
-            }
-        }()
-
         let body = [
-            "customer": customer,
+            "customer": customerIdOrType,
             "currency": settings.currency.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
@@ -415,19 +411,18 @@ extension PlaygroundController {
                 return
             }
 
-            self.clientSecret = json["intentClientSecret"]
-            self.ephemeralKey = json["customerEphemeralKeySecret"]
-            self.customerID = json["customerId"]
-            self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
-            self.amount = Int(json["amount"] ?? "")
-            STPAPIClient.shared.publishableKey = json["publishableKey"]
-
             DispatchQueue.main.async {
-                if self.settings.customerMode == .new && self.newCustomerID == nil {
-                    self.newCustomerID = self.customerID
-                }
+                self.clientSecret = json["intentClientSecret"]
+                self.ephemeralKey = json["customerEphemeralKeySecret"]
+                self.settings.customerId = json["customerId"]
+                self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
+                self.amount = Int(json["amount"] ?? "")
+                STPAPIClient.shared.publishableKey = json["publishableKey"]
+
                 self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
                 self.addressDetails = nil
+                // Persist customerId / customerMode
+                self.serializeSettingsToNSUserDefaults()
 
                 if self.settings.uiStyle == .paymentSheet {
                     self.buildPaymentSheet()
@@ -435,7 +430,6 @@ extension PlaygroundController {
                     self.currentlyRenderedSettings = self.settings
                 } else {
                     let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
-                        self.isLoading = false
                         self.currentlyRenderedSettings = self.settings
                         switch result {
                         case .failure(let error):
@@ -449,6 +443,8 @@ extension PlaygroundController {
                                 self.load()
                             }
                             return
+                        } else {
+                            self.isLoading = false
                         }
                     }
                     switch self.settings.integrationType {
