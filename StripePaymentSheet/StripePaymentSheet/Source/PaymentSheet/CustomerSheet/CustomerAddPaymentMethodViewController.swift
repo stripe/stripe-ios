@@ -18,6 +18,7 @@ protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
 class CustomerAddPaymentMethodViewController: UIViewController {
 
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+    let cbcEligible: Bool
 
     // MARK: - Read-only Properties
     weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?
@@ -115,11 +116,13 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     required init(
         configuration: CustomerSheet.Configuration,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        cbcEligible: Bool,
         delegate: CustomerAddPaymentMethodViewControllerDelegate
     ) {
         self.configuration = configuration
         self.delegate = delegate
         self.paymentMethodTypes = paymentMethodTypes
+        self.cbcEligible = cbcEligible
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = configuration.appearance.colors.background
     }
@@ -211,6 +214,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             addressSpecProvider: .shared,
             offerSaveToLinkWhenSupported: false,
             linkAccount: nil,
+            cardBrandChoiceEligible: cbcEligible,
             supportsLinkCard: false,
             isPaymentIntent: false,
             currency: nil,

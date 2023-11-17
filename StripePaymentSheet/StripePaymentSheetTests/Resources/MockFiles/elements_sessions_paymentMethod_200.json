@@ -1,5 +1,5 @@
 {
-  "apple_pay_preference": "disabled",
+  "apple_pay_preference": "enabled",
   "business_name": "Mobile Example Account",
   "experiments": {
     "miui_payment_element_aa_experiment": "control"

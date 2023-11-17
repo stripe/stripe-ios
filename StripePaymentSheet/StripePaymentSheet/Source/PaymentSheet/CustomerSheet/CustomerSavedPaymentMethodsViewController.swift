@@ -26,6 +26,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let isApplePayEnabled: Bool
     let configuration: CustomerSheet.Configuration
     let customerAdapter: CustomerAdapter
+    let cbcEligible: Bool
 
     // MARK: - Writable Properties
     weak var delegate: CustomerSavedPaymentMethodsViewControllerDelegate?
@@ -45,6 +46,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         return CustomerAddPaymentMethodViewController(
             configuration: configuration,
             paymentMethodTypes: paymentMethodTypes,
+            cbcEligible: cbcEligible,
             delegate: self)
     }()
     private var cachedClientSecret: String?
@@ -86,6 +88,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 showApplePay: showApplePay
             ),
             appearance: configuration.appearance,
+            cbcEligible: cbcEligible,
             delegate: self
         )
     }()
@@ -123,6 +126,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         configuration: CustomerSheet.Configuration,
         customerAdapter: CustomerAdapter,
         isApplePayEnabled: Bool,
+        cbcEligible: Bool,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
     ) {
@@ -132,6 +136,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.configuration = configuration
         self.customerAdapter = customerAdapter
         self.isApplePayEnabled = isApplePayEnabled
+        self.cbcEligible = cbcEligible
         self.csCompletion = csCompletion
         self.delegate = delegate
         if Self.shouldShowPaymentMethodCarousel(savedPaymentMethods: savedPaymentMethods, isApplePayEnabled: isApplePayEnabled) {
@@ -436,12 +441,12 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
-            guard let fetchedSetupIntent = await fetchSetupIntent(clientSecret: clientSecret) else {
+            guard let (fetchedSetupIntent, fetchedElementsSession) = await fetchSetupIntent(clientSecret: clientSecret) else {
                 self.processingInFlight = false
                 self.updateUI()
                 return
             }
-            let setupIntent = Intent.setupIntent(fetchedSetupIntent)
+            let setupIntent = Intent.setupIntent(elementsSession: fetchedElementsSession, setupIntent: fetchedSetupIntent)
 
             guard let setupIntent = await self.confirm(intent: setupIntent, paymentOption: paymentOption),
                   let paymentMethod = setupIntent.paymentMethod else {
@@ -481,15 +486,14 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         return clientSecret
     }
 
-    private func fetchSetupIntent(clientSecret: String) async -> STPSetupIntent? {
-        var setupIntent: STPSetupIntent?
+    private func fetchSetupIntent(clientSecret: String) async -> (STPSetupIntent, STPElementsSession)? {
         do {
-            setupIntent = try await configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret)
+            return try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret)
         } catch {
             STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()
             self.error = error
         }
-        return setupIntent
+        return nil
     }
 
     func confirm(intent: Intent?, paymentOption: PaymentOption) async -> STPSetupIntent? {
@@ -575,6 +579,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.addPaymentMethodViewController = CustomerAddPaymentMethodViewController(
             configuration: configuration,
             paymentMethodTypes: paymentMethodTypes,
+            cbcEligible: cbcEligible,
             delegate: self)
         cachedClientSecret = nil
     }

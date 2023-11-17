@@ -113,6 +113,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     let configuration: Configuration
     let savedPaymentMethodsConfiguration: CustomerSheet.Configuration
     let customerAdapter: CustomerAdapter
+    let cbcEligible: Bool
 
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex else {
@@ -196,6 +197,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         customerAdapter: CustomerAdapter,
         configuration: Configuration,
         appearance: PaymentSheet.Appearance,
+        cbcEligible: Bool,
         delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
@@ -204,6 +206,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         self.configuration = configuration
         self.customerAdapter = customerAdapter
         self.appearance = appearance
+        self.cbcEligible = cbcEligible
         self.delegate = delegate
         self.unsyncedSavedPaymentMethods = []
         super.init(nibName: nil, bundle: nil)
@@ -339,8 +342,8 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
             return UICollectionViewCell()
         }
 
-        // TODO(porter) CBC check in CustomerSheet
-        cell.setViewModel(viewModel.toSavedPaymentOptionsViewControllerSelection(), cbcEligible: false)
+        cell.setViewModel(viewModel.toSavedPaymentOptionsViewControllerSelection(),
+                          cbcEligible: cbcEligible)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance

@@ -49,9 +49,8 @@ class AddPaymentMethodViewController: UIViewController {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
-            // TODO(yuki): Hack to support external_paypal
-            if selectedPaymentMethodType == .externalPayPal {
-                return .externalPayPal(confirmParams: params)
+            if case .external(let paymentMethod) = selectedPaymentMethodType {
+                return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }
             return .new(confirmParams: params)
         }
@@ -354,7 +353,7 @@ class AddPaymentMethodViewController: UIViewController {
             }
         }
         switch intent {
-        case .paymentIntent(let paymentIntent):
+        case .paymentIntent(_, let paymentIntent):
             client.collectBankAccountForPayment(
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
@@ -363,7 +362,7 @@ class AddPaymentMethodViewController: UIViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .setupIntent(let setupIntent):
+        case .setupIntent(_, let setupIntent):
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,

@@ -50,6 +50,7 @@ struct CustomerSheetTestPlayground: View {
                                 Text("Appearance").font(.callout.smallCaps())
                             }.buttonStyle(.bordered)
                         }
+                        SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.paymentMethodMode)
                         SettingView(setting: $playgroundController.settings.applePay)
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
@@ -75,6 +76,18 @@ struct CustomerSheetTestPlayground: View {
             Divider()
             CustomerSheetButtons()
                 .environmentObject(playgroundController)
+        }
+    }
+
+    var merchantCountryBinding: Binding<CustomerSheetTestPlaygroundSettings.MerchantCountry> {
+        Binding<CustomerSheetTestPlaygroundSettings.MerchantCountry> {
+            return playgroundController.settings.merchantCountryCode
+        } set: { newCountry in
+            // Reset customer id if country changes
+            if playgroundController.settings.merchantCountryCode.rawValue != newCountry.rawValue {
+                playgroundController.settings.customerMode = .new
+            }
+            playgroundController.settings.merchantCountryCode = newCountry
         }
     }
 

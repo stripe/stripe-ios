@@ -225,6 +225,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     var uiStyle: UIStyle
     var mode: Mode
+    var customerId: String?
     var integrationType: IntegrationType
     var customerMode: CustomerMode
     var currency: Currency
@@ -253,6 +254,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
             mode: .payment,
+            customerId: nil,
             integrationType: .normal,
             customerMode: .guest,
             currency: .usd,

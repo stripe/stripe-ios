@@ -5,26 +5,18 @@
 //  Created by Nick Porter on 2/16/23.
 //
 
-import Foundation
+import XCTest
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentSheet
 
 class STPElementsSessionTest: XCTestCase {
 
-    // MARK: - Description Tests
-    func testDescription() {
-        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-
-        XCTAssertNotNil(elementsSession)
-        let desc = elementsSession.description
-        XCTAssertTrue(desc.contains(NSStringFromClass(type(of: elementsSession).self)))
-        XCTAssertGreaterThan((desc.count), 500, "Custom description should be long")
-    }
-
     // MARK: - STPAPIResponseDecodable Tests
     func testDecodedObjectFromAPIResponseMapping() {
-        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["unactivated_payment_method_types"] = ["cashapp"]
+        elementsSessionJson["card_brand_choice"] = ["eligible": true]
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
 
         XCTAssertEqual(
@@ -50,6 +42,16 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.countryCode, "US")
         XCTAssertEqual(elementsSession.merchantCountryCode, "US")
         XCTAssertNotNil(elementsSession.paymentMethodSpecs)
+        XCTAssertEqual(elementsSession.cardBrandChoice?.eligible, true)
+        XCTAssertTrue(elementsSession.isApplePayEnabled)
+        XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_applePayPreferenceDisabled() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["apple_pay_preference"] = "disabled"
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertFalse(elementsSession.isApplePayEnabled)
+    }
 }

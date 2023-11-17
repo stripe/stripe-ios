@@ -71,6 +71,12 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case never
         case full
     }
+    enum MerchantCountry: String, PickerEnum {
+        static var enumName: String { "MerchantCountry" }
+
+        case US
+        case FR
+    }
 
     var customerMode: CustomerMode
     var customerId: String?
@@ -85,6 +91,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var collectEmail: BillingDetailsEmail
     var collectPhone: BillingDetailsPhone
     var collectAddress: BillingDetailsAddress
+    var merchantCountryCode: MerchantCountry
 
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
@@ -98,7 +105,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    collectName: .automatic,
                                                    collectEmail: .automatic,
                                                    collectPhone: .automatic,
-                                                   collectAddress: .automatic)
+                                                   collectAddress: .automatic,
+                                                   merchantCountryCode: .US)
     }
 
     var base64Data: String {

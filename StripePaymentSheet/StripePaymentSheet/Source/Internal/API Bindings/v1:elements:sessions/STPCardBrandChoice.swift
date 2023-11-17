@@ -10,16 +10,16 @@ import Foundation
 /// Card brand choice information for an intent
 /// You cannot directly instantiate an `STPCardBrandChoice`.
 /// - seealso: https://stripe.com/docs/card-brand-choice
-@_spi(STP) public class STPCardBrandChoice: NSObject {
+class STPCardBrandChoice: NSObject {
 
     /// Determines if this intent is eligible for card brand choice
-    public let eligible: Bool
+    let eligible: Bool
 
     /// :nodoc:
-    public let allResponseFields: [AnyHashable: Any]
+    let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    @objc override var description: String {
         let props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPCardBrandChoice.self), self),

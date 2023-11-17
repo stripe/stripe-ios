@@ -23,6 +23,7 @@ extension AddressSectionElement {
                 validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
                 accessoryView: configuration.accessoryView(for: text, theme: theme),
                 shouldShowClearButton: configuration.shouldShowClearButton,
+                isEditable: configuration.isEditable,
                 theme: theme
             )
             let textFieldView = TextFieldView(viewModel: viewModel, delegate: self)

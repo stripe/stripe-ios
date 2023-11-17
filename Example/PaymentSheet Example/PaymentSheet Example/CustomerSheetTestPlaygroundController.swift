@@ -4,7 +4,7 @@
 //
 
 import Combine
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -124,7 +124,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
-
+        configuration.cbcEnabled = true // TODO(porter) Remove this for CBC GA
         return configuration
     }
 
@@ -136,7 +136,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
                 // This should be a block that fetches this from your server
                 .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
             }, setupIntentClientSecretProvider: {
-                return try await self.backend.createSetupIntent(customerId: customerId)
+                return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
             })
         case .createAndAttach:
             customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
@@ -186,7 +186,8 @@ extension CustomerSheetTestPlaygroundController {
         self.backend = CustomerSheetBackend(endpoint: currentEndpoint)
 
         // TODO: Refactor this to make the ephemeral key and customerId fetching async
-        self.backend.loadBackendCustomerEphemeralKey(customerType: customerType) { result in
+        self.backend.loadBackendCustomerEphemeralKey(customerType: customerType,
+                                                     merchantCountryCode: settings.merchantCountryCode.rawValue) { result in
             if settingsToLoad != self.settings {
                 DispatchQueue.main.async {
                     self.load()
@@ -267,9 +268,10 @@ class CustomerSheetBackend {
         self.endpoint = endpoint
     }
 
-    func loadBackendCustomerEphemeralKey(customerType: String, completion: @escaping ([String: String]?) -> Void) {
+    func loadBackendCustomerEphemeralKey(customerType: String, merchantCountryCode: String, completion: @escaping ([String: String]?) -> Void) {
 
-        let body = [ "customer_type": customerType
+        let body = [ "customer_type": customerType,
+                     "merchant_country_code": merchantCountryCode,
         ] as [String: Any]
 
         let url = URL(string: "\(endpoint)/customer_ephemeral_key")!
@@ -294,8 +296,9 @@ class CustomerSheetBackend {
         task.resume()
     }
 
-    func createSetupIntent(customerId: String) async throws -> String {
+    func createSetupIntent(customerId: String, merchantCountryCode: String) async throws -> String {
         let body = [ "customer_id": customerId,
+                     "merchant_country_code": merchantCountryCode,
         ] as [String: Any]
         let url = URL(string: "\(endpoint)/create_setup_intent")!
         let session = URLSession.shared

@@ -1,4 +1,10 @@
 ## X.Y.Z 2023-y-z
+### PaymentSheet
+* [Fixed] Visual bug where re-presenting PaymentSheet wouldn't show a spinner while it reloads.
+* [Added] If PaymentSheet fails to load a deferred intent configuration, we fall back to displaying cards (or the intent configuration payment method types) instead of failing.
+* [Fixed] Fixed an issue where PaymentSheet wouldn't accept valid Mexican phone numbers.
+
+## 23.18.2 2023-11-06
 ### CustomerSheet
 * [Fixed] CustomerSheet no longer displays saved cards that originated from Apple Pay or Google Pay.
 
