@@ -30,7 +30,7 @@ enum STPCardScannerError: Int {
 
 @available(macCatalyst 14.0, *)
 @objc(STPCardScanner)
-class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, STPCardScanningProtocol {
+class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
     static let cardScanningAvailableCameraHasUsageDescription = {
         return

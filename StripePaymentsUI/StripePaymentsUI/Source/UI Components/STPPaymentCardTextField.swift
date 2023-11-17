@@ -425,7 +425,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             }
 
             // If CBC is enabled, set the selected card brand
-            if let selectedBrand = viewModel.selectedBrand {
+            if let selectedBrand = viewModel.cbcController.selectedBrand {
                 cardToReturn.networks = STPPaymentMethodCardNetworksParams(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
             }
 
@@ -492,7 +492,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
             // If a card brand is explicitly selected, retain that information
             if let preferredBrandString = callersCardParams.card?.networks?.preferred {
-                viewModel.selectedBrand = STPPaymentMethodCard.brand(from: preferredBrandString)
+                viewModel.cbcController.selectedBrand = STPCard.brand(from: preferredBrandString)
             }
 
             setText(desiredCardParams.number, inField: .number)
@@ -597,7 +597,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             field.text = ""
         }
         let postalCodeRequested = viewModel.postalCodeRequested
-        viewModel = STPPaymentCardTextFieldViewModel()
+        viewModel = STPPaymentCardTextFieldViewModel(brandUpdateHandler: { [weak self] in
+            self?.updateImage(for: .number)
+        })
         viewModel.postalCodeRequested = postalCodeRequested
         onChange()
         updateImage(for: .number)
@@ -720,8 +722,11 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         return build()
     }()
 
-    @objc internal lazy var viewModel: STPPaymentCardTextFieldViewModel =
-        STPPaymentCardTextFieldViewModel()
+    @objc internal lazy var viewModel: STPPaymentCardTextFieldViewModel = {
+        STPPaymentCardTextFieldViewModel(brandUpdateHandler: { [weak self] in
+            self?.updateImage(for: .number)
+        })
+    }()
 
     @objc internal var internalCardParams = STPPaymentMethodCardParams()
     @objc internal var internalBillingDetails: STPPaymentMethodBillingDetails?
@@ -911,17 +916,17 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     @objc func brandViewTapped() {
-        if !self.viewModel.brandState.isCBC {
+        if !self.viewModel.cbcController.brandState.isCBC {
             self.numberField.becomeFirstResponder()
         }
     }
 
     var isShowingCBCIndicator: Bool {
         // The brand state is CBC
-        return self.viewModel.brandState.isCBC &&
+        return self.viewModel.cbcController.brandState.isCBC &&
         // And the CVC field isn't selected
         currentBrandImageFieldType != .CVC &&
-        // And the card is not valid (we're not showing an error image)
+        // And the card is not invalid (we're not showing an error image)
         STPCardValidator.validationState(
             forNumber: viewModel.cardNumber ?? "",
             validatingCardBrand: true
@@ -948,28 +953,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             return nil
         }
 
-        if !self.viewModel.brandState.isCBC {
-            // Not doing CBC at the moment, don't return anything
-            return nil
-        }
-
-        return UIContextMenuConfiguration(actionProvider: { _ in
-            let action = { (action: UIAction) -> Void in
-                let brand = STPCard.brand(from: action.identifier.rawValue)
-                // Set the selected brand if a brand is selected
-                self.viewModel.selectedBrand = brand != .unknown ? brand : nil
-                self.updateImage(for: .number)
-            }
-            let placeholderAction = UIAction(title: String.Localized.card_brand_dropdown_placeholder, attributes: .disabled, handler: action)
-            let menu = UIMenu(children:
-                  [placeholderAction] +
-                  self.viewModel.cardBrands.enumerated().map { (_, brand) in
-                        let brandString = STPCard.string(from: brand)
-                        return UIAction(title: brandString, image: STPImageLibrary.unpaddedCardBrandImage(for: brand), identifier: .init(rawValue: brandString), state: self.viewModel.selectedBrand == brand ? .on : .off, handler: action)
-                }
-            )
-            return menu
-        })
+        return viewModel.cbcController.contextMenuConfiguration
     }
 
     // MARK: appearance properties
@@ -1772,8 +1756,6 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             cvcField.validText = viewModel.validationStateForCVC() != .invalid
             updateImage(for: fieldType)
 
-            updateCardBrandsIfNeeded()
-
             if viewModel.hasCompleteMetadataForCardNumber {
                 let state = STPCardValidator.validationState(
                     forNumber: viewModel.cardNumber ?? "",
@@ -2100,7 +2082,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         validationState: STPCardValidationState
     ) -> UIImage? {
         let brandImage = {
-            switch self.viewModel.brandState {
+            switch self.viewModel.cbcController.brandState {
             case .brand(let brand):
                 return Self.brandImage(for: brand)
             case .cbcBrandSelected(let brand):
@@ -2301,21 +2283,10 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     // For internal testing
     @_spi(STP) public var cbcEnabledOverride: Bool? {
         get {
-            viewModel.cbcEnabledOverride
+            viewModel.cbcController.cbcEnabledOverride
         }
         set {
-            viewModel.cbcEnabledOverride = newValue
-        }
-    }
-
-    private var cardBrands = Set<STPCardBrand>()
-    func updateCardBrandsIfNeeded() {
-        guard viewModel.cbcEnabled else {
-            // Do nothing, CBC is not initializaed
-            return
-        }
-        self.viewModel.fetchCardBrands { [weak self] _ in
-            self?.updateImage(for: .number)
+            viewModel.cbcController.cbcEnabledOverride = newValue
         }
     }
 
@@ -2384,7 +2355,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// customer will select the network.
     open var preferredNetworks: [STPCardBrand]? {
         didSet {
-            viewModel.preferredNetworks = preferredNetworks
+            viewModel.cbcController.preferredNetworks = preferredNetworks
         }
     }
 
