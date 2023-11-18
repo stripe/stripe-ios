@@ -266,7 +266,8 @@ private class STPTestingAnalyticsClient: STPAnalyticsClient {
         expectedEvents[expectation.description] = expectation
     }
 
-    override func logPayload(_ payload: [String: Any]) {
+    override func log(analytic: Analytic, apiClient: STPAPIClient = .shared) {
+        let payload = payload(from: analytic, apiClient: apiClient)
         if let event = payload["event"] as? String,
             let expectedEvent = expectedEvents[event]
         {
