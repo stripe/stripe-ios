@@ -78,7 +78,7 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
 
         let card = self.init()
         card.allResponseFields = response
-        card.brand = self.brand(from: dict.stp_string(forKey: "brand") ?? "")
+        card.brand = STPCard.brand(from: dict.stp_string(forKey: "brand") ?? "")
         card.checks = STPPaymentMethodCardChecks.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "checks"))
         card.country = dict.stp_string(forKey: "country")
@@ -95,30 +95,5 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
         card.wallet = STPPaymentMethodCardWallet.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "wallet"))
         return card
-    }
-
-    // MARK: - STPCardBrand
-
-    @objc(brandFromString:) @_spi(STP) public class func brand(from string: String) -> STPCardBrand
-    {
-        // Documentation: https://stripe.com/docs/api/payment_methods/object#payment_method_object-card-brand
-        let brand = string.lowercased()
-        if brand == "visa" {
-            return .visa
-        } else if brand == "amex" || brand == "american_express" {
-            return .amex
-        } else if brand == "mastercard" {
-            return .mastercard
-        } else if brand == "discover" {
-            return .discover
-        } else if brand == "jcb" {
-            return .JCB
-        } else if brand == "diners" || brand == "diners_club" {
-            return .dinersClub
-        } else if brand == "unionpay" {
-            return .unionPay
-        } else {
-            return .unknown
-        }
     }
 }

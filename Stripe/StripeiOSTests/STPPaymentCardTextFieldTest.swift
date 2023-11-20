@@ -933,7 +933,7 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         sut.paymentMethodParams = params
         let exp = expectation(description: "Wait for CBC load")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            XCTAssertEqual(sut.viewModel.selectedBrand, .visa)
+            XCTAssertEqual(sut.viewModel.cbcController.selectedBrand, .visa)
             exp.fulfill()
         }
         waitForExpectations(timeout: 3.0)

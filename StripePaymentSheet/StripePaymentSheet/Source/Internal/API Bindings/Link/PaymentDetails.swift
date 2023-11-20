@@ -173,7 +173,7 @@ extension ConsumerPaymentDetails.Details.Card {
     }
 
     var stpBrand: STPCardBrand {
-        return STPPaymentMethodCard.brand(from: brand)
+        return STPCard.brand(from: brand)
     }
 
 }

@@ -19,7 +19,7 @@ class STPPaymentCardTextFieldViewModelTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        viewModel = STPPaymentCardTextFieldViewModel()
+        viewModel = STPPaymentCardTextFieldViewModel(brandUpdateHandler: {})
     }
 
     func testCardNumber() {
