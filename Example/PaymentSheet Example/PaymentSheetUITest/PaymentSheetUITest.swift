@@ -191,20 +191,10 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // toggle save this card on and off
         var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
-        if expectDefaultSelectionOn {
-            XCTAssertTrue(saveThisCardToggle.isSelected)
-        } else {
-            XCTAssertFalse(saveThisCardToggle.isSelected)
-        }
+        XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
-        if expectDefaultSelectionOn {
-            XCTAssertFalse(saveThisCardToggle.isSelected)
-        } else {
-            XCTAssertTrue(saveThisCardToggle.isSelected)
-            saveThisCardToggle.tap()  // toggle back off
-
-        }
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()  // toggle back off
         XCTAssertFalse(saveThisCardToggle.isSelected)
 
         // Complete payment
@@ -220,9 +210,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         try! fillCardData(app)  // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
         // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        if !expectDefaultSelectionOn {
-            saveThisCardToggle.tap()
-        }
+        saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
         // Complete payment
@@ -732,18 +720,17 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         let payButton = app.buttons["Pay $50.99"]
         XCTAssertTrue(payButton.waitForExistence(timeout: 5))
 
-        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
         let selectedMandate =
         "By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."
         let unselectedMandate = "By continuing, you agree to authorize payments pursuant to these terms."
         XCTAssertTrue(
-            app.textViews[expectDefaultSelectionOn ? selectedMandate : unselectedMandate].waitForExistence(timeout: 5)
+            app.textViews[unselectedMandate].waitForExistence(timeout: 5)
         )
 
         let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
         saveThisAccountToggle.tap()
         XCTAssertTrue(
-            app.textViews[expectDefaultSelectionOn ? unselectedMandate : selectedMandate].waitForExistence(timeout: 5)
+            app.textViews[selectedMandate].waitForExistence(timeout: 5)
         )
 
         // no pay button tap because linked account is stubbed/fake in UI test
@@ -1961,19 +1948,10 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         // toggle save this card on and off
         var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
-        if expectDefaultSelectionOn {
-            XCTAssertTrue(saveThisCardToggle.isSelected)
-        } else {
-            XCTAssertFalse(saveThisCardToggle.isSelected)
-        }
+        XCTAssertFalse(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
-        if expectDefaultSelectionOn {
-            XCTAssertFalse(saveThisCardToggle.isSelected)
-        } else {
-            XCTAssertTrue(saveThisCardToggle.isSelected)
-            saveThisCardToggle.tap()  // toggle back off
-        }
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()  // toggle back off
         XCTAssertFalse(saveThisCardToggle.isSelected)
 
         // Complete payment
@@ -1989,9 +1967,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         try! fillCardData(app)  // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
         // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        if !expectDefaultSelectionOn {
-            saveThisCardToggle.tap()
-        }
+        saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
         // Complete payment
