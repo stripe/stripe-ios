@@ -511,6 +511,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-apple-pay";
 				PRODUCT_NAME = StripeApplePay;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};
@@ -522,6 +525,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-apple-pay";
 				PRODUCT_NAME = StripeApplePay;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};

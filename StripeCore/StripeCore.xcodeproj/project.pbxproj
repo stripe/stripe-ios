@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -804,8 +804,6 @@
 		CBF07079FA432D2BFCE24022 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 490BD7E6715C734C2A99C55B /* Build configuration list for PBXProject "StripeCore" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -1110,6 +1108,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-core";
 				PRODUCT_NAME = StripeCore;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};
@@ -1136,6 +1137,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-core";
 				PRODUCT_NAME = StripeCore;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};

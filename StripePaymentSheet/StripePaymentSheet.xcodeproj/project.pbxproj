@@ -1820,6 +1820,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payment-sheet";
 				PRODUCT_NAME = StripePaymentSheet;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};
@@ -1867,6 +1870,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payment-sheet";
 				PRODUCT_NAME = StripePaymentSheet;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};

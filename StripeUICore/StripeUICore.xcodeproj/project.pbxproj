@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -784,8 +784,6 @@
 		A39BBBD15F0F6B54725E52AF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 2331F8341192F01F80C0469D /* Build configuration list for PBXProject "StripeUICore" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -1058,6 +1056,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
 				PRODUCT_NAME = StripeUICore;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};
@@ -1076,6 +1077,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
 				PRODUCT_NAME = StripeUICore;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};
