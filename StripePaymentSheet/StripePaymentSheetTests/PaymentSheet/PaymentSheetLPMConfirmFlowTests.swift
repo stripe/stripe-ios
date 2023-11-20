@@ -11,7 +11,7 @@ import XCTest
 import SafariServices
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
+@testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore

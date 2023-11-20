@@ -62,8 +62,8 @@ extension PaymentSheet {
                     label = confirmParams.paymentSheetLabel
                 case .link(let option):
                     label = option.paymentSheetLabel
-                case .external(let PaymentMethod, _):
-                    label = PaymentMethod.localizedLabel
+                case .external(let paymentMethod, _):
+                    label = paymentMethod.label
                 }
             }
         }

@@ -47,8 +47,6 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.cardBrandChoice?.eligible, true)
         XCTAssertTrue(elementsSession.isApplePayEnabled)
         XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
-
-        // TODO: Test epms
     }
 
     func testDecodedObjectFromAPIResponseMapping_applePayPreferenceDisabled() {

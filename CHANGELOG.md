@@ -5,6 +5,7 @@
 
 ### PaymentSheet
 * [Fixed] PaymentSheet sets newly saved payment methods as the default so that they're pre-selected the next time the customer pays.
+* [Added] PaymentSheet now supports external payment methods. See https://stripe.com/docs/payments/external-payment-methods?platform=ios
 
 ### CustomerSheet
 * [Added] Saved SEPA payment methods are now displayed to the customer for reuse, similar to saved cards.

@@ -141,7 +141,7 @@ class PaymentSheetFormFactory {
 
     func make() -> PaymentMethodElement {
         guard case .stripe(let paymentMethod) = paymentMethod else {
-            return makeExternalPayPal()
+            return makeExternalPaymentMethodForm()
         }
         var additionalElements = [Element]()
 
@@ -594,7 +594,8 @@ extension PaymentSheetFormFactory {
         return FormElement(autoSectioningElements: elements, theme: theme)
     }
 
-    func makeExternalPayPal() -> PaymentMethodElement {
+    /// All external payment methods use the same form that collects no user input except for any details the merchant configured PaymentSheet to collect (name, email, phone, billing address).
+    func makeExternalPaymentMethodForm() -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: false, emailRequiredByPaymentMethod: false, phoneRequiredByPaymentMethod: false)
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)

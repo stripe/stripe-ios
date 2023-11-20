@@ -489,7 +489,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     private func fetchSetupIntent(clientSecret: String) async -> (STPSetupIntent, STPElementsSession)? {
         do {
-            // Why do we retrieve an elements session here? Does anything use it?
             return try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret, configuration: .init())
         } catch {
             STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaSetupIntentFailure()

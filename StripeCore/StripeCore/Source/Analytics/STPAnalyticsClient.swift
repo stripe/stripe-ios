@@ -21,8 +21,8 @@ import UIKit
 @_spi(STP) public class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
     @objc public static let sharedClient = STPAnalyticsClient()
     /// When this class logs a payload in an XCTestCase, it's added to `_testLogHistory` instead of being sent over the network.
-    /// This is a hack - ideally, we inject a different analytics client in our tests, but until we can make that significant refactor, this is an escape hatch.
-    public private(set) var _testLogHistory: [[String: Any]] = []
+    /// This is a hack - ideally, we inject a different analytics client in our tests. This is an escape hatch until we can make that (significant) refactor
+    public var _testLogHistory: [[String: Any]] = []
 
     @objc public var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()

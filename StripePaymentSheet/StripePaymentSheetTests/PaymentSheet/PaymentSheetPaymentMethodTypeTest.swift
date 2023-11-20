@@ -9,7 +9,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
+@testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
@@ -425,94 +425,61 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testPaymentMethodOrder() {
-        func callFilteredPaymentMethodTypes(withIntentTypes paymentMethodTypes: [String]) -> [PaymentSheet.PaymentMethodType] {
-            let intent = Intent.deferredIntent(elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes, flags: [:]), intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in }))
-            // Note: 👇 `filteredPaymentMethodTypes` is the function we are testing
-            return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
-        }
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _, completion in
             XCTFail()
             completion(.canceled)
         })
 
-        // Ordering is respected
-        configuration.paymentMethodOrder = ["card", "external_paypal"]
-        XCTAssertEqual(
-            callFilteredPaymentMethodTypes(withIntentTypes: ["card"]),
-            [.stripe(.card), .external(.makeExternalPaypal())]
-        )
-        configuration.paymentMethodOrder = ["external_paypal", "card"]
-        XCTAssertEqual(
-            callFilteredPaymentMethodTypes(withIntentTypes: ["card"]),
-            [.external(.makeExternalPaypal()), .stripe(.card)]
-        )
-        // Omitted PMs are ordered afterwards in their original order
-        configuration.paymentMethodOrder = ["card", "external_paypal"]
-        XCTAssertEqual(
-            callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            [.stripe(.card), .external(.makeExternalPaypal()), .stripe(.iDEAL), .stripe(.bancontact)]
-        )
-        // Invalid PM types are ignored
-        configuration.paymentMethodOrder = ["foo", "card", "bar", "external_paypal", "zoo"]
-        XCTAssertEqual(
-            callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            [.stripe(.card), .external(.makeExternalPaypal()), .stripe(.iDEAL), .stripe(.bancontact)]
-        )
-        // Duplicate PMs are ignored
-        configuration.paymentMethodOrder = ["card", "card", "external_paypal", "card"]
-        XCTAssertEqual(
-            callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            [.stripe(.card), .external(.makeExternalPaypal()), .stripe(.iDEAL), .stripe(.bancontact)]
-        )
-        // Empty paymentMethodOrder -> uses default ordering on the Intent
-        configuration.paymentMethodOrder = []
-        XCTAssertEqual(
-            callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            [.stripe(.iDEAL), .stripe(.card), .stripe(.bancontact), .external(.makeExternalPaypal())]
-        )
-        // Nil paymentMethodOrder -> uses default ordering on the Intent
-        configuration.paymentMethodOrder = nil
-        XCTAssertEqual(
-            callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"]),
-            [.stripe(.iDEAL), .stripe(.card), .stripe(.bancontact), .external(.makeExternalPaypal())]
-        )
-    }
-
-    func testRepectsExternalPayPalFlag() {
-        func callFilteredPaymentMethodTypes(with flags: [String: Bool]) -> [PaymentSheet.PaymentMethodType] {
-            let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"], flags: flags)
+        func callFilteredPaymentMethodTypes(withIntentTypes paymentMethodTypes: [String], externalPMTypes: [String]) -> [PaymentSheet.PaymentMethodType] {
             let intent = Intent.deferredIntent(
-                elementsSession: elementsSession,
+                elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes, externalPaymentMethodTypes: externalPMTypes),
                 intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in })
             )
             // Note: 👇 `filteredPaymentMethodTypes` is the function we are testing
             return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
         }
 
-        // Given a configuration w/ external_paypal...
-        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _, completion in
-            XCTFail()
-            completion(.canceled)
-        })
-
-        // If `elements_enable_external_payment_method_paypal` is false, we should hide external_paypal
-        XCTAssertFalse(
-            callFilteredPaymentMethodTypes(with: ["elements_enable_external_payment_method_paypal": false])
-                .contains(PaymentSheet.PaymentMethodType.external(.makeExternalPaypal()))
+        // Ordering is respected
+        configuration.paymentMethodOrder = ["card", "external_paypal"]
+        XCTAssertEqual(
+            callFilteredPaymentMethodTypes(withIntentTypes: ["card"], externalPMTypes: ["external_paypal"]).map { $0.identifier },
+            ["card", "external_paypal"]
         )
-
-        // If `elements_enable_external_payment_method_paypal` is true, we should show external_paypal
-        XCTAssertTrue(
-            callFilteredPaymentMethodTypes(with: ["elements_enable_external_payment_method_paypal": true])
-                .contains(PaymentSheet.PaymentMethodType.external(.makeExternalPaypal()))
+        configuration.paymentMethodOrder = ["external_paypal", "card"]
+        XCTAssertEqual(
+            callFilteredPaymentMethodTypes(withIntentTypes: ["card"], externalPMTypes: ["external_paypal"]).map { $0.identifier },
+            ["external_paypal", "card"]
         )
-
-        // If `elements_enable_external_payment_method_paypal` is not present, we should show external_paypal
-        XCTAssertTrue(
-            callFilteredPaymentMethodTypes(with: [:])
-                .contains(PaymentSheet.PaymentMethodType.external(.makeExternalPaypal()))
+        // Omitted PMs are ordered afterwards in their original order
+        configuration.paymentMethodOrder = ["card", "external_paypal"]
+        XCTAssertEqual(
+            callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"], externalPMTypes: ["external_paypal"]).map { $0.identifier },
+            ["card", "external_paypal", "ideal", "bancontact"]
+        )
+        // Invalid PM types are ignored
+        configuration.paymentMethodOrder = ["foo", "card", "bar", "external_paypal", "zoo"]
+        XCTAssertEqual(
+            callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"], externalPMTypes: ["external_paypal"]).map { $0.identifier },
+            ["card", "external_paypal", "ideal", "bancontact"]
+        )
+        // Duplicate PMs are ignored
+        configuration.paymentMethodOrder = ["card", "card", "external_paypal", "card"]
+        XCTAssertEqual(
+            callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"], externalPMTypes: ["external_paypal"]).map { $0.identifier },
+            ["card", "external_paypal", "ideal", "bancontact"]
+        )
+        // Empty paymentMethodOrder -> uses default ordering on the Intent
+        configuration.paymentMethodOrder = []
+        XCTAssertEqual(
+            callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"], externalPMTypes: ["external_paypal"]).map { $0.identifier },
+            ["ideal", "card", "bancontact", "external_paypal"]
+        )
+        // Nil paymentMethodOrder -> uses default ordering on the Intent
+        configuration.paymentMethodOrder = nil
+        XCTAssertEqual(
+            callFilteredPaymentMethodTypes(withIntentTypes: ["ideal", "card", "bancontact"], externalPMTypes: ["external_paypal"]).map { $0.identifier },
+            ["ideal", "card", "bancontact", "external_paypal"]
         )
     }
 }

@@ -13,7 +13,7 @@ import Combine
 import Contacts
 import PassKit
 import StripePayments
-@_spi(STP) @_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 @_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 @_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
 import SwiftUI
@@ -210,23 +210,32 @@ class PlaygroundController: ObservableObject {
         }
         return .init(
             externalPaymentMethods: ["external_paypal"]
-        ) { externalPaymentMethodType, billingDetails, completion in
-            print(billingDetails)
-            let alert = UIAlertController(title: "Confirm \(externalPaymentMethodType)?", message: nil, preferredStyle: .alert)
-            alert.addAction(.init(title: "Confirm", style: .default) {_ in
-                completion(.completed)
-            })
-            alert.addAction(.init(title: "Cancel", style: .default) {_ in
-                completion(.canceled)
-            })
-            alert.addAction(.init(title: "Fail", style: .default) {_ in
-                completion(.failed(error: ConfirmHandlerError.unknown))
-            })
-            if self.settings.uiStyle == .paymentSheet {
+        ) { [weak self] externalPaymentMethodType, billingDetails, completion in
+            self?.handleExternalPaymentMethod(type: externalPaymentMethodType, billingDetails: billingDetails, completion: completion)
+        }
+    }
+
+    func handleExternalPaymentMethod(type: String, billingDetails: STPPaymentMethodBillingDetails, completion: @escaping (PaymentSheetResult) -> Void) {
+        print("Customer is attempting to complete payment with \(type). Their billing details: \(billingDetails)")
+        print(billingDetails)
+        let alert = UIAlertController(title: "Confirm \(type)?", message: nil, preferredStyle: .alert)
+        alert.addAction(.init(title: "Confirm", style: .default) {_ in
+            completion(.completed)
+        })
+        alert.addAction(.init(title: "Cancel", style: .default) {_ in
+            completion(.canceled)
+        })
+        alert.addAction(.init(title: "Fail", style: .default) {_ in
+            let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
+            completion(.failed(error: exampleError))
+        })
+        if self.settings.uiStyle == .paymentSheet {
+            self.rootViewController.presentedViewController?.dismiss(animated: true) {
                 self.rootViewController.presentedViewController?.present(alert, animated: true)
-            } else {
-                self.rootViewController.present(alert, animated: true)
             }
+            self.rootViewController.presentedViewController?.present(alert, animated: true)
+        } else {
+            self.rootViewController.present(alert, animated: true)
         }
     }
 

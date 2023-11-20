@@ -126,14 +126,6 @@ enum Intent {
         }
     }
 
-    var shouldDisableExternalPayPal: Bool {
-        // Only disable external_paypal iff this flag is present and false
-        guard let flag = elementsSession.allResponseFields[jsonDict: "flags"]?["elements_enable_external_payment_method_paypal"] as? Bool else {
-            return false
-        }
-        return flag == false
-    }
-
     var isApplePayEnabled: Bool {
         switch self {
         case .paymentIntent(let elementSession, _):
