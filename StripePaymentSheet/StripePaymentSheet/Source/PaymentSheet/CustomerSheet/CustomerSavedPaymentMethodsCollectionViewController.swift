@@ -377,7 +377,19 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
 /// :nodoc:
 extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCellDelegate {
     func paymentOptionCellDidSelectEdit(_ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
-        // TODO(porter) CustomerSheet CBC support
+        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
+              case .saved(let paymentMethod) = viewModels[indexPath.row]
+        else {
+            assertionFailure()
+            return
+        }
+
+        let editVc = UpdateCardViewController(paymentOptionCell: paymentOptionCell,
+                                              paymentMethod: paymentMethod,
+                                              removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
+                                              appearance: appearance)
+        editVc.delegate = self
+        self.bottomSheetController?.pushContentViewController(editVc)
     }
 
     func paymentOptionCellDidSelectRemove(
@@ -389,38 +401,10 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
             assertionFailure("Please file an issue with reproduction steps at https://github.com/stripe/stripe-ios")
             return
         }
-        let viewModel = viewModels[indexPath.row]
         let alert = UIAlertAction(
             title: String.Localized.remove, style: .destructive
         ) { (_) in
-            self.viewModels.remove(at: indexPath.row)
-            // the deletion needs to be in a performBatchUpdates so we make sure it is completed
-            // before potentially leaving edit mode (which triggers a reload that may collide with
-            // this deletion)
-            self.collectionView.performBatchUpdates {
-                self.collectionView.deleteItems(at: [indexPath])
-            } completion: { _ in
-                self.savedPaymentMethods.removeAll(where: {
-                    $0.stripeId == paymentMethod.stripeId
-                })
-                self.unsyncedSavedPaymentMethods.removeAll(where: {
-                    $0.stripeId == paymentMethod.stripeId
-                })
-
-                if let index = self.selectedViewModelIndex {
-                    if indexPath.row == index {
-                        self.selectedViewModelIndex = nil
-                    } else if indexPath.row < index {
-                        self.selectedViewModelIndex = index - 1
-                    }
-                }
-
-                self.delegate?.didSelectRemove(
-                    viewController: self,
-                    paymentMethodSelection: viewModel,
-                    originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod
-                )
-            }
+            self.removePaymentMethod(indexPath: indexPath, paymentMethod: paymentMethod)
         }
         let cancel = UIAlertAction(
             title: String.Localized.cancel,
@@ -437,4 +421,52 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
         alertController.addAction(alert)
         present(alertController, animated: true, completion: nil)
     }
+
+    private func removePaymentMethod(indexPath: IndexPath, paymentMethod: STPPaymentMethod) {
+        let viewModel = viewModels[indexPath.row]
+        self.viewModels.remove(at: indexPath.row)
+        // the deletion needs to be in a performBatchUpdates so we make sure it is completed
+        // before potentially leaving edit mode (which triggers a reload that may collide with
+        // this deletion)
+        self.collectionView.performBatchUpdates {
+            self.collectionView.deleteItems(at: [indexPath])
+        } completion: { _ in
+            self.savedPaymentMethods.removeAll(where: {
+                $0.stripeId == paymentMethod.stripeId
+            })
+            self.unsyncedSavedPaymentMethods.removeAll(where: {
+                $0.stripeId == paymentMethod.stripeId
+            })
+
+            if let index = self.selectedViewModelIndex {
+                if indexPath.row == index {
+                    self.selectedViewModelIndex = nil
+                } else if indexPath.row < index {
+                    self.selectedViewModelIndex = index - 1
+                }
+            }
+
+            self.delegate?.didSelectRemove(
+                viewController: self,
+                paymentMethodSelection: viewModel,
+                originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod
+            )
+        }
+    }
+}
+
+// MARK: - UpdateCardViewControllerDelegate
+/// :nodoc:
+extension CustomerSavedPaymentMethodsCollectionViewController: UpdateCardViewControllerDelegate {
+    func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
+        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
+              case .saved(let paymentMethod) = viewModels[indexPath.row]
+        else {
+            assertionFailure("Please file an issue with reproduction steps at https://github.com/stripe/stripe-ios")
+            return
+        }
+
+        removePaymentMethod(indexPath: indexPath, paymentMethod: paymentMethod)
+    }
+
 }

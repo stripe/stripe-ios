@@ -375,7 +375,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
 
         let editVc = UpdateCardViewController(paymentOptionCell: paymentOptionCell,
                                               paymentMethod: paymentMethod,
-                                              configuration: configuration,
+                                              removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
@@ -391,7 +391,8 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             return
         }
 
-        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod, configuration: configuration) { [weak self] in
+        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
+                                                                          removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage) { [weak self] in
             guard let self = self else { return }
             self.removePaymentMethod(paymentOptionCell: paymentOptionCell)
         }
@@ -445,7 +446,7 @@ extension STPPaymentMethod {
     var removalMessage: (title: String, message: String) {
         switch type {
         case .card:
-            let brandString = STPCardBrandUtilities.stringFrom(card?.brand ?? .unknown) ?? ""
+            let brandString = STPCardBrandUtilities.stringFrom(card?.networks?.preferred?.toCardBrand ?? card?.brand ?? .unknown) ?? ""
             let last4 = card?.last4 ?? ""
             let formattedMessage = STPLocalizedString(
                 "Remove %1$@ ending in %2$@",
@@ -483,7 +484,7 @@ extension STPPaymentMethod {
 
 extension UIAlertController {
     static func makeRemoveAlertController(paymentMethod: STPPaymentMethod,
-                                          configuration: SavedPaymentOptionsViewController.Configuration,
+                                          removeSavedPaymentMethodMessage: String?,
                                           completion: @escaping () -> Void) -> UIAlertController {
         let alert = UIAlertAction(
             title: String.Localized.remove, style: .destructive
@@ -497,7 +498,7 @@ extension UIAlertController {
 
         let alertController = UIAlertController(
             title: paymentMethod.removalMessage.title,
-            message: configuration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
+            message: removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
             preferredStyle: .alert
         )
 

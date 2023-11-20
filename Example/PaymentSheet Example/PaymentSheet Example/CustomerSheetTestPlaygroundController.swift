@@ -124,6 +124,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
+        configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
         configuration.cbcEnabled = true // TODO(porter) Remove this for CBC GA
         return configuration
     }
