@@ -123,10 +123,6 @@ workflows:
         title: Set bundler to ignore development and test gems
     - git-clone@6: {}
     - cache-pull@2: {}
-    - tuist@0:
-        run_if: .IsCI
-        inputs:
-        - command: generate -n
     - bundler@0: {}
     - cache-push@2:
         inputs:
@@ -513,10 +509,6 @@ workflows:
     - git-clone@6:
         inputs:
         - clone_depth: "1"
-    - tuist@0:
-        run_if: .IsCI
-        inputs:
-        - command: generate -n
     - cache-pull@2: {}
     - bundler@0: {}
     - cache-push@2:
