@@ -156,10 +156,7 @@ def build_module_docs(modules, release_version, docs_root_directory)
     end
 
     info "Executing xcodebuild for #{m['framework_name']}..."
-
-    # Regenerate the project after adding the docc bundle
-    `tuist generate -n`
-
+    
     # Build the docs
     puts `xcodebuild docbuild \
      -scheme #{m['scheme']} \
