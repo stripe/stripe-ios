@@ -13,9 +13,8 @@ import UIKit
 
 protocol UpdateCardViewControllerDelegate: AnyObject {
     func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
-    
     func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
-                   updateParams: STPPaymentMethodUpdateParams) async -> Result<STPPaymentMethod, Error>
+                   updateParams: STPPaymentMethodUpdateParams) async throws
 }
 
 /// For internal SDK use only
@@ -170,18 +169,14 @@ final class UpdateCardViewController: UIViewController {
         let updateParams = STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil)
         
         // Make the API request to update the payment method
-        let updateResult = await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateParams: updateParams)
-        
-        // Handle the reuslt of the update API reqeust
-        switch updateResult {
-        case .success:
+        do {
+            let _ = try await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateParams: updateParams)
             updateButton.update(state: .succeeded)
             dismiss()
-        case .failure(let failure):
+        } catch {
             // TODO(porter) Handle error
             updateButton.update(state: .enabled)
-            print(failure)
-            break
+            print(error)
         }
     }
 

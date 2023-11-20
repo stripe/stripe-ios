@@ -541,24 +541,14 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     
     func didSelectUpdate(viewController: SavedPaymentOptionsViewController,
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
-                         updateParams: STPPaymentMethodUpdateParams) async -> Result<STPPaymentMethod, Error> {
+                         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         guard case .saved(let paymentMethod) = paymentMethodSelection,
             let ephemeralKey = configuration.customer?.ephemeralKeySecret
         else {
-            return .failure(PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key secret"))
+            throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key secret")
         }
         
-        return await withCheckedContinuation { continuation in
-            configuration.apiClient.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId,
-                                                        with: updateParams,
-                                                        using: ephemeralKey) { updatedPaymentMethod, error in
-                if let error = error {
-                    continuation.resume(returning: .failure(error))
-                }
-                
-                continuation.resume(returning: .success(paymentMethod))
-            }
-        }
+        return try await configuration.apiClient.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId, with: updateParams, using: ephemeralKey)
     }
     
     func didUpdateSelection(

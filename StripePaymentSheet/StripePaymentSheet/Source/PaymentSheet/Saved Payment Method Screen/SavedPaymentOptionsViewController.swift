@@ -23,7 +23,7 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didSelectUpdate(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
-        updateParams: STPPaymentMethodUpdateParams) async -> Result<STPPaymentMethod, Error>
+        updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
 }
 
 /// For internal SDK use only
@@ -445,31 +445,23 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
     }
     
     func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
-                   updateParams: STPPaymentMethodUpdateParams) async -> Result<STPPaymentMethod, Error> {
+                   updateParams: STPPaymentMethodUpdateParams) async throws {
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
               case .saved = viewModels[indexPath.row],
               let delegate = delegate
         else {
             assertionFailure()
-            return .failure(PaymentSheetError.unknown(debugDescription: "TODO"))
+            throw PaymentSheetError.unknown(debugDescription: "TODO")
         }
         
         let viewModel = viewModels[indexPath.row]
-        let result = await delegate.didSelectUpdate(viewController: self,
+        let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
                                                     paymentMethodSelection: viewModel,
                                                     updateParams: updateParams)
         
-        switch result {
-        case .success(let updatedPaymentMethod):
-            let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
-            viewModels[indexPath.row] = updatedViewModel
-            collectionView.reloadItems(at: [indexPath])
-        case .failure:
-            // let UpdateCardViewController handle the failure
-            break
-        }
-        
-        return result
+        let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
+        viewModels[indexPath.row] = updatedViewModel
+        collectionView.reloadItems(at: [indexPath])
     }
 }
 
