@@ -12,11 +12,11 @@ import Foundation
 
 extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
-    
+
     func makeElementsSessionsParams(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration) -> [String: Any] {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
-            "external_payment_methods": configuration.externalPaymentMethodConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? []
+            "external_payment_methods": configuration.externalPaymentMethodConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
         ]
         switch mode {
         case .deferredIntent(let intentConfig):

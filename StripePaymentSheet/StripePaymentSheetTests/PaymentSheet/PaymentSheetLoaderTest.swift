@@ -5,9 +5,10 @@
 //  Created by Yuki Tokuhiro on 6/24/23.
 //
 
+@testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP)@_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
@@ -215,6 +216,81 @@ final class PaymentSheetLoaderTest: XCTestCase {
             }
         }
         await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    func testPaymentSheetLoadWithExternalPaymentMethods() async throws {
+        // Loading PaymentSheet...
+        let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
+        let types = ["ideal", "card", "bancontact", "sofort"]
+        let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
+        var configuration = self.configuration
+        // ...with valid external payment methods configured...
+        configuration.externalPaymentMethodConfiguration = .init(
+            externalPaymentMethods: ["external_fawry", "external_fonix"],
+            externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */ }
+        )
+        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration) { result in
+            expectation.fulfill()
+            switch result {
+            case .success(let intent, let paymentMethods, _):
+                // ...PaymentSheet should successfully load
+                guard case let .paymentIntent(elementsSession, paymentIntent) = intent else {
+                    XCTFail()
+                    return
+                }
+                // Sanity check that the ElementsSession object contain the types in the PI
+                XCTAssertEqual(
+                    elementsSession.externalPaymentMethods.map { $0.type },
+                    ["external_fawry", "external_fonix"]
+                )
+                // Sanity check the PI matches the one we fetched
+                XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
+                XCTAssertEqual(paymentMethods, [])
+                XCTAssertTrue(intent.isApplePayEnabled)
+            case .failure(let error):
+                XCTFail(error.nonGenericDescription)
+            }
+        }
+        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    func testPaymentSheetLoadWithInvalidExternalPaymentMethods() async throws {
+        // Loading PaymentSheet...
+        let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
+        let types = ["ideal", "card", "bancontact", "sofort"]
+        let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
+        var configuration = self.configuration
+        // ...with valid external payment methods configured...
+        configuration.externalPaymentMethodConfiguration = .init(
+            externalPaymentMethods: ["external_invalid_value"],
+            externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */ }
+        )
+        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration) { result in
+            expectation.fulfill()
+            switch result {
+            case .success(let intent, let paymentMethods, _):
+                // ...PaymentSheet should successfully load
+                guard case let .paymentIntent(elementsSession, paymentIntent) = intent else {
+                    XCTFail()
+                    return
+                }
+                // Sanity check the PI matches the one we fetched
+                XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
+                XCTAssertEqual(paymentMethods, [])
+                XCTAssertTrue(intent.isApplePayEnabled)
+
+                // ...with an empty `externalPaymentMethods` property
+                XCTAssertTrue(elementsSession.externalPaymentMethods.isEmpty)
+                // ...and not send a failure analytic
+                let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
+                XCTAssertFalse(analyticEvents.contains(where: { dict in
+                    (dict["event"] as? String) == STPAnalyticEvent.paymentSheetElementsSessionEPMLoadFailed.rawValue
+                }))
+            case .failure(let error):
+                XCTFail(error.nonGenericDescription)
+            }
+        }
+        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testLoadPerformance() {

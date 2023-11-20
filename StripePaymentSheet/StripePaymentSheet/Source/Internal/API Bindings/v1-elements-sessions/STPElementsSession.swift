@@ -37,6 +37,9 @@ final class STPElementsSession: NSObject {
 
     let isApplePayEnabled: Bool
 
+    /// An ordered list of external payment methods to display
+    let externalPaymentMethods: [ExternalPaymentMethod]
+
     let allResponseFields: [AnyHashable: Any]
 
     private init(
@@ -49,7 +52,8 @@ final class STPElementsSession: NSObject {
         linkSettings: LinkSettings?,
         paymentMethodSpecs: [[AnyHashable: Any]]?,
         cardBrandChoice: STPCardBrandChoice?,
-        isApplePayEnabled: Bool
+        isApplePayEnabled: Bool,
+        externalPaymentMethods: [ExternalPaymentMethod]
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -61,6 +65,7 @@ final class STPElementsSession: NSObject {
         self.paymentMethodSpecs = paymentMethodSpecs
         self.cardBrandChoice = cardBrandChoice
         self.isApplePayEnabled = isApplePayEnabled
+        self.externalPaymentMethods = externalPaymentMethods
         super.init()
     }
 
@@ -91,7 +96,8 @@ final class STPElementsSession: NSObject {
             linkSettings: nil,
             paymentMethodSpecs: nil,
             cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
-            isApplePayEnabled: true
+            isApplePayEnabled: true,
+            externalPaymentMethods: []
         )
     }
 }
@@ -100,33 +106,45 @@ final class STPElementsSession: NSObject {
 extension STPElementsSession: STPAPIResponseDecodable {
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         // Required fields:
-        guard let dict = response,
-              let paymentMethodPrefDict = dict["payment_method_preference"] as? [AnyHashable: Any],
+        guard let response,
+              let paymentMethodPrefDict = response["payment_method_preference"] as? [AnyHashable: Any],
               let paymentMethodTypeStrings = paymentMethodPrefDict["ordered_payment_method_types"] as? [String],
-              let sessionID = dict["session_id"] as? String,
-              let applePayPreference = dict["apple_pay_preference"] as? String
+              let sessionID = response["session_id"] as? String
         else {
             return nil
         }
-        let isApplePayEnabled = applePayPreference != "disabled"
 
         // Optional fields:
-        let unactivatedPaymentMethodTypeStrings = dict["unactivated_payment_method_types"] as? [String] ?? []
-        let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: dict["card_brand_choice"] as? [AnyHashable: Any])
+        let unactivatedPaymentMethodTypeStrings = response["unactivated_payment_method_types"] as? [String] ?? []
+        let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: response["card_brand_choice"] as? [AnyHashable: Any])
+        let applePayPreference = response["apple_pay_preference"] as? String
+        let isApplePayEnabled = applePayPreference != "disabled"
+        let externalPaymentMethods: [ExternalPaymentMethod] = {
+            guard
+                let epmsDataJSON = response["external_payment_methods_data"] as? [[AnyHashable: Any]],
+                let epmsData = ExternalPaymentMethod.decoded(fromAPIResponse: epmsDataJSON) else {
+                // We don't want to fail the entire v1/elements/sessions request if we fail to parse external_payment_methods_data
+                // Instead, fall back to an empty array and log an error.
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionEPMLoadFailed)
+                return []
+            }
+            return epmsData
+        }()
 
         return self.init(
-            allResponseFields: dict,
+            allResponseFields: response,
             sessionID: sessionID,
             orderedPaymentMethodTypes: paymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
             countryCode: paymentMethodPrefDict["country_code"] as? String,
-            merchantCountryCode: dict["merchant_country"] as? String,
+            merchantCountryCode: response["merchant_country"] as? String,
             linkSettings: LinkSettings.decodedObject(
-                fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]
+                fromAPIResponse: response["link_settings"] as? [AnyHashable: Any]
             ),
-            paymentMethodSpecs: dict["payment_method_specs"] as? [[AnyHashable: Any]],
+            paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
             cardBrandChoice: cardBrandChoice,
-            isApplePayEnabled: isApplePayEnabled
+            isApplePayEnabled: isApplePayEnabled,
+            externalPaymentMethods: externalPaymentMethods
         )
     }
 }

@@ -5,10 +5,12 @@
 //  Created by Nick Porter on 2/16/23.
 //
 
-import XCTest
+@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsTestUtils
+import XCTest
 
 class STPElementsSessionTest: XCTestCase {
 
@@ -45,6 +47,8 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.cardBrandChoice?.eligible, true)
         XCTAssertTrue(elementsSession.isApplePayEnabled)
         XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
+
+        // TODO: Test epms
     }
 
     func testDecodedObjectFromAPIResponseMapping_applePayPreferenceDisabled() {
@@ -53,5 +57,24 @@ class STPElementsSessionTest: XCTestCase {
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
 
         XCTAssertFalse(elementsSession.isApplePayEnabled)
+    }
+
+    func testFailedEPMParsing() {
+        // If STPElementsSession decodes a dict...
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        // ...that contains unparseable external_payment_method_data
+        elementsSessionJson["external_payment_method_data"] = [
+            "this dict doesn't match the expected shape": "and will fail to parse",
+        ]
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        // ...it should successfully decode...
+        XCTAssertNotNil(elementsSession)
+        // ...with an empty `externalPaymentMethods` property
+        XCTAssertTrue(elementsSession.externalPaymentMethods.isEmpty)
+        // ...and send a failure analytic
+        let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
+        XCTAssertTrue(analyticEvents.contains(where: { dict in
+            (dict["event"] as? String) == STPAnalyticEvent.paymentSheetElementsSessionEPMLoadFailed.rawValue
+        }))
     }
 }
