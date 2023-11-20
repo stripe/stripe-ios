@@ -19,16 +19,20 @@ struct PaymentSheetTestPlayground: View {
 
     @ViewBuilder
     var clientSettings: some View {
-        SettingView(setting: uiStyle)
-        SettingView(setting: $playgroundController.settings.shippingInfo)
-        SettingView(setting: $playgroundController.settings.applePayEnabled)
-        SettingView(setting: $playgroundController.settings.applePayButtonType)
-        SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
-        SettingView(setting: $playgroundController.settings.defaultBillingAddress)
-        SettingView(setting: $playgroundController.settings.linkEnabled)
-        SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
-        SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
-        SettingView(setting: $playgroundController.settings.autoreload)
+        // Note: Use group to work around XCode 14: "Extra Argument in Call" issue
+        //  (each view can hold 10 direct subviews)
+        Group {
+            SettingView(setting: uiStyle)
+            SettingView(setting: $playgroundController.settings.shippingInfo)
+            SettingView(setting: $playgroundController.settings.applePayEnabled)
+            SettingView(setting: $playgroundController.settings.applePayButtonType)
+            SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
+            SettingView(setting: $playgroundController.settings.defaultBillingAddress)
+            SettingView(setting: $playgroundController.settings.linkEnabled)
+            SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
+            SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
+            SettingView(setting: $playgroundController.settings.autoreload)
+        }
         Group {
             if playgroundController.settings.uiStyle == .flowController {
                 if playgroundController.settings.integrationType == .deferred_csc {
