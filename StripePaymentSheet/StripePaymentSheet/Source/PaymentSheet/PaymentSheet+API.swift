@@ -93,7 +93,7 @@ extension PaymentSheet {
 
             let presentPreConfirmationViewController: () -> Void = {
                 // Set the PaymentSheetViewController as the content of our bottom sheet
-                let bottomSheetVC = Self.makeBottomSheetViewController(
+                let bottomSheetVC = FlowController.makeBottomSheetViewController(
                     preConfirmationViewController,
                     configuration: configuration,
                     didCancelNative3DS2: {
@@ -428,21 +428,6 @@ extension PaymentSheet {
     }
 
     // MARK: - Helper methods
-    static func makeBottomSheetViewController(
-        _ contentViewController: BottomSheetContentViewController,
-        configuration: Configuration,
-        didCancelNative3DS2: @escaping (() -> Void)
-    ) -> BottomSheetViewController {
-        let sheet = BottomSheetViewController(
-            contentViewController: contentViewController,
-            appearance: configuration.appearance,
-            isTestMode: configuration.apiClient.isTestmode,
-            didCancelNative3DS2: didCancelNative3DS2
-        )
-
-        configuration.style.configure(sheet)
-        return sheet
-    }
 
     static func makeShippingParams(for paymentIntent: STPPaymentIntent, configuration: PaymentSheet.Configuration)
         -> STPPaymentIntentShippingDetailsParams?

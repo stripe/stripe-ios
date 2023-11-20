@@ -98,6 +98,7 @@ class MyCustomBackendCVCRecollectionModel: ObservableObject {
                     // Handle error
                     return
                 }
+
                 // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
                 STPAPIClient.shared.publishableKey = publishableKey
                 DispatchQueue.main.async {
