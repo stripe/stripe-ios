@@ -65,7 +65,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
                                                 intent: ._testValue(),
                                                 configuration: configuration,
                                                 onCompletion: { _, _ in },
-                                                onCancel: {_ in })
+                                                onCancel: { _ in })
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
@@ -77,7 +77,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
                                                 intent: ._testValue(),
                                                 configuration: configuration,
                                                 onCompletion: { _, _ in },
-                                                onCancel: {_ in })
+                                                onCancel: { _ in })
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }

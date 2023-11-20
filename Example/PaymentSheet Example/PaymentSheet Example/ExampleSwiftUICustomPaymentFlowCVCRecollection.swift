@@ -160,7 +160,7 @@ class MyCustomBackendCVCRecollectionModel: ObservableObject {
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
             "customer_id": paymentSheetFlowController?.configuration.customer?.id,
-            "require_cvc_recollection" : self.isCVCRecollectionEnabledCallback()
+            "require_cvc_recollection": self.isCVCRecollectionEnabledCallback(),
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
