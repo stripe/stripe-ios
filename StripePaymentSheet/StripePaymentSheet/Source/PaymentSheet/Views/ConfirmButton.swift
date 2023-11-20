@@ -60,9 +60,7 @@ class ConfirmButton: UIView {
     }
 
     var succeededBackgroundColor: UIColor {
-        get {
-            return buyButton.succeededBackgroundColor
-        }
+        return buyButton.succeededBackgroundColor
     }
 
     private(set) var state: Status = .enabled
