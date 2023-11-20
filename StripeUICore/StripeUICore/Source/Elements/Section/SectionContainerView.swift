@@ -106,10 +106,12 @@ class SectionContainerView: UIView {
         )
     }
 
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateUI()
     }
+#endif
 
     // MARK: - Internal methods
     func updateUI(newViews: [UIView]? = nil) {

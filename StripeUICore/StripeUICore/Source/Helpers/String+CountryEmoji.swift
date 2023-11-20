@@ -11,7 +11,7 @@ import UIKit
 extension String {
     static func countryFlagEmoji(for countryCode: String) -> String? {
         let capitalized = countryCode.uppercased()
-        guard Locale.isoRegionCodes.contains(capitalized) else {
+        guard Locale.stp_isoRegionCodes.contains(capitalized) else {
             return nil
         }
 

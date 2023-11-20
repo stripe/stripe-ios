@@ -41,6 +41,7 @@ import UIKit
 
     private let theme: ElementsUITheme
 
+#if !os(visionOS)
     public var inputAccessoryView: UIView? {
         get {
             return textFieldView.textField.inputAccessoryView
@@ -50,7 +51,8 @@ import UIKit
             textFieldView.textField.inputAccessoryView = newValue
         }
     }
-
+#endif
+    
     // MARK: - ViewModel
     public struct KeyboardProperties {
         public init(type: UIKeyboardType, textContentType: UITextContentType?, autocapitalization: UITextAutocapitalizationType) {

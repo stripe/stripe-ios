@@ -39,9 +39,11 @@
     self.view = [[STDSProcessingView alloc] initWithCustomization:self.uiCustomization directoryServerLogo:dsImage];
 }
 
+#if !TARGET_OS_VISION
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return self.uiCustomization.preferredStatusBarStyle;
 }
+#endif
 
 - (void)viewDidLoad {
     [super viewDidLoad];

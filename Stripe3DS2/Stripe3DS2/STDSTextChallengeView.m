@@ -107,9 +107,11 @@ static const CGFloat kTextChallengeViewBottomPadding = 11;
 - (void)didMoveToWindow {
     [super didMoveToWindow];
     
+#if !TARGET_OS_VISION
     if (self.window.screen.nativeScale > 0) {
         self.borderViewHeightConstraint.constant = kBorderViewHeight / self.window.screen.nativeScale;
     }
+#endif
 }
 
 #pragma mark - UITextFieldDelegate

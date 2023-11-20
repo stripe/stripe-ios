@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if !os(visionOS)
 import UIKit
 
 extension OneTimeCodeTextField {
@@ -215,3 +216,5 @@ extension OneTimeCodeTextField {
         }
     }
 }
+
+#endif

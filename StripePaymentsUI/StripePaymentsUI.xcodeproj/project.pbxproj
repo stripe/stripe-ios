@@ -98,16 +98,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		726BA5B2292760F829425C6F /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		CE4914E8623300BC66C40EE6 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -142,6 +132,9 @@
 		2F0B90C79DD7D9E7CE7D74DE /* StripePaymentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripePaymentsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		30B86CEBB7B23D6144D16AAD /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		313F5F862B0BE62200BD98A9 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
+		31AD3BDD2B0C24410080C800 /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		31AD3BE02B0C24450080C800 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		31AD3BE32B0C24490080C800 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34073B6642753145E5DEA6F2 /* STPCardNumberInputTextFieldValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCardNumberInputTextFieldValidator.swift; sourceTree = "<group>"; };
 		3680B23A13112D27179DE23C /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		378D7AAFE63F6D4ADC1D4EC8 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
@@ -402,6 +395,9 @@
 		7ADB2E49AFEC066694F8E7D1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				31AD3BE32B0C24490080C800 /* StripeCore.framework */,
+				31AD3BE02B0C24450080C800 /* StripeUICore.framework */,
+				31AD3BDD2B0C24410080C800 /* StripePayments.framework */,
 				BFE846D5129FB85A61ADB219 /* XCTest.framework */,
 			);
 			name = Frameworks;
@@ -568,7 +564,6 @@
 			buildPhases = (
 				A1F6776A0960C4F06147074E /* Sources */,
 				D3B646E158379063DC903CD9 /* Resources */,
-				726BA5B2292760F829425C6F /* Embed Frameworks */,
 				080B9DE24C5BA81F780F8F21 /* Frameworks */,
 			);
 			buildRules = (

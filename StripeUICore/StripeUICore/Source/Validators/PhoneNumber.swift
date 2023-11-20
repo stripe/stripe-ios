@@ -101,7 +101,7 @@ import UIKit
         }
 
         // This second filter uses the device's locale to pick a winner out of N candidates.
-        if let winner = candidates.first(where: { $0.regionCode == locale.regionCode }) {
+        if let winner = candidates.first(where: { $0.regionCode == locale.stp_regionCode }) {
             return makePhoneNumber(winner)
         }
 

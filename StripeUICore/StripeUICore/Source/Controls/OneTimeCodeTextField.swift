@@ -6,6 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+// UIMenuController not supported on visionOS, rewrite this if needed
+#if !os(visionOS)
+
 import UIKit
 
 /// A field for collecting one-time codes (OTCs).
@@ -54,8 +57,10 @@ import UIKit
         return DigitView(theme: theme)
     }
 
+#if !os(visionOS)
     private let feedbackGenerator = UINotificationFeedbackGenerator()
-
+#endif
+    
     // MARK: - UIControl properties
     override public var isEnabled: Bool {
         didSet {
@@ -307,7 +312,9 @@ public extension OneTimeCodeTextField {
             digitView.borderLayer.add(borderColorAnimation, forKey: "borderColor")
         }
 
+#if !os(visionOS)
         feedbackGenerator.notificationOccurred(.error)
+#endif
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             self?.digitViews.forEach { digitView in
@@ -783,3 +790,5 @@ private extension OneTimeCodeTextField {
     }
 
 }
+
+#endif
