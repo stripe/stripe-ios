@@ -68,7 +68,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
         verify(confirmButton)
     }
-    
+
     // Tests that `primaryButton` success color is updated properly
     func testConfirmButtonSuccessColor() {
         var appearance = PaymentSheet.Appearance.default
@@ -86,7 +86,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
         verify(confirmButton)
     }
-
 
     func verify(
         _ view: UIView,
