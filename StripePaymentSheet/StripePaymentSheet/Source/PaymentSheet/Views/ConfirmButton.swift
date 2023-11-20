@@ -63,9 +63,6 @@ class ConfirmButton: UIView {
         get {
             return buyButton.succeededBackgroundColor
         }
-        set {
-            buyButton.succeededBackgroundColor = newValue
-        }
     }
 
     private(set) var state: Status = .enabled
@@ -230,7 +227,9 @@ class ConfirmButton: UIView {
         }
 
         /// Background color for the `.succeeded` state.
-        var succeededBackgroundColor: UIColor = .systemGreen
+        var succeededBackgroundColor: UIColor {
+            return appearance.primaryButton.successColor
+        }
 
         private static let minimumLabelHeight: CGFloat = 24
         private static let minimumButtonHeight: CGFloat = 44

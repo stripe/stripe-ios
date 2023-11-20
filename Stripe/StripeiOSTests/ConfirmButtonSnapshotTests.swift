@@ -68,6 +68,25 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
         verify(confirmButton)
     }
+    
+    // Tests that `primaryButton` success color is updated properly
+    func testConfirmButtonSuccessColor() {
+        var appearance = PaymentSheet.Appearance.default
+        var button = PaymentSheet.Appearance.PrimaryButton()
+        button.successColor = .red
+        appearance.primaryButton = button
+
+        let confirmButton = ConfirmButton(
+            state: .succeeded,
+            style: .stripe,
+            callToAction: .setup,
+            appearance: appearance,
+            didTap: {}
+        )
+
+        verify(confirmButton)
+    }
+
 
     func verify(
         _ view: UIView,

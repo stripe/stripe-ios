@@ -166,6 +166,10 @@ public extension PaymentSheet {
             /// The text color of the primary button
             /// - Note: If `nil`, defaults to either white or black depending on the color of the button
             public var textColor: UIColor?
+            
+            /// The color of the primary button when in a success state. 
+            /// - Note: Defaults to `UIColor.systemGreen`.
+            public var successColor: UIColor = .systemGreen
 
             /// The corner radius of the primary button
             /// - Note: If `nil`, `appearance.cornerRadius` will be used as the primary button corner radius

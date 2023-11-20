@@ -3,6 +3,7 @@
 * [Fixed] Visual bug where re-presenting PaymentSheet wouldn't show a spinner while it reloads.
 * [Added] If PaymentSheet fails to load a deferred intent configuration, we fall back to displaying cards (or the intent configuration payment method types) instead of failing.
 * [Fixed] Fixed an issue where PaymentSheet wouldn't accept valid Mexican phone numbers.
+* [Added] The ability to customize the success color of the primary button with `PaymentSheetApperance.primaryButton.successColor`.
 
 ## 23.18.2 2023-11-06
 ### CustomerSheet
