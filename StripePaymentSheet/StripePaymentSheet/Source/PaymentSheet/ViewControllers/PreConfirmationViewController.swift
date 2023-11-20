@@ -41,7 +41,6 @@ class PreConfirmationViewController: UIViewController {
                 self?.didTapConfirmButton()
             }
         )
-        button.accessibilityHint = "Confirm CVC/CVV"
         return button
     }()
     private lazy var confirmButtonCTA: String = {

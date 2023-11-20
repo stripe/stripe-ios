@@ -39,6 +39,8 @@ class PaymentMethodInformationView: UIView {
         super.init(frame: .zero)
         installConstraints()
 
+        // Use disabled background if we are using default, otherwise
+        // use the `.disabledColor` to add alpha to the color
         if appearance.colors.componentBackground.cgColor == UIColor.systemBackground.cgColor ||
             appearance.colors.componentBackground.cgColor == UIColor.secondarySystemBackground.cgColor {
             self.backgroundColor = appearance.asElementsTheme.colors.disabledBackground

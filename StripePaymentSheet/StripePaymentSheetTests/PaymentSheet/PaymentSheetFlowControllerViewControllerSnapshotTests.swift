@@ -70,12 +70,6 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         STPSnapshotVerifyView(sut.view)
     }
 
-    private var window: UIWindow {
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 1026))
-        window.isHidden = false
-        return window
-    }
-
     func testCVVRecollectionScreen() {
         let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
 
