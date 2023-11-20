@@ -12,13 +12,11 @@ import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPIntentWithPreferencesTest: XCTestCase {
-    // MARK: PaymentSheet.IntentConfiguration+elementsSessionPayload tests
-
-    func testElementsSessionPayload_Payment() throws {
+class STPAPIClient_PaymentSheetTest: XCTestCase {
+    func testElementsSessionParameters_DeferredPayment() throws {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 2000,
                                                                            currency: "USD",
                                                                            setupFutureUsage: .onSession,
@@ -26,10 +24,13 @@ class STPIntentWithPreferencesTest: XCTestCase {
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
                                                             confirmHandler: { _, _, _ in })
+        var config = PaymentSheet.Configuration()
+        config.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_foo", "external_bar"], externalPaymentMethodConfirmHandler: { _, _, _ in })
 
-        let payload = intentConfig.elementsSessionParameters(publishableKey: "pk_test")
+        let payload = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), configuration: config)
         XCTAssertEqual(payload["key"] as? String, "pk_test")
         XCTAssertEqual(payload["locale"] as? String, Locale.current.toLanguageTag())
+        XCTAssertEqual(payload["external_payment_methods"] as? [String], ["external_foo", "external_bar"])
 
         let deferredIntent = try XCTUnwrap(payload["deferred_intent"] as?  [String: Any])
         XCTAssertEqual(deferredIntent["payment_method_types"] as? [String], ["card", "cashapp"])
@@ -41,16 +42,17 @@ class STPIntentWithPreferencesTest: XCTestCase {
         XCTAssertEqual(deferredIntent["capture_method"] as? String, "automatic_async")
     }
 
-    func testElementsSessionPayload_Setup() throws {
+    func testElementsSessionParameters_DeferredSetup() throws {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
                                                                            setupFutureUsage: .offSession),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
                                                             confirmHandler: { _, _, _ in })
 
-        let payload = intentConfig.elementsSessionParameters(publishableKey: "pk_test")
+        let payload = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), configuration: .init())
         XCTAssertEqual(payload["key"] as? String, "pk_test")
         XCTAssertEqual(payload["locale"] as? String, Locale.current.toLanguageTag())
+        XCTAssertEqual(payload["external_payment_methods"] as? [String], [])
 
         let deferredIntent = try XCTUnwrap(payload["deferred_intent"] as?  [String: Any])
         XCTAssertEqual(deferredIntent["payment_method_types"] as? [String], ["card", "cashapp"])

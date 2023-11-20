@@ -12,20 +12,54 @@ import Foundation
 
 extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
+    
+    func makeElementsSessionsParams(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration) -> [String: Any] {
+        var parameters: [String: Any] = [
+            "locale": Locale.current.toLanguageTag(),
+            "external_payment_methods": configuration.externalPaymentMethodConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? []
+        ]
+        switch mode {
+        case .deferredIntent(let intentConfig):
+            parameters["type"] = "deferred_intent"
+            parameters["key"] = publishableKey
+            parameters["deferred_intent"] = {
+                var deferredIntent = [String: Any]()
+                deferredIntent["payment_method_types"] = intentConfig.paymentMethodTypes
+                deferredIntent["on_behalf_of"] = intentConfig.onBehalfOf
+                switch intentConfig.mode {
+                case .payment(let amount, let currency, let setupFutureUsage, let captureMethod):
+                    deferredIntent["mode"] = "payment"
+                    deferredIntent["amount"] = amount
+                    deferredIntent["currency"] = currency
+                    deferredIntent["setup_future_usage"] = setupFutureUsage?.rawValue
+                    deferredIntent["capture_method"] = captureMethod.rawValue
+                case .setup(let currency, let setupFutureUsage):
+                    deferredIntent["mode"] = "setup"
+                    deferredIntent["currency"] = currency
+                    deferredIntent["setup_future_usage"] = setupFutureUsage.rawValue
+                }
+                return deferredIntent
+            }()
+        case .paymentIntentClientSecret(let clientSecret):
+            parameters["type"] = "payment_intent"
+            parameters["client_secret"] = clientSecret
+            parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
+        case .setupIntentClientSecret(let clientSecret):
+            parameters["type"] = "setup_intent"
+            parameters["client_secret"] = clientSecret
+            parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
+        }
+        return parameters
+    }
 
     func retrieveElementsSession(
-        paymentIntentClientSecret: String
+        paymentIntentClientSecret: String,
+        configuration: PaymentSheet.Configuration
     ) async throws -> (STPPaymentIntent, STPElementsSession) {
-        let parameters: [String: Any] = [
-            "client_secret": paymentIntentClientSecret,
-            "type": "payment_intent",
-            "expand": ["payment_method_preference.payment_intent.payment_method"],
-            "locale": Locale.current.toLanguageTag(),
-        ]
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
-            parameters: parameters
+            parameters: makeElementsSessionsParams(mode: .paymentIntentClientSecret(paymentIntentClientSecret), configuration: configuration)
         )
         // The v1/elements/sessions response contains a PaymentIntent hash that we parse out into a PaymentIntent
         guard
@@ -38,18 +72,13 @@ extension STPAPIClient {
     }
 
     func retrieveElementsSession(
-        setupIntentClientSecret: String
+        setupIntentClientSecret: String,
+        configuration: PaymentSheet.Configuration
     ) async throws -> (STPSetupIntent, STPElementsSession) {
-        let parameters: [String: Any] = [
-            "client_secret": setupIntentClientSecret,
-            "type": "setup_intent",
-            "expand": ["payment_method_preference.setup_intent.payment_method"],
-            "locale": Locale.current.toLanguageTag(),
-        ]
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
-            parameters: parameters
+            parameters: makeElementsSessionsParams(mode: .setupIntentClientSecret(setupIntentClientSecret), configuration: configuration)
         )
         // The v1/elements/sessions response contains a SetupIntent hash that we parse out into a SetupIntent
         guard
@@ -62,9 +91,10 @@ extension STPAPIClient {
     }
 
     func retrieveElementsSession(
-        withIntentConfig intentConfig: PaymentSheet.IntentConfiguration
+        withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
+        configuration: PaymentSheet.Configuration
     ) async throws -> STPElementsSession {
-        let parameters = intentConfig.elementsSessionParameters(publishableKey: publishableKey)
+        let parameters = makeElementsSessionsParams(mode: .deferredIntent(intentConfig), configuration: configuration)
         return try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
@@ -86,35 +116,6 @@ extension STPAPIClient {
             endpoint: APIEndpointElementsSessions,
             parameters: parameters
         )
-    }
-}
-
-extension PaymentSheet.IntentConfiguration {
-    func elementsSessionParameters(publishableKey: String?) -> [String: Any] {
-        var parameters: [String: Any] = [:]
-        parameters["key"] = publishableKey
-        parameters["type"] = "deferred_intent"
-        parameters["locale"] = Locale.current.toLanguageTag()
-
-        var deferredIntent = [String: Any]()
-        deferredIntent["payment_method_types"] = paymentMethodTypes
-        deferredIntent["on_behalf_of"] = onBehalfOf
-
-        switch mode {
-        case .payment(let amount, let currency, let setupFutureUsage, let captureMethod):
-            deferredIntent["mode"] = "payment"
-            deferredIntent["amount"] = amount
-            deferredIntent["currency"] = currency
-            deferredIntent["setup_future_usage"] = setupFutureUsage?.rawValue
-            deferredIntent["capture_method"] = captureMethod.rawValue
-        case .setup(let currency, let setupFutureUsage):
-            deferredIntent["mode"] = "setup"
-            deferredIntent["currency"] = currency
-            deferredIntent["setup_future_usage"] = setupFutureUsage.rawValue
-        }
-
-        parameters["deferred_intent"] = deferredIntent
-        return parameters
     }
 }
 
