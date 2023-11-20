@@ -92,33 +92,22 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
 
         // Create a new EK for the Customer
         let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
-
+        
         // Create a new payment method
         let paymentMethod = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
 
-        // Preferred network and metadata should be nil
-        XCTAssertNil(paymentMethod.card?.networks?.preferred)
-        XCTAssertNil(paymentMethod.metadata?["test_key"])
-
-        // Update the preferred network and metadata for the card
+        // Update the expiry year for the card by 1 year
         let card = STPPaymentMethodCardParams()
-        card.networks = .init(preferred: "visa")
+        card.expYear = (paymentMethod.card!.expYear + 1) as NSNumber
 
-        let params = STPPaymentMethodParams(
-            card: card,
-            billingDetails: nil,
-            metadata: [
-                "test_key": "updated_test_value",
-            ])
+        let params = STPPaymentMethodUpdateParams(card: card, billingDetails: nil)
 
         let updatedPaymentMethod = try await client.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId,
                                                                         with: params,
-                                                                        using: customerAndEphemeralKey.ephemeralKeySecret,
-                                                                        additionalPaymentUserAgentValues: [])
+                                                                        using: customerAndEphemeralKey.ephemeralKeySecret)
 
         // Verify
-        XCTAssertEqual("visa", updatedPaymentMethod.card?.networks?.preferred)
-        XCTAssertEqual("updated_test_value", updatedPaymentMethod.metadata?["test_key"])
+        XCTAssertEqual(updatedPaymentMethod.card!.expYear, (paymentMethod.card!.expYear + 1))
     }
 
     func testCreateBacsPaymentMethod() {

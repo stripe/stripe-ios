@@ -15,7 +15,7 @@ protocol UpdateCardViewControllerDelegate: AnyObject {
     func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
     
     func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
-                   updateCardParams: STPPaymentMethodCardParams) async -> Result<STPPaymentMethod, Error>
+                   updateParams: STPPaymentMethodUpdateParams) async -> Result<STPPaymentMethod, Error>
 }
 
 /// For internal SDK use only
@@ -165,11 +165,12 @@ final class UpdateCardViewController: UIViewController {
         updateButton.update(state: .processing)
         
         // Create the update card params
-        let updateCardParams = STPPaymentMethodCardParams()
-        updateCardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
+        let updateParams = STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil)
         
         // Make the API request to update the payment method
-        let updateResult = await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateCardParams: updateCardParams)
+        let updateResult = await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateParams: updateParams)
         
         // Handle the reuslt of the update API reqeust
         switch updateResult {

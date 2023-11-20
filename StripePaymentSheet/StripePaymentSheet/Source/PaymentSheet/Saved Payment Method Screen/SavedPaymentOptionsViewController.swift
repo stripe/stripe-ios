@@ -23,7 +23,7 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didSelectUpdate(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
-        updateCardParams: STPPaymentMethodCardParams) async -> Result<STPPaymentMethod, Error>
+        updateParams: STPPaymentMethodUpdateParams) async -> Result<STPPaymentMethod, Error>
 }
 
 /// For internal SDK use only
@@ -445,7 +445,7 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
     }
     
     func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
-                   updateCardParams: STPPaymentMethodCardParams) async -> Result<STPPaymentMethod, Error> {
+                   updateParams: STPPaymentMethodUpdateParams) async -> Result<STPPaymentMethod, Error> {
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
               case .saved = viewModels[indexPath.row],
               let delegate = delegate
@@ -457,7 +457,7 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
         let viewModel = viewModels[indexPath.row]
         let result = await delegate.didSelectUpdate(viewController: self,
                                                     paymentMethodSelection: viewModel,
-                                                    updateCardParams: updateCardParams)
+                                                    updateParams: updateParams)
         
         switch result {
         case .success(let updatedPaymentMethod):
