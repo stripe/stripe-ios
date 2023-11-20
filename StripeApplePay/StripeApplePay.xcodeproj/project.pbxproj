@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,7 @@
 		234FA38DC46927B23871A75D /* SetupIntentParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7CF2B75A797D6B2B5A04B4 /* SetupIntentParams.swift */; };
 		2D6CD6872A00B6FE0243C3F5 /* PKPayment+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906F7217DBF694BF42F23458 /* PKPayment+Stripe.swift */; };
 		2EBB230815383A8402D71146 /* STPPaymentMethodFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 905182496A07DE4F056A3EAA /* STPPaymentMethodFunctionalTest.swift */; };
+		313F5F7B2B0BE5A600BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F7A2B0BE5A600BD98A9 /* Docs.docc */; };
 		43682CEAB00A93868FA3188A /* SetupIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2A354F50C5D563436A0068 /* SetupIntent.swift */; };
 		463680AADB8CED6E962CD45A /* PaymentIntentParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478361D29DF10F2B43F7A1D2 /* PaymentIntentParams.swift */; };
 		4AA6A66246DD30798E5CC5F7 /* PaymentIntent+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EAD8979A20E239E16257E4 /* PaymentIntent+API.swift */; };
@@ -90,6 +91,7 @@
 		264583DBFFA42C864220D7FF /* PaymentMethod+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentMethod+API.swift"; sourceTree = "<group>"; };
 		29BFCC7B0FCEA743A857B51F /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		30DDE851AD7450BE70381337 /* SetupIntent+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetupIntent+API.swift"; sourceTree = "<group>"; };
+		313F5F7A2B0BE5A600BD98A9 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
 		3D7CF2B75A797D6B2B5A04B4 /* SetupIntentParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupIntentParams.swift; sourceTree = "<group>"; };
 		40D5ED47331313B6AD8B6F46 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		425B19195E4B86F77229252D /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 		1A99D698FD7EE445DA2366ED /* StripeApplePay */ = {
 			isa = PBXGroup;
 			children = (
+				313F5F7A2B0BE5A600BD98A9 /* Docs.docc */,
 				B7FC50BAFE8B7A10FA7EA283 /* Source */,
 				67711D1BC01BA83323EA1F6B /* Info.plist */,
 				0C1D3421B1B2BB91FAA66620 /* StripeApplePay.h */,
@@ -386,8 +389,6 @@
 		95898E5CA0A1871DDFFB66B0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 2182982C71AEF088A6D2AA6A /* Build configuration list for PBXProject "StripeApplePay" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -438,6 +439,7 @@
 				C6552A9ADEA160B9BBAF3A10 /* STPApplePayContext.swift in Sources */,
 				CECAB0CB1CE4D7BD1EF897F0 /* Blocks.swift in Sources */,
 				59C1DB9EF052987BD20B65A3 /* BillingDetails+ApplePay.swift in Sources */,
+				313F5F7B2B0BE5A600BD98A9 /* Docs.docc in Sources */,
 				F42BC784EDBD141C90E74A5F /* PKContact+Stripe.swift in Sources */,
 				2D6CD6872A00B6FE0243C3F5 /* PKPayment+Stripe.swift in Sources */,
 				4CE57B5BF79D1515F27A18A3 /* Address.swift in Sources */,

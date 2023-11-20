@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -45,6 +45,7 @@
 		2D14461B27B3DEE2CC19B090 /* FinancialConnectionsAccountFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1BC95816DAD5AE9680662 /* FinancialConnectionsAccountFetcher.swift */; };
 		2E29C0A30C137791D357F4C1 /* SuccessBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E53077F6CE2AF59B9BCB4EF /* SuccessBodyView.swift */; };
 		2FADCA33DEC08E6551D94811 /* AttributedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97948A848C99ACD1A498F841 /* AttributedTextView.swift */; };
+		313F5F7F2B0BE5D100BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F7E2B0BE5D100BD98A9 /* Docs.docc */; };
 		31A741F3BE54880AEA75A222 /* ellipsis@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BD84F72112C7434B1E25D09 /* ellipsis@3x.png */; };
 		333B9C3E3349F5369FBA7C32 /* NetworkingLinkVerificationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDB75C69FE9322C745943B3 /* NetworkingLinkVerificationDataSource.swift */; };
 		33FA1684CE79F21271D14F23 /* HitTestStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00D518C15FF3FAED7C193C2 /* HitTestStackView.swift */; };
@@ -297,6 +298,7 @@
 		2C0F907D5B0AC58BE7A454BA /* StripeFinancialConnectionsBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeFinancialConnectionsBundleLocator.swift; sourceTree = "<group>"; };
 		2C10E841FF9EBFEA8C2E30AF /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		2D95E5F34BDEE0237F52DA0A /* APIVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIVersion.swift; sourceTree = "<group>"; };
+		313F5F7E2B0BE5D100BD98A9 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
 		314462DF7856349FF9775598 /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		32ED8A7E94822F14AD94A698 /* FinancialConnectionsDataAccessNotice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsDataAccessNotice.swift; sourceTree = "<group>"; };
 		33B1E2861FA7CA86FF79236C /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -888,6 +890,7 @@
 		B099AE2E516197735F31B3D9 /* StripeFinancialConnections */ = {
 			isa = PBXGroup;
 			children = (
+				313F5F7E2B0BE5D100BD98A9 /* Docs.docc */,
 				65C5C08A61EC14B62EA32D0B /* Resources */,
 				78A335C396F4FDF349C7BD59 /* Source */,
 				1E80DD2D042B327D9756E083 /* Info.plist */,
@@ -1128,8 +1131,6 @@
 		3D00B888AF0B02587576A83F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = F7F4B17FFDBC5691F1A51423 /* Build configuration list for PBXProject "StripeFinancialConnections" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -1364,6 +1365,7 @@
 				2FADCA33DEC08E6551D94811 /* AttributedTextView.swift in Sources */,
 				368DFF9D68F1F8D6A4353961 /* AuthFlowHelpers.swift in Sources */,
 				9AF6EC34D666BEB3C1397092 /* BulletPointLabelView.swift in Sources */,
+				313F5F7F2B0BE5D100BD98A9 /* Docs.docc in Sources */,
 				F65E8D16DE691EB6C99C4521 /* Button+Extensions.swift in Sources */,
 				8EDCAA40D5ACE4D4CCC67695 /* CloseConfirmationAlertHandler.swift in Sources */,
 				4CEE364A07B91B51B3D00F05 /* ConsentBottomSheetModel.swift in Sources */,

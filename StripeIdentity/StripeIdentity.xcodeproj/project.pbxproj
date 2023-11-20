@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -46,6 +46,7 @@
 		2E943A5B252D7927CE3C32E3 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD5FEA0E4E7EF1A4BA9646B /* IdentityVerificationSheetError.swift */; };
 		2F13AF5BC25FF74743D55503 /* DocumentTypeSelectViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28361A39FEF902EF979BEEE /* DocumentTypeSelectViewControllerTest.swift */; };
 		2F330EA97B99545A50328BDD /* HTMLViewWithIconLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36ED32D7EE8F52D6FC7D8826 /* HTMLViewWithIconLabels.swift */; };
+		313F5F812B0BE5DE00BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F802B0BE5DE00BD98A9 /* Docs.docc */; };
 		320565753A6D528A24336934 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198B92E9E0D04CA24F208E07 /* ErrorView.swift */; };
 		33F0FF8DB7D784C95647B693 /* FaceCaptureData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4943A54EF548F28DB66DD1F /* FaceCaptureData.swift */; };
 		349A4B5CC24DF5539B773A84 /* MLDetectorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18593C820FE0E35DDEE36956 /* MLDetectorConfiguration.swift */; };
@@ -351,6 +352,7 @@
 		2FEB1C2A314572B0234005A7 /* SelfieCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfieCaptureView.swift; sourceTree = "<group>"; };
 		30748D6B84FC605EE612C2D3 /* DebugViewControllerSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewControllerSnapshotTest.swift; sourceTree = "<group>"; };
 		3118D24F94912E8A9BB86BFE /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
+		313F5F802B0BE5DE00BD98A9 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
 		31CC3450DDBE415B82707F4B /* IdentityElementsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactory.swift; sourceTree = "<group>"; };
 		3218882B7E1610E17BDB4522 /* VerificationPage_200.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPage_200.json; sourceTree = "<group>"; };
 		328DF3C5E53973F6943FC4BD /* SelfieCaptureViewController+Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelfieCaptureViewController+Strings.swift"; sourceTree = "<group>"; };
@@ -811,6 +813,7 @@
 		500DB8B56AFF3E5D762BA726 /* StripeIdentity */ = {
 			isa = PBXGroup;
 			children = (
+				313F5F802B0BE5DE00BD98A9 /* Docs.docc */,
 				DD11F7A6C34DDED8661D6182 /* Resources */,
 				4CC5469F73EDF726A534C43A /* Source */,
 				80C34F71161E8793947E18E7 /* Info.plist */,
@@ -1346,8 +1349,6 @@
 		0705CAA185B63201FD561508 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 8BD83D322879659AB98AEA29 /* Build configuration list for PBXProject "StripeIdentity" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -1597,6 +1598,7 @@
 				4A824CD6A0A518F616D428CF /* FaceScanner.swift in Sources */,
 				541CA755717969560BF2C694 /* FaceScannerConfiguration.swift in Sources */,
 				29E974CDD5827CF390349EA4 /* FaceScannerOutput.swift in Sources */,
+				313F5F812B0BE5DE00BD98A9 /* Docs.docc in Sources */,
 				6B8DDA62E6ABFBC770A8AC86 /* ImageScanner.swift in Sources */,
 				8E5D382BF426061CDD83197B /* ImageScanningConcurrencyManager.swift in Sources */,
 				4E6AF5DD963FAB8B6E06F482 /* ImageScanningSession.swift in Sources */,

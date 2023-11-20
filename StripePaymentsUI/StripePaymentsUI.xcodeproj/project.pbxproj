@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,7 @@
 		1F3A6355A8BDD75F61E417CC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830CAAFA7D3F03562800E6D9 /* Enums+CustomStringConvertible.swift */; };
 		2B4A598F5C9AFDFD07AB39FF /* NSAttributedString+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA25F39FC75BC81D34E4204D /* NSAttributedString+Stripe.swift */; };
 		2C43175C7B6D2ECE4F494BC4 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B63CD6DDE18E457A337169B /* StripeCoreTestUtils.framework */; };
+		313F5F872B0BE62200BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F862B0BE62200BD98A9 /* Docs.docc */; };
 		3273E873EC3144BA6E6B5382 /* STPInputTextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5A6CC2985AD7713186F111 /* STPInputTextFieldFormatter.swift */; };
 		331C6EA21D75973496B34CF3 /* STPAUBECSDebitFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978DC21B087406C15D764B27 /* STPAUBECSDebitFormView.swift */; };
 		381E12068537365DC3423575 /* STPStringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521054B1E6486BD4F285F830 /* STPStringUtils.swift */; };
@@ -140,6 +141,7 @@
 		2B3640AACAD9398E8AD28571 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F0B90C79DD7D9E7CE7D74DE /* StripePaymentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripePaymentsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		30B86CEBB7B23D6144D16AAD /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		313F5F862B0BE62200BD98A9 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
 		34073B6642753145E5DEA6F2 /* STPCardNumberInputTextFieldValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCardNumberInputTextFieldValidator.swift; sourceTree = "<group>"; };
 		3680B23A13112D27179DE23C /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		378D7AAFE63F6D4ADC1D4EC8 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
@@ -353,6 +355,7 @@
 		58E2DBA9B8DC2BBCEA45972C /* StripePaymentsUI */ = {
 			isa = PBXGroup;
 			children = (
+				313F5F862B0BE62200BD98A9 /* Docs.docc */,
 				92BA1D23641756638281C55B /* Resources */,
 				A62869CC8E06A82A37B603AD /* Source */,
 				4CE7F2BE40869D265B4E2501 /* Info.plist */,
@@ -589,8 +592,6 @@
 		5A75C038903CA5BA2375E90C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 02E5F9E426DAA8E86C0A1EB9 /* Build configuration list for PBXProject "StripePaymentsUI" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -725,6 +726,7 @@
 				FF849AFC244DE3234980E196 /* STPFormTextField.swift in Sources */,
 				6F0B40B4A889041132E6E22C /* STPLabeledFormTextFieldView.swift in Sources */,
 				653D236856F665222F0B18C2 /* STPLabeledMultiFormTextFieldView.swift in Sources */,
+				313F5F872B0BE62200BD98A9 /* Docs.docc in Sources */,
 				E554E00B25258B27E60ABB08 /* STPPaymentCardTextFieldViewModel.swift in Sources */,
 				AF55861520CD45A87A7EBA1A /* STPValidatedTextField.swift in Sources */,
 				619F0D8BDEE0CD4660C7EC54 /* STPViewWithSeparator.swift in Sources */,
