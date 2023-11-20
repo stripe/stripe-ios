@@ -29,9 +29,11 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
         SettingView(setting: $playgroundController.settings.autoreload)
-        if playgroundController.settings.uiStyle == .flowController {
-            if playgroundController.settings.integrationType == .deferred_csc {
-                SettingView(setting: $playgroundController.settings.requireCVCRecollection)
+        Group {
+            if playgroundController.settings.uiStyle == .flowController {
+                if playgroundController.settings.integrationType == .deferred_csc {
+                    SettingView(setting: $playgroundController.settings.requireCVCRecollection)
+                }
             }
         }
     }
