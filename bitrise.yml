@@ -40,6 +40,7 @@ stages:
     - test-builds-xcode-143: {}
     - test-builds-xcode-15: {}
     - test-builds-xcode-143-release: {}
+    - test-builds-vision: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
@@ -52,6 +53,7 @@ stages:
     - framework-tests: {}
     - test-builds-xcode-143: {}
     - test-builds-xcode-15: {}
+    - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
@@ -377,6 +379,21 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1.8core
+  test-builds-vision:
+    steps:
+    - xcode-build-for-test@2:
+        inputs:
+        - scheme: StripePaymentSheet
+        - destination: generic/platform=visionOS
+    - deploy-to-bitrise-io@2: {}
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=visionOS Simulator,name=Apple Vision Pro,OS=1.0
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.1.x-edge
         machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
