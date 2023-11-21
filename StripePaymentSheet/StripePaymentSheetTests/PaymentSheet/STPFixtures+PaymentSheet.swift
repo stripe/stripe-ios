@@ -80,6 +80,17 @@ extension STPPaymentMethod {
         ])!
     }
 
+    static func _testCardAmex() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123card",
+            "type": "card",
+            "card": [
+                "last4": "0005",
+                "brand": "amex",
+            ],
+        ])!
+    }
+
     static func _testUSBankAccount() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123",
