@@ -47,11 +47,11 @@
 		631D09E67497B49BBCA26192 /* UIView+StripeCoreTestingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E4C534285F49A97A04D2B8 /* UIView+StripeCoreTestingUtils.swift */; };
 		677951C643328D76E46720A5 /* StripeAPIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32CB3702691056D3404A8C5F /* StripeAPIConfiguration.swift */; };
 		6A52ABC06783A90B9E339948 /* StripeFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CE623A81057C4063A1E0C4 /* StripeFile.swift */; };
-		6B4156FCFAEDD1C73DC6EDAD /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 23D22B2C40BA7C182BCE50B2 /* iOSSnapshotTestCase */; };
+		6B4156FCFAEDD1C73DC6EDAD /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 23D22B2C40BA7C182BCE50B2 /* iOSSnapshotTestCase */; };
 		6D68B868938BAB15A843B33C /* TestJSONEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF290DF69F5FD1004BBDECA /* TestJSONEncoder.swift */; };
 		6ED5C41DBDAB475BF1119E98 /* UnknownFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64635404BD4D5D62486A7626 /* UnknownFields.swift */; };
 		700E9DAD0407455F11F9F03E /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A4F598BF353D8335B0340D5 /* StripeCoreTestUtils.framework */; };
-		7133C71AC18633F59BA18F57 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 6FFF766FF9F630392C6D446A /* iOSSnapshotTestCase */; };
+		7133C71AC18633F59BA18F57 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 6FFF766FF9F630392C6D446A /* iOSSnapshotTestCase */; };
 		71CD1AE29AA09552DF61131E /* StripeJSONShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C675ABC9D68378DC699DED /* StripeJSONShared.swift */; };
 		72DA29CA8A750E8B00DBF3D4 /* STPError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C51E3FA5EE3587BB7BBC634 /* STPError.swift */; };
 		766FE8E61B44967F057ED424 /* AnalyticLoggableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B890F162E1C247D5CA1A9E6 /* AnalyticLoggableError.swift */; };
@@ -1101,6 +1101,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeCoreTestUtils;
 				PRODUCT_NAME = StripeCoreTestUtils;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Release;
 		};
@@ -1130,6 +1133,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeCoreTests;
 				PRODUCT_NAME = StripeCoreTests;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Debug;
 		};
@@ -1166,6 +1172,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeCoreTestUtils;
 				PRODUCT_NAME = StripeCoreTestUtils;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Debug;
 		};
@@ -1181,6 +1190,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeCoreTests;
 				PRODUCT_NAME = StripeCoreTests;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Release;
 		};

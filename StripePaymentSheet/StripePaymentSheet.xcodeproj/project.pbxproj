@@ -126,7 +126,7 @@
 		73F3E8DCF2314972A162B2A3 /* StripePaymentSheetBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70ED08B0F303B7C2334602C3 /* StripePaymentSheetBundleLocator.swift */; };
 		7479F814D1BC58A6B19F054C /* LinkInlineSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539BC5317DB9A13B247DC576 /* LinkInlineSignupView.swift */; };
 		74E6A1F5A9D91201C47F723D /* MockFiles in Resources */ = {isa = PBXBuildFile; fileRef = 746D332462477C6D99BEA4F2 /* MockFiles */; };
-		7B730323DC024AB253FD972C /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = DD4EE7CCBF04DA81A0181AD3 /* iOSSnapshotTestCase */; };
+		7B730323DC024AB253FD972C /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = DD4EE7CCBF04DA81A0181AD3 /* iOSSnapshotTestCase */; };
 		7F9545AB83E3836A85AE714F /* PaymentSheetUIKitAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383EA30FC9C862DF2217F96D /* PaymentSheetUIKitAdditions.swift */; };
 		8180BC3615767F896E2F9355 /* AddressViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF60B1F629F82621D9911C07 /* AddressViewControllerSnapshotTests.swift */; };
 		820C3EDE61ADBFE4DA1E9A98 /* PaymentSheet+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD1A451B238C1D1ADAA72EC /* PaymentSheet+API.swift */; };
@@ -1861,6 +1861,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentSheetTests;
 				PRODUCT_NAME = StripePaymentSheetTests;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StripePaymentSheetTestHostApp.app/StripePaymentSheetTestHostApp";
 				TEST_TARGET_NAME = StripePaymentSheetTestHostApp;
 			};
@@ -1900,6 +1903,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentSheetTests;
 				PRODUCT_NAME = StripePaymentSheetTests;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StripePaymentSheetTestHostApp.app/StripePaymentSheetTestHostApp";
 				TEST_TARGET_NAME = StripePaymentSheetTestHostApp;
 			};

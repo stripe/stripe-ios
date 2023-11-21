@@ -5,6 +5,7 @@
 //  Created by David Estes on 4/13/22.
 //
 
+#if !os(visionOS)
 import Foundation
 import iOSSnapshotTestCase
 
@@ -45,3 +46,4 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
     }
     
 }
+#endif

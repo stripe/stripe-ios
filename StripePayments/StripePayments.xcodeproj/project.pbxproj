@@ -44,7 +44,7 @@
 		2B4DBC9AA9284BE1805C2A05 /* STPMandateCustomerAcceptanceParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F69252A9AF5E376F43EA20 /* STPMandateCustomerAcceptanceParams.swift */; };
 		2BF8EE1CBF8C363A42B6EDA6 /* STPPaymentMethodCardWalletVisaCheckout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373B2754D51299A60DE459C7 /* STPPaymentMethodCardWalletVisaCheckout.swift */; };
 		2BFBE84BD5718D4D8D4718D8 /* STPPaymentMethodBacsDebitParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06C3BF5EB7272C646558A6A /* STPPaymentMethodBacsDebitParams.swift */; };
-		2E23BD28752B622F86149CA9 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 0DADFCFCE303263FBB27102B /* iOSSnapshotTestCase */; };
+		2E23BD28752B622F86149CA9 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 0DADFCFCE303263FBB27102B /* iOSSnapshotTestCase */; };
 		2E5D133D1E203027C08DEDF0 /* STPPaymentMethodAUBECSDebit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB1D8D7ABB0AC1B87FC0057 /* STPPaymentMethodAUBECSDebit.swift */; };
 		2EF5C661CF25482E6CC14FE9 /* STPInternalAPIResponseDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01FC96365AFC2C12A12CF9B1 /* STPInternalAPIResponseDecodable.swift */; };
 		313F5F852B0BE60E00BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F842B0BE60E00BD98A9 /* Docs.docc */; };
@@ -1670,6 +1670,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTestUtils;
 				PRODUCT_NAME = StripePaymentsTestUtils;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Release;
 		};
@@ -1685,6 +1688,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTestUtils;
 				PRODUCT_NAME = StripePaymentsTestUtils;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Debug;
 		};
@@ -1707,6 +1713,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTests;
 				PRODUCT_NAME = StripePaymentsTests;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Release;
 		};
@@ -1722,6 +1731,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTests;
 				PRODUCT_NAME = StripePaymentsTests;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Debug;
 		};
@@ -1751,6 +1763,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsObjcTestUtils;
 				PRODUCT_NAME = StripePaymentsObjcTestUtils;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Debug;
 		};
@@ -1787,6 +1802,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsObjcTestUtils;
 				PRODUCT_NAME = StripePaymentsObjcTestUtils;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Release;
 		};
