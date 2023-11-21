@@ -42,6 +42,10 @@ class StubCustomerAdapter: CustomerAdapter {
     func setupIntentClientSecretForCustomerAttach() async throws -> String {
         return "seti_123"
     }
+    
+    func updatePaymentMethod(paymentMethodId: String, paymentMethodUpdateParams: StripePayments.STPPaymentMethodUpdateParams) async throws -> StripePayments.STPPaymentMethod {
+        throw CustomerSheetError.unknown(debugDescription: "Not implemented")
+    }
 
     var canCreateSetupIntents: Bool = true
 }
