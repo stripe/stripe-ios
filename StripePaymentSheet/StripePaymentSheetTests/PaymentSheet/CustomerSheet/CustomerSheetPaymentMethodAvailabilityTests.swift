@@ -69,7 +69,7 @@ class MockCustomerAdapter: CustomerAdapter {
     var canCreateSetupIntents: Bool {
         return mockedValue
     }
-    
+
     func updatePaymentMethod(paymentMethodId: String, paymentMethodUpdateParams: StripePayments.STPPaymentMethodUpdateParams) async throws -> StripePayments.STPPaymentMethod {
         throw CustomerSheetError.unknown(debugDescription: "Not implemented")
     }

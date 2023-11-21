@@ -9,6 +9,7 @@
 
 import Stripe
 import StripeCoreTestUtils
+@_spi(STP) import StripePayments
 @testable import StripePaymentsTestUtils
 
 class STPPaymentMethodFunctionalTest: XCTestCase {
@@ -95,6 +96,11 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
 
         // Create a new payment method
         let paymentMethod = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
+
+        // Attach the payment method to the customer
+        try await client.attachPaymentMethod(paymentMethod.stripeId,
+                                   customerID: customerAndEphemeralKey.customer,
+                                   ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         // Update the expiry year for the card by 1 year
         let card = STPPaymentMethodCardParams()

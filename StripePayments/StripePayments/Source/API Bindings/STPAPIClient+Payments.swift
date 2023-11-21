@@ -1110,6 +1110,21 @@ extension STPAPIClient {
         }
     }
 
+    @_spi(STP) public func attachPaymentMethod(
+        _ paymentMethodID: String,
+        customerID: String,
+        ephemeralKeySecret: String) async throws {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+                attachPaymentMethod(paymentMethodID, customerID: customerID, ephemeralKeySecret: ephemeralKeySecret) { error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
+                    }
+                }
+            }
+    }
+
     /// Retrieve a customer
     /// - seealso: https://stripe.com/docs/api#retrieve_customer
     @_spi(STP) public func retrieveCustomer(
