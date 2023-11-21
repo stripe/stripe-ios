@@ -36,7 +36,7 @@ class AffirmCopyLabel: UIView {
         logo.image = PaymentSheetImageLibrary.affirmLogo()
     }
 #endif
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
     }

@@ -25,7 +25,7 @@ import Foundation
         return self.currencyCode
         #endif
     }
-    
+
     var stp_languageCode: String? {
         #if os(visionOS)
         return self.language.languageCode?.identifier
@@ -33,7 +33,7 @@ import Foundation
         return self.languageCode
         #endif
     }
-    
+
     static var stp_isoRegionCodes: [String] {
 #if os(visionOS)
         return self.Region.isoRegions.map { $0.identifier }

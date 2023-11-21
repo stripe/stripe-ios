@@ -56,7 +56,7 @@ final class ManualEntrySuccessTransactionTableView: UIView {
         verticalStackView.backgroundColor = .backgroundContainer
         verticalStackView.layer.cornerRadius = 5
         verticalStackView.layer.borderColor = UIColor.borderNeutral.cgColor
-        
+
         verticalStackView.layer.borderWidth = 1.0 / stp_screenNativeScale
         addAndPinSubview(verticalStackView)
     }

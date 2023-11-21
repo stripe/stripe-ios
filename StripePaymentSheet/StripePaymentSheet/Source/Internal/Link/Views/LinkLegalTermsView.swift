@@ -139,5 +139,5 @@ extension LinkLegalTermsView: UITextViewDelegate {
         return !handled
     }
 #endif
-    
+
 }

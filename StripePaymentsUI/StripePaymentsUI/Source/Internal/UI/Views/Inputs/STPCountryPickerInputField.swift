@@ -6,8 +6,8 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 @_spi(STP) public class STPCountryPickerInputField: STPGenericInputPickerField {
 

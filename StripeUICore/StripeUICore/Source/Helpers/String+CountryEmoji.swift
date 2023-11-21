@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 extension String {
     static func countryFlagEmoji(for countryCode: String) -> String? {

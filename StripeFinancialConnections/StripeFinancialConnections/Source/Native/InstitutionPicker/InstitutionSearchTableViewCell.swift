@@ -82,7 +82,7 @@ private func CreateSelectedBackgroundView() -> UIView {
 
     topSeparatorView.translatesAutoresizingMaskIntoConstraints = false
     bottomSeparatorView.translatesAutoresizingMaskIntoConstraints = false
-    
+
     NSLayoutConstraint.activate([
         topSeparatorView.topAnchor.constraint(equalTo: selectedBackgroundView.topAnchor),
         topSeparatorView.leadingAnchor.constraint(equalTo: selectedBackgroundView.leadingAnchor),

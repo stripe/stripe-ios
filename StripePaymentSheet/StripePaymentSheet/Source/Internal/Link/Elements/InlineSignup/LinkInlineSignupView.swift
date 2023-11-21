@@ -216,7 +216,7 @@ extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
 
     func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {
         let safariVC = SFSafariViewController(url: url)
-        
+
         #if !os(visionOS)
         safariVC.dismissButtonStyle = .close
         #endif

@@ -527,7 +527,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         return true
     }
 #endif
-    
+
     // MARK: - STPFormTextFieldContainer (Overrides)
     /// :nodoc:
     @objc public override var formFont: UIFont {

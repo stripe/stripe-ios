@@ -244,7 +244,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
 #endif
-    
+
     /// The curent brand image displayed in the receiver.
     @objc open private(set) var brandImage: UIImage?
     /// Whether or not the form currently contains a valid card number,
@@ -978,7 +978,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
 #endif
-    
+
     /// :nodoc:
     @objc open override var backgroundColor: UIColor? {
         get {

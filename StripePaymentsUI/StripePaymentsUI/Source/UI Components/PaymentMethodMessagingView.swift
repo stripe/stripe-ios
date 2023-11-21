@@ -129,7 +129,7 @@ import WebKit
         }
     }
 #endif
-    
+
     // MARK: Internal
 
     static let APIEndpoint: URL = URL(string: "https://ppm.stripe.com/content")!

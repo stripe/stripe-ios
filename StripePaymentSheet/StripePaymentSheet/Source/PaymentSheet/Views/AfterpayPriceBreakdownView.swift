@@ -7,10 +7,10 @@
 //
 import Foundation
 import SafariServices
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-@_spi(STP) import StripeCore
 import UIKit
 
 /// For internal SDK use only
