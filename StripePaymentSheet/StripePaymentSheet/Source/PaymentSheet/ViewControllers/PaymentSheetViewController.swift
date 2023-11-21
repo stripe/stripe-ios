@@ -548,7 +548,9 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key secret")
         }
         
-        return try await configuration.apiClient.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId, with: updateParams, using: ephemeralKey)
+        return try await configuration.apiClient.updatePaymentMethod(with: paymentMethod.stripeId,
+                                                                     paymentMethodUpdateParams: updateParams,
+                                                                     ephemeralKeySecret: ephemeralKey)
     }
     
     func didUpdateSelection(

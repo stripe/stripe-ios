@@ -102,9 +102,9 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
 
         let params = STPPaymentMethodUpdateParams(card: card, billingDetails: nil)
 
-        let updatedPaymentMethod = try await client.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId,
-                                                                        with: params,
-                                                                        using: customerAndEphemeralKey.ephemeralKeySecret)
+        let updatedPaymentMethod = try await client.updatePaymentMethod(with: paymentMethod.stripeId,
+                                                                        paymentMethodUpdateParams: params,
+                                                                        ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         // Verify
         XCTAssertEqual(updatedPaymentMethod.card!.expYear, (paymentMethod.card!.expYear + 1))
