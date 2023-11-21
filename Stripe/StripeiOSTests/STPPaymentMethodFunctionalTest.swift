@@ -85,13 +85,13 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
     }
 
     func testUpdateCardPaymentMethod() async throws {
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
 
         // A hardcoded test Customer
-        let testCustomerID = "cus_OvxoV32SLyBXgi"
+        let testCustomerID = "cus_LvNOzX6BFQtXb5"
 
         // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
+        let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "fr")
 
         // Create a new payment method
         let paymentMethod = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
