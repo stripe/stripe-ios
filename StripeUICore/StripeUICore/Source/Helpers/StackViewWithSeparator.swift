@@ -211,5 +211,5 @@ import UIKit
         separatorLayer.strokeColor = separatorColor.cgColor
     }
 #endif
-    
+
 }

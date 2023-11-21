@@ -68,7 +68,9 @@ class AutoCompleteViewController: UIViewController {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
+        #if !os(visionOS)
         tableView.keyboardDismissMode = .onDrag
+        #endif
         tableView.backgroundColor = configuration.appearance.colors.background
         tableView.separatorColor = configuration.appearance.colors.componentDivider
         tableView.tableFooterView = UIView()

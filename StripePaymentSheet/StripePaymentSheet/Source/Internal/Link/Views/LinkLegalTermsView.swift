@@ -120,6 +120,7 @@ final class LinkLegalTermsView: UIView {
 
 extension LinkLegalTermsView: UITextViewDelegate {
 
+#if !os(visionOS)
     func textView(
         _ textView: UITextView,
         shouldInteractWith URL: URL,
@@ -137,5 +138,6 @@ extension LinkLegalTermsView: UITextViewDelegate {
         // If not handled by the delegate, let the system handle the link.
         return !handled
     }
-
+#endif
+    
 }

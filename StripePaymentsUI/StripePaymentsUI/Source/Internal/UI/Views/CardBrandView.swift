@@ -242,11 +242,12 @@ import UIKit
     }
 
     // MARK: - Callbacks
-
+#if !os(visionOS)
     @_spi(STP) public override func traitCollectionDidChange(
         _ previousTraitCollection: UITraitCollection?
     ) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateIcon()
     }
+#endif
 }

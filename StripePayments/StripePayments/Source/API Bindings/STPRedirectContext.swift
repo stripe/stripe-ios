@@ -347,7 +347,6 @@ public class STPRedirectContext: NSObject,
         unsubscribeFromNotificationsAndDismissPresentedViewControllers()
     }
 
-
     // MARK: - UIViewControllerTransitioningDelegate
     /// :nodoc:
     @objc
@@ -493,7 +492,7 @@ public class STPRedirectContext: NSObject,
         completion(completionError)
         completionError = nil
     }
-    
+
     func isSafariVCPresented() -> Bool {
         return safariVC != nil
     }

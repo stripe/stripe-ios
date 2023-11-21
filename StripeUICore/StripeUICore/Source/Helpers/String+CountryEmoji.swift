@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 extension String {
     static func countryFlagEmoji(for countryCode: String) -> String? {

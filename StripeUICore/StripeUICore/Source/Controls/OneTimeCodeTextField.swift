@@ -6,9 +6,6 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-// UIMenuController not supported on visionOS, rewrite this if needed
-#if !os(visionOS)
-
 import UIKit
 
 /// A field for collecting one-time codes (OTCs).
@@ -60,7 +57,7 @@ import UIKit
 #if !os(visionOS)
     private let feedbackGenerator = UINotificationFeedbackGenerator()
 #endif
-    
+
     // MARK: - UIControl properties
     override public var isEnabled: Bool {
         didSet {
@@ -142,7 +139,9 @@ import UIKit
         let result = super.resignFirstResponder()
 
         if result {
+            #if !os(visionOS)
             hideMenu()
+            #endif
             update()
         }
 
@@ -158,7 +157,9 @@ import UIKit
         }
 
         if isFirstResponder {
+            #if !os(visionOS)
             toggleMenu()
+            #endif
         } else {
             becomeFirstResponder()
         }
@@ -226,6 +227,7 @@ private extension OneTimeCodeTextField {
             : STPLocalizedString("Double tap to edit", "Accessibility hint for a text field")
     }
 
+    #if !os(visionOS) // Don't mess with the UIMenuController on visionOS
     func toggleMenu() {
         if UIMenuController.shared.isMenuVisible {
             hideMenu()
@@ -249,6 +251,7 @@ private extension OneTimeCodeTextField {
     func hideMenu() {
         UIMenuController.shared.hideMenu()
     }
+    #endif
 
     @objc func applicationWillEnterForeground(_ notification: Notification) {
         // Forcing an update when the application enters foreground ensures that
@@ -351,7 +354,9 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
+        #if !os(visionOS)
         hideMenu()
+        #endif
         update()
     }
 
@@ -365,7 +370,9 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
+        #if !os(visionOS)
         hideMenu()
+        #endif
         update()
     }
 
@@ -783,12 +790,12 @@ private extension OneTimeCodeTextField {
             updateColors()
         }
 
+#if !os(visionOS)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             updateColors()
         }
+#endif
     }
 
 }
-
-#endif

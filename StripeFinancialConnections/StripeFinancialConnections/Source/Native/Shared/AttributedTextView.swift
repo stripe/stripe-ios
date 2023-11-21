@@ -149,6 +149,7 @@ final class AttributedTextView: HitTestView {
 
 extension AttributedTextView: UITextViewDelegate {
 
+    #if !os(visionOS)
     func textView(
         _ textView: UITextView,
         shouldInteractWith URL: URL,
@@ -163,6 +164,7 @@ extension AttributedTextView: UITextViewDelegate {
         }
         return true
     }
+    #endif
 
     func textViewDidChangeSelection(_ textView: UITextView) {
         // disable the ability to select/copy the text as a way to improve UX

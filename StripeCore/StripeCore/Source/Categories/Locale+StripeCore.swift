@@ -17,12 +17,20 @@ import Foundation
         return self.regionCode
         #endif
     }
-    
+
     var stp_currencyCode: String? {
         #if os(visionOS)
         return self.currency?.identifier
         #else
         return self.currencyCode
+        #endif
+    }
+    
+    var stp_languageCode: String? {
+        #if os(visionOS)
+        return self.language.languageCode?.identifier
+        #else
+        return self.languageCode
         #endif
     }
     

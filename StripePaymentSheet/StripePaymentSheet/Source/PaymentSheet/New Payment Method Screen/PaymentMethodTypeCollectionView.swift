@@ -129,7 +129,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         var useFixedSizeCells: Bool {
             // Prefer fixed size cells for iPads and Mac.
             if #available(iOS 14.0, macCatalyst 14.0, *) {
-                return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
+                return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac || UIDevice.current.userInterfaceIdiom == .vision
             } else {
                 return UIDevice.current.userInterfaceIdiom == .pad
             }
@@ -255,10 +255,12 @@ extension PaymentMethodTypeCollectionView {
             fatalError("init(coder:) has not been implemented")
         }
 
+        #if !os(visionOS)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             update()
         }
+        #endif
 
         override var isSelected: Bool {
             didSet {

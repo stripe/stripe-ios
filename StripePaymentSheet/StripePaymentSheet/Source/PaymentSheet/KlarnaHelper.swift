@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// Helper struct that holds some Klarna specfic logic around accepted currencies and country restrictions
 struct KlarnaHelper {
@@ -39,6 +40,6 @@ struct KlarnaHelper {
         // A list of countries Klarna supports "buy now" from
         // https://site-admin.stripe.com/docs/payments/klarna#payment-options
         let buyNowAvailable = ["AT", "BE", "DE", "IT", "NL", "ES", "SE", "CA", "AU", "PL", "PT", "CH"]
-        return buyNowAvailable.contains(locale.regionCode?.uppercased() ?? "US")
+        return buyNowAvailable.contains(locale.stp_regionCode?.uppercased() ?? "US")
     }
 }

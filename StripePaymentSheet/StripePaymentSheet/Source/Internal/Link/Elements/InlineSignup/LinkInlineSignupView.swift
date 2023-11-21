@@ -149,10 +149,12 @@ final class LinkInlineSignupView: UIView {
         }
     }
 
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateAppearance()
     }
+    #endif
 
     private func focusOnEmptyRequiredField() {
         if viewModel.emailAddress == nil {
@@ -214,7 +216,10 @@ extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
 
     func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {
         let safariVC = SFSafariViewController(url: url)
+        
+        #if !os(visionOS)
         safariVC.dismissButtonStyle = .close
+        #endif
         safariVC.modalPresentationStyle = .overFullScreen
 
         guard let topController = window?.findTopMostPresentedViewController() else {

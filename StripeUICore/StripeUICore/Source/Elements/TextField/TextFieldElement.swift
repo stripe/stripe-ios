@@ -52,7 +52,7 @@ import UIKit
         }
     }
 #endif
-    
+
     // MARK: - ViewModel
     public struct KeyboardProperties {
         public init(type: UIKeyboardType, textContentType: UITextContentType?, autocapitalization: UITextAutocapitalizationType) {

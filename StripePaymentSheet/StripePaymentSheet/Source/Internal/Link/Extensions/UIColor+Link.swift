@@ -159,6 +159,14 @@ extension UIColor {
         forBackgroundColor backgroundColor: UIColor,
         traitCollection: UITraitCollection = .current
     ) -> UIColor {
+        #if os(visionOS)
+        let resolvedLightModeColor = resolvedColor(with: traitCollection.modifyingTraits({ mutableTraits in
+            mutableTraits.userInterfaceStyle = .light
+        }))
+        let resolvedDarkModeColor = resolvedColor(with: traitCollection.modifyingTraits({ mutableTraits in
+            mutableTraits.userInterfaceStyle = .dark
+        }))
+        #else
         let resolvedLightModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
             traitCollection,
             UITraitCollection(userInterfaceStyle: .light),
@@ -168,6 +176,7 @@ extension UIColor {
             traitCollection,
             UITraitCollection(userInterfaceStyle: .dark),
         ]))
+        #endif
 
         let resolvedBackgroundColor = backgroundColor.resolvedColor(with: traitCollection)
 

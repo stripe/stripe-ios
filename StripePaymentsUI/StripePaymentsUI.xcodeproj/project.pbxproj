@@ -871,6 +871,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments-ui";
 				PRODUCT_NAME = StripePaymentsUI;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};
@@ -882,6 +885,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments-ui";
 				PRODUCT_NAME = StripePaymentsUI;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};

@@ -121,6 +121,8 @@ final class InstitutionSearchTableView: UIView {
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 54
+        
+        #if !os(visionOS)
         tableView.contentInset = UIEdgeInsets(
             // add extra inset at the top/bottom to show the cell-selected-state separators
             top: 1.0 / UIScreen.main.nativeScale,
@@ -129,6 +131,7 @@ final class InstitutionSearchTableView: UIView {
             right: 0
         )
         tableView.keyboardDismissMode = .onDrag
+        #endif
         tableView.register(InstitutionSearchTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)

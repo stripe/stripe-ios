@@ -195,8 +195,12 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     @objc
     private func keyboardDidShow(notification: Notification) {
+        #if os(visionOS)
+        let landscape = true
+        #else
         // Hack to get orientation without using `UIApplication`
         let landscape = UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height
+        #endif
         // Handle iPad landscape edge case where `scrollRectToVisible` isn't sufficient
         if UIDevice.current.userInterfaceIdiom == .pad && landscape {
             guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }

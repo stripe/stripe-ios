@@ -132,6 +132,7 @@ class CircularButton: UIControl {
         imageView.tintColor = isEnabled ? iconColor : .tertiaryLabel
     }
 
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateShadow()
@@ -145,7 +146,8 @@ class CircularButton: UIControl {
             }
         }
     }
-
+#endif
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

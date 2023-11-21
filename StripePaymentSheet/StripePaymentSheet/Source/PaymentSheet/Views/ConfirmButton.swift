@@ -133,11 +133,13 @@ class ConfirmButton: UIView {
         super.layoutSubviews()
     }
 
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.buyButton.update(status: state, callToAction: callToAction, animated: false)
     }
-
+#endif
+    
     @objc private func didBecomeActive() {
         self.buyButton.update(status: self.state, callToAction: self.callToAction, animated: false)
     }
@@ -359,11 +361,13 @@ class ConfirmButton: UIView {
             overriddenForegroundColor = appearance.primaryButton.textColor
         }
 
+#if !os(visionOS)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             layer.borderColor = appearance.primaryButton.borderColor.cgColor
         }
-
+#endif
+        
         override func tintColorDidChange() {
             super.tintColorDidChange()
             updateColors()

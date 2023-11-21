@@ -15,12 +15,16 @@ extension UIViewController {
         completion: (() -> Void)? = nil
     ) {
         var presentAsFormSheet: Bool {
+            #if os(visionOS)
+            return true
+            #else
             // Present as form sheet in larger devices (iPad/Mac).
             if #available(iOS 14.0, macCatalyst 14.0, *) {
                 return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
             } else {
                 return UIDevice.current.userInterfaceIdiom == .pad
             }
+            #endif
         }
 
         if presentAsFormSheet {
