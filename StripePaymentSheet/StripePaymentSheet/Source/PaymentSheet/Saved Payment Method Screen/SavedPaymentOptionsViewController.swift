@@ -462,7 +462,7 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
 
         let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
         viewModels[indexPath.row] = updatedViewModel
-        collectionView.reloadItems(at: [indexPath])
+        collectionView.reloadData()
     }
 }
 
