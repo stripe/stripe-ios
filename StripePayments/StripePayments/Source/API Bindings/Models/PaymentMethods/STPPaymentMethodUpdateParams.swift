@@ -11,12 +11,12 @@ import Foundation
 /// - seealso: https://stripe.com/docs/api/payment_methods/update
 public class STPPaymentMethodUpdateParams: NSObject {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
-    
+
     /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
     @objc public var billingDetails: STPPaymentMethodBillingDetails?
     /// If this is a card PaymentMethod, this contains the user’s card details.
     @objc public var card: STPPaymentMethodCardParams?
-    
+
     @objc
     public convenience init(
         card: STPPaymentMethodCardParams,
@@ -31,7 +31,7 @@ public class STPPaymentMethodUpdateParams: NSObject {
 // MARK: - STPFormEncodable
 
 extension STPPaymentMethodUpdateParams: STPFormEncodable {
-    
+
     @objc
     public class func rootObjectName() -> String? {
         return nil

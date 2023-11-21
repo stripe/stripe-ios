@@ -773,16 +773,6 @@ extension STPAPIClient {
     /// - seealso: https://stripe.com/docs/api/payment_methods/update
     /// - Parameters:
     ///   - paymentMethodId: Identifier of the payment method to be updated
-    ///   - paymentMethodParams: The `STPPaymentMethodUpdateParams` to pass to `/v1/payment_methods/update`.  Cannot be nil.
-    ///   - completion: The callback to run with the returned PaymentMethod object, or an error.
-    ///
-    
-    
-    
-    /// Updates a PaymentMethod object with the provided params object.
-    /// - seealso: https://stripe.com/docs/api/payment_methods/update
-    /// - Parameters:
-    ///   - paymentMethodId: Identifier of the payment method to be updated
     ///   - paymentMethodUpdateParams: The `STPPaymentMethodUpdateParams` to pass to `/v1/payment_methods/update`.  Cannot be nil.
     ///   - ephemeralKeySecret: The Customer Ephemeral Key secret to be used
     ///   - completion: The callback to run with the returned `STPPaymentMethod` object, or an error.
@@ -790,13 +780,11 @@ extension STPAPIClient {
                                     paymentMethodUpdateParams: STPPaymentMethodUpdateParams,
                                     ephemeralKeySecret: String,
                                     completion: @escaping STPPaymentMethodCompletionBlock) {
-//        STPAnalyticsClient.sharedClient.logPaymentMethodUpdateAttempt(
-//            with: _stored_configuration,
-//            paymentMethodType: paymentMethodParams.rawTypeString
-//        )
-        
+        STPAnalyticsClient.sharedClient.logPaymentMethodUpdateAttempt(
+            with: _stored_configuration
+        )
+
         let parameters = STPFormEncoder.dictionary(forObject: paymentMethodUpdateParams)
-//        parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: "\(APIEndpointPaymentMethods)/\(paymentMethodId)",
@@ -807,7 +795,6 @@ extension STPAPIClient {
         }
     }
 
-    
     /// Updates a PaymentMethod object with the provided params object.
     /// - seealso: https://stripe.com/docs/api/payment_methods/update
     /// - Parameters:
@@ -818,7 +805,7 @@ extension STPAPIClient {
     public func updatePaymentMethod(with paymentMethodId: String, paymentMethodUpdateParams: STPPaymentMethodUpdateParams,
                                     ephemeralKeySecret: String) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation({ continuation in
-            updatePaymentMethod(with: paymentMethodId, paymentMethodUpdateParams : paymentMethodUpdateParams, ephemeralKeySecret: ephemeralKeySecret) { paymentMethod, error in
+            updatePaymentMethod(with: paymentMethodId, paymentMethodUpdateParams: paymentMethodUpdateParams, ephemeralKeySecret: ephemeralKeySecret) { paymentMethod, error in
                 if let paymentMethod = paymentMethod {
                     continuation.resume(with: .success(paymentMethod))
                 } else {

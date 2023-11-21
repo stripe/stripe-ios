@@ -60,17 +60,14 @@ extension STPAnalyticsClient {
     }
 
     func logPaymentMethodUpdateAttempt(
-        with configuration: NSObject?,
-        paymentMethodType: String?
+        with configuration: NSObject?
     ) {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .paymentMethodCreation,
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
-                additionalParams: [
-                    "source_type": paymentMethodType ?? "unknown"
-                ]
+                additionalParams: [:]
             )
         )
     }

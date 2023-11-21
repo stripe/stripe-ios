@@ -157,20 +157,20 @@ final class UpdateCardViewController: UIViewController {
 
         present(alertController, animated: true, completion: nil)
     }
-    
+
     private func updateCard() async {
         guard let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand, let delegate = delegate else { return }
-        
+
         updateButton.update(state: .processing)
-        
+
         // Create the update card params
         let cardParams = STPPaymentMethodCardParams()
         cardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
         let updateParams = STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil)
-        
+
         // Make the API request to update the payment method
         do {
-            let _ = try await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateParams: updateParams)
+            try await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateParams: updateParams)
             updateButton.update(state: .succeeded)
             dismiss()
         } catch {

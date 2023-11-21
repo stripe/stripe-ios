@@ -92,7 +92,7 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
 
         // Create a new EK for the Customer
         let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
-        
+
         // Create a new payment method
         let paymentMethod = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
 

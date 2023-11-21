@@ -443,7 +443,7 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
     func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
         removePaymentMethod(paymentOptionCell: paymentOptionCell)
     }
-    
+
     func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
                    updateParams: STPPaymentMethodUpdateParams) async throws {
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
@@ -451,14 +451,14 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
               let delegate = delegate
         else {
             assertionFailure()
-            throw PaymentSheetError.unknown(debugDescription: "TODO")
+            throw PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
         }
-        
+
         let viewModel = viewModels[indexPath.row]
         let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
                                                     paymentMethodSelection: viewModel,
                                                     updateParams: updateParams)
-        
+
         let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
         viewModels[indexPath.row] = updatedViewModel
         collectionView.reloadItems(at: [indexPath])
