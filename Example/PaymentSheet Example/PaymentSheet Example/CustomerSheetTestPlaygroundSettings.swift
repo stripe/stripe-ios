@@ -77,6 +77,21 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case US
         case FR
     }
+    enum PreferredNetworksEnabled: String, PickerEnum {
+        static let enumName: String = "Preferred Networks (CBC)"
+
+        case on
+        case off
+
+        var displayName: String {
+            switch self {
+            case .on:
+                return "[visa, cartesBancaires]"
+            case .off:
+                return "off"
+            }
+        }
+    }
 
     var customerMode: CustomerMode
     var customerId: String?
@@ -92,6 +107,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var collectPhone: BillingDetailsPhone
     var collectAddress: BillingDetailsAddress
     var merchantCountryCode: MerchantCountry
+    var preferredNetworksEnabled: PreferredNetworksEnabled
 
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
@@ -106,7 +122,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    collectEmail: .automatic,
                                                    collectPhone: .automatic,
                                                    collectAddress: .automatic,
-                                                   merchantCountryCode: .US)
+                                                   merchantCountryCode: .US,
+                                                   preferredNetworksEnabled: .off)
     }
 
     var base64Data: String {

@@ -718,7 +718,82 @@ class CustomerSheetUITest: XCTestCase {
 
         // Saved card should show the edit icon since it is co-branded
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
-        // TODO(porter) Verify card is removed once it is implemented
+
+        // Remove this card
+        XCTAssertTrue(app.buttons["Remove card"].waitForExistenceAndTap(timeout: 5))
+        let confirmRemoval = app.alerts.buttons["Remove"]
+        XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 5))
+        confirmRemoval.tap()
+
+        // Verify card is removed
+        app.buttons["Done"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Close"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Reload"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Payment method"].waitForExistenceAndTap(timeout: 5)
+        // Card is no longer saved
+        XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: 5))
+    }
+
+    func testCardBrandChoiceWithPreferredNetworks() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.merchantCountryCode = .FR
+        settings.preferredNetworksEnabled = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let button = app.buttons["Payment method"]
+        XCTAssertTrue(button.waitForExistence(timeout: 5))
+        button.forceTapElement()
+
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 5)
+
+        // We should have selected Visa due to preferreedNetworks configuration API
+        let cardBrandTextField = app.textFields["Visa"]
+        let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
+        // Card brand choice textfield/dropdown should not be visible
+        XCTAssertFalse(cardBrandTextField.waitForExistence(timeout: 2))
+
+        let numberField = app.textFields["Card number"]
+        numberField.tap()
+        // Enter 8 digits to start fetching card brand
+        numberField.typeText("49730197")
+
+        // Card brand choice drop down should be enabled
+        cardBrandTextField.tap()
+        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
+        cardBrandChoiceDropdown.swipeDown()
+        app.toolbars.buttons["Cancel"].tap()
+
+        // We should have selected Visa due to preferreedNetworks configuration API
+        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 2))
+
+        // Clear card text field, should reset selected card brand
+        numberField.tap()
+        numberField.clearText()
+
+        // We should reset to showing unknown in the textfield for card brand
+        XCTAssertFalse(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 2))
+
+        // Type full card number to start fetching card brands again
+        numberField.forceTapWhenHittableInTestCase(self)
+        app.typeText("4000002500001001")
+        app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
+        app.typeText("1228") // Expiry
+        app.typeText("123") // CVC
+        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("12345") // Postal
+
+        // Card brand choice drop down should be enabled and we should auto select Visa
+        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
+
+        // Finish saving card
+        app.buttons["Save"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap(timeout: 5)
+        let successText = app.staticTexts["Complete"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
     // MARK: - Helpers

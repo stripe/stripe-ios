@@ -23,7 +23,7 @@ final class UpdateCardViewController: UIViewController {
     private let appearance: PaymentSheet.Appearance
     private let paymentMethod: STPPaymentMethod
     private let paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
-    private let configuration: SavedPaymentOptionsViewController.Configuration
+    private let removeSavedPaymentMethodMessage: String?
 
     weak var delegate: UpdateCardViewControllerDelegate?
 
@@ -106,11 +106,11 @@ final class UpdateCardViewController: UIViewController {
     // MARK: Overrides
     init(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
          paymentMethod: STPPaymentMethod,
-         configuration: SavedPaymentOptionsViewController.Configuration,
+         removeSavedPaymentMethodMessage: String?,
          appearance: PaymentSheet.Appearance) {
         self.paymentOptionCell = paymentOptionCell
         self.paymentMethod = paymentMethod
-        self.configuration = configuration
+        self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
 
         super.init(nibName: nil, bundle: nil)
@@ -149,7 +149,8 @@ final class UpdateCardViewController: UIViewController {
     }
 
     private func removeCard() {
-        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod, configuration: configuration) { [weak self] in
+        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
+                                                                          removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage) { [weak self] in
             guard let self = self else { return }
             self.delegate?.didRemove(paymentOptionCell: self.paymentOptionCell)
             self.dismiss()
