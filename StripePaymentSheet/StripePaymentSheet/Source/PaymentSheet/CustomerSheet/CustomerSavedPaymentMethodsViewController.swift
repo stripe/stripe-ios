@@ -822,8 +822,8 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
             }
         }
 
-    func didSelectUpdate(viewController: CustomerSavedPaymentMethodsCollectionViewController, paymentMethodSelection:
-                         CustomerSavedPaymentMethodsCollectionViewController.Selection,
+    func didSelectUpdate(viewController: CustomerSavedPaymentMethodsCollectionViewController,
+                         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
                          updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         guard case .saved(let paymentMethod) = paymentMethodSelection
         else {
