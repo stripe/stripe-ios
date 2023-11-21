@@ -458,6 +458,10 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
 // MARK: - UpdateCardViewControllerDelegate
 /// :nodoc:
 extension CustomerSavedPaymentMethodsCollectionViewController: UpdateCardViewControllerDelegate {
+    func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell, updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
+        // TODO(porter) CustomerSheet updating CBC cards
+    }
+
     func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
         guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
               case .saved(let paymentMethod) = viewModels[indexPath.row]
