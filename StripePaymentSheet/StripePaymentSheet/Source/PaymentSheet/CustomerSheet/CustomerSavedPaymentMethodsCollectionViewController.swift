@@ -18,6 +18,10 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         originalPaymentMethodSelection: CustomerPaymentOption?)
+    func didSelectUpdate(
+        viewController: CustomerSavedPaymentMethodsCollectionViewController,
+        paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
+        updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
 }
 /*
  This class is largely a copy of SavedPaymentOptionsViewController, however a couple of exceptions
@@ -458,8 +462,24 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
 // MARK: - UpdateCardViewControllerDelegate
 /// :nodoc:
 extension CustomerSavedPaymentMethodsCollectionViewController: UpdateCardViewControllerDelegate {
-    func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell, updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
-        // TODO(porter) CustomerSheet updating CBC cards
+    func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
+                   updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
+        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
+              case .saved = viewModels[indexPath.row],
+              let delegate = delegate
+        else {
+            assertionFailure()
+            throw PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
+        }
+
+        let viewModel = viewModels[indexPath.row]
+        let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
+                                                    paymentMethodSelection: viewModel,
+                                                    updateParams: updateParams)
+
+        let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
+        viewModels[indexPath.row] = updatedViewModel
+        collectionView.reloadData()
     }
 
     func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {

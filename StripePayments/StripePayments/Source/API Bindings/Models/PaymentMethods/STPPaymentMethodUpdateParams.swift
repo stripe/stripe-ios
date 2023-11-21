@@ -15,6 +15,7 @@ public class STPPaymentMethodUpdateParams: NSObject {
     /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
     @objc public var billingDetails: STPPaymentMethodBillingDetails?
     /// If this is a card PaymentMethod, this contains the user’s card details.
+    /// - Note: Only a card's `cvc`, `expMonth`, `expYear`, and `networks.preferred` can be updated.
     @objc public var card: STPPaymentMethodCardParams?
 
     @objc
