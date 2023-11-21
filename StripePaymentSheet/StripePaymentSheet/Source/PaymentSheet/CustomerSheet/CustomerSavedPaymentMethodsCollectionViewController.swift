@@ -469,7 +469,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdateCardViewCon
               let delegate = delegate
         else {
             assertionFailure()
-            throw PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
+            throw CustomerSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
         }
 
         let viewModel = viewModels[indexPath.row]
