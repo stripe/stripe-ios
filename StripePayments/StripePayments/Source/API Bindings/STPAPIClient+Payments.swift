@@ -802,7 +802,8 @@ extension STPAPIClient {
     ///   - paymentMethodUpdateParams: The `STPPaymentMethodUpdateParams` to pass to `/v1/payment_methods/update`.  Cannot be nil.
     ///   - ephemeralKeySecret: The Customer Ephemeral Key secret to be used
     /// - Returns: Returns the updated `STPPaymentMethod` or throws an error if the operation failed.
-    public func updatePaymentMethod(with paymentMethodId: String, paymentMethodUpdateParams: STPPaymentMethodUpdateParams,
+    public func updatePaymentMethod(with paymentMethodId: String,
+                                    paymentMethodUpdateParams: STPPaymentMethodUpdateParams,
                                     ephemeralKeySecret: String) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation({ continuation in
             updatePaymentMethod(with: paymentMethodId, paymentMethodUpdateParams: paymentMethodUpdateParams, ephemeralKeySecret: ephemeralKeySecret) { paymentMethod, error in
