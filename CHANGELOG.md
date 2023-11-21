@@ -5,7 +5,7 @@
 * [Fixed] Fixed an issue where PaymentSheet wouldn't accept valid Mexican phone numbers.
 
 ## 23.18.2 2023-11-06
-### CustomerSheet
+### Custom
 * [Fixed] CustomerSheet no longer displays saved cards that originated from Apple Pay or Google Pay.
 
 ## 23.18.1 2023-10-30
