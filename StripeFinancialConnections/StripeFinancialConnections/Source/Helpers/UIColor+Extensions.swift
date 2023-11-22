@@ -15,6 +15,14 @@ extension UIColor {
         return .white
     }
 
+    static var textDefault: UIColor {
+        return neutral800
+    }
+
+    static var textSubdued: UIColor {
+        return neutral600
+    }
+
     static var textPrimary: UIColor {
         return neutral800
     }
@@ -71,8 +79,12 @@ extension UIColor {
         return UIColor(red: 106 / 255.0, green: 115 / 255.0, blue: 131 / 255.0, alpha: 1)  // #6a7383
     }
 
+    private static var neutral600: UIColor {
+        return UIColor(red: 89 / 255.0, green: 97 / 255.0, blue: 113 / 255.0, alpha: 1)  // #596171
+    }
+
     private static var neutral800: UIColor {
-        return UIColor(red: 48 / 255.0, green: 49 / 255.0, blue: 61 / 255.0, alpha: 1)  // #30313d
+        return UIColor(red: 53 / 255.0, green: 58 / 255.0, blue: 68 / 255.0, alpha: 1)  // #353a44
     }
 
     static var brand100: UIColor {
@@ -80,7 +92,7 @@ extension UIColor {
     }
 
     private static var brand500: UIColor {
-        return UIColor(red: 99 / 255.0, green: 91 / 255.0, blue: 255 / 255.0, alpha: 1)  // #635bff
+        return UIColor(red: 103 / 255.0, green: 93 / 255.0, blue: 255 / 255.0, alpha: 1)  // #675DFF
     }
 
     private static var critical500: UIColor {

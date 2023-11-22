@@ -29,8 +29,8 @@ final class BulletPointLabelView: HitTestView {
             let primaryLabel = AttributedTextView(
                 font: font,
                 boldFont: .body(.mediumEmphasized),
-                linkFont: .body(.mediumEmphasized),
-                textColor: .textPrimary
+                linkFont: .body(.medium),
+                textColor: .textDefault
             )
             primaryLabel.setText(title, action: didSelectURL)
             verticalLabelStackView.addArrangedSubview(primaryLabel)
@@ -42,9 +42,9 @@ final class BulletPointLabelView: HitTestView {
             let font: FinancialConnectionsFont = displayingOnlyContent ? .body(.medium) : .body(.small)
             let subtitleLabel = AttributedTextView(
                 font: font,
-                boldFont: displayingOnlyContent ? .body(.mediumEmphasized) : .body(.smallEmphasized),
-                linkFont: displayingOnlyContent ? .body(.mediumEmphasized) : .body(.smallEmphasized),
-                textColor: .textSecondary
+                boldFont: displayingOnlyContent ? .body(.mediumEmphasized) : .body(.small),
+                linkFont: displayingOnlyContent ? .body(.medium) : .body(.small),
+                textColor: .textSubdued
             )
             subtitleLabel.setText(content, action: didSelectURL)
             verticalLabelStackView.addArrangedSubview(subtitleLabel)
