@@ -127,12 +127,16 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var useFixedSizeCells: Bool {
+            #if STP_BUILD_FOR_VISION
+            return true
+            #else
             // Prefer fixed size cells for iPads and Mac.
             if #available(iOS 14.0, macCatalyst 14.0, *) {
-                return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac || UIDevice.current.userInterfaceIdiom == .vision
+                return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
             } else {
                 return UIDevice.current.userInterfaceIdiom == .pad
             }
+            #endif
         }
 
         if useFixedSizeCells {

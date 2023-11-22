@@ -387,8 +387,6 @@ workflows:
         - scheme: StripePaymentSheet
         - destination: generic/platform=visionOS
     - deploy-to-bitrise-io@2: {}
-    envs:
-    - DEFAULT_TEST_DEVICE: name=Apple Vision Pro,OS=1.0
     before_run:
     - prep_all
     meta:
