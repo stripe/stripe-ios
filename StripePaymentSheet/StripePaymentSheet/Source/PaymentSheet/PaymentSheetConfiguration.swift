@@ -45,8 +45,8 @@ extension PaymentSheet {
     /// @note Some jurisdictions may have rules governing the ability to default to opt-out behaviors
     public enum SavePaymentMethodOptInBehavior {
 
-        /// (Default) The SDK will apply opt-out behavior for supported countries.
-        /// Currently, this behavior is supported in the US.
+        /// (Default) The SDK will apply opt-in behavior for supported countries.
+        /// Currently, this behavior not supported in any country.
         case automatic
 
         /// The control will always default to unselected and users
@@ -60,8 +60,7 @@ extension PaymentSheet {
         var isSelectedByDefault: Bool {
             switch self {
             case .automatic:
-                // only enable the save checkbox by default for US
-                return Locale.current.regionCode == "US"
+                return false
             case .requiresOptIn:
                 return false
             case .requiresOptOut:
