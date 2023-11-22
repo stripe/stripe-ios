@@ -5,7 +5,6 @@
 //  Created by Yuki Tokuhiro on 9/7/23.
 //
 
-import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @_spi(STP) @_spi(EarlyAccessCVCRecollectionFeature) @testable import StripePaymentSheet

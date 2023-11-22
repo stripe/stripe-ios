@@ -54,7 +54,9 @@ import UIKit
         return DigitView(theme: theme)
     }
 
+#if !STP_BUILD_FOR_VISION
     private let feedbackGenerator = UINotificationFeedbackGenerator()
+#endif
 
     // MARK: - UIControl properties
     override public var isEnabled: Bool {
@@ -137,7 +139,9 @@ import UIKit
         let result = super.resignFirstResponder()
 
         if result {
+            #if !STP_BUILD_FOR_VISION
             hideMenu()
+            #endif
             update()
         }
 
@@ -153,7 +157,9 @@ import UIKit
         }
 
         if isFirstResponder {
+            #if !STP_BUILD_FOR_VISION
             toggleMenu()
+            #endif
         } else {
             becomeFirstResponder()
         }
@@ -221,6 +227,7 @@ private extension OneTimeCodeTextField {
             : STPLocalizedString("Double tap to edit", "Accessibility hint for a text field")
     }
 
+    #if !STP_BUILD_FOR_VISION // Don't mess with the UIMenuController on visionOS
     func toggleMenu() {
         if UIMenuController.shared.isMenuVisible {
             hideMenu()
@@ -244,6 +251,7 @@ private extension OneTimeCodeTextField {
     func hideMenu() {
         UIMenuController.shared.hideMenu()
     }
+    #endif
 
     @objc func applicationWillEnterForeground(_ notification: Notification) {
         // Forcing an update when the application enters foreground ensures that
@@ -307,7 +315,9 @@ public extension OneTimeCodeTextField {
             digitView.borderLayer.add(borderColorAnimation, forKey: "borderColor")
         }
 
+#if !STP_BUILD_FOR_VISION
         feedbackGenerator.notificationOccurred(.error)
+#endif
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             self?.digitViews.forEach { digitView in
@@ -344,7 +354,9 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
+        #if !STP_BUILD_FOR_VISION
         hideMenu()
+        #endif
         update()
     }
 
@@ -358,7 +370,9 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
+        #if !STP_BUILD_FOR_VISION
         hideMenu()
+        #endif
         update()
     }
 
@@ -776,10 +790,12 @@ private extension OneTimeCodeTextField {
             updateColors()
         }
 
+#if !STP_BUILD_FOR_VISION
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             updateColors()
         }
+#endif
     }
 
 }

@@ -162,7 +162,7 @@ extension DropdownFieldElement {
                 rawData: $0
             )
         }
-        let defaultCountry = defaultCountry ?? locale.regionCode ?? ""
+        let defaultCountry = defaultCountry ?? locale.stp_regionCode ?? ""
         let defaultCountryIndex = countryCodes.firstIndex(of: defaultCountry) ?? 0
         return DropdownFieldElement(
             items: countryDisplayStrings,
