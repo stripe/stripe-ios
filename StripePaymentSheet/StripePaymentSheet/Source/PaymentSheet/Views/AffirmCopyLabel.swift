@@ -30,10 +30,12 @@ class AffirmCopyLabel: UIView {
         addAndPinSubview(affirmLabel)
     }
 
+#if !STP_BUILD_FOR_VISION
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         logo.image = PaymentSheetImageLibrary.affirmLogo()
     }
+#endif
 
     override init(frame: CGRect) {
         super.init(frame: frame)

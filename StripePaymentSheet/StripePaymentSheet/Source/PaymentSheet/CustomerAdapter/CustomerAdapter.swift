@@ -64,6 +64,14 @@ public protocol CustomerAdapter {
     /// Creates a SetupIntent configured to attach a new payment method to a customer, then returns the client secret for the created SetupIntent.
     func setupIntentClientSecretForCustomerAttach() async throws -> String
 
+    /// Updates a payment method with the provided  `STPPaymentMethodUpdateParams`.
+    /// - Parameters:
+    ///   - paymentMethodId: Identifier of the payment method to update.
+    ///   - paymentMethodUpdateParams: The `STPPaymentMethodUpdateParams` to update the payment method with.
+    /// - Returns: If this API call succeeds, returns the updated payment method, otherwise, throws an error.
+    /// - seealso: https://stripe.com/docs/api/payment_methods/update
+    func updatePaymentMethod(paymentMethodId: String, paymentMethodUpdateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
+
     /// Whether this CustomerAdapter is able to create Setup Intents.
     /// A Setup Intent is recommended when attaching a new card to a Customer, and required for non-card payment methods.
     /// If you are implementing your own <CustomerAdapter>:
@@ -201,6 +209,14 @@ open class StripeCustomerAdapter: CustomerAdapter {
             throw PaymentSheetError.setupIntentClientSecretProviderNil // TODO: This is a programming error, setupIntentClientSecretForCustomerAttach should not be called if canCreateSetupIntents is false
         }
         return try await setupIntentClientSecretProvider()
+    }
+
+    open func updatePaymentMethod(paymentMethodId: String,
+                                  paymentMethodUpdateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
+        let customerEphemeralKey = try await customerEphemeralKey
+        return try await apiClient.updatePaymentMethod(with: paymentMethodId,
+                                                       paymentMethodUpdateParams: paymentMethodUpdateParams,
+                                                       ephemeralKeySecret: customerEphemeralKey.ephemeralKeySecret)
     }
 }
 

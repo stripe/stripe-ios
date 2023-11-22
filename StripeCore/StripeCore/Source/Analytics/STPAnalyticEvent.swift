@@ -18,6 +18,7 @@ import Foundation
     case sourceCreation = "stripeios.source_creationn"
 
     case paymentMethodCreation = "stripeios.payment_method_creation"
+    case paymentMethodUpdate = "stripeios.payment_method_update"
     case paymentMethodIntentCreation = "stripeios.payment_intent_confirmation"
     case setupIntentConfirmationAttempt = "stripeios.setup_intent_confirmation"
 

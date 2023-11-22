@@ -82,16 +82,17 @@ private func CreateSelectedBackgroundView() -> UIView {
 
     topSeparatorView.translatesAutoresizingMaskIntoConstraints = false
     bottomSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+
     NSLayoutConstraint.activate([
         topSeparatorView.topAnchor.constraint(equalTo: selectedBackgroundView.topAnchor),
         topSeparatorView.leadingAnchor.constraint(equalTo: selectedBackgroundView.leadingAnchor),
         topSeparatorView.trailingAnchor.constraint(equalTo: selectedBackgroundView.trailingAnchor),
-        topSeparatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+        topSeparatorView.heightAnchor.constraint(equalToConstant: 1.0 / stp_screenNativeScale),
 
         bottomSeparatorView.bottomAnchor.constraint(equalTo: selectedBackgroundView.bottomAnchor),
         bottomSeparatorView.leadingAnchor.constraint(equalTo: selectedBackgroundView.leadingAnchor),
         bottomSeparatorView.trailingAnchor.constraint(equalTo: selectedBackgroundView.trailingAnchor),
-        bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+        bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1.0 / stp_screenNativeScale),
     ])
 
     return selectedBackgroundView

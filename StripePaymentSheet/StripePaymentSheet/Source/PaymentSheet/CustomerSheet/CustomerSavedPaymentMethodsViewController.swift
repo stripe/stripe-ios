@@ -765,6 +765,7 @@ extension CustomerSavedPaymentMethodsViewController: CustomerAddPaymentMethodVie
 }
 
 extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethodsCollectionViewControllerDelegate {
+
     func didUpdateSelection(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection) {
@@ -820,4 +821,15 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
                 updateBottomNotice()
             }
         }
+
+    func didSelectUpdate(viewController: CustomerSavedPaymentMethodsCollectionViewController,
+                         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
+                         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
+        guard case .saved(let paymentMethod) = paymentMethodSelection
+        else {
+            throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method")
+        }
+
+        return try await customerAdapter.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId, paymentMethodUpdateParams: updateParams)
+    }
 }

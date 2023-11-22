@@ -103,7 +103,9 @@ import UIKit
         pickerView.dataSource = wrappedDataSource
         inputView = pickerView
 
+#if !STP_BUILD_FOR_VISION
         inputAccessoryView = DoneButtonToolbar(delegate: self)
+#endif
 
         rightView = UIImageView(image: StripeUICore.Image.icon_chevron_down.makeImage())
         rightViewMode = .always

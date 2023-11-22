@@ -719,7 +719,18 @@ class CustomerSheetUITest: XCTestCase {
         // Saved card should show the edit icon since it is co-branded
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
 
+        // Update this card
+        XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: 5))
+        app.pickerWheels.firstMatch.swipeUp()
+        app.toolbars.buttons["Done"].tap()
+        app.buttons["Update card"].waitForExistenceAndTap(timeout: 5)
+
+        // We should have updated to Visa
+        XCTAssertTrue(app.images["carousel_card_visa"].waitForExistence(timeout: 5))
+
         // Remove this card
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
         XCTAssertTrue(app.buttons["Remove card"].waitForExistenceAndTap(timeout: 5))
         let confirmRemoval = app.alerts.buttons["Remove"]
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 5))

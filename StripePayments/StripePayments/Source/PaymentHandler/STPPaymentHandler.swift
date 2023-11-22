@@ -1701,13 +1701,15 @@ public class STPPaymentHandler: NSObject {
                 {
                     let safariViewController = SFSafariViewController(url: fallbackURL)
                     safariViewController.modalPresentationStyle = .overFullScreen
+#if !STP_BUILD_FOR_VISION
                     safariViewController.dismissButtonStyle = .close
+                    safariViewController.delegate = self
+#endif
                     if context.responds(
                         to: #selector(STPAuthenticationContext.configureSafariViewController(_:))
                     ) {
                         context.configureSafariViewController?(safariViewController)
                     }
-                    safariViewController.delegate = self
                     self.safariViewController = safariViewController
                     presentingViewController.present(safariViewController, animated: true, completion: {
                       completion?(safariViewController)
@@ -2093,6 +2095,7 @@ public class STPPaymentHandler: NSObject {
     }
 }
 
+#if !STP_BUILD_FOR_VISION
 extension STPPaymentHandler: SFSafariViewControllerDelegate {
     // MARK: - SFSafariViewControllerDelegate
     /// :nodoc:
@@ -2109,6 +2112,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         _retrieveAndCheckIntentForCurrentAction()
     }
 }
+#endif
 
 /// :nodoc:
 @_spi(STP) extension STPPaymentHandler: STPURLCallbackListener {

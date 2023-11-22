@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -49,7 +49,7 @@
 		5936629C4665BC698C3458B1 /* TextFieldElementConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8367A676E35A663E320E1B37 /* TextFieldElementConfiguration.swift */; };
 		5A9B21FE5A6941713087B94B /* SectionElement+MultiElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6737026DF19C8D10AE8114A /* SectionElement+MultiElementRow.swift */; };
 		62601F856C41CFA1C7A8B18F /* UIView+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDBBC76FD31F07EC67C52075 /* UIView+StripeUICore.swift */; };
-		63632799CD2134991E0EA510 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 9B701A244243959A191FF16F /* iOSSnapshotTestCase */; };
+		63632799CD2134991E0EA510 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 9B701A244243959A191FF16F /* iOSSnapshotTestCase */; };
 		64E61A5E0A705F1C4582381A /* PhoneNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263B7E56A83CFA4BA8385638 /* PhoneNumberTests.swift */; };
 		65B9A839BD4AAC315231B421 /* TextFieldElement+AccountFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69C3FF914611057972ABA41 /* TextFieldElement+AccountFactory.swift */; };
 		6606DC43D230ADD183AEF5DA /* RegionCodeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00332BBDCE27F6F5A615C4 /* RegionCodeProvider.swift */; };
@@ -784,8 +784,6 @@
 		A39BBBD15F0F6B54725E52AF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 2331F8341192F01F80C0469D /* Build configuration list for PBXProject "StripeUICore" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -1058,6 +1056,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
 				PRODUCT_NAME = StripeUICore;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};
@@ -1076,6 +1077,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
 				PRODUCT_NAME = StripeUICore;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};
@@ -1098,6 +1102,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeUICoreTests;
 				PRODUCT_NAME = StripeUICoreTests;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Release;
 		};
@@ -1113,6 +1120,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeUICoreTests;
 				PRODUCT_NAME = StripeUICoreTests;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Debug;
 		};

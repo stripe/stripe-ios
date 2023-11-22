@@ -44,7 +44,7 @@
 		2B4DBC9AA9284BE1805C2A05 /* STPMandateCustomerAcceptanceParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F69252A9AF5E376F43EA20 /* STPMandateCustomerAcceptanceParams.swift */; };
 		2BF8EE1CBF8C363A42B6EDA6 /* STPPaymentMethodCardWalletVisaCheckout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373B2754D51299A60DE459C7 /* STPPaymentMethodCardWalletVisaCheckout.swift */; };
 		2BFBE84BD5718D4D8D4718D8 /* STPPaymentMethodBacsDebitParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06C3BF5EB7272C646558A6A /* STPPaymentMethodBacsDebitParams.swift */; };
-		2E23BD28752B622F86149CA9 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 0DADFCFCE303263FBB27102B /* iOSSnapshotTestCase */; };
+		2E23BD28752B622F86149CA9 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 0DADFCFCE303263FBB27102B /* iOSSnapshotTestCase */; };
 		2E5D133D1E203027C08DEDF0 /* STPPaymentMethodAUBECSDebit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB1D8D7ABB0AC1B87FC0057 /* STPPaymentMethodAUBECSDebit.swift */; };
 		2EF5C661CF25482E6CC14FE9 /* STPInternalAPIResponseDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01FC96365AFC2C12A12CF9B1 /* STPInternalAPIResponseDecodable.swift */; };
 		313F5F852B0BE60E00BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F842B0BE60E00BD98A9 /* Docs.docc */; };
@@ -85,6 +85,7 @@
 		5C525B22CAAC7F5AECD9A2E1 /* STPPaymentMethodCashApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0ACD359CBF350143D049EC /* STPPaymentMethodCashApp.swift */; };
 		5D0D293AA8E98B21A4E519B2 /* STPIntentActionBoletoDisplayDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = D927FD12223821805ED77D59 /* STPIntentActionBoletoDisplayDetails.swift */; };
 		610DB7FAF395AEBE6CBEFAC8 /* STPPaymentMethodAffirmParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3CBC01F0A15D28914DB070 /* STPPaymentMethodAffirmParams.swift */; };
+		6151DDBA2B0D1EE800ED4F7E /* STPPaymentMethodUpdateParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151DDB92B0D1EE800ED4F7E /* STPPaymentMethodUpdateParams.swift */; };
 		63200203FD7EFE05901CB191 /* STPPaymentMethodLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99B164CDD13E8F5C9CAD349 /* STPPaymentMethodLink.swift */; };
 		63F661872BA387640F3C4978 /* STPNetworkStubbingTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4DD33E92411C5C8C69A5F /* STPNetworkStubbingTestCase.swift */; };
 		64407AEF1246EE91037E4073 /* STPSetupIntentEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = E579E736ECC6A0064D3984D1 /* STPSetupIntentEnums.swift */; };
@@ -405,6 +406,7 @@
 		5CB97088726E660840DA856F /* STPPaymentIntentShippingDetailsAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentShippingDetailsAddress.swift; sourceTree = "<group>"; };
 		5F7F214A072869D24123AAD3 /* STPFormEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPFormEncoder.swift; sourceTree = "<group>"; };
 		609ECF94337298A5298081D0 /* STPPaymentMethodOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodOptions.swift; sourceTree = "<group>"; };
+		6151DDB92B0D1EE800ED4F7E /* STPPaymentMethodUpdateParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodUpdateParams.swift; sourceTree = "<group>"; };
 		61ED590DF413DA9B8A415C9C /* STPCardBrand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCardBrand.swift; sourceTree = "<group>"; };
 		626D1B1C91151401B1FE77EA /* STPAnalyticsClient+Payments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+Payments.swift"; sourceTree = "<group>"; };
 		63BFDF30EAA4381999FE1149 /* STPSourceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPSourceProtocol.swift; sourceTree = "<group>"; };
@@ -915,6 +917,7 @@
 				BD67688E9F954452E0FCF962 /* STPPaymentMethodBillingDetails.swift */,
 				6BF260394EEC61199F0EABF8 /* STPPaymentMethodEnums.swift */,
 				A3367B526CA353E89C5589BB /* STPPaymentMethodParams.swift */,
+				6151DDB92B0D1EE800ED4F7E /* STPPaymentMethodUpdateParams.swift */,
 			);
 			path = PaymentMethods;
 			sourceTree = "<group>";
@@ -1502,6 +1505,7 @@
 				E22B8E3021079F82D3B0E43F /* STPIntentActionPayNowDisplayQrCode.swift in Sources */,
 				A18B9B95DDF1DD3CAF48FF62 /* STPIntentActionPromptPayDisplayQrCode.swift in Sources */,
 				F09E36DA5BE2C175F5ED45B4 /* STPIntentActionRedirectToURL.swift in Sources */,
+				6151DDBA2B0D1EE800ED4F7E /* STPPaymentMethodUpdateParams.swift in Sources */,
 				32656FE9F07F8B06AAE991E9 /* STPIntentActionSwishHandleRedirect.swift in Sources */,
 				8EB5A0156D519AF6E3723084 /* STPIntentActionVerifyWithMicrodeposits.swift in Sources */,
 				E2F60512657160C05151F465 /* STPIntentActionWeChatPayRedirectToApp.swift in Sources */,
@@ -1670,6 +1674,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTestUtils;
 				PRODUCT_NAME = StripePaymentsTestUtils;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Release;
 		};
@@ -1685,6 +1692,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTestUtils;
 				PRODUCT_NAME = StripePaymentsTestUtils;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Debug;
 		};
@@ -1707,6 +1717,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTests;
 				PRODUCT_NAME = StripePaymentsTests;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Release;
 		};
@@ -1722,6 +1735,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTests;
 				PRODUCT_NAME = StripePaymentsTests;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Debug;
 		};
@@ -1733,6 +1749,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments";
 				PRODUCT_NAME = StripePayments;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};
@@ -1748,6 +1767,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsObjcTestUtils;
 				PRODUCT_NAME = StripePaymentsObjcTestUtils;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Debug;
 		};
@@ -1766,6 +1788,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments";
 				PRODUCT_NAME = StripePayments;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};
@@ -1781,6 +1806,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsObjcTestUtils;
 				PRODUCT_NAME = StripePaymentsObjcTestUtils;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Release;
 		};

@@ -3,11 +3,11 @@
 //  StripePaymentSheet
 //
 
-import iOSSnapshotTestCase
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import UIKit
+import XCTest
 
 @_spi(STP)@testable import StripeCore
 @_spi(STP) @testable import StripePayments
@@ -41,6 +41,10 @@ class StubCustomerAdapter: CustomerAdapter {
 
     func setupIntentClientSecretForCustomerAttach() async throws -> String {
         return "seti_123"
+    }
+
+    func updatePaymentMethod(paymentMethodId: String, paymentMethodUpdateParams: StripePayments.STPPaymentMethodUpdateParams) async throws -> StripePayments.STPPaymentMethod {
+        throw CustomerSheetError.unknown(debugDescription: "Not implemented")
     }
 
     var canCreateSetupIntents: Bool = true
@@ -495,7 +499,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         STPSnapshotVerifyView(
             view,
             identifier: identifier,
-            suffixes: FBSnapshotTestCaseDefaultSuffixes(),
             file: file,
             line: line
         )
