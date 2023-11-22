@@ -9,6 +9,8 @@
 
 import Stripe
 import StripeCoreTestUtils
+@_spi(STP) import StripePayments
+@testable import StripePaymentsTestUtils
 
 class STPPaymentMethodFunctionalTest: XCTestCase {
     override func setUp() {
@@ -81,6 +83,37 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+    }
+
+    func testUpdateCardPaymentMethod() async throws {
+        let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
+
+        // A hardcoded test Customer
+        let testCustomerID = "cus_LvNOzX6BFQtXb5"
+
+        // Create a new EK for the Customer
+        let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "fr")
+
+        // Create a new payment method
+        let paymentMethod = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
+
+        // Attach the payment method to the customer
+        try await client.attachPaymentMethod(paymentMethod.stripeId,
+                                   customerID: customerAndEphemeralKey.customer,
+                                   ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+
+        // Update the expiry year for the card by 1 year
+        let card = STPPaymentMethodCardParams()
+        card.expYear = (paymentMethod.card!.expYear + 1) as NSNumber
+
+        let params = STPPaymentMethodUpdateParams(card: card, billingDetails: nil)
+
+        let updatedPaymentMethod = try await client.updatePaymentMethod(with: paymentMethod.stripeId,
+                                                                        paymentMethodUpdateParams: params,
+                                                                        ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+
+        // Verify
+        XCTAssertEqual(updatedPaymentMethod.card!.expYear, (paymentMethod.card!.expYear + 1))
     }
 
     func testCreateBacsPaymentMethod() {
@@ -168,4 +201,5 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         }
         waitForExpectations(timeout: 5, handler: nil)
     }
+
 }

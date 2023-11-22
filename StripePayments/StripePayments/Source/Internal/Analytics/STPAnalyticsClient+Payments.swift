@@ -58,6 +58,19 @@ extension STPAnalyticsClient {
             )
         )
     }
+
+    func logPaymentMethodUpdateAttempt(
+        with configuration: NSObject?
+    ) {
+        log(
+            analytic: GenericPaymentAnalytic(
+                event: .paymentMethodUpdate,
+                paymentConfiguration: configuration,
+                productUsage: productUsage,
+                additionalParams: [:]
+            )
+        )
+    }
 }
 
 // MARK: - Confirmation
