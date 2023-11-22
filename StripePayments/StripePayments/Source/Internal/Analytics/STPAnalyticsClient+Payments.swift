@@ -64,7 +64,7 @@ extension STPAnalyticsClient {
     ) {
         log(
             analytic: GenericPaymentAnalytic(
-                event: .paymentMethodCreation,
+                event: .paymentMethodUpdate,
                 paymentConfiguration: configuration,
                 productUsage: productUsage,
                 additionalParams: [:]

@@ -68,7 +68,7 @@ public protocol CustomerAdapter {
     /// - Parameters:
     ///   - paymentMethodId: Identifier of the payment method to update.
     ///   - paymentMethodUpdateParams: The `STPPaymentMethodUpdateParams` to update the payment method with.
-    /// - Returns: If this API call succeeds, returns the updated payment method, otherwise, throw an error.
+    /// - Returns: If this API call succeeds, returns the updated payment method, otherwise, throws an error.
     /// - seealso: https://stripe.com/docs/api/payment_methods/update
     func updatePaymentMethod(paymentMethodId: String, paymentMethodUpdateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
 
