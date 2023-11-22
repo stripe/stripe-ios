@@ -385,7 +385,7 @@ workflows:
     - xcode-build-for-test@2:
         inputs:
         - scheme: StripePaymentSheet
-        - destination: generic/platform=visionOS
+        - destination: generic/platform=visionOS Simulator
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
