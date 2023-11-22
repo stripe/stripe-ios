@@ -160,7 +160,11 @@ import PassKit
         let paymentRequest = PKPaymentRequest()
         paymentRequest.merchantIdentifier = merchantIdentifier
         paymentRequest.supportedNetworks = self.supportedPKPaymentNetworks()
+        #if STP_BUILD_FOR_VISION
         paymentRequest.merchantCapabilities = .threeDSecure
+        #else
+        paymentRequest.merchantCapabilities = .capability3DS
+        #endif
         paymentRequest.countryCode = countryCode.uppercased()
         paymentRequest.currencyCode = currencyCode.uppercased()
         paymentRequest.requiredBillingContactFields = Set([.postalAddress])
