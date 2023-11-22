@@ -8,7 +8,7 @@
 import iOSSnapshotTestCase
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(EarlyAccessCVCRecollectionFeature) @testable import StripePaymentSheet
 
 import XCTest
 
@@ -55,6 +55,29 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             isApplePayEnabled: false,
             isLinkEnabled: false
         )
+        sut.view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(sut.view)
+    }
+    func testCVCRecollectionScreen() {
+        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+
+        let sut = PreConfirmationViewController(paymentMethod: STPPaymentMethod._testCard(),
+                                                intent: ._testValue(),
+                                                configuration: configuration,
+                                                onCompletion: { _, _ in },
+                                                onCancel: { _ in })
+        sut.view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(sut.view)
+    }
+
+    func testCVVRecollectionScreen() {
+        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+
+        let sut = PreConfirmationViewController(paymentMethod: STPPaymentMethod._testCardAmex(),
+                                                intent: ._testValue(),
+                                                configuration: configuration,
+                                                onCompletion: { _, _ in },
+                                                onCancel: { _ in })
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }

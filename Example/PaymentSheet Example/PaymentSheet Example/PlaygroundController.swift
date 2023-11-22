@@ -15,6 +15,7 @@ import PassKit
 import StripePayments
 @_spi(STP) @_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
 @_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
+@_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -165,18 +166,23 @@ class PlaygroundController: ObservableObject {
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
             self?.confirmHandler($0, $1, $2)
         }
+        let isCVCRecollectionEnabledCallback = { [weak self] in
+            return self?.settings.requireCVCRecollection == .on
+        }
         switch settings.mode {
         case .payment:
             return PaymentSheet.IntentConfiguration(
                 mode: .payment(amount: amount!, currency: settings.currency.rawValue, setupFutureUsage: nil),
                 paymentMethodTypes: paymentMethodTypes,
-                confirmHandler: confirmHandler
+                confirmHandler: confirmHandler,
+                isCVCRecollectionEnabledCallback: isCVCRecollectionEnabledCallback
             )
         case .paymentWithSetup:
             return PaymentSheet.IntentConfiguration(
                 mode: .payment(amount: amount!, currency: settings.currency.rawValue, setupFutureUsage: .offSession),
                 paymentMethodTypes: paymentMethodTypes,
-                confirmHandler: confirmHandler
+                confirmHandler: confirmHandler,
+                isCVCRecollectionEnabledCallback: isCVCRecollectionEnabledCallback
             )
         case .setup:
             return PaymentSheet.IntentConfiguration(
@@ -379,6 +385,7 @@ extension PlaygroundController {
             "automatic_payment_methods": settings.apmsEnabled == .on,
             "use_link": settings.linkEnabled == .on,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
+            "require_cvc_recollection": settings.requireCVCRecollection == .on,
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
