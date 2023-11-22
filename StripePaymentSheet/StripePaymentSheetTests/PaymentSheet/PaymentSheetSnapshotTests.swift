@@ -6,11 +6,11 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-import iOSSnapshotTestCase
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import UIKit
+import XCTest
 
 @_spi(STP)@testable import StripeCore
 @_spi(STP)@testable import StripePaymentSheet
@@ -1112,7 +1112,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         STPSnapshotVerifyView(
             view,
             identifier: identifier,
-            suffixes: FBSnapshotTestCaseDefaultSuffixes(),
             file: file,
             line: line
         )

@@ -6,7 +6,6 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentsTestUtils
 @_spi(STP)@testable import StripePaymentsUI

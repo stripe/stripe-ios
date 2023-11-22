@@ -46,4 +46,20 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
     }
 
 }
+#else
+import XCTest
+// No-op on visionOS for now, snapshot tests not supported
+open class STPSnapshotTestCase: XCTestCase {
+    public func STPSnapshotVerifyView(
+        _ view: UIView,
+        identifier: String? = nil,
+        suffixes: NSOrderedSet = NSOrderedSet(),
+        perPixelTolerance: CGFloat = 0.02,
+        overallTolerance: CGFloat = 0,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        // Do nothing!
+    }
+}
 #endif

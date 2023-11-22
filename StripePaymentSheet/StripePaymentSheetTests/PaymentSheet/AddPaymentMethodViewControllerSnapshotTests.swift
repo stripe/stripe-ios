@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 3/22/23.
 //
 
+#if !STP_BUILD_FOR_VISION
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
@@ -42,3 +43,4 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         STPSnapshotVerifyView(sut.view)
     }
 }
+#endif
