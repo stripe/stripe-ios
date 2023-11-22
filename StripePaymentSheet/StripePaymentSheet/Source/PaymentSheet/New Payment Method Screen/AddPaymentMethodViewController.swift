@@ -259,7 +259,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodDetailsContainerView.addPinnedSubview(newView)
             paymentMethodDetailsContainerView.layoutIfNeeded()
             newView.alpha = 0
-            #if !os(visionOS)
+            #if !STP_BUILD_FOR_VISION
             UISelectionFeedbackGenerator().selectionChanged()
             #endif
             // Fade the new one in and the old one out

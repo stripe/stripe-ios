@@ -274,7 +274,7 @@ public class STPRedirectContext: NSObject,
             lastKnownSafariVCURL = redirectURL
             let safariVC = SFSafariViewController(url: lastKnownSafariVCURL!)
             safariVC.transitioningDelegate = self
-            #if !os(visionOS)
+            #if !STP_BUILD_FOR_VISION
             safariVC.delegate = self
             #endif
             safariVC.modalPresentationStyle = .custom
@@ -561,7 +561,7 @@ extension UIApplication: UIApplicationProtocol {
     }
 }
 
-#if !os(visionOS)
+#if !STP_BUILD_FOR_VISION
 extension STPRedirectContext: SFSafariViewControllerDelegate {
     // MARK: - SFSafariViewControllerDelegate -
     /// :nodoc:

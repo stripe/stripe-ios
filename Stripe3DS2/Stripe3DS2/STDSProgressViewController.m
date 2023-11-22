@@ -12,6 +12,7 @@
 #import "STDSUICustomization.h"
 #import "UIViewController+Stripe3DS2.h"
 #import "STDSProcessingView.h"
+#import "STDSVisionSupport.h"
 
 @interface STDSProgressViewController()
 @property (nonatomic, strong, nullable) STDSUICustomization *uiCustomization;
@@ -39,7 +40,7 @@
     self.view = [[STDSProcessingView alloc] initWithCustomization:self.uiCustomization directoryServerLogo:dsImage];
 }
 
-#if !TARGET_OS_VISION
+#if !STP_TARGET_VISION
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return self.uiCustomization.preferredStatusBarStyle;
 }

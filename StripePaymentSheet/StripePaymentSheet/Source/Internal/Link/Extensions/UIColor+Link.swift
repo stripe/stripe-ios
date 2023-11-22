@@ -159,7 +159,7 @@ extension UIColor {
         forBackgroundColor backgroundColor: UIColor,
         traitCollection: UITraitCollection = .current
     ) -> UIColor {
-        #if os(visionOS)
+        #if STP_BUILD_FOR_VISION
         let resolvedLightModeColor = resolvedColor(with: traitCollection.modifyingTraits({ mutableTraits in
             mutableTraits.userInterfaceStyle = .light
         }))

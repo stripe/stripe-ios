@@ -49,7 +49,7 @@ final class AUBECSLegalTermsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-#if !os(visionOS)
+#if !STP_BUILD_FOR_VISION
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         textView.font = .preferredFont(forTextStyle: .caption1)

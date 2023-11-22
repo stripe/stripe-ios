@@ -54,7 +54,7 @@ import UIKit
         return DigitView(theme: theme)
     }
 
-#if !os(visionOS)
+#if !STP_BUILD_FOR_VISION
     private let feedbackGenerator = UINotificationFeedbackGenerator()
 #endif
 
@@ -139,7 +139,7 @@ import UIKit
         let result = super.resignFirstResponder()
 
         if result {
-            #if !os(visionOS)
+            #if !STP_BUILD_FOR_VISION
             hideMenu()
             #endif
             update()
@@ -157,7 +157,7 @@ import UIKit
         }
 
         if isFirstResponder {
-            #if !os(visionOS)
+            #if !STP_BUILD_FOR_VISION
             toggleMenu()
             #endif
         } else {
@@ -227,7 +227,7 @@ private extension OneTimeCodeTextField {
             : STPLocalizedString("Double tap to edit", "Accessibility hint for a text field")
     }
 
-    #if !os(visionOS) // Don't mess with the UIMenuController on visionOS
+    #if !STP_BUILD_FOR_VISION // Don't mess with the UIMenuController on visionOS
     func toggleMenu() {
         if UIMenuController.shared.isMenuVisible {
             hideMenu()
@@ -315,7 +315,7 @@ public extension OneTimeCodeTextField {
             digitView.borderLayer.add(borderColorAnimation, forKey: "borderColor")
         }
 
-#if !os(visionOS)
+#if !STP_BUILD_FOR_VISION
         feedbackGenerator.notificationOccurred(.error)
 #endif
 
@@ -354,7 +354,7 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
-        #if !os(visionOS)
+        #if !STP_BUILD_FOR_VISION
         hideMenu()
         #endif
         update()
@@ -370,7 +370,7 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
-        #if !os(visionOS)
+        #if !STP_BUILD_FOR_VISION
         hideMenu()
         #endif
         update()
@@ -790,7 +790,7 @@ private extension OneTimeCodeTextField {
             updateColors()
         }
 
-#if !os(visionOS)
+#if !STP_BUILD_FOR_VISION
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             updateColors()

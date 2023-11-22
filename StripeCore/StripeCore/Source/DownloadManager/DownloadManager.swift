@@ -198,7 +198,7 @@ extension DownloadManager {
     }
 
     func persistToMemory(_ imageData: Data, forImageName imageName: String) -> UIImage? {
-        #if os(visionOS)
+        #if STP_BUILD_FOR_VISION
         let scale = 1.0
         #else
         let scale = UIScreen.main.scale

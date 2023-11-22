@@ -7,6 +7,7 @@
 //
 
 #import "STDSSynchronousLocationManager.h"
+#import "STDSVisionSupport.h"
 
 #import <CoreLocation/CoreLocation.h>
 
@@ -38,7 +39,7 @@ typedef void (^LocationUpdateCompletionBlock)(CLLocation * _Nullable);
 
 + (BOOL)hasPermissions {
 //    TODO: Revisit this after we drop iOS 13, iOS 14 has a new API for authorizationStatus
-#ifdef TARGET_OS_VISION
+#ifdef STP_TARGET_VISION
     if (@available(iOS 14.0, *)) {
         CLAuthorizationStatus authorizationStatus = [[[CLLocationManager alloc] init] authorizationStatus];
         return [CLLocationManager locationServicesEnabled] &&

@@ -113,7 +113,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     private var osVersion = UIDevice.current.systemVersion
 
     private var screenSize: String {
-        #if os(visionOS)
+        #if STP_BUILD_FOR_VISION
         return "visionOS"
         #else
         let screen = UIScreen.main

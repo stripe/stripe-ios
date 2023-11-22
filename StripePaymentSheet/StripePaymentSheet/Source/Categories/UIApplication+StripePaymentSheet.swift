@@ -11,7 +11,7 @@ import UIKit
 extension UIApplication {
     func stp_hackilyFumbleAroundUntilYouFindAKeyWindow() -> UIWindow? {
         // We really shouldn't do this: Try to find a way to get the user to pass us a window instead.
-        #if os(visionOS)
+        #if STP_BUILD_FOR_VISION
         let windows = connectedScenes
             .compactMap { ($0 as? UIWindowScene)?.windows }
             .flatMap { $0 }

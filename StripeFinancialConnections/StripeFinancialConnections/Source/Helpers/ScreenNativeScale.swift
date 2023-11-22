@@ -8,7 +8,7 @@
 import UIKit
 
 var stp_screenNativeScale: CGFloat {
-    #if os(visionOS)
+    #if STP_BUILD_FOR_VISION
     return 1.0
     #else
     return UIScreen.main.nativeScale

@@ -149,7 +149,7 @@ final class AttributedTextView: HitTestView {
 
 extension AttributedTextView: UITextViewDelegate {
 
-    #if !os(visionOS)
+    #if !STP_BUILD_FOR_VISION
     func textView(
         _ textView: UITextView,
         shouldInteractWith URL: URL,

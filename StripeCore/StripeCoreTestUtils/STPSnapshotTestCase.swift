@@ -5,7 +5,7 @@
 //  Created by David Estes on 4/13/22.
 //
 
-#if !os(visionOS)
+#if !STP_BUILD_FOR_VISION
 import Foundation
 import iOSSnapshotTestCase
 

@@ -13,6 +13,7 @@
 
 #import "STDSIPAddress.h"
 #import "STDSSynchronousLocationManager.h"
+#import "STDSVisionSupport.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -213,7 +214,7 @@ static const NSString * const kParameterNilCode = @"RE04";
     return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"C008"
                                                       permissionCheck:nil
                                                            valueCheck:^id _Nullable{
-#if TARGET_OS_VISION
+#if STP_TARGET_VISION
         // Offer something reasonable
         CGRect boundsInPixels = CGRectMake(0, 0, 512, 342);
 #else

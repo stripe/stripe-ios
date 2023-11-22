@@ -53,6 +53,7 @@
 		30632F7C730BF8D23B607CF7 /* STDSWarningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 474F39AA3F47D84F8D54E5B7 /* STDSWarningTests.m */; };
 		30B25163BEDEB99CDD101B5F /* NSString+EmptyChecking.h in Headers */ = {isa = PBXBuildFile; fileRef = A8A77DB1C711B8696B2E5FEF /* NSString+EmptyChecking.h */; };
 		3192FCC841152A7E5E6F19D6 /* STDSAlreadyInitializedException.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1FD11407319293954C6D81 /* STDSAlreadyInitializedException.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		319DD1C82B0D50FF0083BA32 /* STDSVisionSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 319DD1C72B0D50F80083BA32 /* STDSVisionSupport.h */; };
 		31C636A25BF83316EE7EB57D /* STDSThreeDS2Service.h in Headers */ = {isa = PBXBuildFile; fileRef = 5EAA444FA7C82BDA4AD907BF /* STDSThreeDS2Service.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		326AD1DD7BB8A2A6DA66EC67 /* STDSThreeDSProtocolVersion+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 47C29E9F3D2A62676B424CD1 /* STDSThreeDSProtocolVersion+Private.h */; };
 		32BE38D04DD76CA4490389C6 /* STDSConfigParametersTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F551808E65CDADD9B3A9CB8 /* STDSConfigParametersTests.m */; };
@@ -366,6 +367,7 @@
 		2FCABBF51CBA7F9FEF757B4C /* STDSNotInitializedException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSNotInitializedException.h; sourceTree = "<group>"; };
 		30D22985091381DFCDF077E9 /* STDSSecTypeUtilitiesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSecTypeUtilitiesTests.m; sourceTree = "<group>"; };
 		315AEE1534F9D9974DC1674B /* STDSChallengeResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSChallengeResponse.h; sourceTree = "<group>"; };
+		319DD1C72B0D50F80083BA32 /* STDSVisionSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSVisionSupport.h; sourceTree = "<group>"; };
 		3255706D2304FB551C97305F /* STDSProtocolErrorEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSProtocolErrorEvent.m; sourceTree = "<group>"; };
 		33CEADC8006E456FD82CE134 /* STDSWhitelistView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSWhitelistView.h; sourceTree = "<group>"; };
 		371F8076630A8839C1F6A508 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -740,6 +742,7 @@
 				33CEADC8006E456FD82CE134 /* STDSWhitelistView.h */,
 				615F1BD510661B38D6825128 /* STDSWhitelistView.m */,
 				0F024DEAD6628A0229856656 /* Stripe3DS2-Bridging-Header.h */,
+				319DD1C72B0D50F80083BA32 /* STDSVisionSupport.h */,
 				4DD55BECC3FB85216FE46218 /* UIButton+CustomInitialization.h */,
 				AA29B74DD3963B1205AA1C0C /* UIButton+CustomInitialization.m */,
 				4A567E08748C86FCE2A75FEA /* UIColor+DefaultColors.h */,
@@ -1066,6 +1069,7 @@
 				DDB98914E1135E8D445545C8 /* STDSIPAddress.h in Headers */,
 				613EF855524F7861A6DDD8C1 /* STDSImageLoader.h in Headers */,
 				D3432C5BF5211A60D5C15D9E /* STDSIntegrityChecker.h in Headers */,
+				319DD1C82B0D50FF0083BA32 /* STDSVisionSupport.h in Headers */,
 				4C573A44AB0A9CB28D76C621 /* STDSJSONWebEncryption.h in Headers */,
 				CA617B6F5CDFB8FDEEE38636 /* STDSJSONWebSignature.h in Headers */,
 				7C7073B54628ED836F422F1D /* STDSJailbreakChecker.h in Headers */,
