@@ -5,12 +5,9 @@
 //  Created by Nick Porter on 11/27/23.
 //
 
-import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
-@_spi(STP) @testable import StripeUICore
 import XCTest
 
 final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
