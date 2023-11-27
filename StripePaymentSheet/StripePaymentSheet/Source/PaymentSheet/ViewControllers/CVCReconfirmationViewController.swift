@@ -94,6 +94,10 @@ class CVCReconfirmationViewController: UIViewController {
         ])
         updateUI()
     }
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.cvcFormElement.traitCollectionDidChange(previousTraitCollection)
+    }
     func didFinishPresenting() {
         self.cvcFormElement.didFinishPresenting()
     }

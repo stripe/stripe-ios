@@ -75,6 +75,9 @@ final class CVCRecollectionElement: Element {
             self.textFieldElement.beginEditing()
         }
     }
+    func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        stackView.layer.borderColor = appearance.colors.componentBorder.cgColor
+    }
 }
 
 extension CVCRecollectionElement: ElementDelegate {
