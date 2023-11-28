@@ -72,7 +72,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testTransitionFromInitialCardFront() {
-        let vc = makeViewController(state: .initial, documentType: .idCard)
+        let vc = makeViewController(state: .initial)
         // Mock that view appeared
         vc.viewWillAppear(false)
         // Verify camera access requested
@@ -91,8 +91,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testTransitionFromScanningCardFront() {
         let vc = makeViewController(
-            state: .scanning(.front, nil),
-            documentType: .idCard
+            state: .scanning(.front, nil)
         )
         let mockDocumentScannerOutput = makeDocumentScannerOutput(with: .idCardFront)
         // Mock timer so we can verify it was invalidated
@@ -121,8 +120,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testTransitionFromScannedCardFront() {
         let vc = makeViewController(
-            state: .scanned(.front, UIImage()),
-            documentType: .idCard
+            state: .scanned(.front, UIImage())
         )
         vc.buttonViewModels.first!.didTap()
         // Verify state is scanning
@@ -136,7 +134,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testTransitionFromTimeoutCardFront() {
-        let vc = makeViewController(state: .timeout(.front), documentType: .idCard)
+        let vc = makeViewController(state: .timeout(.front))
         vc.buttonViewModels.last!.didTap()
         // Verify camera session started
         waitForCameraSessionToStart()
@@ -149,8 +147,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testTransitionFromScanningCardBack() {
         let vc = makeViewController(
-            state: .scanning(.back, nil),
-            documentType: .idCard
+            state: .scanning(.back, nil)
         )
         let mockDocumentScannerOutput = makeDocumentScannerOutput(with: .idCardBack)
         // Mock timer so we can verify it was invalidated
@@ -179,8 +176,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testTransitionFromScannedCardBack() {
         let vc = makeViewController(
-            state: .scanned(.back, UIImage()),
-            documentType: .idCard
+            state: .scanned(.back, UIImage())
         )
         vc.buttonViewModels.first!.didTap()
         verify(
@@ -193,7 +189,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testTransitionFromTimeoutCardBack() {
-        let vc = makeViewController(state: .timeout(.back), documentType: .idCard)
+        let vc = makeViewController(state: .timeout(.back))
         vc.buttonViewModels.last!.didTap()
         waitForCameraSessionToStart()
         verify(
@@ -204,7 +200,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testTransitionFromInitialPassport() {
-        let vc = makeViewController(state: .initial, documentType: .passport)
+        let vc = makeViewController(state: .initial)
         vc.buttonViewModels.first!.didTap()
         // Mock that view appeared
         vc.viewWillAppear(false)
@@ -224,8 +220,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testTransitionFromScanningPassport() {
         let vc = makeViewController(
-            state: .scanning(.front, nil),
-            documentType: .passport
+            state: .scanning(.front, nil)
         )
         let mockDocumentScannerOutput = makeDocumentScannerOutput(with: .passport)
         // Mock timer so we can verify it was invalidated
@@ -254,8 +249,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testTransitionFromScannedPassport() {
         let vc = makeViewController(
-            state: .scanned(.front, UIImage()),
-            documentType: .passport
+            state: .scanned(.front, UIImage())
         )
         vc.buttonViewModels.first!.didTap()
         verify(
@@ -268,7 +262,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testTransitionFromTimeoutPassport() {
-        let vc = makeViewController(state: .timeout(.front), documentType: .passport)
+        let vc = makeViewController(state: .timeout(.front))
         vc.buttonViewModels.last!.didTap()
         waitForCameraSessionToStart()
         verify(
@@ -281,8 +275,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testResetTimeoutDuringScanning() {
         // Mock that existing sacnningState already found a desired classification
         let vc = makeViewController(
-            state: .scanning(.front, .passport),
-            documentType: .passport
+            state: .scanning(.front, .passport)
         )
 
         // Mock that scanner found non-desired classification
@@ -347,7 +340,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock collected data for analytics
         mockSheetController.collectedData = VerificationPageDataUpdateMock.default.collectedData!
 
-        let vc = makeViewController(state: .initial, documentType: .idCard)
+        let vc = makeViewController(state: .initial)
         // Mock that view appeared
         vc.viewWillAppear(false)
         // Deny access
@@ -358,11 +351,6 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedState: .noCameraAccess,
             expectedButtonState: .enabled
         )
-        // Verify analytics
-        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
-            withEventName: "camera_permission_denied"
-        ).first
-        XCTAssert(analytic: analytic, hasMetadata: "scan_type", withValue: "driving_license")
         XCTAssertEqual(
             mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_granted")
                 .count,
@@ -374,7 +362,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock collected data for analytics
         mockSheetController.collectedData = VerificationPageDataUpdateMock.default.collectedData!
 
-        let vc = makeViewController(state: .initial, documentType: .drivingLicense)
+        let vc = makeViewController(state: .initial)
         // Mock that view appeared
         vc.viewWillAppear(false)
 
@@ -392,7 +380,6 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify analytics
         let analytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_error")
             .first
-        XCTAssert(analytic: analytic, hasMetadata: "scan_type", withValue: "driving_license")
         XCTAssert(
             analytic: analytic,
             hasMetadataError: "error",
@@ -406,17 +393,13 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock collected data for analytics
         mockSheetController.collectedData = VerificationPageDataUpdateMock.default.collectedData!
 
-        let vc = makeViewController(state: .initial, documentType: .idCard)
+        let vc = makeViewController(state: .initial)
         // Mock that view appeared
         vc.viewWillAppear(false)
         // Grant access
         grantCameraAccess(granted: true)
 
         // Verify analytics
-        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
-            withEventName: "camera_permission_granted"
-        ).first
-        XCTAssert(analytic: analytic, hasMetadata: "scan_type", withValue: "driving_license")
         XCTAssertEqual(
             mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_denied")
                 .count,
@@ -425,7 +408,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testSettingsButton() {
-        let vc = makeViewController(state: .noCameraAccess, documentType: .idCard)
+        let vc = makeViewController(state: .noCameraAccess)
         vc.buttonViewModels.last!.didTap()
         // Should open settings
         XCTAssertTrue(mockAppSettingsHelper.didOpenAppSettings)
@@ -438,7 +421,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testFileUploadButtonCameraAccess() {
-        let vc = makeViewController(state: .noCameraAccess, documentType: .idCard)
+        let vc = makeViewController(state: .noCameraAccess)
         vc.buttonViewModels.first!.didTap()
         // Should open File Upload screen
         XCTAssertIs(
@@ -448,7 +431,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testFileUploadButtonTimeout() {
-        let vc = makeViewController(state: .timeout(.front), documentType: .idCard)
+        let vc = makeViewController(state: .timeout(.front))
         vc.buttonViewModels.first!.didTap()
         // Should open File Upload screen
         XCTAssertIs(
@@ -463,7 +446,6 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         let mockResponse = try VerificationPageMock.requireLiveCapture.make()
         let vc = makeViewController(
             state: .noCameraAccess,
-            documentType: .idCard,
             apiConfig: mockResponse.documentCapture
         )
         XCTAssertEqual(vc.buttonViewModels.count, 1)
@@ -475,7 +457,6 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         let mockResponse = try VerificationPageMock.response200.make()
         let vc = makeViewController(
             state: .noCameraAccess,
-            documentType: .idCard,
             apiConfig: mockResponse.documentCapture
         )
         XCTAssertEqual(vc.buttonViewModels.count, 2)
@@ -486,8 +467,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockSheetController.collectedData = VerificationPageDataUpdateMock.default.collectedData!
 
         let vc = makeViewController(
-            state: .scanning(.front, nil),
-            documentType: .drivingLicense
+            state: .scanning(.front, nil)
         )
         let startedScanningDate = Date()
         // Mock that scanner is scanning
@@ -522,14 +502,12 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify analytic logged
         let analytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "document_timeout")
             .first
-        XCTAssert(analytic: analytic, hasMetadata: "scan_type", withValue: "driving_license")
         XCTAssert(analytic: analytic, hasMetadata: "side", withValue: "front")
     }
 
     func testScanAttemptsFront() {
         let vc = makeViewController(
-            state: .scanning(.front, nil),
-            documentType: .drivingLicense
+            state: .scanning(.front, nil)
         )
         // Mock that scanner is scanning
         vc.imageScanningSession.startScanning(expectedClassification: .front)
@@ -554,8 +532,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testScanningUpdatesState() {
         let vc = makeViewController(
-            state: .scanning(.front, nil),
-            documentType: .idCard
+            state: .scanning(.front, nil)
         )
         // Mock that scanner is scanning
         vc.imageScanningSession.startScanning(expectedClassification: .front)
@@ -569,9 +546,6 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardBack))
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .idCardBack))
-
-        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .passport))
-        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .passport))
 
         mockConcurrencyManager.respondToScan(output: nil)
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
@@ -590,8 +564,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testAppBackgrounded() {
         // Mock that vc is scanning
         let vc = makeViewController(
-            state: .scanning(.front, nil),
-            documentType: .idCard
+            state: .scanning(.front, nil)
         )
         vc.imageScanningSession.startScanning(expectedClassification: .front)
         waitForCameraSessionToStart()
@@ -608,8 +581,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testAppForegrounded() {
         // Mock that vc is in background
         let vc = makeViewController(
-            state: .scanning(.front, nil),
-            documentType: .idCard
+            state: .scanning(.front, nil)
         )
         vc.imageScanningSession.appDidEnterBackground()
 
@@ -623,8 +595,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testResetFromScanned() {
         // Mock that vc is done scanning
         let vc = makeViewController(
-            state: .scanned(.back, UIImage()),
-            documentType: .drivingLicense
+            state: .scanned(.back, UIImage())
         )
 
         // Reset
@@ -638,8 +609,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testResetFromScanning() {
         // Mock that vc is scanning
         let vc = makeViewController(
-            state: .scanning(.front, nil),
-            documentType: .idCard
+            state: .scanning(.front, nil)
         )
         vc.imageScanningSession.startScanning(expectedClassification: .front)
         waitForCameraSessionToStart()
@@ -669,8 +639,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         // Mock that vc is scanning
         let vc = makeViewController(
-            state: .scanning(.front, nil),
-            documentType: .idCard
+            state: .scanning(.front, nil)
         )
         vc.imageScanningSession.startScanning(expectedClassification: .front)
         waitForCameraSessionToStart()
@@ -763,7 +732,6 @@ extension DocumentCaptureViewControllerTest {
     ) -> DocumentCaptureViewController {
         return .init(
             apiConfig: DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture,
-            documentType: documentType,
             sheetController: mockSheetController,
             cameraSession: mockCameraSession,
             cameraPermissionsManager: mockCameraPermissionsManager,
@@ -776,13 +744,11 @@ extension DocumentCaptureViewControllerTest {
 
     fileprivate func makeViewController(
         state: DocumentCaptureViewController.State,
-        documentType: DocumentType,
         apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage =
             DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture
     ) -> DocumentCaptureViewController {
         return .init(
             apiConfig: apiConfig,
-            documentType: documentType,
             initialState: state,
             sheetController: mockSheetController,
             cameraSession: mockCameraSession,

@@ -27,8 +27,11 @@ extension PaymentOption {
             return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
         case .link:
             return Image.pm_type_link.makeImage()
-        case .externalPayPal:
-            return Image.pm_type_paypal.makeImage()
+        case .external(let paymentMethod, _):
+            return PaymentSheet.PaymentMethodType.external(paymentMethod).makeImage(
+                forDarkBackground: traitCollection?.isDarkMode ?? false,
+                updateHandler: nil
+            )
         }
     }
 
@@ -44,9 +47,9 @@ extension PaymentOption {
             return UIImage()
         case .link:
             return Image.carousel_link.makeImage(template: false)
-        case .externalPayPal:
+        case .external:
             assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")
-            return Image.pm_type_paypal.makeImage()
+            return UIImage()
         }
     }
 }

@@ -133,8 +133,7 @@ enum VerificationPageDataUpdateMock {
                 lowResImage: "front_full_frame_id",
                 passportScore: .init(0),
                 uploadMethod: .autoCapture
-            ),
-            idDocumentType: .drivingLicense
+            )
         )
     )
 
@@ -161,8 +160,7 @@ enum VerificationPageDataUpdateMock {
                 lowResImage: "front_full_frame_id",
                 passportScore: .init(0),
                 uploadMethod: .autoCapture
-            ),
-            idDocumentType: .drivingLicense
+            )
         )
     )
 }

@@ -106,10 +106,12 @@ class SectionContainerView: UIView {
         )
     }
 
+#if !STP_BUILD_FOR_VISION
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateUI()
     }
+#endif
 
     // MARK: - Internal methods
     func updateUI(newViews: [UIView]? = nil) {

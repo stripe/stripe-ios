@@ -6,6 +6,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 @_spi(STP) public class STPCountryPickerInputField: STPGenericInputPickerField {
@@ -58,10 +59,10 @@ extension STPCountryPickerInputField {
 
         @_spi(STP) public let countries: [(code: String, displayName: String)] = {
 
-            let currentCountryCode = Locale.autoupdatingCurrent.regionCode
+            let currentCountryCode = Locale.autoupdatingCurrent.stp_regionCode
             let locale = NSLocale.autoupdatingCurrent
 
-            let unsorted = Locale.isoRegionCodes.compactMap { (code) -> (String, String)? in
+            let unsorted = Locale.stp_isoRegionCodes.compactMap { (code) -> (String, String)? in
                 let identifier = Locale.identifier(fromComponents: [
                     NSLocale.Key.countryCode.rawValue: code
                 ])

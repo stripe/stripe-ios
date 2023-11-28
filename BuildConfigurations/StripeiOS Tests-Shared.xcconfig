@@ -88,3 +88,6 @@ ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
 LIBRARY_SEARCH_PATHS = $(inherited)
 
 DEFINES_MODULE = YES
+
+// A way to check for visionOS that will work across Xcode 14 and 15
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=xr*] = $(inherited) STP_BUILD_FOR_VISION

@@ -18,6 +18,10 @@ import UIKit
 }
 
 class STPPaymentCardTextFieldViewModel: NSObject {
+    init(brandUpdateHandler: @escaping () -> Void) {
+        self.cbcController = STPCBCController(updateHandler: brandUpdateHandler)
+    }
+
     private var _cardNumber: String?
     @objc dynamic var cardNumber: String? {
         get {
@@ -37,6 +41,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
                     to: Int(STPBINController.shared.maxCardNumberLength())
                 )
             }
+            cbcController.cardNumber = _cardNumber
         }
     }
 
@@ -108,42 +113,10 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    enum BrandState {
-        case brand(STPCardBrand)
-        case cbcBrandSelected(STPCardBrand)
-        case unknown
-        case unknownMultipleOptions
-
-        var isCBC: Bool {
-            switch self {
-            case .brand, .unknown:
-                return false
-            case .cbcBrandSelected, .unknownMultipleOptions:
-                return true
-            }
-        }
-    }
-
-    var brandState: BrandState {
-        if cbcEnabled {
-            if cardBrands.count > 1 {
-                if let selectedBrand = selectedBrand {
-                    return .cbcBrandSelected(selectedBrand)
-                }
-                return .unknownMultipleOptions
-            }
-            if let cardBrand = cardBrands.first {
-                return .brand(cardBrand)
-            }
-            return .unknown
-        } else {
-            // Otherwise, return the brand for the number
-            return .brand(STPCardValidator.brand(forNumber: cardNumber ?? ""))
-        }
-    }
+    let cbcController: STPCBCController
 
     @objc dynamic var brand: STPCardBrand {
-        switch brandState {
+        switch cbcController.brandState {
         case .brand(let brand):
             return brand
         case .cbcBrandSelected(let brand):
@@ -242,18 +215,6 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    var cbcEnabledOverride: Bool? = {
-        // TODO: Remove the default value of `false` once we release CBC
-        return false
-    }()
-
-    var cbcEnabled: Bool {
-        if let cbcEnabledOverride = cbcEnabledOverride {
-            return cbcEnabledOverride
-        }
-        return CardElementConfigService.shared.isCBCEligible
-    }
-
     private var _expirationMonth: String?
     @objc private(set) var expirationMonth: String? {
         get {
@@ -279,54 +240,6 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             _expirationYear = STPCardValidator.sanitizedNumericString(for: newValue ?? "")
                 .stp_safeSubstring(to: 2)
 
-        }
-    }
-
-    var selectedBrand: STPCardBrand?
-
-    var cardBrands = Set<STPCardBrand>() {
-        didSet {
-            // If the selected brand does not exist in the current list of brands, reset it
-            if let selectedBrand = selectedBrand, !cardBrands.contains(selectedBrand) {
-                self.selectedBrand = nil
-            }
-            // If the selected brand is nil and our preferred brand exists, set that as the selected brand
-            if let preferredNetworks = preferredNetworks,
-               selectedBrand == nil,
-               let preferredBrand = preferredNetworks.first(where: { cardBrands.contains($0) }) {
-                self.selectedBrand = preferredBrand
-            }
-        }
-    }
-
-    var preferredNetworks: [STPCardBrand]?
-
-    func fetchCardBrands(handler: @escaping (Set<STPCardBrand>) -> Void) {
-        // Only fetch card brands if we have at least 8 digits in the pan
-        guard let cardNumber = cardNumber,
-              cardNumber.count >= 8 else {
-            // Clear any previously fetched card brands from the dropdown
-            if self.cardBrands != Set<STPCardBrand>() {
-                self.cardBrands = Set<STPCardBrand>()
-                handler(cardBrands)
-            }
-            return
-        }
-
-        var fetchedCardBrands = Set<STPCardBrand>()
-        STPCardValidator.possibleBrands(forNumber: cardNumber) { [weak self] result in
-            switch result {
-            case .success(let brands):
-                fetchedCardBrands = brands
-            case .failure:
-                // If we fail to fetch card brands fall back to normal card brand detection
-                fetchedCardBrands = Set<STPCardBrand>()
-            }
-
-            if self?.cardBrands != fetchedCardBrands {
-                self?.cardBrands = fetchedCardBrands
-                handler(fetchedCardBrands)
-            }
         }
     }
 

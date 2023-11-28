@@ -151,7 +151,7 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         let mockResponse = try VerificationPageDataMock.noErrors.make()
         let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
-        mockFlowController.uncollectedFields = [.idDocumentType, .idDocumentFront, .idDocumentBack]
+        mockFlowController.uncollectedFields = [.idDocumentFront, .idDocumentBack]
 
         // Save data
         controller.saveAndTransition(from: .biometricConsent, collectedData: mockData) {
@@ -171,7 +171,6 @@ final class VerificationSheetControllerTest: XCTestCase {
                     face: true,
                     idDocumentBack: true,
                     idDocumentFront: true,
-                    idDocumentType: true,
                     idNumber: false,
                     dob: false,
                     name: false,

@@ -15,6 +15,7 @@ import PassKit
 import StripePayments
 @_spi(STP) @_spi(ExternalPaymentMethodsPrivateBeta) import StripePaymentSheet
 @_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
+@_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -26,9 +27,6 @@ class PlaygroundController: ObservableObject {
     @Published var addressDetails: AddressViewController.AddressDetails?
     @Published var isLoading: Bool = false
     @Published var lastPaymentResult: PaymentSheetResult?
-
-    // Other
-    var newCustomerID: String? // Stores the new customer returned from the backend for reuse
 
     var applePayConfiguration: PaymentSheet.ApplePayConfiguration? {
         let buttonType: PKPaymentButtonType = {
@@ -88,7 +86,7 @@ class PlaygroundController: ObservableObject {
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
-        if let customerID = customerID,
+        if let customerID = self.settings.customerId,
            let ephemeralKey = ephemeralKey,
            settings.customerMode != .guest {
             return PaymentSheet.CustomerConfiguration(
@@ -168,18 +166,23 @@ class PlaygroundController: ObservableObject {
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
             self?.confirmHandler($0, $1, $2)
         }
+        let isCVCRecollectionEnabledCallback = { [weak self] in
+            return self?.settings.requireCVCRecollection == .on
+        }
         switch settings.mode {
         case .payment:
             return PaymentSheet.IntentConfiguration(
                 mode: .payment(amount: amount!, currency: settings.currency.rawValue, setupFutureUsage: nil),
                 paymentMethodTypes: paymentMethodTypes,
-                confirmHandler: confirmHandler
+                confirmHandler: confirmHandler,
+                isCVCRecollectionEnabledCallback: isCVCRecollectionEnabledCallback
             )
         case .paymentWithSetup:
             return PaymentSheet.IntentConfiguration(
                 mode: .payment(amount: amount!, currency: settings.currency.rawValue, setupFutureUsage: .offSession),
                 paymentMethodTypes: paymentMethodTypes,
-                confirmHandler: confirmHandler
+                confirmHandler: confirmHandler,
+                isCVCRecollectionEnabledCallback: isCVCRecollectionEnabledCallback
             )
         case .setup:
             return PaymentSheet.IntentConfiguration(
@@ -187,6 +190,17 @@ class PlaygroundController: ObservableObject {
                 paymentMethodTypes: paymentMethodTypes,
                 confirmHandler: confirmHandler
             )
+        }
+    }
+
+    var customerIdOrType: String {
+        switch settings.customerMode {
+        case .guest:
+            return "guest"
+        case .new:
+            return settings.customerId ?? "new"
+        case .returning:
+            return "returning"
         }
     }
 
@@ -218,7 +232,6 @@ class PlaygroundController: ObservableObject {
 
     var clientSecret: String?
     var ephemeralKey: String?
-    var customerID: String?
     var paymentMethodTypes: [String]?
     var amount: Int?
     var checkoutEndpoint: String = PaymentSheetTestPlaygroundSettings.defaultCheckoutEndpoint
@@ -257,7 +270,7 @@ class PlaygroundController: ObservableObject {
         self.currentlyRenderedSettings = .defaultValues()
 
         $settings.sink { newValue in
-            if newValue.autoreload == .on {
+            if !self.isLoading && newValue.autoreload == .on {
                 self.load()
             }
         }.store(in: &subscribers)
@@ -364,25 +377,15 @@ extension PlaygroundController {
         isLoading = true
         let settingsToLoad = self.settings
 
-        let customer: String = {
-            switch settings.customerMode {
-            case .guest:
-                return "guest"
-            case .new:
-                return newCustomerID ?? "new"
-            case .returning:
-                return "returning"
-            }
-        }()
-
         let body = [
-            "customer": customer,
+            "customer": customerIdOrType,
             "currency": settings.currency.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,
             "use_link": settings.linkEnabled == .on,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
+            "require_cvc_recollection": settings.requireCVCRecollection == .on,
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
@@ -415,19 +418,18 @@ extension PlaygroundController {
                 return
             }
 
-            self.clientSecret = json["intentClientSecret"]
-            self.ephemeralKey = json["customerEphemeralKeySecret"]
-            self.customerID = json["customerId"]
-            self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
-            self.amount = Int(json["amount"] ?? "")
-            STPAPIClient.shared.publishableKey = json["publishableKey"]
-
             DispatchQueue.main.async {
-                if self.settings.customerMode == .new && self.newCustomerID == nil {
-                    self.newCustomerID = self.customerID
-                }
+                self.clientSecret = json["intentClientSecret"]
+                self.ephemeralKey = json["customerEphemeralKeySecret"]
+                self.settings.customerId = json["customerId"]
+                self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
+                self.amount = Int(json["amount"] ?? "")
+                STPAPIClient.shared.publishableKey = json["publishableKey"]
+
                 self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
                 self.addressDetails = nil
+                // Persist customerId / customerMode
+                self.serializeSettingsToNSUserDefaults()
 
                 if self.settings.uiStyle == .paymentSheet {
                     self.buildPaymentSheet()
@@ -435,7 +437,6 @@ extension PlaygroundController {
                     self.currentlyRenderedSettings = self.settings
                 } else {
                     let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
-                        self.isLoading = false
                         self.currentlyRenderedSettings = self.settings
                         switch result {
                         case .failure(let error):
@@ -449,6 +450,8 @@ extension PlaygroundController {
                                 self.load()
                             }
                             return
+                        } else {
+                            self.isLoading = false
                         }
                     }
                     switch self.settings.integrationType {

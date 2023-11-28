@@ -18,7 +18,6 @@ Tests/installation_tests/carthage/Cartfile.resolved
 Tests/installation_tests/carthage/Carthage/*
 vendor/*
 .bundle/
-tuist-bin
 temp_docs
 
 *.pbxuser
@@ -48,16 +47,4 @@ fastlane/.env
 .swiftpm
 
 # Xcode Related files
-
-.package.resolved
-Stripe.xcworkspace/.tuist-generated
-Stripe.xcworkspace/contents.xcworkspacedata
 Stripe.xcworkspace/xcuserdata/*
-Stripe.xcworkspace/xcshareddata/*
-Stripe*/*.xcodeproj
-Example/**/*.xcodeproj
-Testers/**/*.xcodeproj
-
-# But make sure to store the Package.resolved file for Xcode Cloud
-# https://forums.swift.org/t/package-resolved-should-go-in-the-gitignore/14699/29
-!Stripe.xcworkspace/xcshareddata/swiftpm

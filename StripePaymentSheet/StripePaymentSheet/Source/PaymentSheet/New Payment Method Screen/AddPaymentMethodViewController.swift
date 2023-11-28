@@ -49,9 +49,8 @@ class AddPaymentMethodViewController: UIViewController {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
-            // TODO(yuki): Hack to support external_paypal
-            if selectedPaymentMethodType == .externalPayPal {
-                return .externalPayPal(confirmParams: params)
+            if case .external(let paymentMethod) = selectedPaymentMethodType {
+                return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }
             return .new(confirmParams: params)
         }
@@ -260,8 +259,9 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodDetailsContainerView.addPinnedSubview(newView)
             paymentMethodDetailsContainerView.layoutIfNeeded()
             newView.alpha = 0
-
+            #if !STP_BUILD_FOR_VISION
             UISelectionFeedbackGenerator().selectionChanged()
+            #endif
             // Fade the new one in and the old one out
             animateHeightChange {
                 self.paymentMethodDetailsContainerView.updateHeight()

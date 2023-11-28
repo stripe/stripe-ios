@@ -13,10 +13,9 @@ extension StripeAPI {
 
     struct VerificationPageStaticContentIndividualWelcomePage: Decodable, Equatable {
         let getStartedButtonText: String
-        let body: String
         let privacyPolicy: String
-        let timeEstimate: String
         let title: String
+        let lines: [VerificationPageStaticConsentLineContent]
     }
 
 }

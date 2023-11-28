@@ -1028,10 +1028,25 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Saved card should show the edit icon since it is co-branded
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
 
-        // Remove this card
-        XCTAssertTrue(app.buttons["Remove card"].waitForExistenceAndTap(timeout: 5))
+        // Update this card
+        XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: 5))
+        app.pickerWheels.firstMatch.swipeUp()
+        app.toolbars.buttons["Done"].tap()
+        app.buttons["Update card"].waitForExistenceAndTap(timeout: 5)
 
-        // TODO(porter) Verify card is removed once it is implemented
+        // We should have updated to Visa
+        XCTAssertTrue(app.images["carousel_card_visa"].waitForExistence(timeout: 5))
+
+        // Remove this card
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.buttons["Remove card"].waitForExistenceAndTap(timeout: 5))
+        let confirmRemoval = app.alerts.buttons["Remove"]
+        XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 5))
+        confirmRemoval.tap()
+
+        // Card should be removed
+        XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
     }
 
     // This only tests the PaymentSheet + PaymentIntent flow.
@@ -2074,6 +2089,48 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         payButton.tap()
         app.alerts.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
+    }
+
+    func testCVCRecollectionFlowController() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.requireCVCRecollection = .on
+
+        loadPlayground(app, settings)
+
+        let paymentMethodButton = app.buttons["Payment method"]
+
+        paymentMethodButton.waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        // CVC field should already be selected
+        app.typeText("123")
+
+        let confirmButtons: XCUIElementQuery = app.buttons.matching(identifier: "Confirm")
+        for index in 0..<confirmButtons.count {
+            if confirmButtons.element(boundBy: index).isHittable {
+                confirmButtons.element(boundBy: index).tap()
+            }
+        }
+
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
     /* Disable Link test
      func testDeferredIntentLinkSignIn_SeverSideConfirmation() throws {

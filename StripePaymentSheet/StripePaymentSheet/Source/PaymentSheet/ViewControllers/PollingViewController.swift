@@ -180,8 +180,12 @@ class PollingViewController: UIViewController {
         // disable swipe to dismiss
         isModalInPresentation = true
 
+        #if STP_BUILD_FOR_VISION
+        let height = parent?.view.frame.size.height ?? 600 // An arbitrary value for visionOS
+        #else
         // Height of the polling view controller is either the height of the parent, or the height of the screen (flow controller use case)
         let height = parent?.view.frame.size.height ?? UIScreen.main.bounds.height
+        #endif
         let stackView = UIStackView(arrangedSubviews: [formStackView])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical

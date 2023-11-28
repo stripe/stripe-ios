@@ -101,7 +101,7 @@ import UIKit
         }
 
         // This second filter uses the device's locale to pick a winner out of N candidates.
-        if let winner = candidates.first(where: { $0.regionCode == locale.regionCode }) {
+        if let winner = candidates.first(where: { $0.regionCode == locale.stp_regionCode }) {
             return makePhoneNumber(winner)
         }
 
@@ -337,7 +337,7 @@ import UIKit
             Metadata(prefix: "+508", regionCode: "PM", pattern: "## ## ##"),
             Metadata(prefix: "+509", regionCode: "HT", pattern: "## ## ####"),
             Metadata(prefix: "+51", regionCode: "PE", pattern: "### ### ###"),
-            Metadata(prefix: "+52", regionCode: "MX", pattern: "### ### ### ####"),
+            Metadata(prefix: "+52", regionCode: "MX", pattern: "### ### ####"),
             Metadata(prefix: "+537", regionCode: "CY", pattern: ""),
             Metadata(prefix: "+54", regionCode: "AR", pattern: "## ##-####-####"),
             Metadata(prefix: "+55", regionCode: "BR", pattern: "## #####-####"),

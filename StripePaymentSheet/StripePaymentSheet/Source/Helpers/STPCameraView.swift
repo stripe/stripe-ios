@@ -5,6 +5,7 @@
 //  Created by David Estes on 8/17/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
+#if !STP_BUILD_FOR_VISION
 
 import AVFoundation
 import UIKit
@@ -66,3 +67,5 @@ class STPCameraView: UIView {
         super.init(coder: aDecoder)
     }
 }
+
+#endif

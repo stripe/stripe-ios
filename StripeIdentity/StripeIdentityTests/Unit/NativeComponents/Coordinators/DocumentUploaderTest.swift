@@ -99,8 +99,7 @@ final class DocumentUploaderTest: XCTestCase {
             imageUploader: IdentityImageUploader(
                 configuration: mockConfig,
                 apiClient: mockAPIClient,
-                analyticsClient: .init(verificationSessionId: ""),
-                idDocumentType: .passport
+                analyticsClient: .init(verificationSessionId: "")
             )
         )
         mockDelegate = MockDocumentUploaderDelegate()

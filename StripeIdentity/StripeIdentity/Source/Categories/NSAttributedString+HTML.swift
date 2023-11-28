@@ -48,6 +48,10 @@ struct HTMLStyle {
     let isLinkUnderlined: Bool
     let shouldCenterText: Bool
 
+    let linkColor: UIColor?
+
+    let lineHeightMultiple: CGFloat
+
     init(
         bodyFont: UIFont,
         bodyColor: UIColor? = nil,
@@ -64,7 +68,9 @@ struct HTMLStyle {
         h6Font: UIFont? = nil,
         h6Color: UIColor? = nil,
         isLinkUnderlined: Bool = false,
-        shouldCenterText: Bool = false
+        shouldCenterText: Bool = false,
+        linkColor: UIColor? = nil,
+        lineHeightMultiple: CGFloat = 1
     ) {
         self.bodyFont = bodyFont
         self.bodyColor = bodyColor
@@ -82,6 +88,8 @@ struct HTMLStyle {
         self.h6Color = h6Color
         self.isLinkUnderlined = isLinkUnderlined
         self.shouldCenterText = shouldCenterText
+        self.linkColor = linkColor
+        self.lineHeightMultiple = lineHeightMultiple
     }
 
     fileprivate static func cssText(
@@ -190,6 +198,26 @@ struct HTMLStyle {
 }
 
 extension NSAttributedString {
+    static func createHtmlString(htmlText: String, style: HTMLStyle) throws -> NSAttributedString {
+        let mutableHtmlString = try NSMutableAttributedString(
+            htmlText: htmlText, style: style)
+
+        if style.lineHeightMultiple != 1 {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineHeightMultiple = style.lineHeightMultiple
+            paragraphStyle.headIndent = 1
+            paragraphStyle.firstLineHeadIndent = 0
+            mutableHtmlString.addAttribute(
+                .paragraphStyle,
+                value: paragraphStyle,
+                range: NSRange(location: 0, length: (mutableHtmlString.length))
+            )
+        }
+        return mutableHtmlString
+    }
+}
+
+private extension NSMutableAttributedString {
     /// Initializes an NSAttributedString from HTML with the specified style.
     ///
     /// - Note:

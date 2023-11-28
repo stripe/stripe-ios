@@ -19,16 +19,38 @@ struct PaymentSheetTestPlayground: View {
 
     @ViewBuilder
     var clientSettings: some View {
-        SettingView(setting: $playgroundController.settings.uiStyle)
-        SettingView(setting: $playgroundController.settings.shippingInfo)
-        SettingView(setting: $playgroundController.settings.applePayEnabled)
-        SettingView(setting: $playgroundController.settings.applePayButtonType)
-        SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
-        SettingView(setting: $playgroundController.settings.defaultBillingAddress)
-        SettingView(setting: $playgroundController.settings.linkEnabled)
-        SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
-        SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
-        SettingView(setting: $playgroundController.settings.autoreload)
+        // Note: Use group to work around XCode 14: "Extra Argument in Call" issue
+        //  (each view can hold 10 direct subviews)
+        Group {
+            SettingView(setting: uiStyle)
+            SettingView(setting: $playgroundController.settings.shippingInfo)
+            SettingView(setting: $playgroundController.settings.applePayEnabled)
+            SettingView(setting: $playgroundController.settings.applePayButtonType)
+            SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
+            SettingView(setting: $playgroundController.settings.defaultBillingAddress)
+            SettingView(setting: $playgroundController.settings.linkEnabled)
+            SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
+            SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
+            SettingView(setting: $playgroundController.settings.autoreload)
+        }
+        Group {
+            if playgroundController.settings.uiStyle == .flowController {
+                if playgroundController.settings.integrationType == .deferred_csc {
+                    SettingView(setting: $playgroundController.settings.requireCVCRecollection)
+                }
+            }
+        }
+    }
+
+    var uiStyle: Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
+        Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
+            return playgroundController.settings.uiStyle
+        } set: { newValue in
+            if newValue != .flowController {
+                playgroundController.settings.requireCVCRecollection = .off
+            }
+            playgroundController.settings.uiStyle = newValue
+        }
     }
 
     var body: some View {
@@ -63,8 +85,10 @@ struct PaymentSheetTestPlayground: View {
                                 })
                         }
                         SettingView(setting: $playgroundController.settings.mode)
-                        SettingPickerView(setting: $playgroundController.settings.integrationType)
-                        SettingView(setting: $playgroundController.settings.customerMode)
+                        SettingPickerView(setting: integrationType)
+                        SettingView(setting: customerModeBinding)
+                        TextField("CustomerId", text: customerIdBinding)
+                            .disabled(true)
                         SettingPickerView(setting: $playgroundController.settings.currency)
                         SettingPickerView(setting: $playgroundController.settings.merchantCountryCode)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
@@ -107,13 +131,45 @@ struct PaymentSheetTestPlayground: View {
         }
     }
 
+    var integrationType: Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
+        Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
+            return playgroundController.settings.integrationType
+        } set: { newValue in
+            if newValue != .deferred_csc {
+                playgroundController.settings.requireCVCRecollection = .off
+            }
+            playgroundController.settings.integrationType = newValue
+        }
+    }
+
     var customCTABinding: Binding<String> {
         Binding<String> {
             return playgroundController.settings.customCtaLabel ?? ""
         } set: { newString in
             playgroundController.settings.customCtaLabel = (newString != "") ? newString : nil
         }
-
+    }
+    var customerModeBinding: Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
+        Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
+            return playgroundController.settings.customerMode
+        } set: { newMode in
+            playgroundController.settings.customerId = nil
+            playgroundController.settings.customerMode = newMode
+        }
+    }
+    var customerIdBinding: Binding<String> {
+        Binding<String> {
+            switch playgroundController.settings.customerMode {
+            case .guest:
+                return ""
+            case .new:
+                return playgroundController.settings.customerId ?? ""
+            case .returning:
+                return playgroundController.settings.customerId ?? ""
+            }
+        } set: { newString in
+            playgroundController.settings.customerId = (newString != "") ? newString : nil
+        }
     }
 }
 

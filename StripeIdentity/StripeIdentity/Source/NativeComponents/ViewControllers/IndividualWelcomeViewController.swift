@@ -16,7 +16,11 @@ final class IndividualWelcomeViewController: IdentityFlowViewController {
         welcomeContent: StripeAPI.VerificationPageStaticContentIndividualWelcomePage,
         sheetController: VerificationSheetControllerProtocol
     ) throws {
-        let htmlView = HTMLViewWithIconLabels()
+
+        let multilineContent = MultilineIconLabelHTMLView()
+
+        var didOpenURLHandler: ((URL) -> Void)?
+
         flowViewModel = .init(
             headerViewModel: .init(
                 backgroundColor: .systemBackground,
@@ -24,13 +28,14 @@ final class IndividualWelcomeViewController: IdentityFlowViewController {
                     iconViewModel: .init(
                         iconType: .brand,
                         iconImage: brandLogo,
-                        iconImageContentMode: .scaleToFill
+                        iconImageContentMode: .scaleToFill,
+                        useLargeIcon: true
                     )
                 ),
                 titleText: welcomeContent.title
             ),
             contentViewModel: .init(
-                view: htmlView,
+                view: multilineContent,
                 inset: .init(top: 16, leading: 16, bottom: 8, trailing: 16)
             ),
             buttons: [
@@ -41,33 +46,30 @@ final class IndividualWelcomeViewController: IdentityFlowViewController {
                         sheetController.transitionToIndividual()
                     }
                 ),
-            ]
+            ],
+            buttonTopContentViewModel: .init(
+                text: welcomeContent.privacyPolicy,
+                style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
+                didOpenURL: { url in
+                    didOpenURLHandler?(url)
+                }
+            )
         )
 
         super.init(sheetController: sheetController, analyticsScreenName: .individual_welcome)
 
+        didOpenURLHandler = self.openInSafariViewController
+
         // If HTML fails to render, throw error since it's unacceptable to not
         // display consent copy
-        try htmlView.configure(
+        try multilineContent.configure(
             with: .init(
-                iconText: [
-                    .init(
-                        image: Image.iconClock.makeImage().withTintColor(IdentityUI.iconColor),
-                        text: welcomeContent.timeEstimate,
-                        isTextHTML: false
-                    ),
-                ],
-                nonIconText: [
-                    .init(
-                        text: welcomeContent.privacyPolicy,
-                        isTextHTML: true
-                    ),
-                ],
-                bodyHtmlString: welcomeContent.body,
-                didOpenURL: { [weak self] url in
-                    self?.openInSafariViewController(url: url)
+                lines: welcomeContent.lines.map {
+                    return ($0.icon, $0.content)
                 }
-            )
+            ) { [weak self] url in
+                self?.presentBottomsheet(withUrl: url)
+            }
         )
 
         configure(

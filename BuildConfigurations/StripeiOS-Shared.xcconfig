@@ -155,3 +155,6 @@ LIBRARY_SEARCH_PATHS = $(inherited) $(CONFIGURATION_BUILD_DIR)
 
 // Generate .swiftinterface files
 BUILD_LIBRARY_FOR_DISTRIBUTION = YES
+
+// A way to check for visionOS that will work across Xcode 14 and 15
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=xr*] = $(inherited) STP_BUILD_FOR_VISION

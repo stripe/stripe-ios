@@ -141,7 +141,11 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             case .applePay, .saved, .link:
                 // TODO(Link): Handle link when we re-enable it
                 return nil
-            case .new(confirmParams: let params), .externalPayPal(let params):
+            case .new(confirmParams: let params):
+                return params
+            case let .external(paymentMethod, billingDetails):
+                let params = IntentConfirmParams(type: .external(paymentMethod))
+                params.paymentMethodParams.billingDetails = billingDetails
                 return params
             }
         }()
@@ -445,6 +449,20 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
 // MARK: - SavedPaymentOptionsViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewControllerDelegate {
+    func didSelectUpdate(viewController: SavedPaymentOptionsViewController,
+                         paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+                         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
+        guard case .saved(let paymentMethod) = paymentMethodSelection,
+            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+        else {
+            throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key secret")
+        }
+
+        return try await configuration.apiClient.updatePaymentMethod(with: paymentMethod.stripeId,
+                                                                     paymentMethodUpdateParams: updateParams,
+                                                                     ephemeralKeySecret: ephemeralKey)
+    }
+
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection

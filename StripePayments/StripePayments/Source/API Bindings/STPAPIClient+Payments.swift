@@ -768,6 +768,53 @@ extension STPAPIClient {
             }
         })
     }
+
+    /// Updates a PaymentMethod object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/payment_methods/update
+    /// - Parameters:
+    ///   - paymentMethodId: Identifier of the payment method to be updated
+    ///   - paymentMethodUpdateParams: The `STPPaymentMethodUpdateParams` to pass to `/v1/payment_methods/update`.  Cannot be nil.
+    ///   - ephemeralKeySecret: The Customer Ephemeral Key secret to be used
+    ///   - completion: The callback to run with the returned `STPPaymentMethod` object, or an error.
+    public func updatePaymentMethod(with paymentMethodId: String,
+                                    paymentMethodUpdateParams: STPPaymentMethodUpdateParams,
+                                    ephemeralKeySecret: String,
+                                    completion: @escaping STPPaymentMethodCompletionBlock) {
+        STPAnalyticsClient.sharedClient.logPaymentMethodUpdateAttempt(
+            with: _stored_configuration
+        )
+
+        let parameters = STPFormEncoder.dictionary(forObject: paymentMethodUpdateParams)
+        APIRequest<STPPaymentMethod>.post(
+            with: self,
+            endpoint: "\(APIEndpointPaymentMethods)/\(paymentMethodId)",
+            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
+            parameters: parameters
+        ) { paymentMethod, _, error in
+            completion(paymentMethod, error)
+        }
+    }
+
+    /// Updates a PaymentMethod object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/payment_methods/update
+    /// - Parameters:
+    ///   - paymentMethodId: Identifier of the payment method to be updated
+    ///   - paymentMethodUpdateParams: The `STPPaymentMethodUpdateParams` to pass to `/v1/payment_methods/update`.  Cannot be nil.
+    ///   - ephemeralKeySecret: The Customer Ephemeral Key secret to be used
+    /// - Returns: Returns the updated `STPPaymentMethod` or throws an error if the operation failed.
+    public func updatePaymentMethod(with paymentMethodId: String,
+                                    paymentMethodUpdateParams: STPPaymentMethodUpdateParams,
+                                    ephemeralKeySecret: String) async throws -> STPPaymentMethod {
+        return try await withCheckedThrowingContinuation({ continuation in
+            updatePaymentMethod(with: paymentMethodId, paymentMethodUpdateParams: paymentMethodUpdateParams, ephemeralKeySecret: ephemeralKeySecret) { paymentMethod, error in
+                if let paymentMethod = paymentMethod {
+                    continuation.resume(with: .success(paymentMethod))
+                } else {
+                    continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                }
+            }
+        })
+    }
 }
 
 // MARK: - ThreeDS2
@@ -1061,6 +1108,21 @@ extension STPAPIClient {
         ) { _, _, error in
             completion(error)
         }
+    }
+
+    @_spi(STP) public func attachPaymentMethod(
+        _ paymentMethodID: String,
+        customerID: String,
+        ephemeralKeySecret: String) async throws {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+                attachPaymentMethod(paymentMethodID, customerID: customerID, ephemeralKeySecret: ephemeralKeySecret) { error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
+                    }
+                }
+            }
     }
 
     /// Retrieve a customer

@@ -61,7 +61,7 @@ extension PaymentSheet {
             switch self {
             case .automatic:
                 // only enable the save checkbox by default for US
-                return Locale.current.regionCode == "US"
+                return Locale.current.stp_regionCode == "US"
             case .requiresOptIn:
                 return false
             case .requiresOptOut:
@@ -152,7 +152,7 @@ extension PaymentSheet {
 
         /// The list of preferred networks that should be used to process payments made with a co-branded card.
         /// This value will only be used if your user hasn't selected a network themselves.
-        @_spi(STP)
+        @_spi(STP) // TODO(porter) Remove STP before CBC GA
         public var preferredNetworks: [STPCardBrand]? {
             didSet {
                 guard let preferredNetworks = preferredNetworks else { return }

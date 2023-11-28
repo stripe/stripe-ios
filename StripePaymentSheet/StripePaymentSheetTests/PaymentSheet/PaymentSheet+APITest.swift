@@ -869,7 +869,7 @@ class PaymentSheetAPITest: XCTestCase {
         var config = configuration
         // ...PaymentSheet should set shipping params on /confirm
         XCTAssertNotNil(PaymentSheet.makeShippingParams(for: pi, configuration: config))
-        XCTAssertNotNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod()), paymentIntent: pi, configuration: config).shipping)
+        XCTAssertNotNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod(), paymentOptions: nil), paymentIntent: pi, configuration: config).shipping)
 
         // However, if the PI and config have the same shipping...
         config.shippingDetails = {
@@ -888,7 +888,7 @@ class PaymentSheetAPITest: XCTestCase {
         }
         // ...PaymentSheet should not set shipping params on /confirm
         XCTAssertNil(PaymentSheet.makeShippingParams(for: pi, configuration: config))
-        XCTAssertNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod()), paymentIntent: pi, configuration: config).shipping)
+        XCTAssertNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod(), paymentOptions: nil), paymentIntent: pi, configuration: config).shipping)
     }
 
     /// Setting SFU to `true` when a customer is set should set the parameter to `off_session`.
@@ -964,6 +964,24 @@ class PaymentSheetAPITest: XCTestCase {
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
         XCTAssertEqual((params["payment_method_options"] as! [String: Any]).count, 0)
     }
+    func testPaymentIntentParams_savedPaymenMethod_with_paymentMethodOptions() {
+        let examplePaymentMethod = STPFixtures.paymentMethod()
+        let paymentOptions = STPConfirmPaymentMethodOptions()
+        let cardOptions = STPConfirmCardOptions()
+        cardOptions.cvc = "123"
+        paymentOptions.cardOptions = STPConfirmCardOptions()
+        paymentOptions.cardOptions = cardOptions
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
+
+        let confirmType: PaymentSheet.ConfirmPaymentMethodType = .saved(examplePaymentMethod, paymentOptions: paymentOptions)
+
+        let pi_params = PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: confirmType,
+                                                             paymentIntent: STPFixtures.paymentIntent(),
+                                                             configuration: configuration)
+        XCTAssertEqual(pi_params.paymentMethodOptions?.cardOptions?.cvc, "123")
+
+    }
 
     func testMakeIntentParams_always_sets_paymentMethodType() {
         let examplePaymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
@@ -975,7 +993,7 @@ class PaymentSheetAPITest: XCTestCase {
         let confirmTypes: [PaymentSheet.ConfirmPaymentMethodType] = [
             .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, shouldSave: false),
             .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: examplePaymentMethod, shouldSave: false),
-            .saved(examplePaymentMethod),
+            .saved(examplePaymentMethod, paymentOptions: paymentOptions),
         ]
         for confirmType in confirmTypes {
             let pi_params = PaymentSheet.makePaymentIntentParams(

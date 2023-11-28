@@ -40,6 +40,7 @@ stages:
     - test-builds-xcode-143: {}
     - test-builds-xcode-15: {}
     - test-builds-xcode-143-release: {}
+    - test-builds-vision: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
@@ -52,6 +53,7 @@ stages:
     - framework-tests: {}
     - test-builds-xcode-143: {}
     - test-builds-xcode-15: {}
+    - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
@@ -123,10 +125,6 @@ workflows:
         title: Set bundler to ignore development and test gems
     - git-clone@6: {}
     - cache-pull@2: {}
-    - tuist@0:
-        run_if: .IsCI
-        inputs:
-        - command: generate -n
     - bundler@0: {}
     - cache-push@2:
         inputs:
@@ -382,6 +380,19 @@ workflows:
       bitrise.io:
         stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core
+  test-builds-vision:
+    steps:
+    - xcode-build-for-test@2:
+        inputs:
+        - scheme: StripePaymentSheet
+        - destination: generic/platform=visionOS Simulator
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.1.x-edge
+        machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
     - fastlane@3:
@@ -513,10 +524,6 @@ workflows:
     - git-clone@6:
         inputs:
         - clone_depth: "1"
-    - tuist@0:
-        run_if: .IsCI
-        inputs:
-        - command: generate -n
     - cache-pull@2: {}
     - bundler@0: {}
     - cache-push@2:

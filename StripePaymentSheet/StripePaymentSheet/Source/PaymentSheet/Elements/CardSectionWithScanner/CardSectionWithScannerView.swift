@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if !STP_BUILD_FOR_VISION
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -96,3 +97,5 @@ extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
 protocol CardSectionWithScannerViewDelegate: AnyObject {
     func didScanCard(cardParams: STPPaymentMethodCardParams)
 }
+
+#endif

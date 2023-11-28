@@ -5,6 +5,7 @@
 //  Created by David Estes on 8/17/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
+#if !STP_BUILD_FOR_VISION
 
 import AVFoundation
 import Foundation
@@ -30,7 +31,7 @@ enum STPCardScannerError: Int {
 
 @available(macCatalyst 14.0, *)
 @objc(STPCardScanner)
-class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, STPCardScanningProtocol {
+class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
     static let cardScanningAvailableCameraHasUsageDescription = {
         return
@@ -486,3 +487,5 @@ let STPCardScannerErrorDomain = "STPCardScannerErrorDomain"
 extension STPCardScanner: STPAnalyticsProtocol {
     static var stp_analyticsIdentifier = "STPCardScanner"
 }
+
+#endif

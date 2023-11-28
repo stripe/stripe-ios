@@ -178,4 +178,62 @@ extension String.Localized {
         )
     }
 
+    // MARK: - DocumentFileUpload
+    static var fileUploadInstructionText: String {
+        STPLocalizedString(
+            "Please upload images of the front and back of your identity card",
+            "Instructions for uploading images of identity card"
+        )
+    }
+
+    // MARK: - DocumentWarmup
+    static var documentFrontWarmupTitle: String {
+        STPLocalizedString(
+            "Get ready to scan your photo ID",
+            "Title for document front warmup page"
+        )
+    }
+
+    static var documentFrontWarmupBody: String {
+        STPLocalizedString(
+            "Make sure you're in a well lit space.",
+            "Body for selfie warmup page"
+        )
+    }
+
+    static var acceptFormsOfId: String {
+        STPLocalizedString(
+            "Accepted forms of ID include",
+            "Title for accepted types of ids"
+        )
+    }
+
+    static var imReady: String {
+        STPLocalizedString(
+            "I'm ready",
+            "Ready button text on warmup screen"
+        )
+    }
+
+    static var passport: String {
+        STPLocalizedString(
+            "passport",
+            "passport"
+        )
+    }
+
+    static var governmentIssuedId: String {
+        STPLocalizedString(
+            "government-issued photo ID",
+            "id issued by government"
+        )
+    }
+
+    static var driverLicense: String {
+        STPLocalizedString(
+            "driver's license",
+            "driver's license"
+        )
+    }
+
 }

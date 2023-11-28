@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
@@ -86,7 +87,7 @@ import Foundation
     class func countryCodeOrCurrentLocaleCountry(from nillableCode: String?) -> String {
         var countryCode = nillableCode
         if countryCode == nil {
-            countryCode = NSLocale.autoupdatingCurrent.regionCode
+            countryCode = NSLocale.autoupdatingCurrent.stp_regionCode
         }
         return countryCode ?? ""
     }

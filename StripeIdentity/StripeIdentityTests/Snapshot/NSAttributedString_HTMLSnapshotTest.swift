@@ -41,6 +41,13 @@ final class NSAttributedString_HTMLSnapshotTest: STPSnapshotTestCase {
         </ol>
         """
 
+    static let htmlTextWithUl = """
+        <ul>
+          <li>List Item</li>
+          <li>List Item</li>
+        </ul>
+        """
+
     let textView = UITextView()
 
     // Pick a font that supports italic
@@ -79,6 +86,30 @@ final class NSAttributedString_HTMLSnapshotTest: STPSnapshotTestCase {
             )
         )
     }
+
+    func testDefaultStyleForUlText() throws {
+        try verifyView(
+            htmlString: NSAttributedString_HTMLSnapshotTest.htmlTextWithUl,
+            style: .default
+        )
+    }
+
+    func testCustomStyleForUlText() throws {
+        try verifyView(
+            htmlString: NSAttributedString_HTMLSnapshotTest.htmlTextWithUl,
+            style: .init(
+                bodyFont: customFont,
+                bodyColor: UIColor.systemPurple,
+                h1Color: UIColor.systemYellow,
+                h2Color: UIColor.systemOrange,
+                h3Color: UIColor.systemRed,
+                h4Color: UIColor.systemBlue,
+                h5Color: UIColor.systemGreen,
+                h6Color: UIColor.cyan,
+                isLinkUnderlined: true
+            )
+        )
+    }
 }
 
 extension NSAttributedString_HTMLSnapshotTest {
@@ -88,7 +119,7 @@ extension NSAttributedString_HTMLSnapshotTest {
         file: StaticString = #filePath,
         line: UInt = #line
     ) throws {
-        let attributedText = try NSAttributedString(htmlText: htmlString, style: style)
+        let attributedText = try NSAttributedString.createHtmlString(htmlText: htmlString, style: style)
         textView.attributedText = attributedText
         textView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
         STPSnapshotVerifyView(textView, file: file, line: line)

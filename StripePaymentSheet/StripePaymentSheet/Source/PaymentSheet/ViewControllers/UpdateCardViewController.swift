@@ -13,6 +13,8 @@ import UIKit
 
 protocol UpdateCardViewControllerDelegate: AnyObject {
     func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
+    func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
+                   updateParams: STPPaymentMethodUpdateParams) async throws
 }
 
 /// For internal SDK use only
@@ -21,6 +23,7 @@ final class UpdateCardViewController: UIViewController {
     private let appearance: PaymentSheet.Appearance
     private let paymentMethod: STPPaymentMethod
     private let paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
+    private let removeSavedPaymentMethodMessage: String?
 
     weak var delegate: UpdateCardViewControllerDelegate?
 
@@ -54,8 +57,10 @@ final class UpdateCardViewController: UIViewController {
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update_card), appearance: appearance, didTap: {
-            // TODO(porter) Update card
+        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update_card), appearance: appearance, didTap: {  [weak self] in
+            Task {
+                await self?.updateCard()
+            }
         })
     }()
 
@@ -65,8 +70,8 @@ final class UpdateCardViewController: UIViewController {
         apperanceCopy.primaryButton.textColor = appearance.colors.danger
         apperanceCopy.primaryButton.borderColor = .clear
         apperanceCopy.primaryButton.shadow = .init(color: .clear, opacity: 0.0, offset: .zero, radius: 0.0)
-        return ConfirmButton(callToAction: .custom(title: .Localized.remove_card), appearance: apperanceCopy) {
-            // TODO(porter) Remove card
+        return ConfirmButton(callToAction: .custom(title: .Localized.remove_card), appearance: apperanceCopy) { [weak self] in
+            self?.removeCard()
         }
     }()
 
@@ -99,9 +104,13 @@ final class UpdateCardViewController: UIViewController {
     }()
 
     // MARK: Overrides
-    init(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell, paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance) {
+    init(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
+         paymentMethod: STPPaymentMethod,
+         removeSavedPaymentMethodMessage: String?,
+         appearance: PaymentSheet.Appearance) {
         self.paymentOptionCell = paymentOptionCell
         self.paymentMethod = paymentMethod
+        self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
 
         super.init(nibName: nil, bundle: nil)
@@ -137,6 +146,40 @@ final class UpdateCardViewController: UIViewController {
     private func dismiss() {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
         _ = bottomVc.popContentViewController()
+    }
+
+    private func removeCard() {
+        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
+                                                                          removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage) { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.didRemove(paymentOptionCell: self.paymentOptionCell)
+            self.dismiss()
+        }
+
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func updateCard() async {
+        guard let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand, let delegate = delegate else { return }
+
+        updateButton.update(state: .processing)
+
+        // Create the update card params
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
+        let updateParams = STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil)
+
+        // Make the API request to update the payment method
+        do {
+            try await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateParams: updateParams)
+            updateButton.update(state: .succeeded, animated: true) { [weak self] in
+                self?.dismiss()
+            }
+        } catch {
+            // TODO(porter) Handle error
+            updateButton.update(state: .enabled)
+            print(error)
+        }
     }
 
 }
