@@ -34,6 +34,7 @@ public extension PaymentSheet {
             _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
 
+        @_spi(EarlyAccessCVCRecollectionFeature)
         public typealias CVCRecollectionEnabledCallback = () -> Bool
 
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
