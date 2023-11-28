@@ -21,7 +21,7 @@ class PaymentMethodInformationView: UIView {
     lazy var paymentMethodLabelPrimary: UILabel = {
         let label = UILabel()
         label.font = appearance.scaledFont(for: appearance.font.base, style: .body, maximumPointSize: 15)
-        label.textColor = appearance.colors.text
+        label.textColor = appearance.colors.componentText
         label.numberOfLines = 0
         label.text = primaryText()
         return label
