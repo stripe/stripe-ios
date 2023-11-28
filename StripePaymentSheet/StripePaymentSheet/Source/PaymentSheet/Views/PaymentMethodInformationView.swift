@@ -32,6 +32,23 @@ class PaymentMethodInformationView: UIView {
         return view
     }()
 
+    lazy var transparentMaskView: UIView = {
+        let view = UIView()
+        let alpha: CGFloat = 0.075
+        let colorMaskForLight = UIColor.black.withAlphaComponent(alpha)
+        let colorMaskForDark = UIColor.white.withAlphaComponent(alpha)
+
+        view.backgroundColor = appearance.colors.componentBackground.isBright
+        ? UIColor.dynamic(light: colorMaskForLight,
+                          dark: colorMaskForDark)
+        : UIColor.dynamic(light: colorMaskForDark,
+                          dark: colorMaskForLight)
+
+        view.layer.cornerRadius = appearance.cornerRadius
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+        return view
+    }()
+
     init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
         self.paymentMethod = paymentMethod
@@ -39,15 +56,7 @@ class PaymentMethodInformationView: UIView {
         super.init(frame: .zero)
         installConstraints()
 
-        // Use disabled background if we are using default, otherwise
-        // use the `.disabledColor` to add alpha to the color
-        if appearance.colors.componentBackground.cgColor == UIColor.systemBackground.cgColor ||
-            appearance.colors.componentBackground.cgColor == UIColor.secondarySystemBackground.cgColor {
-            self.backgroundColor = appearance.asElementsTheme.colors.disabledBackground
-        } else {
-            self.backgroundColor = appearance.colors.componentBackground.disabledColor
-        }
-
+        self.backgroundColor = appearance.colors.componentBackground
         self.layer.cornerRadius = appearance.cornerRadius
         self.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
     }
@@ -58,7 +67,8 @@ class PaymentMethodInformationView: UIView {
 
     fileprivate func installConstraints() {
         let defaultPadding: CGFloat = 5.0
-        [paymentMethodImage,
+        [transparentMaskView,
+         paymentMethodImage,
          paymentMethodLabelPrimary,
          separatorView,
         ].forEach {
@@ -75,6 +85,12 @@ class PaymentMethodInformationView: UIView {
             separatorView.topAnchor.constraint(equalTo: topAnchor),
             separatorView.bottomAnchor.constraint(equalTo: bottomAnchor),
             separatorView.widthAnchor.constraint(equalToConstant: appearance.borderWidth),
+
+            transparentMaskView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            transparentMaskView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            transparentMaskView.topAnchor.constraint(equalTo: topAnchor),
+            transparentMaskView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
         ])
     }
 
