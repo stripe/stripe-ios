@@ -188,7 +188,7 @@ final class PaymentSheetLoader {
             }
         }
         // Ensure that there's at least 1 payment method type available for the intent and configuration.
-        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration)
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: configuration, logAvailability: true)
         guard !paymentMethodTypes.isEmpty else {
             throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: intent.recommendedPaymentMethodTypes)
         }

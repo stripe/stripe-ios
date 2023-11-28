@@ -33,7 +33,7 @@ class AddPaymentMethodViewController: UIViewController {
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: intent,
             configuration: configuration,
-            logAvailability: true
+            logAvailability: false
         )
         assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         return paymentMethodTypes
