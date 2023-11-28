@@ -93,8 +93,8 @@ class InstitutionPickerViewController: UIViewController {
 
         view.addAndPinSubview(loadingView)
         view.addAndPinSubviewToSafeArea(
-            createMainView(
-                searchBar: (dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
+            MainView(
+                searchBar: searchBar,
                 contentContainerView: contentContainerView
             )
         )
@@ -367,54 +367,52 @@ extension InstitutionPickerViewController {
 
 // MARK: - Helpers
 
-private func createMainView(
-    searchBar: UIView?,
+private func MainView(
+    searchBar: UIView,
     contentContainerView: UIView
 ) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
-            createHeaderView(
+            HeaderView(
                 searchBar: searchBar
             ),
             contentContainerView,
         ]
     )
     verticalStackView.axis = .vertical
-    verticalStackView.spacing = (searchBar == nil) ? 24 : 16
+    verticalStackView.spacing = 0
     return verticalStackView
 }
 
-private func createHeaderView(
-    searchBar: UIView?
+private func HeaderView(
+    searchBar: UIView
 ) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
-            createHeaderTitleLabel(),
+            HeaderTitleLabel(),
+            searchBar,
         ]
     )
-    if let searchBar = searchBar {
-        verticalStackView.addArrangedSubview(searchBar)
-    }
     verticalStackView.axis = .vertical
     verticalStackView.spacing = 24
     verticalStackView.isLayoutMarginsRelativeArrangement = true
     verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 8,
+        top: 16,
         leading: 24,
-        bottom: 0,
+        bottom: 16,
         trailing: 24
     )
     return verticalStackView
 }
 
-private func createHeaderTitleLabel() -> UIView {
+private func HeaderTitleLabel() -> UIView {
     let headerTitleLabel = AttributedLabel(
-        font: .heading(.large),
-        textColor: .textPrimary
+        font: .heading(.extraLarge),
+        textColor: .textDefault
     )
     headerTitleLabel.setText(
         STPLocalizedString(
-            "Select your bank",
+            "Select bank",
             "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America)."
         )
     )
