@@ -20,6 +20,8 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     var isFinishedCollecting = false
     var analyticsLastScreen: IdentityFlowViewController?
 
+    var visitedIndividualWelcomePage = false
+
     weak var delegate: VerificationSheetFlowControllerDelegate?
 
     let navigationController = UINavigationController()
@@ -70,6 +72,13 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     }
 
     func transitionToSelfieCaptureScreen(
+        staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol
+    ) {
+        // no-op
+    }
+
+    func transitionToDocumentCaptureScreen(
         staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
         sheetController: StripeIdentity.VerificationSheetControllerProtocol
     ) {

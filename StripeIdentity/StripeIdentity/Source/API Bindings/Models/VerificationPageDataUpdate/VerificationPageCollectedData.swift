@@ -16,7 +16,6 @@ extension StripeAPI {
         private(set) var face: VerificationPageDataFace?
         private(set) var idDocumentBack: VerificationPageDataDocumentFileData?
         private(set) var idDocumentFront: VerificationPageDataDocumentFileData?
-        private(set) var idDocumentType: DocumentType?
         private(set) var idNumber: VerificationPageDataIdNumber?
         private(set) var dob: VerificationPageDataDob?
         private(set) var name: VerificationPageDataName?
@@ -29,7 +28,6 @@ extension StripeAPI {
             face: VerificationPageDataFace? = nil,
             idDocumentBack: VerificationPageDataDocumentFileData? = nil,
             idDocumentFront: VerificationPageDataDocumentFileData? = nil,
-            idDocumentType: DocumentType? = nil,
             idNumber: VerificationPageDataIdNumber? = nil,
             dob: VerificationPageDataDob? = nil,
             name: VerificationPageDataName? = nil,
@@ -41,7 +39,6 @@ extension StripeAPI {
             self.face = face
             self.idDocumentBack = idDocumentBack
             self.idDocumentFront = idDocumentFront
-            self.idDocumentType = idDocumentType
             self.idNumber = idNumber
             self.dob = dob
             self.name = name
@@ -64,7 +61,6 @@ extension StripeAPI.VerificationPageCollectedData {
             face: otherData.face ?? self.face,
             idDocumentBack: otherData.idDocumentBack ?? self.idDocumentBack,
             idDocumentFront: otherData.idDocumentFront ?? self.idDocumentFront,
-            idDocumentType: otherData.idDocumentType ?? self.idDocumentType,
             idNumber: otherData.idNumber ?? self.idNumber,
             dob: otherData.dob ?? self.dob,
             name: otherData.name ?? self.name,
@@ -89,8 +85,6 @@ extension StripeAPI.VerificationPageCollectedData {
             self.idDocumentBack = nil
         case .idDocumentFront:
             self.idDocumentFront = nil
-        case .idDocumentType:
-            self.idDocumentType = nil
         case .idNumber:
             self.idNumber = nil
         case .dob:
@@ -108,14 +102,15 @@ extension StripeAPI.VerificationPageCollectedData {
 
     /// Helper to determine the front document score for analytics purposes
     var frontDocumentScore: TwoDecimalFloat? {
-        switch idDocumentType {
-        case .drivingLicense,
-            .idCard:
-            return idDocumentFront?.frontCardScore
-        case .passport:
-            return idDocumentFront?.passportScore
-        case .none:
+        // return the larger of the two
+        guard let frontCardScore = idDocumentFront?.frontCardScore?.value, let passportScore = idDocumentFront?.passportScore?.value else
+        {
             return nil
+        }
+        if frontCardScore > passportScore {
+            return idDocumentFront?.frontCardScore
+        } else {
+            return idDocumentFront?.passportScore
         }
     }
 
@@ -132,9 +127,6 @@ extension StripeAPI.VerificationPageCollectedData {
         }
         if self.idDocumentFront != nil {
             ret.insert(.idDocumentFront)
-        }
-        if self.idDocumentType != nil {
-            ret.insert(.idDocumentType)
         }
         if self.idNumber != nil {
             ret.insert(.idNumber)
