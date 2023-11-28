@@ -46,28 +46,17 @@ class InstitutionPickerViewController: UIViewController {
         contentContainerView.backgroundColor = .clear
         return contentContainerView
     }()
-    private lazy var featuredInstitutionGridView: FeaturedInstitutionGridView = {
-        let featuredInstitutionGridView = FeaturedInstitutionGridView()
-        featuredInstitutionGridView.delegate = self
-        return featuredInstitutionGridView
-    }()
-    private lazy var institutionSearchTableView: InstitutionSearchTableView = {
-        let institutionSearchTableView = InstitutionSearchTableView(
-            frame: view.bounds,
-            allowManualEntry: dataSource.manifest.allowManualEntry
-        )
-        institutionSearchTableView.delegate = self
-        return institutionSearchTableView
-    }()
-
     private lazy var institutionTableView: InstitutionTableView = {
         let institutionTableView = InstitutionTableView(
             frame: view.bounds,
             allowManualEntry: dataSource.manifest.allowManualEntry
         )
-//        institutionTableView.delegate = self
+        institutionTableView.delegate = self
         return institutionTableView
     }()
+    private var isUserCurrentlySearching: Bool {
+        return !searchBar.text.isEmpty
+    }
 
     // MARK: - Debouncing Support
 
@@ -107,8 +96,6 @@ class InstitutionPickerViewController: UIViewController {
                 contentContainerView: contentContainerView
             )
         )
-        contentContainerView.addAndPinSubview(featuredInstitutionGridView)
-        contentContainerView.addAndPinSubview(institutionSearchTableView)
         contentContainerView.addAndPinSubview(institutionTableView)
 
         toggleContentContainerViewVisbility()
@@ -122,8 +109,8 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private func toggleContentContainerViewVisbility() {
-        let isUserCurrentlySearching = !searchBar.text.isEmpty
-        institutionTableView.isHidden = isUserCurrentlySearching
+//        let isUserCurrentlySearching = !searchBar.text.isEmpty
+//        institutionTableView.isHidden = isUserCurrentlySearching
 //        featuredInstitutionGridView.isHidden = isUserCurrentlySearching
 //        institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
     }
@@ -136,7 +123,7 @@ class InstitutionPickerViewController: UIViewController {
         searchBar.resignFirstResponder()
         // clear search results
         searchBar.text = ""
-        institutionSearchTableView.loadInstitutions([])
+        institutionTableView.loadInstitutions(dataSource.featuredInstitutions)
         toggleContentContainerViewVisbility()
         delegate?.institutionPickerViewController(self, didSelect: institution)
     }
@@ -196,12 +183,12 @@ extension InstitutionPickerViewController {
 
     private func fetchInstitutions(searchQuery: String) {
         fetchInstitutionsDispatchWorkItem?.cancel()
-        institutionSearchTableView.showError(false)
+        institutionTableView.showError(false)
 
         guard !searchQuery.isEmpty else {
             searchBar.updateSearchingIndicator(false)
             // clear data because search query is empty
-            institutionSearchTableView.loadInstitutions([])
+            institutionTableView.loadInstitutions(dataSource.featuredInstitutions)
             return
         }
 
@@ -222,10 +209,18 @@ extension InstitutionPickerViewController {
                     }
                     switch result {
                     case .success(let institutionList):
-                        self.institutionSearchTableView.loadInstitutions(
-                            institutionList.data,
-                            showManualEntry: institutionList.showManualEntry
-                        )
+                        if self.isUserCurrentlySearching {
+                            // only load the institutions IF the user has text in search box
+                            self.institutionTableView.loadInstitutions(
+                                institutionList.data,
+                                showManualEntry: institutionList.showManualEntry
+                            )
+                        } else {
+                            self.institutionTableView.loadInstitutions(
+                                self.dataSource.featuredInstitutions,
+                                showManualEntry: institutionList.showManualEntry
+                            )
+                        }
                         self.dataSource
                             .analyticsClient
                             .log(
@@ -239,8 +234,8 @@ extension InstitutionPickerViewController {
                             )
                         self.delegate?.institutionPickerViewControllerDidSearch(self)
                     case .failure(let error):
-                        self.institutionSearchTableView.loadInstitutions([])
-                        self.institutionSearchTableView.showError(true)
+                        self.institutionTableView.loadInstitutions([])
+                        self.institutionTableView.showError(true)
 
                         if
                             let error = error as? StripeError,
@@ -300,45 +295,36 @@ extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
     }
 }
 
-// MARK: - FeaturedInstitutionGridViewDelegate
+// MARK: - InstitutionTableViewDelegate
 
-extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
-
-    func featuredInstitutionGridView(
-        _ view: FeaturedInstitutionGridView,
+extension InstitutionPickerViewController: InstitutionTableViewDelegate {
+    
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
         didSelectInstitution institution: FinancialConnectionsInstitution
     ) {
-        dataSource.analyticsClient.log(
-            eventName: "search.featured_institution_selected",
-            parameters: [
-                "institution_id": institution.id,
-            ],
-            pane: .institutionPicker
-        )
-        didSelectInstitution(institution)
-    }
-}
-
-// MARK: - InstitutionSearchTableViewDelegate
-
-extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
-
-    func institutionSearchTableView(
-        _ tableView: InstitutionSearchTableView,
-        didSelectInstitution institution: FinancialConnectionsInstitution
-    ) {
-        dataSource.analyticsClient.log(
-            eventName: "search.search_result_selected",
-            parameters: [
-                "institution_id": institution.id,
-            ],
-            pane: .institutionPicker
-        )
+        if isUserCurrentlySearching {
+            dataSource.analyticsClient.log(
+                eventName: "search.search_result_selected",
+                parameters: [
+                    "institution_id": institution.id,
+                ],
+                pane: .institutionPicker
+            )
+        } else {
+            dataSource.analyticsClient.log(
+                eventName: "search.featured_institution_selected",
+                parameters: [
+                    "institution_id": institution.id,
+                ],
+                pane: .institutionPicker
+            )
+        }
         didSelectInstitution(institution)
     }
 
-    func institutionSearchTableView(
-        _ tableView: InstitutionSearchTableView,
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
         didSelectManuallyAddYourAccountWithInstitutions institutions: [FinancialConnectionsInstitution]
     ) {
         dataSource
@@ -353,19 +339,21 @@ extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
         delegate?.institutionPickerViewControllerDidSelectManuallyAddYourAccount(self)
     }
 
-    func institutionSearchTableView(
-        _ tableView: InstitutionSearchTableView,
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
         didScrollInstitutions institutions: [FinancialConnectionsInstitution]
     ) {
-        dataSource
-            .analyticsClient
-            .log(
-                eventName: "search.scroll",
-                parameters: [
-                    "institution_ids": institutions.map({ $0.id }),
-                ],
-                pane: .institutionPicker
-            )
+        if isUserCurrentlySearching {
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: "search.scroll",
+                    parameters: [
+                        "institution_ids": institutions.map({ $0.id }),
+                    ],
+                    pane: .institutionPicker
+                )
+        }
     }
 }
 
