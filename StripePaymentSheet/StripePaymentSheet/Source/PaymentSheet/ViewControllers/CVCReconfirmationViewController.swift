@@ -94,10 +94,14 @@ class CVCReconfirmationViewController: UIViewController {
         ])
         updateUI()
     }
+
+    #if !STP_BUILD_FOR_VISION
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.cvcFormElement.traitCollectionDidChange(previousTraitCollection)
     }
+    #endif
+
     func didFinishPresenting() {
         self.cvcFormElement.didFinishPresenting()
     }
