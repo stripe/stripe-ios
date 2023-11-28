@@ -140,10 +140,12 @@ import UIKit
         updateColor()
     }
 
+#if !STP_BUILD_FOR_VISION
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateColor()
     }
+#endif
 
     public override func layoutSubviews() {
         super.layoutSubviews()
@@ -164,7 +166,9 @@ import UIKit
 
         if let window = newWindow {
             contentLayer.shouldRasterize = true
+#if !STP_BUILD_FOR_VISION
             contentLayer.rasterizationScale = window.screen.scale
+#endif
         }
 
         if isAnimating {

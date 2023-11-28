@@ -22,16 +22,14 @@ struct DocumentScannerOutput: Equatable {
     /// Determines if the document is high quality and matches the desired
     /// document type and side.
     /// - Parameters:
-    ///   - type: Type of the desired document
     ///   - side: Side of the desired document.
     func isHighQuality(
-        matchingDocumentType type: DocumentType,
         side: DocumentSide
     ) -> Bool {
         // Don't check barcode result as it would end up returning fast and collecting a blury image
         // that fails to decode on backend
         // TODO(ccen|IDPROD-4697): Implement better heuristic to decode the back of ID.
-        return idDetectorOutput.classification.matchesDocument(type: type, side: side)
+        return idDetectorOutput.classification.matchesDocument(side: side)
             && cameraProperties?.isAdjustingFocus != true
             && !motionBlur.hasMotionBlur
             && blurResult.isBlurry != true

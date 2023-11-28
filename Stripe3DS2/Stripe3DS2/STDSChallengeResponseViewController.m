@@ -17,6 +17,7 @@
 #import "STDSChallengeInformationView.h"
 #import "STDSChallengeSelectionView.h"
 #import "STDSTextChallengeView.h"
+#import "STDSVisionSupport.h"
 #import "STDSWhitelistView.h"
 #import "STDSExpandableInformationView.h"
 #import "STDSWebView.h"
@@ -99,9 +100,11 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     [self.view addGestureRecognizer:self.tapOutsideKeyboardGestureRecognizer];
 }
 
+#if !STP_TARGET_VISION
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return self.uiCustomization.preferredStatusBarStyle;
 }
+#endif
     
 #pragma mark - Public APIs
 
@@ -459,12 +462,14 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     stackView.spacing = 5;
     stackView.translatesAutoresizingMaskIntoConstraints = NO;
     
+#if !STP_TARGET_VISION
     CGSize size = [UIScreen mainScreen].bounds.size;
     if (size.width > size.height) {
         // hack to detect landscape
         stackView.axis = UILayoutConstraintAxisHorizontal;
         stackView.alignment = UIStackViewAlignmentCenter;
     }
+#endif
     return stackView;
 }
 

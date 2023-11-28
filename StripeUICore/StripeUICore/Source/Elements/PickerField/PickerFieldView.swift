@@ -34,7 +34,9 @@ final class PickerFieldView: UIView {
 #endif
         textField.adjustsFontForContentSizeCategory = true
         textField.font = theme.fonts.subheadline
+#if !STP_BUILD_FOR_VISION
         textField.inputAccessoryView = toolbar
+#endif
         textField.delegate = self
         return textField
     }()
@@ -164,12 +166,14 @@ final class PickerFieldView: UIView {
         }
     }
 
+#if !STP_BUILD_FOR_VISION
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         layer.borderColor = theme.colors.border.cgColor
         // Update the text attachment images for the attributed placeholder
         textField.attributedPlaceholder = textField.attributedPlaceholder?.switchAttachments(for: .current)
     }
+#endif
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {

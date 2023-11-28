@@ -33,7 +33,7 @@ final class PayWithLinkController {
 
     func present(completion: @escaping CompletionBlock) {
         guard
-            let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }),
+            let keyWindow = UIApplication.shared.stp_hackilyFumbleAroundUntilYouFindAKeyWindow(),
             let presentedViewController = keyWindow.findTopMostPresentedViewController()
         else {
             assertionFailure("No key window with view controller found")

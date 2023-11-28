@@ -99,7 +99,7 @@ private func CreateDataAccessDisclosureView(
     separatorView.backgroundColor = .borderNeutral
     separatorView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-        separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.nativeScale)
+        separatorView.heightAnchor.constraint(equalToConstant: 1 / stp_screenNativeScale)
     ])
 
     let verticalStackView = HitTestStackView(

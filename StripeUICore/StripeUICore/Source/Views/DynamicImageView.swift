@@ -43,8 +43,10 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
 
+    #if !STP_BUILD_FOR_VISION
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         image = Self.makeImage(for: traitCollection, dynamicImage: dynamicImage, pairedColor: pairedColor)
     }
+    #endif
 }

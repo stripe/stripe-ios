@@ -9,8 +9,8 @@ import Foundation
 
 enum IdentityTopLevelDestination {
     case consentDestination
-    case docSelectionDestination
-    case documentCaptureDestination(documentType: DocumentType)
+    case documentWarmupDestination
+    case documentCaptureDestination
     case selfieCaptureDestination
     case errorDestination
     case individualWelcomeDestination

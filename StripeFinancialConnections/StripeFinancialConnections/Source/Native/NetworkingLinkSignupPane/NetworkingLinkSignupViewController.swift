@@ -148,8 +148,10 @@ final class NetworkingLinkSignupViewController: UIViewController {
         )
         pane.addTo(view: view)
 
+        #if !STP_BUILD_FOR_VISION
         // if user drags, dismiss keyboard so the CTA buttons can be shown
         pane.scrollView.keyboardDismissMode = .onDrag
+        #endif
 
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
         if let emailAddress = emailAddress, !emailAddress.isEmpty {

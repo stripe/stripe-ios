@@ -152,10 +152,12 @@ import UIKit
         textView.invalidateIntrinsicContentSize()
     }
 
+#if !STP_BUILD_FOR_VISION
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateLabels()
     }
+#endif
 
     public func setText(_ text: String) {
         textView.text = text
@@ -240,9 +242,12 @@ import UIKit
 
 // MARK: - UITextViewDelegate
 extension CheckboxButton: UITextViewDelegate {
+    #if !STP_BUILD_FOR_VISION
+    // This is only used by StripeIdentity, which does not support visionOS.
     public func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange) -> Bool {
         return delegate?.checkboxButton(self, shouldOpen: url) ?? true
     }
+    #endif
 }
 
 // MARK: - CheckBox

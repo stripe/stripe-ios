@@ -20,6 +20,10 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didSelectRemove(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
+    func didSelectUpdate(
+        viewController: SavedPaymentOptionsViewController,
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+        updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
 }
 
 /// For internal SDK use only
@@ -439,6 +443,26 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
 extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
     func didRemove(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
         removePaymentMethod(paymentOptionCell: paymentOptionCell)
+    }
+
+    func didUpdate(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
+                   updateParams: STPPaymentMethodUpdateParams) async throws {
+        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
+              case .saved = viewModels[indexPath.row],
+              let delegate = delegate
+        else {
+            assertionFailure()
+            throw PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
+        }
+
+        let viewModel = viewModels[indexPath.row]
+        let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
+                                                    paymentMethodSelection: viewModel,
+                                                    updateParams: updateParams)
+
+        let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
+        viewModels[indexPath.row] = updatedViewModel
+        collectionView.reloadData()
     }
 }
 

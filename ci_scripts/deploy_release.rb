@@ -22,7 +22,7 @@ def export_builds
       build_vm
     end
     bring_up_vm_and_wait_for_boot
-    run_command_vm('source ~/.zprofile && sudo gem install bundler:2.1.2 && bundle install && tuist generate -n && bundle exec ./ci_scripts/export_builds.rb')
+    run_command_vm('source ~/.zprofile && sudo gem install bundler:2.1.2 && bundle install && bundle exec ./ci_scripts/export_builds.rb')
     finish_vm
   end
   raise 'build/Stripe.xcframework.zip not found. Did the build fail?' unless File.exist?('build/Stripe.xcframework.zip')
@@ -103,41 +103,9 @@ def sync_owner_list
     # Sync the owner list for all pods with the Stripe pod.
     run_command('ci_scripts/pod_tools.rb add-all-owners')
   end
-end
-
-def reply_email
-  rputs 'Reply to the mobile-sdk-updates@ email sent by the proposer for this version:'
-  rputs 'https://go/mobile-sdk-updates-list'
-  puts "Deploy complete: https://github.com/stripe/stripe-ios/releases/tag/#{@version}".magenta
-  notify_user
-end
-
-def cleanup_project_files
-  unless @is_dry_run
-    rputs 'Cleanup generated project files from repo'
-    run_command("git checkout -b #{@cleanup_branchname}")
-    run_command("git pull -r origin master")
-    run_command('ci_scripts/delete_project_files.rb')
-    run_command("git add -u && git commit -m \"Remove generated project files for v#{@version}\"")
-  end
-end
-
-def create_cleanup_pr
-  unless @is_dry_run
-    run_command("git push origin #{@cleanup_branchname}")
-    pr = @github_client.create_pull_request(
-      'stripe/stripe-ios',
-      'master',
-      @cleanup_branchname,
-      "Remove generated project files for v#{@version}"
-    )
-
-    rputs "Cleanup PR created at #{pr.html_url}"
-    rputs 'Request review on the PR and merge it.'
-    notify_user
-  end
 
   puts 'Done! Have a nice day!'.green
+  notify_user
 end
 
 steps = [
@@ -149,8 +117,6 @@ steps = [
   method(:upload_framework),
   method(:push_cocoapods),
   method(:push_spm_mirror),
-  method(:sync_owner_list),
-  method(:cleanup_project_files),
-  method(:create_cleanup_pr)
+  method(:sync_owner_list)
 ]
 execute_steps(steps, @step_index)

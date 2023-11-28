@@ -34,6 +34,8 @@ public extension PaymentSheet {
             _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
 
+        public typealias CVCRecollectionHandler = () -> Bool
+
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
         /// - Parameters:
         ///   - mode: The mode of this intent, either payment or setup
@@ -48,6 +50,20 @@ public extension PaymentSheet {
             self.paymentMethodTypes = paymentMethodTypes
             self.onBehalfOf = onBehalfOf
             self.confirmHandler = confirmHandler
+            self.isCVCRecollectionEnabledCallback = { return false }
+        }
+
+        @_spi(EarlyAccessCVCRecollectionFeature)
+        public init(mode: Mode,
+                    paymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
+                    confirmHandler: @escaping ConfirmHandler,
+                    isCVCRecollectionEnabledCallback: CVCRecollectionHandler? = nil) {
+            self.mode = mode
+            self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
+            self.confirmHandler = confirmHandler
+            self.isCVCRecollectionEnabledCallback = isCVCRecollectionEnabledCallback ?? { return false }
         }
 
         /// Information about the payment (PaymentIntent) or setup (SetupIntent).
@@ -63,6 +79,16 @@ public extension PaymentSheet {
         /// The account (if any) for which the funds of the intent are intended.
         /// - Seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-on_behalf_of
         public var onBehalfOf: String?
+
+        /// A callback that controls when to recollect the CVC for saved cards
+        /// In the case of client-side confirmation, the CVC/CVV value will be
+        /// sent with the confirmation of the payment intent within payment_method_options.
+        ///
+        /// (Future) In the case of server-side confirmation, the CVC/CVV value
+        /// will be contained in a ConfirmationToken and exposed via
+        /// a ConfirmationTokenID
+        @_spi(EarlyAccessCVCRecollectionFeature)
+        public var isCVCRecollectionEnabledCallback: CVCRecollectionHandler
 
         /// Controls when the funds will be captured. 
         /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method
@@ -141,6 +167,8 @@ public extension PaymentSheet {
                     }
                 }
             }
+            // TODO
+            self.isCVCRecollectionEnabledCallback = { return false }
         }
     }
 }
