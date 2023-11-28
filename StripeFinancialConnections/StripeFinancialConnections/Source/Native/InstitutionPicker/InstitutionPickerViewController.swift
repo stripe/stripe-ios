@@ -60,6 +60,15 @@ class InstitutionPickerViewController: UIViewController {
         return institutionSearchTableView
     }()
 
+    private lazy var institutionTableView: InstitutionTableView = {
+        let institutionTableView = InstitutionTableView(
+            frame: view.bounds,
+            allowManualEntry: dataSource.manifest.allowManualEntry
+        )
+//        institutionTableView.delegate = self
+        return institutionTableView
+    }()
+
     // MARK: - Debouncing Support
 
     private var fetchInstitutionsDispatchWorkItem: DispatchWorkItem?
@@ -100,6 +109,7 @@ class InstitutionPickerViewController: UIViewController {
         )
         contentContainerView.addAndPinSubview(featuredInstitutionGridView)
         contentContainerView.addAndPinSubview(institutionSearchTableView)
+        contentContainerView.addAndPinSubview(institutionTableView)
 
         toggleContentContainerViewVisbility()
 
@@ -113,8 +123,9 @@ class InstitutionPickerViewController: UIViewController {
 
     private func toggleContentContainerViewVisbility() {
         let isUserCurrentlySearching = !searchBar.text.isEmpty
-        featuredInstitutionGridView.isHidden = isUserCurrentlySearching
-        institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
+        institutionTableView.isHidden = isUserCurrentlySearching
+//        featuredInstitutionGridView.isHidden = isUserCurrentlySearching
+//        institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
     }
 
     @IBAction private func didTapOutsideOfSearchBar() {
@@ -165,7 +176,8 @@ extension InstitutionPickerViewController {
                             ],
                             pane: .institutionPicker
                         )
-                    self.featuredInstitutionGridView.loadInstitutions(institutions)
+
+                    self.institutionTableView.loadInstitutions(institutions)
                     self.dataSource
                         .analyticsClient
                         .logPaneLoaded(pane: .institutionPicker)
