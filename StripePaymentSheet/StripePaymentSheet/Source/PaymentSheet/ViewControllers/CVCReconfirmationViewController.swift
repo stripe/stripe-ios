@@ -94,7 +94,6 @@ class CVCReconfirmationViewController: UIViewController {
         ])
         updateUI()
     }
-
     func didFinishPresenting() {
         self.cvcFormElement.didFinishPresenting()
     }
