@@ -120,6 +120,7 @@
 		6BA8D3362B0C1F9B008C51FF /* CVCReconfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3352B0C1F9B008C51FF /* CVCReconfirmationViewController.swift */; };
 		6BA8D3382B0C1FA9008C51FF /* PreConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3372B0C1FA9008C51FF /* PreConfirmationViewController.swift */; };
 		6BA8D33A2B0C1FBF008C51FF /* PaymentMethodInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3392B0C1FBF008C51FF /* PaymentMethodInformationView.swift */; };
+		6BC19CCC2B16C4B2008E00C4 /* CVCReconfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC19CCB2B16C4B2008E00C4 /* CVCReconfirmationView.swift */; };
 		707F242EECB9A305E04C5B3C /* StripePaymentsObjcTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40EDF386A07E1196FB043798 /* StripePaymentsObjcTestUtils.framework */; };
 		70FEF1703F45F8A90F687E51 /* SimpleMandateTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A49995CE949176F7A8C71F /* SimpleMandateTextView.swift */; };
 		71132CE036C3EE0655ECD2DB /* STPStringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEFE8C0CFEAE73F9FD736D3 /* STPStringUtils.swift */; };
@@ -430,6 +431,7 @@
 		6BA8D3372B0C1FA9008C51FF /* PreConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreConfirmationViewController.swift; sourceTree = "<group>"; };
 		6BA8D3392B0C1FBF008C51FF /* PaymentMethodInformationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodInformationView.swift; sourceTree = "<group>"; };
 		6BB97FB5D5730FE4CAB9298D /* SheetNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetNavigationBar.swift; sourceTree = "<group>"; };
+		6BC19CCB2B16C4B2008E00C4 /* CVCReconfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVCReconfirmationView.swift; sourceTree = "<group>"; };
 		6CCB22C60E716A575DA8180A /* SimpleMandateElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleMandateElement.swift; sourceTree = "<group>"; };
 		6CDF0F248F60A38FE4977428 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6FDD9018F7142928F32AECEC /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -995,6 +997,7 @@
 				D34B92439E9DC6E36D498312 /* CardScanningView.swift */,
 				A68FBE0A16FE56AAAAF4ABBF /* CircularButton.swift */,
 				EFD640EBCE4B4224773DDF45 /* ConfirmButton.swift */,
+				6BC19CCB2B16C4B2008E00C4 /* CVCReconfirmationView.swift */,
 				95BDADF560DB0B1ED175EF50 /* ManualEntryButton.swift */,
 				6BA8D3392B0C1FBF008C51FF /* PaymentMethodInformationView.swift */,
 				383EA30FC9C862DF2217F96D /* PaymentSheetUIKitAdditions.swift */,
@@ -1656,6 +1659,7 @@
 				47B19F96CCEA290541E3B988 /* CardSectionWithScannerElement.swift in Sources */,
 				04FEA90F2D0CB9D1C2029D21 /* CardSectionWithScannerView.swift in Sources */,
 				6BA8D3342B0C1F79008C51FF /* CVCRecollectionElement.swift in Sources */,
+				6BC19CCC2B16C4B2008E00C4 /* CVCReconfirmationView.swift in Sources */,
 				68E3CF21A7E1525CA05BA260 /* ConnectionsElement.swift in Sources */,
 				1BA0F1D78847DC6609FACE9F /* LinkEnabledPaymentMethodElement.swift in Sources */,
 				46DB5D39B3B76C08AE2C83C8 /* PaymentMethodElement.swift in Sources */,

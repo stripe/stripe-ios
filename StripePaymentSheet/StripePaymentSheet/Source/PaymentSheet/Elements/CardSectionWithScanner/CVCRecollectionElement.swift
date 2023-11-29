@@ -15,38 +15,14 @@ final class CVCRecollectionElement: Element {
     weak var delegate: ElementDelegate?
 
     lazy var view: UIView = {
-        return stackView
+        return reconfirmationView
     }()
-    lazy var cvcElementConfiguration: TextFieldElement.CVCConfiguration = {
-        return TextFieldElement.CVCConfiguration(defaultValue: defaultValues.cvc) { [weak self] in
-            return self?.paymentMethod.card?.brand ?? .unknown
-        }
-    }()
-    lazy var paymentMethodInfoView: PaymentMethodInformationView = {
-        let paymentMethodInfoView = PaymentMethodInformationView(paymentMethod: paymentMethod,
-                                                                 appearance: appearance)
-        return paymentMethodInfoView
-    }()
-    lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [
-            paymentMethodInfoView,
-            textFieldElement.view,
-        ])
-        stackView.distribution = .fillEqually
-        stackView.spacing = 0
-        stackView.axis = .horizontal
-        stackView.layer.borderWidth = appearance.borderWidth
-        stackView.layer.cornerRadius = appearance.cornerRadius
-        stackView.layer.borderColor = appearance.colors.componentBorder.cgColor
-        return stackView
-    }()
-    lazy var textFieldElement: TextFieldElement = {
-        let textFieldElement = TextFieldElement(configuration: cvcElementConfiguration, theme: appearance.asElementsTheme)
-        textFieldElement.delegate = self
-        textFieldElement.view.backgroundColor = appearance.colors.componentBackground
-        textFieldElement.view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
-        textFieldElement.view.layer.cornerRadius = appearance.cornerRadius
-        return textFieldElement
+
+    lazy var reconfirmationView: CVCReconfirmationView = {
+        return CVCReconfirmationView(defaultValues: defaultValues,
+                                     paymentMethod: paymentMethod,
+                                     appearance: appearance,
+                                     elementDelegate: self)
     }()
 
     let defaultValues: DefaultValues
@@ -59,7 +35,7 @@ final class CVCRecollectionElement: Element {
         }
         let cvc: String?
     }
-
+    
     init(
         defaultValues: DefaultValues = .init(),
         paymentMethod: STPPaymentMethod,
@@ -69,31 +45,28 @@ final class CVCRecollectionElement: Element {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
     }
-
+    
     func didFinishPresenting() {
         DispatchQueue.main.async {
-            self.textFieldElement.beginEditing()
+            self.reconfirmationView.textFieldElement.beginEditing()
         }
-    }
-    func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        stackView.layer.borderColor = appearance.colors.componentBorder.cgColor
     }
 }
 
 extension CVCRecollectionElement: ElementDelegate {
     func didUpdate(element: Element) {
-        delegate?.didUpdate(element: textFieldElement)
+        delegate?.didUpdate(element: reconfirmationView.textFieldElement)
     }
     func continueToNextField(element: Element) {
-        delegate?.continueToNextField(element: textFieldElement)
+        delegate?.continueToNextField(element: reconfirmationView.textFieldElement)
     }
 }
 
 extension CVCRecollectionElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        if case .valid = textFieldElement.validationState {
+        if case .valid = reconfirmationView.textFieldElement.validationState {
             let cardOptions = STPConfirmCardOptions()
-            cardOptions.cvc = textFieldElement.text
+            cardOptions.cvc = reconfirmationView.textFieldElement.text
             params.confirmPaymentMethodOptions.cardOptions = cardOptions
             return params
         }
