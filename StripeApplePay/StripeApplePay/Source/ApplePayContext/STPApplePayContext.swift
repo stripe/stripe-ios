@@ -107,14 +107,17 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         delegate: _stpinternal_STPApplePayContextDelegateBase?
     ) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
-        if !StripeAPI.canSubmitPaymentRequest(paymentRequest) {
-            return nil
-        }
 
-        authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
-        if authorizationController == nil {
+        guard
+            StripeAPI.canSubmitPaymentRequest(paymentRequest),
+            // PKPaymentAuthorizationController's docs incorrectly state:
+            // "If the user can’t make payments on any of the payment request’s supported networks, initialization fails and this method returns nil."
+            // In actuality, this initializer is non-nullable. To make sure we return nil when the request is invalid, we'll use PKPaymentAuthorizationViewController's initializer, which *is* nullable.
+            PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil
+        else {
             return nil
         }
+        authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
 
         self.delegate = delegate
 
