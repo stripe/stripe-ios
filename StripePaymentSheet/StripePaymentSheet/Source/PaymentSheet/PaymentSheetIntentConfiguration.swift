@@ -34,6 +34,9 @@ public extension PaymentSheet {
             _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
 
+        /// Callback to control when to recollect CVC for a saved card
+        /// - Note: This only works for integrations that use `PaymentSheet.FlowController` with deferred intent creation.  See this [guide](https://stripe.com/docs/payments/accept-a-payment-deferred?platform=ios&integration=paymentsheet-flowcontroller).
+        @_spi(EarlyAccessCVCRecollectionFeature)
         public typealias CVCRecollectionEnabledCallback = () -> Bool
 
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
@@ -53,6 +56,13 @@ public extension PaymentSheet {
             self.isCVCRecollectionEnabledCallback = { return false }
         }
 
+        /// Creates a `PaymentSheet.IntentConfiguration` with the given values
+        /// - Parameters:
+        ///   - mode: The mode of this intent, either payment or setup
+        ///   - paymentMethodTypes: The payment method types for the intent
+        ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
+        ///   - confirmHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
+        ///   - isCVCRecollectionEnabledCallback: Callback to determine whether to display the CVC recollection form
         @_spi(EarlyAccessCVCRecollectionFeature)
         public init(mode: Mode,
                     paymentMethodTypes: [String]? = nil,
