@@ -228,7 +228,7 @@ class ConfirmButton: UIView {
 
         /// Background color for the `.succeeded` state.
         var succeededBackgroundColor: UIColor {
-            return appearance.primaryButton.successColor
+            return appearance.primaryButton.successBackgroundColor
         }
 
         private static let minimumLabelHeight: CGFloat = 24
@@ -532,12 +532,6 @@ class ConfirmButton: UIView {
 
         private func foregroundColor(for status: Status) -> UIColor {
             let background = backgroundColor(for: status)
-
-            if status == .succeeded {
-                // always use hardcoded color for foreground color when in success state
-                return .white
-            }
-
             // if foreground is set prefer that over a dynamic constrasting color in all othe states
             return overriddenForegroundColor ?? background.contrastingColor
         }
