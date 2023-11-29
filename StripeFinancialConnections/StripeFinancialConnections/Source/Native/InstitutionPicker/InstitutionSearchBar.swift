@@ -121,6 +121,10 @@ final class InstitutionSearchBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    @discardableResult override func becomeFirstResponder() -> Bool {
+        return textField.becomeFirstResponder()
+    }
+
     @discardableResult override func resignFirstResponder() -> Bool {
         return textField.resignFirstResponder()
     }

@@ -123,7 +123,10 @@ class InstitutionPickerViewController: UIViewController {
         searchBar.resignFirstResponder()
         // clear search results
         searchBar.text = ""
-        institutionTableView.loadInstitutions(dataSource.featuredInstitutions)
+        institutionTableView.load(
+            institutions: dataSource.featuredInstitutions,
+            isUserSearching: false
+        )
         toggleContentContainerViewVisbility()
         delegate?.institutionPickerViewController(self, didSelect: institution)
     }
@@ -164,7 +167,10 @@ extension InstitutionPickerViewController {
                             pane: .institutionPicker
                         )
 
-                    self.institutionTableView.loadInstitutions(institutions)
+                    self.institutionTableView.load(
+                        institutions: institutions,
+                        isUserSearching: false
+                    )
                     self.dataSource
                         .analyticsClient
                         .logPaneLoaded(pane: .institutionPicker)
@@ -188,7 +194,10 @@ extension InstitutionPickerViewController {
         guard !searchQuery.isEmpty else {
             searchBar.updateSearchingIndicator(false)
             // clear data because search query is empty
-            institutionTableView.loadInstitutions(dataSource.featuredInstitutions)
+            institutionTableView.load(
+                institutions: dataSource.featuredInstitutions,
+                isUserSearching: false
+            )
             return
         }
 
@@ -211,13 +220,15 @@ extension InstitutionPickerViewController {
                     case .success(let institutionList):
                         if self.isUserCurrentlySearching {
                             // only load the institutions IF the user has text in search box
-                            self.institutionTableView.loadInstitutions(
-                                institutionList.data,
+                            self.institutionTableView.load(
+                                institutions: institutionList.data,
+                                isUserSearching: true,
                                 showManualEntry: institutionList.showManualEntry
                             )
                         } else {
-                            self.institutionTableView.loadInstitutions(
-                                self.dataSource.featuredInstitutions,
+                            self.institutionTableView.load(
+                                institutions: self.dataSource.featuredInstitutions,
+                                isUserSearching: false,
                                 showManualEntry: institutionList.showManualEntry
                             )
                         }
@@ -234,7 +245,10 @@ extension InstitutionPickerViewController {
                             )
                         self.delegate?.institutionPickerViewControllerDidSearch(self)
                     case .failure(let error):
-                        self.institutionTableView.loadInstitutions([])
+                        self.institutionTableView.load(
+                            institutions: [],
+                            isUserSearching: false
+                        )
                         self.institutionTableView.showError(true)
 
                         if
@@ -298,7 +312,7 @@ extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
 // MARK: - InstitutionTableViewDelegate
 
 extension InstitutionPickerViewController: InstitutionTableViewDelegate {
-    
+
     func institutionTableView(
         _ tableView: InstitutionTableView,
         didSelectInstitution institution: FinancialConnectionsInstitution
@@ -321,6 +335,10 @@ extension InstitutionPickerViewController: InstitutionTableViewDelegate {
             )
         }
         didSelectInstitution(institution)
+    }
+
+    func institutionTableViewDidSelectSearchForMoreBanks(_ tableView: InstitutionTableView) {
+        searchBar.becomeFirstResponder()
     }
 
     func institutionTableView(

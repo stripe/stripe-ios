@@ -14,52 +14,14 @@ final class InstitutionTableViewCell: UITableViewCell {
     private lazy var institutionIconView: InstitutionIconView = {
         return InstitutionIconView(size: .main)
     }()
-    private lazy var titleLabel: AttributedLabel = {
-        let titleLabel = AttributedLabel(
-            font: .label(.largeEmphasized),
-            textColor: .textDefault
-        )
-        return titleLabel
-    }()
-    private lazy var subtitleLabel: AttributedLabel = {
-        let subtitleLabel = AttributedLabel(
-            font: .label(.medium),
-            textColor: .textSubdued
-        )
-        return subtitleLabel
+    private lazy var institutionCellView: InstitutionCellView = {
+        return InstitutionCellView()
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        contentView.backgroundColor = .customBackgroundColor
-
-        let labelStackView = UIStackView(
-            arrangedSubviews: [
-                titleLabel,
-                subtitleLabel,
-            ]
-        )
-        labelStackView.axis = .vertical
-        labelStackView.spacing = 0
-
-        let cellStackView = UIStackView(
-            arrangedSubviews: [
-                institutionIconView,
-                labelStackView,
-            ]
-        )
-        cellStackView.axis = .horizontal
-        cellStackView.spacing = 12
-        cellStackView.alignment = .center
-        cellStackView.isLayoutMarginsRelativeArrangement = true
-        cellStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 8,
-            leading: 24,
-            bottom: 8,
-            trailing: 24
-        )
-        contentView.addAndPinSubview(cellStackView)
+        contentView.addAndPinSubview(institutionCellView)
 
         self.selectedBackgroundView = CreateSelectedBackgroundView()
     }
@@ -81,8 +43,12 @@ extension InstitutionTableViewCell {
 
     func customize(with institution: FinancialConnectionsInstitution) {
         institutionIconView.setImageUrl(institution.icon?.default)
-        titleLabel.setText(institution.name)
-        subtitleLabel.setText(AuthFlowHelpers.formatUrlString(institution.url) ?? "")
+
+        institutionCellView.customize(
+            iconView: institutionIconView,
+            title: institution.name,
+            subtitle: AuthFlowHelpers.formatUrlString(institution.url)
+        )
     }
 }
 
