@@ -1,16 +1,12 @@
 //
-//  CVCReconfirmationView.swift
+//  CVCRecollectionView.swift
 //  StripePaymentSheet
 //
 
-import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
-class CVCReconfirmationView: UIView {
+class CVCRecollectionView: UIView {
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [

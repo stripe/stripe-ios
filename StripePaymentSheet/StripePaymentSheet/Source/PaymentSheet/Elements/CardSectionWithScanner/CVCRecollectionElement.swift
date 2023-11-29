@@ -15,14 +15,14 @@ final class CVCRecollectionElement: Element {
     weak var delegate: ElementDelegate?
 
     lazy var view: UIView = {
-        return reconfirmationView
+        return cvcRecollectionView
     }()
 
-    lazy var reconfirmationView: CVCReconfirmationView = {
-        return CVCReconfirmationView(defaultValues: defaultValues,
-                                     paymentMethod: paymentMethod,
-                                     appearance: appearance,
-                                     elementDelegate: self)
+    lazy var cvcRecollectionView: CVCRecollectionView = {
+        return CVCRecollectionView(defaultValues: defaultValues,
+                                   paymentMethod: paymentMethod,
+                                   appearance: appearance,
+                                   elementDelegate: self)
     }()
 
     let defaultValues: DefaultValues
@@ -48,25 +48,25 @@ final class CVCRecollectionElement: Element {
     
     func didFinishPresenting() {
         DispatchQueue.main.async {
-            self.reconfirmationView.textFieldElement.beginEditing()
+            self.cvcRecollectionView.textFieldElement.beginEditing()
         }
     }
 }
 
 extension CVCRecollectionElement: ElementDelegate {
     func didUpdate(element: Element) {
-        delegate?.didUpdate(element: reconfirmationView.textFieldElement)
+        delegate?.didUpdate(element: cvcRecollectionView.textFieldElement)
     }
     func continueToNextField(element: Element) {
-        delegate?.continueToNextField(element: reconfirmationView.textFieldElement)
+        delegate?.continueToNextField(element: cvcRecollectionView.textFieldElement)
     }
 }
 
 extension CVCRecollectionElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        if case .valid = reconfirmationView.textFieldElement.validationState {
+        if case .valid = cvcRecollectionView.textFieldElement.validationState {
             let cardOptions = STPConfirmCardOptions()
-            cardOptions.cvc = reconfirmationView.textFieldElement.text
+            cardOptions.cvc = cvcRecollectionView.textFieldElement.text
             params.confirmPaymentMethodOptions.cardOptions = cardOptions
             return params
         }
