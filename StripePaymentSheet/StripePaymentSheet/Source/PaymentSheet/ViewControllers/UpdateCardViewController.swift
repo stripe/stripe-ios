@@ -25,6 +25,13 @@ final class UpdateCardViewController: UIViewController {
     private let paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     private let removeSavedPaymentMethodMessage: String?
 
+    private var latestError: Error? {
+        didSet {
+            errorLabel.text = latestError?.localizedDescription
+            errorLabel.isHidden = latestError == nil
+        }
+    }
+
     weak var delegate: UpdateCardViewControllerDelegate?
 
     // MARK: Navigation bar
@@ -38,7 +45,7 @@ final class UpdateCardViewController: UIViewController {
 
     // MARK: Views
     lazy var formStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, cardSection.view, updateButton, deleteButton])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, cardSection.view, updateButton, deleteButton, errorLabel])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
@@ -73,6 +80,12 @@ final class UpdateCardViewController: UIViewController {
         return ConfirmButton(callToAction: .custom(title: .Localized.remove_card), appearance: apperanceCopy) { [weak self] in
             self?.removeCard()
         }
+    }()
+
+    private lazy var errorLabel: UILabel = {
+        let label = ElementsUI.makeErrorLabel(theme: appearance.asElementsTheme)
+        label.isHidden = true
+        return label
     }()
 
     // MARK: Elements
@@ -176,9 +189,8 @@ final class UpdateCardViewController: UIViewController {
                 self?.dismiss()
             }
         } catch {
-            // TODO(porter) Handle error
             updateButton.update(state: .enabled)
-            print(error)
+            latestError = error
         }
     }
 
@@ -220,6 +232,7 @@ extension UpdateCardViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
+        latestError = nil // clear error on new input
         let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand
         let currentCardBrand = STPCard.brand(from: paymentMethod.card?.networks?.preferred ?? "")
         let shouldBeEnabled = selectedBrand != currentCardBrand && selectedBrand != .unknown
