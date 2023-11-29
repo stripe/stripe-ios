@@ -132,6 +132,11 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.primaryButton.successBackgroundColor = UIColor($0) }
         )
 
+        let primaryButtonSuccessTextColorBinding = Binding(
+            get: { Color(self.appearance.primaryButton.successTextColor) },
+            set: { self.appearance.primaryButton.successTextColor = UIColor($0) }
+        )
+
         let primaryButtonTextColorBinding = Binding(
             get: { Color(self.appearance.primaryButton.textColor ?? UIColor.white) },
             set: { self.appearance.primaryButton.textColor = UIColor($0) }
@@ -258,6 +263,7 @@ struct AppearancePlaygroundView: View {
                     DisclosureGroup {
                         ColorPicker("backgroundColor", selection: primaryButtonBackgroundColorBinding)
                         ColorPicker("successBackgroundColor", selection: primaryButtonSuccessColorBinding)
+                        ColorPicker("successTextColor", selection: primaryButtonSuccessTextColorBinding)
                         ColorPicker("textColor", selection: primaryButtonTextColorBinding)
                         ColorPicker("borderColor", selection: primaryButtonBorderColorBinding)
                         Stepper("borderWidth: \(Int(appearance.primaryButton.borderWidth))", value: primaryButtonCornerBorderWidth, in: 0...30)

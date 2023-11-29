@@ -87,7 +87,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         var appearance = PaymentSheet.Appearance.default
         var button = PaymentSheet.Appearance.PrimaryButton()
         button.successBackgroundColor = .red
-        button.textColor = .green
+        button.successTextColor = .green
         appearance.primaryButton = button
 
         let confirmButton = ConfirmButton(

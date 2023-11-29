@@ -171,6 +171,10 @@ public extension PaymentSheet {
             /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
             public var successBackgroundColor: UIColor = .systemGreen
 
+            /// The text color of the primary button when in a success state.
+            /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
+            public var successTextColor: UIColor = .white
+
             /// The corner radius of the primary button
             /// - Note: If `nil`, `appearance.cornerRadius` will be used as the primary button corner radius
             /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`

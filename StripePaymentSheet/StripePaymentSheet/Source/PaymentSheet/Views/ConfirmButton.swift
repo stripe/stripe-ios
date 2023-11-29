@@ -532,6 +532,11 @@ class ConfirmButton: UIView {
 
         private func foregroundColor(for status: Status) -> UIColor {
             let background = backgroundColor(for: status)
+
+            if status == .succeeded {
+                return appearance.primaryButton.successTextColor
+            }
+
             // if foreground is set prefer that over a dynamic constrasting color in all othe states
             return overriddenForegroundColor ?? background.contrastingColor
         }
