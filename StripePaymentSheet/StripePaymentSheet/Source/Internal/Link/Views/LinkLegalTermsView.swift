@@ -120,7 +120,7 @@ final class LinkLegalTermsView: UIView {
 
 extension LinkLegalTermsView: UITextViewDelegate {
 
-#if !STP_BUILD_FOR_VISION
+#if !os(visionOS)
     func textView(
         _ textView: UITextView,
         shouldInteractWith URL: URL,

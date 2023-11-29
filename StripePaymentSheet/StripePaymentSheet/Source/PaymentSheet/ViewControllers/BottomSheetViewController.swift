@@ -195,7 +195,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     @objc
     private func keyboardDidShow(notification: Notification) {
-        #if STP_BUILD_FOR_VISION
+        #if os(visionOS)
         let landscape = true
         #else
         // Hack to get orientation without using `UIApplication`

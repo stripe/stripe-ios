@@ -474,7 +474,7 @@ class PaymentSheetViewController: UIViewController {
                     // Do nothing, keep customer on payment sheet
                     self.updateUI()
                 case .failed(let error):
-                    #if !STP_BUILD_FOR_VISION
+                    #if !os(visionOS)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
                     #endif
                     // Update state
@@ -491,7 +491,7 @@ class PaymentSheetViewController: UIViewController {
                         self.presentedViewController?.isBeingDismissed == true ? 1 : 0
                     // Hack: PaymentHandler calls the completion block while SafariVC is still being dismissed - "wait" until it's finished before updating UI
                     DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                        #if !STP_BUILD_FOR_VISION
+                        #if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
                         #endif
                         self.buyButton.update(state: .succeeded, animated: true) {

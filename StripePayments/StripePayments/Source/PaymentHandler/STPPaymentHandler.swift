@@ -1701,7 +1701,7 @@ public class STPPaymentHandler: NSObject {
                 {
                     let safariViewController = SFSafariViewController(url: fallbackURL)
                     safariViewController.modalPresentationStyle = .overFullScreen
-#if !STP_BUILD_FOR_VISION
+#if !os(visionOS)
                     safariViewController.dismissButtonStyle = .close
                     safariViewController.delegate = self
 #endif
@@ -2095,7 +2095,7 @@ public class STPPaymentHandler: NSObject {
     }
 }
 
-#if !STP_BUILD_FOR_VISION
+#if !os(visionOS)
 extension STPPaymentHandler: SFSafariViewControllerDelegate {
     // MARK: - SFSafariViewControllerDelegate
     /// :nodoc:

@@ -132,7 +132,7 @@ class CircularButton: UIControl {
         imageView.tintColor = isEnabled ? iconColor : .tertiaryLabel
     }
 
-#if !STP_BUILD_FOR_VISION
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateShadow()

@@ -6,7 +6,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-#if !STP_BUILD_FOR_VISION
+#if !os(visionOS)
 
 import Foundation
 @_spi(STP) import StripeCore

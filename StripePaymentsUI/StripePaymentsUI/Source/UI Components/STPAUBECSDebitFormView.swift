@@ -516,7 +516,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
 
     // MARK: - UITextViewDelegate
     /// :nodoc:
-#if !STP_BUILD_FOR_VISION
+#if !os(visionOS)
     @objc
     public func textView(
         _ textView: UITextView,

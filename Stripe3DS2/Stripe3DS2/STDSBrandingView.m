@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 static const CGFloat kBrandingViewBottomPadding = 24;
 static const CGFloat kBrandingViewSpacing = 16;
-#if !STP_TARGET_VISION
+#if !TARGET_OS_VISION
 static const CGFloat kImageViewBorderWidth = 1;
 #endif
 static const CGFloat kImageViewHorizontalInset = 7;
@@ -61,7 +61,7 @@ static const CGFloat kImageViewCornerRadius = 6;
 - (void)didMoveToWindow {
     [super didMoveToWindow];
     
-#if !STP_TARGET_VISION
+#if !TARGET_OS_VISION
     if (self.window.screen.nativeScale > 0) {
         self.issuerView.layer.borderWidth = kImageViewBorderWidth / self.window.screen.nativeScale;
         self.paymentSystemView.layer.borderWidth = kImageViewBorderWidth / self.window.screen.nativeScale;
@@ -118,7 +118,7 @@ static const CGFloat kImageViewCornerRadius = 6;
     return imageView;
 }
 
-#if !STP_TARGET_VISION
+#if !TARGET_OS_VISION
 - (void)traitCollectionDidChange:(UITraitCollection * _Nullable)previousTraitCollection {
     CGColorRef borderColor = (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) ?
     [UIColor colorWithRed:(CGFloat)0.0 green:(CGFloat)57.0/(CGFloat)255.0 blue:(CGFloat)69.0/(CGFloat)255.0 alpha:(CGFloat)0.25].CGColor :

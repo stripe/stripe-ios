@@ -78,7 +78,7 @@ class BottomSheetPresentationController: UIPresentationController {
 
         coordinator.animate(alongsideTransition: { [weak self] _ in
             self?.backgroundView.alpha = 1
-            #if !STP_BUILD_FOR_VISION
+            #if !os(visionOS)
             self?.presentedViewController.setNeedsStatusBarAppearanceUpdate()
             #endif
         })
@@ -98,7 +98,7 @@ class BottomSheetPresentationController: UIPresentationController {
 
         coordinator.animate(alongsideTransition: { [weak self] _ in
             self?.backgroundView.alpha = 0
-            #if !STP_BUILD_FOR_VISION
+            #if !os(visionOS)
             self?.presentingViewController.setNeedsStatusBarAppearanceUpdate()
             #endif
         })

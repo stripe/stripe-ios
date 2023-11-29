@@ -10,11 +10,11 @@
 
 #ifdef TARGET_OS_VISION
 #if TARGET_OS_VISION
-#define STP_TARGET_VISION 1
+#define TARGET_OS_VISION 1
 #else
 #endif
 #else
-#define STP_TARGET_VISION 0
+#define TARGET_OS_VISION 0
 #endif
 
 

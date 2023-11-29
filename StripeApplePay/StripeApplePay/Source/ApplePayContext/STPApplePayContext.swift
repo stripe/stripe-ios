@@ -132,7 +132,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @available(macCatalystApplicationExtension, unavailable)
     @objc(presentApplePayWithCompletion:)
     public func presentApplePay(completion: STPVoidBlock? = nil) {
-        #if STP_BUILD_FOR_VISION
+        #if os(visionOS)
         // This isn't great: We should encourage the use of presentApplePay(from window:) instead.
         let windows = UIApplication.shared.connectedScenes
             .compactMap { ($0 as? UIWindowScene)?.windows }

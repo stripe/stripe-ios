@@ -149,7 +149,7 @@ final class LinkInlineSignupView: UIView {
         }
     }
 
-    #if !STP_BUILD_FOR_VISION
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateAppearance()
@@ -217,7 +217,7 @@ extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
     func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {
         let safariVC = SFSafariViewController(url: url)
 
-        #if !STP_BUILD_FOR_VISION
+        #if !os(visionOS)
         safariVC.dismissButtonStyle = .close
         #endif
         safariVC.modalPresentationStyle = .overFullScreen

@@ -40,7 +40,7 @@
     self.view = [[STDSProcessingView alloc] initWithCustomization:self.uiCustomization directoryServerLogo:dsImage];
 }
 
-#if !STP_TARGET_VISION
+#if !TARGET_OS_VISION
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return self.uiCustomization.preferredStatusBarStyle;
 }

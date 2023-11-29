@@ -228,7 +228,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
 
-#if !STP_BUILD_FOR_VISION
+#if !os(visionOS)
     private var _inputAccessoryView: UIView?
     /// This behaves identically to setting the inputAccessoryView for each child text field.
     @objc open override var inputAccessoryView: UIView? {
@@ -967,7 +967,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     static let placeholderGrayColor: UIColor = .systemGray2
 
-#if !STP_BUILD_FOR_VISION
+#if !os(visionOS)
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection?.preferredContentSizeCategory

@@ -214,7 +214,7 @@ static const NSString * const kParameterNilCode = @"RE04";
     return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"C008"
                                                       permissionCheck:nil
                                                            valueCheck:^id _Nullable{
-#if STP_TARGET_VISION
+#if TARGET_OS_VISION
         // Offer something reasonable
         CGRect boundsInPixels = CGRectMake(0, 0, 512, 342);
 #else
