@@ -35,7 +35,7 @@ final class CVCRecollectionElement: Element {
         }
         let cvc: String?
     }
-    
+
     init(
         defaultValues: DefaultValues = .init(),
         paymentMethod: STPPaymentMethod,
@@ -45,7 +45,7 @@ final class CVCRecollectionElement: Element {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
     }
-    
+
     func didFinishPresenting() {
         DispatchQueue.main.async {
             self.cvcRecollectionView.textFieldElement.beginEditing()
