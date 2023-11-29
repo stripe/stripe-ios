@@ -41,7 +41,7 @@ final class CVCRecollectionElement: Element {
         return stackView
     }()
     lazy var textFieldElement: TextFieldElement = {
-        let textFieldElement = TextFieldElement(configuration: cvcElementConfiguration)
+        let textFieldElement = TextFieldElement(configuration: cvcElementConfiguration, theme: appearance.asElementsTheme)
         textFieldElement.delegate = self
         textFieldElement.view.backgroundColor = appearance.colors.componentBackground
         textFieldElement.view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
