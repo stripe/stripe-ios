@@ -47,8 +47,20 @@ class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
     }
 }
 
-// MARK: - STPApplePayTestDelegateiOS11
 class STPApplePayContextTest: XCTestCase {
+    func testInvalidPaymentRequest() {
+        // An invalid request (missing payment summary items)...
+        let request = StripeAPI.paymentRequest(
+            withMerchantIdentifier: "foo",
+            country: "US",
+            currency: "USD"
+        )
+        // ...should cause ApplePayContext to be nil
+        let applePayContext = STPApplePayContext(paymentRequest: request, delegate: STPApplePayTestDelegateiOS11())
+        XCTAssertNil(applePayContext)
+    }
+
+    // MARK: - STPApplePayTestDelegateiOS11
     func testiOS11ApplePayDelegateMethodsForwarded() {
         // With a user that only implements iOS 11 delegate methods...
         let delegate = STPApplePayTestDelegateiOS11()
@@ -58,7 +70,7 @@ class STPApplePayContextTest: XCTestCase {
             currency: "USD"
         )
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00"))
+            PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00")),
         ]
         let context = STPApplePayContext(paymentRequest: request, delegate: delegate)!
 
@@ -120,7 +132,7 @@ class STPApplePayContextTest: XCTestCase {
             currency: "USD"
         )
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00"))
+            PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00")),
         ]
         let context = STPApplePayContext(paymentRequest: request, delegate: delegate)
 

@@ -1,3 +1,7 @@
+## X.Y.Z 2023-xx-yy
+### Apple Pay
+* [Fixed] STPApplePayContext initializer returns nil in more cases where the request is invalid. 
+
 ## 23.18.3 2023-11-28
 ### PaymentSheet
 * [Fixed] Visual bug where re-presenting PaymentSheet wouldn't show a spinner while it reloads.
