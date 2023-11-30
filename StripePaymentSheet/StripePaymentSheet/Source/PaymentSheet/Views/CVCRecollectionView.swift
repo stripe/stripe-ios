@@ -10,7 +10,7 @@ class CVCRecollectionView: UIView {
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
-            paymentMethodInfoView,
+            cvcPaymentMethodInformationView,
             textFieldElement.view,
         ])
         stackView.distribution = .fillEqually
@@ -22,9 +22,9 @@ class CVCRecollectionView: UIView {
         return stackView
     }()
 
-    lazy var paymentMethodInfoView: PaymentMethodInformationView = {
-        let paymentMethodInfoView = PaymentMethodInformationView(paymentMethod: paymentMethod,
-                                                                 appearance: appearance)
+    lazy var cvcPaymentMethodInformationView: CVCPaymentMethodInformationView = {
+        let paymentMethodInfoView = CVCPaymentMethodInformationView(paymentMethod: paymentMethod,
+                                                                    appearance: appearance)
         return paymentMethodInfoView
     }()
 

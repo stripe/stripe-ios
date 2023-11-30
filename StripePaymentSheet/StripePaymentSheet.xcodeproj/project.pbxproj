@@ -119,7 +119,7 @@
 		6BA8D3342B0C1F79008C51FF /* CVCRecollectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3332B0C1F79008C51FF /* CVCRecollectionElement.swift */; };
 		6BA8D3362B0C1F9B008C51FF /* CVCReconfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3352B0C1F9B008C51FF /* CVCReconfirmationViewController.swift */; };
 		6BA8D3382B0C1FA9008C51FF /* PreConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3372B0C1FA9008C51FF /* PreConfirmationViewController.swift */; };
-		6BA8D33A2B0C1FBF008C51FF /* PaymentMethodInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3392B0C1FBF008C51FF /* PaymentMethodInformationView.swift */; };
+		6BA8D33A2B0C1FBF008C51FF /* CVCPaymentMethodInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3392B0C1FBF008C51FF /* CVCPaymentMethodInformationView.swift */; };
 		6BC19CCC2B16C4B2008E00C4 /* CVCRecollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC19CCB2B16C4B2008E00C4 /* CVCRecollectionView.swift */; };
 		707F242EECB9A305E04C5B3C /* StripePaymentsObjcTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40EDF386A07E1196FB043798 /* StripePaymentsObjcTestUtils.framework */; };
 		70FEF1703F45F8A90F687E51 /* SimpleMandateTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A49995CE949176F7A8C71F /* SimpleMandateTextView.swift */; };
@@ -429,7 +429,7 @@
 		6BA8D3332B0C1F79008C51FF /* CVCRecollectionElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCRecollectionElement.swift; sourceTree = "<group>"; };
 		6BA8D3352B0C1F9B008C51FF /* CVCReconfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCReconfirmationViewController.swift; sourceTree = "<group>"; };
 		6BA8D3372B0C1FA9008C51FF /* PreConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreConfirmationViewController.swift; sourceTree = "<group>"; };
-		6BA8D3392B0C1FBF008C51FF /* PaymentMethodInformationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodInformationView.swift; sourceTree = "<group>"; };
+		6BA8D3392B0C1FBF008C51FF /* CVCPaymentMethodInformationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCPaymentMethodInformationView.swift; sourceTree = "<group>"; };
 		6BB97FB5D5730FE4CAB9298D /* SheetNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetNavigationBar.swift; sourceTree = "<group>"; };
 		6BC19CCB2B16C4B2008E00C4 /* CVCRecollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVCRecollectionView.swift; sourceTree = "<group>"; };
 		6CCB22C60E716A575DA8180A /* SimpleMandateElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleMandateElement.swift; sourceTree = "<group>"; };
@@ -999,7 +999,7 @@
 				EFD640EBCE4B4224773DDF45 /* ConfirmButton.swift */,
 				6BC19CCB2B16C4B2008E00C4 /* CVCRecollectionView.swift */,
 				95BDADF560DB0B1ED175EF50 /* ManualEntryButton.swift */,
-				6BA8D3392B0C1FBF008C51FF /* PaymentMethodInformationView.swift */,
+				6BA8D3392B0C1FBF008C51FF /* CVCPaymentMethodInformationView.swift */,
 				383EA30FC9C862DF2217F96D /* PaymentSheetUIKitAdditions.swift */,
 				9356711AB2961A5F729F3EAA /* PayWithLinkButton.swift */,
 				AF8355E00EC53A8B0C864167 /* RotatingCardBrandsView.swift */,
@@ -1731,7 +1731,7 @@
 				B8A217F26AAEC592B9B0D2E1 /* CardScanButton.swift in Sources */,
 				436A212E364FD78C3745DDA3 /* CardScanningView.swift in Sources */,
 				19A6D9D9951E13377F305263 /* CircularButton.swift in Sources */,
-				6BA8D33A2B0C1FBF008C51FF /* PaymentMethodInformationView.swift in Sources */,
+				6BA8D33A2B0C1FBF008C51FF /* CVCPaymentMethodInformationView.swift in Sources */,
 				F79DBDF42E5C0ED6B6DDC246 /* ConfirmButton.swift in Sources */,
 				5C0D1B932954D0EF3F3A679F /* ManualEntryButton.swift in Sources */,
 				3DE056395324C5B3A5AAABDA /* PayWithLinkButton.swift in Sources */,
