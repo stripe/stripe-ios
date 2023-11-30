@@ -206,7 +206,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
 
         let params = STPPaymentIntentParams(clientSecret: clientSecret!)
         let cardParams = STPPaymentMethodCardParams()
-        cardParams.number = "4000000000003220"
+        cardParams.number = "4000000000003063"
         cardParams.expMonth = NSNumber(value: 7)
         cardParams.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
 
@@ -1264,7 +1264,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
 
     func cardSourceParams() -> STPSourceParams {
         let card = STPCardParams()
-        card.number = "4000 0000 0000 3220" // Test 3DS required card
+        card.number = "4000 0000 0000 3063" // Test 3DS required card
         card.expMonth = 7
         card.expYear = UInt(Calendar.current.component(.year, from: Date()) + 5)
         card.currency = "usd"
