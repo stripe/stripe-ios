@@ -53,7 +53,7 @@ final class InstitutionCellView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .customBackgroundColor
+        backgroundColor = .clear
         addAndPinSubview(horizontalStackView)
     }
 

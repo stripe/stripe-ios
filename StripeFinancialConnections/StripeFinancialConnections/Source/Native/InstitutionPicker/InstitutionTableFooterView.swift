@@ -21,7 +21,7 @@ final class InstitutionTableFooterView: UIView {
     ) {
         self.didSelect = didSelect
         super.init(frame: .zero)
-        
+
         let institutionCellView = InstitutionCellView()
         institutionCellView.customize(
             iconView: RoundedIconView(
@@ -99,14 +99,14 @@ struct InstitutionTableFooterView_Previews: PreviewProvider {
                 image: .search
             )
             .frame(maxHeight: 100)
-            
+
             InstitutionTableFooterViewUIViewRepresentable(
                 title: "No results",
                 subtitle: "Double check your spelling and search terms",
                 image: .bank
             )
             .frame(maxHeight: 100)
-            
+
             Spacer()
         }
     }

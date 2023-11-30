@@ -91,6 +91,10 @@ extension UIColor {
         return UIColor(red: 224 / 255.0, green: 230 / 255.0, blue: 235 / 255.0, alpha: 1)  // #e0e6eb
     }
 
+    static var neutral200: UIColor {
+        return UIColor(red: 192 / 255.0, green: 200 / 255.0, blue: 210 / 255.0, alpha: 1)  // #c0c8d2
+    }
+
     private static var neutral300: UIColor {
         return UIColor(red: 163 / 255.0, green: 172 / 255.0, blue: 186 / 255.0, alpha: 1)  // #a3acba
     }

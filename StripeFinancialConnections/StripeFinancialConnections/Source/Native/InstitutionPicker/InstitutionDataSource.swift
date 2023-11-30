@@ -55,9 +55,7 @@ class InstitutionAPIDataSource: InstitutionDataSource {
         return apiClient.fetchFeaturedInstitutions(clientSecret: clientSecret)
             .chained { [weak self] list in
                 let featuredInstitutions = list.data
-                if !list.data.isEmpty {
-                    self?.featuredInstitutions = featuredInstitutions
-                }
+                self?.featuredInstitutions = featuredInstitutions
                 return Promise(value: featuredInstitutions)
             }
     }

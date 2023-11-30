@@ -59,7 +59,7 @@ final class InstitutionTableView: UIView {
                 "Manually enter details",
                 "The subtitle of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number)."
             ),
-            image: .add, // TODO(kgaidis): check this
+            image: .add,
             didSelect: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.institutionTableView(
@@ -74,11 +74,10 @@ final class InstitutionTableView: UIView {
         let manualEntryTableFooterView = InstitutionTableFooterView(
             title: STPLocalizedString(
                 "Search for more banks",
-                // TODO(kgaidis): change this subtitle
-                "The title of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number)."
+                "The title of a button that appears at the bottom of a list of banks. The purpose of the button is to give users the option to search for more banks than we feature in the initial list of banks (where only the most popular ones will appear)."
             ),
             subtitle: nil,
-            image: .search, // TODO(kgaidis): check this
+            image: .search,
             didSelect: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.institutionTableViewDidSelectSearchForMoreBanks(self)
@@ -198,16 +197,13 @@ final class InstitutionTableView: UIView {
         dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
 
         // clear state (some of this is defensive programming)
-        showError(false)
+        showError(false, isUserSearching: isUserSearching)
         
         if isUserSearching {
-            // TODO(kgaidis): handle no results + `allowManualEntry`
-            
             if institutions.isEmpty {
                 showTableFooterView(
                     true,
                     view: InstitutionNoResultsView(
-                        // TODO(kgaidis): think about the local variable
                         didSelectManuallyEnterDetails: self.allowManualEntry ? { [weak self] in
                             guard let self = self else { return }
                             self.delegate?.institutionTableView(
@@ -243,14 +239,20 @@ final class InstitutionTableView: UIView {
         bringSubviewToFront(loadingContainerView)  // defensive programming to avoid loadingView being hiddden
     }
 
-    func showError(_ showError: Bool) {
+    func showError(_ showError: Bool, isUserSearching: Bool) {
         if showError {
-            showTableFooterView(true, view: searchMoreBanksTableFooterView)
+            if allowManualEntry {
+                showTableFooterView(true, view: manualEntryTableFooterView)
+            } else {
+                if !isUserSearching {
+                    showTableFooterView(true, view: searchMoreBanksTableFooterView)
+                }
+            }
         } else {
-            // TODO(kgaidis): figure this out...
+            if !isUserSearching {
+                showTableFooterView(true, view: searchMoreBanksTableFooterView)
+            }
         }
-        
-//        showTableFooterView(show, showTopSeparator: false)
     }
     
     // the footer is always shown, except for when there is an error searching

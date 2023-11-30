@@ -91,14 +91,12 @@ class InstitutionPickerViewController: UIViewController {
 
         view.addAndPinSubview(loadingView)
         view.addAndPinSubviewToSafeArea(
-            MainView(
+            CreateMainView(
                 searchBar: searchBar,
                 contentContainerView: contentContainerView
             )
         )
         contentContainerView.addAndPinSubview(institutionTableView)
-
-        toggleContentContainerViewVisbility()
 
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(
             target: self,
@@ -106,13 +104,6 @@ class InstitutionPickerViewController: UIViewController {
         )
         dismissSearchBarTapGestureRecognizer.delegate = self
         view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
-    }
-
-    private func toggleContentContainerViewVisbility() {
-//        let isUserCurrentlySearching = !searchBar.text.isEmpty
-//        institutionTableView.isHidden = isUserCurrentlySearching
-//        featuredInstitutionGridView.isHidden = isUserCurrentlySearching
-//        institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
     }
 
     @IBAction private func didTapOutsideOfSearchBar() {
@@ -127,7 +118,6 @@ class InstitutionPickerViewController: UIViewController {
             institutions: dataSource.featuredInstitutions,
             isUserSearching: false
         )
-        toggleContentContainerViewVisbility()
         delegate?.institutionPickerViewController(self, didSelect: institution)
     }
 
@@ -189,7 +179,7 @@ extension InstitutionPickerViewController {
 
     private func fetchInstitutions(searchQuery: String) {
         fetchInstitutionsDispatchWorkItem?.cancel()
-        institutionTableView.showError(false)
+        institutionTableView.showError(false, isUserSearching: true)
 
         guard !searchQuery.isEmpty else {
             searchBar.updateSearchingIndicator(false)
@@ -249,7 +239,7 @@ extension InstitutionPickerViewController {
                             institutions: [],
                             isUserSearching: false
                         )
-                        self.institutionTableView.showError(true)
+                        self.institutionTableView.showError(true, isUserSearching: false)
 
                         if
                             let error = error as? StripeError,
@@ -294,7 +284,6 @@ extension InstitutionPickerViewController {
 extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
 
     func institutionSearchBar(_ searchBar: InstitutionSearchBar, didChangeText text: String) {
-        toggleContentContainerViewVisbility()
         fetchInstitutions(searchQuery: text)
     }
 }
@@ -385,13 +374,13 @@ extension InstitutionPickerViewController {
 
 // MARK: - Helpers
 
-private func MainView(
+private func CreateMainView(
     searchBar: UIView,
     contentContainerView: UIView
 ) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
-            HeaderView(
+            CreateHeaderView(
                 searchBar: searchBar
             ),
             contentContainerView,
@@ -402,12 +391,12 @@ private func MainView(
     return verticalStackView
 }
 
-private func HeaderView(
+private func CreateHeaderView(
     searchBar: UIView
 ) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
-            HeaderTitleLabel(),
+            CreateHeaderTitleLabel(),
             searchBar,
         ]
     )
@@ -423,7 +412,7 @@ private func HeaderView(
     return verticalStackView
 }
 
-private func HeaderTitleLabel() -> UIView {
+private func CreateHeaderTitleLabel() -> UIView {
     let headerTitleLabel = AttributedLabel(
         font: .heading(.extraLarge),
         textColor: .textDefault

@@ -26,10 +26,10 @@ final class RoundedIconView: UIView {
         case .circle:
             cornerRadius = diameter / 2
         }
-        
+
         backgroundColor = .brand50
         layer.cornerRadius = cornerRadius
-        
+
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             widthAnchor.constraint(equalToConstant: diameter),
@@ -62,7 +62,7 @@ private struct RoundedIconViewUIViewRepresentable: UIViewRepresentable {
 
     let image: Image
     let style: RoundedIconView.Style
-    
+
     func makeUIView(context: Context) -> RoundedIconView {
         RoundedIconView(
             image: image,
@@ -78,7 +78,7 @@ struct RoundedIconView_Previews: PreviewProvider {
         VStack {
             VStack(spacing: 20) {
                 Spacer().frame(height: 30)
-                
+
                 RoundedIconViewUIViewRepresentable(
                     image: .search,
                     style: .rounded

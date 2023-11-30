@@ -18,7 +18,7 @@ final class InstitutionNoResultsView: UIView {
     ) {
         self.didSelectManuallyEnterDetails = didSelectManuallyEnterDetails
         super.init(frame: .zero)
-        
+
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
@@ -29,15 +29,20 @@ final class InstitutionNoResultsView: UIView {
             bottom: 0,
             trailing: 24
         )
-        
+
         let titleLabel = AttributedLabel(
             font: .heading(.large),
             textColor: .textDefault
         )
         titleLabel.textAlignment = .center
-        titleLabel.setText("No results") // TODO(kgaidis): localize title
+        titleLabel.setText(
+            STPLocalizedString(
+                "No results",
+                "The title of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned."
+            )
+        )
         verticalStackView.addArrangedSubview(titleLabel)
-        
+
         let subtitleLabel = AttributedTextView(
             font: .body(.medium),
             boldFont: .body(.mediumEmphasized),
@@ -48,8 +53,14 @@ final class InstitutionNoResultsView: UIView {
             alignCenter: true
         )
         if let didSelectManuallyEnterDetails = didSelectManuallyEnterDetails {
-            let subtitleText = "Try searching another bank or %@"
-            let manuallyEnterDetailsText = "manually enter details"
+            let subtitleText = STPLocalizedString(
+                "Try searching another bank or %@",
+                "Part of a subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. The '%@' will be replaced by a tappable text that says: 'manually enter details'."
+            )
+            let manuallyEnterDetailsText = STPLocalizedString(
+                "manually enter details",
+                "Part of a subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. This part of the notice will be tappable. Tapping this will allow a user to manually enter their bank details (account and routing numbers)."
+            )
             subtitleLabel.setText(
                 String(
                     format: subtitleText,
@@ -60,10 +71,15 @@ final class InstitutionNoResultsView: UIView {
                 }
             )
         } else {
-            subtitleLabel.setText("Try searching another bank")
+            subtitleLabel.setText(
+                STPLocalizedString(
+                    "Try searching another bank",
+                    "The subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned."
+                )
+            )
         }
         verticalStackView.addArrangedSubview(subtitleLabel)
-        
+
         addAndPinSubview(verticalStackView)
 
         accessibilityIdentifier = "institution_no_results_footer_view"
@@ -81,7 +97,7 @@ import SwiftUI
 private struct InstitutionNoResultsViewUIViewRepresentable: UIViewRepresentable {
 
     let showManualEntry: Bool
-    
+
     func makeUIView(context: Context) -> InstitutionNoResultsView {
         InstitutionNoResultsView(
             didSelectManuallyEnterDetails: (showManualEntry ? {} : nil)
@@ -99,13 +115,13 @@ struct InstitutionNoResultsView_Previews: PreviewProvider {
             InstitutionNoResultsViewUIViewRepresentable(
                 showManualEntry: true
             )
-            .frame(maxHeight: 100)
-            
+            .frame(maxHeight: 140)
+
             InstitutionNoResultsViewUIViewRepresentable(
                 showManualEntry: false
             )
             .frame(maxHeight: 100)
-            
+
             Spacer()
         }
         .padding()

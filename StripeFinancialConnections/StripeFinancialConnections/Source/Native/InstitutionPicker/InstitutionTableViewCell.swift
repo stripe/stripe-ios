@@ -20,21 +20,22 @@ final class InstitutionTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
+        adjustBackgroundColor(isHighlighted: false)
         contentView.addAndPinSubview(institutionCellView)
-
-        self.selectedBackgroundView = CreateSelectedBackgroundView()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
 
-private func CreateSelectedBackgroundView() -> UIView {
-    let selectedBackgroundView = UIView()
-    selectedBackgroundView.backgroundColor = .backgroundContainer // TODO(kgaidis): what should this color be
-    return selectedBackgroundView
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        adjustBackgroundColor(isHighlighted: highlighted)
+    }
+
+    private func adjustBackgroundColor(isHighlighted: Bool) {
+        contentView.backgroundColor = isHighlighted ? .backgroundContainer : .customBackgroundColor
+    }
 }
 
 // MARK: - Customize
