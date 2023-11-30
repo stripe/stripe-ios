@@ -67,6 +67,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
 
     struct Configuration {
         let showApplePay: Bool
+        let isTestMode: Bool
     }
 
     var hasRemovablePaymentMethods: Bool {
@@ -391,7 +392,8 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
         let editVc = UpdateCardViewController(paymentOptionCell: paymentOptionCell,
                                               paymentMethod: paymentMethod,
                                               removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
-                                              appearance: appearance)
+                                              appearance: appearance,
+                                              isTestMode: configuration.isTestMode)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }

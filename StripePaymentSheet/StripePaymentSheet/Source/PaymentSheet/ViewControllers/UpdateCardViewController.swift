@@ -24,7 +24,8 @@ final class UpdateCardViewController: UIViewController {
     private let paymentMethod: STPPaymentMethod
     private let paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     private let removeSavedPaymentMethodMessage: String?
-
+    private let isTestMode: Bool
+    
     private var latestError: Error? {
         didSet {
             errorLabel.text = latestError?.localizedDescription
@@ -36,7 +37,7 @@ final class UpdateCardViewController: UIViewController {
 
     // MARK: Navigation bar
     internal lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: false,
+        let navBar = SheetNavigationBar(isTestMode: isTestMode,
                                         appearance: appearance)
         navBar.delegate = self
         navBar.setStyle(.back)
@@ -120,12 +121,14 @@ final class UpdateCardViewController: UIViewController {
     init(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
          paymentMethod: STPPaymentMethod,
          removeSavedPaymentMethodMessage: String?,
-         appearance: PaymentSheet.Appearance) {
+         appearance: PaymentSheet.Appearance,
+         isTestMode: Bool) {
         self.paymentOptionCell = paymentOptionCell
         self.paymentMethod = paymentMethod
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
-
+        self.isTestMode = isTestMode
+        
         super.init(nibName: nil, bundle: nil)
     }
 

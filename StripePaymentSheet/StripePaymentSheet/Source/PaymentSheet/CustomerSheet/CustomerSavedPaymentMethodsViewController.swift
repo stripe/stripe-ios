@@ -85,7 +85,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             savedPaymentMethodsConfiguration: self.configuration,
             customerAdapter: self.customerAdapter,
             configuration: .init(
-                showApplePay: showApplePay
+                showApplePay: showApplePay,
+                isTestMode: configuration.apiClient.isTestmode
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,
