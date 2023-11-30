@@ -34,16 +34,7 @@ class PaymentMethodInformationView: UIView {
 
     lazy var transparentMaskView: UIView = {
         let view = UIView()
-        let alpha: CGFloat = 0.075
-        let colorMaskForLight = UIColor.black.withAlphaComponent(alpha)
-        let colorMaskForDark = UIColor.white.withAlphaComponent(alpha)
-
-        view.backgroundColor = appearance.colors.componentBackground.isBright
-        ? UIColor.dynamic(light: colorMaskForLight,
-                          dark: colorMaskForDark)
-        : UIColor.dynamic(light: colorMaskForDark,
-                          dark: colorMaskForLight)
-
+        view.backgroundColor = transparentMaskViewBackgroundColor()
         view.layer.cornerRadius = appearance.cornerRadius
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         return view
@@ -92,6 +83,25 @@ class PaymentMethodInformationView: UIView {
             transparentMaskView.bottomAnchor.constraint(equalTo: bottomAnchor),
 
         ])
+    }
+
+    #if !STP_BUILD_FOR_VISION
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.transparentMaskView.backgroundColor = transparentMaskViewBackgroundColor()
+    }
+    #endif
+
+    func transparentMaskViewBackgroundColor() -> UIColor {
+        let alpha: CGFloat = 0.075
+        let colorMaskForLight = UIColor.black.withAlphaComponent(alpha)
+        let colorMaskForDark = UIColor.white.withAlphaComponent(alpha)
+
+        return appearance.colors.componentBackground.isBright
+        ? UIColor.dynamic(light: colorMaskForLight,
+                          dark: colorMaskForDark)
+        : UIColor.dynamic(light: colorMaskForDark,
+                          dark: colorMaskForLight)
     }
 
     func primaryText() -> String {
