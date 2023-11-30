@@ -174,19 +174,17 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.customerMode = .new
-        settings.applePayEnabled = .off // disable Apple Pay
         // This test case is testing a feature not available when Link is on,
         // so we must manually turn off Link.
-        settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+//        settings.apmsEnabled = .off
+//        settings.linkEnabled = .off
         loadPlayground(
             app,
             settings
         )
 
-        var paymentMethodButton = app.buttons["Payment method"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
-        paymentMethodButton.tap()
+        app.buttons["Apple Pay"].waitForExistenceAndTap(timeout: 30)
+        app.buttons["+ Add"].waitForExistenceAndTap()
         try! fillCardData(app)
 
         // toggle save this card on and off
@@ -215,9 +213,9 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Reload w/ same customer
         reload(app, settings: settings)
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
-        paymentMethodButton.tap()
-        try! fillCardData(app)  // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
+        app.buttons["Apple Pay"].waitForExistenceAndTap(timeout: 30) // The fact that this is Apple Pay means we didn't save the card
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app) 
         // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         if !expectDefaultSelectionOn {
@@ -235,9 +233,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
 
         // return to payment method selector
-        paymentMethodButton = app.staticTexts["••••4242"]  // The card should be saved now
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
-        paymentMethodButton.tap()
+        app.staticTexts["••••4242"].waitForExistenceAndTap(timeout: 30)  // The card should be saved now and selected as default instead of Apple Pay
 
         let editButton = app.staticTexts["Edit"]
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
