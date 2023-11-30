@@ -133,7 +133,7 @@ struct AppearancePlaygroundView: View {
         )
 
         let primaryButtonSuccessTextColorBinding = Binding(
-            get: { Color(self.appearance.primaryButton.successTextColor) },
+            get: { Color(self.appearance.primaryButton.successTextColor ?? self.appearance.primaryButton.textColor ?? .white) },
             set: { self.appearance.primaryButton.successTextColor = UIColor($0) }
         )
 
