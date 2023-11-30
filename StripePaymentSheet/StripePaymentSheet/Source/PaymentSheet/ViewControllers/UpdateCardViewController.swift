@@ -175,6 +175,7 @@ final class UpdateCardViewController: UIViewController {
     private func updateCard() async {
         guard let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand, let delegate = delegate else { return }
 
+        view.isUserInteractionEnabled = false
         updateButton.update(state: .processing)
 
         // Create the update card params
@@ -192,6 +193,8 @@ final class UpdateCardViewController: UIViewController {
             updateButton.update(state: .enabled)
             latestError = error
         }
+        
+        view.isUserInteractionEnabled = true
     }
 
 }
