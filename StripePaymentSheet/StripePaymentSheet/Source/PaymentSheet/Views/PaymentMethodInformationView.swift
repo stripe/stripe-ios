@@ -21,7 +21,7 @@ class PaymentMethodInformationView: UIView {
     lazy var paymentMethodLabelPrimary: UILabel = {
         let label = UILabel()
         label.font = appearance.scaledFont(for: appearance.font.base, style: .body, maximumPointSize: 15)
-        label.textColor = appearance.colors.text
+        label.textColor = appearance.colors.componentText
         label.numberOfLines = 0
         label.text = primaryText()
         return label
@@ -66,7 +66,7 @@ class PaymentMethodInformationView: UIView {
             addSubview($0)
         }
         NSLayoutConstraint.activate([
-            paymentMethodImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: defaultPadding*2),
+            paymentMethodImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ElementsUI.contentViewInsets.leading),
             paymentMethodImage.centerYAnchor.constraint(equalTo: centerYAnchor),
             paymentMethodLabelPrimary.leadingAnchor.constraint(equalTo: paymentMethodImage.trailingAnchor, constant: defaultPadding),
             paymentMethodLabelPrimary.centerYAnchor.constraint(equalTo: paymentMethodImage.centerYAnchor),
