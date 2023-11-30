@@ -189,9 +189,7 @@ final class UpdateCardViewController: UIViewController {
         // Make the API request to update the payment method
         do {
             try await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateParams: updateParams)
-            updateButton.update(state: .succeeded, animated: true) { [weak self] in
-                self?.dismiss()
-            }
+            dismiss()
         } catch {
             updateButton.update(state: .enabled)
             latestError = error
