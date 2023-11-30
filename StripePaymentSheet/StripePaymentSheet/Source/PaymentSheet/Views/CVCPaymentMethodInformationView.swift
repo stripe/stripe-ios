@@ -1,5 +1,5 @@
 //
-//  PaymentMethodInformationView.swift
+//  CVCPaymentMethodInformationView.swift
 //  StripePaymentSheet
 //
 //
@@ -8,8 +8,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@objc(STP_Internal_PaymentMethodInformation)
-class PaymentMethodInformationView: UIView {
+class CVCPaymentMethodInformationView: UIView {
 
     private let appearance: PaymentSheet.Appearance
     private let paymentMethod: STPPaymentMethod
