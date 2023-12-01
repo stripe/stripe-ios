@@ -68,7 +68,7 @@ class STPSetupIntentTest: XCTestCase {
 
         XCTAssertEqual(url, URL(string: "https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"))
         XCTAssertEqual(setupIntent.paymentMethodID, "pm_123456")
-        XCTAssertEqual(setupIntent.status, STPSetupIntentStatus.requiresConfirmation)
+        XCTAssertEqual(setupIntent.status, STPSetupIntentStatus.requiresAction)
         XCTAssertEqual(setupIntent.usage, STPSetupIntentUsage.offSession)
 
         XCTAssertEqual(setupIntent.paymentMethodTypes, [NSNumber(value: STPPaymentMethodType.card.rawValue)])
