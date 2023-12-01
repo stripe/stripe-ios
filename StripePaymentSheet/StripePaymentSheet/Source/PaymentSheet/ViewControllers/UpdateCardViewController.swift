@@ -214,7 +214,7 @@ extension UpdateCardViewController: BottomSheetContentViewController {
         guard view.isUserInteractionEnabled else {
             return
         }
-        
+
         dismiss()
     }
 
