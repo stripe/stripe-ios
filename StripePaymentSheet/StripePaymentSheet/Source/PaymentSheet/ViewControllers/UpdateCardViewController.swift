@@ -182,7 +182,7 @@ final class UpdateCardViewController: UIViewController {
         guard let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand, let delegate = delegate else { return }
 
         view.isUserInteractionEnabled = false
-        updateButton.update(state: .processing)
+        updateButton.update(state: .spinnerWithInteractionDisabled)
 
         // Create the update card params
         let cardParams = STPPaymentMethodCardParams()
