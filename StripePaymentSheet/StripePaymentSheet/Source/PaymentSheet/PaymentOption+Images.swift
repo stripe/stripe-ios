@@ -107,7 +107,12 @@ extension STPPaymentMethodParams {
                 return STPImageLibrary.unknownCardCardImage()
             }
 
-            let brand = card.networks?.preferred?.toCardBrand ?? STPCardValidator.brand(forNumber: number)
+            var brand = STPCardValidator.brand(forNumber: number)
+            // Handle co-banded cards for flow controller
+            if let networks = card.networks {
+                brand = networks.preferred?.toCardBrand ?? .unknown
+            }
+            
             return STPImageLibrary.cardBrandImage(for: brand)
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
