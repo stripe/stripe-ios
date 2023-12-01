@@ -174,10 +174,6 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.customerMode = .new
-        // This test case is testing a feature not available when Link is on,
-        // so we must manually turn off Link.
-//        settings.apmsEnabled = .off
-//        settings.linkEnabled = .off
         loadPlayground(
             app,
             settings
@@ -213,9 +209,10 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Reload w/ same customer
         reload(app, settings: settings)
-        app.buttons["Apple Pay"].waitForExistenceAndTap(timeout: 30) // The fact that this is Apple Pay means we didn't save the card
+        app.buttons["Apple Pay"].waitForExistenceAndTap(timeout: 30)
+        XCTAssertTrue(app.cells.count == 1) // Should just be Apple Pay
         app.buttons["+ Add"].waitForExistenceAndTap()
-        try! fillCardData(app) 
+        try! fillCardData(app)
         // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         if !expectDefaultSelectionOn {
@@ -247,7 +244,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
 
-        XCTAssertTrue(app.cells.count == 1)
+        XCTAssertTrue(app.cells.count == 2) // Should be Apple Pay and saved card
     }
 
     func testPaymentSheetSwiftUI() throws {
