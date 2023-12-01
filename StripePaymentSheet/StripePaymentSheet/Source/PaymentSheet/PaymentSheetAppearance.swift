@@ -173,7 +173,7 @@ public extension PaymentSheet {
 
             /// The text color of the primary button when in a success state.
             /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
-            /// - Note: If `nil`, defaults to  `textColor`
+            /// - Note: If `nil`, defaults to `textColor`
             public var successTextColor: UIColor?
 
             /// The corner radius of the primary button
