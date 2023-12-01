@@ -353,13 +353,13 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
 
-    /*
     func testSEPADebit_only() {
         stubSessions(paymentMethods: "\"sepa_debit\"")
         prepareCS(configuration: configuration())
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
+    /*
     func testSEPADebit_card() {
         stubSessions(paymentMethods: "\"sepa_debit\", \"card\"")
         prepareCS(configuration: configuration())
