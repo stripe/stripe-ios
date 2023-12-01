@@ -72,15 +72,16 @@ final class UpdateCardViewController: UIViewController {
         })
     }()
 
-    private lazy var deleteButton: ConfirmButton = {
-        var apperanceCopy = appearance
-        apperanceCopy.colors.primary = appearance.colors.background
-        apperanceCopy.primaryButton.textColor = appearance.colors.danger
-        apperanceCopy.primaryButton.borderColor = .clear
-        apperanceCopy.primaryButton.shadow = .init(color: .clear, opacity: 0.0, offset: .zero, radius: 0.0)
-        return ConfirmButton(callToAction: .custom(title: .Localized.remove_card), appearance: apperanceCopy) { [weak self] in
-            self?.removeCard()
-        }
+    private lazy var deleteButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitleColor(appearance.colors.danger, for: .normal)
+        button.setTitle(.Localized.remove_card, for: .normal)
+        button.titleLabel?.textAlignment = .center
+        button.titleLabel?.font = .preferredFont(forTextStyle: .callout, weight: .medium, maximumPointSize: 25)
+        button.titleLabel?.adjustsFontForContentSizeCategory = true
+
+        button.addTarget(self, action: #selector(removeCard), for: .touchUpInside)
+        return button
     }()
 
     private lazy var errorLabel: UILabel = {
@@ -166,7 +167,7 @@ final class UpdateCardViewController: UIViewController {
         _ = bottomVc.popContentViewController()
     }
 
-    private func removeCard() {
+    @objc private func removeCard() {
         let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
                                                                           removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage) { [weak self] in
             guard let self = self else { return }
