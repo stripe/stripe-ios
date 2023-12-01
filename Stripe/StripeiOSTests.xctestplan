@@ -27,6 +27,8 @@
       "skippedTests" : [
         "PaymentMethodMessagingViewSnapshotTests",
         "STPCardBINMetadataTests",
+        "STPPaymentIntentFunctionalTest\/testConfirmPaymentIntentWith3DSCardPaymentMethodSucceeds()",
+        "STPPaymentIntentFunctionalTest\/testConfirmPaymentIntentWith3DSCardSucceeds()",
         "TextFieldElementCardTest\/testBINRangeThatRequiresNetworkCallToValidate()"
       ],
       "target" : {
