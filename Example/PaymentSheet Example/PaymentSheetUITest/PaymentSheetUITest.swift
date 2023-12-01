@@ -1038,7 +1038,31 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // We should have updated to Visa
         XCTAssertTrue(app.images["carousel_card_visa"].waitForExistence(timeout: 5))
 
+        // Update this card again
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.textFields["Visa"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: 5))
+        app.pickerWheels.firstMatch.swipeDown()
+        app.toolbars.buttons["Done"].tap()
+        app.buttons["Update card"].waitForExistenceAndTap(timeout: 5)
+
+        // We should have updated to Cartes Bancaires
+        XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: 5))
+        app.buttons["Done"].tap()
+
+        // Pay with this card
+        app.buttons["Pay €50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
+        // Saved card should show the cartes bancaires logo
+        XCTAssertTrue(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: 5))
+
         // Remove this card
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 60.0))
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
         XCTAssertTrue(app.buttons["Remove card"].waitForExistenceAndTap(timeout: 5))
         let confirmRemoval = app.alerts.buttons["Remove"]

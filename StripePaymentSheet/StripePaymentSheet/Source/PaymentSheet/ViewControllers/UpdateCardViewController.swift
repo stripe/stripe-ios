@@ -25,7 +25,7 @@ final class UpdateCardViewController: UIViewController {
     private let paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     private let removeSavedPaymentMethodMessage: String?
     private let isTestMode: Bool
-    
+
     private var latestError: Error? {
         didSet {
             errorLabel.text = latestError?.localizedDescription
@@ -96,10 +96,12 @@ final class UpdateCardViewController: UIViewController {
 
     private lazy var cardBrandDropDown: DropdownFieldElement = {
         let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }) ?? []
-        let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands), theme: appearance.asElementsTheme)
+        let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
+                                                                           theme: appearance.asElementsTheme,
+                                                                           includePlaceholder: false)
 
         // pre-select current card brand
-        if let currentCardBrand = paymentMethod.card?.networks?.preferred?.toCardBrand,
+        if let currentCardBrand = paymentMethod.card?.preferredDisplayBrand,
            let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
             cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
         }
@@ -128,7 +130,7 @@ final class UpdateCardViewController: UIViewController {
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
         self.isTestMode = isTestMode
-        
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -194,7 +196,7 @@ final class UpdateCardViewController: UIViewController {
             updateButton.update(state: .enabled)
             latestError = error
         }
-        
+
         view.isUserInteractionEnabled = true
     }
 
@@ -238,7 +240,7 @@ extension UpdateCardViewController: ElementDelegate {
     func didUpdate(element: Element) {
         latestError = nil // clear error on new input
         let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand
-        let currentCardBrand = STPCard.brand(from: paymentMethod.card?.networks?.preferred ?? "")
+        let currentCardBrand = paymentMethod.card?.preferredDisplayBrand ?? .unknown
         let shouldBeEnabled = selectedBrand != currentCardBrand && selectedBrand != .unknown
         updateButton.update(state: shouldBeEnabled ? .enabled : .disabled)
     }

@@ -62,7 +62,7 @@ extension STPPaymentMethod {
                 return STPImageLibrary.unknownCardCardImage()
             }
 
-            return STPImageLibrary.cardBrandImage(for: card.networks?.preferred?.toCardBrand ?? card.brand)
+            return STPImageLibrary.cardBrandImage(for: card.preferredDisplayBrand)
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
@@ -82,7 +82,7 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodCellImage() -> UIImage {
         switch type {
         case .card:
-            let cardBrand = card?.networks?.preferred?.toCardBrand ?? card?.brand ?? .unknown
+            let cardBrand = card?.preferredDisplayBrand ?? .unknown
             return cardBrand.makeSavedPaymentMethodCellImage()
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
@@ -203,5 +203,11 @@ extension STPPaymentMethodType {
 extension String {
     var toCardBrand: STPCardBrand? {
         return STPCard.brand(from: self)
+    }
+}
+
+extension STPPaymentMethodCard {
+    var preferredDisplayBrand: STPCardBrand {
+        return networks?.preferred?.toCardBrand ?? displayBrand?.type?.toCardBrand ?? brand
     }
 }

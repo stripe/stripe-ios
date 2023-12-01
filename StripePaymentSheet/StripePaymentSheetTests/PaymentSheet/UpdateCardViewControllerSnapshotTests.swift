@@ -28,7 +28,8 @@ final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
         let sut = UpdateCardViewController(paymentOptionCell: .init(frame: .zero),
                                            paymentMethod: STPFixtures.paymentMethod(),
                                            removeSavedPaymentMethodMessage: "Test removal string",
-                                           appearance: appearance)
+                                           appearance: appearance,
+                                           isTestMode: false)
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
         if darkMode {
