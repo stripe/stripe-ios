@@ -120,11 +120,9 @@ enum Intent {
     var cardBrandChoiceEligible: Bool {
         switch self {
         case .paymentIntent(let elementsSession, _),
+             .setupIntent(let elementsSession, _),
              .deferredIntent(let elementsSession, _):
             return (elementsSession.cardBrandChoice?.eligible ?? false)
-        case .setupIntent:
-            // TODO(porter) We will support SI and later.
-            return false
         }
     }
 

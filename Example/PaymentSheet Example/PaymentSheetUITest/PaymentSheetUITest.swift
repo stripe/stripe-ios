@@ -861,6 +861,22 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         _testCardBrandChoice(settings: settings)
     }
 
+    func testCardBrandChoice_setup() throws {
+        // Currently only our French merchant is eligible for card brand choice
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .setup
+        settings.customerMode = .new
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        settings.preferredNetworksEnabled = .off
+        loadPlayground(
+            app,
+            settings
+        )
+
+        _testCardBrandChoice(isSetup: true, settings: settings)
+    }
+
     func testCardBrandChoice_deferred() throws {
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -2733,7 +2749,7 @@ extension PaymentSheetUITestCase {
         }
     }
 
-    func _testCardBrandChoice(settings: PaymentSheetTestPlaygroundSettings) {
+    func _testCardBrandChoice(isSetup: Bool = false, settings: PaymentSheetTestPlaygroundSettings) {
         app.buttons["Present PaymentSheet"].tap()
 
         let cardBrandTextField = app.textFields["Select card brand (optional)"]
@@ -2790,7 +2806,8 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
 
         // Finish checkout
-        app.buttons["Pay €50.99"].tap()
+        let confirmButtonText = isSetup ? "Set up" : "Pay €50.99"
+        app.buttons[confirmButtonText].tap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
