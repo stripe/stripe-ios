@@ -464,8 +464,8 @@ extension PaymentSheet {
         }
     }
 
-    /// A helper method that sets the Customer's default payment method if necessary
-    /// - Parameter isSaving: Whether or not we are saving the given `paymentMethod`. If it's not being saved, it can't be reused by the customer, so don't set it as the default.
+    /// A helper method that sets the Customer's default payment method if necessary.
+    /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
     static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: Configuration) {
 
         guard

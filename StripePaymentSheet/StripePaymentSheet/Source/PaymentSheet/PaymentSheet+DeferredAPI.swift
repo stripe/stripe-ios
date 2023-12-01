@@ -44,16 +44,18 @@ extension PaymentSheet {
                     return
                 }
 
+                // Overwrite `completion` to ensure we set the default if necessary before completing.
+                let completion = { (status: STPPaymentHandlerActionStatus, paymentOrSetupIntent: PaymentOrSetupIntent?, error: NSError?, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType) in
+                    if let paymentOrSetupIntent {
+                        setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: paymentOrSetupIntent, configuration: configuration)
+                    }
+                    completion(makePaymentSheetResult(for: status, error: error), deferredIntentConfirmationType)
+                }
+
                 // 3. Retrieve the PaymentIntent or SetupIntent
                 switch intentConfig.mode {
                 case .payment:
                     let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
-                    let completion = { (status: STPPaymentHandlerActionStatus, paymentIntent: STPPaymentIntent?, error: NSError?, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType) in
-                        if let paymentIntent {
-                            setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: .paymentIntent(paymentIntent), configuration: configuration)
-                        }
-                        completion(makePaymentSheetResult(for: status, error: error), deferredIntentConfirmationType)
-                    }
 
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
@@ -66,7 +68,7 @@ extension PaymentSheet {
                             mandateData: mandateData
                         )
 
-                        // Dashboard specfic logic
+                        // Dashboard specific logic
                         if configuration.apiClient.publishableKeyIsUserKey {
                             paymentIntentParams = setParamsForDashboardApp(confirmType: confirmType,
                                                                            paymentIntentParams: paymentIntentParams,
@@ -78,7 +80,7 @@ extension PaymentSheet {
                             paymentIntentParams,
                             with: authenticationContext
                         ) { status, paymentIntent, error in
-                            completion(status, paymentIntent, error, .client)
+                            completion(status, paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }, error, .client)
                         }
                     } else {
                         // 4b. Server-side confirmation
@@ -87,17 +89,11 @@ extension PaymentSheet {
                             with: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, paymentIntent, error in
-                            completion(status, paymentIntent, error, .server)
+                            completion(status, paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }, error, .server)
                         }
                     }
                 case .setup:
                     let setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
-                    let completion = { (status: STPPaymentHandlerActionStatus, setupIntent: STPSetupIntent?, error: NSError?, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType) in
-                        if let setupIntent {
-                            setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: .setupIntent(setupIntent), configuration: configuration)
-                        }
-                        completion(makePaymentSheetResult(for: status, error: error), deferredIntentConfirmationType)
-                    }
                     if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
                         // 4a. Client-side confirmation
                         try PaymentSheetDeferredValidator.validate(setupIntent: setupIntent, intentConfiguration: intentConfig)
@@ -111,7 +107,7 @@ extension PaymentSheet {
                             setupIntentParams,
                             with: authenticationContext
                         ) { status, setupIntent, error in
-                            completion(status, setupIntent, error, .client)
+                            completion(status, setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }, error, .client)
                         }
                     } else {
                         // 4b. Server-side confirmation
@@ -120,7 +116,7 @@ extension PaymentSheet {
                             with: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, setupIntent, error in
-                            completion(status, setupIntent, error, .server)
+                            completion(status, setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }, error, .server)
                         }
                     }
                 }
