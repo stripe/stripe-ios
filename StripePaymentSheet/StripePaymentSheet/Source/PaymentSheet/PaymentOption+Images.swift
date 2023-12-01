@@ -112,7 +112,7 @@ extension STPPaymentMethodParams {
             if let networks = card.networks {
                 brand = networks.preferred?.toCardBrand ?? .unknown
             }
-            
+
             return STPImageLibrary.cardBrandImage(for: brand)
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
