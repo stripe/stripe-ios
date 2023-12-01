@@ -207,11 +207,15 @@ final class UpdateCardViewController: UIViewController {
 extension UpdateCardViewController: BottomSheetContentViewController {
 
     var allowsDragToDismiss: Bool {
-        return false
+        return view.isUserInteractionEnabled
     }
 
     func didTapOrSwipeToDismiss() {
-        // no-op
+        guard view.isUserInteractionEnabled else {
+            return
+        }
+        
+        dismiss()
     }
 
     var requiresFullScreen: Bool {
