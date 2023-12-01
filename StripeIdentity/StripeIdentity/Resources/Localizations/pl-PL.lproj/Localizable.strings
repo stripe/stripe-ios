@@ -4,11 +4,7 @@
 
 "App Settings" = "Ustawienia aplikacji";
 
-"Back driver's license photo successfully uploaded" = "Przesłano zdjęcie tylnej strony prawa jazdy";
-
 "Back identity card photo successfully uploaded" = "Przesłano zdjęcie tylnej strony dowodu tożsamości";
-
-"Back of driver's license" = "Tylna strona prawa jazdy";
 
 "Back of identity card" = "Tylna strona dokumentu tożsamości";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Data urodzenia wygląda na nieprawidłową";
 
-"Flip your driver's license over to the other side" = "Obróć prawo jazdy na drugą stronę";
-
 "Flip your identity card over to the other side" = "Obróć dowód tożsamości na drugą stronę";
 
-"Front driver's license photo successfully uploaded" = "Przesłano zdjęcie przedniej strony prawa jazdy";
-
 "Front identity card photo successfully uploaded" = "Przesłano zdjęcie przedniej strony dowodu tożsamości";
-
-"Front of driver's license" = "Przednia strona prawa jazdy";
 
 "Front of identity card" = "Przednia strona dokumentu tożsamości";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "Numer identyfikacyjny";
 
-"ID Type" = "Typ dokumentu tożsamości";
-
-"Image of passport" = "Zdjęcie paszportu";
-
 "Individual CPF" = "CPF osoby fizycznej";
 
 "Last 4 of Social Security number" = "Ostatnie 4 cyfry numeru ubezpieczenia społecznego";
@@ -59,10 +45,6 @@
 "Loading" = "Wczytywanie";
 
 "NRIC or FIN" = "NRIC lub FIN";
-
-"Passport" = "Paszport";
-
-"Passport photo successfully uploaded" = "Udało się przesłać zdjęcie paszportu";
 
 "Personal ID number" = "Numer dowodu tożsamości";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Biblioteka zdjęć";
 
-"Please upload an image of your passport" = "Prześlij zdjęcie paszportu";
-
-"Please upload images of the front and back of your driver's license" = "Prześlij zdjęcia przedniej i tylnej strony prawa jazdy";
-
 "Please upload images of the front and back of your identity card" = "Prześlij zdjęcia przedniej i tylnej strony dokumentu tożsamości";
-
-"Position your driver's license in the center of the frame" = "Umieść prawo jazdy w centrum kadru";
 
 "Position your face in the center of the frame." = "Umieść twarz w centrum kadru.";
 
 "Position your identity card in the center of the frame" = "Umieść dowód tożsamości w centrum kadru";
-
-"Position your passport in the center of the frame" = "Umieść paszport w centrum kadru";
 
 "Retake Photos" = "zrób zdjęcia ponownie";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Wybierz lokalizację, z której chcesz przesłać przednią stronę dokumentu tożsamości";
 
-"Select back driver's license photo" = "Wybierz zdjęcie tyłu prawa jazdy";
-
 "Select back identity card photo" = "Wybierz zdjęcie tyłu dowodu tożsamości";
 
-"Select front driver's license photo" = "Wybierz zdjęcie przodu prawa jazdy";
-
 "Select front identity card photo" = "Wybierz zdjęcie tyłu dowodu tożsamości";
-
-"Select passport photo" = "Wybierz zdjęcie paszportu";
 
 "Selfie" = "Selfie";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "Prześlij dokument tożsamości ze zdjęciem";
 
-"Uploading back driver's license photo" = "Przesyłanie zdjęcia tyłu prawa jazdy";
-
 "Uploading back identity card photo" = "Przesyłanie zdjęcia tyłu dowodu tożsamości";
 
-"Uploading front driver's license photo" = "Przesyłanie zdjęcia przodu prawa jazdy";
-
 "Uploading front identity card photo" = "Przesyłanie zdjęcia przodu dowodu tożsamości";
-
-"Uploading passport photo" = "Przesyłanie zdjęcia paszportu";
 
 "Verify your identity" = "Zweryfikuj tożsamość";
 

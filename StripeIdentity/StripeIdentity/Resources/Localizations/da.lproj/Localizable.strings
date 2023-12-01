@@ -4,11 +4,7 @@
 
 "App Settings" = "Appindstillinger";
 
-"Back driver's license photo successfully uploaded" = "Foto af bagside af kørekort blev uploadet";
-
 "Back identity card photo successfully uploaded" = "Foto af bagside af identitetskort blev uploadet";
-
-"Back of driver's license" = "Bagside af kørekort";
 
 "Back of identity card" = "Bagside af identitetskort";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Fødselsdatoen ser ikke ud til at være gyldig.";
 
-"Flip your driver's license over to the other side" = "Vend dit kørekort om på bagsiden";
-
 "Flip your identity card over to the other side" = "Vend dit identitetskort om på bagsiden";
 
-"Front driver's license photo successfully uploaded" = "Foto af forside af kørekort blev uploadet";
-
 "Front identity card photo successfully uploaded" = "Foto af forside af identitetskort blev uploadet";
-
-"Front of driver's license" = "Forside af kørekort";
 
 "Front of identity card" = "Forside af identitetskort";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "ID-nummer";
 
-"ID Type" = "ID-type";
-
-"Image of passport" = "Billede af pas";
-
 "Individual CPF" = "Individuel CPF";
 
 "Last 4 of Social Security number" = "Sidste 4 cifre af personnummer";
@@ -59,10 +45,6 @@
 "Loading" = "Indlæser";
 
 "NRIC or FIN" = "NRIC eller FIN";
-
-"Passport" = "Pas";
-
-"Passport photo successfully uploaded" = "Foto af pas blev uploadet";
 
 "Personal ID number" = "Personligt id-nummer";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Fotobibliotek";
 
-"Please upload an image of your passport" = "Upload et billede af dit pas";
-
-"Please upload images of the front and back of your driver's license" = "Upload billede af forsiden og bagsiden af dit kørekort";
-
 "Please upload images of the front and back of your identity card" = "Upload billeder af forsiden og bagsiden af dit identitetskort";
-
-"Position your driver's license in the center of the frame" = "Placer dit kørekort midt i rammen";
 
 "Position your face in the center of the frame." = "Placer dit ansigt i midten af rammen.";
 
 "Position your identity card in the center of the frame" = "Placer dit identitetskort midt i rammen";
-
-"Position your passport in the center of the frame" = "Placer dit pas midt i rammen";
 
 "Retake Photos" = "Tag billeder igen";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Vælg en placering, som forsiden af dit identitetsdokument skal uploades fra";
 
-"Select back driver's license photo" = "Vælg foto af bagside af kørekort";
-
 "Select back identity card photo" = "Vælg foto af bagside af identitetskort";
 
-"Select front driver's license photo" = "Vælg foto af forside af kørekort";
-
 "Select front identity card photo" = "Vælg foto af forside af identitetskort";
-
-"Select passport photo" = "Vælg foto af pas";
 
 "Selfie" = "Selfie";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "Upload dit foto-id";
 
-"Uploading back driver's license photo" = "Uploader foto af bagside af kørekort";
-
 "Uploading back identity card photo" = "Uploader foto af bagside af identitetskort";
 
-"Uploading front driver's license photo" = "Uploader foto af forside af kørekort";
-
 "Uploading front identity card photo" = "Uploader foto af forside af identitetskort";
-
-"Uploading passport photo" = "Uploader foto af pas";
 
 "Verify your identity" = "Bekræft din identitet";
 

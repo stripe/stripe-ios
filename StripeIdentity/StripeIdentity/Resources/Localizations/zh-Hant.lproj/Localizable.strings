@@ -4,11 +4,7 @@
 
 "App Settings" = "應用設定";
 
-"Back driver's license photo successfully uploaded" = "駕駛執照背面照片已成功上傳";
-
 "Back identity card photo successfully uploaded" = "身份證背面照片已成功上傳";
-
-"Back of driver's license" = "駕駛執照背面";
 
 "Back of identity card" = "身分證背面";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "出生日期看似無效";
 
-"Flip your driver's license over to the other side" = "將駕駛執照翻到另一面";
-
 "Flip your identity card over to the other side" = "將身份證翻到另一面";
 
-"Front driver's license photo successfully uploaded" = "駕駛執照正面照片已成功上傳";
-
 "Front identity card photo successfully uploaded" = "身份證正面照片已成功上傳";
-
-"Front of driver's license" = "駕駛執照正面";
 
 "Front of identity card" = "身分證正面";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "證件號碼";
 
-"ID Type" = "證件類型";
-
-"Image of passport" = "護照照片";
-
 "Individual CPF" = "個人 CPF";
 
 "Last 4 of Social Security number" = "社會安全號碼後 4 位";
@@ -59,10 +45,6 @@
 "Loading" = "正在載入";
 
 "NRIC or FIN" = "NRIC 或 FIN";
-
-"Passport" = "護照";
-
-"Passport photo successfully uploaded" = "護照照片已成功上傳";
 
 "Personal ID number" = "個人身分證件號碼";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "照片庫";
 
-"Please upload an image of your passport" = "請上傳您的護照的照片";
-
-"Please upload images of the front and back of your driver's license" = "請上傳您的駕駛執照正反面的照片";
-
 "Please upload images of the front and back of your identity card" = "請上傳您的身分證正反面的照片";
-
-"Position your driver's license in the center of the frame" = "將駕駛執照放在畫面正中間";
 
 "Position your face in the center of the frame." = "將臉放在畫面正中間。";
 
 "Position your identity card in the center of the frame" = "將身份證放在畫面正中間";
-
-"Position your passport in the center of the frame" = "將護照放在畫面正中間";
 
 "Retake Photos" = "重新拍照";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "選擇一個位置，從那裡您上傳您的身分證的正面";
 
-"Select back driver's license photo" = "選擇駕駛執照背面照片";
-
 "Select back identity card photo" = "選擇身份證背面照片";
 
-"Select front driver's license photo" = "選擇駕駛執照正面照片";
-
 "Select front identity card photo" = "選擇身份證正面照片";
-
-"Select passport photo" = "選擇護照照片";
 
 "Selfie" = "自拍照";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "上傳您帶照片的身分證件";
 
-"Uploading back driver's license photo" = "正在上傳駕駛執照背面照片";
-
 "Uploading back identity card photo" = "正在上傳身份證背面照片";
 
-"Uploading front driver's license photo" = "正在上傳駕駛執照正面照片";
-
 "Uploading front identity card photo" = "正在上傳身份證正面照片";
-
-"Uploading passport photo" = "正在上傳護照照片";
 
 "Verify your identity" = "驗證您的身份";
 

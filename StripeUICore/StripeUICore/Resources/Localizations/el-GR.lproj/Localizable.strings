@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Αφαίρεση του τραπεζικού λογαριασμού που λήγει σε %@";
 
+"Remove card" = "Αφαίρεση κάρτας";
+
 "Search" = "Αναζήτηση";
 
 "Select card brand (optional)" = "Επιλέξτε επωνυμία κάρτας (προαιρετικό)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "Ο αριθμός ταυτότητας που εισαγάγατε είναι ελλιπής.";
 
 "The account number you entered is incomplete." = "Ο αριθμός λογαριασμού που εισαγάγατε είναι ελλιπής.";
+
+"The sort code you entered is invalid." = "Ο κωδικός sort που εισαγάγατε δεν είναι έγκυρος.";
 
 "Town or city" = "Κωμόπολη ή πόλη";
 

@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Neħħi l-kont tal-bank li jispiċċa b'%@";
 
+"Remove card" = "Neħħi l-karta";
+
 "Search" = "Fittex";
 
 "Select card brand (optional)" = "Agħżel id-ditta tal-karta (mhux obbligatorja)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "In-numru tal-ID li daħħalt mhuwiex komplut.";
 
 "The account number you entered is incomplete." = "In-numru tal-kont li daħħalt mhux komplut.";
+
+"The sort code you entered is invalid." = "Il-kodiċi sort li daħħalt mhux tajjeb.";
 
 "Town or city" = "Belt";
 

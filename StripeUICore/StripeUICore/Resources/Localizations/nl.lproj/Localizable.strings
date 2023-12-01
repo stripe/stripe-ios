@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Bankrekening verwijderen die eindigt op %@";
 
+"Remove card" = "Betaalkaart verwijderen";
+
 "Search" = "Zoeken";
 
 "Select card brand (optional)" = "Merk van betaalkaart selecteren (optioneel)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "Het opgegeven identificatienummer is onvolledig.";
 
 "The account number you entered is incomplete." = "Het opgegeven rekeningnummer is onvolledig.";
+
+"The sort code you entered is invalid." = "De opgegeven bankcode is ongeldig.";
 
 "Town or city" = "Stad of plaats";
 

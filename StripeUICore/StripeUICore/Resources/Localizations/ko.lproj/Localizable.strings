@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "%@(으)로 끝나는 은행 계좌 삭제";
 
+"Remove card" = "카드 제거";
+
 "Search" = "검색";
 
 "Select card brand (optional)" = "카드 브랜드 선택(선택 사항)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "입력한 ID 번호가 불완전합니다.";
 
 "The account number you entered is incomplete." = "입력하신 계좌 번호가 불완전합니다.";
+
+"The sort code you entered is invalid." = "입력하신 분류 코드가 유효하지 않습니다.";
 
 "Town or city" = "마을 또는 도시";
 

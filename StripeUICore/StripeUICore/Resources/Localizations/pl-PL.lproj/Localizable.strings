@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Usuń konto bankowe kończące się na %@";
 
+"Remove card" = "Usuń kartę";
+
 "Search" = "Wyszukaj";
 
 "Select card brand (optional)" = "Wybierz markę karty (opcjonalne)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "Podany identyfikator jest niekompletny.";
 
 "The account number you entered is incomplete." = "Podany numer konta jest niekompletny.";
+
+"The sort code you entered is invalid." = "Wprowadzony kod sortowania jest nieprawidłowy.";
 
 "Town or city" = "Miejscowość";
 

@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Удалить банковский счет, оканчивающийся на %@";
 
+"Remove card" = "Удалить карту";
+
 "Search" = "Поиск";
 
 "Select card brand (optional)" = "Выберите бренд карты (необязательно)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "Номер документа, удостоверяющего личность, введен не полностью.";
 
 "The account number you entered is incomplete." = "Номер счета введен не полностью.";
+
+"The sort code you entered is invalid." = "Введенный код сортировки неверен.";
 
 "Town or city" = "Город";
 

@@ -4,11 +4,7 @@
 
 "App Settings" = "Settings tal-App";
 
-"Back driver's license photo successfully uploaded" = "Ir-ritratt tan-naħa ta' wara tal-liċenzja tas-sewqan ittella'";
-
 "Back identity card photo successfully uploaded" = "Ir-ritratt tan-naħa ta' wara tal-karta tal-identità ttella'";
-
-"Back of driver's license" = "In-naħa ta' wara tal-liċenzja tas-sewqan";
 
 "Back of identity card" = "In-naħa ta' wara tal-karta tal-identità";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Id-data tat-twelid ma tidhirx li hija tajba";
 
-"Flip your driver's license over to the other side" = "Dawwar il-liċenzja tas-sewqan tiegħek";
-
 "Flip your identity card over to the other side" = "Aqleb il-kard tal-identità tiegħek għan-naħa l-oħra";
 
-"Front driver's license photo successfully uploaded" = "Ir-ritratt tan-naħa ta' quddiem tal-liċenzja tas-sewqan ittella' b'suċċes";
-
 "Front identity card photo successfully uploaded" = "Ir-ritratt tan-naħa ta' quddiem tal-kard tal-identità ttella' b'suċċes";
-
-"Front of driver's license" = "In-naħa ta' quddiem tal-liċenzja tas-sewqan";
 
 "Front of identity card" = "In-naħa ta' quddiem tal-karta tal-identità";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "In-Numru tal-ID";
 
-"ID Type" = "It-Tip tad-Dokument tal-Identità";
-
-"Image of passport" = "Ritratt tal-passaport";
-
 "Individual CPF" = "CPF personali";
 
 "Last 4 of Social Security number" = "L-aħħar 4 ċifri tan-numru tas-Sigurtà Soċjali";
@@ -59,10 +45,6 @@
 "Loading" = "Tielgħa";
 
 "NRIC or FIN" = "NRIC jew FIN";
-
-"Passport" = "Passaport";
-
-"Passport photo successfully uploaded" = "Ir-ritratt tal-passaport ittella'";
 
 "Personal ID number" = "In-numru tal-ID personali";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Ġabra tar-Ritratti";
 
-"Please upload an image of your passport" = "Jekk jogħġbok tella' ritratt tal-passaport tiegħek";
-
-"Please upload images of the front and back of your driver's license" = "Jekk jogħġbok tella' r-ritratti tan-naħa ta' quddiem u ta' wara tal-liċenzja tas-sewqan tiegħek";
-
 "Please upload images of the front and back of your identity card" = "Jekk jogħġbok tella' r-ritratti tan-naħa ta' quddiem u ta' wara tal-karta tal-identità tiegħek";
-
-"Position your driver's license in the center of the frame" = "Qiegħed il-liċenzja tas-sewqan tiegħek f'nofs il-gwarniċ";
 
 "Position your face in the center of the frame." = "Qiegħed wiċċek f'nofs il-gwarniċ.";
 
 "Position your identity card in the center of the frame" = "Qiegħed il-karta tal-identità tiegħek f'nofs il-gwarniċ";
-
-"Position your passport in the center of the frame" = "Qiegħed il-passaport tiegħek f'nofs il-gwarniċ";
 
 "Retake Photos" = "Erġa' ħu r-ritratti";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Agħżel il-post minn fejn tixtieq ittella' n-naħa ta' quddiem tad-dokument tal-identità";
 
-"Select back driver's license photo" = "Agħżel ir-ritratt tan-naħa ta' wara tal-liċenzja tas-sewqan";
-
 "Select back identity card photo" = "Agħżel ir-ritratt tan-naħa ta' wara tal-karta tal-identità";
 
-"Select front driver's license photo" = "Agħżel ir-ritratt tan-naħa ta' quddiem tal-liċenzja tas-sewqan";
-
 "Select front identity card photo" = "Agħżel ir-ritratt tan-naħa ta' quddiem tal-karta tal-identità";
-
-"Select passport photo" = "Agħżel ir-ritratt tal-passaport";
 
 "Selfie" = "Stessu";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "Tella' d-dokument tal-identità b'ritratt tiegħek";
 
-"Uploading back driver's license photo" = "Qed ittella' r-ritratt tan-naħa ta' wara tal-liċenzja tas-sewqan";
-
 "Uploading back identity card photo" = "Qed ittella' r-ritratt tan-naħa ta' wara tal-kartà tal-identità";
 
-"Uploading front driver's license photo" = "Qed ittella' r-ritratt tan-naħa ta' quddiem tal-liċenzja tas-sewqan";
-
 "Uploading front identity card photo" = "Qed ittella' r-ritratt tan-naħa ta' quddiem tal-karta tal-identità";
-
-"Uploading passport photo" = "Qed ittella' r-ritratt tal-passaport";
 
 "Verify your identity" = "Ivverifika l-identità tiegħek";
 

@@ -4,11 +4,7 @@
 
 "App Settings" = "Postavke aplikacije";
 
-"Back driver's license photo successfully uploaded" = "Fotografija stražnje strane vozačke dozvole je uspješno učitana";
-
 "Back identity card photo successfully uploaded" = "Fotografija stražnje strane osobne iskaznice je uspješno učitana";
-
-"Back of driver's license" = "Stražnja strana vozačke dozvole";
 
 "Back of identity card" = "Stražnja strana osobne iskaznice";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Datum rođenja ne izgleda ispravno";
 
-"Flip your driver's license over to the other side" = "Okrenite svoju vozačku dozvolu na drugu stranu";
-
 "Flip your identity card over to the other side" = "Okrenite svoju osobnu iskaznicu na drugu stranu";
 
-"Front driver's license photo successfully uploaded" = "Fotografija prednje strane vozačke dozvole uspješno je učitana";
-
 "Front identity card photo successfully uploaded" = "Fotografija prednje strane osobne iskaznice uspješno je učitana";
-
-"Front of driver's license" = "Prednja strana vozačke dozvole";
 
 "Front of identity card" = "Prednja strana osobne iskaznice";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "ID broj";
 
-"ID Type" = "Vrsta osobnog dokumenta";
-
-"Image of passport" = "Slika putovnice";
-
 "Individual CPF" = "CPF porezni broj";
 
 "Last 4 of Social Security number" = "4 zadnja broja socijalnog osiguranja";
@@ -59,10 +45,6 @@
 "Loading" = "Učitavanje";
 
 "NRIC or FIN" = "NRIC ili FIN";
-
-"Passport" = "Putovnica";
-
-"Passport photo successfully uploaded" = "Fotografija putovnice uspješno učitana";
 
 "Personal ID number" = "Osobni identifikacijski broj";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Biblioteka fotografija";
 
-"Please upload an image of your passport" = "Molimo učitajte sliku vaše putovnice";
-
-"Please upload images of the front and back of your driver's license" = "Molimo vas učitajte slike prednje i stražnje strane vaše vozačke dozvole";
-
 "Please upload images of the front and back of your identity card" = "Molimo vas učitajte slike prednje i stražnje strane vaše osobne iskaznice";
-
-"Position your driver's license in the center of the frame" = "Postavite svoju vozačku dozvolu u sredinu okvira";
 
 "Position your face in the center of the frame." = "Postavite svoje lice u središte okvira.";
 
 "Position your identity card in the center of the frame" = "Postavite svoju osobnu iskaznicu u sredinu okvira";
-
-"Position your passport in the center of the frame" = "Postavite svoju putovnicu u sredinu okvira";
 
 "Retake Photos" = "Ponovo snimi fotografije";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Odaberite lokaciju s koje ćete učitati prednju stranu svog dokumenta";
 
-"Select back driver's license photo" = "Odaberite fotografiju stražnje strane osobne iskaznica";
-
 "Select back identity card photo" = "Odaberite fotografiju stražnje strane osobne iskaznice";
 
-"Select front driver's license photo" = "Odaberite fotografiju prednje strane vozačke dozvole";
-
 "Select front identity card photo" = "Odaberite fotografiju prednje strane osobne iskaznice";
-
-"Select passport photo" = "Odaberite fotografiju putovnice";
 
 "Selfie" = "Selfie";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "Učitajte svoj identifikacijski dokument s fotografijom";
 
-"Uploading back driver's license photo" = "Učitavanje fotografije stražnje strane vozačke dozvole";
-
 "Uploading back identity card photo" = "Učitavanje fotografije stražnje strane osobne iskaznice";
 
-"Uploading front driver's license photo" = "Učitavanje fotografije prednje strane vozačke dozvole";
-
 "Uploading front identity card photo" = "Učitavanje fotografije prednje strane osobne iskaznice";
-
-"Uploading passport photo" = "Učitavanje fotografije putovnice";
 
 "Verify your identity" = "Potvrdite svoj identitet";
 

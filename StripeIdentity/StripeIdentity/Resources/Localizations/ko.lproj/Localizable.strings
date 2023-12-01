@@ -4,11 +4,7 @@
 
 "App Settings" = "앱 설정";
 
-"Back driver's license photo successfully uploaded" = "운전 면허증 뒷면 사진 업로드 성공";
-
 "Back identity card photo successfully uploaded" = "신분증 뒷면 사진 업로드 성공";
-
-"Back of driver's license" = "운전 면허증 뒷면";
 
 "Back of identity card" = "신분증 뒷면";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "생년월일이 유효하지 않습니다.";
 
-"Flip your driver's license over to the other side" = "운전 면허증 반대쪽 면이 보이게 뒤집으십시오.";
-
 "Flip your identity card over to the other side" = "신분증 반대쪽 면이 보이게 뒤집으십시오.";
 
-"Front driver's license photo successfully uploaded" = "운전 면허증 앞면 사진 업로드 성공";
-
 "Front identity card photo successfully uploaded" = "신분증 앞면 사진 업로드 성공";
-
-"Front of driver's license" = "운전 면허증 앞면";
 
 "Front of identity card" = "신분증 앞면";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "ID 번호";
 
-"ID Type" = "신분증 유형";
-
-"Image of passport" = "여권 이미지";
-
 "Individual CPF" = "개별 CPF";
 
 "Last 4 of Social Security number" = "사회 보장 번호의 마지막 4자리 숫자";
@@ -59,10 +45,6 @@
 "Loading" = "로드 중";
 
 "NRIC or FIN" = "NRIC 또는 FIN";
-
-"Passport" = "여권";
-
-"Passport photo successfully uploaded" = "여권 사진 업로드 성공";
 
 "Personal ID number" = "개인 ID 번호";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "사진 라이브러리";
 
-"Please upload an image of your passport" = "여권의 앞면과 뒷면 이미지를 업로드하십시오.";
-
-"Please upload images of the front and back of your driver's license" = "운전 면허증의 앞면과 뒷면 이미지를 업로드하십시오.";
-
 "Please upload images of the front and back of your identity card" = "신분증의 앞면과 뒷면 이미지를 업로드하십시오.";
-
-"Position your driver's license in the center of the frame" = "프레임 중앙에 운전 면허증을 놓으십시오.";
 
 "Position your face in the center of the frame." = "프레임 중앙에 얼굴을 놓으십시오.";
 
 "Position your identity card in the center of the frame" = "프레임 중앙에 신분증을 놓으십시오.";
-
-"Position your passport in the center of the frame" = "프레임 중앙에 여권을 놓으십시오.";
 
 "Retake Photos" = "사진 다시 찍기";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "신분 증명서 앞면을 업로드할 위치 선택 -";
 
-"Select back driver's license photo" = "운전 면허증 뒷면 사진 선택";
-
 "Select back identity card photo" = "신분증 뒷면 사진 선택";
 
-"Select front driver's license photo" = "운전 면허증 앞면 사진 선택";
-
 "Select front identity card photo" = "신분증 앞면 사진 선택";
-
-"Select passport photo" = "여권 사진 선택";
 
 "Selfie" = "셀카";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "사진 ID 업로드";
 
-"Uploading back driver's license photo" = "운전 면허증 뒷면 사진 업로드하는 중";
-
 "Uploading back identity card photo" = "신분증 뒷면 사진 업로드하는 중";
 
-"Uploading front driver's license photo" = "운전 면허증 앞면 사진 업로드하는 중";
-
 "Uploading front identity card photo" = "신분증 앞면 사진 업로드하는 중";
-
-"Uploading passport photo" = "여권 사진 업로드하는 중";
 
 "Verify your identity" = "ID 확인";
 

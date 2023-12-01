@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Премахване на банкова сметка, завършваща на %@";
 
+"Remove card" = "Премахване на банкова карта";
+
 "Search" = "Търсене";
 
 "Select card brand (optional)" = "Изберете марка на картата (по избор)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "Идентификационният номер, който сте въвели, е непълен.";
 
 "The account number you entered is incomplete." = "Въведеният от Вас номер на сметката е невалиден.";
+
+"The sort code you entered is invalid." = "Идентификационният банков код, който въведохте, е невалиден.";
 
 "Town or city" = "Град";
 
