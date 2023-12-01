@@ -533,7 +533,7 @@ class ConfirmButton: UIView {
         private func foregroundColor(for status: Status) -> UIColor {
             let background = backgroundColor(for: status)
 
-            // Use successTextColor if in succeded state and provided, otherwise fallback on foreground color
+            // Use successTextColor if in succeeded state and provided, otherwise fallback to foreground color
             if status == .succeeded, let successTextColor = appearance.primaryButton.successTextColor {
                 return successTextColor
             }
