@@ -137,41 +137,41 @@ class ConsentViewController: UIViewController {
                 if urlHost == "manual-entry" {
                     delegate?.consentViewControllerDidSelectManuallyVerify(self)
                 } else if urlHost == "data-access-notice" {
-                    let dataAccessNoticeModel = dataSource.consent.dataAccessNotice
-                    let consentBottomSheetModel = ConsentBottomSheetModel(
-                        title: dataAccessNoticeModel.title,
-                        subtitle: dataAccessNoticeModel.subtitle,
-                        body: ConsentBottomSheetModel.Body(
-                            bullets: dataAccessNoticeModel.body.bullets
-                        ),
-                        extraNotice: dataAccessNoticeModel.connectedAccountNotice,
-                        learnMore: dataAccessNoticeModel.learnMore,
-                        cta: dataAccessNoticeModel.cta
-                    )
-                    ConsentBottomSheetViewController.present(
-                        withModel: consentBottomSheetModel,
-                        didSelectUrl: { [weak self] url in
-                            self?.didSelectURLInTextFromBackend(url)
-                        }
-                    )
+//                    let dataAccessNoticeModel = dataSource.consent.dataAccessNotice
+//                    let consentBottomSheetModel = ConsentBottomSheetModel(
+//                        title: dataAccessNoticeModel.title,
+//                        subtitle: dataAccessNoticeModel.subtitle,
+//                        body: ConsentBottomSheetModel.Body(
+//                            bullets: dataAccessNoticeModel.body.bullets
+//                        ),
+//                        extraNotice: dataAccessNoticeModel.connectedAccountNotice,
+//                        learnMore: dataAccessNoticeModel.learnMore,
+//                        cta: dataAccessNoticeModel.cta
+//                    )
+//                    ConsentBottomSheetViewController.present(
+//                        withModel: consentBottomSheetModel,
+//                        didSelectUrl: { [weak self] url in
+//                            self?.didSelectURLInTextFromBackend(url)
+//                        }
+//                    )
                 } else if urlHost == "legal-details-notice" {
-                    let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
-                    let consentBottomSheetModel = ConsentBottomSheetModel(
-                        title: legalDetailsNoticeModel.title,
-                        subtitle: nil,
-                        body: ConsentBottomSheetModel.Body(
-                            bullets: legalDetailsNoticeModel.body.bullets
-                        ),
-                        extraNotice: nil,
-                        learnMore: legalDetailsNoticeModel.learnMore,
-                        cta: legalDetailsNoticeModel.cta
-                    )
-                    ConsentBottomSheetViewController.present(
-                        withModel: consentBottomSheetModel,
-                        didSelectUrl: { [weak self] url in
-                            self?.didSelectURLInTextFromBackend(url)
-                        }
-                    )
+//                    let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
+//                    let consentBottomSheetModel = ConsentBottomSheetModel(
+//                        title: legalDetailsNoticeModel.title,
+//                        subtitle: nil,
+//                        body: ConsentBottomSheetModel.Body(
+//                            bullets: legalDetailsNoticeModel.body.bullets
+//                        ),
+//                        extraNotice: nil,
+//                        learnMore: legalDetailsNoticeModel.learnMore,
+//                        cta: legalDetailsNoticeModel.cta
+//                    )
+//                    ConsentBottomSheetViewController.present(
+//                        withModel: consentBottomSheetModel,
+//                        didSelectUrl: { [weak self] url in
+//                            self?.didSelectURLInTextFromBackend(url)
+//                        }
+//                    )
                 }
             }
         )
