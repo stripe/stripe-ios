@@ -36,7 +36,23 @@ final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
             testWindow.overrideUserInterfaceStyle = .dark
         }
         testWindow.rootViewController = sut
-        sut.view.autosizeHeight(width: 375)
+        sut.view.autosizeHeight(width: 375, height: 280)
         STPSnapshotVerifyView(sut.view)
+    }
+}
+
+private extension UIView {
+    /// Constrains the view to the given width and autosizes its height.
+    /// - Parameter width: Resizes the view to this width
+    func autosizeHeight(width: CGFloat, height: CGFloat) {
+        translatesAutoresizingMaskIntoConstraints = false
+        widthAnchor.constraint(equalToConstant: width).isActive = true
+        heightAnchor.constraint(equalToConstant: height).isActive = true
+        setNeedsLayout()
+        layoutIfNeeded()
+        frame = .init(
+            origin: .zero,
+            size: systemLayoutSizeFitting(CGSize(width: width, height: height))
+        )
     }
 }

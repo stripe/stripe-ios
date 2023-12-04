@@ -77,7 +77,7 @@ final class UpdateCardViewController: UIViewController {
         button.setTitleColor(appearance.colors.danger, for: .normal)
         button.setTitle(.Localized.remove_card, for: .normal)
         button.titleLabel?.textAlignment = .center
-        button.titleLabel?.font = .preferredFont(forTextStyle: .callout, weight: .medium, maximumPointSize: 25)
+        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
         button.titleLabel?.adjustsFontForContentSizeCategory = true
 
         button.addTarget(self, action: #selector(removeCard), for: .touchUpInside)
