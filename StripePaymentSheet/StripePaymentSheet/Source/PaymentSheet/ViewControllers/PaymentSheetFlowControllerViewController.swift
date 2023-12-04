@@ -162,7 +162,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                merchantDisplayName: configuration.merchantDisplayName
+                merchantDisplayName: configuration.merchantDisplayName,
+                isTestMode: configuration.apiClient.isTestmode
             ),
             appearance: configuration.appearance,
             cbcEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled

@@ -57,6 +57,9 @@ import UIKit
     // MARK: - Public properties
     weak public var delegate: ElementDelegate?
     public private(set) var items: [DropdownItem]
+    public var nonPlacerholderItems: [DropdownItem] {
+        return items.filter({ !$0.isPlaceholder })
+    }
     public var selectedItem: DropdownItem {
         return items[selectedIndex]
     }

@@ -24,6 +24,7 @@ final class UpdateCardViewController: UIViewController {
     private let paymentMethod: STPPaymentMethod
     private let paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     private let removeSavedPaymentMethodMessage: String?
+    private let isTestMode: Bool
 
     private var latestError: Error? {
         didSet {
@@ -36,7 +37,7 @@ final class UpdateCardViewController: UIViewController {
 
     // MARK: Navigation bar
     internal lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: false,
+        let navBar = SheetNavigationBar(isTestMode: isTestMode,
                                         appearance: appearance)
         navBar.delegate = self
         navBar.setStyle(.back)
@@ -71,15 +72,16 @@ final class UpdateCardViewController: UIViewController {
         })
     }()
 
-    private lazy var deleteButton: ConfirmButton = {
-        var apperanceCopy = appearance
-        apperanceCopy.colors.primary = appearance.colors.background
-        apperanceCopy.primaryButton.textColor = appearance.colors.danger
-        apperanceCopy.primaryButton.borderColor = .clear
-        apperanceCopy.primaryButton.shadow = .init(color: .clear, opacity: 0.0, offset: .zero, radius: 0.0)
-        return ConfirmButton(callToAction: .custom(title: .Localized.remove_card), appearance: apperanceCopy) { [weak self] in
-            self?.removeCard()
-        }
+    private lazy var deleteButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitleColor(appearance.colors.danger, for: .normal)
+        button.setTitle(.Localized.remove_card, for: .normal)
+        button.titleLabel?.textAlignment = .center
+        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
+        button.titleLabel?.adjustsFontForContentSizeCategory = true
+
+        button.addTarget(self, action: #selector(removeCard), for: .touchUpInside)
+        return button
     }()
 
     private lazy var errorLabel: UILabel = {
@@ -95,10 +97,12 @@ final class UpdateCardViewController: UIViewController {
 
     private lazy var cardBrandDropDown: DropdownFieldElement = {
         let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }) ?? []
-        let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands), theme: appearance.asElementsTheme)
+        let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
+                                                                           theme: appearance.asElementsTheme,
+                                                                           includePlaceholder: false)
 
         // pre-select current card brand
-        if let currentCardBrand = paymentMethod.card?.networks?.preferred?.toCardBrand,
+        if let currentCardBrand = paymentMethod.card?.preferredDisplayBrand,
            let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
             cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
         }
@@ -120,11 +124,13 @@ final class UpdateCardViewController: UIViewController {
     init(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell,
          paymentMethod: STPPaymentMethod,
          removeSavedPaymentMethodMessage: String?,
-         appearance: PaymentSheet.Appearance) {
+         appearance: PaymentSheet.Appearance,
+         isTestMode: Bool) {
         self.paymentOptionCell = paymentOptionCell
         self.paymentMethod = paymentMethod
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
+        self.isTestMode = isTestMode
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -161,7 +167,7 @@ final class UpdateCardViewController: UIViewController {
         _ = bottomVc.popContentViewController()
     }
 
-    private func removeCard() {
+    @objc private func removeCard() {
         let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
                                                                           removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage) { [weak self] in
             guard let self = self else { return }
@@ -175,7 +181,8 @@ final class UpdateCardViewController: UIViewController {
     private func updateCard() async {
         guard let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand, let delegate = delegate else { return }
 
-        updateButton.update(state: .processing)
+        view.isUserInteractionEnabled = false
+        updateButton.update(state: .spinnerWithInteractionDisabled)
 
         // Create the update card params
         let cardParams = STPPaymentMethodCardParams()
@@ -185,13 +192,13 @@ final class UpdateCardViewController: UIViewController {
         // Make the API request to update the payment method
         do {
             try await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateParams: updateParams)
-            updateButton.update(state: .succeeded, animated: true) { [weak self] in
-                self?.dismiss()
-            }
+            dismiss()
         } catch {
             updateButton.update(state: .enabled)
             latestError = error
         }
+
+        view.isUserInteractionEnabled = true
     }
 
 }
@@ -200,11 +207,15 @@ final class UpdateCardViewController: UIViewController {
 extension UpdateCardViewController: BottomSheetContentViewController {
 
     var allowsDragToDismiss: Bool {
-        return false
+        return view.isUserInteractionEnabled
     }
 
     func didTapOrSwipeToDismiss() {
-        // no-op
+        guard view.isUserInteractionEnabled else {
+            return
+        }
+
+        dismiss()
     }
 
     var requiresFullScreen: Bool {
@@ -234,7 +245,7 @@ extension UpdateCardViewController: ElementDelegate {
     func didUpdate(element: Element) {
         latestError = nil // clear error on new input
         let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand
-        let currentCardBrand = STPCard.brand(from: paymentMethod.card?.networks?.preferred ?? "")
+        let currentCardBrand = paymentMethod.card?.preferredDisplayBrand ?? .unknown
         let shouldBeEnabled = selectedBrand != currentCardBrand && selectedBrand != .unknown
         updateButton.update(state: shouldBeEnabled ? .enabled : .disabled)
     }

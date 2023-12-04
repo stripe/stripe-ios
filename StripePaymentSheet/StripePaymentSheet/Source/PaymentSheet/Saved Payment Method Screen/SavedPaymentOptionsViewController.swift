@@ -70,6 +70,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let showLink: Bool
         let removeSavedPaymentMethodMessage: String?
         let merchantDisplayName: String
+        let isTestMode: Bool
     }
 
     var hasRemovablePaymentMethods: Bool {
@@ -380,7 +381,8 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         let editVc = UpdateCardViewController(paymentOptionCell: paymentOptionCell,
                                               paymentMethod: paymentMethod,
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                              appearance: appearance)
+                                              appearance: appearance,
+                                              isTestMode: configuration.isTestMode)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
