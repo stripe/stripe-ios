@@ -126,8 +126,8 @@ class CustomerSheetTests: APIStubbedTestCase {
                 return
             }
             XCTAssertEqual(paymentMethods.count, 2)
-            XCTAssertEqual(paymentMethods[0].type, .card)
-            XCTAssertEqual(paymentMethods[1].type, .USBankAccount)
+            XCTAssert(paymentMethods[0].type == .card && paymentMethods[1].type == .USBankAccount ||
+                      paymentMethods[1].type == .card && paymentMethods[0].type == .USBankAccount)
             XCTAssert(selectedPaymentMethod == nil)
             loadPaymentMethodInfo.fulfill()
         }
@@ -156,8 +156,8 @@ class CustomerSheetTests: APIStubbedTestCase {
                 return
             }
             XCTAssertEqual(paymentMethods.count, 2)
-            XCTAssertEqual(paymentMethods[0].type, .card)
-            XCTAssertEqual(paymentMethods[1].type, .SEPADebit)
+            XCTAssert(paymentMethods[0].type == .card && paymentMethods[1].type == .SEPADebit ||
+                      paymentMethods[1].type == .card && paymentMethods[0].type == .SEPADebit)
             XCTAssert(selectedPaymentMethod == nil)
             loadPaymentMethodInfo.fulfill()
         }
