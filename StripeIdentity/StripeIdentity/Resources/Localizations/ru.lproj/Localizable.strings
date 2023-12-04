@@ -4,11 +4,7 @@
 
 "App Settings" = "Настройки приложения";
 
-"Back driver's license photo successfully uploaded" = "Фотография оборотной стороны водительских прав успешно отправлена";
-
 "Back identity card photo successfully uploaded" = "Фотография оборотной стороны удостоверения личности успешно отправлена";
-
-"Back of driver's license" = "Оборот водительского удостоверения";
 
 "Back of identity card" = "Оборот удостоверения личности";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Похоже, дата рождения недействительна";
 
-"Flip your driver's license over to the other side" = "Переверните водительские права другой стороной";
-
 "Flip your identity card over to the other side" = "Переверните удостоверение личности другой стороной";
 
-"Front driver's license photo successfully uploaded" = "Фотография лицевой стороны водительских прав успешно отправлена";
-
 "Front identity card photo successfully uploaded" = "Фотография лицевой стороны удостоверения личности успешно отправлена";
-
-"Front of driver's license" = "Лицевая сторона водительского удостоверения";
 
 "Front of identity card" = "Лицевая сторона удостоверения личности";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "Номер удостоверения личности";
 
-"ID Type" = "Тип удостоверения";
-
-"Image of passport" = "Изображение паспорта";
-
 "Individual CPF" = "Личный номер CPF";
 
 "Last 4 of Social Security number" = "Последние 4 цифры номера социального страхования";
@@ -59,10 +45,6 @@
 "Loading" = "Идет загрузка";
 
 "NRIC or FIN" = "Номер NRIC или FIN";
-
-"Passport" = "Паспорт";
-
-"Passport photo successfully uploaded" = "Фотография паспорта успешно отправлена";
 
 "Personal ID number" = "Номер документа, удостоверяющего личность";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Библиотека фотографий";
 
-"Please upload an image of your passport" = "Отправьте изображение вашего паспорта";
-
-"Please upload images of the front and back of your driver's license" = "Отправьте изображения лицевой стороны и оборота вашего водительского удостоверения";
-
 "Please upload images of the front and back of your identity card" = "Отправьте изображения лицевой стороны и оборота вашего удостоверения личности";
-
-"Position your driver's license in the center of the frame" = "Поместите водительское удостоверение в центр рамки";
 
 "Position your face in the center of the frame." = "Расположите лицо по центру рамки";
 
 "Position your identity card in the center of the frame" = "Поместите удостоверение личности в центр рамки";
-
-"Position your passport in the center of the frame" = "Поместите паспорт в центр рамки";
 
 "Retake Photos" = "Повторные фото";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Выберите папку с изображением лицевой стороны вашего документа, удостоверяющего личность, для отправки";
 
-"Select back driver's license photo" = "Выбрать фотографию оборотной стороны водительских прав";
-
 "Select back identity card photo" = "Выбрать фотографию оборотной стороны удостоверения личности";
 
-"Select front driver's license photo" = "Выбрать фотографию лицевой стороны водительских прав";
-
 "Select front identity card photo" = "Выбрать фотографию лицевой стороны удостоверения личности";
-
-"Select passport photo" = "Выбрать фотографию паспорта";
 
 "Selfie" = "Селфи";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "Отправьте удостоверение личности с фото";
 
-"Uploading back driver's license photo" = "Отправляется фотография оборотной стороны водительских прав";
-
 "Uploading back identity card photo" = "Отправляется фотография оборотной стороны удостоверения личности";
 
-"Uploading front driver's license photo" = "Отправляется фотография лицевой стороны водительских прав";
-
 "Uploading front identity card photo" = "Отправляется фотография лицевой стороны удостоверения личности";
-
-"Uploading passport photo" = "Отправляется фотография паспорта";
 
 "Verify your identity" = "Подтвердите свою личность";
 

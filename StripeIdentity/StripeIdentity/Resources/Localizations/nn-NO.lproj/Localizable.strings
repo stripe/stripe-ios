@@ -4,11 +4,7 @@
 
 "App Settings" = "Appinnstillingar";
 
-"Back driver's license photo successfully uploaded" = "Bilete av baksida av førarkort lasta opp";
-
 "Back identity card photo successfully uploaded" = "Bilete av baksida av identifikasjonskort lasta opp";
-
-"Back of driver's license" = "Baksida av førarkort";
 
 "Back of identity card" = "Baksida av ID-kort";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Fødselsdato ser ikkje gyldig ut";
 
-"Flip your driver's license over to the other side" = "Snu førarkortet ditt";
-
 "Flip your identity card over to the other side" = "Snu ID-kortet ditt";
 
-"Front driver's license photo successfully uploaded" = "Bilete av framsida av førarkort lasta opp";
-
 "Front identity card photo successfully uploaded" = "Bilete av framsida av identifikasjonskort lasta opp";
-
-"Front of driver's license" = "Framsida av førarkort";
 
 "Front of identity card" = "Framsida av identifikasjonskort";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "ID-nummer";
 
-"ID Type" = "ID-type";
-
-"Image of passport" = "Bilete av pass";
-
 "Individual CPF" = "Individuell CPF";
 
 "Last 4 of Social Security number" = "Siste 4 tak i personnummeret";
@@ -59,10 +45,6 @@
 "Loading" = "Lastar";
 
 "NRIC or FIN" = "NRIC eller FIN";
-
-"Passport" = "Pass";
-
-"Passport photo successfully uploaded" = "Bilete av pass lasta opp";
 
 "Personal ID number" = "Personleg ID-nummer";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Biletebibliotek";
 
-"Please upload an image of your passport" = "Last opp eit bilete av passet ditt";
-
-"Please upload images of the front and back of your driver's license" = "Last opp bilete av framsida og bakside av førarkortet ditt";
-
 "Please upload images of the front and back of your identity card" = "Last opp bilete av framsida og bakside av identifikasjonskortet ditt";
-
-"Position your driver's license in the center of the frame" = "Posisjoner førarkortet ditt i midten av biletet";
 
 "Position your face in the center of the frame." = "Posisjoner andletet ditt i midten av biletet";
 
 "Position your identity card in the center of the frame" = "Posisjoner ID-kortet ditt i midten av biletet";
-
-"Position your passport in the center of the frame" = "Posisjoner passet ditt i midten av biletet";
 
 "Retake Photos" = "Ta bilete på nytt";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Vel ei plassering du vil laste opp framsida av ID-dokumentet ditt frå";
 
-"Select back driver's license photo" = "Vel bilete for baksida av førarkort";
-
 "Select back identity card photo" = "Vel bilete for baksida av ID-kort";
 
-"Select front driver's license photo" = "Vel bilete for framsida av førarkort";
-
 "Select front identity card photo" = "Vel bilete for framsida av ID-kort";
-
-"Select passport photo" = "Vel bilete av pass";
 
 "Selfie" = "Selfie";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "Last opp legitimasjon med foto";
 
-"Uploading back driver's license photo" = "Lastar opp baksida av førarkort";
-
 "Uploading back identity card photo" = "Lastar opp baksida av ID-kort";
 
-"Uploading front driver's license photo" = "Lastar opp framsida av førarkort";
-
 "Uploading front identity card photo" = "Lastar opp framsida av ID-kort";
-
-"Uploading passport photo" = "Lastar opp bilete av pass";
 
 "Verify your identity" = "Stadfest identiteten din";
 

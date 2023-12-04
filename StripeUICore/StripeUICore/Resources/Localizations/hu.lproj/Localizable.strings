@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "%@ számra végződő bankszámla eltávolítása";
 
+"Remove card" = "Kártya törlése";
+
 "Search" = "Keresés";
 
 "Select card brand (optional)" = "Válassza ki a kártya márkáját (nem kötelező)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "A beírt azonosítószám hiányos.";
 
 "The account number you entered is incomplete." = "A számlaszám hiányos.";
+
+"The sort code you entered is invalid." = "A beírt bankazonosító érvénytelen.";
 
 "Town or city" = "Kisváros vagy város";
 

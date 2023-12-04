@@ -4,11 +4,7 @@
 
 "App Settings" = "Mga Setting ng App";
 
-"Back driver's license photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng likod ng lisensya sa pagmamaneho";
-
 "Back identity card photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng likod ng kard ng pagkakakilanlan";
-
-"Back of driver's license" = "Likod ng lisensya sa pagmamaneho";
 
 "Back of identity card" = "Likod ng kard ng pagkakakilanlan";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Mukhang hindi balido ang petsa ng kapanganakan";
 
-"Flip your driver's license over to the other side" = "Baliktarin ang iyong lisensya sa pagmamaneho";
-
 "Flip your identity card over to the other side" = "Baliktarin ang iyong kard ng pagkakakilanlan";
 
-"Front driver's license photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng harap ng lisensya sa pagmamaneho";
-
 "Front identity card photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng harap ng kard ng pagkakakilanlan";
-
-"Front of driver's license" = "Harap ng lisensya sa pagmamaneho";
 
 "Front of identity card" = "Harap ng card ng pagkakakilanlan";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "Numero ng ID";
 
-"ID Type" = "Uri ng ID";
-
-"Image of passport" = "Imahe ng pasaporte";
-
 "Individual CPF" = "Indibidwal na CPF";
 
 "Last 4 of Social Security number" = "Huling 4 ng numero ng Social Security";
@@ -59,10 +45,6 @@
 "Loading" = "Niloload";
 
 "NRIC or FIN" = "NRIC o FIN";
-
-"Passport" = "Pasaporte";
-
-"Passport photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng pasaporte";
 
 "Personal ID number" = "Numero ng Personal na ID";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Library ng Larawan";
 
-"Please upload an image of your passport" = "Mangyaring i-upload ang imahe ng iyong pasaporte";
-
-"Please upload images of the front and back of your driver's license" = "Mangyaring i-upload ang mga imahe ng harap at likod ng iyong lisensya sa pagmamaneho";
-
 "Please upload images of the front and back of your identity card" = "Mangyaring i-upload ang mga imahe ng harap at likod ng iyong card ng pagkakakilanlan";
-
-"Position your driver's license in the center of the frame" = "Iposisyon ang iyong lisensya sa pagmamaneho sa gitna ng frame";
 
 "Position your face in the center of the frame." = "Iposisyon ang iyong mukha sa gitna ng frame.";
 
 "Position your identity card in the center of the frame" = "Iposisyon ang iyong kard ng pagkakakilanlan sa gitna ng frame";
-
-"Position your passport in the center of the frame" = "Iposisyon ang iyong pasaporte sa gitna ng frame";
 
 "Retake Photos" = "Kunan Muli Ang Mga Larawan";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Pumili ng lokasyon kung saan i-a-upload ang harap ng iyong dokumento ng pagkakakilanlan";
 
-"Select back driver's license photo" = "Pumili ng larawan ng likod ng lisensya sa pagmamaneho";
-
 "Select back identity card photo" = "Pumili ng larawan ng likod ng kard ng pagkakakilanlan";
 
-"Select front driver's license photo" = "Pumili ng larawan ng harap ng lisensya sa pagmamaneho";
-
 "Select front identity card photo" = "Pumili ng larawan ng harap ng kard ng pagkakakilanlan";
-
-"Select passport photo" = "Pumili ng larawan ng pasaporte";
 
 "Selfie" = "Selfie";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "I-upload ang iyong photo ID";
 
-"Uploading back driver's license photo" = "Ina-upload ang larawan ng likod ng lisensya sa pagmamaneho";
-
 "Uploading back identity card photo" = "Ina-upload ang larawan ng likod ng card ng pagkakakilanlan";
 
-"Uploading front driver's license photo" = "Ina-upload ang larawan ng harap ng lisensya sa pagmamaneho";
-
 "Uploading front identity card photo" = "Ina-upload ang larawan ng harap ng kard ng pagkakakilanlan";
-
-"Uploading passport photo" = "Ina-upload ang larawan ng passport";
 
 "Verify your identity" = "Patunayan ang iyong pagkakakilanlan";
 

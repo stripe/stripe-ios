@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "移除尾号为 %@ 的银行账户";
 
+"Remove card" = "移除卡";
+
 "Search" = "搜索";
 
 "Select card brand (optional)" = "选择银行卡品牌（可选）";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "您输入的证件号码不完整。";
 
 "The account number you entered is incomplete." = "您输入的账号不完整。";
+
+"The sort code you entered is invalid." = "您输入的分类代码无效。";
 
 "Town or city" = "城镇或城市";
 

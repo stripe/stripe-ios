@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Eliminați contul bancar care se termină în %@";
 
+"Remove card" = "Eliminare card";
+
 "Search" = "Căutare";
 
 "Select card brand (optional)" = "Selectare marcă card (opțional)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "Numărul de identificare pe care l-ați introdus nu este complet.";
 
 "The account number you entered is incomplete." = "Numărul de cont pe care l-ați introdus nu este complet.";
+
+"The sort code you entered is invalid." = "Codul de identificare a băncii pe care l-ați introdus nu este valid.";
 
 "Town or city" = "Municipalitate sau oraș";
 

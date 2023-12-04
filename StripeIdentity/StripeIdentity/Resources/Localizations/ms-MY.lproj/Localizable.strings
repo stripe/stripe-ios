@@ -4,11 +4,7 @@
 
 "App Settings" = "Tetapan Aplikasi";
 
-"Back driver's license photo successfully uploaded" = "Foto bahagian belakang lesen memandu berjaya dimuat naik";
-
 "Back identity card photo successfully uploaded" = "Foto bahagian belakang kad pengenalan berjaya dimuat naik";
-
-"Back of driver's license" = "Bahagian belakang lesen memandu";
 
 "Back of identity card" = "Bahagian belakang kad pengenalan";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Tarikh lahir tampaknya tidak sah";
 
-"Flip your driver's license over to the other side" = "Terbalikkan lesen memandu anda ke sebelah satu lagi";
-
 "Flip your identity card over to the other side" = "Terbalikkan kad pengenalan anda ke sebelah satu lagi";
 
-"Front driver's license photo successfully uploaded" = "Foto bahagian hadapan lesen memandu berjaya dimuat naik";
-
 "Front identity card photo successfully uploaded" = "Foto bahagian hadapan kad pengenalan berjaya dimuat naik";
-
-"Front of driver's license" = "Bahagian hadapan lesen memandu";
 
 "Front of identity card" = "Bahagian hadapan kad pengenalan";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "Nombor ID";
 
-"ID Type" = "Jenis ID";
-
-"Image of passport" = "Imej pasport";
-
 "Individual CPF" = "CPF Individu";
 
 "Last 4 of Social Security number" = "Empat digit terakhir nombor Keselamatan Sosial";
@@ -59,10 +45,6 @@
 "Loading" = "Sedang dimuatkan";
 
 "NRIC or FIN" = "NRIC atau FIN";
-
-"Passport" = "Pasport";
-
-"Passport photo successfully uploaded" = "Foto pasport berjaya dimuat naik";
 
 "Personal ID number" = "Nombor ID peribadi";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Pustaka Foto";
 
-"Please upload an image of your passport" = "Sila muat naik imej pasport anda";
-
-"Please upload images of the front and back of your driver's license" = "Sila muat naik imej hadapan dan belakang lesen memandu anda";
-
 "Please upload images of the front and back of your identity card" = "Sila muat naik imej hadapan dan belakang kad pengenalan anda";
-
-"Position your driver's license in the center of the frame" = "Letakkan lesen memandu anda di tengah bingkai";
 
 "Position your face in the center of the frame." = "Letakkan muka anda di tengah bingkai";
 
 "Position your identity card in the center of the frame" = "Letakkan kad pengenalan anda di tengah bingkai";
-
-"Position your passport in the center of the frame" = "Letakkan pasport anda di tengah bingkai";
 
 "Retake Photos" = "Ambil Semula Foto";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Pilih lokasi sumber untuk memuat naik bahagian hadapan dokumen pengenalan anda";
 
-"Select back driver's license photo" = "Pilih foto bahagian belakang lesen memandu";
-
 "Select back identity card photo" = "Pilih foto bahagian belakang kad pengenalan";
 
-"Select front driver's license photo" = "Pilih foto bahagian hadapan lesen memandu";
-
 "Select front identity card photo" = "Pilih foto bahagian hadapan kad pengenalan";
-
-"Select passport photo" = "Pilih foto pasport";
 
 "Selfie" = "Swafoto";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "Muat naik ID berfoto anda";
 
-"Uploading back driver's license photo" = "Foto bahagian belakang lesen memandu sedang dimuat naik";
-
 "Uploading back identity card photo" = "Foto bahagian belakang kad pengenalan sedang dimuat naik";
 
-"Uploading front driver's license photo" = "Foto bahagian hadapan lesen memandu sedang dimuat naik";
-
 "Uploading front identity card photo" = "Foto bahagian hadapan kad pengenalan sedang dimuat naik";
-
-"Uploading passport photo" = "Foto pasport sedang dimuat naik";
 
 "Verify your identity" = "Tentusahkan identiti anda";
 

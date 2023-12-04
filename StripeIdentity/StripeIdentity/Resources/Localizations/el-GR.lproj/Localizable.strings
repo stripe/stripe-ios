@@ -4,11 +4,7 @@
 
 "App Settings" = "Ρυθμίσεις εφαρμογής";
 
-"Back driver's license photo successfully uploaded" = "Η φωτογραφία της πίσω πλευράς του διπλώματος οδήγησης στάλθηκε με επιτυχία";
-
 "Back identity card photo successfully uploaded" = "Η φωτογραφία της πίσω πλευράς της ταυτότητας στάλθηκε με επιτυχία";
-
-"Back of driver's license" = "Πίσω πλευρά διπλώματος οδήγησης";
 
 "Back of identity card" = "Πίσω πλευρά ταυτότητας";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Η ημερομηνία γέννησης δεν φαίνεται έγκυρη";
 
-"Flip your driver's license over to the other side" = "Γυρίστε το δίπλωμα οδήγησής σας από την άλλη πλευρά";
-
 "Flip your identity card over to the other side" = "Γυρίστε την ταυτότητά σας από την άλλη πλευρά";
 
-"Front driver's license photo successfully uploaded" = "Η φωτογραφία της μπροστινής πλευράς του διπλώματος οδήγησης στάλθηκε με επιτυχία";
-
 "Front identity card photo successfully uploaded" = "Η φωτογραφία της μπροστινής πλευράς της ταυτότητας στάλθηκε με επιτυχία";
-
-"Front of driver's license" = "Μπροστινή πλευρά διπλώματος οδήγησης";
 
 "Front of identity card" = "Μπροστινή πλευρά ταυτότητας";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "Αριθμός ταυτότητας";
 
-"ID Type" = "Τύπος αναγνωριστικού";
-
-"Image of passport" = "Εικόνα διαβατηρίου";
-
 "Individual CPF" = "Ατομικό CPF";
 
 "Last 4 of Social Security number" = "Τελευταία 4 ψηφία του Αριθμού κοινωνικής ασφάλισης";
@@ -59,10 +45,6 @@
 "Loading" = "Φόρτωση";
 
 "NRIC or FIN" = "NRIC ή FIN";
-
-"Passport" = "Διαβατήριο";
-
-"Passport photo successfully uploaded" = "Η φωτογραφία του διαβατηρίου στάλθηκε με επιτυχία";
 
 "Personal ID number" = "Αριθμός ταυτότητας";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Βιβλιοθήκη φωτογραφιών";
 
-"Please upload an image of your passport" = "Αποστείλετε μια εικόνα του διαβατηρίου σας";
-
-"Please upload images of the front and back of your driver's license" = "Αποστείλετε εικόνες της μπροστινής και της πίσω πλευράς του διπλώματος οδήγησης";
-
 "Please upload images of the front and back of your identity card" = "Αποστείλετε εικόνες της μπροστινής και της πίσω πλευράς της ταυτότητάς σας";
-
-"Position your driver's license in the center of the frame" = "Τοποθετήστε το δίπλωμα οδήγησής σας στο κέντρο του πλαισίου";
 
 "Position your face in the center of the frame." = "Τοποθετήστε το πρόσωπό σας στο κέντρο του πλαισίου.";
 
 "Position your identity card in the center of the frame" = "Τοποθετήστε την ταυτότητά σας στο κέντρο του πλαισίου";
-
-"Position your passport in the center of the frame" = "Τοποθετήστε το διαβατήριό σας στο κέντρο του πλαισίου";
 
 "Retake Photos" = "Λήψη φωτογραφιών εκ νέου";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Επιλέξτε την τοποθεσία από την οποία θα αποστείλετε την μπροστινή πλευρά του εγγράφου ταυτότητάς σας";
 
-"Select back driver's license photo" = "Επιλογή φωτογραφίας πίσω πλευράς διπλώματος οδήγησης";
-
 "Select back identity card photo" = "Επιλογή φωτογραφίας πίσω πλευράς ταυτότητας";
 
-"Select front driver's license photo" = "Επιλογή φωτογραφίας μπροστινής πλευράς διπλώματος οδήγησης";
-
 "Select front identity card photo" = "Επιλογή φωτογραφίας μπροστινής πλευράς ταυτότητας";
-
-"Select passport photo" = "Επιλογή φωτογραφίας διαβατηρίου";
 
 "Selfie" = "Selfie";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "Αποστείλετε την ταυτότητα με φωτογραφία";
 
-"Uploading back driver's license photo" = "Αποστολή φωτογραφίας πίσω πλευράς διπλώματος οδήγησης";
-
 "Uploading back identity card photo" = "Αποστολή φωτογραφίας πίσω πλευράς ταυτότητας";
 
-"Uploading front driver's license photo" = "Αποστολή φωτογραφίας μπροστινής πλευράς διπλώματος οδήγησης";
-
 "Uploading front identity card photo" = "Αποστολή φωτογραφίας μπροστινής πλευράς ταυτότητας";
-
-"Uploading passport photo" = "Αποστολή φωτογραφίας διαβατηρίου";
 
 "Verify your identity" = "Επαληθεύστε την ταυτότητά σας";
 

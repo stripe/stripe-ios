@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Bankkonto mit den Endziffern %@ entfernen";
 
+"Remove card" = "Karte entfernen";
+
 "Search" = "Suchen";
 
 "Select card brand (optional)" = "Kartenmarke auswählen (optional)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "Die eingegebene Ausweisnummer ist unvollständig.";
 
 "The account number you entered is incomplete." = "Die von Ihnen eingegebene Kontonummer ist unvollständig.";
+
+"The sort code you entered is invalid." = "Die eingegebene Bankleitzahl ist ungültig.";
 
 "Town or city" = "Stadt oder Ort";
 

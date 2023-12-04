@@ -4,11 +4,7 @@
 
 "App Settings" = "アプリの設定";
 
-"Back driver's license photo successfully uploaded" = "運転免許証の裏面の写真のアップロードが完了しました";
-
 "Back identity card photo successfully uploaded" = "身分証明書の裏面の写真のアップロードが完了しました";
-
-"Back of driver's license" = "運転免許証の裏面";
 
 "Back of identity card" = "身分証明書の裏面";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "生年月日が無効のようです";
 
-"Flip your driver's license over to the other side" = "運転免許証を裏返してください";
-
 "Flip your identity card over to the other side" = "身分証明書を裏返してください";
 
-"Front driver's license photo successfully uploaded" = "運転免許証の表面の写真のアップロードが完了しました";
-
 "Front identity card photo successfully uploaded" = "身分証明書の表面の写真のアップロードが完了しました";
-
-"Front of driver's license" = "運転免許証の表面";
 
 "Front of identity card" = "身分証明書の表面";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "ID 番号";
 
-"ID Type" = "ID タイプ";
-
-"Image of passport" = "パスポートの画像";
-
 "Individual CPF" = "個人 CPF";
 
 "Last 4 of Social Security number" = "社会保障番号の末尾 4 桁";
@@ -59,10 +45,6 @@
 "Loading" = "読み込み中";
 
 "NRIC or FIN" = "NRIC または FIN";
-
-"Passport" = "パスポート";
-
-"Passport photo successfully uploaded" = "パスポートの写真のアップロードが完了しました";
 
 "Personal ID number" = "身分証明書番号";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "フォトライブラリー";
 
-"Please upload an image of your passport" = "パスポートの画像をアップロードしてください";
-
-"Please upload images of the front and back of your driver's license" = "運転免許証の表裏両面の画像をアップロードしてください";
-
 "Please upload images of the front and back of your identity card" = "身分証明書の表裏両面の画像をアップロードしてください";
-
-"Position your driver's license in the center of the frame" = "運転免許証をフレームの中央に置いてください";
 
 "Position your face in the center of the frame." = "フレームの中央に顔を置いてください。";
 
 "Position your identity card in the center of the frame" = "身分証明書をフレームの中央に置いてください";
-
-"Position your passport in the center of the frame" = "パスポートをフレームの中央に置いてください";
 
 "Retake Photos" = "写真を撮り直す";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "身分証明書の表面をどこからアップロードするのかを選択してください";
 
-"Select back driver's license photo" = "運転免許証の裏面の写真を選択";
-
 "Select back identity card photo" = "身分証明書の裏面の写真を選択";
 
-"Select front driver's license photo" = "運転免許証の表面の写真を選択";
-
 "Select front identity card photo" = "身分証明書の表面の写真を選択";
-
-"Select passport photo" = "パスポートの写真を選択";
 
 "Selfie" = "セルフィ―";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "写真付き身分証明書をアップロードする";
 
-"Uploading back driver's license photo" = "運転免許証の裏面をアップロードしています";
-
 "Uploading back identity card photo" = "身分証明書の裏面をアップロードしています";
 
-"Uploading front driver's license photo" = "運転免許証の表面をアップロードしています";
-
 "Uploading front identity card photo" = "身分証明書の表面をアップロードしています";
-
-"Uploading passport photo" = "パスポートの写真をアップロードしています";
 
 "Verify your identity" = "本人確認を行う";
 

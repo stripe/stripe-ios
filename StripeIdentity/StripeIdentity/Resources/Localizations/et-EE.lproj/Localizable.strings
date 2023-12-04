@@ -4,11 +4,7 @@
 
 "App Settings" = "Rakenduse sätted";
 
-"Back driver's license photo successfully uploaded" = "Juhiloa tagakülje foto üleslaadimine õnnestus";
-
 "Back identity card photo successfully uploaded" = "ID-kaardi tagakülje foto üleslaadimine õnnestus";
-
-"Back of driver's license" = "Juhiloa tagakülg";
 
 "Back of identity card" = "ID-kaardi tagakülg";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Sünnikuupäev ei näi olevat õige";
 
-"Flip your driver's license over to the other side" = "Pöörake juhiluba ümber";
-
 "Flip your identity card over to the other side" = "Pöörake ID-kaart ümber";
 
-"Front driver's license photo successfully uploaded" = "Juhiloa esikülje foto üleslaadimine õnnestus";
-
 "Front identity card photo successfully uploaded" = "ID-kaardi esikülje foto üleslaadimine õnnestus";
-
-"Front of driver's license" = "Juhiloa esikülg";
 
 "Front of identity card" = "ID-kaardi esikülg";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "Isikukood";
 
-"ID Type" = "Isikut tõendava dokumendi liik";
-
-"Image of passport" = "Passi pilt";
-
 "Individual CPF" = "Eraisiku CPF";
 
 "Last 4 of Social Security number" = "Sotsiaalkindlustuse numbri viimased 4 numbrit";
@@ -59,10 +45,6 @@
 "Loading" = "Laadimine";
 
 "NRIC or FIN" = "NRIC või FIN";
-
-"Passport" = "Pass";
-
-"Passport photo successfully uploaded" = "Passi foto üleslaadimine õnnestus";
 
 "Personal ID number" = "Isikukood";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Fototeek";
 
-"Please upload an image of your passport" = "Laadige üles oma passi pilt";
-
-"Please upload images of the front and back of your driver's license" = "Laadige üles oma juhiloa esi- ja tagakülje pildid";
-
 "Please upload images of the front and back of your identity card" = "Laadige üles oma ID-kaardi esi- ja tagakülje pildid";
-
-"Position your driver's license in the center of the frame" = "Jälgige, et juhiluba oleks raami keskel";
 
 "Position your face in the center of the frame." = "Jälgige, et nägu oleks raami keskel.";
 
 "Position your identity card in the center of the frame" = "Jälgige, et ID-kaart oleks raami keskel";
-
-"Position your passport in the center of the frame" = "Jälgige, et pass oleks raami keskel";
 
 "Retake Photos" = "Tee fotod uuesti";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Valige asukoht, kust laadida üles oma isikut tõendava dokumendi esikülg";
 
-"Select back driver's license photo" = "Vali juhiloa tagakülje foto";
-
 "Select back identity card photo" = "Vali ID-kaardi tagakülje foto";
 
-"Select front driver's license photo" = "Vali juhiloa esikülje foto";
-
 "Select front identity card photo" = "Vali ID-kaardi esikülje foto";
-
-"Select passport photo" = "Vali passi foto";
 
 "Selfie" = "Selfi";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "Laadige üles fotoga isikut tõendav dokument";
 
-"Uploading back driver's license photo" = "Juhiloa tagakülje foto üleslaadimine";
-
 "Uploading back identity card photo" = "ID-kaardi tagakülje foto üleslaadimine";
 
-"Uploading front driver's license photo" = "Juhiloa esikülje foto üleslaadimine";
-
 "Uploading front identity card photo" = "ID-kaardi esikülje foto üleslaadimine";
-
-"Uploading passport photo" = "Passi foto üleslaadimine";
 
 "Verify your identity" = "Kinnitage oma isik";
 
