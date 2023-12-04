@@ -174,19 +174,13 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.customerMode = .new
-        settings.applePayEnabled = .off // disable Apple Pay
-        // This test case is testing a feature not available when Link is on,
-        // so we must manually turn off Link.
-        settings.apmsEnabled = .off
-        settings.linkEnabled = .off
         loadPlayground(
             app,
             settings
         )
 
-        var paymentMethodButton = app.buttons["Payment method"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
-        paymentMethodButton.tap()
+        app.buttons["Apple Pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        app.buttons["+ Add"].waitForExistenceAndTap()
         try! fillCardData(app)
 
         // toggle save this card on and off
@@ -215,9 +209,10 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Reload w/ same customer
         reload(app, settings: settings)
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
-        paymentMethodButton.tap()
-        try! fillCardData(app)  // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
+        app.buttons["Apple Pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        XCTAssertEqual(app.cells.count, 3) // Should be "Add" and "Apple Pay" and "Link"
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app)
         // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         if !expectDefaultSelectionOn {
@@ -235,9 +230,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
 
         // return to payment method selector
-        paymentMethodButton = app.staticTexts["••••4242"]  // The card should be saved now
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
-        paymentMethodButton.tap()
+        app.staticTexts["••••4242"].waitForExistenceAndTap(timeout: 30)  // The card should be saved now and selected as default instead of Apple Pay
+        XCTAssertEqual(app.cells.count, 4) // Should be "Add", "Apple Pay", "Link", and saved card
 
         let editButton = app.staticTexts["Edit"]
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
@@ -251,7 +245,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
 
-        XCTAssertTrue(app.cells.count == 1)
+        XCTAssertEqual(app.cells.count, 3) // Should be "Add", "Apple Pay", "Link"
     }
 
     func testPaymentSheetSwiftUI() throws {
@@ -1328,17 +1322,6 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
         app.textFields["ZIP"].tap()
         app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
-
-        // Reload w/ same customer
-        reload(app, settings: settings)
-        // Unfortunately, the next time you check out, Link is still selected by default.
-        // Select the saved SEPA PM to make it the default and make sure we can still check out successfully.
-        paymentMethodButton.tap()
-        app.buttons["••••3201"].waitForExistenceAndTap()
-        XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.exists)
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))

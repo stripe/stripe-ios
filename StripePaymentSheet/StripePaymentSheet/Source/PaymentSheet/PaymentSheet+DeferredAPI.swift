@@ -44,10 +44,19 @@ extension PaymentSheet {
                     return
                 }
 
+                // Overwrite `completion` to ensure we set the default if necessary before completing.
+                let completion = { (status: STPPaymentHandlerActionStatus, paymentOrSetupIntent: PaymentOrSetupIntent?, error: NSError?, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType) in
+                    if let paymentOrSetupIntent {
+                        setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: paymentOrSetupIntent, configuration: configuration)
+                    }
+                    completion(makePaymentSheetResult(for: status, error: error), deferredIntentConfirmationType)
+                }
+
                 // 3. Retrieve the PaymentIntent or SetupIntent
                 switch intentConfig.mode {
                 case .payment:
                     let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
+
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 4a. Client-side confirmation
@@ -59,7 +68,7 @@ extension PaymentSheet {
                             mandateData: mandateData
                         )
 
-                        // Dashboard specfic logic
+                        // Dashboard specific logic
                         if configuration.apiClient.publishableKeyIsUserKey {
                             paymentIntentParams = setParamsForDashboardApp(confirmType: confirmType,
                                                                            paymentIntentParams: paymentIntentParams,
@@ -70,8 +79,8 @@ extension PaymentSheet {
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext
-                        ) { status, _, error in
-                            completion(makePaymentSheetResult(for: status, error: error), .client)
+                        ) { status, paymentIntent, error in
+                            completion(status, paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }, error, .client)
                         }
                     } else {
                         // 4b. Server-side confirmation
@@ -79,8 +88,8 @@ extension PaymentSheet {
                             for: paymentIntent,
                             with: authenticationContext,
                             returnURL: configuration.returnURL
-                        ) { status, _, error in
-                            completion(makePaymentSheetResult(for: status, error: error), .server)
+                        ) { status, paymentIntent, error in
+                            completion(status, paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }, error, .server)
                         }
                     }
                 case .setup:
@@ -97,8 +106,8 @@ extension PaymentSheet {
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,
                             with: authenticationContext
-                        ) { status, _, error in
-                            completion(makePaymentSheetResult(for: status, error: error), .client)
+                        ) { status, setupIntent, error in
+                            completion(status, setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }, error, .client)
                         }
                     } else {
                         // 4b. Server-side confirmation
@@ -106,8 +115,8 @@ extension PaymentSheet {
                             for: setupIntent,
                             with: authenticationContext,
                             returnURL: configuration.returnURL
-                        ) { status, _, error in
-                            completion(makePaymentSheetResult(for: status, error: error), .server)
+                        ) { status, setupIntent, error in
+                            completion(status, setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }, error, .server)
                         }
                     }
                 }

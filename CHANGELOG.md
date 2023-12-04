@@ -2,6 +2,9 @@
 ### Apple Pay
 * [Fixed] STPApplePayContext initializer returns nil in more cases where the request is invalid. 
 
+### PaymentSheet
+* [Fixed] PaymentSheet sets newly saved payment methods as the default so that they're pre-selected the next time the customer pays.
+
 ## 23.18.3 2023-11-28
 ### PaymentSheet
 * [Fixed] Visual bug where re-presenting PaymentSheet wouldn't show a spinner while it reloads.
