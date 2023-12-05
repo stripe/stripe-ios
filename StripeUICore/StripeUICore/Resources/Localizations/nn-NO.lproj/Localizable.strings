@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Fjern bankkonto som sluttar på %@";
 
+"Remove card" = "Fjern kort";
+
 "Search" = "Søk";
 
 "Select card brand (optional)" = "Vel kortmerkje (valfritt)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "ID-nummeret du skrev inn, er ufullstendig.";
 
 "The account number you entered is incomplete." = "Kontonummeret du skrev inn, er ufullstendig.";
+
+"The sort code you entered is invalid." = "Sorteringskoden du angjev, er ugyldig.";
 
 "Town or city" = "Stad";
 

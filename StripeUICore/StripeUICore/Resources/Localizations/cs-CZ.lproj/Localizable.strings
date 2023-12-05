@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Odebrat bankovní účet končící na %@";
 
+"Remove card" = "Odebrat kartu";
+
 "Search" = "Hledat";
 
 "Select card brand (optional)" = "Vyberte značku karty (volitelné)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "Identifikační číslo, které jste zadali, je neúplné.";
 
 "The account number you entered is incomplete." = "Zadané číslo účtu je neúplné.";
+
+"The sort code you entered is invalid." = "Zadaný lokální bankovní kód je neplatný.";
 
 "Town or city" = "Město nebo velkoměsto";
 

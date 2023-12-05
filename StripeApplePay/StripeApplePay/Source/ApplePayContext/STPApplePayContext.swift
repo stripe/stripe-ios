@@ -107,9 +107,19 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         delegate: _stpinternal_STPApplePayContextDelegateBase?
     ) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
+        let canMakePayments: Bool = {
+            if #available(iOS 15.0, *) {
+                // On iOS 15+, Apple Pay can be displayed even though there are no cards because Apple added the ability for customers to add cards in the payment sheet (see WWDC '21 "What's new in Wallet and Apple Pay")
+                return PKPaymentAuthorizationController.canMakePayments()
+            } else {
+                return PKPaymentAuthorizationController.canMakePayments(usingNetworks: StripeAPI.supportedPKPaymentNetworks())
+            }
+        }()
 
+        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantIdentifier` on your payment request.")
         guard
-            StripeAPI.canSubmitPaymentRequest(paymentRequest),
+            canMakePayments,
+            !paymentRequest.merchantIdentifier.isEmpty,
             // PKPaymentAuthorizationController's docs incorrectly state:
             // "If the user can’t make payments on any of the payment request’s supported networks, initialization fails and this method returns nil."
             // In actuality, this initializer is non-nullable. To make sure we return nil when the request is invalid, we'll use PKPaymentAuthorizationViewController's initializer, which *is* nullable.

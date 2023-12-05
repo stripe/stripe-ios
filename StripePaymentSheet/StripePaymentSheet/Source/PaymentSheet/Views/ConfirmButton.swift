@@ -59,15 +59,6 @@ class ConfirmButton: UIView {
         }
     }
 
-    var succeededBackgroundColor: UIColor {
-        get {
-            return buyButton.succeededBackgroundColor
-        }
-        set {
-            buyButton.succeededBackgroundColor = newValue
-        }
-    }
-
     private(set) var state: Status = .enabled
     private(set) var style: Style
     private(set) var callToAction: CallToActionType
@@ -232,7 +223,9 @@ class ConfirmButton: UIView {
         }
 
         /// Background color for the `.succeeded` state.
-        var succeededBackgroundColor: UIColor = .systemGreen
+        var succeededBackgroundColor: UIColor {
+            return appearance.primaryButton.successBackgroundColor
+        }
 
         private static let minimumLabelHeight: CGFloat = 24
         private static let minimumButtonHeight: CGFloat = 44
@@ -536,9 +529,9 @@ class ConfirmButton: UIView {
         private func foregroundColor(for status: Status) -> UIColor {
             let background = backgroundColor(for: status)
 
-            if status == .succeeded {
-                // always use hardcoded color for foreground color when in success state
-                return .white
+            // Use successTextColor if in succeeded state and provided, otherwise fallback to foreground color
+            if status == .succeeded, let successTextColor = appearance.primaryButton.successTextColor {
+                return successTextColor
             }
 
             // if foreground is set prefer that over a dynamic constrasting color in all othe states

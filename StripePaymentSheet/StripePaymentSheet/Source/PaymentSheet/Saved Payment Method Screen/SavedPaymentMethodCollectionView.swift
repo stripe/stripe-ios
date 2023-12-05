@@ -341,7 +341,7 @@ extension SavedPaymentMethodCollectionView {
                     if shouldAllowEditing {
                         accessoryButton.set(style: .edit, with: appearance.colors.danger)
                         accessoryButton.backgroundColor = UIColor.dynamic(
-                            light: .systemGray5, dark: .tertiaryLabel)
+                            light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
                         accessoryButton.iconColor = appearance.colors.icon
                     } else {
                         accessoryButton.set(style: .remove, with: appearance.colors.danger)

@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Alisin ang account sa bangko na nagtatapos sa %@";
 
+"Remove card" = "Alisin ang kard";
+
 "Search" = "Maghanap";
 
 "Select card brand (optional)" = "Pumili ng brand ng kard (opsyonal)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "Ang numero ng ID na inilagay mo ay kulang.";
 
 "The account number you entered is incomplete." = "Ang numero ng account na inilagay mo ay kulang.";
+
+"The sort code you entered is invalid." = "Ang sort code na inilagay mo ay hindi valid.";
 
 "Town or city" = "Bayan o siyudad";
 

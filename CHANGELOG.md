@@ -1,6 +1,10 @@
 ## X.Y.Z 2023-xx-yy
 ### Apple Pay
-* [Fixed] STPApplePayContext initializer returns nil in more cases where the request is invalid. 
+* [Fixed] STPApplePayContext initializer returns nil in more cases where the request is invalid.
+* [Fixed] STPApplePayContext now allows Apple Pay when the customer doesn’t have saved cards but can set them up in the Apple Pay sheet (iOS 15+).
+
+### PaymentSheet
+* [Fixed] PaymentSheet sets newly saved payment methods as the default so that they're pre-selected the next time the customer pays.
 
 ### CustomerSheet
 * [Added] Saved SEPA payment methods are now displayed to the customer for reuse, similar to saved cards.
@@ -11,6 +15,7 @@
 * [Fixed] Visual bug where re-presenting PaymentSheet wouldn't show a spinner while it reloads.
 * [Added] If PaymentSheet fails to load a deferred intent configuration, we fall back to displaying cards (or the intent configuration payment method types) instead of failing.
 * [Fixed] Fixed an issue where PaymentSheet wouldn't accept valid Mexican phone numbers.
+* [Added] The ability to customize the success colors of the primary button with `PaymentSheetAppearance.primaryButton.successBackgroundColor` and `PaymentSheetAppearance.primaryButton.successTextColor`.
 
 ## 23.18.2 2023-11-06
 ### CustomerSheet

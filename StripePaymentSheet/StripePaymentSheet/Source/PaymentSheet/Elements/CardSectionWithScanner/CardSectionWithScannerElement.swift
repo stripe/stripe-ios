@@ -82,8 +82,7 @@ final class CardSection: ContainerElement {
         if cardBrandChoiceEligible {
             cardBrandDropDown = PaymentMethodElementWrapper(DropdownFieldElement.makeCardBrandDropdown(theme: theme)) { field, params in
                 let cardBrand = STPCard.brand(from: field.selectedItem.rawData)
-                guard cardBrand != .unknown else { return params }
-                cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: STPCardBrandUtilities.apiValue(from: cardBrand))
+                cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: cardBrand != .unknown ? STPCardBrandUtilities.apiValue(from: cardBrand) : nil)
                 return params
             }
         }

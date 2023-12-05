@@ -94,6 +94,8 @@
 
 "Remove bank account ending in %@" = "Odstranite bančni račun, ki se konča s števkami %@";
 
+"Remove card" = "Odstrani kartico";
+
 "Search" = "Išči";
 
 "Select card brand (optional)" = "Izberite blagovno znamko kartice (neobvezno)";
@@ -109,6 +111,8 @@
 "The ID number you entered is incomplete." = "Vnesena številka osebnega dokumenta ni popolna.";
 
 "The account number you entered is incomplete." = "Vnesena številka računa ni popolna.";
+
+"The sort code you entered is invalid." = "Ta številka banke ni veljavna.";
 
 "Town or city" = "Kraj ali mesto";
 

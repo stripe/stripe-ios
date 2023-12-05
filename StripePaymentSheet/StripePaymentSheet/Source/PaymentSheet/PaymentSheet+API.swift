@@ -161,7 +161,10 @@ extension PaymentSheet {
                 paymentHandler.confirmPayment(
                     params,
                     with: authenticationContext,
-                    completion: { actionStatus, _, error in
+                    completion: { actionStatus, paymentIntent, error in
+                        if let paymentIntent {
+                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration)
+                        }
                         paymentHandlerCompletion(actionStatus, error)
                     }
                 )
@@ -179,7 +182,10 @@ extension PaymentSheet {
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
-                    completion: { actionStatus, _, error in
+                    completion: { actionStatus, setupIntent, error in
+                        if let setupIntent {
+                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration)
+                        }
                         paymentHandlerCompletion(actionStatus, error)
                     }
                 )
@@ -242,6 +248,7 @@ extension PaymentSheet {
             }
         // MARK: - Link
         case .link(let confirmOption):
+            // This is called when the customer pays in the sheet (as opposed to the Link webview) and agreed to sign up for Link
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams) -> Void = { paymentMethodParams in
                 switch intent {
                 case .paymentIntent(_, let paymentIntent):
@@ -428,6 +435,52 @@ extension PaymentSheet {
     }
 
     // MARK: - Helper methods
+
+    enum PaymentOrSetupIntent {
+        case paymentIntent(STPPaymentIntent)
+        case setupIntent(STPSetupIntent)
+
+        var isSetupFutureUsageSet: Bool {
+            switch self {
+            case .paymentIntent(let paymentIntent):
+                return paymentIntent.setupFutureUsage != .none || (paymentIntent.paymentMethodOptions?.allResponseFields.values.contains(where: {
+                    if let value = $0 as? [String: Any] {
+                        return value["setup_future_usage"] != nil
+                    }
+                    return false
+                }) ?? false)
+            case .setupIntent:
+                return true
+            }
+        }
+
+        var paymentMethod: STPPaymentMethod? {
+            switch self {
+            case .paymentIntent(let paymentIntent):
+                return paymentIntent.paymentMethod
+            case .setupIntent(let setupIntent):
+                return setupIntent.paymentMethod
+            }
+        }
+    }
+
+    /// A helper method that sets the Customer's default payment method if necessary.
+    /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
+    static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: Configuration) {
+
+        guard
+            // Did we successfully save this payment method?
+            actionStatus == .succeeded,
+            let customer = configuration.customer?.id,
+            intent.isSetupFutureUsageSet,
+            let paymentMethod = intent.paymentMethod,
+            // Can it appear in the list of saved PMs?
+            PaymentSheetLoader.savedPaymentMethodTypes.contains(paymentMethod.type)
+        else {
+            return
+        }
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: customer)
+    }
 
     static func makeShippingParams(for paymentIntent: STPPaymentIntent, configuration: PaymentSheet.Configuration)
         -> STPPaymentIntentShippingDetailsParams?

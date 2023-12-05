@@ -4,11 +4,7 @@
 
 "App Settings" = "Nastavení aplikace";
 
-"Back driver's license photo successfully uploaded" = "Fotografie z přední strany řidičského průkazu byla úspěšně nahrána";
-
 "Back identity card photo successfully uploaded" = "Fotografie ze zadní strany průkazu totožnosti byla úspěšně nahrána";
-
-"Back of driver's license" = "Zadní strana řidičského průkazu";
 
 "Back of identity card" = "Zadní strana průkazu totožnosti";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Datum narození nevypadá jako platný údaj";
 
-"Flip your driver's license over to the other side" = "Převraťte řidičský průkaz na druhou stranu";
-
 "Flip your identity card over to the other side" = "Převraťte průkaz totožnosti na druhou stranu";
 
-"Front driver's license photo successfully uploaded" = "Fotografie z přední strany řidičského průkazu byla úspěšně nahrána";
-
 "Front identity card photo successfully uploaded" = "Fotografie z přední strany průkazu totožnosti byla úspěšně nahrána";
-
-"Front of driver's license" = "Přední strana řidičského průkazu";
 
 "Front of identity card" = "Přední strana průkazu totožnosti";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "Identifikační číslo";
 
-"ID Type" = "Typ ID";
-
-"Image of passport" = "Obrázek cestovního pasu";
-
 "Individual CPF" = "Individuální CPF";
 
 "Last 4 of Social Security number" = "Poslední 4 pozice čísla sociálního pojištění";
@@ -59,10 +45,6 @@
 "Loading" = "Načítání";
 
 "NRIC or FIN" = "NRIC nebo FIN";
-
-"Passport" = "Pas";
-
-"Passport photo successfully uploaded" = "Pasová fotografie byla úspěšně nahrána";
 
 "Personal ID number" = "Osobní identifikační číslo";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Knihovna fotek";
 
-"Please upload an image of your passport" = "Nahrajte prosím obrázek vašeho cestovního pasu";
-
-"Please upload images of the front and back of your driver's license" = "Nahrajte prosím obrázky přední a zadní strany vašeho řidičského průkazu";
-
 "Please upload images of the front and back of your identity card" = "Nahrajte prosím obrázky přední a zadní strany vašeho průkazu totožnosti";
-
-"Position your driver's license in the center of the frame" = "Umístěte řidičský průkaz do středu rámečku";
 
 "Position your face in the center of the frame." = "Svoji tvář umístěte do středu rámečku.";
 
 "Position your identity card in the center of the frame" = "Umístěte průkaz totožnosti do středu rámečku";
-
-"Position your passport in the center of the frame" = "Umístěte pas do středu rámečku";
 
 "Retake Photos" = "Znovu pořídit fotografie";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Vyberte místo k nahrání přední strany vašeho průkazu totožnosti z";
 
-"Select back driver's license photo" = "Vyberte fotografii ze zadní strany řidičského průkazu";
-
 "Select back identity card photo" = "Vyberte fotografii ze zadní strany řidičského průkazu";
 
-"Select front driver's license photo" = "Vyberte fotografii z přední strany řidičského průkazu";
-
 "Select front identity card photo" = "Vyberte fotografii z přední strany průkazu totožnosti";
-
-"Select passport photo" = "Vyberte pasovou fotografii";
 
 "Selfie" = "Selfie";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "Nahrajte svou fotografii";
 
-"Uploading back driver's license photo" = "Nahrávání fotografie ze zadní strany řidičského průkazu";
-
 "Uploading back identity card photo" = "Nahrávání fotografie ze zadní strany průkazu totožnosti";
 
-"Uploading front driver's license photo" = "Nahrávání fotografie z přední strany řidičského průkazu";
-
 "Uploading front identity card photo" = "Nahrávání fotografie z přední strany průkazu totožnosti";
-
-"Uploading passport photo" = "Nahrávání pasové fotografie";
 
 "Verify your identity" = "Potvrďte svou totožnost";
 

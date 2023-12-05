@@ -190,6 +190,13 @@
             ReferencedContainer = "container:Stripe/Stripe.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "FB_REFERENCE_IMAGE_DIR"
+            value = "$(SOURCE_ROOT)/../Tests/ReferenceImages"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -322,15 +329,6 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <CommandLineArguments>
-      </CommandLineArguments>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "FB_REFERENCE_IMAGE_DIR"
-            value = "$(SOURCE_ROOT)/../Tests/ReferenceImages"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

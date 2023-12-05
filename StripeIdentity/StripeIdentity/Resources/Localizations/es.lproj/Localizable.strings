@@ -4,11 +4,7 @@
 
 "App Settings" = "Configuración de la aplicación";
 
-"Back driver's license photo successfully uploaded" = "La foto del reverso del permiso de conducir se ha cargado correctamente";
-
 "Back identity card photo successfully uploaded" = "La foto del reverso del documento de identidad se ha cargado correctamente";
-
-"Back of driver's license" = "Reverso del permiso de conducir";
 
 "Back of identity card" = "Reverso del documento de identidad";
 
@@ -28,15 +24,9 @@
 
 "Date of birth does not look valid" = "Parece que la fecha de nacimiento no es válida";
 
-"Flip your driver's license over to the other side" = "Gira tu permiso de conducir hacia el lado contrario";
-
 "Flip your identity card over to the other side" = "Gira tu documento de identidad hacia el lado contrario";
 
-"Front driver's license photo successfully uploaded" = "La foto del anverso del permiso de conducir se ha cargado correctamente";
-
 "Front identity card photo successfully uploaded" = "La foto del anverso del documento de identidad se ha cargado correctamente";
-
-"Front of driver's license" = "Anverso del permiso de conducir";
 
 "Front of identity card" = "Anverso del documento de identidad";
 
@@ -48,10 +38,6 @@
 
 "ID Number" = "Número de ID";
 
-"ID Type" = "Tipo de ID";
-
-"Image of passport" = "Imagen del pasaporte";
-
 "Individual CPF" = "CPF individual";
 
 "Last 4 of Social Security number" = "Últimos 4 dígitos del número de seguridad social";
@@ -59,10 +45,6 @@
 "Loading" = "Cargando";
 
 "NRIC or FIN" = "NRIC o FIN";
-
-"Passport" = "Pasaporte";
-
-"Passport photo successfully uploaded" = "La foto del pasaporte se ha cargado correctamente";
 
 "Personal ID number" = "Número de identificación personal";
 
@@ -74,19 +56,11 @@
 
 "Photo Library" = "Biblioteca de fotos";
 
-"Please upload an image of your passport" = "Carga una imagen de tu pasaporte";
-
-"Please upload images of the front and back of your driver's license" = "Carga las imágenes del anverso y el reverso de tu permiso de conducir";
-
 "Please upload images of the front and back of your identity card" = "Carga las imágenes del anverso y el reverso de tu documento de identidad";
-
-"Position your driver's license in the center of the frame" = "Coloca el permiso de conducir en el centro del marco";
 
 "Position your face in the center of the frame." = "Coloca la cara en el centro del marco.";
 
 "Position your identity card in the center of the frame" = "Coloca el documento de identidad en el centro del marco";
-
-"Position your passport in the center of the frame" = "Coloca el pasaporte en el centro del marco";
 
 "Retake Photos" = "Volver a sacar las fotos";
 
@@ -100,15 +74,9 @@
 
 "Select a location to upload the front of your identity document from" = "Selecciona una ubicación desde la que cargar el anverso de tu documento de identidad";
 
-"Select back driver's license photo" = "Selecciona la foto del reverso del permiso de conducir";
-
 "Select back identity card photo" = "Selecciona la foto del reverso del documento de identidad";
 
-"Select front driver's license photo" = "Selecciona la foto del anverso del permiso de conducir";
-
 "Select front identity card photo" = "Selecciona la foto del anverso del documento de identidad";
-
-"Select passport photo" = "Selecciona la foto del pasaporte";
 
 "Selfie" = "Selfie";
 
@@ -134,15 +102,9 @@
 
 "Upload your photo ID" = "Sube tu documento de identidad con foto";
 
-"Uploading back driver's license photo" = "Cargando la foto del reverso del permiso de conducir";
-
 "Uploading back identity card photo" = "Cargando la foto del reverso del documento de identidad";
 
-"Uploading front driver's license photo" = "Cargando la foto del anverso del permiso de conducir";
-
 "Uploading front identity card photo" = "Cargando la foto del anverso del documento de identidad";
-
-"Uploading passport photo" = "Cargando la foto del pasaporte";
 
 "Verify your identity" = "Verifica tu identidad";
 

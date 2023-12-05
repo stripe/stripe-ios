@@ -1077,6 +1077,111 @@ class PaymentSheetAPITest: XCTestCase {
             ["deferred-intent"]
         )
     }
+
+    // MARK: - Set default payment method tests
+
+    @MainActor
+    func testSetsNewlySavedPMAsDefault_PI() async throws {
+        // A PI w/o SFU shouldn't set its PM as default
+        func makePaymentIntent() async throws -> STPPaymentIntent {
+            let clientSecret = try await STPTestingAPIClient().createPaymentIntent(withParams: ["amount": 100])
+            return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+        }
+
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in
+            return try await STPTestingAPIClient().createPaymentIntent(withParams: ["amount": 100])
+        }
+
+        // Set up intents
+        let pi_intent = try await Intent.paymentIntent(elementsSession: ._testCardValue(), paymentIntent: makePaymentIntent())
+        let deferred_pi_intent: Intent = .deferredIntent(
+            elementsSession: ._testCardValue(),
+            intentConfig: intentConfig
+        )
+
+        await _testSetsDefaultPM(intent: pi_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: false)
+        await _testSetsDefaultPM(intent: deferred_pi_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: false)
+
+        // Selecting the 'save' checkbox should result in the PM being set as default
+        let valid_card_checkbox_selected = PaymentSheet.PaymentOption.new(confirmParams: valid_card_checkbox_selected)
+        let pi_intent_2 = try await Intent.paymentIntent(elementsSession: ._testCardValue(), paymentIntent: makePaymentIntent())
+        await _testSetsDefaultPM(intent: pi_intent_2, apiClient: apiClient, paymentHandler: paymentHandler, paymentOption: valid_card_checkbox_selected, shouldSetDefaultPM: true)
+        await _testSetsDefaultPM(intent: deferred_pi_intent, apiClient: apiClient, paymentHandler: paymentHandler, paymentOption: valid_card_checkbox_selected, shouldSetDefaultPM: true)
+    }
+
+    func testSetsNewlySavedPMAsDefault_PaymentIntent_SFU() async throws {
+        // PI + SFU with a new card should set the payment method to the default
+        let clientSecret = try await STPTestingAPIClient().createPaymentIntent(withParams: ["amount": 100, "setup_future_usage": "off_session"])
+        let paymentIntent = try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession)) { _, _ in
+            return try await STPTestingAPIClient().createPaymentIntent(withParams: ["amount": 100, "setup_future_usage": "off_session"])
+        }
+
+        // Set up intents
+        let pi_intent = Intent.paymentIntent(elementsSession: ._testCardValue(), paymentIntent: paymentIntent)
+        let deferred_pi_intent: Intent = .deferredIntent(
+            elementsSession: ._testCardValue(),
+            intentConfig: intentConfig
+        )
+
+        await _testSetsDefaultPM(intent: pi_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
+        await _testSetsDefaultPM(intent: deferred_pi_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
+    }
+
+    func testSetsNewlySavedPMAsDefault_SetupIntent() async throws {
+        // SetupIntent with a new card should set the payment method to the default
+        let clientSecret = try await STPTestingAPIClient().createSetupIntent(withParams: nil)
+        let setupIntent = try await apiClient.retrieveSetupIntent(clientSecret: clientSecret)
+
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup()) { _, _ in
+            return try await STPTestingAPIClient().createSetupIntent(withParams: nil)
+        }
+
+        // Set up intents
+        let si_intent = Intent.setupIntent(elementsSession: ._testCardValue(), setupIntent: setupIntent)
+        let deferred_si_intent: Intent = .deferredIntent(
+            elementsSession: ._testCardValue(),
+            intentConfig: intentConfig
+        )
+
+        await _testSetsDefaultPM(intent: si_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
+        await _testSetsDefaultPM(intent: deferred_si_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
+    }
+
+    func _testSetsDefaultPM(intent: Intent, apiClient: STPAPIClient, paymentHandler: STPPaymentHandler, paymentOption: PaymentSheet.PaymentOption? = nil, shouldSetDefaultPM: Bool) async {
+        let paymentOption = paymentOption ?? PaymentSheet.PaymentOption.new(confirmParams: valid_card_checkbox_deselected)
+        var configuration = self.configuration
+        configuration.apiClient = apiClient
+        configuration.customer = .init(id: "cus_123_test", ephemeralKeySecret: "")
+        let expectation = expectation(description: "Confirm")
+
+        // Clear the default PM for this customer
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId("old_default_value"), forCustomer: configuration.customer?.id)
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: intent,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler
+        ) { _, deferredConfirmationType in
+            // ...should set the newly saved PM as the default
+            let defaultPM = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+            if shouldSetDefaultPM {
+                // It's hard to know what the PM ID is, so let's just check what it _shouldn't_ be
+                XCTAssertNotNil(defaultPM)
+                XCTAssertNotEqual(defaultPM, .stripeId("old_default_value"))
+            } else {
+                XCTAssertEqual(defaultPM, .stripeId("old_default_value"))
+            }
+            if case .deferredIntent = intent {
+                // while we're here, let's check the deferred confirmation type
+                XCTAssertEqual(deferredConfirmationType, .client)
+            }
+            expectation.fulfill()
+        }
+        await fulfillment(of: [expectation])
+    }
 }
 
 extension PaymentSheetAPITest: STPAuthenticationContext {

@@ -13,9 +13,13 @@ import UIKit
 
 extension DropdownFieldElement {
 
-    @_spi(STP) public static func makeCardBrandDropdown(cardBrands: Set<STPCardBrand> = Set<STPCardBrand>(), theme: ElementsUITheme = .default, maxWidth: CGFloat? = nil, hasPadding: Bool = true) -> DropdownFieldElement {
+    @_spi(STP) public static func makeCardBrandDropdown(cardBrands: Set<STPCardBrand> = Set<STPCardBrand>(),
+                                                        theme: ElementsUITheme = .default,
+                                                        includePlaceholder: Bool = true,
+                                                        maxWidth: CGFloat? = nil,
+                                                        hasPadding: Bool = true) -> DropdownFieldElement {
         return DropdownFieldElement(
-            items: items(from: cardBrands, theme: theme, maxWidth: maxWidth),
+            items: items(from: cardBrands, theme: theme, includePlaceholder: includePlaceholder, maxWidth: maxWidth),
             defaultIndex: 0,
             label: nil,
             theme: theme,
@@ -24,7 +28,7 @@ extension DropdownFieldElement {
         )
     }
 
-    @_spi(STP) public static func items(from cardBrands: Set<STPCardBrand>, theme: ElementsUITheme, maxWidth: CGFloat? = nil) -> [DropdownItem] {
+    @_spi(STP) public static func items(from cardBrands: Set<STPCardBrand>, theme: ElementsUITheme, includePlaceholder: Bool = true, maxWidth: CGFloat? = nil) -> [DropdownItem] {
         let placeholderItem = DropdownItem(
             pickerDisplayName: NSAttributedString(string: .Localized.card_brand_dropdown_placeholder),
             labelDisplayName: STPCardBrand.unknown.brandIconAttributedString(theme: theme, maxWidth: maxWidth),
@@ -34,6 +38,6 @@ extension DropdownFieldElement {
         )
 
         let cardBrandItems = cardBrands.sorted().map { $0.cardBrandItem(theme: theme, maxWidth: maxWidth) }
-        return [placeholderItem] + cardBrandItems
+        return includePlaceholder ? [placeholderItem] + cardBrandItems : cardBrandItems
     }
 }

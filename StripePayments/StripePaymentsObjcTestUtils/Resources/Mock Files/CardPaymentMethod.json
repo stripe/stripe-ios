@@ -31,6 +31,10 @@
     "three_d_secure_usage": {
       "supported": true
     },
+    "networks": {
+      "available": ["visa", "mastercard"],
+      "preferred": "visa"
+    },
     "wallet": {
         "type": "visa_checkout",
         "visa_checkout": {
