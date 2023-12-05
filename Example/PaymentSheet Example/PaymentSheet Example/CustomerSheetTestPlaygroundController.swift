@@ -156,7 +156,6 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             return false
         }
     }
-
     func customerMode() -> String {
         switch settings.customerMode {
         case .returning:
