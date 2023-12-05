@@ -63,6 +63,12 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
+    @Published var enableDataMode: Bool = PlaygroundUserDefaults.enableDataMode {
+        didSet {
+            PlaygroundUserDefaults.enableDataMode = enableDataMode
+        }
+    }
+
     @Published var email: String = PlaygroundUserDefaults.email {
         didSet {
             PlaygroundUserDefaults.email = email
@@ -162,7 +168,8 @@ final class PlaygroundMainViewModel: ObservableObject {
             enableBalancesPermission: enableBalancesPermission,
             customScenario: customScenario.rawValue,
             customPublicKey: customPublicKey,
-            customSecretKey: customSecretKey
+            customSecretKey: customSecretKey,
+            enableDataMode: enableDataMode
         ) { [weak self] setupPlaygroundResponse in
             if let setupPlaygroundResponse = setupPlaygroundResponse {
                 PresentFinancialConnectionsSheet(
@@ -231,6 +238,7 @@ private func SetupPlayground(
     customScenario: String,
     customPublicKey: String,
     customSecretKey: String,
+    enableDataMode: Bool,
     completionHandler: @escaping ([String: String]?) -> Void
 ) {
     if !enableTestMode && email == "test@test.com" {
@@ -253,6 +261,7 @@ private func SetupPlayground(
         requestBody["custom_scenario"] = customScenario
         requestBody["custom_public_key"] = customPublicKey
         requestBody["custom_secret_key"] = customSecretKey
+        requestBody["enable_data_mode"] = enableDataMode
         return try! JSONSerialization.data(
             withJSONObject: requestBody,
             options: .prettyPrinted

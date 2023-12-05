@@ -13,7 +13,8 @@ import UIKit
 protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
+        nextPane: FinancialConnectionsSessionManifest.NextPane?
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
@@ -167,7 +168,8 @@ final class AccountPickerViewController: UIViewController {
                     } else if shouldSkipAccountSelection {
                         self.delegate?.accountPickerViewController(
                             self,
-                            didSelectAccounts: accounts
+                            didSelectAccounts: accounts,
+                            nextPane: nil
                         )
                     } else if self.dataSource.manifest.singleAccount,
                         self.dataSource.authSession.institutionSkipAccountSelection ?? false,
@@ -341,10 +343,31 @@ final class AccountPickerViewController: UIViewController {
                 guard let self = self else { return }
                 switch result {
                 case .success(let linkedAccounts):
-                    self.delegate?.accountPickerViewController(
-                        self,
-                        didSelectAccounts: linkedAccounts.data
-                    )
+                    if
+                        self.dataSource.manifest.isNetworkingUserFlow == true,
+                        self.dataSource.manifest.accountholderIsLinkConsumer == true,
+                        !self.dataSource.manifest.shouldAttachLinkedPaymentMethod,
+                        numberOfSelectedAccounts > 0,
+                        let consumerSessionClientSecret = self.dataSource.consumerSessionClientSecret
+                    {
+                        self.dataSource.saveToLink(
+                            consumerSessionClientSecret: consumerSessionClientSecret
+                        )
+                        .observe { [weak self] _ in
+                            guard let self = self else { return }
+                            self.delegate?.accountPickerViewController(
+                                self,
+                                didSelectAccounts: linkedAccounts.data,
+                                nextPane: .success
+                            )
+                        }
+                    } else {
+                        self.delegate?.accountPickerViewController(
+                            self,
+                            didSelectAccounts: linkedAccounts.data,
+                            nextPane: linkedAccounts.nextPane
+                        )
+                    }
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient
