@@ -7,13 +7,14 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension CustomerSheet {
-    static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
+    static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
 }
 
 extension Array where Element == STPPaymentMethodType {
-    func customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: CustomerAdapter) -> [STPPaymentMethodType] {
+    func customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: CustomerAdapter,
+                                                        supportedPaymentMethods: [STPPaymentMethodType] = CustomerSheet.supportedPaymentMethods) -> [STPPaymentMethodType] {
         return self.filter { type in
-            var isSupported = CustomerSheet.supportedPaymentMethods.contains(type)
+            var isSupported = supportedPaymentMethods.contains(type)
             if type == .USBankAccount {
                 if !FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
                     #if DEBUG

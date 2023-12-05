@@ -194,6 +194,26 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         return collectionView
     }()
 
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [collectionView, sepaMandateView])
+        stackView.axis = .vertical
+        return stackView
+    }()
+
+    private lazy var sepaMandateView: UIView = {
+        let mandateText = String(format: String.Localized.sepa_mandate_text, self.savedPaymentMethodsConfiguration.merchantDisplayName)
+        let view = UIView()
+        let mandateView = SimpleMandateTextView(mandateText: mandateText, theme: appearance.asElementsTheme)
+        let margins = NSDirectionalEdgeInsets.insets(
+            top: 8,
+            leading: PaymentSheetUI.defaultMargins.leading,
+            bottom: 0,
+            trailing: PaymentSheetUI.defaultMargins.trailing
+        )
+        view.addAndPinSubview(mandateView, directionalLayoutMargins: margins)
+        return view
+    }()
+
     // MARK: - Inits
     required init(
         savedPaymentMethods: [STPPaymentMethod],
@@ -230,17 +250,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        [collectionView].forEach({
-            view.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        })
-
-        NSLayoutConstraint.activate([
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        view.addAndPinSubview(stackView)
 
         // In the add payment flow, selectedViewModelIndex is set, and then
         // the view is loaded. Checking selectedViewModelIndex is needed to avoid
@@ -277,11 +287,29 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
 
         // Select default
         self.selectedViewModelIndex = self.viewModels.firstIndex(where: { $0 == selectedSavedPaymentOption })
+        self.updateMandateView()
 
         DispatchQueue.main.async {
             self.collectionView.reloadData()
             self.collectionView.selectItem(at: self.selectedIndexPath, animated: false, scrollPosition: [])
             self.collectionView.scrollRectToVisible(CGRect.zero, animated: false)
+        }
+    }
+
+    private func updateMandateView() {
+        let shouldHideSEPA: Bool = {
+            if let selectedViewModelIndex,
+               let viewModel = viewModels.stp_boundSafeObject(at: selectedViewModelIndex),
+               case .saved(paymentMethod: let paymentMethod) = viewModel,
+               paymentMethod.type == .SEPADebit,
+               didSelectDifferentPaymentMethod() {
+                // Only show SEPA if there's a selected PM and it's type is SEPADebit and it's a different payment method
+                return false
+            }
+            return true
+        }()
+        if sepaMandateView.isHidden != shouldHideSEPA {
+            stackView.toggleArrangedSubview(sepaMandateView, shouldShow: !shouldHideSEPA, animated: isViewLoaded)
         }
     }
 
@@ -374,6 +402,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
         selectedViewModelIndex = indexPath.item
         let viewModel = viewModels[indexPath.item]
 
+        updateMandateView()
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }
 }

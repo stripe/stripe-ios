@@ -6,6 +6,10 @@
 ### PaymentSheet
 * [Fixed] PaymentSheet sets newly saved payment methods as the default so that they're pre-selected the next time the customer pays.
 
+### CustomerSheet
+* [Added] Saved SEPA payment methods are now displayed to the customer for reuse, similar to saved cards.
+
+
 ## 23.18.3 2023-11-28
 ### PaymentSheet
 * [Fixed] Visual bug where re-presenting PaymentSheet wouldn't show a spinner while it reloads.

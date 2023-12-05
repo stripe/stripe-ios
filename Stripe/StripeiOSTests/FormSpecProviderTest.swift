@@ -47,14 +47,14 @@ class FormSpecProviderTest: XCTestCase {
     }
 
     func testLoadJsonCanOverwriteLoadedSpecs() throws {
-        let e = expectation(description: "Loads form specs file")
+        let e1 = expectation(description: "Loads form specs file")
         let sut = FormSpecProvider()
         let paymentMethodType = "eps"
         sut.load { loaded in
             XCTAssertTrue(loaded)
-            e.fulfill()
+            e1.fulfill()
         }
-        waitForExpectations(timeout: 2, handler: nil)
+        wait(for: [e1], timeout: 2)
         let eps = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
         XCTAssertEqual(eps.fields.count, 5)
         XCTAssertEqual(
@@ -83,6 +83,23 @@ class FormSpecProviderTest: XCTestCase {
 
         let epsUpdated = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
         XCTAssertEqual(epsUpdated.fields.count, 1)
+        XCTAssertEqual(
+            epsUpdated.fields.first,
+            .name(
+                FormSpec.NameFieldSpec(
+                    apiPath: ["v1": "billing_details[someOtherValue]"],
+                    translationId: nil
+                )
+            )
+        )
+
+        // If load is called again, ensure that on-disk specs do not override
+        let e2 = expectation(description: "Loads form specs file, 2nd time")
+        sut.load { loaded in
+            XCTAssertTrue(loaded)
+            e2.fulfill()
+        }
+        wait(for: [e2], timeout: 2)
         XCTAssertEqual(
             epsUpdated.fields.first,
             .name(
