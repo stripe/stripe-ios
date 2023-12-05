@@ -512,7 +512,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
 
-     private func billingDetails() -> PaymentSheet.BillingDetails {
+    private func billingDetails() -> PaymentSheet.BillingDetails {
         return .init(
             address: .init(
                 city: "San Francisco",
@@ -579,7 +579,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         DispatchQueue.global(qos: .background).async {
             var isLoading = true
             var count = 0
-            while isLoading && count < 20 {
+            while isLoading && count < 10 {
                 count += 1
                 DispatchQueue.main.sync {
                     guard

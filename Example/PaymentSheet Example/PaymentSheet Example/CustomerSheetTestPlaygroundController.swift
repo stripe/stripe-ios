@@ -129,7 +129,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         return configuration
     }
 
-    func customerAdapter(customerId: String, ephemeralKey: String, merchantCountryCode: String, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter {
+    func customerAdapter(customerId: String, ephemeralKey: String, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter {
         let customerAdapter: StripeCustomerAdapter
         switch settings.paymentMethodMode {
         case .setupIntent:
@@ -167,15 +167,6 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             return self.settings.customerId ?? ""
         }
     }
-
-    func merchantCountryCode() -> String {
-        switch settings.merchantCountryCode {
-        case .US:
-            return "US"
-        case .FR:
-            return "FR"
-        }
-    }
 }
 
 // MARK: - Backend
@@ -193,7 +184,7 @@ extension CustomerSheetTestPlaygroundController {
         isLoading = true
         let settingsToLoad = self.settings
         let customerType: String = customerMode()
-        let merchantCountryCode = merchantCountryCode()
+
         self.backend = CustomerSheetBackend(endpoint: currentEndpoint)
 
         // TODO: Refactor this to make the ephemeral key and customerId fetching async
@@ -222,10 +213,7 @@ extension CustomerSheetTestPlaygroundController {
                 // Create Customer Sheet
                 var configuration = self.customerSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
                 configuration.applePayEnabled = self.applePayEnabled()
-                let customerAdapter = self.customerAdapter(customerId: customerId,
-                                                           ephemeralKey: ephemeralKey,
-                                                           merchantCountryCode: merchantCountryCode,
-                                                           configuration: configuration)
+                let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey, configuration: configuration)
                 self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
 
                 // Retrieve selected PM
