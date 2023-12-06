@@ -44,12 +44,13 @@ import Foundation
     // characters to help create a valid URL. See https://developer.apple.com/documentation/foundation/url/3126806-init
     @objc(queryStringForURLFromParameters:)
     public class func queryStringForURL(from params: [String: Any]) -> String {
-        let encoder = if #available(iOS 17.0, *) {
-            // don't escape here because URL init escapes in iOS 17
-            escapeSpacesOnly
-        } else {
-            escape
-        }
+        var encoder = escape
+        #if compiler(>=5.9)
+            if #available(iOS 17.0, *) {
+                // don't escape here because URL init escapes in iOS 17
+                encoder = escapeSpacesOnly
+            }
+        #endif
         return query(params, encoder: encoder)
     }
 }
