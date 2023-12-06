@@ -664,14 +664,14 @@
 			path = PaymentSheetFormFactory;
 			sourceTree = "<group>";
 		};
-		1B84E8DA16EA02948055C084 /* v1:elements:sessions */ = {
+		1B84E8DA16EA02948055C084 /* v1-elements-sessions */ = {
 			isa = PBXGroup;
 			children = (
 				2BFA5FA03C7093654EC6926F /* ExternalPaymentMethod.swift */,
 				CC3498CF4AEAA8F169616CDF /* STPCardBrandChoice.swift */,
 				5CA2D5E6CAA2990D88F64A4D /* STPElementsSession.swift */,
 			);
-			path = "v1:elements:sessions";
+			path = "v1-elements-sessions";
 			sourceTree = "<group>";
 		};
 		25AB69CF78A2B13839EB32EC /* AddressViewController */ = {
@@ -1127,7 +1127,7 @@
 			isa = PBXGroup;
 			children = (
 				6702628D1C9A293C2AA5A3EC /* Link */,
-				1B84E8DA16EA02948055C084 /* v1:elements:sessions */,
+				1B84E8DA16EA02948055C084 /* v1-elements-sessions */,
 				C05D8F23CA45F1C7D8D75674 /* VO */,
 				BD113E607DF094670BD5852D /* STPAPIClient+PaymentSheet.swift */,
 			);
