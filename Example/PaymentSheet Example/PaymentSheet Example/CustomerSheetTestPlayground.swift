@@ -174,6 +174,7 @@ struct CustomerSheetButtons: View {
 
 struct CustomerSheetPaymentOptionView: View {
     let paymentOptionDisplayData: CustomerSheet.PaymentOptionSelection?
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         HStack {
@@ -184,6 +185,8 @@ struct CustomerSheetPaymentOptionView: View {
                 .foregroundColor(.black)
             Text(paymentOptionDisplayData?.displayData().label ?? "None")
                 .accessibility(identifier: "Payment method")
+                .foregroundColor(colorScheme == .dark ? .white : .black)
+
         }.padding()
             .foregroundColor(.black)
             .cornerRadius(6)
