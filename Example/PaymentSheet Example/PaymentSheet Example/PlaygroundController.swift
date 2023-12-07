@@ -237,6 +237,7 @@ class PlaygroundController: ObservableObject {
     var checkoutEndpoint: String = PaymentSheetTestPlaygroundSettings.defaultCheckoutEndpoint
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
+    var currentDataTask: URLSessionDataTask?
 
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
@@ -270,7 +271,7 @@ class PlaygroundController: ObservableObject {
         self.currentlyRenderedSettings = .defaultValues()
 
         $settings.sink { newValue in
-            if !self.isLoading && newValue.autoreload == .on {
+            if newValue.autoreload == .on {
                 self.load()
             }
         }.store(in: &subscribers)
@@ -362,11 +363,14 @@ extension PlaygroundController {
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = json
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
-        let task = session.dataTask(with: urlRequest) { data, response, error in
+        if self.currentDataTask?.state == .running {
+            self.currentDataTask?.cancel()
+        }
+        self.currentDataTask = session.dataTask(with: urlRequest) { data, response, error in
             completionHandler(data, response, error)
         }
 
-        task.resume()
+        self.currentDataTask?.resume()
     }
 
     func loadBackend() {
@@ -396,6 +400,10 @@ extension PlaygroundController {
                 }
                 return
             }
+            if let nserror = error as? NSError, nserror.code == NSURLErrorCancelled {
+                // Ignore, we canceled and following up with another request
+                return
+            }
             guard
                 error == nil,
                 let data = data,
@@ -419,9 +427,12 @@ extension PlaygroundController {
             }
 
             DispatchQueue.main.async {
+                self.lastPaymentResult = nil
                 self.clientSecret = json["intentClientSecret"]
                 self.ephemeralKey = json["customerEphemeralKeySecret"]
-                self.settings.customerId = json["customerId"]
+                if self.settings.customerId != json["customerId"] {
+                    self.settings.customerId = json["customerId"]
+                }
                 self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
                 self.amount = Int(json["amount"] ?? "")
                 STPAPIClient.shared.publishableKey = json["publishableKey"]
