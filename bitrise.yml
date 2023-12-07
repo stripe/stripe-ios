@@ -40,7 +40,6 @@ stages:
     - test-builds-xcode-143: {}
     - test-builds-xcode-15: {}
     - test-builds-xcode-143-release: {}
-    - test-builds-vision: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
@@ -53,7 +52,6 @@ stages:
     - framework-tests: {}
     - test-builds-xcode-143: {}
     - test-builds-xcode-15: {}
-    - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
@@ -74,6 +72,7 @@ stages:
     - data-theorem-sast: {}
     - deploy-dry-run: {}
     - pod-lint-tests: {}
+    - test-builds-vision: {}
 workflows:
   basic-integration-tests:
     steps:
