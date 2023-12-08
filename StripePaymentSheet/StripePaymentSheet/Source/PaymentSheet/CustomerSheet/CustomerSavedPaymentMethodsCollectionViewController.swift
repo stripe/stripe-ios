@@ -103,6 +103,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
                     selectedViewModelIndex = originalSelectedViewModelIndex
                 }
             }
+            updateMandateView()
         }
     }
     var bottomNoticeAttributedString: NSAttributedString? {
