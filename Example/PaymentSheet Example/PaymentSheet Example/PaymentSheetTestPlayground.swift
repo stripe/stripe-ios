@@ -308,7 +308,6 @@ struct StaleView: View {
 
 struct PaymentOptionView: View {
     let paymentOptionDisplayData: PaymentSheet.FlowController.PaymentOptionDisplayData?
-    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         HStack {
@@ -321,7 +320,7 @@ struct PaymentOptionView: View {
                 // Surprisingly, setting the accessibility identifier on the HStack causes the identifier to be
                 // "Payment method-Payment method". We'll set it on a single View instead.
                 .accessibility(identifier: "Payment method")
-                .foregroundColor(colorScheme == .dark ? .white : .black)
+                .foregroundColor(.primary)
         }
         .padding()
         .foregroundColor(.black)
