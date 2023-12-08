@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirma el pago en la aplicación de tu banco en el transcurso de %@ para completar la compra.";
 
+"Confirm your CVC" = "Confirma tu CVC";
+
+"Confirm your CVV" = "Confirma tu CVV";
+
 "Contact information" = "Información de contacto";
 
 "EPS Bank" = "Banco que opera con EPS";

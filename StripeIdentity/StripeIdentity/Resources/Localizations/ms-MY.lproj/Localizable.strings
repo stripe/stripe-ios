@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Beberapa foto akan diambil secara automatik pada langkah seterusnya untuk menentusahkan andalah orangnya";
 
+"Accepted forms of ID include" = "Bentuk ID yang diterima termasuklah";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Sebagai alternatif, anda boleh memuat naik foto dokumen pengenalan anda secara manual.";
 
 "App Settings" = "Tetapan Aplikasi";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "Bahagian hadapan kad pengenalan";
 
+"Get ready to scan your photo ID" = "Bersedia untuk mengimbas ID berfoto anda";
+
 "Get ready to take a selfie" = "Bersedia untuk mengambil swafoto";
 
 "Go Back" = "Undur";
 
 "Hold still, scanning" = "Jangan bergerak, pengimbasan sedang berlangsung";
+
+"I'm ready" = "Saya sudah bersedia";
 
 "ID Number" = "Nombor ID";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "Empat digit terakhir nombor Keselamatan Sosial";
 
 "Loading" = "Sedang dimuatkan";
+
+"Make sure you're in a well lit space." = "Pastikan anda berada di ruang yang cukup terang.";
 
 "NRIC or FIN" = "NRIC atau FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "Anda boleh cuba lagi atau muat naik imej daripada peranti anda.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Imej swafoto anda belum lagi disimpan. Adakah anda ingin meninggalkannya?";
+
+"driver's license" = "lesen memandu";
+
+"government-issued photo ID" = "ID berfoto yang dikeluarkan oleh kerajaan";
+
+"passport" = "pasport";

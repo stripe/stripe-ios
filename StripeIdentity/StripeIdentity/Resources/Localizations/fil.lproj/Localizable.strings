@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Awtomatikong kukunin ang ilang larawan sa susunod na hakbang upang patunayan na ikaw nga ito";
 
+"Accepted forms of ID include" = "Kasama sa mga tinatanggap na uri ng ID";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Bilang alternatibo, maaari kang manu-manong mag-upload ng larawan ng dokumento ng iyong pagkakakilanlan.";
 
 "App Settings" = "Mga Setting ng App";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "Harap ng card ng pagkakakilanlan";
 
+"Get ready to scan your photo ID" = "Maghandang i-scan ang iyong photo ID";
+
 "Get ready to take a selfie" = "Maghanda na kumuha ng selfie";
 
 "Go Back" = "Bumalik";
 
 "Hold still, scanning" = "Huwag gumalaw, ini-iscan";
+
+"I'm ready" = "Handa na ako";
 
 "ID Number" = "Numero ng ID";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "Huling 4 ng numero ng Social Security";
 
 "Loading" = "Niloload";
+
+"Make sure you're in a well lit space." = "Siguraduhing ikaw ay nasa maliwanag na lugar.";
 
 "NRIC or FIN" = "NRIC o FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "Puwede mong subukan muli o mag-upload ng imahe mula sa iyong device.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Hindi pa na-save Ang iyong mga imaheng selfie. Gusto mo bang umalis?";
+
+"driver's license" = "lisensya sa pagmamaneho";
+
+"government-issued photo ID" = "inisyu ng gobyerno na photo ID";
+
+"passport" = "pasaporte";

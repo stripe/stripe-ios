@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "V ďalšom kroku sa automaticky urobí pár fotografií na overenie, že ste to vy.";
 
+"Accepted forms of ID include" = "K prijateľným formám dokladu totožnosti patria";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Prípadne môžete nahrať fotografiu vášho dokladu totožnosti.";
 
 "App Settings" = "Nastavenia aplikácie";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "Predná strana preukazu totožnosti";
 
+"Get ready to scan your photo ID" = "Pripravte sa na naskenovanie dokladu totožnosti s fotografiou";
+
 "Get ready to take a selfie" = "Pripravte sa na nasnímanie selfie";
 
 "Go Back" = "Späť";
 
 "Hold still, scanning" = "Držte pokojne, skenuje sa";
+
+"I'm ready" = "Som pripravený/-á";
 
 "ID Number" = "Identifikačné číslo";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "Posledné 4 číslice čísla sociálneho poistenia";
 
 "Loading" = "Nahrávanie";
+
+"Make sure you're in a well lit space." = "Uistite sa, že ste v dobre osvetlenom priestore.";
 
 "NRIC or FIN" = "NRIC alebo FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "Môžete to skúsiť znova alebo nahrať obrázok zo svojho zariadenia.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Obrázky selfie sa neuložili. Chcete odísť?";
+
+"driver's license" = "vodičský preukaz";
+
+"government-issued photo ID" = "doklad totožnosti s fotografiou vydaný štátom";
+
+"passport" = "pas";

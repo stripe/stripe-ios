@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Patvirtinkite mokėjimą savo banko programėlėje per %@ ir užbaikite pirkimą.";
 
+"Confirm your CVC" = "Patvirtinkite savo CVC";
+
+"Confirm your CVV" = "Patvirtinkite savo CVV";
+
 "Contact information" = "Kontaktinė informacija";
 
 "EPS Bank" = "EPS bankas";

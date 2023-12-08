@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "購入を完了するには、%@ 以内に銀行のアプリで支払いを確定してください。";
 
+"Confirm your CVC" = "セキュリティコードを確定";
+
+"Confirm your CVV" = "CVV を確定";
+
 "Contact information" = "連絡先情報";
 
 "EPS Bank" = "EPS 銀行";

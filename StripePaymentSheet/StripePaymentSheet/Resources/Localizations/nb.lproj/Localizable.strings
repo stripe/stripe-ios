@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Bekreft betalingen i bankens app innen %@ for å fullføre kjøpet.";
 
+"Confirm your CVC" = "Bekreft CVC-koden din";
+
+"Confirm your CVV" = "Bekreft CVV-koden din";
+
 "Contact information" = "Kontaktinformasjon";
 
 "EPS Bank" = "EPS Bank";

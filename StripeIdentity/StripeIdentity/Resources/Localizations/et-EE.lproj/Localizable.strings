@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Järgmises etapis tehakse automaatselt mõned fotod, et kinnitada, et see olete teie";
 
+"Accepted forms of ID include" = "Aktsepteeritud isikut tõendavad dokumendid hõlmavad järgmist";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Samuti võite oma isikut tõendava dokumendi foto käsitsi üles laadida.";
 
 "App Settings" = "Rakenduse sätted";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "ID-kaardi esikülg";
 
+"Get ready to scan your photo ID" = "Valmistuge oma fotoga isikut tõendava dokumendi skannimiseks";
+
 "Get ready to take a selfie" = "Valmistuge tegema selfit";
 
 "Go Back" = "Mine tagasi";
 
 "Hold still, scanning" = "Hoidke paigal, skannimine";
+
+"I'm ready" = "Olen valmis jätkama";
 
 "ID Number" = "Isikukood";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "Sotsiaalkindlustuse numbri viimased 4 numbrit";
 
 "Loading" = "Laadimine";
+
+"Make sure you're in a well lit space." = "Veenduge, et olete hästi valgustatud kohas.";
 
 "NRIC or FIN" = "NRIC või FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "Võite kas uuesti proovida või pildi oma seadmest üles laadida.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Teie selfi pilte pole salvestatud. Kas soovite lahkuda?";
+
+"driver's license" = "juhiluba";
+
+"government-issued photo ID" = "riigi poolt väljastatud fotoga isikut tõendav dokument";
+
+"passport" = "pass";

@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "下一步將自動拍攝一些照片來驗證是否是您本人";
 
+"Accepted forms of ID include" = "接受的身份證件類型包括";
+
 "Alternatively, you may manually upload a photo of your identity document." = "您也可以手動上載您的身份證件的照片。";
 
 "App Settings" = "應用設定";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "身份證正面";
 
+"Get ready to scan your photo ID" = "準備好掃描您帶照片的身份證件";
+
 "Get ready to take a selfie" = "準備好自拍";
 
 "Go Back" = "返回";
 
 "Hold still, scanning" = "保持不動，正在掃描";
+
+"I'm ready" = "我準備好了";
 
 "ID Number" = "證件號碼";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "社會安全號碼後 4 位";
 
 "Loading" = "正在載入";
+
+"Make sure you're in a well lit space." = "確保光線充足。";
 
 "NRIC or FIN" = "NRIC 或 FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "您可以重試或從設備上載一張照片。";
 
 "Your selfie images have not been saved. Do you want to leave?" = "尚未保存您的自拍照。想要離開嗎？";
+
+"driver's license" = "駕駛執照";
+
+"government-issued photo ID" = "政府簽發的帶照片身份證";
+
+"passport" = "護照";

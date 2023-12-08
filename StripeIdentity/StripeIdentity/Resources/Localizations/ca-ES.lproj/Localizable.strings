@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Es faran unes quantes fotos automàticament al següent pas per verificar que sou vosaltres";
 
+"Accepted forms of ID include" = "Les formes d'identificació acceptades inclouen";
+
 "Alternatively, you may manually upload a photo of your identity document." = "També podeu pujar manualment una foto del document d'identitat.";
 
 "App Settings" = "Configuració de l'aplicació";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "Anvers del document d'identitat";
 
+"Get ready to scan your photo ID" = "Prepareu-vos per escanejar la vostra identificació amb foto";
+
 "Get ready to take a selfie" = "Prepareu-vos per fer-vos l'autofoto";
 
 "Go Back" = "Enrere";
 
 "Hold still, scanning" = "S'està escanejant; espereu";
+
+"I'm ready" = "Estic a punt";
 
 "ID Number" = "Número d'identificació";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "Últims 4 números de la Seguretat Social";
 
 "Loading" = "S'està carregant";
+
+"Make sure you're in a well lit space." = "Assegureu-vos que esteu en un espai ben il·luminat.";
 
 "NRIC or FIN" = "NRIC o FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "Podeu tornar-ho a provar o carregar una imatge des del vostre dispositiu.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "No s'han desat les autofotos. Voleu sortir?";
+
+"driver's license" = "permís de conduir";
+
+"government-issued photo ID" = "identificació governamental amb foto";
+
+"passport" = "passaport";

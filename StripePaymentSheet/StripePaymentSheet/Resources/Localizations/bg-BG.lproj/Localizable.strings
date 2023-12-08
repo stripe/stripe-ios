@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Потвърдете плащането в приложението на Вашата банка в рамките на %@, за да завършите покупката.";
 
+"Confirm your CVC" = "Потвърдете своя CVC";
+
+"Confirm your CVV" = "Потвърдете своя CVV";
+
 "Contact information" = "Информация за контакт";
 
 "EPS Bank" = "Банка EPS";

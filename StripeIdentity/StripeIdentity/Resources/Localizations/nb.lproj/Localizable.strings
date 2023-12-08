@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Noen få bilder tas automatisk i neste trinn for å bekrefte at det er deg";
 
+"Accepted forms of ID include" = "Godkjente former for ID inkluderer";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Alternativt kan du laste opp et bilde av identitetsdokumentet manuelt.";
 
 "App Settings" = "Appinnstillinger";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "Forsiden av identitetskortet";
 
+"Get ready to scan your photo ID" = "Gjør deg klar til å skanne bilde-ID-en din";
+
 "Get ready to take a selfie" = "Gjør deg klar til å ta en selfie";
 
 "Go Back" = "Gå tilbake";
 
 "Hold still, scanning" = "Vær rolig, skanner";
+
+"I'm ready" = "Jeg er klar";
 
 "ID Number" = "ID-nummer";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "Siste 4 sifre i personnummer";
 
 "Loading" = "Laster inn";
+
+"Make sure you're in a well lit space." = "Sørg for at du befinner deg i et godt opplyst rom.";
 
 "NRIC or FIN" = "NRIC eller FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "Du kan enten prøve på nytt eller laste opp et bilde fra enheten din.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Selfiebildene er ikke lagret. Vil du forlate?";
+
+"driver's license" = "førerkort";
+
+"government-issued photo ID" = "offentlig godkjente foto-ID";
+
+"passport" = "pass";

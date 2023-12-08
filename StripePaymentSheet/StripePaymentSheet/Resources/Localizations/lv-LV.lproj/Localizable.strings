@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas lietotnē %@, lai pabeigtu maksājumu.";
 
+"Confirm your CVC" = "Apstiprināt CVC";
+
+"Confirm your CVV" = "Apstiprināt CVV";
+
 "Contact information" = "Kontaktinformācija";
 
 "EPS Bank" = "EPS Bank";

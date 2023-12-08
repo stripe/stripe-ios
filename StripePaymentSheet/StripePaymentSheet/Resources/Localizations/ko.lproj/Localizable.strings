@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ 이내에 은행 앱에서 결제를 확인하여 구매를 완료하십시오.";
 
+"Confirm your CVC" = "CVC 확인";
+
+"Confirm your CVV" = "CVV 확인";
+
 "Contact information" = "연락처 정보";
 
 "EPS Bank" = "EPS 은행";
