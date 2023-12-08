@@ -542,8 +542,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock that scanner found a classification that was not desired and
         // verify the state is updated accordingly
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .invalid))
-        
-        
+
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0])))
 
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardBack))
@@ -562,7 +561,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront))
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanned(.front, UIImage()))
     }
-    
+
     func testScanningWithBarcode() {
         let vc = makeViewController(
             state: .scanning(.front, nil)
@@ -575,8 +574,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock that scanner found a classification that was not desired and
         // verify the state is updated accordingly
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .invalid))
-        
-        
+
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0])))
 
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardBack))
