@@ -184,6 +184,7 @@ struct CustomerSheetPaymentOptionView: View {
                 .foregroundColor(.black)
             Text(paymentOptionDisplayData?.displayData().label ?? "None")
                 .accessibility(identifier: "Payment method")
+                .foregroundColor(.primary)
         }.padding()
             .foregroundColor(.black)
             .cornerRadius(6)

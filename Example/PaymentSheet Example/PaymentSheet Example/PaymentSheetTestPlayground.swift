@@ -334,6 +334,7 @@ struct PaymentOptionView: View {
                 // Surprisingly, setting the accessibility identifier on the HStack causes the identifier to be
                 // "Payment method-Payment method". We'll set it on a single View instead.
                 .accessibility(identifier: "Payment method")
+                .foregroundColor(.primary)
         }
         .padding()
         .foregroundColor(.black)
