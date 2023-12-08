@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Serão tiradas algumas fotografias automaticamente no passo seguinte para verificar a sua identidade";
 
+"Accepted forms of ID include" = "Formas de documento de identificação aceites incluem";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Em alternativa, pode carregar manualmente uma fotografia do seu documento de identificação.";
 
 "App Settings" = "Definições da aplicação";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "Frente do cartão de identidade";
 
+"Get ready to scan your photo ID" = "Prepare-se para digitalizar o seu documento de identificação com fotografia";
+
 "Get ready to take a selfie" = "Prepare-se para tirar uma selfie";
 
 "Go Back" = "Voltar";
 
 "Hold still, scanning" = "Segure com firmeza, a capturar";
+
+"I'm ready" = "Estou pronto";
 
 "ID Number" = "Número de identificação";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "Últimos 4 dígitos do número da segurança social";
 
 "Loading" = "A carregar";
+
+"Make sure you're in a well lit space." = "Certifique-se de que se encontra num espaço bem iluminado.";
 
 "NRIC or FIN" = "NRIC ou FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "Pode tentar novamente ou carregar uma imagem a partir do seu dispositivo.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "As suas imagens de selfie não foram guardadas. Pretende sair?";
+
+"driver's license" = "carta de condução";
+
+"government-issued photo ID" = "documento de identificação com fotografia, emitido pelo governo";
+
+"passport" = "passaporte";

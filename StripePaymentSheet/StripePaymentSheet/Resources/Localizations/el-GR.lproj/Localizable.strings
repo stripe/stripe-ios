@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Επιβεβαιώστε την πληρωμή στην εφαρμογή της τράπεζάς σας μέσα σε %@ για την ολοκλήρωση της αγοράς.";
 
+"Confirm your CVC" = "Επιβεβαιώστε τον κωδικό CVC";
+
+"Confirm your CVV" = "Επιβεβαιώστε τον κωδικό CVV";
+
 "Contact information" = "Στοιχεία επικοινωνίας";
 
 "EPS Bank" = "Τράπεζα με EPS";

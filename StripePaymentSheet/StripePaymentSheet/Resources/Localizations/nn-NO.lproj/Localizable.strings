@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Stadfest betalinga i bankappen innan %@ for å fullføre kjøpet.";
 
+"Confirm your CVC" = "Stadfest CVC-koden din";
+
+"Confirm your CVV" = "Stadfest CVV-koden din";
+
 "Contact information" = "Kontaktopplysningar";
 
 "EPS Bank" = "EPS Bank";

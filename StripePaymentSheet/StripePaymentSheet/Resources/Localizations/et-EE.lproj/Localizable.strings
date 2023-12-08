@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma pangarakenduses %@ jooksul.";
 
+"Confirm your CVC" = "Kinnita CVC";
+
+"Confirm your CVV" = "Kinnita CVV";
+
 "Contact information" = "Kontaktandmed";
 
 "EPS Bank" = "EPS pank";

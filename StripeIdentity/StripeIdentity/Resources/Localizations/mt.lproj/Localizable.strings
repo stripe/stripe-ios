@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Fil-pass li jmiss se niġbdu ftit ritratti awtomatikament biex nivverifikaw li int min qed tgħid li int";
 
+"Accepted forms of ID include" = "Ix-xorta ta' dokumenti tal-identità aċċettati";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Inkella tista' ttella' ritratt tad-dokument tal-identità tiegħek int stess.";
 
 "App Settings" = "Settings tal-App";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "In-naħa ta' quddiem tal-karta tal-identità";
 
+"Get ready to scan your photo ID" = "Ħejji ruħek biex tiskennja d-dokument tal-identità bir-ritratt tiegħek";
+
 "Get ready to take a selfie" = "Ħejji ruħek għall-istessu";
 
 "Go Back" = "Mur Lura";
 
 "Hold still, scanning" = "Tiċċaqlaqx, qed niskennjaw";
+
+"I'm ready" = "Jien lest/a";
 
 "ID Number" = "In-Numru tal-ID";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "L-aħħar 4 ċifri tan-numru tas-Sigurtà Soċjali";
 
 "Loading" = "Tielgħa";
+
+"Make sure you're in a well lit space." = "Ara li tinsab f'post imdawwal sew.";
 
 "NRIC or FIN" = "NRIC jew FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "Tista' terġa' tipprova jew tagħżel li ttella' ritratt mit-tagħmir tiegħek.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "L-istessi tiegħek għadhom ma ntrefgħux. Tixtieq toħroġ?";
+
+"driver's license" = "liċenzja tas-sewqan";
+
+"government-issued photo ID" = "dokument tal-identità bir-ritratt maħruġ mill-gvern";
+
+"passport" = "passaport";

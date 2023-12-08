@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "U sljedećem koraku automatski će se snimiti nekoliko fotografija kako bi se potvrdilo da ste to vi";
 
+"Accepted forms of ID include" = "Prihvaćeni oblici identifikacijskih dokumenata uključuju";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Umjesto toga možete ručno prenijeti fotografiju svog osobnog dokumenta.";
 
 "App Settings" = "Postavke aplikacije";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "Prednja strana osobne iskaznice";
 
+"Get ready to scan your photo ID" = "Pripremite se za skeniranje svog osobnog dokumenta s fotografijom";
+
 "Get ready to take a selfie" = "Pripremite se za snimanje selfija";
 
 "Go Back" = "Vrati se natrag";
 
 "Hold still, scanning" = "Ne pomičite se, skeniranje u tijeku";
+
+"I'm ready" = "Spreman sam";
 
 "ID Number" = "ID broj";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "4 zadnja broja socijalnog osiguranja";
 
 "Loading" = "Učitavanje";
+
+"Make sure you're in a well lit space." = "Provjerite jeste li u dobro osvijetljenom prostoru.";
 
 "NRIC or FIN" = "NRIC ili FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "Možete pokušati ponovno ili prenijeti sliku sa svog uređaja.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Vaše selfie slike nisu pohranjene. Želite li napustiti?";
+
+"driver's license" = "vozačka dozvola";
+
+"government-issued photo ID" = "Državni identifikacijski dokument s fotografijom";
+
+"passport" = "putovnica";

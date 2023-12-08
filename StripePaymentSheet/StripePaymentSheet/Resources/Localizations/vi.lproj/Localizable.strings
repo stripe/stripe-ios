@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng của quý vị trong vòng %@ để hoàn tất giao dịch mua.";
 
+"Confirm your CVC" = "Xác nhận CVC của bạn";
+
+"Confirm your CVV" = "Xác nhận CVV của bạn";
+
 "Contact information" = "Thông tin liên lạc";
 
 "EPS Bank" = "Ngân hàng EPS";

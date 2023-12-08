@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "На следующем этапе будет автоматически сделано несколько фотографий: это нужно, чтобы подтвердить вашу личность";
 
+"Accepted forms of ID include" = "Принимаются следующие виды удостоверений";
+
 "Alternatively, you may manually upload a photo of your identity document." = "В качестве альтернативы вы можете загрузить фотографию своего удостоверения личности.";
 
 "App Settings" = "Настройки приложения";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "Лицевая сторона удостоверения личности";
 
+"Get ready to scan your photo ID" = "Приготовьтесь сканировать удостоверение личности с фотографией";
+
 "Get ready to take a selfie" = "Приготовьтесь сделать селфи";
 
 "Go Back" = "Назад";
 
 "Hold still, scanning" = "Держите документ неподвижно, идет сканирование";
+
+"I'm ready" = "Готово";
 
 "ID Number" = "Номер удостоверения личности";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "Последние 4 цифры номера социального страхования";
 
 "Loading" = "Идет загрузка";
+
+"Make sure you're in a well lit space." = "Позаботьтесь о хорошем освещении.";
 
 "NRIC or FIN" = "Номер NRIC или FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "Попробуйте еще раз или загрузите изображение со своего устройства.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Ваши селфи-изображения не были сохранены. Хотите выйти?";
+
+"driver's license" = "водительские права";
+
+"government-issued photo ID" = "государственное удостоверение личности с фотографией";
+
+"passport" = "паспорт";

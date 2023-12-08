@@ -1,5 +1,7 @@
 "A few photos will be taken automatically on the next step to verify it's you" = "Seuraavassa vaiheessa otetaan automaattisesti muutama kuva sen vahvistamiseksi, että kyseessä olet sinä";
 
+"Accepted forms of ID include" = "Hyväksyttyjä henkilöllisyystodistusmuotoja ovat";
+
 "Alternatively, you may manually upload a photo of your identity document." = "Voit vaihtoehtoisesti ladata henkilöllisyysasiakirjan kuvan manuaalisesti.";
 
 "App Settings" = "Sovelluksen asetukset";
@@ -30,11 +32,15 @@
 
 "Front of identity card" = "Henkilökortin etupuoli";
 
+"Get ready to scan your photo ID" = "Valmistaudu skannaamaan kuvallinen henkilöllisyystodistus";
+
 "Get ready to take a selfie" = "Valmistaudu selfien ottoon";
 
 "Go Back" = "Siirry takaisin";
 
 "Hold still, scanning" = "Odota, skannaus kesken";
+
+"I'm ready" = "Olen valmis";
 
 "ID Number" = "Tunnusnumero";
 
@@ -43,6 +49,8 @@
 "Last 4 of Social Security number" = "Sosiaaliturvatunnuksen 4 viimeistä merkkiä";
 
 "Loading" = "Ladataan";
+
+"Make sure you're in a well lit space." = "Varmista, että olet hyvin valaistussa tilassa.";
 
 "NRIC or FIN" = "NRIC tai FIN";
 
@@ -117,3 +125,9 @@
 "You can either try again or upload an image from your device." = "Voit joko yrittää uudelleen tai ladata kuvan laitteestasi.";
 
 "Your selfie images have not been saved. Do you want to leave?" = "Selfiekuviasi ei ole tallennettu. Haluatko poistua?";
+
+"driver's license" = "ajokortti";
+
+"government-issued photo ID" = "valtion myöntämä kuvallinen henkilöllisyystodistus";
+
+"passport" = "passi";

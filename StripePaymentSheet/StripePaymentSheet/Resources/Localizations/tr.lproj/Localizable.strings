@@ -50,6 +50,10 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ içinde banka uygulamanızda ödemeyi onaylayarak satın almayı tamamlayın.";
 
+"Confirm your CVC" = "CVC kodunuzu onaylayın";
+
+"Confirm your CVV" = "CVV kodunuzu onaylayın";
+
 "Contact information" = "İletişim bilgileri";
 
 "EPS Bank" = "EPS Bank";
