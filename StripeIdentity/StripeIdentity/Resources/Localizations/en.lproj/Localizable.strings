@@ -88,6 +88,12 @@
 /* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
 
+/* Instructional text when camera is too far from a document */
+"Move closer" = "Move closer";
+
+/* Instructional text when camera is too close to a document */
+"Move farther" = "Move farther";
+
 /* Label for the ID field to collect NRIC or FIN for Singaporean ID */
 "NRIC or FIN" = "NRIC or FIN";
 

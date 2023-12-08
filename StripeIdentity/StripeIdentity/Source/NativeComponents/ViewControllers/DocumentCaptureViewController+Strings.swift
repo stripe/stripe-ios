@@ -27,26 +27,32 @@ extension DocumentCaptureViewController {
 
     func scanningInstructionText(
         for side: DocumentSide,
-        foundClassification: IDDetectorOutput.Classification?
+        idDetectorOutput: IDDetectorOutput?
     ) -> String {
+        let foundClassification = idDetectorOutput?.classification
         let matchesClassification =
         foundClassification?.matchesDocument(side: side) ?? false
-        switch (side, matchesClassification) {
-        case (.front, false):
-            return STPLocalizedString(
-                "Position your identity card in the center of the frame",
-                "Instructional text for scanning front of a identity card"
-            )
-        case (.back, false):
-            return STPLocalizedString(
-                "Flip your identity card over to the other side",
-                "Instructional text for scanning back of a identity card"
-            )
-        case (_, true):
-            return STPLocalizedString(
-                "Hold still, scanning",
-                "Instructional text when camera is focusing on a document while scanning it"
-            )
+        let zoomLevel = idDetectorOutput?.computeZoomLevel()
+
+        guard let zoomLevel = zoomLevel else {
+            if side == .front {
+                return String.Localized.position_in_center
+            } else {
+                return String.Localized.flip_to_other_side
+            }
+        }
+
+        switch (side, matchesClassification, zoomLevel) {
+        case (.front, false, _):
+            return String.Localized.position_in_center
+        case (.back, false, _):
+            return String.Localized.flip_to_other_side
+        case (_, true, .ok):
+            return String.Localized.scanning
+        case (_, true, .tooClose):
+            return String.Localized.move_farther
+        case (_, true, .tooFar):
+            return String.Localized.move_closer
         }
     }
 
