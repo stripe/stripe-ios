@@ -16,7 +16,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     typealias DocumentImageScanningSession = ImageScanningSession<
         DocumentSide,
-        IDDetectorOutput.Classification?,
+        IDDetectorOutput?,
         UIImage,
         DocumentScannerOutput?
     >
@@ -61,23 +61,18 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                     scanningViewModel: .blank,
                     instructionalText: scanningInstructionText(
                         for: .front,
-                        foundClassification: nil
+                        idDetectorOutput: nil
                     )
                 )
             )
-        case .scanning(let documentSide, let foundClassification):
+        case .scanning(let documentSide, let idDetectorOutput):
             return .scan(
                 .init(
-                    scanningViewModel: .videoPreview(
-                        imageScanningSession.cameraSession,
-                        animateBorder: foundClassification?.matchesDocument(
-                            side: documentSide
-                        ) ?? false
-                    ),
-                    instructionalText: scanningInstructionText(
-                        for: documentSide,
-                        foundClassification: foundClassification
-                    )
+                    scanningViewModel:
+                        .videoPreview(
+                            imageScanningSession.cameraSession, animateBorder: idDetectorOutput?.classification.matchesDocument(side: documentSide) ?? false
+                        ),
+                    instructionalText: scanningInstructionText(for: documentSide, idDetectorOutput: idDetectorOutput)
                 )
             )
         case .scanned(_, let image),
@@ -407,7 +402,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 extension DocumentCaptureViewController: ImageScanningSessionDelegate {
     typealias ExpectedClassificationType = DocumentSide
 
-    typealias ScanningStateType = IDDetectorOutput.Classification?
+    typealias ScanningStateType = IDDetectorOutput?
 
     typealias CapturedDataType = UIImage
 
@@ -499,7 +494,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
     ) {
         // If scanningState matches, but scannerOutputOptional is nil, it means the previous frame
         // is a match, but the current frame is not match, reset the timer.
-        if case let .scanning(_, scanningState?) = imageScanningSession.state, scanningState.matchesDocument(side: documentSide) && scannerOutputOptional == nil {
+        if case let .scanning(_, idDetectorOutput?) = imageScanningSession.state, idDetectorOutput.classification.matchesDocument(side: documentSide) && scannerOutputOptional == nil {
             imageScanningSession.startTimeoutTimer(expectedClassification: documentSide)
         }
 
@@ -509,7 +504,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             scannerOutput.isHighQuality(side: documentSide)
         else {
             imageScanningSession.updateScanningState(
-                scannerOutputOptional?.idDetectorOutput.classification
+                scannerOutputOptional?.idDetectorOutput
             )
             return
         }

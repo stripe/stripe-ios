@@ -53,11 +53,20 @@ struct IDDetectorPrediction: MLBoundingBox {
 
 extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
 
+    enum ZoomLevel: Equatable {
+        case tooClose
+        case tooFar
+        case ok
+    }
+
     /// Expected feature names from the ML model output
     private enum FeatureNames: String {
         case scores
         case boxes
     }
+
+    private static let minZoomLevel: CGFloat = 6.0
+    private static let maxZoomLevel: CGFloat = 9.0
 
     init?(
         detector: IDDetector,
@@ -213,5 +222,19 @@ extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
         return boxes.shape.count == 3 && boxes.shape[0] == 1 && boxes.shape[2] == 4
             && scores.shape.count == 3 && scores.shape[0] == 1 && scores.shape[2].intValue > 0
             && boxes.shape[1] == scores.shape[1]
+    }
+
+    func computeZoomLevel() -> ZoomLevel {
+        // The full input frame's height is always longer than width, the input to ML model centerCrops the square in the middle with size fullFrame.width x fullFrame.width.
+        // documentBounds.width = boundingBoxWidth/fullFrameWidth, use it calcuate zoom level.
+        let zoomLevel = documentBounds.width * 10
+
+        if zoomLevel > IDDetectorOutput.maxZoomLevel {
+            return .tooClose
+        } else if zoomLevel < IDDetectorOutput.minZoomLevel {
+            return .tooFar
+        } else {
+            return .ok
+        }
     }
 }

@@ -82,6 +82,8 @@ import AVKit
         /// Video settings for the video output
         /// - Seealso: https://developer.apple.com/documentation/avfoundation/avcapturephotosettings/video_settings
         public let outputSettings: [String: Any]
+        /// https://developer.apple.com/documentation/avfoundation/avcapturedevice/1624622-autofocusrangerestriction
+        public let autoFocusRangeRestriction: AVCaptureDevice.AutoFocusRangeRestriction
 
         /// - Parameters:
         ///   - initialCameraPosition: The initial position of camera: front or back
@@ -96,7 +98,8 @@ import AVKit
             focusMode: AVCaptureDevice.FocusMode? = nil,
             focusPointOfInterest: CGPoint? = nil,
             sessionPreset: AVCaptureSession.Preset = .high,
-            outputSettings: [String: Any] = [:]
+            outputSettings: [String: Any] = [:],
+            autoFocusRangeRestriction: AVCaptureDevice.AutoFocusRangeRestriction = .none
         ) {
             self.initialCameraPosition = initialCameraPosition
             self.initialOrientation = initialOrientation
@@ -104,6 +107,7 @@ import AVKit
             self.focusPointOfInterest = focusPointOfInterest
             self.sessionPreset = sessionPreset
             self.outputSettings = outputSettings
+            self.autoFocusRangeRestriction = autoFocusRangeRestriction
         }
     }
 
@@ -194,29 +198,12 @@ import AVKit
                     orientation: configuration.initialOrientation,
                     focusMode: configuration.focusMode,
                     focusPointOfInterest: configuration.focusPointOfInterest,
+                    autoFocusRangeRestriction: configuration.autoFocusRangeRestriction,
                     delegate: delegate
                 )
             }.observe(on: queue) { [weak self] result in
                 self?.setupResult = result.setupResult
                 completion(result.setupResult)
-            }
-        }
-    }
-
-    public func setFocus(
-        focusMode: AVCaptureDevice.FocusMode,
-        focusPointOfInterest: CGPoint? = nil,
-        completion: @escaping (Error?) -> Void
-    ) {
-        sessionQueue.async { [weak self] in
-            do {
-                try self?.setFocusOnCurrentQueue(
-                    focusMode: focusMode,
-                    focusPointOfInterest: focusPointOfInterest
-                )
-                completion(nil)
-            } catch {
-                completion(error)
             }
         }
     }
@@ -380,6 +367,7 @@ extension CameraSession {
         orientation: AVCaptureVideoOrientation,
         focusMode: AVCaptureDevice.FocusMode?,
         focusPointOfInterest: CGPoint?,
+        autoFocusRangeRestriction: AVCaptureDevice.AutoFocusRangeRestriction,
         delegate: AVCaptureVideoDataOutputSampleBufferDelegate
     ) -> Future<Void> {
         let promise = Promise<Void>()
@@ -420,6 +408,7 @@ extension CameraSession {
             promise.fulfill { [weak self] in
                 try self?.setFocusOnCurrentQueue(
                     focusMode: focusMode,
+                    autoFocusRangeRestriction: autoFocusRangeRestriction,
                     focusPointOfInterest: focusPointOfInterest
                 )
             }
@@ -444,6 +433,7 @@ extension CameraSession {
 
     fileprivate func setFocusOnCurrentQueue(
         focusMode: AVCaptureDevice.FocusMode,
+        autoFocusRangeRestriction: AVCaptureDevice.AutoFocusRangeRestriction,
         focusPointOfInterest: CGPoint?
     ) throws {
         dispatchPrecondition(condition: .onQueue(sessionQueue))
@@ -455,14 +445,25 @@ extension CameraSession {
         try device.lockForConfiguration()
         if device.isFocusModeSupported(focusMode) {
             device.focusMode = focusMode
+
+        }
+
+        if device.isAutoFocusRangeRestrictionSupported {
+            device.autoFocusRangeRestriction = autoFocusRangeRestriction
         }
 
         if let focusPointOfInterest = focusPointOfInterest,
             device.isFocusPointOfInterestSupported
         {
+            if device.isSmoothAutoFocusSupported {
+                device.isSmoothAutoFocusEnabled = true
+            }
             device.focusPointOfInterest = focusPointOfInterest
         }
 
+        if device.isLowLightBoostSupported {
+            device.automaticallyEnablesLowLightBoostWhenAvailable = true
+        }
         device.unlockForConfiguration()
     }
 }

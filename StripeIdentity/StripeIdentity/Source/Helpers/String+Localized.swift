@@ -67,6 +67,43 @@ extension String.Localized {
         )
     }
 
+    // MARK: - Document Capture
+
+    static var position_in_center: String {
+        return STPLocalizedString(
+            "Position your identity card in the center of the frame",
+            "Instructional text for scanning front of a identity card"
+        )
+    }
+
+    static var flip_to_other_side: String {
+        return STPLocalizedString(
+            "Flip your identity card over to the other side",
+            "Instructional text for scanning back of a identity card"
+        )
+    }
+
+    static var scanning: String {
+        return STPLocalizedString(
+            "Hold still, scanning",
+            "Instructional text when camera is focusing on a document while scanning it"
+        )
+    }
+
+    static var move_closer: String {
+        return STPLocalizedString(
+            "Move closer",
+            "Instructional text when camera is too far from a document"
+        )
+    }
+
+    static var move_farther: String {
+        return STPLocalizedString(
+            "Move farther",
+            "Instructional text when camera is too close to a document"
+        )
+    }
+
     // MARK: - Document Upload
 
     static var app_settings: String {
