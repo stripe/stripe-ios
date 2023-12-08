@@ -31,7 +31,6 @@ struct PaymentSheetTestPlayground: View {
             SettingView(setting: $playgroundController.settings.linkEnabled)
             SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
             SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
-            SettingView(setting: $playgroundController.settings.autoreload)
         }
         Group {
             if playgroundController.settings.uiStyle == .flowController {
@@ -39,6 +38,9 @@ struct PaymentSheetTestPlayground: View {
                     SettingView(setting: $playgroundController.settings.requireCVCRecollection)
                 }
             }
+        }
+        Group {
+            SettingView(setting: $playgroundController.settings.autoreload)
         }
     }
 
@@ -90,7 +92,7 @@ struct PaymentSheetTestPlayground: View {
                         TextField("CustomerId", text: customerIdBinding)
                             .disabled(true)
                         SettingPickerView(setting: $playgroundController.settings.currency)
-                        SettingPickerView(setting: $playgroundController.settings.merchantCountryCode)
+                        SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
                     }
                     Divider()
@@ -171,6 +173,18 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.customerId = (newString != "") ? newString : nil
         }
     }
+    var merchantCountryBinding: Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
+        Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
+            return playgroundController.settings.merchantCountryCode
+        } set: { newCountry in
+            // Reset customer id if country changes
+            if playgroundController.settings.merchantCountryCode.rawValue != newCountry.rawValue {
+                playgroundController.settings.customerMode = .guest
+            }
+            playgroundController.settings.merchantCountryCode = newCountry
+        }
+    }
+
 }
 
 @available(iOS 14.0, *)
