@@ -17,9 +17,9 @@ struct ExternalPaymentMethod: Decodable, Equatable, Hashable {
     let type: String
     /// A localized label for the payment method e.g. "FooPay"
     let label: String
-    /// URL of a 48x pixel tall PNG representing the payment method suitable for display against a light background color.
+    /// URL of a 48x pixel tall, variable width PNG representing the payment method suitable for display against a light background color.
     let lightImageUrl: URL
-    /// URL of a 48x pixel tall PNG representing the payment method suitable for display against a dark background color. If `nil`, use `lightImageUrl` instead.
+    /// URL of a 48x pixel, variable width tall PNG representing the payment method suitable for display against a dark background color. If `nil`, use `lightImageUrl` instead.
     let darkImageUrl: URL?
 
     /// Helper method to decode the `v1/elements/sessions` response's `external_payment_methods_data` hash.

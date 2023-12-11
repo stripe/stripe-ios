@@ -13,10 +13,10 @@ import Foundation
 extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
 
-    func makeElementsSessionsParams(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration) -> [String: Any] {
+    func makeElementsSessionsParams(mode: PaymentSheet.InitializationMode, epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?) -> [String: Any] {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
-            "external_payment_methods": configuration.externalPaymentMethodConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
+            "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
         ]
         switch mode {
         case .deferredIntent(let intentConfig):
@@ -59,7 +59,7 @@ extension STPAPIClient {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
-            parameters: makeElementsSessionsParams(mode: .paymentIntentClientSecret(paymentIntentClientSecret), configuration: configuration)
+            parameters: makeElementsSessionsParams(mode: .paymentIntentClientSecret(paymentIntentClientSecret), epmConfiguration: configuration.externalPaymentMethodConfiguration)
         )
         // The v1/elements/sessions response contains a PaymentIntent hash that we parse out into a PaymentIntent
         guard
@@ -78,7 +78,7 @@ extension STPAPIClient {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
-            parameters: makeElementsSessionsParams(mode: .setupIntentClientSecret(setupIntentClientSecret), configuration: configuration)
+            parameters: makeElementsSessionsParams(mode: .setupIntentClientSecret(setupIntentClientSecret), epmConfiguration: configuration.externalPaymentMethodConfiguration)
         )
         // The v1/elements/sessions response contains a SetupIntent hash that we parse out into a SetupIntent
         guard
@@ -94,7 +94,7 @@ extension STPAPIClient {
         withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
         configuration: PaymentSheet.Configuration
     ) async throws -> STPElementsSession {
-        let parameters = makeElementsSessionsParams(mode: .deferredIntent(intentConfig), configuration: configuration)
+        let parameters = makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: configuration.externalPaymentMethodConfiguration)
         return try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
