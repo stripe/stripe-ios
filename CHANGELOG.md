@@ -1,4 +1,4 @@
-## X.Y.Z 2023-xx-yy
+## 23.19.0 2023-12-11
 ### Apple Pay
 * [Fixed] STPApplePayContext initializer returns nil in more cases where the request is invalid.
 * [Fixed] STPApplePayContext now allows Apple Pay when the customer doesn’t have saved cards but can set them up in the Apple Pay sheet (iOS 15+).
