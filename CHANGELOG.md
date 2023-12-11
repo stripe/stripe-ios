@@ -1,3 +1,10 @@
+## X.Y.Z 2023-xx-yy
+### PaymentSheet
+* [Added] Support for [Card Brand Choice](https://stripe.com/docs/card-brand-choice).
+
+### CustomerSheet
+* [Added] Support for [Card Brand Choice](https://stripe.com/docs/card-brand-choice).
+
 ## 23.19.0 2023-12-11
 ### Apple Pay
 * [Fixed] STPApplePayContext initializer returns nil in more cases where the request is invalid.
