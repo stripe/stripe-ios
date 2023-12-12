@@ -41,7 +41,7 @@ import UIKit
 
     private let theme: ElementsUITheme
 
-#if !STP_BUILD_FOR_VISION
+#if !canImport(CompositorServices)
     public var inputAccessoryView: UIView? {
         get {
             return textFieldView.textField.inputAccessoryView

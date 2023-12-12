@@ -198,7 +198,7 @@ extension DownloadManager {
     }
 
     func persistToMemory(_ imageData: Data, forImageName imageName: String) -> UIImage? {
-        #if STP_BUILD_FOR_VISION
+        #if canImport(CompositorServices)
         let scale = 1.0
         #else
         let scale = UIScreen.main.scale

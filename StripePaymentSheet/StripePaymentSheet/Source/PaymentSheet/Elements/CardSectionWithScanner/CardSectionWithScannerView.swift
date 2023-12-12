@@ -6,7 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-#if !STP_BUILD_FOR_VISION
+#if !canImport(CompositorServices)
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments

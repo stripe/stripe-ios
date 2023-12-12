@@ -78,7 +78,7 @@ class ShadowedRoundedRectangle: UIView {
         layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
     }
 
-    #if !STP_BUILD_FOR_VISION
+    #if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         setNeedsLayout()

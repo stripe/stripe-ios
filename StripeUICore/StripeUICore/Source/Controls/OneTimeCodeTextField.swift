@@ -54,7 +54,7 @@ import UIKit
         return DigitView(theme: theme)
     }
 
-#if !STP_BUILD_FOR_VISION
+#if !canImport(CompositorServices)
     private let feedbackGenerator = UINotificationFeedbackGenerator()
 #endif
 
@@ -139,7 +139,7 @@ import UIKit
         let result = super.resignFirstResponder()
 
         if result {
-            #if !STP_BUILD_FOR_VISION
+            #if !canImport(CompositorServices)
             hideMenu()
             #endif
             update()
@@ -157,7 +157,7 @@ import UIKit
         }
 
         if isFirstResponder {
-            #if !STP_BUILD_FOR_VISION
+            #if !canImport(CompositorServices)
             toggleMenu()
             #endif
         } else {
@@ -227,7 +227,7 @@ private extension OneTimeCodeTextField {
             : STPLocalizedString("Double tap to edit", "Accessibility hint for a text field")
     }
 
-    #if !STP_BUILD_FOR_VISION // Don't mess with the UIMenuController on visionOS
+    #if !canImport(CompositorServices) // Don't mess with the UIMenuController on visionOS
     func toggleMenu() {
         if UIMenuController.shared.isMenuVisible {
             hideMenu()
@@ -315,7 +315,7 @@ public extension OneTimeCodeTextField {
             digitView.borderLayer.add(borderColorAnimation, forKey: "borderColor")
         }
 
-#if !STP_BUILD_FOR_VISION
+#if !canImport(CompositorServices)
         feedbackGenerator.notificationOccurred(.error)
 #endif
 
@@ -354,7 +354,7 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
-        #if !STP_BUILD_FOR_VISION
+        #if !canImport(CompositorServices)
         hideMenu()
         #endif
         update()
@@ -370,7 +370,7 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
-        #if !STP_BUILD_FOR_VISION
+        #if !canImport(CompositorServices)
         hideMenu()
         #endif
         update()
@@ -790,7 +790,7 @@ private extension OneTimeCodeTextField {
             updateColors()
         }
 
-#if !STP_BUILD_FOR_VISION
+#if !canImport(CompositorServices)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             updateColors()
