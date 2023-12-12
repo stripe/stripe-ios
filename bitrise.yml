@@ -391,7 +391,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-15.1.x-edge
+        stack: osx-xcode-15.2.x-edge
         machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
