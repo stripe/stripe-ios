@@ -15,7 +15,7 @@ extension UIViewController {
         completion: (() -> Void)? = nil
     ) {
         var presentAsFormSheet: Bool {
-            #if STP_BUILD_FOR_VISION
+            #if canImport(CompositorServices)
             return true
             #else
             // Present as form sheet in larger devices (iPad/Mac).

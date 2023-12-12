@@ -101,7 +101,7 @@ import UIKit
             targetSize.height
             / (Self.legacyIconSize.height - Self.iconPadding.top - Self.iconPadding.bottom)
         // We could adapt this for multiple screens, but probably not worth it (better solution is to remove padding from images)
-        #if STP_BUILD_FOR_VISION
+        #if canImport(CompositorServices)
         let screenScale = 1.0
         #else
         let screenScale = UIScreen.main.scale
@@ -242,7 +242,7 @@ import UIKit
     }
 
     // MARK: - Callbacks
-#if !STP_BUILD_FOR_VISION
+#if !canImport(CompositorServices)
     @_spi(STP) public override func traitCollectionDidChange(
         _ previousTraitCollection: UITraitCollection?
     ) {

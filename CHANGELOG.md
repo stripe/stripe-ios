@@ -1,6 +1,7 @@
 ## X.Y.Z 2023-xx-yy
 ### PaymentSheet
 * [Added] Support for [card brand choice](https://stripe.com/docs/card-brand-choice). To set default preferred networks, use the new configuration option `PaymentSheet.Configuration.preferredNetworks`.
+* [Fixed] Fixed visionOS support in Swift Package Manager and Cocoapods.
 
 ### CustomerSheet
 * [Added] Support for [card brand choice](https://stripe.com/docs/card-brand-choice). To set default preferred networks, use the new configuration option `PaymentSheet.Configuration.preferredNetworks`.

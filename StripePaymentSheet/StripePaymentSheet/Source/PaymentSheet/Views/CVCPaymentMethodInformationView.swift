@@ -84,7 +84,7 @@ class CVCPaymentMethodInformationView: UIView {
         ])
     }
 
-    #if !STP_BUILD_FOR_VISION
+    #if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.transparentMaskView.backgroundColor = transparentMaskViewBackgroundColor()
