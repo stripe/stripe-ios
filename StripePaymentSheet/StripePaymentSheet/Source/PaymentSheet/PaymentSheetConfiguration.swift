@@ -335,11 +335,11 @@ extension PaymentSheet {
         public var address: Address = Address()
 
         /// The customer's email
-        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        /// - Note: When used with defaultBillingDetails, the value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var email: String?
 
         /// The customer's full name
-        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        /// - Note: When used with defaultBillingDetails, the value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var name: String?
 
         /// The customer's phone number without formatting (e.g. 5551234567)
@@ -442,5 +442,20 @@ extension PaymentSheet.Configuration {
         || billingDetailsCollectionConfiguration.phone == .always
         || billingDetailsCollectionConfiguration.email == .always
         || billingDetailsCollectionConfiguration.address == .full
+    }
+}
+
+extension STPPaymentMethodBillingDetails {
+    func toPaymentSheetBillingDetails() -> PaymentSheet.BillingDetails {
+        let address = PaymentSheet.Address(city: self.address?.city,
+                                           country: self.address?.country,
+                                           line1: self.address?.line1,
+                                           line2: self.address?.line2,
+                                           postalCode: self.address?.postalCode,
+                                           state: self.address?.state)
+        return PaymentSheet.BillingDetails(address: address,
+                                           email: self.email,
+                                           name: self.name,
+                                           phone: self.phone)
     }
 }

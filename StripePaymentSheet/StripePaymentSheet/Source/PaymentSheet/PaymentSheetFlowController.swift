@@ -51,19 +51,38 @@ extension PaymentSheet {
             /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
             public let label: String
 
+            /// The billing details associated with the customer's desired payment option
+            public let billingDetails: PaymentSheet.BillingDetails?
+
+            /// A string representation of the customer's desired payment option
+            /// - If this is a Stripe payment method, see https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for possible values.
+            /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
+            /// - If this is Apple Pay, the value is "apple_pay"
+            public let paymentMethodType: String
+
             init(paymentOption: PaymentOption) {
                 image = paymentOption.makeIcon(updateImageHandler: nil)
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
+                    paymentMethodType = "apple_pay"
+                    billingDetails = nil
                 case .saved(let paymentMethod):
                     label = paymentMethod.paymentSheetLabel
+                    paymentMethodType = paymentMethod.type.identifier
+                    billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
                 case .new(let confirmParams):
                     label = confirmParams.paymentSheetLabel
+                    paymentMethodType = confirmParams.paymentMethodType.identifier
+                    billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
                 case .link(let option):
                     label = option.paymentSheetLabel
-                case .external(let paymentMethod, _):
+                    paymentMethodType = STPPaymentMethodType.link.identifier
+                    billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
+                case .external(let paymentMethod, let stpBillingDetails):
                     label = paymentMethod.label
+                    paymentMethodType = paymentMethod.type
+                    billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
                 }
             }
         }

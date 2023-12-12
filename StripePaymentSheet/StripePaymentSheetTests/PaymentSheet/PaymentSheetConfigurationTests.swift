@@ -60,4 +60,28 @@ class PaymentSheetConfigurationTests: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.phone = .always
         XCTAssert(configuration.isUsingBillingAddressCollection())
     }
+
+    func testSTPPaymentMethodBillingDetailsToPaymentSheetBililngDetails() {
+        var billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.name = "Jane Doe"
+        billingDetails.email = "janedoe@test.com"
+        billingDetails.phone = "+18885551234"
+        billingDetails.address = STPPaymentMethodAddress()
+        billingDetails.address?.line1 = "123 Main Street"
+        billingDetails.address?.line2 = ""
+        billingDetails.address?.city = "San Francisco"
+        billingDetails.address?.state = "California"
+        billingDetails.address?.country = "US"
+
+        let psBillingDetails = billingDetails.toPaymentSheetBillingDetails()
+
+        XCTAssertEqual(psBillingDetails.name, "Jane Doe")
+        XCTAssertEqual(psBillingDetails.email, "janedoe@test.com")
+        XCTAssertEqual(psBillingDetails.phone, "+18885551234")
+        XCTAssertEqual(psBillingDetails.address.line1, "123 Main Street")
+        XCTAssertEqual(psBillingDetails.address.line2, "")
+        XCTAssertEqual(psBillingDetails.address.city, "San Francisco")
+        XCTAssertEqual(psBillingDetails.address.state, "California")
+        XCTAssertEqual(psBillingDetails.address.country, "US")
+    }
 }
