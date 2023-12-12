@@ -133,7 +133,6 @@ class PlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
-        configuration.cbcEnabled = true // TODO(porter) Remove for CBC GA
         return configuration
     }
 

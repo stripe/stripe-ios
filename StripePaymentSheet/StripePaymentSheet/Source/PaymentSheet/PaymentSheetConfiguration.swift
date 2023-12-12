@@ -152,7 +152,6 @@ extension PaymentSheet {
 
         /// The list of preferred networks that should be used to process payments made with a co-branded card.
         /// This value will only be used if your user hasn't selected a network themselves.
-        @_spi(STP) // TODO(porter) Remove STP before CBC GA
         public var preferredNetworks: [STPCardBrand]? {
             didSet {
                 guard let preferredNetworks = preferredNetworks else { return }
@@ -160,9 +159,6 @@ extension PaymentSheet {
                        "preferredNetworks must not contain any duplicate card brands")
             }
         }
-
-        // TODO(porter) Remove for CBC GA
-        @_spi(STP) public var cbcEnabled: Bool = false
 
         /// Initializes a Configuration with default values
         public init() {}

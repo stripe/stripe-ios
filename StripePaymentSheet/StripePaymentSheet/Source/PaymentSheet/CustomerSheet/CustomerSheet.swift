@@ -148,7 +148,7 @@ public class CustomerSheet {
                                                                                     configuration: self.configuration,
                                                                                     customerAdapter: self.customerAdapter,
                                                                                     isApplePayEnabled: isApplePayEnabled,
-                                                                                    cbcEligible: self.configuration.cbcEnabled && cbcEligible,
+                                                                                    cbcEligible: cbcEligible,
                                                                                     csCompletion: self.csCompletion,
                                                                                     delegate: self)
                 self.bottomSheetViewController.contentStack = [savedPaymentSheetVC]

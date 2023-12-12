@@ -91,7 +91,7 @@ class PaymentSheetViewController: UIViewController {
                 isTestMode: configuration.apiClient.isTestmode
             ),
             appearance: configuration.appearance,
-            cbcEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled,
+            cbcEligible: intent.cardBrandChoiceEligible,
             delegate: self
         )
     }()
