@@ -2038,7 +2038,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         payButton.tap()
         app.buttons["Fail"].tap()
-        XCTAssertTrue(app.staticTexts["An unknown error occurred."].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["Something went wrong!"].waitForExistence(timeout: 5.0))
 
         payButton.tap()
         app.buttons["Confirm"].tap()
@@ -2067,7 +2067,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         let payButton = app.buttons["Confirm"]
         payButton.tap()
         app.buttons["Fail"].tap()
-        XCTAssertTrue(app.staticTexts["Payment failed: PaymentSheetExample.PlaygroundController.ConfirmHandlerError.unknown"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["Payment failed: Error Domain= Code=0 \"Something went wrong!\" UserInfo={NSLocalizedDescription=Something went wrong!}"].waitForExistence(timeout: 5.0))
 
         payButton.tap()
         app.alerts.buttons["Confirm"].tap()

@@ -230,9 +230,6 @@ class PlaygroundController: ObservableObject {
             completion(.failed(error: exampleError))
         })
         if self.settings.uiStyle == .paymentSheet {
-            self.rootViewController.presentedViewController?.dismiss(animated: true) {
-                self.rootViewController.presentedViewController?.present(alert, animated: true)
-            }
             self.rootViewController.presentedViewController?.present(alert, animated: true)
         } else {
             self.rootViewController.present(alert, animated: true)
