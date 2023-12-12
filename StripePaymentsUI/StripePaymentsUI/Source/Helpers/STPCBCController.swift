@@ -81,10 +81,7 @@ class STPCBCController {
         }
     }
 
-    var cbcEnabledOverride: Bool? = {
-        // TODO: Remove the default value of `false` once we release CBC
-        return false
-    }()
+    var cbcEnabledOverride: Bool?
 
     var cbcEnabled: Bool {
         if let cbcEnabledOverride = cbcEnabledOverride {
