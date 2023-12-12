@@ -166,7 +166,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 isTestMode: configuration.apiClient.isTestmode
             ),
             appearance: configuration.appearance,
-            cbcEligible: intent.cardBrandChoiceEligible && configuration.cbcEnabled
+            cbcEligible: intent.cardBrandChoiceEligible
         )
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
