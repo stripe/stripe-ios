@@ -147,7 +147,7 @@ extension PaymentSheet {
             // Log a warning if elements session doesn't contain all the merchant's desired external payment methods
             let missingExternalPaymentMethods = Set(configuration.externalPaymentMethodConfiguration?.externalPaymentMethods.map { $0.lowercased() } ?? [])
                 .subtracting(Set(intent.elementsSession.externalPaymentMethods.map { $0.type }))
-            if !missingExternalPaymentMethods.isEmpty {
+            if logAvailability && !missingExternalPaymentMethods.isEmpty {
                 print("[Stripe SDK]: PaymentSheet could not offer these external payment methods: \(missingExternalPaymentMethods). See https://stripe.com/docs/payments/external-payment-methods#available-external-payment-methods")
             }
 
