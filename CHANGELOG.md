@@ -9,6 +9,7 @@
 ### PaymentsUI
 * [Added] Adds support for [card brand choice](https://stripe.com/docs/card-brand-choice) to STPPaymentCardTextField and STPCardFormView. To set a default preferred network for these UI elements, use the new `preferredNetworks` parameter.
 
+* [Deprecated] Mark STPPinManagementService deprecated & suggest alternative.
 
 ## 23.19.0 2023-12-11
 ### Apple Pay
