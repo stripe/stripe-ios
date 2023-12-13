@@ -5,7 +5,7 @@
 //  Created by David Estes on 4/13/22.
 //
 
-#if !STP_BUILD_FOR_VISION
+#if !canImport(CompositorServices)
 import Foundation
 import iOSSnapshotTestCase
 

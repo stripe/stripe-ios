@@ -13,6 +13,7 @@ import Foundation
 import UIKit
 
 /// STPAPIClient extensions to manage PIN on Stripe Issuing cards
+@available(*, deprecated, message: "Please use Issuing Elements instead: https://stripe.com/docs/issuing/elements")
 public class STPPinManagementService: NSObject {
     /// The API Client to use to make requests.
     /// Defaults to STPAPIClient.shared

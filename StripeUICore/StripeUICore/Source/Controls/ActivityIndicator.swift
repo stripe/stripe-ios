@@ -140,7 +140,7 @@ import UIKit
         updateColor()
     }
 
-#if !STP_BUILD_FOR_VISION
+#if !canImport(CompositorServices)
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateColor()
@@ -166,7 +166,7 @@ import UIKit
 
         if let window = newWindow {
             contentLayer.shouldRasterize = true
-#if !STP_BUILD_FOR_VISION
+#if !canImport(CompositorServices)
             contentLayer.rasterizationScale = window.screen.scale
 #endif
         }

@@ -1,6 +1,7 @@
 ## X.Y.Z 2023-xx-yy
 ### PaymentSheet
 * [Added] Support for [card brand choice](https://stripe.com/docs/card-brand-choice). To set default preferred networks, use the new configuration option `PaymentSheet.Configuration.preferredNetworks`.
+* [Fixed] Fixed visionOS support in Swift Package Manager and Cocoapods.
 
 ### CustomerSheet
 * [Added] Support for [card brand choice](https://stripe.com/docs/card-brand-choice). To set default preferred networks, use the new configuration option `PaymentSheet.Configuration.preferredNetworks`.
@@ -8,6 +9,7 @@
 ### PaymentsUI
 * [Added] Adds support for [card brand choice](https://stripe.com/docs/card-brand-choice) to STPPaymentCardTextField and STPCardFormView. To set a default preferred network for these UI elements, use the new `preferredNetworks` parameter.
 
+* [Changed] Mark STPPinManagementService deprecated & suggest alternative.
 
 ## 23.19.0 2023-12-11
 ### Apple Pay

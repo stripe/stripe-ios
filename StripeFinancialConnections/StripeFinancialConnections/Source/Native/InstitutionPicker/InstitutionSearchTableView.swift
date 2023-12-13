@@ -122,7 +122,7 @@ final class InstitutionSearchTableView: UIView {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 54
 
-        #if !STP_BUILD_FOR_VISION
+        #if !canImport(CompositorServices)
         tableView.contentInset = UIEdgeInsets(
             // add extra inset at the top/bottom to show the cell-selected-state separators
             top: 1.0 / UIScreen.main.nativeScale,

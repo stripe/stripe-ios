@@ -64,7 +64,7 @@ class CVCRecollectionView: UIView {
         addAndPinSubview(stackView)
 
     }
-    #if !STP_BUILD_FOR_VISION
+    #if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.stackView.layer.borderColor = appearance.colors.componentBorder.cgColor
