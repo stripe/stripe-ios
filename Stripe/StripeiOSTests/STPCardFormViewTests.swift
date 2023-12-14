@@ -161,6 +161,25 @@ class STPCardFormViewTests: XCTestCase {
         waitForExpectations(timeout: 3.0)
     }
 
+    func testCBCFourDigitCVCIsInvalid() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "5555552500001001"
+        cardParams.expYear = 2080
+        cardParams.expMonth = 12
+        cardParams.cvc = "1234"
+        let billingDetails = STPPaymentMethodBillingDetails(postalCode: "12345", countryCode: "US")
+        let paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: billingDetails, metadata: nil)
+        cardFormView.cardParams = paymentMethodParams
+        let exp = expectation(description: "Wait for validation")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            XCTAssertFalse(cardFormView.cvcField.isValid)
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 0.5)
+    }
+
     // MARK: Functional Tests
     // If these fail it's _possibly_ because the returned error formats have changed
 
