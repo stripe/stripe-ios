@@ -79,7 +79,7 @@ extension STPAPIClient {
             "email_address": email.lowercased(),
             "phone_number": phoneNumber,
             "locale": locale.toLanguageTag(),
-            "country_inferring_method": "PHONE_NUMBER"
+            "country_inferring_method": "PHONE_NUMBER",
         ]
 
         if let legalName = legalName {
