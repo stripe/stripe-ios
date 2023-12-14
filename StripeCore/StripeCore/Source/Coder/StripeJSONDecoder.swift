@@ -10,6 +10,8 @@
 import Foundation
 
 @_spi(STP) public class StripeJSONDecoder {
+    @_spi(STP) public init() {}
+
     @_spi(STP) public var userInfo: [CodingUserInfoKey: Any] = [:]
 
     @_spi(STP) public var inputFormatting: JSONSerialization.ReadingOptions = []

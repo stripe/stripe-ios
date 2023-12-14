@@ -146,7 +146,7 @@ final class PaymentSheetLoader {
             let paymentIntent: STPPaymentIntent
             let elementsSession: STPElementsSession
             do {
-                (paymentIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(paymentIntentClientSecret: clientSecret)
+                (paymentIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(paymentIntentClientSecret: clientSecret, configuration: configuration)
             } catch let error {
                 analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 // Fallback to regular retrieve PI when retrieve PI with preferences fails
@@ -162,7 +162,7 @@ final class PaymentSheetLoader {
             let setupIntent: STPSetupIntent
             let elementsSession: STPElementsSession
             do {
-                (setupIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret)
+                (setupIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret, configuration: configuration)
             } catch let error {
                 analyticsClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 // Fallback to regular retrieve SI when retrieve SI with preferences fails
@@ -176,7 +176,7 @@ final class PaymentSheetLoader {
             intent = .setupIntent(elementsSession: elementsSession, setupIntent: setupIntent)
         case .deferredIntent(let intentConfig):
             do {
-                let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig)
+                let elementsSession = try await configuration.apiClient.retrieveElementsSession(withIntentConfig: intentConfig, configuration: configuration)
                 intent = .deferredIntent(elementsSession: elementsSession, intentConfig: intentConfig)
             } catch let error as NSError where error == NSError.stp_genericFailedToParseResponseError() {
                 // Most errors are useful and should be reported back to the merchant to help them debug their integration (e.g. bad connection, unknown parameter, invalid api key).

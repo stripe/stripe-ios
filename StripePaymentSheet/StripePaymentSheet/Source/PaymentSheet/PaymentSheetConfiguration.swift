@@ -176,7 +176,6 @@ extension PaymentSheet {
         public var removeSavedPaymentMethodMessage: String?
 
         /// Configuration for external payment methods.
-        @_spi(ExternalPaymentMethodsPrivateBeta)
         public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
 
         /// By default, PaymentSheet will use a dynamic ordering that optimizes payment method display for the customer.
@@ -184,7 +183,6 @@ extension PaymentSheet {
         /// See https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for the list of valid types.  You may also pass external payment methods.
         /// - Example: ["card", "external_paypal", "klarna"]
         /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
-        @_spi(ExternalPaymentMethodsPrivateBeta)
         public var paymentMethodOrder: [String]?
     }
 
@@ -401,8 +399,14 @@ extension PaymentSheet {
         public var attachDefaultsToPaymentMethod = false
     }
 
-    @_spi(ExternalPaymentMethodsPrivateBeta)
+    /// Configuration for external payment methods
+    /// - Seealso: See the [integration guide](https://stripe.com/docs/payments/external-payment-methods?platform=ios).
     public struct ExternalPaymentMethodConfiguration {
+
+        /// Initializes an `ExternalPaymentMethodConfiguration`
+        /// - Parameter externalPaymentMethods: A list of external payment methods to display in PaymentSheet e.g., ["external_paypal"].
+        /// - Parameter externalPaymentMethodConfirmHandler: A handler called when the customer confirms the payment using an external payment method.
+        /// - Seealso: See the [integration guide](https://stripe.com/docs/payments/external-payment-methods?platform=ios).
         public init(externalPaymentMethods: [String], externalPaymentMethodConfirmHandler: @escaping PaymentSheet.ExternalPaymentMethodConfiguration.ExternalPaymentMethodConfirmHandler) {
             self.externalPaymentMethods = externalPaymentMethods
             self.externalPaymentMethodConfirmHandler = externalPaymentMethodConfirmHandler
@@ -412,7 +416,7 @@ extension PaymentSheet {
         /// e.g. ["external_paypal"].
         public var externalPaymentMethods: [String] = []
 
-        /// - Parameter externalPaymentMethodType: The external payment method to confirm payment with.  e.g. "external_paypal"
+        /// - Parameter externalPaymentMethodType: The external payment method to confirm payment with e.g., "external_paypal"
         /// - Parameter billingDetails: An object containing any billing details you've configured PaymentSheet to collect.
         /// - Parameter completion: Call this after payment has completed, passing the result of the payment.
         /// - Returns: The result of the attempt to confirm payment using the given external payment method.
@@ -423,7 +427,7 @@ extension PaymentSheet {
         ) -> Void
 
         /// This handler is called when the customer confirms the payment using an external payment method.
-        /// Your implementation should complete the payment and call the `completion` paramter with the result.
+        /// Your implementation should complete the payment and call the `completion` parameter with the result.
         /// - Note: This is always called on the main thread.
         public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
     }
