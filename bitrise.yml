@@ -40,6 +40,7 @@ stages:
     - test-builds-xcode-143: {}
     - test-builds-xcode-15: {}
     - test-builds-xcode-143-release: {}
+    - test-builds-vision: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
@@ -52,6 +53,7 @@ stages:
     - framework-tests: {}
     - test-builds-xcode-143: {}
     - test-builds-xcode-15: {}
+    - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
@@ -72,7 +74,6 @@ stages:
     - data-theorem-sast: {}
     - deploy-dry-run: {}
     - pod-lint-tests: {}
-    - test-builds-vision: {}
 workflows:
   basic-integration-tests:
     steps:
@@ -390,7 +391,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-15.1.x-edge
+        stack: osx-xcode-15.2.x-edge
         machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
