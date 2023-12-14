@@ -190,7 +190,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     }
 
     func validationStateForCVC() -> STPCardValidationState {
-        return STPCardValidator.validationState(forCVC: cvc ?? "", cardBrand: brand)
+        return STPCardValidator.validationState(forCVC: cvc ?? "", cardBrand: cbcController.brandForCVC)
     }
 
     func validationStateForPostalCode() -> STPCardValidationState {

@@ -28,6 +28,10 @@ import UIKit
     var cardBrandState: STPCBCController.BrandState {
         return (validator as! STPCardNumberInputTextFieldValidator).cardBrandState
     }
+    
+    var brandForCVC: STPCardBrand {
+        return (validator as! STPCardNumberInputTextFieldValidator).cbcController.brandForCVC
+    }
 
     var preferredNetworks: [STPCardBrand]? {
         get {

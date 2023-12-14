@@ -134,6 +134,13 @@ class STPCBCController {
             return .brand(STPCardValidator.brand(forNumber: cardNumber ?? ""))
         }
     }
+    
+    // Instead of validating against the selected brand (for CBC purposes),
+    // validate CVCs against the default brand of the PAN.
+    // We can assume that the CVC length will not change based on the choice of card brand.
+    var brandForCVC: STPCardBrand {
+        return STPCardValidator.brand(forNumber: cardNumber ?? "")
+    }
 
     var contextMenuConfiguration: UIContextMenuConfiguration {
         return UIContextMenuConfiguration(actionProvider: { _ in
