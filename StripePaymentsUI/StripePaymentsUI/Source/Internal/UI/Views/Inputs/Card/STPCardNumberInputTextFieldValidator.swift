@@ -38,6 +38,7 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
 
     override public var inputValue: String? {
         didSet {
+            cbcController.cardNumber = inputValue
             guard let inputValue = inputValue else {
                 validationState = .incomplete(description: nil)
                 return
@@ -77,7 +78,6 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                     validationState = .processing
                 }
             }
-            cbcController.cardNumber = inputValue
         }
     }
 

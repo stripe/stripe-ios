@@ -1177,7 +1177,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         } else {
             // Otherwise size to fit our placeholder or what is likely to be the
             // largest possible string enterable (whichever is larger)
-            let maxCvcLength = Int(STPCardValidator.maxCVCLength(for: viewModel.brand))
+            let maxCvcLength = Int(STPCardValidator.maxCVCLength(for: viewModel.cbcController.brandForCVC))
             var longestCvc = "888"
             if maxCvcLength == 4 {
                 longestCvc = "8888"
@@ -1827,7 +1827,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 let sanitizedCvc = STPCardValidator.sanitizedNumericString(
                     for: formTextField.text ?? ""
                 )
-                if sanitizedCvc.count >= STPCardValidator.maxCVCLength(for: viewModel.brand) {
+                if sanitizedCvc.count >= STPCardValidator.maxCVCLength(for: viewModel.cbcController.brandForCVC) {
                     // auto-advance
                     nextFirstResponderField().becomeFirstResponder()
                     UIAccessibility.post(notification: .screenChanged, argument: nil)

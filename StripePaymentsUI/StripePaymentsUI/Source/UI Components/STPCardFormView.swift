@@ -467,7 +467,7 @@ public class STPCardFormView: STPFormView {
         }
 
         if textField == numberField {
-            cvcField.cardBrand = numberField.cardBrandState.brand
+            cvcField.cardBrand = numberField.brandForCVC
         } else if textField == countryField {
             let countryChanged = textField.inputValue != countryCode
 

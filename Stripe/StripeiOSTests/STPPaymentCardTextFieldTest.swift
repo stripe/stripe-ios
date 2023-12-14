@@ -938,6 +938,21 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         }
         waitForExpectations(timeout: 3.0)
     }
+
+    func testFourDigitCVCNotAllowedUnknownCBCCard() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        let sut = STPPaymentCardTextField()
+        sut.cbcEnabledOverride = true
+        sut.preferredNetworks = [.visa]
+        let card = STPPaymentMethodCardParams()
+        card.number = "4973019750239993"
+        card.expMonth = 12
+        card.expYear = 43
+        card.cvc = "1234"
+        let params = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
+        sut.paymentMethodParams = params
+        XCTAssertFalse(sut.isValid)
+    }
 }
 
 // N.B. It is eexpected for setting the card params to generate API response errors
