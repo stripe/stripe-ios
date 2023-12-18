@@ -26,11 +26,11 @@ class ConsentViewController: UIViewController {
 
     private lazy var titleLabel: AttributedTextView = {
         let titleLabel = AttributedTextView(
-            font: .heading(.large),
-            boldFont: .heading(.large),
-            linkFont: .heading(.large),
-            textColor: .textPrimary,
-            alignCenter: dataSource.merchantLogo != nil
+            font: .heading(.extraLarge),
+            boldFont: .heading(.extraLarge),
+            linkFont: .heading(.extraLarge),
+            textColor: .textDefault,
+            alignCenter: dataSource.merchantLogo != nil // TODO(kgaidis): is this necessary
         )
         titleLabel.setText(
             dataSource.consent.title,
@@ -87,7 +87,6 @@ class ConsentViewController: UIViewController {
                     return titleLabel
                 }
             }(),
-            headerTopMargin: 16,
             contentView: ConsentBodyView(
                 bulletItems: dataSource.consent.body.bullets,
                 didSelectURL: { [weak self] url in

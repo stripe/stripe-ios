@@ -40,10 +40,10 @@ class ConsentFooterView: HitTestView {
         backgroundColor = .customBackgroundColor
 
         let termsAndPrivacyPolicyLabel = AttributedTextView(
-            font: .body(.small),
-            boldFont: .body(.smallEmphasized),
-            linkFont: .body(.smallEmphasized),
-            textColor: .textSecondary,
+            font: .label(.small),
+            boldFont: .label(.smallEmphasized),
+            linkFont: .label(.small),
+            textColor: .textDefault,
             alignCenter: true
         )
         termsAndPrivacyPolicyLabel.setText(
@@ -58,14 +58,14 @@ class ConsentFooterView: HitTestView {
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 24
+        verticalStackView.spacing = 16
 
         if let belowCtaText = belowCtaText {
             let manuallyVerifyLabel = AttributedTextView(
-                font: .body(.small),
-                boldFont: .body(.smallEmphasized),
-                linkFont: .body(.smallEmphasized),
-                textColor: .textSecondary,
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
+                linkFont: .label(.small),
+                textColor: .textDefault,
                 alignCenter: true
             )
             manuallyVerifyLabel.setText(
