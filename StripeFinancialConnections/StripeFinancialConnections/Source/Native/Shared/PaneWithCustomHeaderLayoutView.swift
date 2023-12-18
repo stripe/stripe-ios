@@ -25,7 +25,7 @@ final class PaneWithCustomHeaderLayoutView {
 
     init(
         headerView: UIView,
-        headerTopMargin: CGFloat = 8.0,
+        headerTopMargin: CGFloat = 24.0,
         contentView: UIView,
         headerAndContentSpacing: CGFloat = 24.0,
         footerView: UIView?
@@ -44,7 +44,7 @@ final class PaneWithCustomHeaderLayoutView {
                 verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
                     top: headerTopMargin,
                     leading: 24,
-                    bottom: 16,
+                    bottom: 32,
                     trailing: 24
                 )
                 return verticalStackView
@@ -61,9 +61,9 @@ final class PaneWithCustomHeaderLayoutView {
                     verticalStackView.spacing = 0
                     verticalStackView.isLayoutMarginsRelativeArrangement = true
                     verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-                        top: 20,
+                        top: 16,
                         leading: 24,
-                        bottom: 24,
+                        bottom: 16,
                         trailing: 24
                     )
                     return verticalStackView

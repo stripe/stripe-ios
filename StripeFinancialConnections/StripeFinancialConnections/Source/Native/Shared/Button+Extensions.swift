@@ -18,6 +18,7 @@ extension Button.Configuration {
     static var financialConnectionsPrimary: Button.Configuration {
         var primaryButtonConfiguration = Button.Configuration.primary()
         primaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
+        primaryButtonConfiguration.cornerRadius = 12.0
         // default
         primaryButtonConfiguration.backgroundColor = .textBrand
         primaryButtonConfiguration.foregroundColor = .white
@@ -33,6 +34,7 @@ extension Button.Configuration {
     static var financialConnectionsSecondary: Button.Configuration {
         var secondaryButtonConfiguration = Button.Configuration.secondary()
         secondaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
+        secondaryButtonConfiguration.cornerRadius = 12.0
         // default
         secondaryButtonConfiguration.foregroundColor = .textPrimary
         secondaryButtonConfiguration.backgroundColor = .backgroundContainer
