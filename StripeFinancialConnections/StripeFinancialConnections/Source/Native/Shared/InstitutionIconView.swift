@@ -12,6 +12,7 @@ import UIKit
 final class InstitutionIconView: UIView {
 
     enum Size {
+        case main   // 56x56
         case small  // 24x24
         case medium  // 36x36
         case large  // 40x40
@@ -25,11 +26,14 @@ final class InstitutionIconView: UIView {
         return CreateWarningIconView()
     }()
 
-    init(size: Size, showWarning: Bool = false) {
+    init(size: Size = .main, showWarning: Bool = false) {
         super.init(frame: .zero)
         let diameter: CGFloat
         let cornerRadius: CGFloat
         switch size {
+        case .main:
+            diameter = 56
+            cornerRadius = 12
         case .small:
             diameter = 24
             cornerRadius = 4
@@ -53,6 +57,14 @@ final class InstitutionIconView: UIView {
         if showWarning {
             addSubview(warningIconView)
         }
+
+        layer.shadowColor = UIColor.textDefault.cgColor
+        layer.shadowOpacity = 0.3
+        layer.shadowRadius = 1
+        layer.shadowOffset = CGSize(
+            width: 0,
+            height: 1
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -131,25 +143,34 @@ private struct InstitutionIconViewUIViewRepresentable: UIViewRepresentable {
 struct InstitutionIconView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            VStack(spacing: 10) {
+            VStack(spacing: 20) {
+                InstitutionIconViewUIViewRepresentable(
+                    size: .main,
+                    showWarning: true
+                )
+                .frame(width: 56, height: 56)
+
                 InstitutionIconViewUIViewRepresentable(
                     size: .large,
                     showWarning: true
                 )
+                .frame(width: 40, height: 40)
 
                 InstitutionIconViewUIViewRepresentable(
                     size: .medium,
                     showWarning: false
                 )
+                .frame(width: 36, height: 36)
 
                 InstitutionIconViewUIViewRepresentable(
                     size: .small,
                     showWarning: false
                 )
+                .frame(width: 24, height: 24)
 
                 Spacer()
             }
-            .frame(width: 40, height: 200)
+            .frame(width: 100, height: 300)
             .padding()
 
             Spacer()
