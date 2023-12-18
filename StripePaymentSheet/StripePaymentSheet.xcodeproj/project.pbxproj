@@ -511,7 +511,7 @@
 		B54274B9DEB3F1B0906127D1 /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B61FFE76D0960C7F1E34B405 /* PaymentSheetAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetAppearance.swift; sourceTree = "<group>"; };
 		B667E074D30964FABC64B552 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
-		B68CB9622B0D2169006ACDB1 /* STPAPIClient+PaymentSheetTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "STPAPIClient+PaymentSheetTest.swift"; path = "../../../Stripe/StripeiOSTests/STPAPIClient+PaymentSheetTest.swift"; sourceTree = "<group>"; };
+		B68CB9622B0D2169006ACDB1 /* STPAPIClient+PaymentSheetTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+PaymentSheetTest.swift"; sourceTree = "<group>"; };
 		B70D161E50723A8953665C4B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B829BC7EEE9576F724F7A9B3 /* StripePaymentSheetTestHostApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StripePaymentSheetTestHostApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8A49995CE949176F7A8C71F /* SimpleMandateTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleMandateTextView.swift; sourceTree = "<group>"; };
