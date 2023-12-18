@@ -46,19 +46,17 @@ class InstitutionPickerViewController: UIViewController {
         contentContainerView.backgroundColor = .clear
         return contentContainerView
     }()
-    private lazy var featuredInstitutionGridView: FeaturedInstitutionGridView = {
-        let featuredInstitutionGridView = FeaturedInstitutionGridView()
-        featuredInstitutionGridView.delegate = self
-        return featuredInstitutionGridView
-    }()
-    private lazy var institutionSearchTableView: InstitutionSearchTableView = {
-        let institutionSearchTableView = InstitutionSearchTableView(
+    private lazy var institutionTableView: InstitutionTableView = {
+        let institutionTableView = InstitutionTableView(
             frame: view.bounds,
             allowManualEntry: dataSource.manifest.allowManualEntry
         )
-        institutionSearchTableView.delegate = self
-        return institutionSearchTableView
+        institutionTableView.delegate = self
+        return institutionTableView
     }()
+    private var isUserCurrentlySearching: Bool {
+        return !searchBar.text.isEmpty
+    }
 
     // MARK: - Debouncing Support
 
@@ -93,15 +91,12 @@ class InstitutionPickerViewController: UIViewController {
 
         view.addAndPinSubview(loadingView)
         view.addAndPinSubviewToSafeArea(
-            createMainView(
-                searchBar: (dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
+            CreateMainView(
+                searchBar: searchBar,
                 contentContainerView: contentContainerView
             )
         )
-        contentContainerView.addAndPinSubview(featuredInstitutionGridView)
-        contentContainerView.addAndPinSubview(institutionSearchTableView)
-
-        toggleContentContainerViewVisbility()
+        contentContainerView.addAndPinSubview(institutionTableView)
 
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(
             target: self,
@@ -109,12 +104,6 @@ class InstitutionPickerViewController: UIViewController {
         )
         dismissSearchBarTapGestureRecognizer.delegate = self
         view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
-    }
-
-    private func toggleContentContainerViewVisbility() {
-        let isUserCurrentlySearching = !searchBar.text.isEmpty
-        featuredInstitutionGridView.isHidden = isUserCurrentlySearching
-        institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
     }
 
     @IBAction private func didTapOutsideOfSearchBar() {
@@ -125,8 +114,10 @@ class InstitutionPickerViewController: UIViewController {
         searchBar.resignFirstResponder()
         // clear search results
         searchBar.text = ""
-        institutionSearchTableView.loadInstitutions([])
-        toggleContentContainerViewVisbility()
+        institutionTableView.load(
+            institutions: dataSource.featuredInstitutions,
+            isUserSearching: false
+        )
         delegate?.institutionPickerViewController(self, didSelect: institution)
     }
 
@@ -165,7 +156,11 @@ extension InstitutionPickerViewController {
                             ],
                             pane: .institutionPicker
                         )
-                    self.featuredInstitutionGridView.loadInstitutions(institutions)
+
+                    self.institutionTableView.load(
+                        institutions: institutions,
+                        isUserSearching: false
+                    )
                     self.dataSource
                         .analyticsClient
                         .logPaneLoaded(pane: .institutionPicker)
@@ -184,12 +179,15 @@ extension InstitutionPickerViewController {
 
     private func fetchInstitutions(searchQuery: String) {
         fetchInstitutionsDispatchWorkItem?.cancel()
-        institutionSearchTableView.showError(false)
+        institutionTableView.showError(false, isUserSearching: true)
 
         guard !searchQuery.isEmpty else {
             searchBar.updateSearchingIndicator(false)
             // clear data because search query is empty
-            institutionSearchTableView.loadInstitutions([])
+            institutionTableView.load(
+                institutions: dataSource.featuredInstitutions,
+                isUserSearching: false
+            )
             return
         }
 
@@ -210,10 +208,20 @@ extension InstitutionPickerViewController {
                     }
                     switch result {
                     case .success(let institutionList):
-                        self.institutionSearchTableView.loadInstitutions(
-                            institutionList.data,
-                            showManualEntry: institutionList.showManualEntry
-                        )
+                        if self.isUserCurrentlySearching {
+                            // only load the institutions IF the user has text in search box
+                            self.institutionTableView.load(
+                                institutions: institutionList.data,
+                                isUserSearching: true,
+                                showManualEntry: institutionList.showManualEntry
+                            )
+                        } else {
+                            self.institutionTableView.load(
+                                institutions: self.dataSource.featuredInstitutions,
+                                isUserSearching: false,
+                                showManualEntry: institutionList.showManualEntry
+                            )
+                        }
                         self.dataSource
                             .analyticsClient
                             .log(
@@ -227,8 +235,11 @@ extension InstitutionPickerViewController {
                             )
                         self.delegate?.institutionPickerViewControllerDidSearch(self)
                     case .failure(let error):
-                        self.institutionSearchTableView.loadInstitutions([])
-                        self.institutionSearchTableView.showError(true)
+                        self.institutionTableView.load(
+                            institutions: [],
+                            isUserSearching: false
+                        )
+                        self.institutionTableView.showError(true, isUserSearching: false)
 
                         if
                             let error = error as? StripeError,
@@ -273,7 +284,6 @@ extension InstitutionPickerViewController {
 extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
 
     func institutionSearchBar(_ searchBar: InstitutionSearchBar, didChangeText text: String) {
-        toggleContentContainerViewVisbility()
         fetchInstitutions(searchQuery: text)
     }
 }
@@ -288,45 +298,40 @@ extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
     }
 }
 
-// MARK: - FeaturedInstitutionGridViewDelegate
+// MARK: - InstitutionTableViewDelegate
 
-extension InstitutionPickerViewController: FeaturedInstitutionGridViewDelegate {
+extension InstitutionPickerViewController: InstitutionTableViewDelegate {
 
-    func featuredInstitutionGridView(
-        _ view: FeaturedInstitutionGridView,
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
         didSelectInstitution institution: FinancialConnectionsInstitution
     ) {
-        dataSource.analyticsClient.log(
-            eventName: "search.featured_institution_selected",
-            parameters: [
-                "institution_id": institution.id,
-            ],
-            pane: .institutionPicker
-        )
-        didSelectInstitution(institution)
-    }
-}
-
-// MARK: - InstitutionSearchTableViewDelegate
-
-extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
-
-    func institutionSearchTableView(
-        _ tableView: InstitutionSearchTableView,
-        didSelectInstitution institution: FinancialConnectionsInstitution
-    ) {
-        dataSource.analyticsClient.log(
-            eventName: "search.search_result_selected",
-            parameters: [
-                "institution_id": institution.id,
-            ],
-            pane: .institutionPicker
-        )
+        if isUserCurrentlySearching {
+            dataSource.analyticsClient.log(
+                eventName: "search.search_result_selected",
+                parameters: [
+                    "institution_id": institution.id,
+                ],
+                pane: .institutionPicker
+            )
+        } else {
+            dataSource.analyticsClient.log(
+                eventName: "search.featured_institution_selected",
+                parameters: [
+                    "institution_id": institution.id,
+                ],
+                pane: .institutionPicker
+            )
+        }
         didSelectInstitution(institution)
     }
 
-    func institutionSearchTableView(
-        _ tableView: InstitutionSearchTableView,
+    func institutionTableViewDidSelectSearchForMoreBanks(_ tableView: InstitutionTableView) {
+        searchBar.becomeFirstResponder()
+    }
+
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
         didSelectManuallyAddYourAccountWithInstitutions institutions: [FinancialConnectionsInstitution]
     ) {
         dataSource
@@ -341,19 +346,21 @@ extension InstitutionPickerViewController: InstitutionSearchTableViewDelegate {
         delegate?.institutionPickerViewControllerDidSelectManuallyAddYourAccount(self)
     }
 
-    func institutionSearchTableView(
-        _ tableView: InstitutionSearchTableView,
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
         didScrollInstitutions institutions: [FinancialConnectionsInstitution]
     ) {
-        dataSource
-            .analyticsClient
-            .log(
-                eventName: "search.scroll",
-                parameters: [
-                    "institution_ids": institutions.map({ $0.id }),
-                ],
-                pane: .institutionPicker
-            )
+        if isUserCurrentlySearching {
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: "search.scroll",
+                    parameters: [
+                        "institution_ids": institutions.map({ $0.id }),
+                    ],
+                    pane: .institutionPicker
+                )
+        }
     }
 }
 
@@ -367,54 +374,52 @@ extension InstitutionPickerViewController {
 
 // MARK: - Helpers
 
-private func createMainView(
-    searchBar: UIView?,
+private func CreateMainView(
+    searchBar: UIView,
     contentContainerView: UIView
 ) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
-            createHeaderView(
+            CreateHeaderView(
                 searchBar: searchBar
             ),
             contentContainerView,
         ]
     )
     verticalStackView.axis = .vertical
-    verticalStackView.spacing = (searchBar == nil) ? 24 : 16
+    verticalStackView.spacing = 0
     return verticalStackView
 }
 
-private func createHeaderView(
-    searchBar: UIView?
+private func CreateHeaderView(
+    searchBar: UIView
 ) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
-            createHeaderTitleLabel(),
+            CreateHeaderTitleLabel(),
+            searchBar,
         ]
     )
-    if let searchBar = searchBar {
-        verticalStackView.addArrangedSubview(searchBar)
-    }
     verticalStackView.axis = .vertical
     verticalStackView.spacing = 24
     verticalStackView.isLayoutMarginsRelativeArrangement = true
     verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 8,
+        top: 16,
         leading: 24,
-        bottom: 0,
+        bottom: 16,
         trailing: 24
     )
     return verticalStackView
 }
 
-private func createHeaderTitleLabel() -> UIView {
+private func CreateHeaderTitleLabel() -> UIView {
     let headerTitleLabel = AttributedLabel(
-        font: .heading(.large),
-        textColor: .textPrimary
+        font: .heading(.extraLarge),
+        textColor: .textDefault
     )
     headerTitleLabel.setText(
         STPLocalizedString(
-            "Select your bank",
+            "Select bank",
             "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America)."
         )
     )
