@@ -37,6 +37,7 @@ final class AttributedTextView: HitTestView {
         textColor: UIColor,
         // links are the same color as the text by default
         linkColor: UIColor? = nil,
+        showLinkUnderline: Bool = true,
         alignCenter: Bool = false
     ) {
         let linkColor = linkColor ?? textColor
@@ -63,10 +64,15 @@ final class AttributedTextView: HitTestView {
         // Get rid of the extra padding added by default to UITextViews
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0.0
-        textView.linkTextAttributes = [
-            .foregroundColor: linkColor,
-            .underlineStyle: NSUnderlineStyle.single.rawValue,
-        ]
+        textView.linkTextAttributes = {
+            var linkTextAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: linkColor
+            ]
+            if showLinkUnderline {
+                linkTextAttributes[.underlineStyle] = NSUnderlineStyle.single.rawValue
+            }
+            return linkTextAttributes
+        }()
         textView.delegate = self
         // remove clipping so when user selects an attributed
         // link, the selection area does not get clipped
