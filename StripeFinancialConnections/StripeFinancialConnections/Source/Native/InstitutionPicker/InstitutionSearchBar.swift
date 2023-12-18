@@ -33,7 +33,7 @@ final class InstitutionSearchBar: UIView {
 
     private lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
-        textField.textColor = .textPrimary
+        textField.textColor = .textDefault
         textField.font = FinancialConnectionsFont.label(.large).uiFont
         // this removes the `searchTextField` background color.
         // for an unknown reason, setting the `backgroundColor` to
@@ -46,7 +46,7 @@ final class InstitutionSearchBar: UIView {
                 "The placeholder message that appears in a search bar. The placeholder appears before a user enters a search term. It instructs user that this is a search bar."
             ),
             attributes: [
-                .foregroundColor: UIColor.textSecondary,
+                .foregroundColor: UIColor.textSubdued,
                 .font: FinancialConnectionsFont.label(.large).uiFont,
             ]
         )
@@ -64,7 +64,7 @@ final class InstitutionSearchBar: UIView {
         let imageView = UIImageView()
         let textFieldClearButton = TextFieldClearButton()
         let cancelImage = Image.cancel_circle.makeImage()
-            .withTintColor(.textDisabled)
+            .withTintColor(.neutral200)
         textFieldClearButton.setImage(cancelImage, for: .normal)
         textFieldClearButton.addTarget(
             self,
@@ -81,18 +81,18 @@ final class InstitutionSearchBar: UIView {
     private lazy var searchIconView: UIView = {
         let searchIconImageView = UIImageView()
         searchIconImageView.image = Image.search.makeImage()
-            .withTintColor(.textPrimary)
+            .withTintColor(.iconDefault)
         searchIconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            searchIconImageView.widthAnchor.constraint(equalToConstant: 16),
-            searchIconImageView.heightAnchor.constraint(equalToConstant: 16),
+            searchIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            searchIconImageView.heightAnchor.constraint(equalToConstant: 20),
         ])
         return searchIconImageView
     }()
 
     init() {
         super.init(frame: .zero)
-        layer.cornerRadius = 8
+        layer.cornerRadius = 12
 
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
@@ -103,7 +103,7 @@ final class InstitutionSearchBar: UIView {
         )
         horizontalStackView.axis = .horizontal
         horizontalStackView.alignment = .center
-        horizontalStackView.spacing = 10
+        horizontalStackView.spacing = 12
         horizontalStackView.isLayoutMarginsRelativeArrangement = true
         horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
@@ -119,6 +119,10 @@ final class InstitutionSearchBar: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    @discardableResult override func becomeFirstResponder() -> Bool {
+        return textField.becomeFirstResponder()
     }
 
     @discardableResult override func resignFirstResponder() -> Bool {
@@ -142,10 +146,10 @@ final class InstitutionSearchBar: UIView {
         let searchBarBorderColor: UIColor
         let searchBarBorderWidth: CGFloat
         if shouldHighlightBorder {
-            searchBarBorderColor = .textBrand
+            searchBarBorderColor = .textActionPrimaryFocused
             searchBarBorderWidth = 2
         } else {
-            searchBarBorderColor = .borderNeutral
+            searchBarBorderColor = .borderDefault
             searchBarBorderWidth = 1
         }
         layer.borderColor = searchBarBorderColor.cgColor

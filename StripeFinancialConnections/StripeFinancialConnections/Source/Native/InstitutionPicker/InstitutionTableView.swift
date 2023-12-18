@@ -1,8 +1,8 @@
 //
-//  InstitutionSearchTableView.swift
+//  InstitutionTableView.swift
 //  StripeFinancialConnections
 //
-//  Created by Krisjanis Gaidis on 7/20/22.
+//  Created by Krisjanis Gaidis on 11/28/23.
 //
 
 import Foundation
@@ -14,22 +14,23 @@ private enum Section {
     case main
 }
 
-protocol InstitutionSearchTableViewDelegate: AnyObject {
-    func institutionSearchTableView(
-        _ tableView: InstitutionSearchTableView,
+protocol InstitutionTableViewDelegate: AnyObject {
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
         didSelectInstitution institution: FinancialConnectionsInstitution
     )
-    func institutionSearchTableView(
-        _ tableView: InstitutionSearchTableView,
+    func institutionTableViewDidSelectSearchForMoreBanks(_ tableView: InstitutionTableView)
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
         didSelectManuallyAddYourAccountWithInstitutions institutions: [FinancialConnectionsInstitution]
     )
-    func institutionSearchTableView(
-        _ tableView: InstitutionSearchTableView,
+    func institutionTableView(
+        _ tableView: InstitutionTableView,
         didScrollInstitutions institutions: [FinancialConnectionsInstitution]
     )
 }
 
-final class InstitutionSearchTableView: UIView {
+final class InstitutionTableView: UIView {
 
     private let allowManualEntry: Bool
     private let tableView: UITableView
@@ -38,51 +39,51 @@ final class InstitutionSearchTableView: UIView {
         return allowManualEntry
             ? { [weak self] in
                 guard let self = self else { return }
-                self.delegate?.institutionSearchTableView(
+                self.delegate?.institutionTableView(
                     self,
                     didSelectManuallyAddYourAccountWithInstitutions: self.institutions
                 )
             } : nil
     }()
-    weak var delegate: InstitutionSearchTableViewDelegate?
+    weak var delegate: InstitutionTableViewDelegate?
     private var institutions: [FinancialConnectionsInstitution] = []
     private var shouldLogScroll = true
 
-    private lazy var tableFooterView: InstitutionSearchFooterView = {
-        let title: String
-        let subtitle: String
-        let showIcon: Bool
-        let didSelect: (() -> Void)?
-        if allowManualEntry {
-            title = STPLocalizedString(
-                "Don't see your bank?",
+    private lazy var manualEntryTableFooterView: InstitutionTableFooterView = {
+        let manualEntryTableFooterView = InstitutionTableFooterView(
+            title: STPLocalizedString(
+                "Can't find your bank?",
                 "The title of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number)."
-            )
-            subtitle = STPLocalizedString(
-                "Enter your account and routing numbers",
+            ),
+            subtitle: STPLocalizedString(
+                "Manually enter details",
                 "The subtitle of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number)."
-            )
-            showIcon = true
-            didSelect = didSelectManualEntry
-        } else {
-            title = STPLocalizedString(
-                "No results",
-                "The title of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned."
-            )
-            subtitle = STPLocalizedString(
-                "Double check your spelling and search terms",
-                "The subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned."
-            )
-            showIcon = false
-            didSelect = nil
-        }
-        let footerView = InstitutionSearchFooterView(
-            title: title,
-            subtitle: subtitle,
-            showIcon: showIcon,
-            didSelect: didSelect
+            ),
+            image: .add,
+            didSelect: { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.institutionTableView(
+                    self,
+                    didSelectManuallyAddYourAccountWithInstitutions: self.institutions
+                )
+            }
         )
-        return footerView
+        return manualEntryTableFooterView
+    }()
+    private lazy var searchMoreBanksTableFooterView: InstitutionTableFooterView = {
+        let manualEntryTableFooterView = InstitutionTableFooterView(
+            title: STPLocalizedString(
+                "Search for more banks",
+                "The title of a button that appears at the bottom of a list of banks. The purpose of the button is to give users the option to search for more banks than we feature in the initial list of banks (where only the most popular ones will appear)."
+            ),
+            subtitle: nil,
+            image: .search,
+            didSelect: { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.institutionTableViewDidSelectSearchForMoreBanks(self)
+            }
+        )
+        return manualEntryTableFooterView
     }()
     private lazy var loadingContainerView: UIView = {
         let loadingContainerView = UIView()
@@ -99,15 +100,15 @@ final class InstitutionSearchTableView: UIView {
 
     init(frame: CGRect, allowManualEntry: Bool) {
         self.allowManualEntry = allowManualEntry
-        let cellIdentifier = "\(InstitutionSearchTableViewCell.self)"
+        let cellIdentifier = "\(InstitutionTableViewCell.self)"
         tableView = UITableView(frame: frame)
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, _, institution in
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)
-                    as? InstitutionSearchTableViewCell
+                    as? InstitutionTableViewCell
             else {
                 fatalError(
-                    "Unable to dequeue cell \(InstitutionSearchTableViewCell.self) with cell identifier \(cellIdentifier)"
+                    "Unable to dequeue cell \(InstitutionTableViewCell.self) with cell identifier \(cellIdentifier)"
                 )
             }
             cell.customize(with: institution)
@@ -120,9 +121,7 @@ final class InstitutionSearchTableView: UIView {
         tableView.separatorInset = .zero
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 54
-
-        #if !canImport(CompositorServices)
+        tableView.estimatedRowHeight = 72
         tableView.contentInset = UIEdgeInsets(
             // add extra inset at the top/bottom to show the cell-selected-state separators
             top: 1.0 / UIScreen.main.nativeScale,
@@ -131,8 +130,7 @@ final class InstitutionSearchTableView: UIView {
             right: 0
         )
         tableView.keyboardDismissMode = .onDrag
-        #endif
-        tableView.register(InstitutionSearchTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.register(InstitutionTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)
 
@@ -145,8 +143,6 @@ final class InstitutionSearchTableView: UIView {
             loadingView.leadingAnchor.constraint(equalTo: loadingContainerView.leadingAnchor),
             loadingView.trailingAnchor.constraint(equalTo: loadingContainerView.trailingAnchor),
         ])
-
-        showTableFooterView(false)
     }
 
     required init?(coder: NSCoder) {
@@ -186,8 +182,9 @@ final class InstitutionSearchTableView: UIView {
         }
     }
 
-    func loadInstitutions(
-        _ institutions: [FinancialConnectionsInstitution],
+    func load(
+        institutions: [FinancialConnectionsInstitution],
+        isUserSearching: Bool,
         showManualEntry: Bool? = nil
     ) {
         assertMainQueue()
@@ -200,15 +197,31 @@ final class InstitutionSearchTableView: UIView {
         dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
 
         // clear state (some of this is defensive programming)
-        showError(false)
-
-        if allowManualEntry {
-            showTableFooterView(
-                institutions.isEmpty || (showManualEntry == true),
-                showTopSeparator: !institutions.isEmpty
-            )
+        showError(false, isUserSearching: isUserSearching)
+        
+        if isUserSearching {
+            if institutions.isEmpty {
+                showTableFooterView(
+                    true,
+                    view: InstitutionNoResultsView(
+                        didSelectManuallyEnterDetails: self.allowManualEntry ? { [weak self] in
+                            guard let self = self else { return }
+                            self.delegate?.institutionTableView(
+                                self,
+                                didSelectManuallyAddYourAccountWithInstitutions: []
+                            )
+                        } : nil
+                    )
+                )
+            } else {
+                if allowManualEntry, showManualEntry == true {
+                    showTableFooterView(true, view: manualEntryTableFooterView)
+                } else {
+                    showTableFooterView(false, view: nil)
+                }
+            }
         } else {
-            showTableFooterView(institutions.isEmpty, showTopSeparator: false)
+            showTableFooterView(true, view: searchMoreBanksTableFooterView)
         }
     }
 
@@ -226,15 +239,26 @@ final class InstitutionSearchTableView: UIView {
         bringSubviewToFront(loadingContainerView)  // defensive programming to avoid loadingView being hiddden
     }
 
-    func showError(_ show: Bool) {
-        showTableFooterView(show, showTopSeparator: false)
+    func showError(_ showError: Bool, isUserSearching: Bool) {
+        if showError {
+            if allowManualEntry {
+                showTableFooterView(true, view: manualEntryTableFooterView)
+            } else {
+                if !isUserSearching {
+                    showTableFooterView(true, view: searchMoreBanksTableFooterView)
+                }
+            }
+        } else {
+            if !isUserSearching {
+                showTableFooterView(true, view: searchMoreBanksTableFooterView)
+            }
+        }
     }
-
+    
     // the footer is always shown, except for when there is an error searching
-    private func showTableFooterView(_ show: Bool, showTopSeparator: Bool = true) {
-        tableFooterView.showTopSeparator = showTopSeparator
-        if show {
-            tableView.setTableFooterViewWithCompressedFrameSize(tableFooterView)
+    private func showTableFooterView(_ show: Bool, view: UIView?) {
+        if show, let view = view {
+            tableView.setTableFooterViewWithCompressedFrameSize(view)
         } else {
             tableView.tableFooterView = nil
         }
@@ -243,10 +267,10 @@ final class InstitutionSearchTableView: UIView {
 
 // MARK: - UITableViewDelegate
 
-extension InstitutionSearchTableView: UITableViewDelegate {
+extension InstitutionTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let institution = dataSource.itemIdentifier(for: indexPath) {
-            delegate?.institutionSearchTableView(self, didSelectInstitution: institution)
+            delegate?.institutionTableView(self, didSelectInstitution: institution)
         }
     }
 
@@ -255,7 +279,7 @@ extension InstitutionSearchTableView: UITableViewDelegate {
         if shouldLogScroll {
             shouldLogScroll = false
 
-            delegate?.institutionSearchTableView(
+            delegate?.institutionTableView(
                 self,
                 didScrollInstitutions: institutions
             )
