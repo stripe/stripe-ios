@@ -146,29 +146,27 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
 
     func present(over viewController: UIViewController? = nil) {
         STPAnalyticsClient.sharedClient.logLinkPopupShow(sessionType: self.context.intent.linkPopupWebviewOption)
-        Task { @MainActor in
-            do {
-                // Generate Link URL, fetching the customer if needed
-                let linkPopupUrl = try await LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
+        do {
+            // Generate Link URL, fetching the customer if needed
+            let linkPopupUrl = try LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
 
-                let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
-                    self.handleWebAuthenticationSessionCompletion(returnURL: returnURL, error: error)
-                }
-
-                // Check if we're in the ephemeral session experiment
-                if self.context.intent.linkPopupWebviewOption == .ephemeral {
-                    webAuthSession.prefersEphemeralWebBrowserSession = true
-                }
-
-                // Set up presentation
-                self.presentationVC = viewController
-                webAuthSession.presentationContextProvider = self
-
-                self.webAuthSession = webAuthSession
-                webAuthSession.start()
-            } catch {
-                self.canceledWithError(error: error)
+            let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
+                self.handleWebAuthenticationSessionCompletion(returnURL: returnURL, error: error)
             }
+
+            // Check if we're in the ephemeral session experiment
+            if self.context.intent.linkPopupWebviewOption == .ephemeral {
+                webAuthSession.prefersEphemeralWebBrowserSession = true
+            }
+
+            // Set up presentation
+            self.presentationVC = viewController
+            webAuthSession.presentationContextProvider = self
+
+            self.webAuthSession = webAuthSession
+            webAuthSession.start()
+        } catch {
+            self.canceledWithError(error: error)
         }
     }
 

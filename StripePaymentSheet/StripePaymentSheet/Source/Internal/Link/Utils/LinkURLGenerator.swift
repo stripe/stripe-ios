@@ -87,7 +87,7 @@ class LinkURLGenerator {
         return url
     }
 
-    static func url(configuration: PaymentSheet.Configuration, intent: Intent) async throws -> URL {
+    static func url(configuration: PaymentSheet.Configuration, intent: Intent) throws -> URL {
         let params = try Self.linkParams(configuration: configuration, intent: intent)
         return try url(params: params)
     }
