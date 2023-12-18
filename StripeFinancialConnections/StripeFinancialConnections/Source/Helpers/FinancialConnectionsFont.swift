@@ -26,7 +26,7 @@ struct FinancialConnectionsFont {
         case medium
         /// 24 size / 32 line height / 700 weight
         case large
-        /// 28 size / 36 line height / 600 weight
+        /// 28 size / 36 line height / 700 weight
         case extraLarge
     }
     static func heading(_ token: HeadingToken) -> FinancialConnectionsFont {
