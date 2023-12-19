@@ -453,6 +453,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             if shouldDismissSheetOnConfirm(paymentMethod: paymentMethod, setupIntent: setupIntent) {
                 self.handleDismissSheet(shouldDismissImmediately: true)
             } else {
+                self.configuration.didAddPaymentMethodBlock?(paymentMethod)
                 self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
                 self.mode = .selectingSaved
                 self.updateUI(animated: true)
@@ -462,7 +463,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func shouldDismissSheetOnConfirm(paymentMethod: STPPaymentMethod, setupIntent: STPSetupIntent) -> Bool{
-        return paymentMethod.type == .USBankAccount && setupIntent.nextAction?.type == .verifyWithMicrodeposits
+        return (paymentMethod.type == .USBankAccount && setupIntent.nextAction?.type == .verifyWithMicrodeposits)
     }
 
     private func fetchClientSecret() async -> String? {
