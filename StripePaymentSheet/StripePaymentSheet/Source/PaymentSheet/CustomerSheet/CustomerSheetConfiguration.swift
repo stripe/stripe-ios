@@ -27,6 +27,8 @@ extension CustomerSheet {
         /// Describes the appearance of SavdPaymentMethodsSheet
         public var appearance = PaymentSheet.Appearance.default
 
+        public var autoDismissOnCardAdd = false
+        
         /// Your customer-facing business name.
         /// This is used to display a "Pay \(merchantDisplayName)" line item in the Apple Pay sheet
         /// The default value is the name of your app, using CFBundleDisplayName or CFBundleName

@@ -468,7 +468,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func shouldDismissSheetOnConfirm(paymentMethod: STPPaymentMethod, setupIntent: STPSetupIntent) -> Bool{
-        return paymentMethod.type == .USBankAccount && setupIntent.nextAction?.type == .verifyWithMicrodeposits
+        return (paymentMethod.type == .USBankAccount && setupIntent.nextAction?.type == .verifyWithMicrodeposits) ||
+        configuration.autoDismissOnCardAdd
     }
 
     private func fetchClientSecret() async -> String? {
