@@ -103,7 +103,7 @@ final class UpdateCardViewController: UIViewController {
                                                                            includePlaceholder: false) { [weak self] in
                                                                                 guard let self = self else { return }
                                                                                 let selectedCardBrand = self.cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
-                                                                                let params = ["selected_card_brand": selectedCardBrand, "cbc_event_source": "edit"]
+                                                                                let params = ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand), "cbc_event_source": "edit"]
                                                                                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .openCardBrandDropdown),
                                                                                                                                                                              params: params)
                                                                             } didTapClose: { [weak self] in

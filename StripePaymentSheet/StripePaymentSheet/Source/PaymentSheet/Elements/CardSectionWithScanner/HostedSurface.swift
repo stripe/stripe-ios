@@ -12,7 +12,7 @@ import Foundation
 enum HostedSurface {
     case paymentSheet
     case customerSheet
-    
+
     init(config: PaymentSheetFormFactoryConfig) {
         switch config {
         case .paymentSheet:
@@ -21,7 +21,7 @@ enum HostedSurface {
             self = .customerSheet
         }
     }
-    
+
     func analyticEvent(for event: CardBrandChoiceEvents) -> STPAnalyticEvent {
         switch (event, self) {
         case (.displayCardBrandDropdownIndicator, .paymentSheet):
@@ -54,7 +54,7 @@ enum HostedSurface {
             return .customerSheetClosesEditScreen
         }
     }
-    
+
     // Helper for mapping between PaymentSheet and CustomerSheet CBC events
     enum CardBrandChoiceEvents {
         case displayCardBrandDropdownIndicator
