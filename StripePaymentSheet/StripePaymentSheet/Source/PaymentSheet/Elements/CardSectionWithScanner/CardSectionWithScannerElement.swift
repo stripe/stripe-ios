@@ -57,14 +57,17 @@ final class CardSection: ContainerElement {
     let expiryElement: TextFieldElement
     let theme: ElementsUITheme
     let preferredNetworks: [STPCardBrand]?
+    let hostedSurface: HostedSurface
 
     init(
         collectName: Bool = false,
         defaultValues: DefaultValues = .init(),
         preferredNetworks: [STPCardBrand]? = nil,
         cardBrandChoiceEligible: Bool = false,
+        hostedSurface: HostedSurface,
         theme: ElementsUITheme = .default
     ) {
+        self.hostedSurface = hostedSurface
         self.theme = theme
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
@@ -135,6 +138,22 @@ final class CardSection: ContainerElement {
         self.expiryElement = expiryElement.element
         self.preferredNetworks = preferredNetworks
         cardSection.delegate = self
+
+        // Hook up CBC analytics after self is initialized
+        self.cardBrandDropDown?.didPresent = { [weak self] in
+            guard let self = self, let cardBrandDropDown = self.cardBrandDropDown else { return }
+            let selectedCardBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
+            let params = ["selected_card_brand": selectedCardBrand, "cbc_event_source": "add"]
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .openCardBrandDropdown),
+                                                                 params: params)
+        }
+
+        self.cardBrandDropDown?.didTapClose = { [weak self] in
+            guard let self = self, let cardBrandDropDown = self.cardBrandDropDown else { return }
+            let selectedCardBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .closeCardBrandDropDown),
+                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand)])
+        }
     }
 
     // MARK: - ElementDelegate
@@ -177,6 +196,7 @@ final class CardSection: ContainerElement {
         var fetchedCardBrands = Set<STPCardBrand>()
         let hadBrands = !cardBrands.isEmpty
         STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let brands):
                 fetchedCardBrands = brands
@@ -185,20 +205,25 @@ final class CardSection: ContainerElement {
                 fetchedCardBrands = Set<STPCardBrand>()
             }
 
-            if self?.cardBrands != fetchedCardBrands {
-                self?.cardBrands = fetchedCardBrands
-                cardBrandDropDown.update(items: DropdownFieldElement.items(from: fetchedCardBrands, theme: self?.theme ?? .default))
+            // If we had no brands but now have brands the CBC indicator will appear, log the analytic
+            if !hadBrands, !fetchedCardBrands.isEmpty {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .displayCardBrandDropdownIndicator))
+            }
+
+            if self.cardBrands != fetchedCardBrands {
+                self.cardBrands = fetchedCardBrands
+                cardBrandDropDown.update(items: DropdownFieldElement.items(from: fetchedCardBrands, theme: self.theme))
 
                 // If we didn't previously have brands but now have them select based on merchant preference
                 // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks
                 if !hadBrands,
-                   let preferredNetworks = self?.preferredNetworks,
+                   let preferredNetworks = self.preferredNetworks,
                    let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
                    let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) {
                     cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
                 }
 
-                self?.panElement.setText(self?.panElement.text ?? "") // Hack to get the accessory view to update
+                self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
         }
     }

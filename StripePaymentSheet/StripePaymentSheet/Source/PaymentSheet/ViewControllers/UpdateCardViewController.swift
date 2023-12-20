@@ -25,6 +25,7 @@ final class UpdateCardViewController: UIViewController {
     private let paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     private let removeSavedPaymentMethodMessage: String?
     private let isTestMode: Bool
+    private let hostedSurface: HostedSurface
 
     private var latestError: Error? {
         didSet {
@@ -99,7 +100,18 @@ final class UpdateCardViewController: UIViewController {
         let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }) ?? []
         let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
                                                                            theme: appearance.asElementsTheme,
-                                                                           includePlaceholder: false)
+                                                                           includePlaceholder: false) { [weak self] in
+                                                                                guard let self = self else { return }
+                                                                                let selectedCardBrand = self.cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
+                                                                                let params = ["selected_card_brand": selectedCardBrand, "cbc_event_source": "edit"]
+                                                                                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .openCardBrandDropdown),
+                                                                                                                                                                             params: params)
+                                                                            } didTapClose: { [weak self] in
+                                                                                guard let self = self else { return }
+                                                                                let selectedCardBrand = self.cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
+                                                                                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .closeCardBrandDropDown),
+                                                                                                                                     params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand)])
+                                                                            }
 
         // pre-select current card brand
         if let currentCardBrand = paymentMethod.card?.preferredDisplayBrand,
@@ -125,11 +137,13 @@ final class UpdateCardViewController: UIViewController {
          paymentMethod: STPPaymentMethod,
          removeSavedPaymentMethodMessage: String?,
          appearance: PaymentSheet.Appearance,
+         hostedSurface: HostedSurface,
          isTestMode: Bool) {
         self.paymentOptionCell = paymentOptionCell
         self.paymentMethod = paymentMethod
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
+        self.hostedSurface = hostedSurface
         self.isTestMode = isTestMode
 
         super.init(nibName: nil, bundle: nil)
@@ -161,9 +175,17 @@ final class UpdateCardViewController: UIViewController {
         ])
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .openCardBrandEditScreen))
+    }
+
     // MARK: Private helpers
-    private func dismiss() {
+    private func dismiss(didUpdate: Bool = false) {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
+        if !didUpdate {
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .closeEditScreen))
+        }
         _ = bottomVc.popContentViewController()
     }
 
@@ -192,10 +214,15 @@ final class UpdateCardViewController: UIViewController {
         // Make the API request to update the payment method
         do {
             try await delegate.didUpdate(paymentOptionCell: paymentOptionCell, updateParams: updateParams)
-            dismiss()
+            dismiss(didUpdate: true)
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .updateCardBrand),
+                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
         } catch {
             updateButton.update(state: .enabled)
             latestError = error
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .updateCardBrandFailed),
+                                                                 error: error,
+                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
         }
 
         view.isUserInteractionEnabled = true
