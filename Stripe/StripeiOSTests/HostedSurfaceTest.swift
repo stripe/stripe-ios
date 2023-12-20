@@ -17,12 +17,12 @@ class HostedSurfaceTest: XCTestCase {
     // Test the initializer
     func testHostedSurfaceInitializer() {
         let paymentSheetConfig = PaymentSheetFormFactoryConfig.paymentSheet(.init())
-        
+
         let hostedSurfaceForPaymentSheet = HostedSurface(config: paymentSheetConfig)
         XCTAssertEqual(hostedSurfaceForPaymentSheet, .paymentSheet)
-        
+
         let customerSheetConfig = PaymentSheetFormFactoryConfig.customerSheet(.init())
-        
+
         let hostedSurfaceForCustomerSheet = HostedSurface(config: customerSheetConfig)
         XCTAssertEqual(hostedSurfaceForCustomerSheet, .customerSheet)
     }
@@ -32,12 +32,12 @@ class HostedSurfaceTest: XCTestCase {
         let hostedSurface = HostedSurface.paymentSheet
         testAnalyticEvents(for: hostedSurface)
     }
-    
+
     func testCustomerSheetAnalyticEvents() {
         let hostedSurface = HostedSurface.customerSheet
         testAnalyticEvents(for: hostedSurface)
     }
-    
+
     private func testAnalyticEvents(for hostedSurface: HostedSurface) {
         let events: [HostedSurface.CardBrandChoiceEvents] = [
             .displayCardBrandDropdownIndicator,
@@ -48,7 +48,7 @@ class HostedSurfaceTest: XCTestCase {
             .updateCardBrandFailed,
             .closeEditScreen,
         ]
-        
+
         let expectedEventsPaymentSheet: [HostedSurface.CardBrandChoiceEvents: STPAnalyticEvent] = [
             .displayCardBrandDropdownIndicator: .paymentSheetDisplayCardBrandDropdownIndicator,
             .openCardBrandDropdown: .paymentSheetOpenCardBrandDropdown,
@@ -58,7 +58,7 @@ class HostedSurfaceTest: XCTestCase {
             .updateCardBrandFailed: .paymentSheetUpdateCardBrandFailed,
             .closeEditScreen: .paymentSheetClosesEditScreen,
         ]
-        
+
         let expectedEventsCustomerSheet: [HostedSurface.CardBrandChoiceEvents: STPAnalyticEvent] = [
             .displayCardBrandDropdownIndicator: .customerSheetDisplayCardBrandDropdownIndicator,
             .openCardBrandDropdown: .customerSheetOpenCardBrandDropdown,
@@ -68,7 +68,7 @@ class HostedSurfaceTest: XCTestCase {
             .updateCardBrandFailed: .customerSheetUpdateCardBrandFailed,
             .closeEditScreen: .customerSheetClosesEditScreen,
         ]
-        
+
         for event in events {
             let analyticEvent = hostedSurface.analyticEvent(for: event)
             // assert that the event is the expected one

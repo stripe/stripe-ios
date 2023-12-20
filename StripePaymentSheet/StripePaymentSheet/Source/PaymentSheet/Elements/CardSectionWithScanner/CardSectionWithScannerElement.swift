@@ -17,6 +17,7 @@ import UIKit
 /// If card scanning is available, it uses a custom view that adds card scanning. Otherwise, it uses the default SectionElement view.
 /// It coordinates between the PAN and CVC fields.
 final class CardSection: ContainerElement {
+
     var elements: [Element] {
         return [cardSection]
     }
@@ -207,7 +208,7 @@ final class CardSection: ContainerElement {
 
             // If we had no brands but now have brands the CBC indicator will appear, log the analytic
             if !hadBrands, !fetchedCardBrands.isEmpty {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .displayCardBrandDropdownIndicator))
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandDropdownIndicator))
             }
 
             if self.cardBrands != fetchedCardBrands {
