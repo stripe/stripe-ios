@@ -143,7 +143,7 @@ final class CardSection: ContainerElement {
         self.cardBrandDropDown?.didPresent = { [weak self] in
             guard let self = self, let cardBrandDropDown = self.cardBrandDropDown else { return }
             let selectedCardBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
-            let params = ["selected_card_brand": selectedCardBrand, "cbc_event_source": "add"]
+            let params = ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand), "cbc_event_source": "add"]
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .openCardBrandDropdown),
                                                                  params: params)
         }
