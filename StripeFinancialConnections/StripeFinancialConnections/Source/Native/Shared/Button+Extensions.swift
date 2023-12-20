@@ -14,6 +14,12 @@ func FinancialConnectionsPrimaryButtonConfiguration() -> Button.Configuration {
     return .financialConnectionsPrimary
 }
 
+// Fixes a SwiftUI preview bug where previews will crash
+// if `.financialConnectionsPrimary` is directly referenced
+func FinancialConnectionsSecondaryButtonConfiguration() -> Button.Configuration {
+    return .financialConnectionsSecondary
+}
+
 extension Button.Configuration {
     static var financialConnectionsPrimary: Button.Configuration {
         var primaryButtonConfiguration = Button.Configuration.primary()

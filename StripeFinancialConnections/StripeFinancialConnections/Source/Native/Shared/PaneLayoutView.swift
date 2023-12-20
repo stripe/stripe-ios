@@ -47,5 +47,10 @@ final class PaneLayoutView {
         // BEFORE we can add a constraint for `UIScrollView` content
         view.addAndPinSubviewToSafeArea(paneLayoutView)
         scrollViewContentView?.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+
+        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(
+            equalTo: scrollView.contentLayoutGuide.heightAnchor)
+        scrollViewHeightConstraint.priority = .fittingSizeLevel
+        scrollViewHeightConstraint.isActive = true
     }
 }
