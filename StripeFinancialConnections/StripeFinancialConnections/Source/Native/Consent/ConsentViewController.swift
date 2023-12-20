@@ -137,6 +137,18 @@ class ConsentViewController: UIViewController {
                 if urlHost == "manual-entry" {
                     delegate?.consentViewControllerDidSelectManuallyVerify(self)
                 } else if urlHost == "data-access-notice" {
+                    
+//                    CloseConfirmationSheetViewController.present(
+//                        didSelectClose: {
+////                            completeFinancialConnectionsSession()
+//                        }
+//                    )
+                    
+                    let drawerViewController = DrawerViewController()
+                    drawerViewController.present(on: self)
+                    
+//                    PresentCustomSheet(type: /*<#T##CustomSheetPresentationType#>, sheetCommunicationHelper: <#T##CustomSheetCommunicationHelper#>)*/
+                    
 //                    let dataAccessNoticeModel = dataSource.consent.dataAccessNotice
 //                    let consentBottomSheetModel = ConsentBottomSheetModel(
 //                        title: dataAccessNoticeModel.title,
