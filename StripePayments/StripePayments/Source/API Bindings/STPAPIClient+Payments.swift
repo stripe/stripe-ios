@@ -669,6 +669,9 @@ extension STPAPIClient {
 
         let endpoint = setupIntentEndpoint(from: setupIntentParams.clientSecret) + "/confirm"
         var params = STPFormEncoder.dictionary(forObject: setupIntentParams)
+        if publishableKeyIsUserKey {
+            params["client_secret"] = nil
+        }
         if var sourceParamsDict = params[SourceDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
             sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict)

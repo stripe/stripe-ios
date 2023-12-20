@@ -453,6 +453,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             if shouldDismissSheetOnConfirm(paymentMethod: paymentMethod, setupIntent: setupIntent) {
                 self.handleDismissSheet(shouldDismissImmediately: true)
             } else {
+                self.configuration.didAddPaymentMethodBlock?(paymentMethod)
                 self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
                 self.mode = .selectingSaved
                 self.updateUI(animated: true)
