@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### Payments
+* [Changed] Increased the maximum number of retries from 2 to 4 when waiting for an intent to update to a terminal state, this impacts Cash App Pay and 3DS2.
+
 ## 23.20.0 2023-12-18
 ### PaymentSheet
 * [Added] Support for [card brand choice](https://stripe.com/docs/card-brand-choice). To set default preferred networks, use the new configuration option `PaymentSheet.Configuration.preferredNetworks`.

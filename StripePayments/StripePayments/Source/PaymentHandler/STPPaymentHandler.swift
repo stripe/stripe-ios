@@ -1938,7 +1938,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    static let maxChallengeRetries = 2
+    static let maxChallengeRetries = 4
     func _markChallengeCompleted(
         withCompletion completion: @escaping STPBooleanSuccessBlock,
         retryCount: Int = maxChallengeRetries
