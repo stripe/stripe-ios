@@ -242,7 +242,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
             checkedStillInProgress.fulfill()
         }
 
-        wait(for: [paymentHandlerExpectation, checkedStillInProgress], timeout: 60)
+        wait(for: [paymentHandlerExpectation, checkedStillInProgress], timeout: 30)
         STPPaymentHandler.sharedHandler.apiClient = STPAPIClient.shared
     }
 }

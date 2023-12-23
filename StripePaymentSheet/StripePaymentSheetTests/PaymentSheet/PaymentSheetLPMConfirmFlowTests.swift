@@ -436,7 +436,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 }
                 e.fulfill()
             }
-            await fulfillment(of: [e], timeout: 45)
+            await fulfillment(of: [e], timeout: 10)
         }
     }
 
