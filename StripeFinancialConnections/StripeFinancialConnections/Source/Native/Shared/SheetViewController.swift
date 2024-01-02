@@ -27,16 +27,19 @@ class SheetViewController: UIViewController {
         contentStackView.addArrangedSubview(handleView)
         return contentStackView
     }()
+
+    // The sheet/drawer handle at the top of the sheet
     private lazy var handleView: UIView = {
         let handleView = CreateCustomSheetHandleView()
         handleView.backgroundColor = .customBackgroundColor
         return handleView
     }()
-    // adds extra padding at the bottom of the sheet so when the
+
+    // Adds extra padding at the bottom of the sheet so when the
     // sheet is panned up, there is no blank space - instead,
     // it looks like a continous sheet
     //
-    // it also covers the `contentStackView` cornerRadius at the bottom
+    // It also covers the `contentStackView` cornerRadius at the bottom
     private lazy var sheetExtraBottomView: UIView = {
         let sheetExtraBottomView = UIView()
         sheetExtraBottomView.backgroundColor = .customBackgroundColor
@@ -44,7 +47,7 @@ class SheetViewController: UIViewController {
       return sheetExtraBottomView
     }()
     private var contentViewMinY: CGFloat = 0
-    private var didPresent = false
+    private var performedSheetPresentationAnimation = false
     private var dismissAnimationInitialSpringVelocityY: CGFloat = 0
 
     private var paneViewContainerView: UIView?
@@ -107,12 +110,17 @@ class SheetViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         var contentViewMinY = view.window?.safeAreaInsets.top ?? 0
-        contentViewMinY += 10 // estimated iOS value of how far drawer stretches
+        // estimated iOS value of how far default sheet
+        // stretches beyond safeAreaInset.top
+        contentViewMinY += 10
         contentViewMinY += UINavigationController().navigationBar.bounds.height
-        contentViewMinY += 24 // typical FInancial COnnecitons padding
+        contentViewMinY += 24 // typical Financial Connecitons padding
         let didChangeContentViewMinY = (self.contentViewMinY != contentViewMinY)
         self.contentViewMinY = contentViewMinY
 
+        // we only want `contentView.frame` to be adjusted
+        // if view changes (ex. first presentation or rotation)
+        // otherwise, there could be layout/animation glitches
         if didChangeContentViewMinY {
             var contentViewFrame = view.bounds
             contentViewFrame.size.height -= contentViewMinY
@@ -120,8 +128,8 @@ class SheetViewController: UIViewController {
             contentView.frame = contentViewFrame
 
             // animate the sheet from top to bottom
-            if !didPresent {
-                didPresent = true
+            if !performedSheetPresentationAnimation {
+                performedSheetPresentationAnimation = true
 
                 var initialFrame = contentViewFrame
                 initialFrame.origin.y += contentViewFrame.height
@@ -130,7 +138,7 @@ class SheetViewController: UIViewController {
                 self.sheetExtraBottomView.isHidden = true
                 contentView.frame = initialFrame
                 UIView.animate(
-                    withDuration: customSheetAnimationDuration,
+                    withDuration: sheetAnimationDuration,
                     delay: 0,
                     options: .curveEaseOut,
                     animations: {
@@ -160,7 +168,23 @@ class SheetViewController: UIViewController {
     }
 
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        animateSheetDismiss()
+        // animate dismiss animation
+        UIView.animate(
+            withDuration: sheetAnimationDuration,
+            delay: 0,
+            usingSpringWithDamping: 1.0,
+            initialSpringVelocity: abs(dismissAnimationInitialSpringVelocityY)/view.bounds.height,
+            options: [.curveEaseOut]
+        ) {
+            self.contentView.frame = CGRect(
+                x: 0,
+                y: self.view.bounds.height,
+                width: self.contentView.bounds.width,
+                height: self.contentView.bounds.height
+            )
+            self.removeContentViewSnapshot()
+        }
+
         super.dismiss(animated: flag, completion: completion)
     }
 
@@ -193,7 +217,7 @@ class SheetViewController: UIViewController {
             // panned above the sheet (the dark area by navigation bar)
             if contentView.frame.minY < self.contentViewMinY {
                 UIView.animate(
-                    withDuration: customSheetAnimationDuration,
+                    withDuration: sheetAnimationDuration,
                     delay: 0,
                     options: .curveEaseOut
                 ) {
@@ -226,7 +250,7 @@ class SheetViewController: UIViewController {
                 // Sheet will remain open
                 else {
                     UIView.animate(
-                        withDuration: customSheetAnimationDuration,
+                        withDuration: sheetAnimationDuration,
                         delay: 0,
                         usingSpringWithDamping: 0.9,
                         // the abs on velocity is important as
@@ -244,24 +268,6 @@ class SheetViewController: UIViewController {
                     }
                 }
             }
-        }
-    }
-
-    private func animateSheetDismiss() {
-        UIView.animate(
-            withDuration: customSheetAnimationDuration,
-            delay: 0,
-            usingSpringWithDamping: 1.0,
-            initialSpringVelocity: abs(dismissAnimationInitialSpringVelocityY)/view.bounds.height,
-            options: [.curveEaseOut]
-        ) {
-            self.contentView.frame = CGRect(
-                x: 0,
-                y: self.view.bounds.height,
-                width: self.contentView.bounds.width,
-                height: self.contentView.bounds.height
-            )
-            self.removeContentViewSnapshot()
         }
     }
 
@@ -310,7 +316,7 @@ class SheetViewController: UIViewController {
 
     // MARK: - Presenting
 
-    fileprivate let transitionDelegate = CustomSheetTransitioningDelegate()
+    fileprivate let transitionDelegate = SheetTransitioningDelegate()
     func present(on viewController: UIViewController) {
         modalPresentationStyle = .custom
         transitioningDelegate = transitionDelegate
@@ -335,23 +341,6 @@ extension SheetViewController: UIGestureRecognizerDelegate {
             return true
         }
     }
-
-//    func gestureRecognizer(
-//        _ gestureRecognizer: UIGestureRecognizer,
-//        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
-//    ) -> Bool {
-//        // Allow simultaneous recognition
-//        return true
-//    }
-
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-//                           shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//        if gestureRecognizer == customPanGesture && otherGestureRecognizer == scrollView.panGestureRecognizer {
-//            let isScrollingDown = scrollView.contentOffset.y <= 0 && scrollView.panGestureRecognizer.translation(in: scrollView).y > 0
-//            return isScrollingDown
-//        }
-//        return false
-//    }
 }
 
 private func CreateCustomSheetHandleView() -> UIView {
@@ -367,7 +356,7 @@ private func CreateCustomSheetHandleView() -> UIView {
     ])
 
     let handleView = UIView()
-    handleView.backgroundColor = UIColor.textDisabled // TODO(kgaidis): fix color
+    handleView.backgroundColor = UIColor.textDisabled
     handleView.layer.cornerRadius = 4
     containerView.addSubview(handleView)
     handleView.translatesAutoresizingMaskIntoConstraints = false
@@ -381,9 +370,9 @@ private func CreateCustomSheetHandleView() -> UIView {
     return containerView
 }
 
-private class CustomSheetTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
+private class SheetTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
 
-    private let transitionAnimator = CustomSheetTransitionAnimator()
+    private let transitionAnimator = SheetTransitionAnimator()
 
     func animationController(
         forPresented presented: UIViewController,
@@ -402,9 +391,9 @@ private class CustomSheetTransitioningDelegate: NSObject, UIViewControllerTransi
     }
 }
 
-private let customSheetAnimationDuration: TimeInterval = 0.3
+private let sheetAnimationDuration: TimeInterval = 0.3
 
-private class CustomSheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+private class SheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
     private let backgroundDimmingView = UIView()
 
@@ -418,7 +407,7 @@ private class CustomSheetTransitionAnimator: NSObject, UIViewControllerAnimatedT
     func transitionDuration(
         using transitionContext: UIViewControllerContextTransitioning?
     ) -> TimeInterval {
-        return customSheetAnimationDuration
+        return sheetAnimationDuration
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
