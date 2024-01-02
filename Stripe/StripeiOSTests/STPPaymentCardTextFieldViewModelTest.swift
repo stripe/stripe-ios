@@ -41,15 +41,15 @@ class STPPaymentCardTextFieldViewModelTest: XCTestCase {
         // swiftlint:disable:next large_tuple
         let tests: [(String, String, String, String, STPCardValidationState)] = [
             ("", "", "", "", .incomplete),
-            ("12/24", "12/24", "12", "24", .valid),
-            ("1224", "12/24", "12", "24", .valid),
+            ("12/30", "12/30", "12", "30", .valid),
+            ("1230", "12/30", "12", "30", .valid),
             ("1", "1", "1", "", .incomplete),
             ("2", "02/", "02", "", .incomplete),
             ("12", "12/", "12", "", .incomplete),
             ("12/2", "12/2", "12", "2", .incomplete),
-            ("99/24", "99", "99", "24", .invalid),
+            ("99/30", "99", "99", "30", .invalid),
             ("10/12", "10/12", "10", "12", .invalid),
-            ("12*24", "12/24", "12", "24", .valid),
+            ("12*30", "12/30", "12", "30", .valid),
             ("12/*", "12/", "12", "", .incomplete),
             ("*", "", "", "", .incomplete),
         ]
