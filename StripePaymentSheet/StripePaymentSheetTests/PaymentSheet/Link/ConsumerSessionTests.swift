@@ -10,11 +10,11 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+@_spi(STP)@testable import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
 @_spi(STP)@testable import StripePaymentsTestUtils
-@_spi(STP)@testable import StripeCoreTestUtils
+@testable@_spi(STP) import StripePaymentsUI
 
 class ConsumerSessionTests: XCTestCase {
 
@@ -24,7 +24,7 @@ class ConsumerSessionTests: XCTestCase {
     }()
 
     let cookieStore = LinkInMemoryCookieStore()
-    
+
     func testLookupSession_noParams() {
         let expectation = self.expectation(description: "Lookup ConsumerSession")
 
@@ -124,8 +124,7 @@ class ConsumerSessionTests: XCTestCase {
                     if case .card(let cardDetails) = createdPaymentDetails.details {
                         XCTAssertEqual(cardDetails.expiryMonth, cardParams.expMonth?.intValue)
                         XCTAssertEqual(cardDetails.expiryYear, cardParams.expYear?.intValue)
-                        
-                        
+
                         consumerSession.verifyDefaultPaymentDetails(consumerAccountPublishableKey: sessionWithKey?.publishableKey, last4: "4242") { result in
                             switch result {
                             case .success(let verifyDetails):
@@ -133,7 +132,7 @@ class ConsumerSessionTests: XCTestCase {
                             case .failure(let error):
                                 XCTFail("Received error: \(error.nonGenericDescription)")
                             }
-                            
+
                             verifyCardDetailsExpectation.fulfill()
                         }
 
@@ -146,7 +145,7 @@ class ConsumerSessionTests: XCTestCase {
 
                 createExpectation.fulfill()
             }
-            
+
             wait(for: [createExpectation, verifyCardDetailsExpectation], timeout: STPTestingNetworkRequestTimeout)
         }
     }

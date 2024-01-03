@@ -210,7 +210,7 @@ extension ConsumerSession {
             last4: last4,
             completion: completion)
     }
-    
+
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,

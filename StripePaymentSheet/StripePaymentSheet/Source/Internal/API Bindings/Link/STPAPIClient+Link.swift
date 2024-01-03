@@ -255,7 +255,7 @@ extension STPAPIClient {
             completion: completion
         )
     }
-    
+
     func verifyDefaultPaymentDetails(
             for consumerSessionClientSecret: String,
             consumerAccountPublishableKey: String?,
@@ -266,7 +266,7 @@ extension STPAPIClient {
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "last4": last4
+            "last4": last4,
         ]
 
         post(
@@ -276,7 +276,7 @@ extension STPAPIClient {
             completion: completion
         )
     }
-    
+
     func listPaymentDetails(
         for consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
