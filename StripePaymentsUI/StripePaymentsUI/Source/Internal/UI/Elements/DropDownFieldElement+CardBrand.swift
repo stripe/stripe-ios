@@ -17,14 +17,18 @@ extension DropdownFieldElement {
                                                         theme: ElementsUITheme = .default,
                                                         includePlaceholder: Bool = true,
                                                         maxWidth: CGFloat? = nil,
-                                                        hasPadding: Bool = true) -> DropdownFieldElement {
+                                                        hasPadding: Bool = true,
+                                                        didPresent: DropdownFieldElement.DidPresent? = nil,
+                                                        didTapClose: DropdownFieldElement.DidTapClose? = nil) -> DropdownFieldElement {
         return DropdownFieldElement(
             items: items(from: cardBrands, theme: theme, includePlaceholder: includePlaceholder, maxWidth: maxWidth),
             defaultIndex: 0,
             label: nil,
             theme: theme,
             hasPadding: hasPadding,
-            isOptional: true
+            isOptional: true,
+            didPresent: didPresent,
+            didTapClose: didTapClose
         )
     }
 
