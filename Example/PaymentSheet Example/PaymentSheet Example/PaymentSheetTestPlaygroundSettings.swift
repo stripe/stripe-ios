@@ -158,7 +158,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
-    
+
     enum LinkV2Allowed: String, PickerEnum {
         static var enumName: String { "Link v2 Allowed" }
 
