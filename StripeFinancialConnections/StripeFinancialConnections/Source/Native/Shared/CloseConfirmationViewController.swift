@@ -27,7 +27,7 @@ final class CloseConfirmationViewController: SheetViewController {
         setup(
             withContentView: PaneLayoutView.createContentView(
                 iconView: RoundedIconView(
-                    image: .arrow_right,
+                    image: .image(.arrow_right),
                     style: .circle
                 ),
                 title: STPLocalizedString(

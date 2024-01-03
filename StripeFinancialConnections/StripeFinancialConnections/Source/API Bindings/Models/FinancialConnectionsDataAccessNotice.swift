@@ -8,11 +8,12 @@
 import Foundation
 
 struct FinancialConnectionsDataAccessNotice: Decodable {
+    let icon: FinancialConnectionsImage?
     let title: String
     let subtitle: String?
     let body: Body
     let connectedAccountNotice: String?
-    let learnMore: String
+    let disclaimer: String?
     let cta: String
 
     struct Body: Decodable {

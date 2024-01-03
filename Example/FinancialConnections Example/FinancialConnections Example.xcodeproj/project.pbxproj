@@ -421,6 +421,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 12172B25D264517544462C00 /* FinancialConnectionsUITests-Debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = FinancialConnectionsUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.FinancialConnectionsUITests;
 				PRODUCT_NAME = FinancialConnectionsUITests;
@@ -452,6 +453,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 19C47FD718039DCD11FCBF98 /* FinancialConnectionsUITests-Release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = FinancialConnectionsUITests/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.FinancialConnectionsUITests;
 				PRODUCT_NAME = FinancialConnectionsUITests;
