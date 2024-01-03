@@ -9,16 +9,16 @@
 @_spi(STP) import StripePayments
 
 extension Intent {
-    var supportsLink: Bool {
-        return recommendedPaymentMethodTypes.contains(.link)
+    func supportsLink(allowV2Features: Bool) -> Bool {
+        return recommendedPaymentMethodTypes.contains(.link) || (linkPassthroughModeEnabled && allowV2Features)
     }
 
-    var supportsLinkCard: Bool {
-        return supportsLink && (linkFundingSources?.contains(.card) ?? false)
+    func supportsLinkCard(allowV2Features: Bool) -> Bool {
+        return supportsLink(allowV2Features: allowV2Features) && (linkFundingSources?.contains(.card) ?? false) || (linkPassthroughModeEnabled && allowV2Features)
     }
 
     var onlySupportsLinkBank: Bool {
-        return supportsLink && (linkFundingSources == [.bankAccount])
+        return supportsLink(allowV2Features: false) && (linkFundingSources == [.bankAccount])
     }
 
     var callToAction: ConfirmButton.CallToActionType {
@@ -34,6 +34,17 @@ extension Intent {
             case .setup:
                 return .setup
             }
+        }
+    }
+
+    var linkPassthroughModeEnabled: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent, _):
+            return paymentIntent.linkSettings?.passthroughModeEnabled ?? false
+        case .setupIntent(let setupIntent, _):
+            return setupIntent.linkSettings?.passthroughModeEnabled ?? false
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.linkSettings?.passthroughModeEnabled ?? false
         }
     }
 

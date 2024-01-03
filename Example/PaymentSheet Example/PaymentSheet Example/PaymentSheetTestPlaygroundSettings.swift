@@ -158,6 +158,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+    
+    enum LinkV2Allowed: String, PickerEnum {
+        static var enumName: String { "Link v2 Allowed" }
+
+        case on
+        case off
+    }
 
     enum BillingDetailsAttachDefaults: String, PickerEnum {
         static var enumName: String { "Attach defaults" }
@@ -243,6 +250,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var allowsDelayedPMs: AllowsDelayedPMs
     var defaultBillingAddress: DefaultBillingAddress
     var linkEnabled: LinkEnabled
+    var linkV2Allowed: LinkV2Allowed
     var customCtaLabel: String?
     var checkoutEndpoint: String?
     var autoreload: Autoreload
@@ -272,6 +280,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             allowsDelayedPMs: .off,
             defaultBillingAddress: .off,
             linkEnabled: .off,
+            linkV2Allowed: .off,
             customCtaLabel: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,

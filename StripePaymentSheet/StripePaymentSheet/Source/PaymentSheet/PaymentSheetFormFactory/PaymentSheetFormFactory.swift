@@ -44,7 +44,7 @@ class PaymentSheetFormFactory {
     var canSaveToLink: Bool {
         // For Link private beta, only save cards in ".userSelectable" mode.
         // We don't want to override the merchant's own "Save this card" checkbox.
-        return (supportsLinkCard && paymentMethod == .stripe(.card) && saveMode != .userSelectable)
+        return (supportsLinkCard && paymentMethod == .stripe(.card) && saveMode != .userSelectable) && configuration.linkPaymentMethodsOnly
     }
 
     var theme: ElementsUITheme {
@@ -96,7 +96,7 @@ class PaymentSheetFormFactory {
                   offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
                   linkAccount: linkAccount,
                   cardBrandChoiceEligible: cardBrandChoiceEligible,
-                  supportsLinkCard: intent.supportsLinkCard,
+                  supportsLinkCard: intent.supportsLinkCard(allowV2Features: configuration.allowLinkV2Features),
                   isPaymentIntent: intent.isPaymentIntent,
                   currency: intent.currency,
                   amount: intent.amount,
