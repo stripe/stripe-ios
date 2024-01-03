@@ -861,7 +861,7 @@ class CustomerSheetUITest: XCTestCase {
     func removeFirstPaymentMethodInList() {
         let removeButton1 = app.buttons["Remove"].firstMatch
         removeButton1.tap()
-        dismissAlertView(alertBody: "Remove Visa ending in 4242", alertTitle: "Remove Card", buttonToTap: "Remove")
+        dismissAlertView(alertBody: "Visa •••4242", alertTitle: "Remove Card?", buttonToTap: "Remove")
     }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {
