@@ -16,11 +16,6 @@ import UIKit
 
 class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
-    override func setUp() {
-        super.setUp()
-        recordMode = true
-    }
-
     func testDefaultState() {
         let sut = makeSUT()
         verify(sut)
