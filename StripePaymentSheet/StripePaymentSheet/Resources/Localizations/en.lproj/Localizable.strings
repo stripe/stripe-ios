@@ -1,3 +1,6 @@
+/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••{last 4} e.g. 'Visa •••3155' */
+"%1$@ •••%2$@" = "%1$@ •••%2$@";
+
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 
@@ -166,11 +169,8 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. 'Remove VISA ending in 4242' */
-"Remove %1$@ ending in %2$@" = "Remove %1$@ ending in %2$@";
-
 /* Title for confirmation alert to remove a card */
-"Remove Card" = "Remove Card";
+"Remove Card?" = "Remove Card?";
 
 /* A button used for saving a new payment method */
 "Save" = "Save";
