@@ -37,7 +37,7 @@ final class PaymentSheetLoader {
                     // User keys can't pass payment_method_data directly to /confirm, which is what the non-deferred intent flows do
                     assertionFailure("Dashboard isn't supported in non-deferred intent flows")
                 }
-                
+
                 // Fetch PaymentIntent, SetupIntent, or ElementsSession
                 async let _intent = fetchIntent(mode: mode, configuration: configuration, analyticsClient: analyticsClient)
 

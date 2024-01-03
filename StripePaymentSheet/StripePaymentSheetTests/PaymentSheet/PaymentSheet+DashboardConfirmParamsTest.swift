@@ -25,7 +25,9 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
     }
 
     enum MockParams {
-        static let dashboardClientSecret = "pi_xxx"
+        // Note Dashboard's uk requires it to pass PaymentSheet intent identifiers as the "client secret". Seealso: https://github.com/stripe-ios/stripe-ios-private/pull/59
+        static let dashboardPaymentIntentClientSecret = "pi_xxx"
+        static let dashboardSetupIntentClientSecret = "seti_xxx"
         static let dashboardPublicKey = "uk_xxx"
 
         static func configuration(pk: String) -> PaymentSheet.Configuration {
@@ -116,110 +118,34 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
         stub { urlRequest in
             guard let pathComponents = urlRequest.url?.pathComponents else { return false }
             return pathComponents[2] == "setup_intents" && pathComponents.last != "confirm"
-        } response: { _ in
-            return HTTPStubsResponse(jsonObject: MockJson.setupIntent, statusCode: 200, headers: nil)
+        } response: { request in
+            var json = MockJson.setupIntent
+            // Mock that the PI requires confirmation if it's being fetched for a deferred PI
+            if request.httpMethod == "GET" {
+                json["status"] = "requires_confirmation"
+            }
+
+            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
         }
-    }
-
-    // MARK: - Dashboard PaymentIntent
-
-    func testDashboard_PaymentIntent_saved() {
-        stubConfirmPaymentExpecting(
-            paymentMethodId: MockParams.cardPaymentMethod.stripeId,
-            shippingAddressLine1: "Line 1",
-            shippingAddressCountry: "US",
-            shippingName: "Jane Doe",
-            shippingPhone: "5551234567",
-            cardMoto: true
-        )
-
-        let configuration = MockParams.configurationWithCustomer(pk: MockParams.dashboardPublicKey)
-
-        PaymentSheet.confirm(
-            configuration: configuration,
-            authenticationContext: self,
-            intent: .paymentIntent(elementsSession: .emptyElementsSession, paymentIntent: MockParams.paymentIntent),
-            paymentOption: .saved(paymentMethod: MockParams.cardPaymentMethod),
-            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            completion: { _, _ in }
-        )
-
-        waitForExpectations(timeout: 10)
-    }
-
-    func testDashboard_PaymentIntent_new_saveUnchecked() {
-        stubConfirmPaymentExpecting(
-            paymentMethodData: MockParams.paymentMethodCardParams,
-            shippingAddressLine1: "Line 1",
-            shippingAddressCountry: "US",
-            shippingName: "Jane Doe",
-            shippingPhone: "5551234567",
-            cardMoto: true
-        )
-
-        let configuration = MockParams.configuration(pk: MockParams.dashboardPublicKey)
-
-        PaymentSheet.confirm(
-            configuration: configuration,
-            authenticationContext: self,
-            intent: .paymentIntent(elementsSession: .emptyElementsSession, paymentIntent: MockParams.paymentIntent),
-            paymentOption: .new(confirmParams: MockParams.intentConfirmParams),
-            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            completion: { _, _ in }
-        )
-
-        waitForExpectations(timeout: 10)
-    }
-
-    func testDashboard_PaymentIntent_new_saveChecked() {
-        let intentConfirmParams = MockParams.intentConfirmParams
-        intentConfirmParams.saveForFutureUseCheckboxState = .selected
-
-        stubConfirmPaymentExpecting(
-            paymentMethodData: MockParams.paymentMethodCardParams,
-            setupFutureUsage: "off_session",
-            shippingAddressLine1: "Line 1",
-            shippingAddressCountry: "US",
-            shippingName: "Jane Doe",
-            shippingPhone: "5551234567",
-            cardMoto: true
-        )
-
-        let configuration = MockParams.configurationWithCustomer(pk: MockParams.dashboardPublicKey)
-
-        PaymentSheet.confirm(
-            configuration: configuration,
-            authenticationContext: self,
-            intent: .paymentIntent(elementsSession: .emptyElementsSession, paymentIntent: MockParams.paymentIntent),
-            paymentOption: .new(confirmParams: intentConfirmParams),
-            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            completion: { _, _ in }
-        )
-
-        waitForExpectations(timeout: 10)
     }
 
     // MARK: - Dashboard Deferred PaymentIntent
 
     func testDashboard_DeferredPaymentIntent_saved() {
-        stubConfirmPaymentExpecting(
-            paymentMethodId: MockParams.cardPaymentMethod.stripeId,
-            shippingAddressLine1: "Line 1",
-            shippingAddressCountry: "US",
-            shippingName: "Jane Doe",
-            shippingPhone: "5551234567",
-            cardMoto: true
-        )
+        stubConfirmPaymentExpecting(isPaymentIntent: true, paymentMethodId: MockParams.cardPaymentMethod.stripeId)
 
         let configuration = MockParams.configurationWithCustomer(pk: MockParams.dashboardPublicKey)
 
+        let exp = expectation(description: "confirm completed")
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardClientSecret)),
+            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardPaymentIntentClientSecret)),
             paymentOption: .saved(paymentMethod: MockParams.cardPaymentMethod),
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            completion: { _, _ in }
+            completion: { _, _ in
+                exp.fulfill()
+            }
         )
 
         waitForExpectations(timeout: 10)
@@ -227,23 +153,22 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
 
     func testDashboard_DeferredPaymentIntent_new_saveUnchecked() {
         stubConfirmPaymentExpecting(
-            paymentMethodId: MockParams.cardPaymentMethod.stripeId,
-            shippingAddressLine1: "Line 1",
-            shippingAddressCountry: "US",
-            shippingName: "Jane Doe",
-            shippingPhone: "5551234567",
-            cardMoto: true
+            isPaymentIntent: true,
+            paymentMethodId: MockParams.cardPaymentMethod.stripeId
         )
 
         let configuration = MockParams.configuration(pk: MockParams.dashboardPublicKey)
 
+        let exp = expectation(description: "confirm completed")
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardClientSecret)),
+            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardPaymentIntentClientSecret)),
             paymentOption: .new(confirmParams: MockParams.intentConfirmParams),
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            completion: { _, _ in }
+            completion: { _, _ in
+                exp.fulfill()
+            }
         )
 
         waitForExpectations(timeout: 10)
@@ -254,24 +179,71 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
         intentConfirmParams.saveForFutureUseCheckboxState = .selected
 
         stubConfirmPaymentExpecting(
+            isPaymentIntent: true,
             paymentMethodId: MockParams.cardPaymentMethod.stripeId,
-            setupFutureUsage: "off_session",
-            shippingAddressLine1: "Line 1",
-            shippingAddressCountry: "US",
-            shippingName: "Jane Doe",
-            shippingPhone: "5551234567",
-            cardMoto: true
+            setupFutureUsage: "off_session"
         )
 
         let configuration = MockParams.configurationWithCustomer(pk: MockParams.dashboardPublicKey)
 
+        let exp = expectation(description: "confirm completed")
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardClientSecret)),
+            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardPaymentIntentClientSecret)),
             paymentOption: .new(confirmParams: intentConfirmParams),
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            completion: { _, _ in }
+            completion: { _, _ in
+                exp.fulfill()
+            }
+        )
+
+        waitForExpectations(timeout: 10)
+    }
+
+    // MARK: - Dashboard Deferred SetupIntent
+
+    func testDashboard_DeferredSetupIntent_saved() {
+        stubConfirmPaymentExpecting(
+            isPaymentIntent: false,
+            paymentMethodId: MockParams.cardPaymentMethod.stripeId
+        )
+
+        let configuration = MockParams.configurationWithCustomer(pk: MockParams.dashboardPublicKey)
+
+        let exp = expectation(description: "confirm completed")
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredSetupIntentConfiguration(clientSecret: MockParams.dashboardSetupIntentClientSecret)),
+            paymentOption: .saved(paymentMethod: MockParams.cardPaymentMethod),
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            completion: { _, _ in
+                exp.fulfill()
+            }
+        )
+
+        waitForExpectations(timeout: 10)
+    }
+
+    func testDashboard_DeferredSetupIntent_new() {
+        stubConfirmPaymentExpecting(
+            isPaymentIntent: false,
+            paymentMethodId: MockParams.cardPaymentMethod.stripeId
+        )
+
+        let configuration = MockParams.configurationWithCustomer(pk: MockParams.dashboardPublicKey)
+
+        let exp = expectation(description: "confirm completed")
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredSetupIntentConfiguration(clientSecret: MockParams.dashboardSetupIntentClientSecret)),
+            paymentOption: .new(confirmParams: MockParams.intentConfirmParams),
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            completion: { _, _ in
+                exp.fulfill()
+            }
         )
 
         waitForExpectations(timeout: 10)
@@ -288,46 +260,37 @@ extension PaymentSheet_ConfirmParamsTest: STPAuthenticationContext {
 
 private extension PaymentSheet_ConfirmParamsTest {
     func stubConfirmPaymentExpecting(
-        paymentMethodId: String? = nil,
-        paymentMethodData: STPPaymentMethodCardParams? = nil,
+        isPaymentIntent: Bool,
+        paymentMethodId: String,
         setupFutureUsage: String? = nil,
-        shippingAddressLine1: String? = nil,
-        shippingAddressCountry: String? = nil,
-        shippingName: String? = nil,
-        shippingPhone: String? = nil,
-        cardMoto: Bool? = nil,
         line: UInt = #line
     ) {
         let exp = expectation(description: "confirm payment requested")
 
         stub { urlRequest in
             guard let pathComponents = urlRequest.url?.pathComponents else { return false }
-            return pathComponents[2] == "payment_intents" && pathComponents.last == "confirm"
+            return pathComponents.last == "confirm"
         } response: { [self] request in
+            XCTAssertFalse(request.url!.absoluteString.contains("secret")) // Sanity check that the request /confirm URL doesn't contain a client secret
             let params = bodyParams(from: request, line: line)
 
+            // For unknown reasons, the API doesn't allow Dashboard `uk_` keys to pass payment_method_data
+            assertParam(params, named: "payment_method_data[type]", is: nil, line: line)
+            assertParam(params, named: "payment_method_data[card][number]", is: nil, line: line)
             assertParam(params, named: "payment_method", is: paymentMethodId, line: line)
-
-            // Payment Method Card
-            assertParam(params, named: "payment_method_data[type]", is: paymentMethodData.map { _ in "card" }, line: line)
-            assertParam(params, named: "payment_method_data[card][number]", is: paymentMethodData?.number, line: line)
-            assertParam(params, named: "payment_method_data[card][cvc]", is: paymentMethodData?.cvc, line: line)
-            assertParam(params, named: "payment_method_data[card][exp_year]", is: paymentMethodData?.expYear.map { "\($0)" }, line: line)
-            assertParam(params, named: "payment_method_data[card][exp_month]", is: paymentMethodData?.expMonth.map { "\($0)" }, line: line)
+            // The API also doesn't allow Dashboard `uk_` key to pass client_secret here
+            assertParam(params, named: "client_secret", is: nil, line: line)
 
             // Payment Method Options
             assertParam(params, named: "payment_method_options[card][setup_future_usage]", is: setupFutureUsage, line: line)
-            assertParam(params, named: "payment_method_options[card][moto]", is: cardMoto.map { "\($0)" }, line: line)
-
-            // Shipping
-            assertParam(params, named: "shipping[name]", is: shippingName, line: line)
-            assertParam(params, named: "shipping[phone]", is: shippingPhone, line: line)
-            assertParam(params, named: "shipping[address][line1]", is: shippingAddressLine1, line: line)
-            assertParam(params, named: "shipping[address][country]", is: shippingAddressCountry, line: line)
+            // Dashboard should always set `moto`
+            assertParam(params, named: "payment_method_options[card][moto]", is: "true", line: line)
 
             defer { exp.fulfill() }
+            var json = isPaymentIntent ? MockJson.paymentIntent : MockJson.setupIntent
+            json["status"] = "succeeded"
 
-            return HTTPStubsResponse(jsonObject: MockJson.paymentIntent, statusCode: 200, headers: nil)
+            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
         }
     }
 
