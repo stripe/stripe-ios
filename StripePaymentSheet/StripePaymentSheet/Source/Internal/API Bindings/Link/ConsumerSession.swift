@@ -112,6 +112,7 @@ extension ConsumerSession {
         paymentMethodParams: STPPaymentMethodParams,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,
+        saveAsActive: Bool = false, // card details are created with active false so we don't save them until the intent confirmation succeeds
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         guard paymentMethodParams.type == .card,
@@ -130,6 +131,7 @@ extension ConsumerSession {
             billingEmailAddress: billingDetails.email ?? emailAddress,
             billingDetails: billingDetails,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
+            saveAsActive: saveAsActive,
             completion: completion)
     }
 
@@ -195,6 +197,20 @@ extension ConsumerSession {
             completion: completion)
     }
 
+    func verifyDefaultPaymentDetails(
+            with apiClient: STPAPIClient = STPAPIClient.shared,
+            cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+            consumerAccountPublishableKey: String?,
+            last4: String,
+            completion: @escaping (Result<VerifyDefaultPaymentDetailsResponse, Error>) -> Void)
+    {
+        apiClient.verifyDefaultPaymentDetails(
+            for: clientSecret,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            last4: last4,
+            completion: completion)
+    }
+    
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,

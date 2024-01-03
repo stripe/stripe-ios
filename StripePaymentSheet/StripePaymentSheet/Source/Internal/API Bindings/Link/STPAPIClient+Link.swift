@@ -127,6 +127,7 @@ extension STPAPIClient {
         billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
         consumerAccountPublishableKey: String?,
+        saveAsActive: Bool,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
@@ -143,7 +144,7 @@ extension STPAPIClient {
             "card": card as Any,
             "billing_email_address": billingEmailAddress,
             "billing_address": billingParams,
-            "active": false, // card details are created with active false so we don't save them until the intent confirmation succeeds
+            "active": saveAsActive,
         ]
 
         makePaymentDetailsRequest(
@@ -254,7 +255,28 @@ extension STPAPIClient {
             completion: completion
         )
     }
+    
+    func verifyDefaultPaymentDetails(
+            for consumerSessionClientSecret: String,
+            consumerAccountPublishableKey: String?,
+            last4: String,
+            completion: @escaping (Result<VerifyDefaultPaymentDetailsResponse, Error>) -> Void)
+    {
+        let endpoint: String = "consumers/mobile/verify_default_payment_details"
 
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "last4": last4
+        ]
+
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            ephemeralKeySecret: consumerAccountPublishableKey,
+            completion: completion
+        )
+    }
+    
     func listPaymentDetails(
         for consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
