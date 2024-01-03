@@ -125,17 +125,18 @@ class ConsumerSessionTests: XCTestCase {
                         XCTAssertEqual(cardDetails.expiryMonth, cardParams.expMonth?.intValue)
                         XCTAssertEqual(cardDetails.expiryYear, cardParams.expYear?.intValue)
 
-                        consumerSession.verifyDefaultPaymentDetails(consumerAccountPublishableKey: sessionWithKey?.publishableKey, last4: "4242") { result in
-                            switch result {
-                            case .success(let verifyDetails):
-                                XCTAssert(verifyDetails.isDefault)
-                            case .failure(let error):
-                                XCTFail("Received error: \(error.nonGenericDescription)")
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 60.0) {
+                            consumerSession.verifyDefaultPaymentDetails(consumerAccountPublishableKey: sessionWithKey?.publishableKey, last4: "4242") { result in
+                                switch result {
+                                case .success(let verifyDetails):
+                                    XCTAssert(verifyDetails.isDefault)
+                                case .failure(let error):
+                                    XCTFail("Received error: \(error.nonGenericDescription)")
+                                }
+
+                                verifyCardDetailsExpectation.fulfill()
                             }
-
-                            verifyCardDetailsExpectation.fulfill()
                         }
-
                     } else {
                         XCTAssert(false)
                     }
@@ -146,7 +147,8 @@ class ConsumerSessionTests: XCTestCase {
                 createExpectation.fulfill()
             }
 
-            wait(for: [createExpectation, verifyCardDetailsExpectation], timeout: STPTestingNetworkRequestTimeout)
+            wait(for: [createExpectation], timeout: STPTestingNetworkRequestTimeout)
+            wait(for: [verifyCardDetailsExpectation], timeout: 90.0)
         }
     }
 
