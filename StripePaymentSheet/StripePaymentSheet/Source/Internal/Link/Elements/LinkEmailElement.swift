@@ -21,8 +21,10 @@ class LinkEmailElement: Element {
         return activityIndicator
     }()
 
+    private let infoView: LinkMoreInfoView
+
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [emailAddressElement.view, activityIndicator])
+        let stackView = UIStackView(arrangedSubviews: [emailAddressElement.view, activityIndicator, infoView])
         stackView.spacing = 0
         stackView.axis = .horizontal
         stackView.alignment = .center
@@ -33,6 +35,10 @@ class LinkEmailElement: Element {
             bottom: 0,
             trailing: ElementsUI.contentViewInsets.trailing
         )
+        NSLayoutConstraint.activate([
+            activityIndicator.trailingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: -ElementsUI.contentViewInsets.trailing),
+            infoView.widthAnchor.constraint(equalToConstant: LinkMoreInfoView.Constants.logoWidth)
+        ])
         return stackView
     }()
 
@@ -75,6 +81,7 @@ class LinkEmailElement: Element {
     }
 
     public init(defaultValue: String? = nil, theme: ElementsUITheme = .default) {
+        self.infoView = LinkMoreInfoView(theme: theme)
         emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue, theme: theme)
         emailAddressElement.delegate = self
     }

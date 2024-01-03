@@ -66,18 +66,12 @@ final class LinkInlineSignupView: UIView {
         )
     }()
 
-    private(set) lazy var moreInfoElement: StaticElement = {
-        let infoView = LinkMoreInfoView(theme: theme)
-        return StaticElement(view: infoView)
-    }()
-
     private lazy var formElement = FormElement(elements: [
         checkboxElement,
         emailSection,
         phoneNumberSection,
         nameSection,
         legalTermsElement,
-        moreInfoElement,
     ], theme: theme)
 
     init(viewModel: LinkInlineSignupViewModel) {
@@ -131,7 +125,6 @@ final class LinkInlineSignupView: UIView {
         formElement.toggleChild(phoneNumberSection, show: viewModel.shouldShowPhoneField, animated: animated)
         formElement.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
         formElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
-        formElement.toggleChild(moreInfoElement, show: viewModel.shouldShowLegalTerms, animated: animated)
 
         // 2-way binding
         checkboxElement.isChecked = viewModel.saveCheckboxChecked
