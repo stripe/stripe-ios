@@ -37,7 +37,7 @@ class LinkEmailElement: Element {
         )
         NSLayoutConstraint.activate([
             activityIndicator.trailingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: -ElementsUI.contentViewInsets.trailing),
-            infoView.widthAnchor.constraint(equalToConstant: LinkMoreInfoView.Constants.logoWidth)
+            infoView.widthAnchor.constraint(equalToConstant: LinkMoreInfoView.Constants.logoWidth),
         ])
         return stackView
     }()
