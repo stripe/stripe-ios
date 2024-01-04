@@ -88,7 +88,7 @@ private func CreateSingleLinkView(
     let verticalLabelStackView = HitTestStackView()
     verticalLabelStackView.axis = .vertical
     verticalLabelStackView.spacing = 0
-    
+
     let titleLabelFont: FinancialConnectionsFont = .label(.largeEmphasized)
     let titleLabel = AttributedTextView(
         font: titleLabelFont,
@@ -100,7 +100,7 @@ private func CreateSingleLinkView(
     )
     titleLabel.setText(title, action: didSelectURL)
     verticalLabelStackView.addArrangedSubview(titleLabel)
-    
+
     if let content = content {
         let contentFont: FinancialConnectionsFont = .label(.medium)
         let contentLabel = AttributedTextView(
@@ -114,7 +114,7 @@ private func CreateSingleLinkView(
         contentLabel.setText(content, action: didSelectURL)
         verticalLabelStackView.addArrangedSubview(contentLabel)
     }
-    
+
     return verticalLabelStackView
 }
 
