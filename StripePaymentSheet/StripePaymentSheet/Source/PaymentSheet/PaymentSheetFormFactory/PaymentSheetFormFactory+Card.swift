@@ -58,6 +58,7 @@ extension PaymentSheetFormFactory {
             defaultValues: cardDefaultValues,
             preferredNetworks: configuration.preferredNetworks,
             cardBrandChoiceEligible: cardBrandChoiceEligible,
+            hostedSurface: .init(config: configuration),
             theme: theme
         )
 
