@@ -2074,6 +2074,33 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
     }
 
+    func testPreservesSelectionAfterDismissPaymentSheetFlowController() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .new
+
+        loadPlayground(app, settings)
+
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try fillCardData(app)
+
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
+        reload(app, settings: settings)
+
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+
+        // Tap to dismiss PaymentSheet
+        app.tapCoordinate(at: CGPoint(x: 100, y: 100))
+        // Give time for the dismiss animation and the payment option to update
+        sleep(2)
+
+        XCTAssertTrue(app.staticTexts["••••4242"].waitForExistenceAndTap(timeout: 10))
+    }
+
     func testCVCRecollectionFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
@@ -2817,5 +2844,14 @@ extension XCUIElement {
         let startCoord = self.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         let endCoord = startCoord.withOffset(CGVector(dx: 0.0, dy: 30.0)) // 30pts = height of picker item
         endCoord.tap()
+    }
+}
+
+extension XCUIApplication {
+    func tapCoordinate(at point: CGPoint) {
+        let normalized = coordinate(withNormalizedOffset: .zero)
+        let offset = CGVector(dx: point.x, dy: point.y)
+        let coordinate = normalized.withOffset(offset)
+        coordinate.tap()
     }
 }
