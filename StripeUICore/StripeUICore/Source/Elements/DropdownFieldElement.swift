@@ -17,7 +17,9 @@ import UIKit
  */
 @objc(STP_Internal_DropdownFieldElement)
 @_spi(STP) public class DropdownFieldElement: NSObject {
+    public typealias DidPresent = () -> Void
     public typealias DidUpdateSelectedIndex = (Int) -> Void
+    public typealias DidTapClose = () -> Void
 
     public struct DropdownItem {
         public init(pickerDisplayName: NSAttributedString, labelDisplayName: NSAttributedString, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false) {
@@ -68,7 +70,9 @@ import UIKit
             updatePickerField()
         }
     }
+    public var didPresent: DidPresent?
     public var didUpdate: DidUpdateSelectedIndex?
+    public var didTapClose: DidTapClose?
     public let theme: ElementsUITheme
     public let hasPadding: Bool
 
@@ -145,7 +149,9 @@ import UIKit
         hasPadding: Bool = true,
         disableDropdownWithSingleElement: Bool = false,
         isOptional: Bool = false,
-        didUpdate: DidUpdateSelectedIndex? = nil
+        didPresent: DidPresent? = nil,
+        didUpdate: DidUpdateSelectedIndex? = nil,
+        didTapClose: DidTapClose? = nil
     ) {
         assert(!items.isEmpty, "`items` must contain at least one item")
 
@@ -154,7 +160,9 @@ import UIKit
         self.items = items
         self.disableDropdownWithSingleElement = disableDropdownWithSingleElement
         self.isOptional = isOptional
+        self.didPresent = didPresent
         self.didUpdate = didUpdate
+        self.didTapClose = didTapClose
         self.hasPadding = hasPadding
 
         // Default to defaultIndex, if in bounds
@@ -254,7 +262,7 @@ extension DropdownFieldElement: UIPickerViewDataSource {
 
 extension DropdownFieldElement: PickerFieldViewDelegate {
     func didBeginEditing(_ pickerFieldView: PickerFieldView) {
-        // No-op
+        didPresent?()
     }
 
     func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {
@@ -275,5 +283,6 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
     func didCancel(_ pickerFieldView: PickerFieldView) {
         // Reset to previously selected index when canceling
         selectedIndex = previouslySelectedIndex
+        didTapClose?()
     }
 }
