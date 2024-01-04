@@ -274,7 +274,8 @@ private extension PaymentSheet_ConfirmParamsTest {
             XCTAssertFalse(request.url!.absoluteString.contains("secret")) // Sanity check that the request /confirm URL doesn't contain a client secret
             let params = bodyParams(from: request, line: line)
 
-            // For unknown reasons, the API doesn't allow Dashboard `uk_` keys to pass payment_method_data
+            // The API doesn't allow Dashboard `uk_` keys to pass raw PANs
+            // see card_raw_pan_validator.rb
             assertParam(params, named: "payment_method_data[type]", is: nil, line: line)
             assertParam(params, named: "payment_method_data[card][number]", is: nil, line: line)
             assertParam(params, named: "payment_method", is: paymentMethodId, line: line)
