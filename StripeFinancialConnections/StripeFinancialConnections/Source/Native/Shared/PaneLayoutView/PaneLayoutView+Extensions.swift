@@ -140,19 +140,19 @@ extension PaneLayoutView {
         footerStackView.spacing = 8
 
         if let topText = topText {
-            let termsAndPrivacyPolicyLabel = AttributedTextView(
+            let topTextLabel = AttributedTextView(
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
                 textColor: .textDefault,
                 alignCenter: true
             )
-            termsAndPrivacyPolicyLabel.setText(
+            topTextLabel.setText(
                 topText,
                 action: didSelectURL ?? { _ in }
             )
-            footerStackView.addArrangedSubview(termsAndPrivacyPolicyLabel)
-            footerStackView.setCustomSpacing(16, after: termsAndPrivacyPolicyLabel)
+            footerStackView.addArrangedSubview(topTextLabel)
+            footerStackView.setCustomSpacing(16, after: topTextLabel)
         }
 
         if let primaryButtonConfiguration = primaryButtonConfiguration {
