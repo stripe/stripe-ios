@@ -115,7 +115,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     let configuration: Configuration
 
     var selectedPaymentOption: PaymentOption? {
-        guard let index = selectedViewModelIndex, viewModels.count > index else {
+        guard let index = selectedViewModelIndex, viewModels.indices.contains(index) else {
             return nil
         }
 
