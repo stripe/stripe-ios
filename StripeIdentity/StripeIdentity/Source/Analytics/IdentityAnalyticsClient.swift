@@ -63,10 +63,11 @@ final class IdentityAnalyticsClient {
 
     enum ScreenName: String {
         case biometricConsent = "consent"
-        case documentTypeSelect = "document_select"
         case documentCapture = "live_capture"
         case documentFileUpload = "file_upload"
+        case documentWarmup = "document_warmup"
         case selfieCapture = "selfie"
+        case selfieWarmup = "selfie_warmup"
         case success = "confirmation"
         case individual = "individual"
         case phoneOtp = "phone_otp"

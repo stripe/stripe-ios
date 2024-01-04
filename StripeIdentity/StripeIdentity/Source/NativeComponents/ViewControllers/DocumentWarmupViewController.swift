@@ -33,7 +33,7 @@ final class DocumentWarmupViewController: IdentityFlowViewController {
                 sheetController.transitionToDocumentCapture()
             }
         )
-        super.init(sheetController: sheetController, analyticsScreenName: .individual)
+        super.init(sheetController: sheetController, analyticsScreenName: .documentWarmup)
         configure(
             backButtonTitle: nil,
             viewModel: flowViewModel
