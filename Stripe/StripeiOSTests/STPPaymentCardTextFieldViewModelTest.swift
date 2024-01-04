@@ -47,7 +47,7 @@ class STPPaymentCardTextFieldViewModelTest: XCTestCase {
             ("2", "02/", "02", "", .incomplete),
             ("12", "12/", "12", "", .incomplete),
             ("12/2", "12/2", "12", "2", .incomplete),
-            ("99/30", "99", "99", "30", .invalid),
+            ("99/23", "99", "99", "23", .invalid),
             ("10/12", "10/12", "10", "12", .invalid),
             ("12*25", "12/25", "12", "25", .valid),
             ("12/*", "12/", "12", "", .incomplete),
