@@ -145,6 +145,18 @@ class SavedPaymentOptionsViewController: UIViewController {
             return true
         }
     }
+    /// Whether or not there are any payment options we can show
+    /// i.e. Are there any cells besides the Add and Link cell?
+    var hasOptionsExcludingLink: Bool {
+        return viewModels.contains {
+            switch $0 {
+            case .add, .link:
+                return false
+            default:
+                return true
+            }
+        }
+    }
     weak var delegate: SavedPaymentOptionsViewControllerDelegate?
     var appearance = PaymentSheet.Appearance.default
 
