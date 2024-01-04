@@ -143,10 +143,7 @@ final class PaymentSheetLoader {
         guard intent.supportsLink else {
             return false
         }
-        return configuration.billingDetailsCollectionConfiguration.name == .automatic
-        && configuration.billingDetailsCollectionConfiguration.phone == .automatic
-        && configuration.billingDetailsCollectionConfiguration.email == .automatic
-        && configuration.billingDetailsCollectionConfiguration.address == .automatic
+        return !configuration.isUsingBillingAddressCollection()
     }
 
     static func fetchIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration, analyticsClient: STPAnalyticsClient) async throws -> Intent {
