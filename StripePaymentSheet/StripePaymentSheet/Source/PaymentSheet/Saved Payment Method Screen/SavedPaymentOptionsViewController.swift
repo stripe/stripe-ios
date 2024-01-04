@@ -481,7 +481,7 @@ extension STPPaymentMethod {
             )
             return (
                 title: STPLocalizedString(
-                    "Remove Card?",
+                    "Remove card?",
                     "Title for confirmation alert to remove a card"
                 ),
                 message: String(format: formattedMessage, brandString, last4)

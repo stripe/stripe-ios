@@ -170,7 +170,7 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 /* Title for confirmation alert to remove a card */
-"Remove Card?" = "Remove Card?";
+"Remove card?" = "Remove card?";
 
 /* A button used for saving a new payment method */
 "Save" = "Save";
