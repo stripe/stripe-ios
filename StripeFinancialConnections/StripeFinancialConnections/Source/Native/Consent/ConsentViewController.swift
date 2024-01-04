@@ -145,23 +145,14 @@ class ConsentViewController: UIViewController {
                     )
                     dataAccessNoticeViewController.present(on: self)
                 } else if urlHost == "legal-details-notice" {
-//                    let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
-//                    let consentBottomSheetModel = ConsentBottomSheetModel(
-//                        title: legalDetailsNoticeModel.title,
-//                        subtitle: nil,
-//                        body: ConsentBottomSheetModel.Body(
-//                            bullets: legalDetailsNoticeModel.body.bullets
-//                        ),
-//                        extraNotice: nil,
-//                        learnMore: legalDetailsNoticeModel.learnMore,
-//                        cta: legalDetailsNoticeModel.cta
-//                    )
-//                    ConsentBottomSheetViewController.present(
-//                        withModel: consentBottomSheetModel,
-//                        didSelectUrl: { [weak self] url in
-//                            self?.didSelectURLInTextFromBackend(url)
-//                        }
-//                    )
+                    let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
+                    let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
+                        legalDetailsNotice: legalDetailsNoticeModel,
+                        didSelectUrl: { [weak self] url in
+                            self?.didSelectURLInTextFromBackend(url)
+                        }
+                    )
+                    legalDetailsNoticeViewController.present(on: self)
                 }
             }
         )
