@@ -476,8 +476,8 @@ extension STPPaymentMethod {
             let brandString = STPCardBrandUtilities.stringFrom(card?.networks?.preferred?.toCardBrand ?? card?.brand ?? .unknown) ?? ""
             let last4 = card?.last4 ?? ""
             let formattedMessage = STPLocalizedString(
-                "%1$@ •••%2$@",
-                "Content for alert popup prompting to confirm removing a saved card. {card brand} •••{last 4} e.g. 'Visa •••3155'"
+                "%1$@ ••••%2$@",
+                "Content for alert popup prompting to confirm removing a saved card. {card brand} ••••{last 4} e.g. 'Visa ••••3155'"
             )
             return (
                 title: STPLocalizedString(
