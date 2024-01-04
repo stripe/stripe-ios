@@ -34,6 +34,9 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         case .addingNew:
             if let paymentOption = addPaymentMethodViewController.paymentOption {
                 return paymentOption
+            } else if let paymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
+                // If no valid payment option from adding, fallback on any saved payment method
+                return paymentOption
             } else if isApplePayEnabled {
                 return .applePay
             }
