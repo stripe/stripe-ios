@@ -105,6 +105,7 @@
 		5C047CFEA91C1A04EAEC0CFF /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35BFC60D1945087E74B6BD89 /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5C0D1B932954D0EF3F3A679F /* ManualEntryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95BDADF560DB0B1ED175EF50 /* ManualEntryButton.swift */; };
 		5E00512CDFBC1C93781E20AB /* PaymentSheetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DBDEE23A856CE8D3B49861 /* PaymentSheetLoader.swift */; };
+		610DF5DA2B334DBF00DA6AAA /* HostedSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610DF5D92B334DBF00DA6AAA /* HostedSurface.swift */; };
 		6151DDC02B14FDCF00ED4F7E /* UpdateCardViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151DDBF2B14FDCF00ED4F7E /* UpdateCardViewControllerSnapshotTests.swift */; };
 		61C0D3B8C63EB4558AB74A7E /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A1C7CFA5C9C1A8A73CFA1C0 /* StripePayments.framework */; };
 		623C2D9F87929D6DA9C09E23 /* STPCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39B31D0B890A4F8E4819B15 /* STPCameraView.swift */; };
@@ -415,6 +416,7 @@
 		5EFCD0B8D104E175C9EFF7A0 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		5F884F7A5FF4FC6D0E24E6FC /* PaymentSheetErrorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetErrorTest.swift; sourceTree = "<group>"; };
 		5FD715F32B61017198E9F952 /* BottomSheetTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetTransitioningDelegate.swift; sourceTree = "<group>"; };
+		610DF5D92B334DBF00DA6AAA /* HostedSurface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HostedSurface.swift; path = ../Elements/CardSectionWithScanner/HostedSurface.swift; sourceTree = "<group>"; };
 		6139AA50F07A1E2AC7E9827F /* AUBECSMandate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUBECSMandate.swift; sourceTree = "<group>"; };
 		6151DDBF2B14FDCF00ED4F7E /* UpdateCardViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCardViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		617C44F9338DE2E93E318291 /* PayWithLinkWebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayWithLinkWebController.swift; sourceTree = "<group>"; };
@@ -971,6 +973,7 @@
 		9A5ACB8060F5CFC60687631B /* BottomSheet */ = {
 			isa = PBXGroup;
 			children = (
+				610DF5D92B334DBF00DA6AAA /* HostedSurface.swift */,
 				A8F7582743930881FEB8C206 /* BottomSheetPresentable.swift */,
 				E8F09CF961C943E36D76860F /* BottomSheetPresentationAnimator.swift */,
 				06CA605ED1C2F5469889E9AC /* BottomSheetPresentationController.swift */,
@@ -1586,6 +1589,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				610DF5DA2B334DBF00DA6AAA /* HostedSurface.swift in Sources */,
 				3BAF910D2D3E23FF2A29B013 /* AnalyticsHelper.swift in Sources */,
 				4E5A3324BBD882A780925E2B /* STPAnalyticsClient+Address.swift in Sources */,
 				0FB52E5B87B1854B28362BF3 /* STPAnalyticsClient+CustomerSheet.swift in Sources */,

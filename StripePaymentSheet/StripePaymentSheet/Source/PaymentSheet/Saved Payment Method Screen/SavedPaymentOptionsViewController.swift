@@ -382,6 +382,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               paymentMethod: paymentMethod,
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
+                                              hostedSurface: .paymentSheet,
                                               isTestMode: configuration.isTestMode)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
