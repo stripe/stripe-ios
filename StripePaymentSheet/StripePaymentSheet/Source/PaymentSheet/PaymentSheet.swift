@@ -57,6 +57,13 @@ public class PaymentSheet {
                 return nil
             }
         }
+
+        var isDeferred: Bool {
+            if case .deferredIntent = self {
+                return true
+            }
+            return false
+        }
     }
 
     /// This contains all configurable properties of PaymentSheet

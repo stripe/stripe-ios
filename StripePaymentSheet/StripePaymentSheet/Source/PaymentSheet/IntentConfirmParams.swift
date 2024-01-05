@@ -77,30 +77,6 @@ class IntentConfirmParams {
         self.confirmPaymentMethodOptions = STPConfirmPaymentMethodOptions()
     }
 
-    static func makeDashboardParams(
-        paymentIntentClientSecret: String,
-        paymentMethodID: String,
-        shouldSave: Bool,
-        paymentMethodType: STPPaymentMethodType,
-        customer: PaymentSheet.CustomerConfiguration?
-    ) -> STPPaymentIntentParams {
-        let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
-        params.paymentMethodId = paymentMethodID
-
-        // Dashboard only supports a specific payment flow today
-        let options = STPConfirmPaymentMethodOptions()
-        options.setSetupFutureUsageIfNecessary(
-            shouldSave,
-            paymentMethodType: paymentMethodType,
-            customer: customer
-        )
-        params.paymentMethodOptions = options
-
-        options.setMoto()
-
-        return params
-    }
-
     /// Applies the values of `Configuration.defaultBillingDetails` to this IntentConfirmParams if `attachDefaultsToPaymentMethod` is true.
     /// - Note: This overwrites `paymentMethodParams.billingDetails`.
     func setDefaultBillingDetailsIfNecessary(for configuration: PaymentSheet.Configuration) {

@@ -552,13 +552,21 @@ extension STPAPIClient {
 extension STPAPIClient {
 
     func setupIntentEndpoint(from secret: String) -> String {
-        assert(
-            STPSetupIntentConfirmParams.isClientSecretValid(secret),
-            "`secret` format does not match expected client secret formatting."
-        )
-        let identifier = STPSetupIntent.id(fromClientSecret: secret) ?? ""
-
-        return "\(APIEndpointSetupIntents)/\(identifier)"
+        if publishableKeyIsUserKey {
+            assert(
+                secret.hasPrefix("seti_"),
+                "`secret` format does not match expected identifier formatting."
+            )
+            let identifier = STPSetupIntent.id(fromClientSecret: secret) ?? secret
+            return "\(APIEndpointSetupIntents)/\(identifier)"
+        } else {
+            assert(
+                STPSetupIntentConfirmParams.isClientSecretValid(secret),
+                "`secret` format does not match expected client secret formatting."
+            )
+            let identifier = STPSetupIntent.id(fromClientSecret: secret) ?? ""
+            return "\(APIEndpointSetupIntents)/\(identifier)"
+        }
     }
 
     /// Retrieves the SetupIntent object using the given secret. - seealso: https://stripe.com/docs/api/setup_intents/retrieve
@@ -590,7 +598,10 @@ extension STPAPIClient {
     ) {
 
         let endpoint = setupIntentEndpoint(from: secret)
-        var parameters: [String: Any] = ["client_secret": secret]
+        var parameters: [String: Any] = [:]
+        if !publishableKeyIsUserKey {
+            parameters["client_secret"] = secret
+        }
         if let expand = expand,
             !expand.isEmpty
         {
@@ -682,6 +693,9 @@ extension STPAPIClient {
             !expand.isEmpty
         {
             params["expand"] = expand
+        }
+        if publishableKeyIsUserKey {
+            params["client_secret"] = nil
         }
 
         APIRequest<STPSetupIntent>.post(
