@@ -20,7 +20,8 @@ extension STPAnalyticsClient {
                              isCustom: isCustom,
                              configuration: configuration),
                              configuration: configuration,
-                             intentConfig: intentConfig)
+                             intentConfig: intentConfig,
+                             apiClient: configuration.apiClient)
     }
 
     func logPaymentSheetPayment(
@@ -34,7 +35,8 @@ extension STPAnalyticsClient {
         intentConfig: PaymentSheet.IntentConfiguration? = nil,
         deferredIntentConfirmationType: DeferredIntentConfirmationType?,
         paymentMethodTypeAnalyticsValue: String? = nil,
-        error: Error? = nil
+        error: Error? = nil,
+        apiClient: STPAPIClient
     ) {
         var success = false
         switch result {
@@ -61,7 +63,8 @@ extension STPAnalyticsClient {
             intentConfig: intentConfig,
             error: error,
             deferredIntentConfirmationType: deferredIntentConfirmationType,
-            paymentMethodTypeAnalyticsValue: paymentMethodTypeAnalyticsValue
+            paymentMethodTypeAnalyticsValue: paymentMethodTypeAnalyticsValue,
+            apiClient: apiClient
         )
     }
 
@@ -71,7 +74,8 @@ extension STPAnalyticsClient {
         linkEnabled: Bool,
         activeLinkSession: Bool,
         currency: String?,
-        intentConfig: PaymentSheet.IntentConfiguration? = nil
+        intentConfig: PaymentSheet.IntentConfiguration? = nil,
+        apiClient: STPAPIClient
     ) {
         AnalyticsHelper.shared.startTimeMeasurement(.checkout)
         logPaymentSheetEvent(
@@ -79,19 +83,23 @@ extension STPAnalyticsClient {
             linkEnabled: linkEnabled,
             activeLinkSession: activeLinkSession,
             currency: currency,
-            intentConfig: intentConfig
+            intentConfig: intentConfig,
+            apiClient: apiClient
         )
     }
 
     func logPaymentSheetPaymentOptionSelect(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
-        intentConfig: PaymentSheet.IntentConfiguration? = nil
+        intentConfig: PaymentSheet.IntentConfiguration? = nil,
+        apiClient: STPAPIClient
     ) {
         logPaymentSheetEvent(event: paymentSheetPaymentOptionSelectEventValue(
                              isCustom: isCustom,
                              paymentMethod: paymentMethod),
-                             intentConfig: intentConfig)
+                             intentConfig: intentConfig,
+                             apiClient: apiClient
+        )
     }
 
     enum DeferredIntentConfirmationType: String {
@@ -246,7 +254,8 @@ extension STPAnalyticsClient {
         error: Error? = nil,
         deferredIntentConfirmationType: DeferredIntentConfirmationType? = nil,
         paymentMethodTypeAnalyticsValue: String? = nil,
-        params: [String: Any] = [:]
+        params: [String: Any] = [:],
+        apiClient: STPAPIClient = .shared
     ) {
         var additionalParams = [:] as [String: Any]
         if isSimulatorOrTest {
@@ -279,8 +288,7 @@ extension STPAnalyticsClient {
         let analytic = PaymentSheetAnalytic(event: event,
                                             productUsage: productUsage,
                                             additionalParams: additionalParams)
-
-        log(analytic: analytic)
+        log(analytic: analytic, apiClient: apiClient)
     }
 
     var isSimulatorOrTest: Bool {

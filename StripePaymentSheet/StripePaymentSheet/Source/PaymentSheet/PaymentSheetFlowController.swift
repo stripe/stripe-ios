@@ -349,7 +349,8 @@ extension PaymentSheet {
                         intentConfig: intent.intentConfig,
                         deferredIntentConfirmationType: deferredIntentConfirmationType,
                         paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
-                        error: result.error
+                        error: result.error,
+                        apiClient: configuration.apiClient
                     )
 
                     if case .completed = result, case .link = paymentOption {
