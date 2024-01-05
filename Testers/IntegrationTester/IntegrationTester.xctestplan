@@ -20,7 +20,6 @@
     {
       "parallelizable" : true,
       "skippedTests" : [
-        "IntegrationTesterUICardTests\/testStandardCustomCard3DS1()"
       ],
       "target" : {
         "containerPath" : "container:IntegrationTester.xcodeproj",
