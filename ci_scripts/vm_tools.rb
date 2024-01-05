@@ -58,6 +58,7 @@ def build_vm
   rputs 'Building VM images! This will take a while, grab some coffee and keep your Mac awake...'
   setup_vm_requirements
   Dir.chdir("#{Dir.home}/stripe/ios-deploy-vm") do
+    run_command('packer init')
     unless `tart list`.include? 'ventura-vanilla'
       run_command('packer build -var-file="variables.pkrvars.hcl" templates/vanilla-ventura.pkr.hcl')
     end
