@@ -14,7 +14,7 @@ extension PaneLayoutView {
 
     @available(iOSApplicationExtension, unavailable)
     static func createContentView(
-        iconView: RoundedIconView?,
+        iconView: UIView?,
         title: String?,
         subtitle: String?,
         contentView: UIView?,
@@ -43,7 +43,7 @@ extension PaneLayoutView {
 
     @available(iOSApplicationExtension, unavailable)
     static func createHeaderView(
-        iconView: RoundedIconView?,
+        iconView: UIView?,
         title: String?,
         isSheet: Bool = false
     ) -> UIView {
@@ -117,13 +117,24 @@ extension PaneLayoutView {
 
     struct ButtonConfiguration {
         let title: String
+        let accessibilityIdentifier: String?
         let action: () -> Void
+
+        init(
+            title: String,
+            accessibilityIdentifier: String? = nil,
+            action: @escaping () -> Void
+        ) {
+            self.title = title
+            self.accessibilityIdentifier = accessibilityIdentifier
+            self.action = action
+        }
     }
 
     @available(iOSApplicationExtension, unavailable)
     static func createFooterView(
         primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?,
-        secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?,
+        secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration? = nil,
         topText: String? = nil,
         didSelectURL: ((URL) -> Void)? = nil
     ) -> UIView? {
@@ -158,6 +169,7 @@ extension PaneLayoutView {
         if let primaryButtonConfiguration = primaryButtonConfiguration {
             let primaryButton = Button(configuration: FinancialConnectionsPrimaryButtonConfiguration())
             primaryButton.title = primaryButtonConfiguration.title
+            primaryButton.accessibilityIdentifier = primaryButtonConfiguration.accessibilityIdentifier
             primaryButton.addTarget(
                 footerStackView,
                 action: #selector(FooterStackView.didSelectPrimaryButton),
@@ -173,6 +185,7 @@ extension PaneLayoutView {
         if let secondaryButtonConfiguration = secondaryButtonConfiguration {
             let secondaryButton = Button(configuration: FinancialConnectionsSecondaryButtonConfiguration())
             secondaryButton.title = secondaryButtonConfiguration.title
+            secondaryButton.accessibilityIdentifier = secondaryButtonConfiguration.accessibilityIdentifier
             secondaryButton.addTarget(
                 footerStackView,
                 action: #selector(FooterStackView.didSelectSecondaryButton),
