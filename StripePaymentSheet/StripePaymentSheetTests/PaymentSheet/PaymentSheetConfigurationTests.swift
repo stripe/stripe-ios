@@ -61,4 +61,3 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssert(configuration.isUsingBillingAddressCollection())
     }
 }
-

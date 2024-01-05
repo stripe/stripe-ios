@@ -61,4 +61,3 @@ class CustomerSheetConfigurationTests: XCTestCase {
         XCTAssert(configuration.isUsingBillingAddressCollection())
     }
 }
-
