@@ -2248,7 +2248,9 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     func testLinkInlineSignup() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
+        settings.apmsEnabled = .on
         settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
 
         loadPlayground(app, settings)
 
@@ -2256,7 +2258,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         try fillCardData(app)
 
-        app.switches["Save my info for secure 1-click checkout"].tap()
+        app.switches["Save your info for secure 1-click checkout with Link"].tap()
 
         let emailField = app.textFields["Email"]
         emailField.tap()
