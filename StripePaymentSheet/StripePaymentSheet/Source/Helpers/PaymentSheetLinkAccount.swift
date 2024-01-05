@@ -226,7 +226,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             )
         }
     }
-    
+
     func sharePaymentDetails(id: String, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
         guard let session = currentSession else {
             assertionFailure()
@@ -236,7 +236,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 )
             )
         }
-        
+
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
             session.sharePaymentDetails(
                 with: apiClient,

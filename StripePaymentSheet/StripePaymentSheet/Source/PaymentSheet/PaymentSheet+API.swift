@@ -369,7 +369,7 @@ extension PaymentSheet {
                     linkAccount.createPaymentDetails(with: paymentMethodParams) { result in
                         switch result {
                         case .success(let paymentDetails):
-                            if (intent.linkPassthroughModeEnabled) {
+                            if intent.linkPassthroughModeEnabled {
                                 // If passthrough mode, share payment details
                                 linkAccount.sharePaymentDetails(id: paymentDetails.stripeID) { result in
                                     switch result {

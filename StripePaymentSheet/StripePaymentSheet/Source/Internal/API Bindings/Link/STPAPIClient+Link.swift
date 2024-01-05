@@ -276,7 +276,7 @@ extension STPAPIClient {
             completion(result.map { $0.redactedPaymentDetails })
         }
     }
-    
+
     func sharePaymentDetails(
         for consumerSessionClientSecret: String,
         id: String,
@@ -288,7 +288,7 @@ extension STPAPIClient {
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
-            "id": id
+            "id": id,
         ]
 
         post(
@@ -298,7 +298,6 @@ extension STPAPIClient {
             completion: completion
         )
     }
-
 
     func deletePaymentDetails(
         for consumerSessionClientSecret: String,

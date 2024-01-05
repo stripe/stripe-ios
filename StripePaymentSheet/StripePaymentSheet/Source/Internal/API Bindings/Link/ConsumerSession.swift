@@ -167,7 +167,7 @@ extension ConsumerSession {
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }
-    
+
     func sharePaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,
