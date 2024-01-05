@@ -1954,10 +1954,6 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
 
-        let addCardButton = app.buttons["+ Add"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
-        addCardButton.tap()
-
         try! fillCardData(app)
 
         // toggle save this card on and off
@@ -1987,11 +1983,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
+        try! fillCardData(app)  // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
 
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
-        addCardButton.tap()
-
-        try! fillCardData(app)
         // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         if !expectDefaultSelectionOn {
@@ -2009,6 +2002,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
 
         // return to payment method selector
+        paymentMethodButton = app.staticTexts["••••4242"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
 
@@ -2024,7 +2018,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
 
-        XCTAssertTrue(app.cells.count == 2)
+        XCTAssertTrue(app.cells.count == 1)
     }
 
     // MARK: - External PayPal 
