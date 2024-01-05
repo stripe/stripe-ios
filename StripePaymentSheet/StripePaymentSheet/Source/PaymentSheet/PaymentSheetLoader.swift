@@ -72,14 +72,14 @@ final class PaymentSheetLoader {
                             intent: intent
                         )
                     }
-
+                let isLinkEnabled = isLinkEnabled(intent: intent, configuration: configuration)
                 analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadSucceeded,
                                                                      duration: Date().timeIntervalSince(loadingStartDate))
                 completion(
                     .success(
                         intent: intent,
                         savedPaymentMethods: filteredSavedPaymentMethods,
-                        isLinkEnabled: intent.supportsLink
+                        isLinkEnabled: isLinkEnabled
                     )
                 )
             } catch {
@@ -142,6 +142,13 @@ final class PaymentSheetLoader {
         } else {
             return nil
         }
+    }
+
+    static func isLinkEnabled(intent: Intent, configuration: PaymentSheet.Configuration) -> Bool {
+        guard intent.supportsLink else {
+            return false
+        }
+        return !configuration.isUsingBillingAddressCollection()
     }
 
     static func fetchIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration, analyticsClient: STPAnalyticsClient) async throws -> Intent {

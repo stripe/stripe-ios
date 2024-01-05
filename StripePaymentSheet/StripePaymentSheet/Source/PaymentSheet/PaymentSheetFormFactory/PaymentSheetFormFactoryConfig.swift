@@ -84,4 +84,13 @@ enum PaymentSheetFormFactoryConfig {
             return config.preferredNetworks
         }
     }
+
+    var isUsingBillingAddressCollection: Bool {
+        switch self {
+        case .paymentSheet(let config):
+            return config.isUsingBillingAddressCollection()
+        case .customerSheet(let config):
+            return config.isUsingBillingAddressCollection()
+        }
+    }
 }
