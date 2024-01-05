@@ -566,6 +566,10 @@ extension PaymentSheet {
         if let mandateData = mandateData {
             params.mandateData = mandateData
         }
+        // Set moto (mail order and telephone orders) for Dashboard b/c merchants key in cards on behalf of customers
+        if configuration.apiClient.publishableKeyIsUserKey {
+            paymentOptions.setMoto()
+        }
         params.paymentMethodOptions = paymentOptions
         params.returnURL = configuration.returnURL
         params.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
@@ -606,6 +610,10 @@ extension PaymentSheet {
         }
         if let mandateData = mandateData {
             params.mandateData = mandateData
+        }
+        // Set moto (mail order and telephone orders) for Dashboard b/c merchants key in cards on behalf of customers
+        if configuration.apiClient.publishableKeyIsUserKey {
+            params.additionalAPIParameters["payment_method_options"] = ["card": ["moto": true]]
         }
         params.returnURL = configuration.returnURL
         return params

@@ -61,20 +61,12 @@ extension PaymentSheet {
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 4a. Client-side confirmation
                         try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent, intentConfiguration: intentConfig, isFlowController: isFlowController)
-                        var paymentIntentParams = makePaymentIntentParams(
+                        let paymentIntentParams = makePaymentIntentParams(
                             confirmPaymentMethodType: confirmType,
                             paymentIntent: paymentIntent,
                             configuration: configuration,
                             mandateData: mandateData
                         )
-
-                        // Dashboard specific logic
-                        if configuration.apiClient.publishableKeyIsUserKey {
-                            paymentIntentParams = setParamsForDashboardApp(confirmType: confirmType,
-                                                                           paymentIntentParams: paymentIntentParams,
-                                                                           paymentIntent: paymentIntent,
-                                                                           configuration: configuration)
-                        }
 
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
@@ -165,33 +157,5 @@ extension PaymentSheet {
             paymentUserAgentValues.append("autopm")
         }
         return paymentUserAgentValues
-    }
-
-    static func setParamsForDashboardApp(confirmType: ConfirmPaymentMethodType,
-                                         paymentIntentParams: STPPaymentIntentParams,
-                                         paymentIntent: STPPaymentIntent,
-                                         configuration: PaymentSheet.Configuration) -> STPPaymentIntentParams {
-        var intentParamsCopy = paymentIntentParams
-        switch confirmType {
-        case .saved:
-            // The Dashboard app requires MOTO
-            intentParamsCopy.paymentMethodOptions = intentParamsCopy.paymentMethodOptions == nil ? .init() : intentParamsCopy.paymentMethodOptions
-            intentParamsCopy.paymentMethodOptions?.setMoto()
-        case .new(_, _, let paymentMethod, let shouldSave):
-            // The Dashboard app cannot pass `paymentMethodParams` ie payment_method_data
-            intentParamsCopy = IntentConfirmParams.makeDashboardParams(
-                paymentIntentClientSecret: paymentIntent.clientSecret,
-                paymentMethodID: paymentMethod?.stripeId ?? "",
-                shouldSave: shouldSave,
-                paymentMethodType: paymentMethod?.type ?? .unknown,
-                customer: configuration.customer
-            )
-            intentParamsCopy.shipping = makeShippingParams(
-                for: paymentIntent,
-                configuration: configuration
-            )
-        }
-
-        return intentParamsCopy
     }
 }

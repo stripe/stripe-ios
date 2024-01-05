@@ -44,7 +44,10 @@ class PaymentSheetFormFactory {
     var canSaveToLink: Bool {
         // For Link private beta, only save cards in ".userSelectable" mode.
         // We don't want to override the merchant's own "Save this card" checkbox.
-        return (supportsLinkCard && paymentMethod == .stripe(.card) && saveMode != .userSelectable)
+        return (supportsLinkCard &&
+                paymentMethod == .stripe(.card) &&
+                saveMode != .userSelectable &&
+                !configuration.isUsingBillingAddressCollection)
     }
 
     var theme: ElementsUITheme {
@@ -701,7 +704,13 @@ extension PaymentSheetFormFactory {
             KlarnaHelper.canBuyNow()
             ? STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
             : STPLocalizedString("Pay later with Klarna.", "Klarna pay later copy")
-        return makeSectionTitleLabelWith(text: text)
+
+        let label = UILabel()
+        label.text = text
+        label.font = theme.fonts.subheadline
+        label.textColor = theme.colors.bodyText
+        label.numberOfLines = 0
+        return StaticElement(view: label)
     }
 
     private func makeUSBankAccountCopyLabel() -> StaticElement {

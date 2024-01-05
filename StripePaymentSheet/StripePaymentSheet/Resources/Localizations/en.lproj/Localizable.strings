@@ -1,3 +1,6 @@
+/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 
@@ -166,11 +169,8 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. 'Remove VISA ending in 4242' */
-"Remove %1$@ ending in %2$@" = "Remove %1$@ ending in %2$@";
-
 /* Title for confirmation alert to remove a card */
-"Remove Card" = "Remove Card";
+"Remove card?" = "Remove card?";
 
 /* A button used for saving a new payment method */
 "Save" = "Save";
@@ -184,10 +184,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* The label of a switch indicating whether to save the payment method for future payments. */
 "Save for future payments" = "Save for future payments";
 
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save my info for secure 1-click checkout" = "Save my info for secure 1-click checkout";
-
 /* Prompt next to checkbox to save bank account. */
 "Save this account for future %@ payments" = "Save this account for future %@ payments";
 
@@ -196,6 +192,10 @@ to be saved and used in future checkout sessions. */
 
 /* US Bank Account copy title for Mobile payment element form */
 "Save your bank account in just a few steps." = "Save your bank account in just a few steps.";
+
+/* Label for a checkbox that when checked allows the payment information
+to be saved and used in future checkout sessions. */
+"Save your info for secure 1-click checkout with Link" = "Save your info for secure 1-click checkout with Link";
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";

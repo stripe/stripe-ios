@@ -436,3 +436,12 @@ extension PaymentSheet {
         public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
     }
 }
+
+extension PaymentSheet.Configuration {
+    func isUsingBillingAddressCollection() -> Bool {
+        return billingDetailsCollectionConfiguration.name == .always
+        || billingDetailsCollectionConfiguration.phone == .always
+        || billingDetailsCollectionConfiguration.email == .always
+        || billingDetailsCollectionConfiguration.address == .full
+    }
+}

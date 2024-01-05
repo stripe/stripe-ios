@@ -115,7 +115,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     let configuration: Configuration
 
     var selectedPaymentOption: PaymentOption? {
-        guard let index = selectedViewModelIndex else {
+        guard let index = selectedViewModelIndex, viewModels.indices.contains(index) else {
             return nil
         }
 
@@ -382,6 +382,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               paymentMethod: paymentMethod,
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
+                                              hostedSurface: .paymentSheet,
                                               isTestMode: configuration.isTestMode)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
@@ -475,12 +476,12 @@ extension STPPaymentMethod {
             let brandString = STPCardBrandUtilities.stringFrom(card?.networks?.preferred?.toCardBrand ?? card?.brand ?? .unknown) ?? ""
             let last4 = card?.last4 ?? ""
             let formattedMessage = STPLocalizedString(
-                "Remove %1$@ ending in %2$@",
-                "Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. 'Remove VISA ending in 4242'"
+                "%1$@ •••• %2$@",
+                "Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155'"
             )
             return (
                 title: STPLocalizedString(
-                    "Remove Card",
+                    "Remove card?",
                     "Title for confirmation alert to remove a card"
                 ),
                 message: String(format: formattedMessage, brandString, last4)

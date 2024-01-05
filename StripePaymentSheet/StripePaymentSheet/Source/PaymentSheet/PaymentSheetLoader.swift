@@ -33,6 +33,11 @@ final class PaymentSheetLoader {
 
         Task { @MainActor in
             do {
+                if !mode.isDeferred && configuration.apiClient.publishableKeyIsUserKey {
+                    // User keys can't pass payment_method_data directly to /confirm, which is what the non-deferred intent flows do
+                    assertionFailure("Dashboard isn't supported in non-deferred intent flows")
+                }
+
                 // Fetch PaymentIntent, SetupIntent, or ElementsSession
                 async let _intent = fetchIntent(mode: mode, configuration: configuration, analyticsClient: analyticsClient)
 
@@ -67,14 +72,14 @@ final class PaymentSheetLoader {
                             intent: intent
                         )
                     }
-
+                let isLinkEnabled = isLinkEnabled(intent: intent, configuration: configuration)
                 analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadSucceeded,
                                                                      duration: Date().timeIntervalSince(loadingStartDate))
                 completion(
                     .success(
                         intent: intent,
                         savedPaymentMethods: filteredSavedPaymentMethods,
-                        isLinkEnabled: intent.supportsLink(allowV2Features: configuration.allowLinkV2Features)
+                        isLinkEnabled: isLinkEnabled
                     )
                 )
             } catch {
@@ -137,6 +142,13 @@ final class PaymentSheetLoader {
         } else {
             return nil
         }
+    }
+
+    static func isLinkEnabled(intent: Intent, configuration: PaymentSheet.Configuration) -> Bool {
+        guard intent.supportsLink(allowV2Features: configuration.allowLinkV2Features) else {
+            return false
+        }
+        return !configuration.isUsingBillingAddressCollection()
     }
 
     static func fetchIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration, analyticsClient: STPAnalyticsClient) async throws -> Intent {
