@@ -143,7 +143,7 @@ extension STPAPIClient {
             "card": card as Any,
             "billing_email_address": billingEmailAddress,
             "billing_address": billingParams,
-            "active": false, // card details are created with active false so we don't save them until the intent confirmation succeeds
+            "active": true, // card details are created with active true so they can be shared for passthrough mode
         ]
 
         makePaymentDetailsRequest(
@@ -276,6 +276,29 @@ extension STPAPIClient {
             completion(result.map { $0.redactedPaymentDetails })
         }
     }
+    
+    func sharePaymentDetails(
+        for consumerSessionClientSecret: String,
+        id: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/payment_details/share"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
+            "id": id
+        ]
+
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            ephemeralKeySecret: nil,
+            completion: completion
+        )
+    }
+
 
     func deletePaymentDetails(
         for consumerSessionClientSecret: String,
