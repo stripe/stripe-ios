@@ -123,7 +123,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     private lazy var bottomNoticeTextField: UITextView = {
         return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
     }()
-    
+
     private typealias WalletHeaderView = PaymentSheetViewController.WalletHeaderView
     private lazy var walletHeader: WalletHeaderView = {
         var walletOptions: WalletHeaderView.WalletOptions = []
@@ -259,7 +259,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         if linkOnlyMode {
             mode = .addingNew
         }
-        
+
         updateUI()
     }
 
@@ -316,12 +316,12 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         isDismissable = !isSavingInProgress && !isVerificationInProgress
 
         configureNavBar()
-        
+
         // Content header
         walletHeader.isHidden = !shouldShowWalletHeader
         walletHeader.showsCardPaymentMessage = (addPaymentMethodViewController.paymentMethodTypes == [.stripe(.card)])
         headerLabel.isHidden = shouldShowWalletHeader
-        
+
         switch mode {
         case .selectingSaved:
             headerLabel.text = STPLocalizedString(
@@ -632,7 +632,7 @@ extension PaymentSheetFlowControllerViewController: WalletHeaderViewDelegate {
     func walletHeaderViewApplePayButtonTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
         // no-op
     }
-    
+
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
         // Link should be the selected payment option as the Link header button is only available in `linkOnlyMode`
         mode = .selectingSaved
