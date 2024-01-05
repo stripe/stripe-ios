@@ -701,7 +701,13 @@ extension PaymentSheetFormFactory {
             KlarnaHelper.canBuyNow()
             ? STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
             : STPLocalizedString("Pay later with Klarna.", "Klarna pay later copy")
-        return makeSectionTitleLabelWith(text: text)
+
+        let label = UILabel()
+        label.text = text
+        label.font = theme.fonts.subheadline
+        label.textColor = theme.colors.bodyText
+        label.numberOfLines = 0
+        return StaticElement(view: label)
     }
 
     private func makeUSBankAccountCopyLabel() -> StaticElement {

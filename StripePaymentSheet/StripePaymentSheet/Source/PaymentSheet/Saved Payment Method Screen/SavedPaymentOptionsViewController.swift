@@ -476,12 +476,12 @@ extension STPPaymentMethod {
             let brandString = STPCardBrandUtilities.stringFrom(card?.networks?.preferred?.toCardBrand ?? card?.brand ?? .unknown) ?? ""
             let last4 = card?.last4 ?? ""
             let formattedMessage = STPLocalizedString(
-                "Remove %1$@ ending in %2$@",
-                "Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. 'Remove VISA ending in 4242'"
+                "%1$@ •••• %2$@",
+                "Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155'"
             )
             return (
                 title: STPLocalizedString(
-                    "Remove Card",
+                    "Remove card?",
                     "Title for confirmation alert to remove a card"
                 ),
                 message: String(format: formattedMessage, brandString, last4)

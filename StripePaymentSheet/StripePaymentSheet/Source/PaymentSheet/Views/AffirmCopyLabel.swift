@@ -24,7 +24,7 @@ class AffirmCopyLabel: UIView {
         message.replaceOccurrences(of: "%@", with: logo)
         affirmLabel.attributedText = message
         affirmLabel.font = theme.fonts.subheadline
-        affirmLabel.textColor = theme.colors.secondaryText
+        affirmLabel.textColor = theme.colors.bodyText
         affirmLabel.numberOfLines = 0
         affirmLabel.sizeToFit()
         addAndPinSubview(affirmLabel)
