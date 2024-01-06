@@ -113,7 +113,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .newPM,
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            currency: "USD",
+            apiClient: .init()
         )
 
         let event2 = XCTestExpectation(description: "mc_complete_sheet_savedpm_show")
@@ -123,7 +124,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .savedPM,
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            currency: "USD",
+            apiClient: .init()
         )
 
         let event3 = XCTestExpectation(description: "mc_complete_payment_savedpm_success")
@@ -136,7 +138,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             activeLinkSession: false,
             linkSessionType: .ephemeral,
             currency: "USD",
-            deferredIntentConfirmationType: nil
+            deferredIntentConfirmationType: nil,
+            apiClient: .init()
         )
 
         let event4 = XCTestExpectation(description: "mc_custom_payment_applepay_failure")
@@ -149,16 +152,17 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             activeLinkSession: false,
             linkSessionType: .ephemeral,
             currency: "USD",
-            deferredIntentConfirmationType: nil
+            deferredIntentConfirmationType: nil,
+            apiClient: .init()
         )
 
         let event5 = XCTestExpectation(description: "mc_custom_paymentoption_applepay_select")
         client.registerExpectation(event5)
-        client.logPaymentSheetPaymentOptionSelect(isCustom: true, paymentMethod: .applePay)
+        client.logPaymentSheetPaymentOptionSelect(isCustom: true, paymentMethod: .applePay, apiClient: .init())
 
         let event6 = XCTestExpectation(description: "mc_complete_paymentoption_newpm_select")
         client.registerExpectation(event6)
-        client.logPaymentSheetPaymentOptionSelect(isCustom: false, paymentMethod: .newPM)
+        client.logPaymentSheetPaymentOptionSelect(isCustom: false, paymentMethod: .newPM, apiClient: .init())
 
         wait(
             for: [event1, event2, event3, event4, event5, event6],
@@ -222,7 +226,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             paymentMethod: .newPM,
             linkEnabled: false,
             activeLinkSession: false,
-            currency: "USD"
+            currency: "USD",
+            apiClient: .init()
         )
 
         client.logPaymentSheetPayment(
@@ -233,7 +238,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             activeLinkSession: false,
             linkSessionType: .ephemeral,
             currency: "USD",
-            deferredIntentConfirmationType: nil
+            deferredIntentConfirmationType: nil,
+            apiClient: .init()
         )
 
         let duration = client.lastPayload?["duration"] as? TimeInterval
