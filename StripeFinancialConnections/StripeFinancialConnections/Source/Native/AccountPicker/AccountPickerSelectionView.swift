@@ -30,7 +30,7 @@ final class AccountPickerSelectionView: UIView {
     ) {
         self.delegate = delegate
         self.listView = AccountPickerSelectionListView(
-            selectionType: accountPickerType == .checkbox ? .checkbox : .radioButton,
+            selectionType: accountPickerType == .checkbox ? .multiple : .single,
             enabledAccounts: enabledAccounts,
             disabledAccounts: disabledAccounts
         )
