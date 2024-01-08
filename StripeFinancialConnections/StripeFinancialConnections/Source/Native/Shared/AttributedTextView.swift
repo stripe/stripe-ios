@@ -223,4 +223,22 @@ private class VerticalCenterLayoutManager: NSLayoutManager {
             super.drawGlyphs(forGlyphRange: glyphsToShow, at: origin)
         }
     }
+
+    override func underlineGlyphRange(
+        _ glyphRange: NSRange,
+        underlineType: NSUnderlineStyle,
+        lineFragmentRect: CGRect,
+        lineFragmentGlyphRange: NSRange,
+        containerOrigin: CGPoint
+    ) {
+        var lineFragmentRect = lineFragmentRect
+        lineFragmentRect.origin.y += 1.5 // move the underline down more
+        super.underlineGlyphRange(
+            glyphRange,
+            underlineType: underlineType,
+            lineFragmentRect: lineFragmentRect,
+            lineFragmentGlyphRange: lineFragmentGlyphRange,
+            containerOrigin: containerOrigin
+        )
+    }
 }
