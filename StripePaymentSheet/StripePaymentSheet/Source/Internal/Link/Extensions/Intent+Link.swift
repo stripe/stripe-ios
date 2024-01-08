@@ -10,6 +10,7 @@
 
 extension Intent {
     func supportsLink(allowV2Features: Bool) -> Bool {
+        // Either Link is an allowed Payment Method in the elements/sessions response, or passthrough mode (Link as a Card PM) is allowed
         return recommendedPaymentMethodTypes.contains(.link) || (linkPassthroughModeEnabled && allowV2Features)
     }
 
