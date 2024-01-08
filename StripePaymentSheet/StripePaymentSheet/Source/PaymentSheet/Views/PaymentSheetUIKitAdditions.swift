@@ -15,6 +15,13 @@ import UIKit
 enum PaymentSheetUI {
     /// The padding between views in the sheet e.g., between the bottom of the form and the Pay button
     static let defaultPadding: CGFloat = 20
+
+#if canImport(CompositorServices)
+    static let navBarPadding: CGFloat = 30
+#else
+    static let navBarPadding = defaultPadding
+#endif
+    
     static let defaultMargins: NSDirectionalEdgeInsets = .insets(
         leading: defaultPadding, trailing: defaultPadding)
     static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
