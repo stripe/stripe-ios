@@ -343,7 +343,6 @@ struct PaymentOptionView: View {
             .cornerRadius(6)
             if let paymentMethodType = paymentOptionDisplayData?.paymentMethodType {
                 Text(paymentMethodType)
-                    .accessibility(identifier: "Payment Method Type")
                     .font(.caption)
                     .foregroundColor(.primary)
 
