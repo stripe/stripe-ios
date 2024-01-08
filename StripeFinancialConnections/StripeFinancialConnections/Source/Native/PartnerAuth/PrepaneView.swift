@@ -243,12 +243,13 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
                     icon: nil
                 ),
                 dataAccessNotice: FinancialConnectionsDataAccessNotice(
+                    icon: nil,
                     title: "",
                     subtitle: nil,
                     body: FinancialConnectionsDataAccessNotice.Body(bullets: []),
                     connectedAccountNotice: nil,
-                    learnMore: "",
-                    cta: ""
+                    disclaimer: nil,
+                    cta: "OK"
                 )
             ),
             didSelectURL: { _ in },

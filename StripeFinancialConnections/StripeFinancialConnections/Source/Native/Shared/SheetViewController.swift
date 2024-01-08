@@ -11,6 +11,8 @@ import UIKit
 
 class SheetViewController: UIViewController {
 
+    private static let cornerRadius: CGFloat = 20
+
     // The `contentView` represents the area of the sheet
     // where content is displayed. It's about 80% of the
     // screen and does NOT contain the dark overlay at the top.
@@ -22,7 +24,7 @@ class SheetViewController: UIViewController {
         let contentStackView = UIStackView()
         contentStackView.axis = .vertical
         contentStackView.spacing = 0
-        contentStackView.layer.cornerRadius = 20
+        contentStackView.layer.cornerRadius = Self.cornerRadius
         contentStackView.clipsToBounds = true
         contentStackView.addArrangedSubview(handleView)
         return contentStackView
@@ -35,17 +37,6 @@ class SheetViewController: UIViewController {
         return handleView
     }()
 
-    // Adds extra padding at the bottom of the sheet so when the
-    // sheet is panned up, there is no blank space - instead,
-    // it looks like a continous sheet
-    //
-    // It also covers the `contentStackView` cornerRadius at the bottom
-    private lazy var sheetExtraBottomView: UIView = {
-        let sheetExtraBottomView = UIView()
-        sheetExtraBottomView.backgroundColor = .customBackgroundColor
-        sheetExtraBottomView.isHidden = true // will be unhidden when presentation finishes
-      return sheetExtraBottomView
-    }()
     private var contentViewMinY: CGFloat = 0
     private var performedSheetPresentationAnimation = false
     private var dismissAnimationInitialSpringVelocityY: CGFloat = 0
@@ -85,17 +76,10 @@ class SheetViewController: UIViewController {
             ),
             contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            contentStackView.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor),
         ])
 
-        view.insertSubview(sheetExtraBottomView, belowSubview: contentView)
-        sheetExtraBottomView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            sheetExtraBottomView.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50),
-            sheetExtraBottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            sheetExtraBottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            sheetExtraBottomView.heightAnchor.constraint(equalToConstant: 100),
-        ])
+        Self.addBottomExtensionView(toView: contentView)
 
         let panGestureRecognizer = UIPanGestureRecognizer(
             target: self,
@@ -135,7 +119,6 @@ class SheetViewController: UIViewController {
                 initialFrame.origin.y += contentViewFrame.height
                 let finalFrame = contentViewFrame
 
-                self.sheetExtraBottomView.isHidden = true
                 contentView.frame = initialFrame
                 UIView.animate(
                     withDuration: sheetAnimationDuration,
@@ -144,9 +127,7 @@ class SheetViewController: UIViewController {
                     animations: {
                         self.contentView.frame = finalFrame
                     },
-                    completion: { _ in
-                        self.sheetExtraBottomView.isHidden = false
-                    }
+                    completion: { _ in }
                 )
             }
         }
@@ -283,12 +264,14 @@ class SheetViewController: UIViewController {
         //    properly follow the finger until the distance of
         //    safeAreaInset.bottom is traveled
         let contentViewSnapshot = contentView.snapshotView(afterScreenUpdates: false)
+        contentViewSnapshot?.clipsToBounds = false
         contentViewSnapshot?.frame = contentView.frame
         if let contentViewSnapshot = contentViewSnapshot {
             // the `superview` should always be the UIViewController
             // `view` but we just do it here in case that is not true
             contentView.superview?.addSubview(contentViewSnapshot)
             contentView.isHidden = true
+            Self.addBottomExtensionView(toView: contentViewSnapshot)
         }
         self.contentViewSnapshot = contentViewSnapshot
     }
@@ -312,6 +295,26 @@ class SheetViewController: UIViewController {
 
     @objc private func didTapDarkArea() {
         dismiss(animated: true)
+    }
+
+    // Adds extra padding at the bottom of the sheet so
+    // there is no blank space - instead, it looks like a
+    // continous sheet
+    private static func addBottomExtensionView(toView view: UIView) {
+        view.clipsToBounds = false
+        let extensionBottomView = UIView()
+        extensionBottomView.backgroundColor = .customBackgroundColor
+        view.insertSubview(extensionBottomView, at: 0)
+        extensionBottomView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            extensionBottomView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Self.cornerRadius),
+            extensionBottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            extensionBottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            // the value is estimated...ideally it should cover corner radius,
+            // bottom safe area insets, and some extra to account for "pulling"
+            // the sheet up beyond the size of it on screen
+            extensionBottomView.heightAnchor.constraint(equalToConstant: Self.cornerRadius + 100),
+        ])
     }
 
     // MARK: - Presenting
@@ -455,21 +458,37 @@ private class SheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransit
                 }() as CGFloat
 
                 // rotate if iPad rotates
+                containerView.addSubview(sheetContainerView)
                 sheetContainerView.autoresizingMask = [
                     .flexibleLeftMargin,
                     .flexibleTopMargin,
                     .flexibleRightMargin,
                     .flexibleBottomMargin,
                 ]
-                containerView.addSubview(sheetContainerView)
 
-                sheetContainerView.addAndPinSubview(backgroundDimmingView)
-                sheetContainerView.addAndPinSubview(toViewController.view)
+                // WARNING: Do not use autolayout because it
+                //          breaks the custom presentation
+                //          when other VC is presented on top
+                sheetContainerView.addSubview(backgroundDimmingView)
+                backgroundDimmingView.frame = sheetContainerView.bounds
+                backgroundDimmingView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+                sheetContainerView.addSubview(toViewController.view)
+                toViewController.view.frame = sheetContainerView.bounds
+                toViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             }
             // iPhone
             else {
-                containerView.addAndPinSubview(backgroundDimmingView)
-                containerView.addAndPinSubview(toViewController.view)
+                // WARNING: Do not use autolayout because it
+                //          breaks the custom presentation
+                //          when other VC is presented on top
+                containerView.addSubview(backgroundDimmingView)
+                backgroundDimmingView.frame = containerView.bounds
+                backgroundDimmingView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+                containerView.addSubview(toViewController.view)
+                toViewController.view.frame = containerView.bounds
+                toViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             }
 
             backgroundDimmingView.alpha = 0.0
