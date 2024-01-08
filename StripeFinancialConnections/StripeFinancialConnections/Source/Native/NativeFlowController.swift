@@ -95,13 +95,12 @@ class NativeFlowController {
             self?.closeAuthFlow()
         }
         if showConfirmationAlert {
-            CloseConfirmationAlertHandler.present(
-                businessName: dataManager.manifest.businessName,
-                showNetworkingLanguageInConfirmationAlert: (dataManager.manifest.isNetworkingUserFlow == true && navigationController.topViewController is NetworkingLinkSignupViewController),
-                didSelectOK: {
+            let closeConfirmationViewController = CloseConfirmationViewController(
+                didSelectClose: {
                     finishClosingAuthFlow()
                 }
             )
+            closeConfirmationViewController.present(on: navigationController)
         } else {
             finishClosingAuthFlow()
         }
