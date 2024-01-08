@@ -42,10 +42,20 @@ final class PaneLayoutView {
     }
 
     func addTo(view: UIView) {
-        // this function encapsulates an error-prone sequence where we
+        // This function encapsulates an error-prone sequence where we
         // must add `paneLayoutView` (and all it's subviews) to the `view`
         // BEFORE we can add a constraint for `UIScrollView` content
         view.addAndPinSubviewToSafeArea(paneLayoutView)
         scrollViewContentView?.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+
+        // Fit the scroll view height to be the size of the
+        // scroll view contents
+        //
+        // For exampple, this is needed for `SheetViewController`
+        // to automatically re-size the sheet to the size of contents
+        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(
+            equalTo: scrollView.contentLayoutGuide.heightAnchor)
+        scrollViewHeightConstraint.priority = .fittingSizeLevel
+        scrollViewHeightConstraint.isActive = true
     }
 }
