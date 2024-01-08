@@ -168,6 +168,19 @@ extension ConsumerSession {
             completion: completion)
     }
 
+    func sharePaymentDetails(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        id: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
+    ) {
+        apiClient.sharePaymentDetails(
+            for: clientSecret,
+            id: id,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
+    }
+
     func deletePaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,

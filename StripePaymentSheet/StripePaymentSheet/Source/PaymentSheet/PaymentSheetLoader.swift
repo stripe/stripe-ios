@@ -110,7 +110,7 @@ final class PaymentSheetLoader {
 
     static func lookupLinkAccount(intent: Intent, configuration: PaymentSheet.Configuration) async throws -> PaymentSheetLinkAccount? {
         // Only lookup the consumer account if Link is supported
-        guard intent.supportsLink else {
+        guard intent.supportsLink(allowV2Features: configuration.allowLinkV2Features) else {
             return nil
         }
 
@@ -145,7 +145,7 @@ final class PaymentSheetLoader {
     }
 
     static func isLinkEnabled(intent: Intent, configuration: PaymentSheet.Configuration) -> Bool {
-        guard intent.supportsLink else {
+        guard intent.supportsLink(allowV2Features: configuration.allowLinkV2Features) else {
             return false
         }
         return !configuration.isUsingBillingAddressCollection()

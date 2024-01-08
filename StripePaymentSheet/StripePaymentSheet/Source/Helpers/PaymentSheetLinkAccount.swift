@@ -227,6 +227,26 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
+    func sharePaymentDetails(id: String, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
+        guard let session = currentSession else {
+            assertionFailure()
+            return completion(
+                .failure(
+                    PaymentSheetError.savingWithoutValidLinkSession
+                )
+            )
+        }
+
+        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+            session.sharePaymentDetails(
+                with: apiClient,
+                id: id,
+                consumerAccountPublishableKey: publishableKey,
+                completion: completionWrapper
+            )
+        }
+    }
+
     func deletePaymentDetails(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let session = currentSession else {
             assertionFailure()

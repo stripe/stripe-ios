@@ -99,7 +99,7 @@ class PaymentSheetFormFactory {
                   offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
                   linkAccount: linkAccount,
                   cardBrandChoiceEligible: cardBrandChoiceEligible,
-                  supportsLinkCard: intent.supportsLinkCard,
+                  supportsLinkCard: intent.supportsLinkCard(allowV2Features: configuration.allowLinkV2Features),
                   isPaymentIntent: intent.isPaymentIntent,
                   currency: intent.currency,
                   amount: intent.amount,

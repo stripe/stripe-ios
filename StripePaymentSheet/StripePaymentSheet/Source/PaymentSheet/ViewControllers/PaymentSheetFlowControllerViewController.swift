@@ -268,7 +268,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(
             isCustom: true,
             paymentMethod: mode.analyticsValue,
-            linkEnabled: intent.supportsLink,
+            linkEnabled: intent.supportsLink(allowV2Features: configuration.allowLinkV2Features),
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
             currency: intent.currency,
             intentConfig: intent.intentConfig

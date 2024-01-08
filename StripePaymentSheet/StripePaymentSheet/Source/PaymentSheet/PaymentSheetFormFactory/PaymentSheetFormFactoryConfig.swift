@@ -35,6 +35,14 @@ enum PaymentSheetFormFactoryConfig {
             return false
         }
     }
+    var allowLinkV2Features: Bool {
+        switch self {
+        case .paymentSheet(let config):
+            return config.allowLinkV2Features
+        case .customerSheet:
+            return false
+        }
+    }
     var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
         switch self {
         case .paymentSheet(let config):

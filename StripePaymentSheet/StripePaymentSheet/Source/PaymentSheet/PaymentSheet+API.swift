@@ -369,7 +369,22 @@ extension PaymentSheet {
                     linkAccount.createPaymentDetails(with: paymentMethodParams) { result in
                         switch result {
                         case .success(let paymentDetails):
-                            confirmWithPaymentDetails(linkAccount, paymentDetails)
+                            if intent.linkPassthroughModeEnabled {
+                                // If passthrough mode, share payment details
+                                linkAccount.sharePaymentDetails(id: paymentDetails.stripeID) { result in
+                                    switch result {
+                                    case .success(let shareResponse):
+                                        confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod))
+                                    case .failure(let error):
+                                        assertionFailure("Failed to share payment details \(error)")
+                                        // If this fails, confirm directly
+                                        confirmWithPaymentMethodParams(paymentMethodParams)
+                                    }
+                                }
+                            } else {
+                                // If not passthrough mode, confirm details directly
+                                confirmWithPaymentDetails(linkAccount, paymentDetails)
+                            }
                         case .failure:
                             assertionFailure("Failed to create payment details")
                             // Attempt to confirm directly with params
