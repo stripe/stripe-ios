@@ -21,7 +21,7 @@ enum PaymentSheetUI {
 #else
     static let navBarPadding = defaultPadding
 #endif
-    
+
     static let defaultMargins: NSDirectionalEdgeInsets = .insets(
         leading: defaultPadding, trailing: defaultPadding)
     static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
