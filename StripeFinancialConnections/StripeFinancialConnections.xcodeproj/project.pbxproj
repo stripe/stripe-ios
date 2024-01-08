@@ -89,6 +89,9 @@
 		6A1D43052B17AD76005A1EB0 /* InstitutionTableFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43042B17AD76005A1EB0 /* InstitutionTableFooterView.swift */; };
 		6A1D43072B17AE37005A1EB0 /* RoundedIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43062B17AE37005A1EB0 /* RoundedIconView.swift */; };
 		6A1D43092B17CB04005A1EB0 /* InstitutionNoResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43082B17CB04005A1EB0 /* InstitutionNoResultsView.swift */; };
+		6A78140D2B30F15400168992 /* SheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78140C2B30F15400168992 /* SheetViewController.swift */; };
+		6A7814112B32462100168992 /* CloseConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814102B32462100168992 /* CloseConfirmationViewController.swift */; };
+		6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814172B361C5000168992 /* PaneLayoutView+Extensions.swift */; };
 		6BC6DB482984F9288944FE25 /* NetworkingSaveToLinkVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D3CAB53EC9D33831C5A48B /* NetworkingSaveToLinkVerificationViewController.swift */; };
 		6D018BB3C1253ED4C1674E0B /* ManualEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C03F4DDC67B50C5E1993F6 /* ManualEntryFormView.swift */; };
 		6D29E55F6A3864ED52799169 /* InstitutionPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3BF292FD82A198752A82EB /* InstitutionPickerViewController.swift */; };
@@ -118,7 +121,6 @@
 		8A424D8F321E80945AD42B1A /* ReusableInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1C8781095363382A0F7BE5 /* ReusableInformationView.swift */; };
 		8C985491C17431278097D0FF /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2710EA52082B4A983294567 /* Placeholder.swift */; };
 		8DC6C2A239456994091BF3EE /* NetworkingLinkSignupFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A74B9F667A3BF48253045E /* NetworkingLinkSignupFooterView.swift */; };
-		8EDCAA40D5ACE4D4CCC67695 /* CloseConfirmationAlertHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4BBD3A262039B34C2DDCCB /* CloseConfirmationAlertHandler.swift */; };
 		91A3583A0BDE0F8F0C4AD3E2 /* InstitutionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939D10B20D3ECA7BF7021BF8 /* InstitutionIconView.swift */; };
 		933F9DFE970FAB4715369086 /* HostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C4ECB724BD75320A999C42 /* HostController.swift */; };
 		95B2A73AC5DA9FA64017B3CB /* NetworkingLinkSignupBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40ECB2B008FC082B4D38D2FE /* NetworkingLinkSignupBodyView.swift */; };
@@ -284,7 +286,7 @@
 		1E80DD2D042B327D9756E083 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1F2C7AE6509C80B6F30662AA /* FinancialConnectionsCustomManualEntryRequiredError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsCustomManualEntryRequiredError.swift; sourceTree = "<group>"; };
 		1F9D6F0CC79B7949D037DE66 /* NetworkingLinkStepUpVerificationBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkStepUpVerificationBodyView.swift; sourceTree = "<group>"; };
-		1FD362DF2D937D22E803C1DD /* PaneWithHeaderLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaneWithHeaderLayoutView.swift; sourceTree = "<group>"; };
+		1FD362DF2D937D22E803C1DD /* PaneWithHeaderLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PaneWithHeaderLayoutView.swift; path = ../PaneWithHeaderLayoutView.swift; sourceTree = "<group>"; };
 		20E7725EF317C3BD62ADF845 /* FinancialConnectionsSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSheetTests.swift; sourceTree = "<group>"; };
 		2323E76B1B9C295DC5EAD53E /* AccountPickerLabelRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerLabelRowView.swift; sourceTree = "<group>"; };
 		24701CABF53C21DD7BCF3E48 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -292,7 +294,7 @@
 		24D4A72B4CCA677F45C29A5C /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		252DA1FE0574822605438AB4 /* NetworkingLinkLoginWarmupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkLoginWarmupViewController.swift; sourceTree = "<group>"; };
 		25BDE722D8A827955C3182E8 /* PartnerAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerAuthViewController.swift; sourceTree = "<group>"; };
-		263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaneWithCustomHeaderLayoutView.swift; sourceTree = "<group>"; };
+		263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PaneWithCustomHeaderLayoutView.swift; path = ../PaneWithCustomHeaderLayoutView.swift; sourceTree = "<group>"; };
 		267B3586136203186882F5CE /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
 		283469CD0298E3AFCFDAF10F /* AccountPickerSelectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerSelectionListView.swift; sourceTree = "<group>"; };
 		2BE553B86F5AC8B7D6190A04 /* NetworkingSaveToLinkBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingSaveToLinkBodyView.swift; sourceTree = "<group>"; };
@@ -304,7 +306,7 @@
 		31AD3BE82B0C2F000080C800 /* ScreenNativeScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenNativeScale.swift; sourceTree = "<group>"; };
 		32ED8A7E94822F14AD94A698 /* FinancialConnectionsDataAccessNotice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsDataAccessNotice.swift; sourceTree = "<group>"; };
 		33B1E2861FA7CA86FF79236C /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
-		34452D5FDC1ED566A13427FE /* PaneLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaneLayoutView.swift; sourceTree = "<group>"; };
+		34452D5FDC1ED566A13427FE /* PaneLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PaneLayoutView.swift; path = StripeFinancialConnections/Source/Native/Shared/PaneLayoutView.swift; sourceTree = SOURCE_ROOT; };
 		35882B0B77DB22CEEDDA8C3C /* ManualEntrySuccessTransactionTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntrySuccessTransactionTableView.swift; sourceTree = "<group>"; };
 		359BF8ACFB35A16EBD96C4F0 /* FinancialConnectionsAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAccount.swift; sourceTree = "<group>"; };
 		3979E84D319D3ED1C3273D74 /* FinancialConnectionsNetworkedAccountsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsNetworkedAccountsResponse.swift; sourceTree = "<group>"; };
@@ -364,6 +366,9 @@
 		6A1D43062B17AE37005A1EB0 /* RoundedIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedIconView.swift; sourceTree = "<group>"; };
 		6A1D43082B17CB04005A1EB0 /* InstitutionNoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionNoResultsView.swift; sourceTree = "<group>"; };
 		6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "generic_error@3x.png"; sourceTree = "<group>"; };
+		6A78140C2B30F15400168992 /* SheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetViewController.swift; sourceTree = "<group>"; };
+		6A7814102B32462100168992 /* CloseConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseConfirmationViewController.swift; sourceTree = "<group>"; };
+		6A7814172B361C5000168992 /* PaneLayoutView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaneLayoutView+Extensions.swift"; sourceTree = "<group>"; };
 		6B70A0C4DBFE46805549CF8B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6C81D547F6BAD96C62E1E4D3 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6CDEF702710EEA29BA3DC653 /* NetworkingLinkSignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkSignupViewController.swift; sourceTree = "<group>"; };
@@ -508,7 +513,6 @@
 		F9A847D2AAA7271F507DC9F3 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA62F9B77C6A1D1B12F02CF5 /* AttachLinkedPaymentAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachLinkedPaymentAccountViewController.swift; sourceTree = "<group>"; };
-		FB4BBD3A262039B34C2DDCCB /* CloseConfirmationAlertHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseConfirmationAlertHandler.swift; sourceTree = "<group>"; };
 		FBC23DAC91962D0D8A713D37 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		FD137B9465B0DB96AED0AC98 /* NetworkingSaveToLinkFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingSaveToLinkFooterView.swift; sourceTree = "<group>"; };
 		FF54EDA6123C7E4E78D9D56B /* APIPollingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIPollingHelper.swift; sourceTree = "<group>"; };
@@ -774,6 +778,17 @@
 			path = LinkAccountPicker;
 			sourceTree = "<group>";
 		};
+		6A7814162B361C1900168992 /* PaneLayoutView */ = {
+			isa = PBXGroup;
+			children = (
+				34452D5FDC1ED566A13427FE /* PaneLayoutView.swift */,
+				6A7814172B361C5000168992 /* PaneLayoutView+Extensions.swift */,
+				263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */,
+				1FD362DF2D937D22E803C1DD /* PaneWithHeaderLayoutView.swift */,
+			);
+			path = PaneLayoutView;
+			sourceTree = "<group>";
+		};
 		7879CBA341D7E807714A831B = {
 			isa = PBXGroup;
 			children = (
@@ -959,6 +974,7 @@
 		C0C2FC181FFA71CFAA6F3148 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				6A7814162B361C1900168992 /* PaneLayoutView */,
 				7E5623CA300ADBCBE8B33E69 /* NetworkingOTPView */,
 				BD2284A0556400DEAEB279BE /* AlwaysTemplateImageView.swift */,
 				EE64D5A17913CF4AAD855A9A /* AttributedLabel.swift */,
@@ -966,20 +982,18 @@
 				A9B31B3A45DD8AAFD6F08820 /* AuthFlowHelpers.swift */,
 				591E8073D2AD30115ABDB60F /* BulletPointLabelView.swift */,
 				4E4A84F0646AD673029CB6FC /* Button+Extensions.swift */,
-				FB4BBD3A262039B34C2DDCCB /* CloseConfirmationAlertHandler.swift */,
 				1A80CA4A87A90D2E19262220 /* ConsentBottomSheetModel.swift */,
 				8199AF9CE999D21ED5871D96 /* ConsentBottomSheetView.swift */,
 				9E337C061E4152E7814FC21E /* ConsentBottomSheetViewController.swift */,
+				6A7814102B32462100168992 /* CloseConfirmationViewController.swift */,
 				A00D518C15FF3FAED7C193C2 /* HitTestStackView.swift */,
 				F669BB8F3DA862C425897705 /* HitTestView.swift */,
 				939D10B20D3ECA7BF7021BF8 /* InstitutionIconView.swift */,
 				6A1D43062B17AE37005A1EB0 /* RoundedIconView.swift */,
 				13A97EEE12DA8FB77D13C527 /* MerchantDataAccessView.swift */,
-				34452D5FDC1ED566A13427FE /* PaneLayoutView.swift */,
-				263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */,
-				1FD362DF2D937D22E803C1DD /* PaneWithHeaderLayoutView.swift */,
 				6F1C8781095363382A0F7BE5 /* ReusableInformationView.swift */,
 				1D38B3C816EAB38AD242B064 /* SFSafariViewController+Extensions.swift */,
+				6A78140C2B30F15400168992 /* SheetViewController.swift */,
 				723996D53965EC2286267A01 /* SpinnerIconView.swift */,
 				7455C145AEAE3D5F87532187 /* SuccessIconView.swift */,
 				E813BE6B34901E4E050FFE13 /* TimeInterval+Extensions.swift */,
@@ -1328,6 +1342,7 @@
 				2343C58289259920DD81620D /* ManualEntryErrorView.swift in Sources */,
 				A1AEE72611F62550267C326C /* ManualEntryFooterView.swift in Sources */,
 				6D018BB3C1253ED4C1674E0B /* ManualEntryFormView.swift in Sources */,
+				6A78140D2B30F15400168992 /* SheetViewController.swift in Sources */,
 				1C5D953684456368EEF4C622 /* ManualEntryTextField.swift in Sources */,
 				07A86CEB6B4F6BEB524EFE37 /* ManualEntryValidator.swift in Sources */,
 				19D1548A5A4034D349DB0947 /* ManualEntryViewController.swift in Sources */,
@@ -1370,7 +1385,6 @@
 				9AF6EC34D666BEB3C1397092 /* BulletPointLabelView.swift in Sources */,
 				313F5F7F2B0BE5D100BD98A9 /* Docs.docc in Sources */,
 				F65E8D16DE691EB6C99C4521 /* Button+Extensions.swift in Sources */,
-				8EDCAA40D5ACE4D4CCC67695 /* CloseConfirmationAlertHandler.swift in Sources */,
 				4CEE364A07B91B51B3D00F05 /* ConsentBottomSheetModel.swift in Sources */,
 				EDB22A11E058269784090A51 /* ConsentBottomSheetView.swift in Sources */,
 				69508BFAF474855B05347CE4 /* ConsentBottomSheetViewController.swift in Sources */,
@@ -1381,6 +1395,7 @@
 				0375F8C6D79947C992C32362 /* NetworkingOTPDataSource.swift in Sources */,
 				40FF444E6CF20E9DA7D90448 /* NetworkingOTPView.swift in Sources */,
 				444884F264D13FF654EA7471 /* PaneLayoutView.swift in Sources */,
+				6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */,
 				B8F440921DB172F96F912CD0 /* PaneWithCustomHeaderLayoutView.swift in Sources */,
 				A6DB232AD8CB25B0C9F4C79C /* PaneWithHeaderLayoutView.swift in Sources */,
 				8A424D8F321E80945AD42B1A /* ReusableInformationView.swift in Sources */,
@@ -1405,6 +1420,7 @@
 				B5EEF34D158C08A1745FA150 /* ContinueStateView.swift in Sources */,
 				2D14461B27B3DEE2CC19B090 /* FinancialConnectionsAccountFetcher.swift in Sources */,
 				82FD3CEE526DE8B6519F666E /* FinancialConnectionsSessionFetcher.swift in Sources */,
+				6A7814112B32462100168992 /* CloseConfirmationViewController.swift in Sources */,
 				AB7C9A26484953762FFBB4A5 /* FinancialConnectionsWebFlowViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

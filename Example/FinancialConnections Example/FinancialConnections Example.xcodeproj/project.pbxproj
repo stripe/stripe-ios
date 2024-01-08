@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -409,6 +409,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 701003016E153D5DF2B00442 /* FinancialConnections-Example-Debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "FinancialConnections Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.example.Connections-Example";
 				PRODUCT_NAME = FinancialConnectionsExample;
@@ -439,6 +440,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B50C88219DC0F3F0BFC5CE4 /* FinancialConnections-Example-Release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "FinancialConnections Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.example.Connections-Example";
 				PRODUCT_NAME = FinancialConnectionsExample;
