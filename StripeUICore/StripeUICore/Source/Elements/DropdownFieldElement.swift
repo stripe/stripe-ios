@@ -78,7 +78,7 @@ import UIKit
 
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
-#if targetEnvironment(macCatalyst)
+#if targetEnvironment(macCatalyst) || canImport(CompositorServices)
     private(set) lazy var pickerView: UIButton = {
         let button = UIButton()
         let action = { (action: UIAction) -> Void in
@@ -197,7 +197,7 @@ import UIKit
 private extension DropdownFieldElement {
 
     func updatePickerField() {
-        #if targetEnvironment(macCatalyst)
+        #if targetEnvironment(macCatalyst) || canImport(CompositorServices)
         if #available(macCatalyst 14.0, *) {
             // Mark the enabled menu item as selected
             pickerView.menu?.children.forEach { ($0 as? UIAction)?.state = .off }

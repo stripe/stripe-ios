@@ -79,7 +79,9 @@ class SheetNavigationBar: UIView {
         testModeView.isHidden = !isTestMode
         self.appearance = appearance
         super.init(frame: .zero)
+        #if !canImport(CompositorServices)
         backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
+        #endif
         [leftItemsStackView, closeButtonRight, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
@@ -87,17 +89,17 @@ class SheetNavigationBar: UIView {
 
         NSLayoutConstraint.activate([
             leftItemsStackView.leadingAnchor.constraint(
-                equalTo: leadingAnchor, constant: PaymentSheetUI.defaultPadding),
+                equalTo: leadingAnchor, constant: PaymentSheetUI.navBarPadding),
             leftItemsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             leftItemsStackView.trailingAnchor.constraint(lessThanOrEqualTo: closeButtonRight.leadingAnchor),
             leftItemsStackView.trailingAnchor.constraint(lessThanOrEqualTo: additionalButton.leadingAnchor),
 
             additionalButton.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
+                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
             additionalButton.centerYAnchor.constraint(equalTo: centerYAnchor),
 
             closeButtonRight.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
+                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
             closeButtonRight.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
