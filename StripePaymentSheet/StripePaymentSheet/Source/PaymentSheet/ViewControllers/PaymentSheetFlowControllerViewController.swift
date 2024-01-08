@@ -70,6 +70,19 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         navBar.delegate = self
         return navBar
     }()
+    /// Returns true if Apple Pay is not enabled and Link is enabled and there are no saved payment methods
+    private var linkOnlyMode: Bool {
+        return !isApplePayEnabled && isLinkEnabled && !savedPaymentOptionsViewController.hasOptionsExcludingLink
+    }
+    // Only show the wallet header when Link is the only available PM
+    private var shouldShowWalletHeader: Bool {
+        switch mode {
+        case .addingNew:
+            return linkOnlyMode
+        case .selectingSaved:
+            return false
+        }
+    }
     private(set) var error: Error?
     private(set) var isDismissable: Bool = true
 
@@ -109,6 +122,23 @@ class PaymentSheetFlowControllerViewController: UIViewController {
 
     private lazy var bottomNoticeTextField: UITextView = {
         return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
+    }()
+
+    private typealias WalletHeaderView = PaymentSheetViewController.WalletHeaderView
+    private lazy var walletHeader: WalletHeaderView = {
+        var walletOptions: WalletHeaderView.WalletOptions = []
+
+        if linkOnlyMode {
+            walletOptions.insert(.link)
+        }
+
+        let header = WalletHeaderView(
+            options: walletOptions,
+            appearance: configuration.appearance,
+            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
+            delegate: self
+        )
+        return header
     }()
 
     // MARK: - Init
@@ -194,6 +224,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
             headerLabel,
+            walletHeader,
             paymentContainerView,
             errorLabel,
             confirmButton,
@@ -223,6 +254,11 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             stackView.bottomAnchor.constraint(
                 equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
+
+        // Automatically switch into the adding new mode when Link is the only available payment method
+        if linkOnlyMode {
+            mode = .addingNew
+        }
 
         updateUI()
     }
@@ -280,6 +316,11 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         isDismissable = !isSavingInProgress && !isVerificationInProgress
 
         configureNavBar()
+
+        // Content header
+        walletHeader.isHidden = !shouldShowWalletHeader
+        walletHeader.showsCardPaymentMessage = (addPaymentMethodViewController.paymentMethodTypes == [.stripe(.card)])
+        headerLabel.isHidden = shouldShowWalletHeader
 
         switch mode {
         case .selectingSaved:
@@ -549,7 +590,7 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
     }
 
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard isLinkEnabled else {
+        guard isLinkEnabled, !linkOnlyMode else {
             return false
         }
 
@@ -584,5 +625,18 @@ extension PaymentSheetFlowControllerViewController: SheetNavigationBarDelegate {
 extension PaymentSheet.PaymentMethodType {
     var requiresMandateDisplayForSavedSelection: Bool {
         return self == .stripe(.USBankAccount) || self == .stripe(.SEPADebit)
+    }
+}
+
+extension PaymentSheetFlowControllerViewController: WalletHeaderViewDelegate {
+    func walletHeaderViewApplePayButtonTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
+        // no-op
+    }
+
+    func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
+        // Link should be the selected payment option as the Link header button is only available in `linkOnlyMode`
+        mode = .selectingSaved
+        didDismiss(didCancel: false)
+        updateUI()
     }
 }

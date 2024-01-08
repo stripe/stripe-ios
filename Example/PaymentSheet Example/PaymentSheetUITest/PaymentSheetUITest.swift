@@ -2142,6 +2142,38 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
+
+    func testLinkOnlyFlowController() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.linkEnabled = .on
+
+        loadPlayground(app, settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        app.buttons["pay_with_link_button"].waitForExistenceAndTap()
+
+        let expectation = XCTestExpectation(description: "Link sign in dialog")
+        // Listen for the system login dialog
+        addUIInterruptionMonitor(withDescription: "Link sign in system dialog") { alert in
+            // Cancel the payment
+            alert.buttons["Cancel"].waitForExistenceAndTap()
+            expectation.fulfill()
+            return true
+        }
+
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        app.tap() // required to trigger the UI interruption monitor
+        wait(for: [expectation], timeout: 5.0)
+
+        XCTAssertTrue(app.staticTexts["Payment canceled."].waitForExistence(timeout: 5))
+
+        // Re-tapping the payment method button should present the saved payment view
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Select your payment method"].waitForExistence(timeout: 5))
+    }
+
     /* Disable Link test
      func testDeferredIntentLinkSignIn_SeverSideConfirmation() throws {
      loadPlayground(
