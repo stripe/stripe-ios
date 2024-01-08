@@ -87,6 +87,7 @@ extension PaneLayoutView {
         contentView: UIView?
     ) -> UIView {
         let paddingStackView = HitTestStackView()
+        paddingStackView.axis = .vertical
         paddingStackView.spacing = 16
         paddingStackView.isLayoutMarginsRelativeArrangement = true
         paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
@@ -122,7 +123,9 @@ extension PaneLayoutView {
     @available(iOSApplicationExtension, unavailable)
     static func createFooterView(
         primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?,
-        secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
+        secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?,
+        topText: String? = nil,
+        didSelectURL: ((URL) -> Void)? = nil
     ) -> UIView? {
         guard
             primaryButtonConfiguration != nil || secondaryButtonConfiguration != nil
@@ -135,6 +138,23 @@ extension PaneLayoutView {
         )
         footerStackView.axis = .vertical
         footerStackView.spacing = 8
+
+        if let topText = topText {
+            let topTextLabel = AttributedTextView(
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
+                linkFont: .label(.small),
+                textColor: .textDefault,
+                alignCenter: true
+            )
+            topTextLabel.setText(
+                topText,
+                action: didSelectURL ?? { _ in }
+            )
+            footerStackView.addArrangedSubview(topTextLabel)
+            footerStackView.setCustomSpacing(16, after: topTextLabel)
+        }
+
         if let primaryButtonConfiguration = primaryButtonConfiguration {
             let primaryButton = Button(configuration: FinancialConnectionsPrimaryButtonConfiguration())
             primaryButton.title = primaryButtonConfiguration.title
@@ -149,6 +169,7 @@ extension PaneLayoutView {
             ])
             footerStackView.addArrangedSubview(primaryButton)
         }
+
         if let secondaryButtonConfiguration = secondaryButtonConfiguration {
             let secondaryButton = Button(configuration: FinancialConnectionsSecondaryButtonConfiguration())
             secondaryButton.title = secondaryButtonConfiguration.title
