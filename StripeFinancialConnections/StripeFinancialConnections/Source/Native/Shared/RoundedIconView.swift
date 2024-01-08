@@ -11,12 +11,17 @@ import UIKit
 
 final class RoundedIconView: UIView {
 
+    enum ImageType {
+        case image(Image)
+        case imageUrl(String?)
+    }
+
     enum Style {
         case rounded
         case circle
     }
 
-    init(image: Image, style: Style) {
+    init(image: ImageType, style: Style) {
         super.init(frame: .zero)
         let diameter: CGFloat = 56
         let cornerRadius: CGFloat
@@ -37,8 +42,16 @@ final class RoundedIconView: UIView {
         ])
 
         let iconImageView = UIImageView()
-        iconImageView.image = image.makeImage()
-            .withTintColor(.iconActionPrimary)
+        switch image {
+        case .image(let image):
+            iconImageView.image = image.makeImage()
+                .withTintColor(.iconActionPrimary)
+        case .imageUrl(let imageUrl):
+            iconImageView.setImage(
+                with: imageUrl,
+                placeholder: nil
+            )
+        }
         addSubview(iconImageView)
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -65,7 +78,7 @@ private struct RoundedIconViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> RoundedIconView {
         RoundedIconView(
-            image: image,
+            image: .image(image),
             style: style
         )
     }
