@@ -71,7 +71,6 @@
 		4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */; };
 		4A537AE0C50CAFF3889EFE28 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */; };
 		4AADAA347EF70ECB8BE28E84 /* SuccessIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7455C145AEAE3D5F87532187 /* SuccessIconView.swift */; };
-		4CEE364A07B91B51B3D00F05 /* ConsentBottomSheetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A80CA4A87A90D2E19262220 /* ConsentBottomSheetModel.swift */; };
 		4DC8EB63806434ABF4C9CC43 /* add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782A419DCF59BE6AB6439D04 /* add@3x.png */; };
 		54B51EA1F75B9607D7C29B08 /* NetworkingLinkSignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDEF702710EEA29BA3DC653 /* NetworkingLinkSignupViewController.swift */; };
 		5F3C86F23B65CAC56FDDEC90 /* NetworkingLinkSignupBodyFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041EFAE37D8F7E96DD4A4435 /* NetworkingLinkSignupBodyFormView.swift */; };
@@ -82,7 +81,6 @@
 		685CBD26771250C40E60F7A0 /* NetworkingSaveToLinkBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE553B86F5AC8B7D6190A04 /* NetworkingSaveToLinkBodyView.swift */; };
 		691619AE9A989548ABA36535 /* HitTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669BB8F3DA862C425897705 /* HitTestView.swift */; };
 		6944E131D351784058C7D734 /* FinancialConnectionsPaymentMethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191760EFAA9154C1F168E1D2 /* FinancialConnectionsPaymentMethodType.swift */; };
-		69508BFAF474855B05347CE4 /* ConsentBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E337C061E4152E7814FC21E /* ConsentBottomSheetViewController.swift */; };
 		6A1D42FF2B1686FC005A1EB0 /* InstitutionTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D42FE2B1686FC005A1EB0 /* InstitutionTableView.swift */; };
 		6A1D43012B1687AB005A1EB0 /* InstitutionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43002B1687AB005A1EB0 /* InstitutionTableViewCell.swift */; };
 		6A1D43032B16B3DC005A1EB0 /* InstitutionCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43022B16B3DC005A1EB0 /* InstitutionCellView.swift */; };
@@ -92,6 +90,8 @@
 		6A78140D2B30F15400168992 /* SheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78140C2B30F15400168992 /* SheetViewController.swift */; };
 		6A7814112B32462100168992 /* CloseConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814102B32462100168992 /* CloseConfirmationViewController.swift */; };
 		6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814172B361C5000168992 /* PaneLayoutView+Extensions.swift */; };
+		6A78141A2B45D53700168992 /* DataAccessNoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814192B45D53700168992 /* DataAccessNoticeViewController.swift */; };
+		6A78141C2B462D5D00168992 /* LegalDetailsNoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78141B2B462D5D00168992 /* LegalDetailsNoticeViewController.swift */; };
 		6BC6DB482984F9288944FE25 /* NetworkingSaveToLinkVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D3CAB53EC9D33831C5A48B /* NetworkingSaveToLinkVerificationViewController.swift */; };
 		6D018BB3C1253ED4C1674E0B /* ManualEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C03F4DDC67B50C5E1993F6 /* ManualEntryFormView.swift */; };
 		6D29E55F6A3864ED52799169 /* InstitutionPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3BF292FD82A198752A82EB /* InstitutionPickerViewController.swift */; };
@@ -205,7 +205,6 @@
 		EABA08E892B087D89C97AE4F /* FinancialConnectionsEvent+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B23D2BD3CD4071A40D9AE9 /* FinancialConnectionsEvent+Extensions.swift */; };
 		EC74B719F0FA1A977EF4708C /* FinancialConnectionsAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359BF8ACFB35A16EBD96C4F0 /* FinancialConnectionsAccount.swift */; };
 		ED818E10F37230678B9B73CC /* SoftLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A06A97D714450321A5D76D /* SoftLinkTests.swift */; };
-		EDB22A11E058269784090A51 /* ConsentBottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8199AF9CE999D21ED5871D96 /* ConsentBottomSheetView.swift */; };
 		F0397F4E1D6A91416897F45E /* brandicon_default@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7413C9D80DF7190CA6FB82EE /* brandicon_default@3x.png */; };
 		F03F840B9E896F1B09742191 /* PartnerAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BDE722D8A827955C3182E8 /* PartnerAuthViewController.swift */; };
 		F0495231F4C70E054149C03A /* LinkAccountPickerNewAccountRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF070262170A321F5622CCF /* LinkAccountPickerNewAccountRowView.swift */; };
@@ -275,7 +274,6 @@
 		14CED33665ED3D8EE8D5D7B7 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
 		1848547B588045C776236B3B /* LinkAccountPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountPickerViewController.swift; sourceTree = "<group>"; };
 		191760EFAA9154C1F168E1D2 /* FinancialConnectionsPaymentMethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPaymentMethodType.swift; sourceTree = "<group>"; };
-		1A80CA4A87A90D2E19262220 /* ConsentBottomSheetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentBottomSheetModel.swift; sourceTree = "<group>"; };
 		1AD7571981F0FE2F10F68530 /* prepane_phone_background@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "prepane_phone_background@3x.png"; sourceTree = "<group>"; };
 		1CD19E0601599AE89976DB4D /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		1CE32B7E492EFD8143F687F2 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -369,6 +367,8 @@
 		6A78140C2B30F15400168992 /* SheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetViewController.swift; sourceTree = "<group>"; };
 		6A7814102B32462100168992 /* CloseConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseConfirmationViewController.swift; sourceTree = "<group>"; };
 		6A7814172B361C5000168992 /* PaneLayoutView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaneLayoutView+Extensions.swift"; sourceTree = "<group>"; };
+		6A7814192B45D53700168992 /* DataAccessNoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAccessNoticeViewController.swift; sourceTree = "<group>"; };
+		6A78141B2B462D5D00168992 /* LegalDetailsNoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalDetailsNoticeViewController.swift; sourceTree = "<group>"; };
 		6B70A0C4DBFE46805549CF8B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6C81D547F6BAD96C62E1E4D3 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6CDEF702710EEA29BA3DC653 /* NetworkingLinkSignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkSignupViewController.swift; sourceTree = "<group>"; };
@@ -398,7 +398,6 @@
 		7C402C24A15DC6167E2C593F /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7F3A660CB2E9651947FE6D0A /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		81304AD5BE5CCA10D1A866E0 /* ConsentDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentDataSource.swift; sourceTree = "<group>"; };
-		8199AF9CE999D21ED5871D96 /* ConsentBottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentBottomSheetView.swift; sourceTree = "<group>"; };
 		8301F7BA1FF90D131AE96E10 /* ManualEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryViewController.swift; sourceTree = "<group>"; };
 		83E0A15A666F20DA97F128EA /* FinancialConnectionsFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsFont.swift; sourceTree = "<group>"; };
 		846D9EF58B02C69F9629AE79 /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -421,7 +420,6 @@
 		9ACAB1B6DB88D74F5ECC1C6D /* AccountPickerFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerFooterView.swift; sourceTree = "<group>"; };
 		9CBF53BDBB2CDC5908C374D7 /* NetworkingLinkVerificationBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkVerificationBodyView.swift; sourceTree = "<group>"; };
 		9D8F7A75976314427E8087F9 /* LinkingAccountsLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkingAccountsLoadingView.swift; sourceTree = "<group>"; };
-		9E337C061E4152E7814FC21E /* ConsentBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentBottomSheetViewController.swift; sourceTree = "<group>"; };
 		9EA0AA05BC9FC60A06AC1B5E /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9ED1CF95D441821773EA68EE /* InstitutionDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionDataSource.swift; sourceTree = "<group>"; };
 		A00D518C15FF3FAED7C193C2 /* HitTestStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitTestStackView.swift; sourceTree = "<group>"; };
@@ -982,9 +980,6 @@
 				A9B31B3A45DD8AAFD6F08820 /* AuthFlowHelpers.swift */,
 				591E8073D2AD30115ABDB60F /* BulletPointLabelView.swift */,
 				4E4A84F0646AD673029CB6FC /* Button+Extensions.swift */,
-				1A80CA4A87A90D2E19262220 /* ConsentBottomSheetModel.swift */,
-				8199AF9CE999D21ED5871D96 /* ConsentBottomSheetView.swift */,
-				9E337C061E4152E7814FC21E /* ConsentBottomSheetViewController.swift */,
 				6A7814102B32462100168992 /* CloseConfirmationViewController.swift */,
 				A00D518C15FF3FAED7C193C2 /* HitTestStackView.swift */,
 				F669BB8F3DA862C425897705 /* HitTestView.swift */,
@@ -1001,6 +996,8 @@
 				DDC3AC48492FAB61E5B66D94 /* UIImageView+Extensions.swift */,
 				B52F27D0FACAE9D4F4D15A73 /* UITableView+Extensions.swift */,
 				CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */,
+				6A7814192B45D53700168992 /* DataAccessNoticeViewController.swift */,
+				6A78141B2B462D5D00168992 /* LegalDetailsNoticeViewController.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1339,6 +1336,7 @@
 				72BB9389206F10DE9B18E542 /* LinkAccountPickerViewController.swift in Sources */,
 				48E093CC2FB4A619A9E2C20E /* ManualEntryCheckView.swift in Sources */,
 				4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */,
+				6A78141A2B45D53700168992 /* DataAccessNoticeViewController.swift in Sources */,
 				2343C58289259920DD81620D /* ManualEntryErrorView.swift in Sources */,
 				A1AEE72611F62550267C326C /* ManualEntryFooterView.swift in Sources */,
 				6D018BB3C1253ED4C1674E0B /* ManualEntryFormView.swift in Sources */,
@@ -1385,9 +1383,6 @@
 				9AF6EC34D666BEB3C1397092 /* BulletPointLabelView.swift in Sources */,
 				313F5F7F2B0BE5D100BD98A9 /* Docs.docc in Sources */,
 				F65E8D16DE691EB6C99C4521 /* Button+Extensions.swift in Sources */,
-				4CEE364A07B91B51B3D00F05 /* ConsentBottomSheetModel.swift in Sources */,
-				EDB22A11E058269784090A51 /* ConsentBottomSheetView.swift in Sources */,
-				69508BFAF474855B05347CE4 /* ConsentBottomSheetViewController.swift in Sources */,
 				33FA1684CE79F21271D14F23 /* HitTestStackView.swift in Sources */,
 				691619AE9A989548ABA36535 /* HitTestView.swift in Sources */,
 				91A3583A0BDE0F8F0C4AD3E2 /* InstitutionIconView.swift in Sources */,
@@ -1420,6 +1415,7 @@
 				B5EEF34D158C08A1745FA150 /* ContinueStateView.swift in Sources */,
 				2D14461B27B3DEE2CC19B090 /* FinancialConnectionsAccountFetcher.swift in Sources */,
 				82FD3CEE526DE8B6519F666E /* FinancialConnectionsSessionFetcher.swift in Sources */,
+				6A78141C2B462D5D00168992 /* LegalDetailsNoticeViewController.swift in Sources */,
 				6A7814112B32462100168992 /* CloseConfirmationViewController.swift in Sources */,
 				AB7C9A26484953762FFBB4A5 /* FinancialConnectionsWebFlowViewController.swift in Sources */,
 			);

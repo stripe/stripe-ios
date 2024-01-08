@@ -649,25 +649,14 @@ final class PartnerAuthViewController: UIViewController {
             analyticsClient: dataSource.analyticsClient,
             handleStripeScheme: { urlHost in
                 if urlHost == "data-access-notice" {
-                    if let dataAccessNoticeModel = dataSource.pendingAuthSession?.display?.text?.oauthPrepane?
-                        .dataAccessNotice
-                    {
-                        let consentBottomSheetModel = ConsentBottomSheetModel(
-                            title: dataAccessNoticeModel.title,
-                            subtitle: dataAccessNoticeModel.subtitle,
-                            body: ConsentBottomSheetModel.Body(
-                                bullets: dataAccessNoticeModel.body.bullets
-                            ),
-                            extraNotice: dataAccessNoticeModel.connectedAccountNotice,
-                            learnMore: dataAccessNoticeModel.learnMore,
-                            cta: dataAccessNoticeModel.cta
-                        )
-                        ConsentBottomSheetViewController.present(
-                            withModel: consentBottomSheetModel,
+                    if let dataAccessNoticeModel = dataSource.pendingAuthSession?.display?.text?.oauthPrepane?.dataAccessNotice {
+                        let dataAccessNoticeViewController = DataAccessNoticeViewController(
+                            dataAccessNotice: dataAccessNoticeModel,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }
                         )
+                        dataAccessNoticeViewController.present(on: self)
                     }
                 }
             }
