@@ -25,7 +25,7 @@ final class InstitutionTableFooterView: UIView {
         let institutionCellView = InstitutionCellView()
         institutionCellView.customize(
             iconView: RoundedIconView(
-                image: image,
+                image: .image(image),
                 style: .rounded
             ),
             title: title,
