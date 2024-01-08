@@ -167,7 +167,6 @@ extension PaymentSheet {
         internal var linkPaymentMethodsOnly: Bool = false
 
         /// If enabled, PaymentSheet will offer V2 Link features, such as passthrough mode
-        /// 🚧 Under construction, do not use 🚧
         @_spi(STP) public var allowLinkV2Features: Bool = false
 
         /// Describes how billing details should be collected.
