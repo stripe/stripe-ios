@@ -1,6 +1,7 @@
-## X.X.X
+## x.x.x x-x-x
 ### PaymentSheet
 * [Fixed] Fixed a few design issues on visionOS.
+* [Added] Exposed BillingDetails and type on selected PaymentOption when dismissing FlowController's payment option selector
 
 ## 23.20.0 2023-12-18
 ### PaymentSheet
