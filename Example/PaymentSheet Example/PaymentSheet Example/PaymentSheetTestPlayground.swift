@@ -330,6 +330,7 @@ struct StaleView: View {
 }
 struct PaymentOptionView: View {
     let paymentOptionDisplayData: PaymentSheet.FlowController.PaymentOptionDisplayData?
+
     var body: some View {
         HStack {
             Image(uiImage: paymentOptionDisplayData?.image ?? UIImage(systemName: "creditcard")!)
@@ -338,8 +339,8 @@ struct PaymentOptionView: View {
                 .frame(maxWidth: 30, maxHeight: 30, alignment: .leading)
                 .foregroundColor(.black)
             Text(paymentOptionDisplayData?.label ?? "None")
-            // Surprisingly, setting the accessibility identifier on the HStack causes the identifier to be
-            // "Payment method-Payment method". We'll set it on a single View instead.
+                // Surprisingly, setting the accessibility identifier on the HStack causes the identifier to be
+                // "Payment method-Payment method". We'll set it on a single View instead.
                 .accessibility(identifier: "Payment method")
                 .foregroundColor(.primary)
             }
@@ -355,10 +356,12 @@ struct PaymentOptionInfoView: View {
                 Text(paymentMethodType)
                     .font(.caption)
                     .foregroundColor(.primary)
-
             }
             if let billingDetails = paymentOptionDisplayData?.billingDetails {
                 BillingDetailsView(billingDetails: billingDetails)
+                    .font(.caption)
+                    .foregroundColor(.primary)
+
             }
         }
     }
@@ -372,56 +375,38 @@ struct BillingDetailsView: View {
             if let name = billingDetails.name {
                 Text(name)
                     .accessibility(identifier: "Name")
-                    .font(.caption)
-                    .foregroundColor(.primary)
             }
             if let email = billingDetails.email {
                 Text(email)
                     .accessibility(identifier: "Email")
-                    .font(.caption)
-                    .foregroundColor(.primary)
             }
             if let phone = billingDetails.phone {
                 Text(phone)
                     .accessibility(identifier: "Phone")
-                    .font(.caption)
-                    .foregroundColor(.primary)
             }
             if let line1 = billingDetails.address.line1 {
                 Text(line1)
                     .accessibility(identifier: "Line1")
-                    .font(.caption)
-                    .foregroundColor(.primary)
             }
             if let line2 = billingDetails.address.line2 {
                 Text(line2)
                     .accessibility(identifier: "Line2")
-                    .font(.caption)
-                    .foregroundColor(.primary)
             }
             if let city = billingDetails.address.city {
                 Text(city)
                     .accessibility(identifier: "City")
-                    .font(.caption)
-                    .foregroundColor(.primary)
             }
             if let state = billingDetails.address.state {
                 Text(state)
                     .accessibility(identifier: "State")
-                    .font(.caption)
-                    .foregroundColor(.primary)
             }
             if let postalCode = billingDetails.address.postalCode {
                 Text(postalCode)
-                    .accessibility(identifier: "postalCode")
-                    .font(.caption)
-                    .foregroundColor(.primary)
+                    .accessibility(identifier: "PostalCode")
             }
             if let country = billingDetails.address.country {
                 Text(country)
-                    .accessibility(identifier: "country")
-                    .font(.caption)
-                    .foregroundColor(.primary)
+                    .accessibility(identifier: "Country")
             }
         }
     }
