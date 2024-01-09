@@ -22,6 +22,11 @@ final class LinkInlineSignupViewModel {
         case continueWithoutLink
     }
 
+    enum Mode {
+        case normal // shows the Link inline signup with the checkbox and nested form fields
+        case textFieldsOnly // shows the Link inline signup without the checkbox
+    }
+
     weak var delegate: LinkInlineSignupViewModelDelegate?
 
     private let accountService: LinkAccountServiceProtocol
@@ -32,12 +37,14 @@ final class LinkInlineSignupViewModel {
 
     let configuration: PaymentSheet.Configuration
 
+    let mode: Mode
+
     var saveCheckboxChecked: Bool = false {
         didSet {
             if saveCheckboxChecked != oldValue {
                 notifyUpdate()
 
-                if saveCheckboxChecked {
+                if saveCheckboxChecked, mode != .textFieldsOnly {
                     STPAnalyticsClient.sharedClient.logLinkSignupCheckboxChecked()
                 }
             }
@@ -180,13 +187,42 @@ final class LinkInlineSignupViewModel {
         }
     }
 
+    var layoutInsets: CGFloat {
+        switch mode {
+        case .normal:
+            return 16
+        case .textFieldsOnly:
+            return 0
+        }
+    }
+
+    var showCheckbox: Bool {
+        switch mode {
+        case .normal:
+            return true
+        case .textFieldsOnly:
+            return false
+        }
+    }
+
+    var bordered: Bool {
+        switch mode {
+        case .normal:
+            return true
+        case .textFieldsOnly:
+            return false
+        }
+    }
+
     init(
         configuration: PaymentSheet.Configuration,
+        mode: Mode,
         accountService: LinkAccountServiceProtocol,
         linkAccount: PaymentSheetLinkAccount? = nil,
         country: String? = nil
     ) {
         self.configuration = configuration
+        self.mode = mode
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email

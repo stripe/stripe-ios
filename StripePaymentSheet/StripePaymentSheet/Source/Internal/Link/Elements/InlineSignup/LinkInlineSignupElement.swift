@@ -14,7 +14,9 @@ final class LinkInlineSignupElement: Element {
     private let signupView: LinkInlineSignupView
 
     lazy var view: UIView = {
-        return FormView(viewModel: .init(elements: [signupView], bordered: true, theme: viewModel.configuration.appearance.asElementsTheme))
+
+        return FormView(viewModel: .init(elements: [signupView],
+                                         bordered: viewModel.bordered, theme: viewModel.configuration.appearance.asElementsTheme))
     }()
 
     var viewModel: LinkInlineSignupViewModel {
@@ -38,6 +40,7 @@ final class LinkInlineSignupElement: Element {
     ) {
         self.init(viewModel: LinkInlineSignupViewModel(
             configuration: configuration,
+            mode: .textFieldsOnly,
             accountService: LinkAccountService(apiClient: configuration.apiClient),
             linkAccount: linkAccount,
             country: country
