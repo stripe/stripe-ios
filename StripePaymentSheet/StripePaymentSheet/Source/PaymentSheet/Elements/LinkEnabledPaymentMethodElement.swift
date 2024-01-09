@@ -87,6 +87,10 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
         case .continueWithoutLink:
             return .new(confirmParams: params)
         case .none:
+            // Link is optional when in textFieldOnly mode
+            if inlineSignupElement.viewModel.mode == .textFieldsOnly {
+                return .new(confirmParams: params)
+            }
             return nil
         }
     }
