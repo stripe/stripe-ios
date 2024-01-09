@@ -271,13 +271,21 @@ struct PaymentSheetButtons: View {
                     }.padding(.horizontal)
                     HStack {
                         if let psfc = playgroundController.paymentSheetFlowController {
-                            Button {
-                                psFCOptionsIsPresented = true
-                            } label: {
-                                PaymentOptionView(paymentOptionDisplayData: playgroundController.paymentSheetFlowController?.paymentOption)
+                            VStack {
+                                Button {
+                                    psFCOptionsIsPresented = true
+                                } label: {
+                                    PaymentOptionView(paymentOptionDisplayData: playgroundController.paymentSheetFlowController?.paymentOption)
+                                }
+                                .disabled(playgroundController.paymentSheetFlowController == nil)
+                                Button {
+                                    psFCOptionsIsPresented = true
+                                } label: {
+                                    PaymentOptionInfoView(paymentOptionDisplayData: playgroundController.paymentSheetFlowController?.paymentOption)
+                                }
+                                .disabled(playgroundController.paymentSheetFlowController == nil)
+                                .padding()
                             }
-                            .disabled(playgroundController.paymentSheetFlowController == nil)
-                            .padding()
                             Button {
                                 playgroundController.didTapShippingAddressButton()
                             } label: {
@@ -320,27 +328,29 @@ struct StaleView: View {
             .cornerRadius(8.0)
     }
 }
-
 struct PaymentOptionView: View {
+    let paymentOptionDisplayData: PaymentSheet.FlowController.PaymentOptionDisplayData?
+    var body: some View {
+        HStack {
+            Image(uiImage: paymentOptionDisplayData?.image ?? UIImage(systemName: "creditcard")!)
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: 30, maxHeight: 30, alignment: .leading)
+                .foregroundColor(.black)
+            Text(paymentOptionDisplayData?.label ?? "None")
+            // Surprisingly, setting the accessibility identifier on the HStack causes the identifier to be
+            // "Payment method-Payment method". We'll set it on a single View instead.
+                .accessibility(identifier: "Payment method")
+                .foregroundColor(.primary)
+            }
+        }
+}
+
+struct PaymentOptionInfoView: View {
     let paymentOptionDisplayData: PaymentSheet.FlowController.PaymentOptionDisplayData?
 
     var body: some View {
         VStack {
-            HStack {
-                Image(uiImage: paymentOptionDisplayData?.image ?? UIImage(systemName: "creditcard")!)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: 30, maxHeight: 30, alignment: .leading)
-                    .foregroundColor(.black)
-                Text(paymentOptionDisplayData?.label ?? "None")
-                // Surprisingly, setting the accessibility identifier on the HStack causes the identifier to be
-                // "Payment method-Payment method". We'll set it on a single View instead.
-                    .accessibility(identifier: "Payment method")
-                    .foregroundColor(.primary)
-            }
-            .padding()
-            .foregroundColor(.black)
-            .cornerRadius(6)
             if let paymentMethodType = paymentOptionDisplayData?.paymentMethodType {
                 Text(paymentMethodType)
                     .font(.caption)
