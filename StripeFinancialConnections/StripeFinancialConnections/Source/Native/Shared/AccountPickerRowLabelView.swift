@@ -67,14 +67,14 @@ final class AccountPickerRowLabelView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func set(
         title: String,
         subtitle: String?,
         balanceString: String? = nil
     ) {
         titleLabel.text = title
-        
+
         horizontalSubtitleStackView.removeFromSuperview()
         subtitleLabel.removeFromSuperview()
         subtitleBalanceView.removeFromSuperview()
@@ -82,12 +82,12 @@ final class AccountPickerRowLabelView: UIView {
             subtitleLabel.text = subtitle
             horizontalSubtitleStackView.addArrangedSubview(subtitleLabel)
         }
-        
+
         if let balanceString = balanceString {
             subtitleBalanceLabel.text = balanceString
             horizontalSubtitleStackView.addArrangedSubview(subtitleBalanceView)
         }
-        
+
         if (subtitle != nil) || (balanceString != nil) {
             verticalLabelStackView.addArrangedSubview(horizontalSubtitleStackView)
         }

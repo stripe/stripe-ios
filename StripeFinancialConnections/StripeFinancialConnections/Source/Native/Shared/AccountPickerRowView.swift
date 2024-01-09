@@ -59,7 +59,7 @@ final class AccountPickerRowView: UIView {
     ) {
         self.didSelect = didSelect
         super.init(frame: .zero)
-        
+
         // necessary so the shadow does not appear under text
         backgroundColor = .customBackgroundColor
 
@@ -83,10 +83,10 @@ final class AccountPickerRowView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+
         // `isSelected` controls the shadow, which is driven
         // by the layout, so this refreshes
         // shadow layout
@@ -107,7 +107,7 @@ final class AccountPickerRowView: UIView {
         )
         self.isSelected = isSelected
     }
-    
+
     @objc private func didTapView() {
         self.didSelect()
     }
@@ -153,7 +153,7 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
         )
         return view
     }
-    
+
     func updateUIView(
         _ uiView: AccountPickerRowView,
         context: Context
