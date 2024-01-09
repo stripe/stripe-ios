@@ -36,11 +36,12 @@ final class LinkInlineSignupElement: Element {
     convenience init(
         configuration: PaymentSheet.Configuration,
         linkAccount: PaymentSheetLinkAccount?,
-        country: String?
+        country: String?,
+        mode: LinkInlineSignupViewModel.Mode
     ) {
         self.init(viewModel: LinkInlineSignupViewModel(
             configuration: configuration,
-            mode: .textFieldsOnly,
+            mode: mode,
             accountService: LinkAccountService(apiClient: configuration.apiClient),
             linkAccount: linkAccount,
             country: country

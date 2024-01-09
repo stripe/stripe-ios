@@ -20,7 +20,7 @@ extension PaymentSheetFormFactory {
                 merchantDisplayName: configuration.merchantDisplayName
             )
         )
-        let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && !canSaveToLink
+        let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable
 
         // Make section titled "Contact Information" w/ phone and email if merchant requires it.
         let optionalPhoneAndEmailInformationSection: SectionElement? = {
@@ -97,7 +97,8 @@ extension PaymentSheetFormFactory {
                 paymentMethodElement: cardFormElement,
                 configuration: configuration,
                 linkAccount: linkAccount,
-                country: countryCode
+                country: countryCode,
+                mode: shouldDisplaySaveCheckbox ? .textFieldsOnly : .normal
             )
         } else {
             return cardFormElement

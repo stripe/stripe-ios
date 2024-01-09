@@ -46,14 +46,16 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
         paymentMethodElement: PaymentMethodElement,
         configuration: PaymentSheet.Configuration,
         linkAccount: PaymentSheetLinkAccount?,
-        country: String?
+        country: String?,
+        mode: LinkInlineSignupViewModel.Mode
     ) {
         self.paymentMethodType = type
         self.paymentMethodElement = paymentMethodElement
         self.inlineSignupElement = LinkInlineSignupElement(
             configuration: configuration,
             linkAccount: linkAccount,
-            country: country
+            country: country,
+            mode: mode
         )
 
         paymentMethodElement.delegate = self
