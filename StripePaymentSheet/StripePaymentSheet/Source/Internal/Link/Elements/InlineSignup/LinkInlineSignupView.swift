@@ -79,7 +79,9 @@ final class LinkInlineSignupView: UIView {
     }()
 
     private(set) lazy var legalTermsElement: StaticElement = {
-        let legalView = LinkLegalTermsView(textAlignment: .left, delegate: self)
+        let legalView = LinkLegalTermsView(textAlignment: .left,
+                                           mode: viewModel.mode,
+                                           delegate: self)
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
         legalView.tintColor = theme.colors.primary
@@ -160,6 +162,7 @@ final class LinkInlineSignupView: UIView {
             // 2-way binding
             checkboxElement.isChecked = viewModel.saveCheckboxChecked
         case .textFieldsOnly:
+            // assume checkbox is checked in text field only mode
             viewModel.saveCheckboxChecked = true
         }
     }

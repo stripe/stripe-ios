@@ -96,6 +96,7 @@ extension LinkInlineSignupElementSnapshotTests {
 
         let viewModel = LinkInlineSignupViewModel(
             configuration: configuration,
+            mode: .normal,
             accountService: MockAccountService(),
             country: country
         )

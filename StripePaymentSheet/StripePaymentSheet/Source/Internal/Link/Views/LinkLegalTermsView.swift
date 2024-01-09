@@ -36,6 +36,7 @@ final class LinkLegalTermsView: UIView {
     ]
 
     weak var delegate: LinkLegalTermsViewDelegate?
+    private let mode: LinkInlineSignupViewModel.Mode
 
     var textColor: UIColor? {
         get {
@@ -71,7 +72,10 @@ final class LinkLegalTermsView: UIView {
         return textView
     }()
 
-    init(textAlignment: NSTextAlignment = .left, delegate: LinkLegalTermsViewDelegate? = nil) {
+    init(textAlignment: NSTextAlignment = .left,
+         mode: LinkInlineSignupViewModel.Mode = .normal,
+         delegate: LinkLegalTermsViewDelegate? = nil) {
+        self.mode = mode
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment
         self.delegate = delegate
@@ -83,10 +87,20 @@ final class LinkLegalTermsView: UIView {
     }
 
     private func formattedLegalText() -> NSAttributedString {
-        let string = STPLocalizedString(
-            "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
-            "Legal text shown when creating a Link account."
-        )
+        let string: String = {
+            switch mode {
+            case .normal:
+                return STPLocalizedString(
+                    "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "Legal text shown when creating a Link account."
+                )
+            case .textFieldsOnly:
+                return STPLocalizedString(
+                    "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "Legal text shown when creating a Link account."
+                )
+            }
+        }()
 
         let formattedString = NSMutableAttributedString()
 
