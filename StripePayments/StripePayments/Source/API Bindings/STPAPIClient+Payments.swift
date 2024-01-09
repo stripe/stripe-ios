@@ -493,7 +493,8 @@ extension STPAPIClient {
             ?? paymentIntentParams.sourceParams?.rawTypeString
         STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
             with: _stored_configuration,
-            paymentMethodType: type
+            paymentMethodType: type,
+            apiClient: self
         )
 
         let endpoint = "\(APIEndpointPaymentIntents)/\(identifier)/confirm"
@@ -675,7 +676,8 @@ extension STPAPIClient {
 
         STPAnalyticsClient.sharedClient.logSetupIntentConfirmationAttempt(
             with: _stored_configuration,
-            paymentMethodType: setupIntentParams.paymentMethodParams?.rawTypeString
+            paymentMethodType: setupIntentParams.paymentMethodParams?.rawTypeString,
+            apiClient: self
         )
 
         let endpoint = setupIntentEndpoint(from: setupIntentParams.clientSecret) + "/confirm"
@@ -751,7 +753,8 @@ extension STPAPIClient {
     ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
             with: _stored_configuration,
-            paymentMethodType: paymentMethodParams.rawTypeString
+            paymentMethodType: paymentMethodParams.rawTypeString,
+            apiClient: self
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
         parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)

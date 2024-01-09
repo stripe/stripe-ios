@@ -251,7 +251,8 @@ class PaymentSheetViewController: UIViewController {
             linkEnabled: intent.supportsLink(allowV2Features: configuration.allowLinkV2Features),
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
             currency: intent.currency,
-            intentConfig: intent.intentConfig
+            intentConfig: intent.intentConfig,
+            apiClient: configuration.apiClient
         )
     }
 
@@ -466,7 +467,8 @@ class PaymentSheetViewController: UIViewController {
                     intentConfig: self.intent.intentConfig,
                     deferredIntentConfirmationType: deferredIntentConfirmationType,
                     paymentMethodTypeAnalyticsValue: paymentOption.paymentMethodTypeAnalyticsValue,
-                    error: result.error
+                    error: result.error,
+                    apiClient: self.configuration.apiClient
                 )
 
                 self.isPaymentInFlight = false
@@ -565,7 +567,8 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(
             isCustom: false,
             paymentMethod: paymentMethodSelection.analyticsValue,
-            intentConfig: intent.intentConfig
+            intentConfig: intent.intentConfig,
+            apiClient: configuration.apiClient
         )
         if case .add = paymentMethodSelection {
             mode = .addingNew
