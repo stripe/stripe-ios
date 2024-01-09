@@ -80,9 +80,11 @@ class LinkEmailElement: Element {
         }
     }
 
-    public init(defaultValue: String? = nil, theme: ElementsUITheme = .default) {
+    public init(defaultValue: String? = nil, isOptional: Bool = false, theme: ElementsUITheme = .default) {
         self.infoView = LinkMoreInfoView(theme: theme)
-        emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue, theme: theme)
+        emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue,
+                                                         isOptional: isOptional,
+                                                         theme: theme)
         emailAddressElement.delegate = self
     }
 

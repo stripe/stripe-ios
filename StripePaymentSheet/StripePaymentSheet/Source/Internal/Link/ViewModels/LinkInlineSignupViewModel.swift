@@ -219,6 +219,15 @@ final class LinkInlineSignupViewModel {
         }
     }
 
+    var isEmailOptional: Bool {
+        switch mode {
+        case .normal:
+            return false
+        case .textFieldsOnly:
+            return true
+        }
+    }
+
     init(
         configuration: PaymentSheet.Configuration,
         mode: Mode,

@@ -32,7 +32,9 @@ final class LinkInlineSignupView: UIView {
     )
 
     private(set) lazy var emailElement: LinkEmailElement = {
-        let element = LinkEmailElement(defaultValue: viewModel.emailAddress, theme: theme)
+        let element = LinkEmailElement(defaultValue: viewModel.emailAddress,
+                                       isOptional: viewModel.isEmailOptional,
+                                       theme: theme)
         element.indicatorTintColor = theme.colors.primary
         return element
     }()
@@ -90,7 +92,7 @@ final class LinkInlineSignupView: UIView {
     private lazy var formElement: FormElement = {
         var elements: [Element] = [emailSection,
                         phoneNumberSection,
-                        nameSection,]
+                        nameSection, ]
         if viewModel.showCheckbox {
             elements.insert(checkboxElement, at: 0)
         }

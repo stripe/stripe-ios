@@ -72,10 +72,16 @@ import UIKit
     struct EmailConfiguration: TextFieldElementConfiguration {
         public let label = String.Localized.email
         public let defaultValue: String?
+        public let isOptional: Bool
         public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
         let invalidError = Error.invalid(
             localizedDescription: String.Localized.invalid_email
         )
+
+        init(defaultValue: String? = nil, isOptional: Bool = false) {
+            self.defaultValue = defaultValue
+            self.isOptional = isOptional
+        }
 
         public func validate(text: String, isOptional: Bool) -> ValidationState {
             if text.isEmpty {
@@ -93,8 +99,9 @@ import UIKit
         }
     }
 
-    static func makeEmail(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
-        return TextFieldElement(configuration: EmailConfiguration(defaultValue: defaultValue), theme: theme)
+    static func makeEmail(defaultValue: String?, isOptional: Bool = false, theme: ElementsUITheme = .default) -> TextFieldElement {
+        return TextFieldElement(configuration: EmailConfiguration(defaultValue: defaultValue,
+                                                                  isOptional: isOptional), theme: theme)
     }
 
     // MARK: VPA
