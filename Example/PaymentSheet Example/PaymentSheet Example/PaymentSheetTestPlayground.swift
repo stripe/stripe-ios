@@ -328,6 +328,7 @@ struct StaleView: View {
             .cornerRadius(8.0)
     }
 }
+
 struct PaymentOptionView: View {
     let paymentOptionDisplayData: PaymentSheet.FlowController.PaymentOptionDisplayData?
 
