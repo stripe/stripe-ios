@@ -152,7 +152,12 @@ final class LinkInlineSignupViewModel {
     }
 
     var shouldShowLegalTerms: Bool {
-        return shouldShowPhoneField
+        switch mode {
+        case .normal:
+            return shouldShowPhoneField
+        case .textFieldsOnly:
+            return true
+        }
     }
 
     var action: Action? {
