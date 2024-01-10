@@ -52,6 +52,7 @@ extension FaceScanner: ImageScanner {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraProperties: CameraSession.DeviceProperties?
     ) throws -> FaceScannerOutput {
         return .init(

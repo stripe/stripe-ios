@@ -30,7 +30,7 @@ let package = Package(
         ),
         .library(
             name: "StripeIdentity",
-            targets: ["StripeIdentity"]
+            targets: ["StripeIdentity", "CaptureCore"]
         ),
         .library(
             name: "StripeCardScan",
@@ -145,6 +145,10 @@ let package = Package(
             resources: [
                 .process("Resources/Images"),
             ]
-        )
+        ),
+        .binaryTarget(
+            name: "CaptureCore",
+            url: "https://github.com/BlinkID/capture-ios/releases/download/v1.2.1/CaptureCore.xcframework.zip",
+            checksum: "df75df5a1db125f129b26910774f4d34acd41ca0f4c96e7fc38b598b67c89b39")
     ]
 )

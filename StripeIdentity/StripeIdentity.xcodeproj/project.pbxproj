@@ -250,6 +250,8 @@
 		D4715C1E2B0E8F43008D07CC /* icon_warning_92@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4715C092B0E8F43008D07CC /* icon_warning_92@3x.png */; };
 		D4715C1F2B0E8F43008D07CC /* icon_wallet@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4715C0A2B0E8F43008D07CC /* icon_wallet@3x.png */; };
 		D4715C202B0E8F43008D07CC /* icon_camera@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4715C0B2B0E8F43008D07CC /* icon_camera@3x.png */; };
+		D4AD00012B4E25F80054E69E /* MBDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AD00002B4E25F80054E69E /* MBDetector.swift */; };
+		D4AD000A2B4F4CF50054E69E /* CaptureCore in Frameworks */ = {isa = PBXBuildFile; productRef = D4AD00092B4F4CF50054E69E /* CaptureCore */; };
 		D55B24D4D03E43A9438BCFE5 /* IdNumberElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB73F630CCAFE6AAB9727C62 /* IdNumberElement.swift */; };
 		DB6005016F47D09559DA0C98 /* DocumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAC1FACF9A36AAFC19BF2F /* DocumentType.swift */; };
 		DCFBA69CC4437E2E6061F50B /* IdentityMLModelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546F9D432ACFF45E9CE1368 /* IdentityMLModelLoader.swift */; };
@@ -572,6 +574,7 @@
 		D4715C092B0E8F43008D07CC /* icon_warning_92@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_warning_92@3x.png"; sourceTree = "<group>"; };
 		D4715C0A2B0E8F43008D07CC /* icon_wallet@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_wallet@3x.png"; sourceTree = "<group>"; };
 		D4715C0B2B0E8F43008D07CC /* icon_camera@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_camera@3x.png"; sourceTree = "<group>"; };
+		D4AD00002B4E25F80054E69E /* MBDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBDetector.swift; sourceTree = "<group>"; };
 		D5C7698331B899B80AF4F730 /* VerificationPage_no_selfie.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPage_no_selfie.json; sourceTree = "<group>"; };
 		D604F6AABE4D6D5CCF802685 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6918DC6A9681E769D44BC78 /* TruncatedDecimalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TruncatedDecimalTest.swift; sourceTree = "<group>"; };
@@ -626,6 +629,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4AD000A2B4F4CF50054E69E /* CaptureCore in Frameworks */,
 				695E12945F47ED3060B8AE19 /* StripeCameraCore.framework in Frameworks */,
 				10B606812179D64E67BFFFCF /* StripeCore.framework in Frameworks */,
 				A7AC2D0D9FDCF8AC5298708D /* StripeUICore.framework in Frameworks */,
@@ -740,6 +744,7 @@
 				0989CE5CF80CF69BD28675DE /* MLDetectorMetricsTracker.swift */,
 				57F22CC7DFA4B98A1A533CE0 /* MotionBlurDetector.swift */,
 				9E170B07B4958901EE3864A4 /* VisionBasedDetector.swift */,
+				D4AD00002B4E25F80054E69E /* MBDetector.swift */,
 			);
 			path = Detectors;
 			sourceTree = "<group>";
@@ -1396,6 +1401,9 @@
 			dependencies = (
 			);
 			name = StripeIdentity;
+			packageProductDependencies = (
+				D4AD00092B4F4CF50054E69E /* CaptureCore */,
+			);
 			productName = StripeIdentity;
 			productReference = D604F6AABE4D6D5CCF802685 /* StripeIdentity.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1459,6 +1467,7 @@
 			packageReferences = (
 				98906E4295D5EDD251F81145 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */,
 				1034C700B96E0B79C2107621 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+				D4AD00082B4F4CF50054E69E /* XCRemoteSwiftPackageReference "capture-core-sp" */,
 			);
 			productRefGroup = DA1A05D0BE4F60655BC0E2CD /* Products */;
 			projectDirPath = "";
@@ -1712,6 +1721,7 @@
 				286BF86B773F41210E015B2B /* IdentityDataCollecting.swift in Sources */,
 				0FBE6D53EBE7C2B93DEA34B4 /* IdentityFlowNavigationController.swift in Sources */,
 				BFA24F4BD97F5BE9F5C0E934 /* IdentityUI.swift in Sources */,
+				D4AD00012B4E25F80054E69E /* MBDetector.swift in Sources */,
 				D4715BA42B0E8E20008D07CC /* VerificationPageStaticContentConsentPage.swift in Sources */,
 				51DCAEAEEA0B32038A989A51 /* MLModelLoader.swift in Sources */,
 				C5DB8461793523F9488DBBFA /* MLModelUnexpectedOutputError.swift in Sources */,
@@ -1934,6 +1944,14 @@
 				kind = branch;
 			};
 		};
+		D4AD00082B4F4CF50054E69E /* XCRemoteSwiftPackageReference "capture-core-sp" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/BlinkID/capture-core-sp";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1948,6 +1966,11 @@
 		960247DC321CBDB422FE713D /* iOSSnapshotTestCase */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = iOSSnapshotTestCase;
+		};
+		D4AD00092B4F4CF50054E69E /* CaptureCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D4AD00082B4F4CF50054E69E /* XCRemoteSwiftPackageReference "capture-core-sp" */;
+			productName = CaptureCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

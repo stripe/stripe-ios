@@ -10,6 +10,7 @@ import CoreVideo
 import Foundation
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCore
+import CoreMedia
 
 /// Scans an image and returns results
 protocol ImageScanner {
@@ -20,6 +21,7 @@ protocol ImageScanner {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraProperties: CameraSession.DeviceProperties?
     ) throws -> Output
 
@@ -35,6 +37,7 @@ struct AnyImageScanner<Output> {
     private let _scanImage:
         (
             _ pixelBuffer: CVPixelBuffer,
+            _ sampleBuffer: CMSampleBuffer,
             _ cameraProperties: CameraSession.DeviceProperties?
         ) throws -> Output
 
@@ -46,9 +49,10 @@ struct AnyImageScanner<Output> {
         _getModelMetricsTrackers = {
             return imageScanner.mlModelMetricsTrackers
         }
-        _scanImage = { pixelBuffer, cameraProperties in
+        _scanImage = { pixelBuffer, sampleBuffer, cameraProperties in
             try imageScanner.scanImage(
                 pixelBuffer: pixelBuffer,
+                sampleBuffer: sampleBuffer,
                 cameraProperties: cameraProperties
             )
         }
@@ -63,9 +67,10 @@ struct AnyImageScanner<Output> {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraProperties: CameraSession.DeviceProperties?
     ) throws -> Output {
-        return try _scanImage(pixelBuffer, cameraProperties)
+        return try _scanImage(pixelBuffer, sampleBuffer, cameraProperties)
     }
 
     func reset() {
