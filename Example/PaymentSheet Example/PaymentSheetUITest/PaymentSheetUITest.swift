@@ -2309,6 +2309,39 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
+    func testLinkInlineSignup_progressive() throws {
+        app.launch()
+        app.staticTexts["PaymentSheet"].tap()
+        let buyButton = app.staticTexts["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.tap()
+
+        try! fillCardData(app)
+
+        let emailField = app.textFields["Email"]
+        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
+        emailField.tap()
+        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+
+        let phoneField = app.textFields["Phone"]
+        XCTAssert(phoneField.waitForExistence(timeout: 10))
+        phoneField.tap()
+        phoneField.typeText("3105551234")
+
+        // The name field is only required for non-US countries. Only fill it out if it exists.
+        let nameField = app.textFields["Name"]
+        if nameField.exists {
+        nameField.tap()
+        nameField.typeText("Jane Done")
+        }
+
+        app.buttons["Pay €9.73"].tap()
+        let successText = app.alerts.staticTexts["Your order is confirmed!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
+        okButton.tap()
+    }
+
 //    TODO: This is disabled until the Link team adds some hooks for testing.
 //    func testLinkWebFlow() throws {
 //        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
