@@ -130,8 +130,9 @@ final class AccountPickerViewController: UIViewController {
     }
 
     private func pollAuthSessionAccounts() {
-        // Load accounts
-        let retreivingAccountsLoadingView = buildRetrievingAccountsView()
+        let retreivingAccountsLoadingView = RetrieveAccountsLoadingView(
+            institutionIconUrl: dataSource.institution.icon?.default
+        )
         view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
 
         let pollingStartDate = Date()
@@ -328,12 +329,11 @@ final class AccountPickerViewController: UIViewController {
     }
 
     private func didSelectLinkAccounts() {
-        let numberOfSelectedAccounts = dataSource.selectedAccounts.count
-        let linkingAccountsLoadingView = LinkingAccountsLoadingView(
-            numberOfSelectedAccounts: numberOfSelectedAccounts,
-            businessName: businessName
-        )
-        view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
+        footerView.startLoading()
+        // the `footerView` only shows loading view on the button,
+        // so we need to prevent interactions elsewhere on the
+        // screen while its loading
+        view.isUserInteractionEnabled = false
 
         dataSource
             .selectAuthSessionAccounts()

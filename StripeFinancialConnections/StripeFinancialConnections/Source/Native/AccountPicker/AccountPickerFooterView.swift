@@ -99,4 +99,8 @@ final class AccountPickerFooterView: UIView {
             linkAccountsButton.title = multipleAccountButtonTitle
         }
     }
+
+    func startLoading() {
+        linkAccountsButton.isLoading = true
+    }
 }
