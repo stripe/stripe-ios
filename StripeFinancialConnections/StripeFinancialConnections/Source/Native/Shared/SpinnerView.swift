@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class SpinnerView: UIView {
-    
+
     init() {
         super.init(frame: .zero)
         let activityIndicator = ActivityIndicator(size: .large)
@@ -19,7 +19,7 @@ final class SpinnerView: UIView {
         addAndPinSubviewToSafeArea(activityIndicator)
         activityIndicator.startAnimating()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

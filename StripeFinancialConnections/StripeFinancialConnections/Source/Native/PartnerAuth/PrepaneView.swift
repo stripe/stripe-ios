@@ -30,9 +30,13 @@ final class PrepaneView: UIView {
         let paneLayoutView = PaneLayoutView(
             contentView: PaneLayoutView.createContentView(
                 iconView: {
-                    let institutionIconView = InstitutionIconView()
-                    institutionIconView.setImageUrl(prepaneModel.institutionIcon?.default)
-                    return institutionIconView
+                    if let institutionIconUrl = prepaneModel.institutionIcon?.default {
+                        let institutionIconView = InstitutionIconView()
+                        institutionIconView.setImageUrl(institutionIconUrl)
+                        return institutionIconView
+                    } else {
+                        return nil
+                    }
                 }(),
                 title: prepaneModel.title,
                 subtitle: prepaneModel.subtitle,

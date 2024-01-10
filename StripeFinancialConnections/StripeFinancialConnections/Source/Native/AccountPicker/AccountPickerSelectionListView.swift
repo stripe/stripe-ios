@@ -18,12 +18,7 @@ protocol AccountPickerSelectionListViewDelegate: AnyObject {
 
 final class AccountPickerSelectionListView: UIView {
 
-    enum SelectionType {
-        case single
-        case multiple
-    }
-
-    private let selectionType: SelectionType
+    private let selectionType: AccountPickerSelectionType
     private let enabledAccounts: [FinancialConnectionsPartnerAccount]
     private let disabledAccounts: [FinancialConnectionsPartnerAccount]
     weak var delegate: AccountPickerSelectionListViewDelegate?
@@ -36,7 +31,7 @@ final class AccountPickerSelectionListView: UIView {
     }()
 
     init(
-        selectionType: SelectionType,
+        selectionType: AccountPickerSelectionType,
         enabledAccounts: [FinancialConnectionsPartnerAccount],
         disabledAccounts: [FinancialConnectionsPartnerAccount]
     ) {

@@ -28,15 +28,15 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
     )
 }
 
-enum AccountPickerType {
-    case checkbox
-    case radioButton
+enum AccountPickerSelectionType {
+    case single
+    case multiple
 }
 
 final class AccountPickerViewController: UIViewController {
 
     private let dataSource: AccountPickerDataSource
-    private let accountPickerType: AccountPickerType
+    private let selectionType: AccountPickerSelectionType
     weak var delegate: AccountPickerViewControllerDelegate?
     private weak var accountPickerSelectionView: AccountPickerSelectionView?
     private var businessName: String? {
@@ -112,7 +112,7 @@ final class AccountPickerViewController: UIViewController {
 
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
-        self.accountPickerType = dataSource.manifest.singleAccount ? .radioButton : .checkbox
+        self.selectionType = dataSource.manifest.singleAccount ? .single : .multiple
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
@@ -248,7 +248,7 @@ final class AccountPickerViewController: UIViewController {
         _ disabledAccounts: [FinancialConnectionsPartnerAccount]
     ) {
         let accountPickerSelectionView = AccountPickerSelectionView(
-            accountPickerType: accountPickerType,
+            selectionType: selectionType,
             enabledAccounts: enabledAccounts,
             disabledAccounts: disabledAccounts,
             institution: dataSource.institution,
@@ -287,11 +287,11 @@ final class AccountPickerViewController: UIViewController {
         )
         paneLayoutView.addTo(view: view)
 
-        switch accountPickerType {
-        case .checkbox:
+        switch selectionType {
+        case .multiple:
             // select all accounts
             dataSource.updateSelectedAccounts(enabledAccounts)
-        case .radioButton:
+        case .single:
             if let firstAccount = enabledAccounts.first {
                 dataSource.updateSelectedAccounts([firstAccount])
             } else {
@@ -361,8 +361,8 @@ final class AccountPickerViewController: UIViewController {
     private func logAccountSelectOrDeselect(selectedAccounts: [FinancialConnectionsPartnerAccount]) {
         let isSelect: Bool? // false when deselected, and nil when event shouldn't be sent
         let accountId: String?
-        switch accountPickerType {
-        case .radioButton:
+        switch selectionType {
+        case .single:
             // user deselected an account by selecting the same row
             if selectedAccounts.isEmpty {
                 isSelect = false
@@ -373,7 +373,7 @@ final class AccountPickerViewController: UIViewController {
                 isSelect = true
                 accountId = selectedAccounts.first?.id
             }
-        case .checkbox:
+        case .multiple:
             // if user selects or deselects more than two accounts at the same time, we assume user pressed
             // "All accounts" which we have decided to exclude due to V3 changes
             let pressedAllAccountsButton = (abs(selectedAccounts.count - dataSource.selectedAccounts.count) >= 2)

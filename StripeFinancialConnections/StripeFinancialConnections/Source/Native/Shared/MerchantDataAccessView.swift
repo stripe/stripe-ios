@@ -115,9 +115,6 @@ private func FormPermissionListString(
             }
         }
     }
-
-//    let capitalizedFirstLetter = permissionListString.prefix(1).uppercased()
-//    let restOfString = String(permissionListString.dropFirst())
     return permissionListString
 }
 
