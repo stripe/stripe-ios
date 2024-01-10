@@ -62,6 +62,8 @@ stages:
     - ui-tests-1: {}
     - ui-tests-2: {}
     - legacy-tests-14: {}
+    - legacy-tests-15: {}
+    - legacy-tests-16: {}
     - carthage-install-test: {}
     - pod-lint-tests: {}
     - integration-all: {}
@@ -70,6 +72,8 @@ stages:
     - basic-integration-tests: {}
     - check-docs: {}
     - legacy-tests-14: {}
+    - legacy-tests-15: {}
+    - legacy-tests-16: {}
     - carthage-install-test: {}
     - data-theorem-sast: {}
     - deploy-dry-run: {}
@@ -449,12 +453,41 @@ workflows:
       bitrise.io:
         stack: osx-xcode-14.3.x-ventura
         machine_type_id: g2-m1.8core
-
     before_run:
     - prep_all
     after_run:
     - upload_logs
     - notify_ci
+  legacy-tests-15:
+    steps:
+    - fastlane@3:
+        inputs:
+        - lane: legacy_tests_15
+        title: fastlane legacy_tests_15
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core
+    before_run:
+    - prep_all
+    after_run:
+    - upload_logs
+    - notify_ci
+  legacy-tests-16:
+    steps:
+    - fastlane@3:
+        inputs:
+        - lane: legacy_tests_16
+        title: fastlane legacy_tests_16
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
+    before_run:
+    - prep_all
+    after_run:
+    - upload_logs
+    - notify_ci        
   lint-tests:
     steps:
     - script@1:
