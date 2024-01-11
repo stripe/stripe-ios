@@ -51,7 +51,7 @@ extension PaymentSheet {
             /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
             public let label: String
 
-            /// The billing details associated with the customer's desired payment option
+            /// The billing details associated with the customer's desired payment method
             public let billingDetails: PaymentSheet.BillingDetails?
 
             /// A string representation of the customer's desired payment option
