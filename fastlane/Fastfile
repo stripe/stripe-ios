@@ -90,6 +90,14 @@ platform :ios do
     legacy_tests(device: 'iPhone 11', version: '14.5')
   end
 
+  lane :legacy_tests_15 do
+    legacy_tests(device: 'iPhone 12 mini', version: '15.4')
+  end
+
+  lane :legacy_tests_16 do
+    legacy_tests(device: 'iPhone 12 mini', version: '16.4')
+  end
+
   lane :e2e_only do
     Dir.chdir('..') do
       sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --only-test 'StripeiOS Tests/STPE2ETest' --retry-on-failure")
