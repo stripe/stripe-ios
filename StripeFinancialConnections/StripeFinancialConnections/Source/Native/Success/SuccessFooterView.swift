@@ -27,8 +27,6 @@ final class SuccessFooterView: UIView {
     }()
 
     init(
-        showFailedToLinkNotice: Bool,
-        businessName: String?,
         didSelectDone: @escaping (SuccessFooterView) -> Void
     ) {
         self.didSelectDone = didSelectDone

@@ -19,26 +19,6 @@ final class SuccessViewController: UIViewController {
     private let dataSource: SuccessDataSource
     weak var delegate: SuccessViewControllerDelegate?
 
-    private lazy var footerView: UIView = {
-        return SuccessFooterView(
-            showFailedToLinkNotice: false,
-            businessName: dataSource.manifest.businessName,
-            didSelectDone: { [weak self] footerView in
-                guard let self = self else { return }
-                // we NEVER set isLoading to `false` because
-                // we will always close the Auth Flow
-                footerView.setIsLoading(true)
-                self.dataSource
-                    .analyticsClient
-                    .log(
-                        eventName: "click.done",
-                        pane: .success
-                    )
-                self.delegate?.successViewControllerDidSelectDone(self)
-            }
-        )
-    }()
-
     init(dataSource: SuccessDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
@@ -67,8 +47,6 @@ final class SuccessViewController: UIViewController {
         contentView.addSubview(bodyView)
 
         let footerView = SuccessFooterView(
-            showFailedToLinkNotice: false,
-            businessName: dataSource.manifest.businessName,
             didSelectDone: { [weak self] footerView in
                 guard let self = self else { return }
                 // we NEVER set isLoading to `false` because
