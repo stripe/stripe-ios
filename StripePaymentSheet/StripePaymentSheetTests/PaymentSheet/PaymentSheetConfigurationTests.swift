@@ -61,7 +61,7 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssert(configuration.isUsingBillingAddressCollection())
     }
 
-    func testSTPPaymentMethodBillingDetailsToPaymentSheetBililngDetails() {
+    func testSTPPaymentMethodBillingDetailsToPaymentSheetBillingDetails() {
         var billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Jane Doe"
         billingDetails.email = "janedoe@test.com"
