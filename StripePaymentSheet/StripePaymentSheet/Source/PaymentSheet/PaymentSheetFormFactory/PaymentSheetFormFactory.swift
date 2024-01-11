@@ -42,11 +42,9 @@ class PaymentSheetFormFactory {
     let cardBrandChoiceEligible: Bool
 
     var canSaveToLink: Bool {
-        // For Link private beta, only save cards in ".userSelectable" mode.
-        // We don't want to override the merchant's own "Save this card" checkbox.
         return (supportsLinkCard &&
                 paymentMethod == .stripe(.card) &&
-                saveMode != .userSelectable &&
+                (configuration.allowLinkV2Features || saveMode != .userSelectable) &&
                 !configuration.isUsingBillingAddressCollection)
     }
 

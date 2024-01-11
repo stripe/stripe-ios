@@ -16,6 +16,8 @@ import UIKit
 
 class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
+    // MARK: Normal mode
+
     func testDefaultState() {
         let sut = makeSUT()
         verify(sut)
@@ -42,6 +44,40 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
             country: "CA",
             preFillName: "Jane Diaz",
             preFillPhone: "+13105551234"
+        )
+        verify(sut)
+    }
+
+    // MARK: Textfield only mode
+
+    func testDefaultState_textFieldsOnly() {
+        let sut = makeSUT(mode: .textFieldsOnly)
+        verify(sut)
+    }
+
+    func testExpandedState_textFieldsOnly() {
+        let sut = makeSUT(saveCheckboxChecked: true, emailAddress: "user@example.com", mode: .textFieldsOnly)
+        verify(sut)
+    }
+
+    func testExpandedState_nonUS_textFieldsOnly() {
+        let sut = makeSUT(
+            saveCheckboxChecked: true,
+            emailAddress: "user@example.com",
+            country: "CA",
+            mode: .textFieldsOnly
+        )
+        verify(sut)
+    }
+
+    func testExpandedState_nonUS_preFilled_textFieldsOnly() {
+        let sut = makeSUT(
+            saveCheckboxChecked: true,
+            emailAddress: "user@example.com",
+            country: "CA",
+            preFillName: "Jane Diaz",
+            preFillPhone: "+13105551234",
+            mode: .textFieldsOnly
         )
         verify(sut)
     }
@@ -87,7 +123,8 @@ extension LinkInlineSignupElementSnapshotTests {
         emailAddress: String? = nil,
         country: String = "US",
         preFillName: String? = nil,
-        preFillPhone: String? = nil
+        preFillPhone: String? = nil,
+        mode: LinkInlineSignupViewModel.Mode = .normal
     ) -> LinkInlineSignupElement {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "[Merchant]"
@@ -96,6 +133,7 @@ extension LinkInlineSignupElementSnapshotTests {
 
         let viewModel = LinkInlineSignupViewModel(
             configuration: configuration,
+            mode: mode,
             accountService: MockAccountService(),
             country: country
         )

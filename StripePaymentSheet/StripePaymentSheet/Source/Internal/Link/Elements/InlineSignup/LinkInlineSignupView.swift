@@ -32,7 +32,9 @@ final class LinkInlineSignupView: UIView {
     )
 
     private(set) lazy var emailElement: LinkEmailElement = {
-        let element = LinkEmailElement(defaultValue: viewModel.emailAddress, theme: theme)
+        let element = LinkEmailElement(defaultValue: viewModel.emailAddress,
+                                       isOptional: viewModel.isEmailOptional,
+                                       theme: theme)
         element.indicatorTintColor = theme.colors.primary
         return element
     }()
@@ -49,14 +51,37 @@ final class LinkInlineSignupView: UIView {
 
     // MARK: Sections
 
-    private lazy var emailSection = SectionElement(elements: [emailElement], theme: theme)
+    private lazy var emailSection: Element = {
+        switch viewModel.mode {
+        case .normal:
+            return SectionElement(elements: [emailElement], theme: theme)
+        case .textFieldsOnly:
+            return emailElement
+        }
+    }()
 
-    private lazy var nameSection = SectionElement(elements: [nameElement], theme: theme)
+    private lazy var nameSection: Element = {
+        switch viewModel.mode {
+        case .normal:
+            return SectionElement(elements: [nameElement], theme: theme)
+        case .textFieldsOnly:
+            return nameElement
+        }
+    }()
 
-    private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement], theme: theme)
+    private lazy var phoneNumberSection: Element = {
+        switch viewModel.mode {
+        case .normal:
+            return SectionElement(elements: [phoneNumberElement], theme: theme)
+        case .textFieldsOnly:
+            return phoneNumberElement
+        }
+    }()
 
     private(set) lazy var legalTermsElement: StaticElement = {
-        let legalView = LinkLegalTermsView(textAlignment: .left, delegate: self)
+        let legalView = LinkLegalTermsView(textAlignment: .left,
+                                           mode: viewModel.mode,
+                                           delegate: self)
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
         legalView.tintColor = theme.colors.primary
@@ -66,13 +91,19 @@ final class LinkInlineSignupView: UIView {
         )
     }()
 
-    private lazy var formElement = FormElement(elements: [
-        checkboxElement,
-        emailSection,
-        phoneNumberSection,
-        nameSection,
-        legalTermsElement,
-    ], theme: theme)
+    private lazy var formElement: FormElement = {
+        var elements: [Element] = [emailSection,
+                        phoneNumberSection,
+                        nameSection, ]
+        if viewModel.showCheckbox {
+            elements.insert(checkboxElement, at: 0)
+        }
+
+        let style: FormElement.Style = viewModel.showCheckbox ? .plain : .bordered
+        let formElement = FormElement(elements: elements, style: style, theme: theme)
+
+        return FormElement(elements: [formElement, legalTermsElement], theme: theme)
+    }()
 
     init(viewModel: LinkInlineSignupViewModel) {
         self.viewModel = viewModel
@@ -89,7 +120,7 @@ final class LinkInlineSignupView: UIView {
 
     func setupUI() {
         clipsToBounds = true
-        directionalLayoutMargins = .insets(amount: 16)
+        directionalLayoutMargins = .insets(amount: viewModel.layoutInsets)
 
         formElement.view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(formElement.view)
@@ -126,8 +157,14 @@ final class LinkInlineSignupView: UIView {
         formElement.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
         formElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
 
-        // 2-way binding
-        checkboxElement.isChecked = viewModel.saveCheckboxChecked
+        switch viewModel.mode {
+        case .normal:
+            // 2-way binding
+            checkboxElement.isChecked = viewModel.saveCheckboxChecked
+        case .textFieldsOnly:
+            // assume checkbox is checked in text field only mode
+            viewModel.saveCheckboxChecked = true
+        }
     }
 
     private func updateAppearance() {
