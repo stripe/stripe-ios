@@ -342,7 +342,7 @@ extension PaymentSheet {
         /// - Note: When used with defaultBillingDetails, the value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var name: String?
 
-        /// The customer's phone number without formatting (e.g. 5551234567)
+        /// The customer's phone number without formatting (e.g. +15551234567)
         public var phone: String?
 
         /// Initializes billing details
