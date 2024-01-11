@@ -2310,11 +2310,15 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     }
 
     func testLinkInlineSignup_progressive() throws {
-        app.launch()
-        app.staticTexts["PaymentSheet"].tap()
-        let buyButton = app.staticTexts["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
-        buyButton.tap()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
 
         try! fillCardData(app)
 
@@ -2335,11 +2339,9 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         nameField.typeText("Jane Done")
         }
 
-        app.buttons["Pay €9.73"].tap()
-        let successText = app.alerts.staticTexts["Your order is confirmed!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
-        okButton.tap()
+        // Pay!
+        app.buttons["Pay $50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
 //    TODO: This is disabled until the Link team adds some hooks for testing.

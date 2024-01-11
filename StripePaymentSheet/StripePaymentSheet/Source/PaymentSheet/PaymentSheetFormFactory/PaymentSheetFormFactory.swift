@@ -44,6 +44,7 @@ class PaymentSheetFormFactory {
     var canSaveToLink: Bool {
         return (supportsLinkCard &&
                 paymentMethod == .stripe(.card) &&
+                (configuration.allowLinkV2Features || saveMode != .userSelectable) &&
                 !configuration.isUsingBillingAddressCollection)
     }
 
