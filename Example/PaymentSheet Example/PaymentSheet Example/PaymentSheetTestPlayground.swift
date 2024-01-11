@@ -271,21 +271,13 @@ struct PaymentSheetButtons: View {
                     }.padding(.horizontal)
                     HStack {
                         if let psfc = playgroundController.paymentSheetFlowController {
-                            VStack {
-                                Button {
-                                    psFCOptionsIsPresented = true
-                                } label: {
-                                    PaymentOptionView(paymentOptionDisplayData: playgroundController.paymentSheetFlowController?.paymentOption)
-                                }
-                                .disabled(playgroundController.paymentSheetFlowController == nil)
-                                Button {
-                                    psFCOptionsIsPresented = true
-                                } label: {
-                                    PaymentOptionInfoView(paymentOptionDisplayData: playgroundController.paymentSheetFlowController?.paymentOption)
-                                }
-                                .disabled(playgroundController.paymentSheetFlowController == nil)
-                                .padding()
+                            Button {
+                                psFCOptionsIsPresented = true
+                            } label: {
+                                PaymentOptionView(paymentOptionDisplayData: playgroundController.paymentSheetFlowController?.paymentOption)
                             }
+                            .disabled(playgroundController.paymentSheetFlowController == nil)
+                            .padding()
                             Button {
                                 playgroundController.didTapShippingAddressButton()
                             } label: {
@@ -333,26 +325,19 @@ struct PaymentOptionView: View {
     let paymentOptionDisplayData: PaymentSheet.FlowController.PaymentOptionDisplayData?
 
     var body: some View {
-        HStack {
-            Image(uiImage: paymentOptionDisplayData?.image ?? UIImage(systemName: "creditcard")!)
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: 30, maxHeight: 30, alignment: .leading)
-                .foregroundColor(.black)
-            Text(paymentOptionDisplayData?.label ?? "None")
+        VStack {
+            HStack {
+                Image(uiImage: paymentOptionDisplayData?.image ?? UIImage(systemName: "creditcard")!)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 30, maxHeight: 30, alignment: .leading)
+                    .foregroundColor(.black)
+                Text(paymentOptionDisplayData?.label ?? "None")
                 // Surprisingly, setting the accessibility identifier on the HStack causes the identifier to be
                 // "Payment method-Payment method". We'll set it on a single View instead.
-                .accessibility(identifier: "Payment method")
-                .foregroundColor(.primary)
+                    .accessibility(identifier: "Payment method")
+                    .foregroundColor(.primary)
             }
-        }
-}
-
-struct PaymentOptionInfoView: View {
-    let paymentOptionDisplayData: PaymentSheet.FlowController.PaymentOptionDisplayData?
-
-    var body: some View {
-        VStack {
             if let paymentMethodType = paymentOptionDisplayData?.paymentMethodType {
                 Text(paymentMethodType)
                     .font(.caption)
@@ -375,39 +360,30 @@ struct BillingDetailsView: View {
         VStack {
             if let name = billingDetails.name {
                 Text(name)
-                    .accessibility(identifier: "Name")
             }
             if let email = billingDetails.email {
                 Text(email)
-                    .accessibility(identifier: "Email")
             }
             if let phone = billingDetails.phone {
                 Text(phone)
-                    .accessibility(identifier: "Phone")
             }
             if let line1 = billingDetails.address.line1 {
                 Text(line1)
-                    .accessibility(identifier: "Line1")
             }
             if let line2 = billingDetails.address.line2 {
                 Text(line2)
-                    .accessibility(identifier: "Line2")
             }
             if let city = billingDetails.address.city {
                 Text(city)
-                    .accessibility(identifier: "City")
             }
             if let state = billingDetails.address.state {
                 Text(state)
-                    .accessibility(identifier: "State")
             }
             if let postalCode = billingDetails.address.postalCode {
                 Text(postalCode)
-                    .accessibility(identifier: "PostalCode")
             }
             if let country = billingDetails.address.country {
                 Text(country)
-                    .accessibility(identifier: "Country")
             }
         }
     }
