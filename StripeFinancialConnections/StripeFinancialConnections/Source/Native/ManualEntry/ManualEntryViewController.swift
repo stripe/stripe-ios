@@ -51,24 +51,27 @@ final class ManualEntryViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
 
-        let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
-            title: STPLocalizedString(
-                "Enter bank account details",
-                "The title of a screen that allows a user to manually enter their bank account information."
-            ),
-            subtitle: dataSource.manifest.manualEntryUsesMicrodeposits
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: nil,
+                title: STPLocalizedString(
+                    "Enter bank details",
+                    "The title of a screen that allows a user to manually enter their bank account information."
+                ),
+                subtitle: dataSource.manifest.manualEntryUsesMicrodeposits
                 ? STPLocalizedString(
                     "Your bank information will be verified with micro-deposits to your account",
                     "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified."
                 ) : nil,
-            contentView: manualEntryFormView,
+                contentView: manualEntryFormView
+            ),
             footerView: footerView
         )
-        paneWithHeaderLayoutView.addTo(view: view)
+        paneLayoutView.addTo(view: view)
         #if !canImport(CompositorServices)
-        paneWithHeaderLayoutView.scrollView.keyboardDismissMode = .onDrag
+        paneLayoutView.scrollView.keyboardDismissMode = .onDrag
         #endif
-        stp_beginObservingKeyboardAndInsettingScrollView(paneWithHeaderLayoutView.scrollView, onChange: nil)
+        stp_beginObservingKeyboardAndInsettingScrollView(paneLayoutView.scrollView, onChange: nil)
 
         adjustContinueButtonStateIfNeeded()
 
