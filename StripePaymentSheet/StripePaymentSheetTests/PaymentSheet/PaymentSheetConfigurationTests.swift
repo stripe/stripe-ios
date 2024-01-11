@@ -73,7 +73,7 @@ class PaymentSheetConfigurationTests: XCTestCase {
         billingDetails.address?.state = "California"
         billingDetails.address?.country = "US"
 
-        let psBillingDetails = billingDetails.toPaymentSheetBillingDetails()
+        let psBillingDetails: PaymentSheet.BillingDetails = billingDetails.toPaymentSheetBillingDetails()
 
         XCTAssertEqual(psBillingDetails.name, "Jane Doe")
         XCTAssertEqual(psBillingDetails.email, "janedoe@test.com")
