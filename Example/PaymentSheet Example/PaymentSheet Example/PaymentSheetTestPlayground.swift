@@ -364,7 +364,7 @@ struct BillingDetailsView: View {
             if let email = billingDetails.email {
                 Text(email)
             }
-            if let phone = billingDetails.phone {
+            if let phone = billingDetails.phoneNumberForDisplay {
                 Text(phone)
             }
             if let line1 = billingDetails.address.line1 {

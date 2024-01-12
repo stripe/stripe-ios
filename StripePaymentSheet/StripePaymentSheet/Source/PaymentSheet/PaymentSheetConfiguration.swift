@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
 import UIKit
 
@@ -342,8 +343,17 @@ extension PaymentSheet {
         /// - Note: When used with defaultBillingDetails, the value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var name: String?
 
-        /// The customer's phone number without formatting (e.g. +15551234567)
+        /// The customer's phone number in e164 formatting (e.g. +15551234567)
+        /// - Note: Not passing in a '+' will assume a US based phone number
         public var phone: String?
+
+        /// The customer's phone number used for displaying in your UI (e.g. +1 (555) 555-5555)
+        public var phoneNumberForDisplay: String? {
+            guard let phone = self.phone else {
+                return nil
+            }
+            return PhoneNumber.fromE164(phone)?.string(as: .international)
+        }
 
         /// Initializes billing details
         public init(address: PaymentSheet.Address = Address(), email: String? = nil, name: String? = nil, phone: String? = nil) {

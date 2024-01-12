@@ -78,6 +78,7 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssertEqual(psBillingDetails.name, "Jane Doe")
         XCTAssertEqual(psBillingDetails.email, "janedoe@test.com")
         XCTAssertEqual(psBillingDetails.phone, "+18885551234")
+        XCTAssertEqual(psBillingDetails.phoneNumberForDisplay, "+1 (888) 555-1234")
         XCTAssertEqual(psBillingDetails.address.line1, "123 Main Street")
         XCTAssertEqual(psBillingDetails.address.line2, "")
         XCTAssertEqual(psBillingDetails.address.city, "San Francisco")
