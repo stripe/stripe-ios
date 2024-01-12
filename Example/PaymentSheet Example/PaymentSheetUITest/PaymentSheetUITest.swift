@@ -2300,11 +2300,49 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         phoneField.typeText("3105551234")
 
         // The name field is only required for non-US countries. Only fill it out if it exists.
-        let nameField = app.textFields["Name"]
+        let nameField = app.textFields["Full name"]
         if nameField.exists {
-            nameField.tap()
-            nameField.typeText("Jane Done")
+            // Country is geolocated from client's request - tests are expected to run in US
+            XCTFail("Name field should not exist")
         }
+
+        // Pay!
+        app.buttons["Pay $50.99"].tap()
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
+    func testLinkInlineSignup_gb() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.linkOverrideCountry = .GB
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        try fillCardData(app)
+
+        app.switches["Save your info for secure 1-click checkout with Link"].tap()
+
+        let emailField = app.textFields["Email"]
+        emailField.tap()
+        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+
+        let phoneField = app.textFields["Phone"]
+        // Phone field appears after the network call finishes. We want to wait for it to appear.
+        XCTAssert(phoneField.waitForExistence(timeout: 10))
+        phoneField.tap()
+        phoneField.typeText("3105551234")
+
+        // The name field is required for non-US countries
+        let nameField = app.textFields["Full name"]
+        XCTAssert(nameField.waitForExistence(timeout: 10))
+        nameField.tap()
+        nameField.typeText("Jane Doe")
 
         // Pay!
         app.buttons["Pay $50.99"].tap()

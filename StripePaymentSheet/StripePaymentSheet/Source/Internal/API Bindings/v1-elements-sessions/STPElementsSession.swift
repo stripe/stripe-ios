@@ -11,6 +11,9 @@ import Foundation
 
 /// The response returned by v1/elements/sessions
 final class STPElementsSession: NSObject {
+    #if DEBUG && targetEnvironment(simulator)
+    public static let countryCodeOverride: String? = nil
+    #endif
     /// Elements Session ID for analytics purposes, looks like "elements_session_1234"
     let sessionID: String
 

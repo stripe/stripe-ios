@@ -104,6 +104,10 @@ class PlaygroundController: ObservableObject {
         configuration.customer = customerConfiguration
         configuration.appearance = appearance
         configuration.allowLinkV2Features = settings.linkV2Allowed == .on
+        if settings.linkOverrideCountry != .off {
+            configuration.linkOverrideCountry = settings.linkOverrideCountry.rawValue
+        }
+
         configuration.returnURL = "payments-example://stripe-redirect"
         if settings.defaultBillingAddress == .on {
             configuration.defaultBillingDetails.name = "Jane Doe"
