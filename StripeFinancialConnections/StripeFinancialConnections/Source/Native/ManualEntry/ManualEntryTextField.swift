@@ -45,17 +45,24 @@ final class ManualEntryTextField: UIView {
                 textField
             ]
         )
+        textFieldStackView.backgroundColor = .customBackgroundColor
         textFieldStackView.axis = .vertical
         textFieldStackView.spacing = 0
         textFieldStackView.isLayoutMarginsRelativeArrangement = true
         textFieldStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 8,
             leading: 16,
-            bottom: 8
-            ,
+            bottom: 8,
             trailing: 16
         )
         textFieldStackView.layer.cornerRadius = 12
+        textFieldStackView.layer.shadowColor = UIColor.black.cgColor
+        textFieldStackView.layer.shadowRadius = 2 / UIScreen.main.nativeScale
+        textFieldStackView.layer.shadowOpacity = 0.1
+        textFieldStackView.layer.shadowOffset = CGSize(
+            width: 0,
+            height: 1 / UIScreen.main.nativeScale
+        )
         return textFieldStackView
     }()
     private(set) lazy var textField: UITextField = {

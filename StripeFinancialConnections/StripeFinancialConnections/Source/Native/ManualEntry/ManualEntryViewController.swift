@@ -118,6 +118,9 @@ final class ManualEntryViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case .success(let resource):
+                // note: we are not stopping the footer button loading in the `success`
+                // case because we will transition to a different screen
+                // so we want to avoid slight animation 'blip' by stopping
                 self.delegate?
                     .manualEntryViewController(
                         self,
@@ -125,6 +128,8 @@ final class ManualEntryViewController: UIViewController {
                         accountNumberLast4: String(routingAndAccountNumber.accountNumber.suffix(4))
                     )
             case .failure(let error):
+                self.footerView.setIsLoading(false)
+
                 let errorText: String
                 if let stripeError = error as? StripeError, case .apiError(let apiError) = stripeError {
                     errorText = apiError.message ?? stripeError.localizedDescription
@@ -140,7 +145,6 @@ final class ManualEntryViewController: UIViewController {
                         pane: .manualEntry
                     )
             }
-            self.footerView.setIsLoading(false)
         }
     }
 
