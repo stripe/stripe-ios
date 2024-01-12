@@ -75,8 +75,16 @@ extension UIColor {
         return neutral50
     }
 
+    static var backgroundOffset: UIColor {
+        return neutral25
+    }
+
     static var attention50: UIColor {
         return UIColor(red: 254 / 255.0, green: 249 / 255.0, blue: 218 / 255.0, alpha: 1)  // #fef9da
+    }
+
+    private static var neutral25: UIColor {
+        return UIColor(red: 245 / 255.0, green: 246 / 255.0, blue: 248 / 255.0, alpha: 1)  // #f5f6f8
     }
 
     private static var neutral50: UIColor {

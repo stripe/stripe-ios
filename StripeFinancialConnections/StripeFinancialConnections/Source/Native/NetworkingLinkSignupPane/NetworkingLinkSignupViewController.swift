@@ -32,11 +32,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
     private let dataSource: NetworkingLinkSignupDataSource
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
-    private lazy var loadingView: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .textDisabled
-        activityIndicator.backgroundColor = .customBackgroundColor
-        return activityIndicator
+    private lazy var loadingView: SpinnerView = {
+        return SpinnerView()
     }()
     private lazy var formView: NetworkingLinkSignupBodyFormView = {
         let formView = NetworkingLinkSignupBodyFormView(
@@ -168,11 +165,6 @@ final class NetworkingLinkSignupViewController: UIViewController {
         }
 
         loadingView.isHidden = !show
-        if show {
-            loadingView.startAnimating()
-        } else {
-            loadingView.stopAnimating()
-        }
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
 
