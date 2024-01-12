@@ -344,7 +344,7 @@ extension PaymentSheet {
         public var name: String?
 
         /// The customer's phone number in e164 formatting (e.g. +15551234567)
-        /// - Note: Not passing in a '+' will assume a US based phone number
+        /// - Note: When used with defaultBillingDetails, omitting '+' will assume a US based phone number.
         public var phone: String?
 
         /// The customer's phone number used for displaying in your UI (e.g. +1 (555) 555-5555)
