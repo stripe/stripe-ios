@@ -22,7 +22,7 @@ final class AccountPickerSelectionView: UIView {
     private let listView: AccountPickerSelectionListView
 
     init(
-        accountPickerType: AccountPickerType,
+        selectionType: AccountPickerSelectionType,
         enabledAccounts: [FinancialConnectionsPartnerAccount],
         disabledAccounts: [FinancialConnectionsPartnerAccount],
         institution: FinancialConnectionsInstitution,
@@ -30,7 +30,7 @@ final class AccountPickerSelectionView: UIView {
     ) {
         self.delegate = delegate
         self.listView = AccountPickerSelectionListView(
-            selectionType: accountPickerType == .checkbox ? .checkbox : .radioButton,
+            selectionType: selectionType,
             enabledAccounts: enabledAccounts,
             disabledAccounts: disabledAccounts
         )

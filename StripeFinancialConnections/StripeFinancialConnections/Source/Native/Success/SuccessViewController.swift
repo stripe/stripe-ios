@@ -65,7 +65,7 @@ final class SuccessViewController: UIViewController {
                             pane: .success
                         )
                 },
-                didSelectMerchantDataAccessLearnMore: { [weak self] in
+                didSelectMerchantDataAccessLearnMore: { [weak self] _ in
                     guard let self = self else { return }
                     self.dataSource
                         .analyticsClient

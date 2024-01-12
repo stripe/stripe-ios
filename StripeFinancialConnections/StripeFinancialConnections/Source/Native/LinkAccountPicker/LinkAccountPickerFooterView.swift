@@ -34,7 +34,7 @@ final class LinkAccountPickerFooterView: UIView {
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         singleAccount: Bool,
         didSelectConnectAccount: @escaping () -> Void,
-        didSelectMerchantDataAccessLearnMore: @escaping () -> Void
+        didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {
         self.defaultCta = defaultCta
         self.singleAccount = singleAccount

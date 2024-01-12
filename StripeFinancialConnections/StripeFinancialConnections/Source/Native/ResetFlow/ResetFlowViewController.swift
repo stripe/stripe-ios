@@ -48,11 +48,8 @@ final class ResetFlowViewController: UIViewController {
             .analyticsClient
             .logPaneLoaded(pane: .resetFlow)
 
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .textDisabled
-        activityIndicator.backgroundColor = .customBackgroundColor
-        view.addAndPinSubviewToSafeArea(activityIndicator)
-        activityIndicator.startAnimating()
+        let loadingView = SpinnerView()
+        view.addAndPinSubviewToSafeArea(loadingView)
 
         dataSource.markLinkingMoreAccounts()
             .observe(on: .main) { [weak self] result in

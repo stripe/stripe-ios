@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
@@ -27,19 +28,15 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
     )
 }
 
-enum AccountPickerType {
-    case checkbox
-    case radioButton
+enum AccountPickerSelectionType {
+    case single
+    case multiple
 }
 
 final class AccountPickerViewController: UIViewController {
 
     private let dataSource: AccountPickerDataSource
-    private let accountPickerType: AccountPickerType
-    // a special case where some institutions have an
-    // account picker as part of their bank auth
-    // flow, so we give special treatment
-    private let institutionHasAccountPicker: Bool
+    private let selectionType: AccountPickerSelectionType
     weak var delegate: AccountPickerViewControllerDelegate?
     private weak var accountPickerSelectionView: AccountPickerSelectionView?
     private var businessName: String? {
@@ -77,7 +74,6 @@ final class AccountPickerViewController: UIViewController {
             businessName: businessName,
             permissions: dataSource.manifest.permissions,
             singleAccount: dataSource.manifest.singleAccount,
-            institutionHasAccountPicker: institutionHasAccountPicker,
             didSelectLinkAccounts: { [weak self] in
                 guard let self = self else {
                     return
@@ -94,8 +90,19 @@ final class AccountPickerViewController: UIViewController {
                 )
                 self.didSelectLinkAccounts()
             },
-            didSelectMerchantDataAccessLearnMore: { [weak self] in
+            didSelectMerchantDataAccessLearnMore: { [weak self] url in
                 guard let self = self else { return }
+                SFSafariViewController.present(url: url)
+
+                // TODO(kgaidis): fix/return `dataAccessNotice`
+//                let dataAccessNoticeViewController = DataAccessNoticeViewController(
+//                    dataAccessNotice: dataSource.consent.dataAccessNotice,
+//                    didSelectUrl: { [weak self] url in
+//                        self?.didSelectURLInTextFromBackend(url)
+//                    }
+//                )
+//                dataAccessNoticeViewController.present(on: self)
+
                 self.dataSource
                     .analyticsClient
                     .logMerchantDataAccessLearnMore(pane: .accountPicker)
@@ -105,10 +112,7 @@ final class AccountPickerViewController: UIViewController {
 
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
-        self.accountPickerType = dataSource.manifest.singleAccount ? .radioButton : .checkbox
-        self.institutionHasAccountPicker =
-            (dataSource.authSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount
-                && dataSource.authSession.isOauthNonOptional)
+        self.selectionType = dataSource.manifest.singleAccount ? .single : .multiple
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
@@ -126,8 +130,9 @@ final class AccountPickerViewController: UIViewController {
     }
 
     private func pollAuthSessionAccounts() {
-        // Load accounts
-        let retreivingAccountsLoadingView = buildRetrievingAccountsView()
+        let retreivingAccountsLoadingView = RetrieveAccountsLoadingView(
+            institutionIconUrl: dataSource.institution.icon?.default
+        )
         view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
 
         let pollingStartDate = Date()
@@ -243,24 +248,29 @@ final class AccountPickerViewController: UIViewController {
         _ disabledAccounts: [FinancialConnectionsPartnerAccount]
     ) {
         let accountPickerSelectionView = AccountPickerSelectionView(
-            accountPickerType: accountPickerType,
+            selectionType: selectionType,
             enabledAccounts: enabledAccounts,
             disabledAccounts: disabledAccounts,
             institution: dataSource.institution,
             delegate: self
         )
         self.accountPickerSelectionView = accountPickerSelectionView
-        let paneLayoutView = PaneWithHeaderLayoutView(
-            title: {
-                if self.institutionHasAccountPicker {
-                    return STPLocalizedString(
-                        "Confirm your account",
-                        "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
-                    )
-                } else {
+
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: {
+                    if let institutionIconUrl = dataSource.institution.icon?.default {
+                        let institutionIconView = InstitutionIconView()
+                        institutionIconView.setImageUrl(institutionIconUrl)
+                        return institutionIconView
+                    } else {
+                        return nil
+                    }
+                }(),
+                title: {
                     if dataSource.manifest.singleAccount {
                         return STPLocalizedString(
-                            "Select an account",
+                            "Select account",
                             "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
                         )
                     } else {
@@ -269,28 +279,19 @@ final class AccountPickerViewController: UIViewController {
                             "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
                         )
                     }
-                }
-            }(),
-            subtitle: {
-                if institutionHasAccountPicker {
-                    return STPLocalizedString(
-                        "Select the account you'd like to link.",
-                        "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account."
-                    )
-                } else {
-                    return nil  // no subtitle
-                }
-            }(),
-            contentView: accountPickerSelectionView,
+                }(),
+                subtitle: nil,
+                contentView: accountPickerSelectionView
+            ),
             footerView: footerView
         )
         paneLayoutView.addTo(view: view)
 
-        switch accountPickerType {
-        case .checkbox:
+        switch selectionType {
+        case .multiple:
             // select all accounts
             dataSource.updateSelectedAccounts(enabledAccounts)
-        case .radioButton:
+        case .single:
             if let firstAccount = enabledAccounts.first {
                 dataSource.updateSelectedAccounts([firstAccount])
             } else {
@@ -328,12 +329,11 @@ final class AccountPickerViewController: UIViewController {
     }
 
     private func didSelectLinkAccounts() {
-        let numberOfSelectedAccounts = dataSource.selectedAccounts.count
-        let linkingAccountsLoadingView = LinkingAccountsLoadingView(
-            numberOfSelectedAccounts: numberOfSelectedAccounts,
-            businessName: businessName
-        )
-        view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
+        footerView.startLoading()
+        // the `footerView` only shows loading view on the button,
+        // so we need to prevent interactions elsewhere on the
+        // screen while its loading
+        view.isUserInteractionEnabled = false
 
         dataSource
             .selectAuthSessionAccounts()
@@ -361,8 +361,8 @@ final class AccountPickerViewController: UIViewController {
     private func logAccountSelectOrDeselect(selectedAccounts: [FinancialConnectionsPartnerAccount]) {
         let isSelect: Bool? // false when deselected, and nil when event shouldn't be sent
         let accountId: String?
-        switch accountPickerType {
-        case .radioButton:
+        switch selectionType {
+        case .single:
             // user deselected an account by selecting the same row
             if selectedAccounts.isEmpty {
                 isSelect = false
@@ -373,7 +373,7 @@ final class AccountPickerViewController: UIViewController {
                 isSelect = true
                 accountId = selectedAccounts.first?.id
             }
-        case .checkbox:
+        case .multiple:
             // if user selects or deselects more than two accounts at the same time, we assume user pressed
             // "All accounts" which we have decided to exclude due to V3 changes
             let pressedAllAccountsButton = (abs(selectedAccounts.count - dataSource.selectedAccounts.count) >= 2)

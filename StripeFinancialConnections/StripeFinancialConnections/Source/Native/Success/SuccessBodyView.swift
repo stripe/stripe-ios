@@ -23,7 +23,7 @@ final class SuccessBodyView: HitTestView {
         isNetworking: Bool,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         didSelectDisconnectYourAccounts: @escaping () -> Void,
-        didSelectMerchantDataAccessLearnMore: @escaping () -> Void
+        didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {
         super.init(frame: .zero)
         let verticalStackView = HitTestStackView()
@@ -93,7 +93,7 @@ private func CreateDataAccessDisclosureView(
     businessName: String?,
     permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
     isNetworking: Bool,
-    didSelectLearnMore: @escaping () -> Void
+    didSelectLearnMore: @escaping (URL) -> Void
 ) -> UIView {
     let separatorView = UIView()
     separatorView.backgroundColor = .borderNeutral
