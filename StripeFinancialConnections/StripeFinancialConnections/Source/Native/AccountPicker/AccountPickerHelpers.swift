@@ -8,6 +8,33 @@
 import UIKit
 
 final class AccountPickerHelpers {
+
+    static func rowInfo(
+        forAccount account: FinancialConnectionsPartnerAccount
+    ) -> (
+        accountName: String,
+        accountNumbers: String?,
+        balanceString: String?
+    ) {
+        return (
+            accountName: account.name,
+            accountNumbers: {
+                if let displayableAccountNumbers = account.displayableAccountNumbers {
+                   return "••••\(displayableAccountNumbers)"
+                } else {
+                    return nil
+                }
+            }(),
+            balanceString: {
+                if let balanceInfo = account.balanceInfo {
+                    return currencyString(currency: balanceInfo.currency, balanceAmount: balanceInfo.balanceAmount)
+                } else {
+                    return nil
+                }
+            }()
+        )
+    }
+
     static func rowTitles(
         forAccount account: FinancialConnectionsPartnerAccount,
         // caption, for networked accounts, will hide account numbers, so we should show account numbers in the title
@@ -36,6 +63,7 @@ final class AccountPickerHelpers {
         }
     }
 
+    // exposed for testing purposes
     static func currencyString(currency: String, balanceAmount: Int) -> String? {
         let numberFormatter = NumberFormatter()
         numberFormatter.currencyCode = currency

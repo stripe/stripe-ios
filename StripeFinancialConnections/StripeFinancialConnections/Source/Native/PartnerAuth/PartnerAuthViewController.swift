@@ -146,11 +146,8 @@ final class PartnerAuthViewController: UIViewController {
             // a legacy (non-oauth) institution will have a blank background
             // during presenting + dismissing of the Web View, so
             // add a loading spinner to fill some of the blank space
-            let activityIndicator = ActivityIndicator(size: .large)
-            activityIndicator.color = .textDisabled
-            activityIndicator.backgroundColor = .customBackgroundColor
-            activityIndicator.startAnimating()
-            view.addAndPinSubview(activityIndicator)
+            let loadingView = SpinnerView()
+            view.addAndPinSubview(loadingView)
 
             openInstitutionAuthenticationWebView(authSession: authSession)
         }
