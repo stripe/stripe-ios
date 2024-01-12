@@ -21,18 +21,7 @@ final class ManualEntryErrorView: UIView {
             linkColor: .textFeedbackCritical
         )
         errorLabel.setText(text)
-        errorLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-
-        let horizontalStackView = UIStackView(
-            arrangedSubviews: [
-                errorLabel,
-            ]
-        )
-        horizontalStackView.axis = .horizontal
-        horizontalStackView.spacing = 6
-        // align icon + text to the top
-        horizontalStackView.alignment = .top
-        addAndPinSubview(horizontalStackView)
+        addAndPinSubview(errorLabel)
     }
 
     required init?(coder: NSCoder) {

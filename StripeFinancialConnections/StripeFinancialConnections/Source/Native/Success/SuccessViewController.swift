@@ -39,8 +39,9 @@ final class SuccessViewController: UIViewController {
         view.addSubview(contentView)
 
         let bodyView = CreateBodyView(
-            subtitle: CreateSubtitleText(
-                isLinkingOneAccount: (dataSource.linkedAccounts.count == 1),
+            subtitle: dataSource.customSuccessPaneMessage ?? CreateSubtitleText(
+                // manual entry has "0" linked accounts count
+                isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
                 showSaveToLinkFailedNotice: showSaveToLinkFailedNotice
             )
         )
