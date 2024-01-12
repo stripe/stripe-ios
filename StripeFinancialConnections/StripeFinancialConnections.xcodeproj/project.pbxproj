@@ -41,7 +41,6 @@
 		2AA0942F22A323B33CA6B7CA /* PartnerAuthDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC8B933341AF86D9AFF5979 /* PartnerAuthDataSource.swift */; };
 		2CE89100448F26DDA831F455 /* NativeFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F856808B78F4F1975959805 /* NativeFlowController.swift */; };
 		2D14461B27B3DEE2CC19B090 /* FinancialConnectionsAccountFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1BC95816DAD5AE9680662 /* FinancialConnectionsAccountFetcher.swift */; };
-		2E29C0A30C137791D357F4C1 /* SuccessBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E53077F6CE2AF59B9BCB4EF /* SuccessBodyView.swift */; };
 		2FADCA33DEC08E6551D94811 /* AttributedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97948A848C99ACD1A498F841 /* AttributedTextView.swift */; };
 		313F5F7F2B0BE5D100BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F7E2B0BE5D100BD98A9 /* Docs.docc */; };
 		31AD3BE92B0C2F000080C800 /* ScreenNativeScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BE82B0C2F000080C800 /* ScreenNativeScale.swift */; };
@@ -156,7 +155,6 @@
 		B5EEF34D158C08A1745FA150 /* ContinueStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA55452373FD735983F3690B /* ContinueStateView.swift */; };
 		B8F440921DB172F96F912CD0 /* PaneWithCustomHeaderLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */; };
 		B9A24A47454134F2B869C969 /* FinancialConnectionsConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD9739F1AA7CBA76DD3E1E2 /* FinancialConnectionsConsent.swift */; };
-		BAA72FE13406CAF5FA4BBDC8 /* SuccessAccountListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4EDFBDA8D9C0CEA30B51F2 /* SuccessAccountListView.swift */; };
 		BCEA321423DF0E7674C2544C /* APIVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D95E5F34BDEE0237F52DA0A /* APIVersion.swift */; };
 		BD3C87E03EB44F7D1C11664C /* spinner@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 57B289E803B7A53B000D7919 /* spinner@3x.png */; };
 		BF5F964E1CA6312755D4161E /* SessionFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965814B0C5F3D13158E610E3 /* SessionFetcherTests.swift */; };
@@ -324,7 +322,6 @@
 		4AFBF95DAE0783010A17EB58 /* FinancialConnectionsSession_only_accounts.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_only_accounts.json; sourceTree = "<group>"; };
 		4BFCD9C339634B71FC8F85E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4C15A30C40F34CE330F89C41 /* SuccessDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessDataSource.swift; sourceTree = "<group>"; };
-		4C4EDFBDA8D9C0CEA30B51F2 /* SuccessAccountListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessAccountListView.swift; sourceTree = "<group>"; };
 		4DA1C1B311E06C1165C6F6A2 /* InstitutionSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchBar.swift; sourceTree = "<group>"; };
 		4E2EAD7059FF8358E674774A /* FinancialConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClient.swift; sourceTree = "<group>"; };
 		4E4A84F0646AD673029CB6FC /* Button+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Extensions.swift"; sourceTree = "<group>"; };
@@ -349,7 +346,6 @@
 		5D1C78684DD0B2D168C86229 /* ResetFlowDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetFlowDataSource.swift; sourceTree = "<group>"; };
 		5D555DB0657A602274596428 /* warning_triangle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning_triangle@3x.png"; sourceTree = "<group>"; };
 		5E48DB3155C1546B196DF97B /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
-		5E53077F6CE2AF59B9BCB4EF /* SuccessBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessBodyView.swift; sourceTree = "<group>"; };
 		5F856808B78F4F1975959805 /* NativeFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeFlowController.swift; sourceTree = "<group>"; };
 		606B3546B822EE9F9F868B8C /* LinkAccountPickerRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountPickerRowView.swift; sourceTree = "<group>"; };
 		60B7CFC14964440E8AA670A9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
@@ -653,8 +649,6 @@
 		3ADD22C8436381E94908DA82 /* Success */ = {
 			isa = PBXGroup;
 			children = (
-				4C4EDFBDA8D9C0CEA30B51F2 /* SuccessAccountListView.swift */,
-				5E53077F6CE2AF59B9BCB4EF /* SuccessBodyView.swift */,
 				4C15A30C40F34CE330F89C41 /* SuccessDataSource.swift */,
 				DD828AB80DE41DE11D38AF5C /* SuccessFooterView.swift */,
 				EB3F67BE6E46ED018EB8C3FD /* SuccessViewController.swift */,
@@ -1414,8 +1408,6 @@
 				486E50E6CB90208AB98C031E /* UIImageView+Extensions.swift in Sources */,
 				F0FB346A0F86C3561CD3C048 /* UITableView+Extensions.swift in Sources */,
 				A34AB3AC6D071605CABFFC9B /* UIViewController+KeyboardAvoiding.swift in Sources */,
-				BAA72FE13406CAF5FA4BBDC8 /* SuccessAccountListView.swift in Sources */,
-				2E29C0A30C137791D357F4C1 /* SuccessBodyView.swift in Sources */,
 				B2970FE2753A4D79E428BA73 /* SuccessDataSource.swift in Sources */,
 				C39214EA5995D85B847406BE /* SuccessFooterView.swift in Sources */,
 				6A1D42FF2B1686FC005A1EB0 /* InstitutionTableView.swift in Sources */,
