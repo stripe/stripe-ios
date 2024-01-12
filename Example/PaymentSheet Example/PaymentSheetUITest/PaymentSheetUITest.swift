@@ -179,7 +179,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
             settings
         )
 
-        app.buttons["Apple Pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         app.buttons["+ Add"].waitForExistenceAndTap()
 
         try! fillCardData(app)
@@ -210,7 +210,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Reload w/ same customer
         reload(app, settings: settings)
-        app.buttons["Apple Pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         XCTAssertEqual(app.cells.count, 3) // Should be "Add" and "Apple Pay" and "Link"
         app.buttons["+ Add"].waitForExistenceAndTap()
 
@@ -1331,7 +1331,8 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Reload w/ same customer
         reload(app, settings: settings)
         // This time, expect SEPA to be pre-selected as the default
-        XCTAssertEqual(paymentMethodButton.label, "••••3201")
+        XCTAssert(paymentMethodButton.label.hasPrefix("••••3201, sepa_debit"))
+
         // Tapping confirm without presenting flowcontroller should show the mandate
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.waitForExistence(timeout: 1))
@@ -1346,7 +1347,9 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Reload w/ same customer
         reload(app, settings: settings)
         // If you present the flowcontroller and see the mandate...
-        app.buttons["••••3201"].waitForExistenceAndTap()
+        XCTAssert(paymentMethodButton.label.hasPrefix("••••3201, sepa_debit"))
+        paymentMethodButton.waitForExistenceAndTap()
+
         XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.exists)
         // ...you shouldn't see the mandate again when you confirm
         app.buttons["Continue"].tap()

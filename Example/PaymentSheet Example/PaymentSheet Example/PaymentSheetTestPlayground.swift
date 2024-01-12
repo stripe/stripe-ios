@@ -325,21 +325,67 @@ struct PaymentOptionView: View {
     let paymentOptionDisplayData: PaymentSheet.FlowController.PaymentOptionDisplayData?
 
     var body: some View {
-        HStack {
-            Image(uiImage: paymentOptionDisplayData?.image ?? UIImage(systemName: "creditcard")!)
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: 30, maxHeight: 30, alignment: .leading)
-                .foregroundColor(.black)
-            Text(paymentOptionDisplayData?.label ?? "None")
+        VStack {
+            HStack {
+                Image(uiImage: paymentOptionDisplayData?.image ?? UIImage(systemName: "creditcard")!)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 30, maxHeight: 30, alignment: .leading)
+                    .foregroundColor(.black)
+                Text(paymentOptionDisplayData?.label ?? "None")
                 // Surprisingly, setting the accessibility identifier on the HStack causes the identifier to be
                 // "Payment method-Payment method". We'll set it on a single View instead.
-                .accessibility(identifier: "Payment method")
-                .foregroundColor(.primary)
+                    .accessibility(identifier: "Payment method")
+                    .foregroundColor(.primary)
+            }
+            if let paymentMethodType = paymentOptionDisplayData?.paymentMethodType {
+                Text(paymentMethodType)
+                    .font(.caption)
+                    .foregroundColor(.primary)
+            }
+            if let billingDetails = paymentOptionDisplayData?.billingDetails {
+                BillingDetailsView(billingDetails: billingDetails)
+                    .font(.caption)
+                    .foregroundColor(.primary)
+
+            }
         }
-        .padding()
-        .foregroundColor(.black)
-        .cornerRadius(6)
+    }
+}
+
+struct BillingDetailsView: View {
+    let billingDetails: PaymentSheet.BillingDetails
+
+    var body: some View {
+        VStack {
+            if let name = billingDetails.name {
+                Text(name)
+            }
+            if let email = billingDetails.email {
+                Text(email)
+            }
+            if let phone = billingDetails.phoneNumberForDisplay {
+                Text(phone)
+            }
+            if let line1 = billingDetails.address.line1 {
+                Text(line1)
+            }
+            if let line2 = billingDetails.address.line2 {
+                Text(line2)
+            }
+            if let city = billingDetails.address.city {
+                Text(city)
+            }
+            if let state = billingDetails.address.state {
+                Text(state)
+            }
+            if let postalCode = billingDetails.address.postalCode {
+                Text(postalCode)
+            }
+            if let country = billingDetails.address.country {
+                Text(country)
+            }
+        }
     }
 }
 
