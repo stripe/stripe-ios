@@ -58,11 +58,34 @@ final class ManualEntryViewController: UIViewController {
                     "Enter bank details",
                     "The title of a screen that allows a user to manually enter their bank account information."
                 ),
-                subtitle: dataSource.manifest.manualEntryUsesMicrodeposits
-                ? STPLocalizedString(
-                    "Your bank information will be verified with micro-deposits to your account",
-                    "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified."
-                ) : nil,
+                subtitle: {
+                    let checkingOnly = !dataSource.manifest.product.hasSuffix("onboarding")
+                    if checkingOnly {
+                        if dataSource.manifest.manualEntryUsesMicrodeposits {
+                            return STPLocalizedString(
+                                "Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported.",
+                                "The subtitle/description in a screen that allows a user to manually enter their bank account information."
+                            )
+                        } else {
+                            return STPLocalizedString(
+                                "Only checking accounts are supported.",
+                                "The subtitle/description in a screen that allows a user to manually enter their bank account information."
+                            )
+                        }
+                    } else { // checking or savings
+                        if dataSource.manifest.manualEntryUsesMicrodeposits {
+                            return STPLocalizedString(
+                                "Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days.",
+                                "The subtitle/description in a screen that allows a user to manually enter their bank account information."
+                            )
+                        } else {
+                            return STPLocalizedString(
+                                "Checking and savings accounts are supported.",
+                                "The subtitle/description in a screen that allows a user to manually enter their bank account information."
+                            )
+                        }
+                    }
+                }(),
                 contentView: manualEntryFormView
             ),
             footerView: footerView

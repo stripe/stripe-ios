@@ -18,14 +18,11 @@ final class ManualEntryFormView: UIView {
 
     weak var delegate: ManualEntryFormViewDelegate?
     private lazy var textFieldStackView: UIStackView = {
-//        let spacerView = UIView()
-//        spacerView.setContentHuggingPriority(.defaultLow, for: .vertical)
         let textFieldVerticalStackView = UIStackView(
             arrangedSubviews: [
                 routingNumberTextField,
                 accountNumberTextField,
                 accountNumberConfirmationTextField,
-//                spacerView,
             ]
         )
         textFieldVerticalStackView.axis = .vertical
