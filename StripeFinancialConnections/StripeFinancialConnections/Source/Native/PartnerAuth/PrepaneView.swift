@@ -13,55 +13,53 @@ import UIKit
 final class PrepaneView: UIView {
 
     private let didSelectContinue: () -> Void
+    private let didSelectCancel: () -> Void
 
     init(
         prepaneModel: FinancialConnectionsOAuthPrepane,
+        isRepairSession: Bool,
         didSelectURL: @escaping (URL) -> Void,
-        didSelectContinue: @escaping () -> Void
+        didSelectContinue: @escaping () -> Void,
+        didSelectCancel: @escaping () -> Void
     ) {
         self.didSelectContinue = didSelectContinue
+        self.didSelectCancel = didSelectCancel
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
-        let bodyContainsImage = prepaneModel.body.entries?.contains(where: {
-            if case .image = $0.content {
-                return true
-            } else {
-                return false
-            }
-        }) ?? false
-        let paneLayoutView = PaneWithHeaderLayoutView(
-            icon: {
-                if let institutionIcon = prepaneModel.institutionIcon,
-                    let institutionImageUrl = institutionIcon.default
-                {
-                    return .view(
-                        {
-                            let institutionIconView = InstitutionIconView(size: .large)
-                            institutionIconView.setImageUrl(institutionImageUrl)
-                            return institutionIconView
-                        }()
-                    )
-                } else {
-                    return nil
-                }
-            }(),
-            title: prepaneModel.title,
-            subtitle: nil,
-            contentView: CreateContentView(
-                prepaneBodyModel: prepaneModel.body,
-                // put the partner notice in the BODY if an image exists
-                // (...because we want to avoid the partner notice clipping the image)
-                prepanePartnerNoticeModel: bodyContainsImage ? prepaneModel.partnerNotice : nil,
-                didSelectURL: didSelectURL
+
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: {
+                    let institutionIconView = InstitutionIconView()
+                    institutionIconView.setImageUrl(prepaneModel.institutionIcon?.default)
+                    return institutionIconView
+                }(),
+                title: prepaneModel.title,
+                subtitle: prepaneModel.subtitle,
+                contentView: CreateContentView(
+                    prepaneBodyModel: prepaneModel.body,
+                    didSelectURL: didSelectURL
+                )
             ),
-            headerAndContentSpacing: 8,
-            footerView: CreateFooterView(
-                prepaneCtaModel: prepaneModel.cta,
-                // put the partner notice in the FOOTER if an image does NOT exist
-                // (...because partner notice will not be able to clip image)
-                prepanePartnerNoticeModel: bodyContainsImage ? nil : prepaneModel.partnerNotice,
-                didSelectURL: didSelectURL,
-                view: self
+            footerView: PaneLayoutView.createFooterView(
+                primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                    title: prepaneModel.cta.text,
+                    accessibilityIdentifier: "prepane_continue_button",
+                    action: didSelectContinue
+                ),
+                secondaryButtonConfiguration: {
+                    if isRepairSession {
+                        return nil
+                    } else {
+                        return PaneLayoutView.ButtonConfiguration(
+                            title: STPLocalizedString(
+                                "Choose a different bank",
+                                "Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one."
+                            ),
+                            action: didSelectCancel
+                        )
+                    }
+                }()
             )
         )
         paneLayoutView.addTo(view: self)
@@ -78,7 +76,6 @@ final class PrepaneView: UIView {
 
 private func CreateContentView(
     prepaneBodyModel: FinancialConnectionsOAuthPrepane.OauthPrepaneBody,
-    prepanePartnerNoticeModel: FinancialConnectionsOAuthPrepane.OauthPrepanePartnerNotice?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalStackView = UIStackView()
@@ -106,101 +103,7 @@ private func CreateContentView(
         }
     }
 
-    if let prepanePartnerNoticeModel = prepanePartnerNoticeModel {
-        verticalStackView.addArrangedSubview(
-            CreatePartnerDisclosureView(
-                partnerNoticeModel: prepanePartnerNoticeModel,
-                didSelectURL: didSelectURL
-            )
-        )
-    }
-
     return verticalStackView
-}
-
-private func CreateFooterView(
-    prepaneCtaModel: FinancialConnectionsOAuthPrepane.OauthPrepaneCTA,
-    prepanePartnerNoticeModel: FinancialConnectionsOAuthPrepane.OauthPrepanePartnerNotice?,
-    didSelectURL: @escaping (URL) -> Void,
-    view: PrepaneView
-) -> UIView {
-    let continueButton = Button(configuration: .financialConnectionsPrimary)
-    continueButton.title = prepaneCtaModel.text
-    continueButton.addTarget(view, action: #selector(PrepaneView.didSelectContinueButton), for: .touchUpInside)
-    continueButton.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        continueButton.heightAnchor.constraint(equalToConstant: 56)
-    ])
-    continueButton.accessibilityIdentifier = "prepane_continue_button"
-
-    let footerStackView = UIStackView()
-    footerStackView.axis = .vertical
-    footerStackView.spacing = 20
-
-    if let prepanePartnerNoticeModel = prepanePartnerNoticeModel {
-        footerStackView.addArrangedSubview(
-            CreatePartnerDisclosureView(
-                partnerNoticeModel: prepanePartnerNoticeModel,
-                didSelectURL: didSelectURL
-            )
-        )
-    }
-    footerStackView.addArrangedSubview(continueButton)
-
-    return footerStackView
-}
-
-private func CreatePartnerDisclosureView(
-    partnerNoticeModel: FinancialConnectionsOAuthPrepane.OauthPrepanePartnerNotice,
-    didSelectURL: @escaping (URL) -> Void
-) -> UIView {
-    let horizontalStackView = UIStackView()
-    horizontalStackView.spacing = 12
-    horizontalStackView.isLayoutMarginsRelativeArrangement = true
-    horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 10,
-        leading: 12,
-        bottom: 10,
-        trailing: 12
-    )
-    horizontalStackView.alignment = .center
-    horizontalStackView.backgroundColor = .backgroundContainer
-    horizontalStackView.layer.cornerRadius = 8
-
-    if let partnerIconUrlString = partnerNoticeModel.partnerIcon?.default {
-        horizontalStackView.addArrangedSubview(
-            {
-                let partnerIconImageView = UIImageView()
-                partnerIconImageView.setImage(with: partnerIconUrlString)
-                partnerIconImageView.clipsToBounds = true
-                partnerIconImageView.layer.cornerRadius = 4
-                partnerIconImageView.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate([
-                    partnerIconImageView.widthAnchor.constraint(equalToConstant: 24),
-                    partnerIconImageView.heightAnchor.constraint(equalToConstant: 24),
-                ])
-                return partnerIconImageView
-            }()
-        )
-    }
-
-    horizontalStackView.addArrangedSubview(
-        {
-            let partnerDisclosureLabel = AttributedTextView(
-                font: .label(.small),
-                boldFont: .label(.smallEmphasized),
-                linkFont: .label(.smallEmphasized),
-                textColor: .textSecondary
-            )
-            partnerDisclosureLabel.setText(
-                partnerNoticeModel.text,
-                action: didSelectURL
-            )
-            return partnerDisclosureLabel
-        }()
-    )
-
-    return horizontalStackView
 }
 
 #if DEBUG
@@ -214,6 +117,7 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
             prepaneModel: FinancialConnectionsOAuthPrepane(
                 institutionIcon: nil,
                 title: "Log in to Capital One and grant the right permissions",
+                subtitle: "Next, you'll be promted to log in and connect your accounts.",
                 body: FinancialConnectionsOAuthPrepane.OauthPrepaneBody(
                     entries: [
                         .init(
@@ -252,8 +156,10 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
                     cta: "OK"
                 )
             ),
+            isRepairSession: false,
             didSelectURL: { _ in },
-            didSelectContinue: {}
+            didSelectContinue: {},
+            didSelectCancel: {}
         )
     }
 
