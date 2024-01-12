@@ -21,6 +21,8 @@ protocol ManualEntryTextFieldDelegate: AnyObject {
 
 final class ManualEntryTextField: UIView {
 
+    // Used to optionally add an error message
+    // at the bottom of the text field
     private lazy var verticalStackView: UIStackView = {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -30,14 +32,6 @@ final class ManualEntryTextField: UIView {
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 6
         return verticalStackView
-    }()
-    private lazy var titleLabel: AttributedLabel = {
-        let titleLabel = AttributedLabel(
-            font: .label(.largeEmphasized),
-            textColor: .textPrimary
-        )
-        titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        return titleLabel
     }()
     private lazy var textFieldContainerView: UIView = {
         let textFieldStackView = UIStackView(
@@ -69,6 +63,9 @@ final class ManualEntryTextField: UIView {
         let textField = IncreasedHitTestTextField()
         textField.font = FinancialConnectionsFont.label(.large).uiFont
         textField.textColor = .textPrimary
+        textField.defaultPlaceholderColor = .textSubdued
+        textField.floatingPlaceholderColor = .textSubdued
+        textField.placeholderLabel.font = textField.font
         textField.keyboardType = .numberPad
         textField.delegate = self
         return textField
@@ -95,19 +92,10 @@ final class ManualEntryTextField: UIView {
     }
     weak var delegate: ManualEntryTextFieldDelegate?
 
-    // TODO(kgaidis): delete title
-    // TODO(kgaidis):  delete footerText
-    init(title: String, placeholder: String, footerText: String? = nil) {
+    init(placeholder: String, footerText: String? = nil) {
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
-        titleLabel.text = title
-        textField.attributedPlaceholder = NSAttributedString(
-            string: placeholder,
-            attributes: [
-                .font: FinancialConnectionsFont.label(.large).uiFont,
-                .foregroundColor: UIColor.textSubdued,
-            ]
-        )
+        textField.placeholder = placeholder
         self.footerText = footerText
         didUpdateFooterText()  // simulate `didSet`. it not get called in `init`
         updateBorder(highlighted: false)
@@ -189,7 +177,7 @@ extension ManualEntryTextField: UITextFieldDelegate {
     }
 }
 
-private class IncreasedHitTestTextField: STPFloatingPlaceholderTextField {
+private class IncreasedHitTestTextField: FloatingPlaceholderTextField {
     // increase the area of TextField taps
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let largerBounds = bounds.insetBy(dx: -16, dy: -16)
@@ -197,89 +185,15 @@ private class IncreasedHitTestTextField: STPFloatingPlaceholderTextField {
     }
 }
 
-#if DEBUG
+private class FloatingPlaceholderTextField: UITextField {
 
-import SwiftUI
-
-private struct ManualEntryTextFieldUIViewRepresentable: UIViewRepresentable {
-
-    let title: String
-    let placeholder: String
-    let footerText: String?
-    let errorText: String?
-
-    func makeUIView(context: Context) -> ManualEntryTextField {
-        ManualEntryTextField(
-            title: title,
-            placeholder: placeholder,
-            footerText: footerText
-        )
-    }
-
-    func updateUIView(_ uiView: ManualEntryTextField, context: Context) {
-        uiView.errorText = errorText
-    }
-}
-
-struct ManualEntryTextField_Previews: PreviewProvider {
-    static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack(spacing: 16) {
-                ManualEntryTextFieldUIViewRepresentable(
-                    title: "Routing number",
-                    placeholder: "Routing number",
-                    footerText: nil,
-                    errorText: nil
-                )
-                .frame(height: 80)
-                ManualEntryTextFieldUIViewRepresentable(
-                    title: "Account number",
-                    placeholder: "000123456789",
-                    footerText: "Your account can be checkings or savings.",
-                    errorText: nil
-                )
-                ManualEntryTextFieldUIViewRepresentable(
-                    title: "Confirm account number",
-                    placeholder: "000123456789",
-                    footerText: nil,
-                    errorText: nil
-                )
-                ManualEntryTextFieldUIViewRepresentable(
-                    title: "Routing number",
-                    placeholder: "123456789",
-                    footerText: nil,
-                    errorText: "Routing number is required."
-                )
-                ManualEntryTextFieldUIViewRepresentable(
-                    title: "Account number",
-                    placeholder: "000123456789",
-                    footerText: "Your account can be checkings or savings.",
-                    errorText: "Account number is required."
-                )
-                Spacer()
-            }
-//            .frame(maxHeight: 600)
-            .padding()
-            .background(Color(UIColor.customBackgroundColor))
-        }
-    }
-}
-
-#endif
-
-private class STPFloatingPlaceholderTextField: UITextField {
-
-    struct LayoutConstants {
+    private struct LayoutConstants {
         static let defaultHeight: CGFloat = 40
 
         static let horizontalMargin: CGFloat = 0
         static let horizontalSpacing: CGFloat = 4
 
         static let floatingPlaceholderScale: CGFloat = 0.75
-
-//        static let defaultPlaceholderColor: UIColor = .orange
-//
-//        static let floatingPlaceholderColor: UIColor = .red
     }
 
     private(set) lazy var placeholderLabel: UILabel = {
@@ -288,15 +202,11 @@ private class STPFloatingPlaceholderTextField: UITextField {
         label.adjustsFontForContentSizeCategory = true
         return label
     }()
-
-    var lastAnimator: UIViewPropertyAnimator?
-
-    var changingFirstResponderStatus = false
-
+    private var lastAnimator: UIViewPropertyAnimator?
+    private var changingFirstResponderStatus = false
     var defaultPlaceholderColor: UIColor = .textSubdued
     var floatingPlaceholderColor: UIColor = .textSubdued
-
-    var placeholderColor: UIColor {
+    private var placeholderColor: UIColor {
         get {
             return placeholderLabel.textColor
         }
@@ -305,21 +215,17 @@ private class STPFloatingPlaceholderTextField: UITextField {
         }
     }
 
-    override init(
-        frame: CGRect
-    ) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         setupSubviews()
     }
 
-    required init?(
-        coder: NSCoder
-    ) {
+    required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupSubviews()
+        fatalError("init(coder:) has not been implemented")
     }
 
-    func setupSubviews() {
+    private func setupSubviews() {
         // even though the default font value for UITextFields is body, on iOS 13 at least they do not respect
         // the font size settings. Resetting here fixes
         font = UIFont.preferredFont(forTextStyle: .body)
@@ -331,7 +237,7 @@ private class STPFloatingPlaceholderTextField: UITextField {
         addSubview(placeholderLabel)
     }
 
-    func floatingPlaceholderHeight() -> CGFloat {
+    private func floatingPlaceholderHeight() -> CGFloat {
         let placeholderLabelHeight = placeholderLabel.textRect(
             forBounds: CGRect(
                 x: 0,
@@ -342,10 +248,10 @@ private class STPFloatingPlaceholderTextField: UITextField {
             limitedToNumberOfLines: 1
         ).height
         return placeholderLabelHeight
-            * STPFloatingPlaceholderTextField.LayoutConstants.floatingPlaceholderScale
+            * FloatingPlaceholderTextField.LayoutConstants.floatingPlaceholderScale
     }
 
-    func contentPadding() -> UIEdgeInsets {
+    private func contentPadding() -> UIEdgeInsets {
 
         let floatingPlaceholderLabelHeight = floatingPlaceholderHeight()
         let availableHeight = bounds.height
@@ -376,30 +282,30 @@ private class STPFloatingPlaceholderTextField: UITextField {
             floatingPlaceholderLabelHeight > 0
             ? max(
                 0,
-                STPFloatingPlaceholderTextField.LayoutConstants.floatingPlaceholderScale
+                FloatingPlaceholderTextField.LayoutConstants.floatingPlaceholderScale
                     * (availableHeight - floatingPlaceholderLabelHeight
                         - (floatingPlaceholderLabelHeight
-                            / STPFloatingPlaceholderTextField.LayoutConstants
+                            / FloatingPlaceholderTextField.LayoutConstants
                             .floatingPlaceholderScale))
                     / CGFloat(2)
             ) : 0
 
-        var leftMargin = STPFloatingPlaceholderTextField.LayoutConstants.horizontalMargin
+        var leftMargin = FloatingPlaceholderTextField.LayoutConstants.horizontalMargin
         if leftView != nil,
             leftViewMode == .always
         {
             leftMargin =
                 leftMargin + self.leftViewRect(forBounds: bounds).width
-                + STPFloatingPlaceholderTextField.LayoutConstants.horizontalSpacing
+                + FloatingPlaceholderTextField.LayoutConstants.horizontalSpacing
         }
 
-        var rightMargin = STPFloatingPlaceholderTextField.LayoutConstants.horizontalMargin
+        var rightMargin = FloatingPlaceholderTextField.LayoutConstants.horizontalMargin
         if rightView != nil,
             rightViewMode == .always
         {
             rightMargin =
                 rightMargin + self.rightViewRect(forBounds: bounds).width
-                + STPFloatingPlaceholderTextField.LayoutConstants.horizontalSpacing
+                + FloatingPlaceholderTextField.LayoutConstants.horizontalSpacing
         }
 
         let isRTL = traitCollection.layoutDirection == .rightToLeft
@@ -412,7 +318,7 @@ private class STPFloatingPlaceholderTextField: UITextField {
         )
     }
 
-    func textEntryFieldInset() -> UIEdgeInsets {
+    private func textEntryFieldInset() -> UIEdgeInsets {
         var inset = contentPadding()
         if isEditing || !(text?.isEmpty ?? true) {
             // contentPadding pads the top to the floating placeholder so for text
@@ -423,11 +329,11 @@ private class STPFloatingPlaceholderTextField: UITextField {
         return inset
     }
 
-    func textEntryFrame() -> CGRect {
+    private func textEntryFrame() -> CGRect {
         return bounds.inset(by: textEntryFieldInset())
     }
 
-    func layoutPlaceholder(animated: Bool) {
+    private func layoutPlaceholder(animated: Bool) {
         guard !(placeholder?.isEmpty ?? true) else {
             return
         }
@@ -447,7 +353,7 @@ private class STPFloatingPlaceholderTextField: UITextField {
         let minimized = isEditing || !(text?.isEmpty ?? true)
 
         if minimized {
-            let scale = STPFloatingPlaceholderTextField.LayoutConstants.floatingPlaceholderScale
+            let scale = FloatingPlaceholderTextField.LayoutConstants.floatingPlaceholderScale
 
             placeholderFrame.origin.y = self.contentPadding().top
             if traitCollection.layoutDirection == .rightToLeft {
@@ -497,13 +403,9 @@ private class STPFloatingPlaceholderTextField: UITextField {
         }
     }
 
-}
+    // MARK: - UITextField Overrides
 
-// MARK: UITextField Overrides
-extension STPFloatingPlaceholderTextField {
-
-    /// :nodoc:
-    @objc public override var placeholder: String? {
+    override var placeholder: String? {
         get {
             return placeholderLabel.text
         }
@@ -515,8 +417,7 @@ extension STPFloatingPlaceholderTextField {
         }
     }
 
-    /// :nodoc:
-    @objc public override var attributedPlaceholder: NSAttributedString? {
+    override var attributedPlaceholder: NSAttributedString? {
         get {
             return placeholderLabel.attributedText
         }
@@ -528,22 +429,19 @@ extension STPFloatingPlaceholderTextField {
         }
     }
 
-    /// :nodoc:
-    @objc public override var font: UIFont? {
+    override var font: UIFont? {
         didSet {
             placeholderLabel.font = font
         }
     }
 
-    /// :nodoc:
-    @objc public override var textAlignment: NSTextAlignment {
+    override var textAlignment: NSTextAlignment {
         didSet {
             placeholderLabel.textAlignment = textAlignment
         }
     }
 
-    /// :nodoc:
-    @objc public override var leftViewMode: UITextField.ViewMode {
+    override var leftViewMode: UITextField.ViewMode {
         get {
             return super.leftViewMode
         }
@@ -557,8 +455,7 @@ extension STPFloatingPlaceholderTextField {
         }
     }
 
-    /// :nodoc:
-    @objc public override var rightViewMode: UITextField.ViewMode {
+    override var rightViewMode: UITextField.ViewMode {
         get {
             return super.rightViewMode
         }
@@ -572,8 +469,7 @@ extension STPFloatingPlaceholderTextField {
         }
     }
 
-    /// :nodoc:
-    @objc public override func layoutSubviews() {
+    override func layoutSubviews() {
         super.layoutSubviews()
         // internally, becoming first responder triggers a layout which we want to suppress
         // so we can animate
@@ -582,8 +478,7 @@ extension STPFloatingPlaceholderTextField {
         }
     }
 
-    /// :nodoc:
-    @objc public override func becomeFirstResponder() -> Bool {
+    override func becomeFirstResponder() -> Bool {
         changingFirstResponderStatus = true
         let ret = super.becomeFirstResponder()
         layoutPlaceholder(animated: true)
@@ -591,8 +486,7 @@ extension STPFloatingPlaceholderTextField {
         return ret
     }
 
-    /// :nodoc:
-    @objc public override func resignFirstResponder() -> Bool {
+    override func resignFirstResponder() -> Bool {
         changingFirstResponderStatus = true
         let ret = super.resignFirstResponder()
         layoutPlaceholder(animated: true)
@@ -600,48 +494,42 @@ extension STPFloatingPlaceholderTextField {
         return ret
     }
 
-    /// :nodoc:
-    @objc public override func textRect(forBounds bounds: CGRect) -> CGRect {
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
         // N.B. The bounds passed here are not the same as self.bounds
         // which is why we don't just use textEntryFrame()
         return bounds.inset(by: textEntryFieldInset())
     }
 
-    /// :nodoc:
-    @objc public override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         // N.B. The bounds passed here are not the same as self.bounds
         // which is why we don't just use textEntryFrame()
         return bounds.inset(by: textEntryFieldInset())
     }
 
-    /// :nodoc:
-    @objc public override func editingRect(forBounds bounds: CGRect) -> CGRect {
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
         // N.B. The bounds passed here are not the same as self.bounds
         // which is why we don't just use textEntryFrame()
         return bounds.inset(by: textEntryFieldInset())
     }
 
-    /// :nodoc:
-    @objc public override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+    override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
         var leftViewRect = super.leftViewRect(forBounds: bounds)
         leftViewRect.origin.x =
-            leftViewRect.origin.x + STPFloatingPlaceholderTextField.LayoutConstants.horizontalMargin
+            leftViewRect.origin.x + FloatingPlaceholderTextField.LayoutConstants.horizontalMargin
         return leftViewRect
     }
 
-    /// :nodoc:
-    @objc public override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+    override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
         var rightViewRect = super.rightViewRect(forBounds: bounds)
         rightViewRect.origin.x =
             rightViewRect.origin.x
-            - STPFloatingPlaceholderTextField.LayoutConstants.horizontalMargin
+            - FloatingPlaceholderTextField.LayoutConstants.horizontalMargin
         return rightViewRect
     }
 
-    /// :nodoc:
-    @objc public override var intrinsicContentSize: CGSize {
+    override var intrinsicContentSize: CGSize {
         let height = UIFontMetrics.default.scaledValue(
-            for: STPFloatingPlaceholderTextField.LayoutConstants.defaultHeight
+            for: FloatingPlaceholderTextField.LayoutConstants.defaultHeight
         )
         let contentPadding = self.contentPadding()
         return CGSize(
@@ -651,16 +539,14 @@ extension STPFloatingPlaceholderTextField {
         )
     }
 
-    /// :nodoc:
-    @objc public override func sizeThatFits(_ size: CGSize) -> CGSize {
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
         var size = super.sizeThatFits(size)
         size.height = max(size.height, intrinsicContentSize.height)
         size.width = max(size.width, intrinsicContentSize.width)
         return size
     }
 
-    /// :nodoc:
-    @objc public override func systemLayoutSizeFitting(
+    override func systemLayoutSizeFitting(
         _ targetSize: CGSize,
         withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
         verticalFittingPriority: UILayoutPriority
@@ -674,3 +560,65 @@ extension STPFloatingPlaceholderTextField {
         return size
     }
 }
+
+#if DEBUG
+
+import SwiftUI
+
+private struct ManualEntryTextFieldUIViewRepresentable: UIViewRepresentable {
+
+    let placeholder: String
+    let footerText: String?
+    let errorText: String?
+
+    func makeUIView(context: Context) -> ManualEntryTextField {
+        ManualEntryTextField(
+            placeholder: placeholder,
+            footerText: footerText
+        )
+    }
+
+    func updateUIView(_ uiView: ManualEntryTextField, context: Context) {
+        uiView.errorText = errorText
+    }
+}
+
+struct ManualEntryTextField_Previews: PreviewProvider {
+    static var previews: some View {
+        if #available(iOS 14.0, *) {
+            VStack(spacing: 16) {
+                ManualEntryTextFieldUIViewRepresentable(
+                    placeholder: "Routing number",
+                    footerText: nil,
+                    errorText: nil
+                )
+                .frame(height: 80)
+                ManualEntryTextFieldUIViewRepresentable(
+                    placeholder: "Account number",
+                    footerText: "Your account can be checkings or savings.",
+                    errorText: nil
+                )
+                ManualEntryTextFieldUIViewRepresentable(
+                    placeholder: "Confirm account number",
+                    footerText: nil,
+                    errorText: nil
+                )
+                ManualEntryTextFieldUIViewRepresentable(
+                    placeholder: "Routing number",
+                    footerText: nil,
+                    errorText: "Routing number is required."
+                )
+                ManualEntryTextFieldUIViewRepresentable(
+                    placeholder: "Account number",
+                    footerText: "Your account can be checkings or savings.",
+                    errorText: "Account number is required."
+                )
+                Spacer()
+            }
+            .padding()
+            .background(Color(UIColor.customBackgroundColor))
+        }
+    }
+}
+
+#endif

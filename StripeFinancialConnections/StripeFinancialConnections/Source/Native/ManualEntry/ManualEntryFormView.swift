@@ -32,7 +32,6 @@ final class ManualEntryFormView: UIView {
     private var errorView: UIView?
     private lazy var routingNumberTextField: ManualEntryTextField = {
         let routingNumberTextField = ManualEntryTextField(
-            title: "",
             placeholder: STPLocalizedString(
                 "Routing number",
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number."
@@ -49,9 +48,7 @@ final class ManualEntryFormView: UIView {
     }()
     private lazy var accountNumberTextField: ManualEntryTextField = {
         let accountNumberTextField = ManualEntryTextField(
-            // STPLocalizedString_("Account number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the account number."),
-            title: "",
-            placeholder: "Account number"  // TODO: replace with String.Localized.accountNumber,
+            placeholder: STPLocalizedString("Account number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the account number.")
         )
         accountNumberTextField.textField.addTarget(
             self,
@@ -64,7 +61,6 @@ final class ManualEntryFormView: UIView {
     }()
     private lazy var accountNumberConfirmationTextField: ManualEntryTextField = {
         let accountNumberConfirmationTextField = ManualEntryTextField(
-            title: "",
             placeholder: STPLocalizedString(
                 "Confirm account number",
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it."

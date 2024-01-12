@@ -66,7 +66,7 @@ final class ManualEntryValidator {
             )
         } else if accountNumberConfirmation != accountNumber {
             return STPLocalizedString(
-                "Your account numbers don’t match.",
+                "Your account numbers don't match.",
                 "An error message that appears when a user is manually entering their bank account information. This error message tells the user that the account number they typed doesn't match a previously typed account number."
             )
         } else {
