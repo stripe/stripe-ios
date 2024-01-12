@@ -173,7 +173,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         XCTAssertTrue(app.staticTexts["card"].waitForExistence(timeout: 10.0))
         XCTAssertTrue(app.staticTexts["Jane Doe"].waitForExistence(timeout: 10.0))
         XCTAssertTrue(app.staticTexts["foo@bar.com"].waitForExistence(timeout: 10.0))
-        XCTAssertTrue(app.staticTexts["+13105551234"].waitForExistence(timeout: 10.0))
+        XCTAssertTrue(app.staticTexts["+1 (310) 555-1234"].waitForExistence(timeout: 10.0))
         XCTAssertTrue(app.staticTexts["510 Townsend St."].waitForExistence(timeout: 10.0))
         XCTAssertTrue(app.staticTexts["San Francisco"].waitForExistence(timeout: 10.0))
         XCTAssertTrue(app.staticTexts["CA"].waitForExistence(timeout: 10.0))
