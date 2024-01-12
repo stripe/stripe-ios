@@ -347,7 +347,7 @@ extension PaymentSheet {
         /// - Note: When used with defaultBillingDetails, omitting '+' will assume a US based phone number.
         public var phone: String?
 
-        /// The customer's phone number used for displaying in your UI (e.g. +1 (555) 555-5555)
+        /// The customer's phone number formatted for display in your UI (e.g. "+1 (555) 555-5555")
         public var phoneNumberForDisplay: String? {
             guard let phone = self.phone else {
                 return nil
