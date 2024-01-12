@@ -2417,7 +2417,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         loadPlayground(app, settings)
         app.buttons["Payment method"].tap()
 
-        // Ensure Link wallet button is shown in SPM view
+        // Ensure Link wallet button is shown
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         assertLinkInlineSignupNotShown()
 
@@ -2457,7 +2457,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         loadPlayground(app, settings)
         app.buttons["Payment method"].tap()
 
-        // Ensure Link wallet button is shown in SPM view
+        // Ensure Link wallet button is shown
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         assertLinkInlineSignupNotShown()
 
