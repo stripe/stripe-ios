@@ -27,11 +27,8 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
     private let dataSource: NetworkingSaveToLinkVerificationDataSource
     weak var delegate: NetworkingSaveToLinkVerificationViewControllerDelegate?
 
-    private lazy var loadingView: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .textDisabled
-        activityIndicator.backgroundColor = .customBackgroundColor
-        return activityIndicator
+    private lazy var loadingView: SpinnerView = {
+        return SpinnerView()
     }()
     private lazy var bodyView: NetworkingSaveToLinkVerificationBodyView = {
         let bodyView = NetworkingSaveToLinkVerificationBodyView(
@@ -97,11 +94,6 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
         }
 
         loadingView.isHidden = !show
-        if show {
-            loadingView.startAnimating()
-        } else {
-            loadingView.stopAnimating()
-        }
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
 }

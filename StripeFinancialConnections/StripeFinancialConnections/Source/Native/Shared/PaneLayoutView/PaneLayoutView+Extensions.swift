@@ -207,7 +207,7 @@ extension PaneLayoutView {
         paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
             leading: 24,
-            bottom: 24,
+            bottom: 16,
             trailing: 24
         )
         return paddingStackView

@@ -21,7 +21,7 @@ final class MerchantDataAccessView: HitTestView {
         font: FinancialConnectionsFont,
         boldFont: FinancialConnectionsFont,
         alignCenter: Bool,
-        didSelectLearnMore: @escaping () -> Void
+        didSelectLearnMore: @escaping (URL) -> Void
     ) {
         super.init(frame: .zero)
 
@@ -29,20 +29,20 @@ final class MerchantDataAccessView: HitTestView {
         let leadingString: String
         if isStripeDirect {
             let localizedLeadingString = STPLocalizedString(
-                "Data accessible to Stripe:",
+                "Stripe can access",
                 "This text is a lead-up to a disclosure that lists all of the bank data that Stripe will have access to. For example, the full text may read 'Data accessible to Stripe: Account details, transactions.'"
             )
             leadingString = localizedLeadingString
         } else {
             if let businessName = businessName {
                 let localizedLeadingString = STPLocalizedString(
-                    "Data accessible to %@:",
+                    "%@ can access",
                     "This text is a lead-up to a disclosure that lists all of the bank data that a merchant (ex. Coca-Cola) will have access to. For example, the full text may read 'Data accessible to Coca-Cola: Account details, transactions.'"
                 )
                 leadingString = String(format: localizedLeadingString, businessName)
             } else {
                 let localizedLeadingString = STPLocalizedString(
-                    "Data accessible to this business:",
+                    "This business can access",
                     "This text is a lead-up to a disclosure that lists all of the bank data that a business will have access to. For example, the full text may read 'Data accessible to this business: Account details, transactions.'"
                 )
                 leadingString = localizedLeadingString
@@ -68,39 +68,24 @@ final class MerchantDataAccessView: HitTestView {
 
         let finalString: String
         if isNetworking {
-            let localizedPermissionFullString = String(
-                format: STPLocalizedString(
-                    "%@ through Link.",
-                    "A sentence that describes what users banking data is accessible to Link. For example, the full sentence may say 'Account details, transactions, balances through Link.'"
-                ),
-                permissionString
-            )
-            finalString = "\(leadingString) \(localizedPermissionFullString) \(learnMoreString)"
+            finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
         } else if isStripeDirect {
             finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
         } else {
-            let localizedPermissionFullString = String(
-                format: STPLocalizedString(
-                    "%@ through Stripe.",
-                    "A sentence that describes what users banking data is accessible to Stripe. For example, the full sentence may say 'Account details, transactions, balances through Stripe.'"
-                ),
-                permissionString
-            )
-            finalString = "\(leadingString) \(localizedPermissionFullString) \(learnMoreString)"
+            finalString = "\(leadingString) \(permissionString). \(learnMoreString)"
         }
 
         let label = AttributedTextView(
             font: font,
             boldFont: boldFont,
-            linkFont: boldFont,
-            textColor: .textSecondary,
+            linkFont: font,
+            textColor: .textDefault,
             alignCenter: alignCenter
         )
         label.setText(
             finalString,
             action: { url in
-                SFSafariViewController.present(url: url)
-                didSelectLearnMore()
+                didSelectLearnMore(url)
             }
         )
         addAndPinSubview(label)
@@ -130,10 +115,7 @@ private func FormPermissionListString(
             }
         }
     }
-
-    let capitalizedFirstLetter = permissionListString.prefix(1).uppercased()
-    let restOfString = String(permissionListString.dropFirst())
-    return capitalizedFirstLetter + restOfString
+    return permissionListString
 }
 
 private func LocalizedStringFromPermission(
@@ -193,7 +175,7 @@ private struct MerchantDataAccessViewUIViewRepresentable: UIViewRepresentable {
             font: .body(.small),
             boldFont: .body(.smallEmphasized),
             alignCenter: Bool.random(),
-            didSelectLearnMore: {}
+            didSelectLearnMore: { _ in }
         )
     }
 

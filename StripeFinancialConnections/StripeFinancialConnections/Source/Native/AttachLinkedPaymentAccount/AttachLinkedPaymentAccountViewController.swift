@@ -81,13 +81,8 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
     }
 
     private func attachLinkedAccountIdToLinkAccountSession() {
-        let linkingAccountsLoadingView = LinkingAccountsLoadingView(
-            // the `AttachLinkedPaymentAccount` flow will only ever
-            // have one account
-            numberOfSelectedAccounts: 1,
-            businessName: dataSource.manifest.businessName
-        )
-        view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
+        let loadingView = SpinnerView()
+        view.addAndPinSubviewToSafeArea(loadingView)
 
         let pollingStartDate = Date()
         dataSource.attachLinkedAccountIdToLinkAccountSession()
@@ -123,7 +118,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                 // screen, and we don't want to show a blank background
                 // while we transition to the next pane
                 case .failure(let error):
-                    linkingAccountsLoadingView.removeFromSuperview()
+                    loadingView.removeFromSuperview()
                     if let error = error as? StripeError,
                         case .apiError(let apiError) = error,
                         let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
