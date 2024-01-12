@@ -111,6 +111,7 @@ final class PartnerAuthViewController: UIViewController {
         if authSession.isOauthNonOptional, let prepaneModel = authSession.display?.text?.oauthPrepane {
             let prepaneView = PrepaneView(
                 prepaneModel: prepaneModel,
+                isRepairSession: false, // TODO(kgaidis): change this for repair sessions
                 didSelectURL: { [weak self] url in
                     self?.didSelectURLInTextFromBackend(url)
                 },
@@ -129,6 +130,10 @@ final class PartnerAuthViewController: UIViewController {
                     } else {
                         self.openInstitutionAuthenticationWebView(authSession: authSession)
                     }
+                },
+                didSelectCancel: { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
                 }
             )
             view.addAndPinSubview(prepaneView)
