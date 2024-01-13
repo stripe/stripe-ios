@@ -167,7 +167,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     enum UserOverrideCountry: String, PickerEnum {
-        static var enumName: String { "Link override country" }
+        static var enumName: String { "UserOverrideCountry (debug only)" }
 
         case off
         case GB
