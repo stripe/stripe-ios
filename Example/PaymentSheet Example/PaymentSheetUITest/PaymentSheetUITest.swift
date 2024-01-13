@@ -2318,7 +2318,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
         settings.linkV2Allowed = .on
-        settings.linkOverrideCountry = .GB
+        settings.userOverrideCountry = .GB
 
         loadPlayground(app, settings)
 

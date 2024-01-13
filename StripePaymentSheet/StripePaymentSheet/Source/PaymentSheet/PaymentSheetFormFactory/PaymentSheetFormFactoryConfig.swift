@@ -46,7 +46,7 @@ enum PaymentSheetFormFactoryConfig {
     var overrideCountry: String? {
         switch self {
         case .paymentSheet(let config):
-            return config.linkOverrideCountry
+            return config.userOverrideCountry
         case .customerSheet:
             return nil
         }

@@ -166,7 +166,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum LinkOverrideCountry: String, PickerEnum {
+    enum UserOverrideCountry: String, PickerEnum {
         static var enumName: String { "Link override country" }
 
         case off
@@ -258,7 +258,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var defaultBillingAddress: DefaultBillingAddress
     var linkEnabled: LinkEnabled
     var linkV2Allowed: LinkV2Allowed
-    var linkOverrideCountry: LinkOverrideCountry
+    var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var checkoutEndpoint: String?
     var autoreload: Autoreload
@@ -289,7 +289,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             defaultBillingAddress: .off,
             linkEnabled: .off,
             linkV2Allowed: .off,
-            linkOverrideCountry: .off,
+            userOverrideCountry: .off,
             customCtaLabel: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,

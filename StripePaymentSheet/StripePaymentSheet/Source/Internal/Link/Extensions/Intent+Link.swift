@@ -58,7 +58,7 @@ extension Intent {
     }
 
     func countryCode(overrideCountry: String?) -> String? {
-#if DEBUG && targetEnvironment(simulator)
+#if DEBUG
         if let overrideCountry {
             return overrideCountry
         }

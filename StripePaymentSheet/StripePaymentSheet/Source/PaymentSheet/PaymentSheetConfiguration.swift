@@ -171,7 +171,7 @@ extension PaymentSheet {
         @_spi(STP) public var allowLinkV2Features: Bool = false
 
         /// Override country for test purposes
-        @_spi(STP) public var linkOverrideCountry: String?
+        @_spi(STP) public var userOverrideCountry: String?
 
         /// Describes how billing details should be collected.
         /// All values default to `automatic`.
