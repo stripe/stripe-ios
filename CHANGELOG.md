@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.21.0 2024-01-16
 ### PaymentSheet
 * [Fixed] Fixed a few design issues on visionOS.
 * [Added] Added billing details and type properties to [`PaymentSheet.FlowController.PaymentOptionDisplayData`](https://stripe.dev/stripe-ios/stripepaymentsheet/documentation/stripepaymentsheet/paymentsheet/flowcontroller/paymentoptiondisplaydata). 
