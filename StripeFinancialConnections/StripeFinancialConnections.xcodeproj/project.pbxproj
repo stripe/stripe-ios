@@ -32,7 +32,6 @@
 		1C5D953684456368EEF4C622 /* ManualEntryTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6516BB12D029D1DDCBA1534D /* ManualEntryTextField.swift */; };
 		1CE588CD44D6591B95A9B281 /* AlwaysTemplateImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2284A0556400DEAEB279BE /* AlwaysTemplateImageView.swift */; };
 		1E0C39EB65B8CB04F218D0BD /* NetworkingLinkLoginWarmupDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091D43608583C7BE5E444C2C /* NetworkingLinkLoginWarmupDataSource.swift */; };
-		1F5DD8E2E0FCED964D636D00 /* NetworkingSaveToLinkFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD137B9465B0DB96AED0AC98 /* NetworkingSaveToLinkFooterView.swift */; };
 		22426A37E01AE759BF93C422 /* AttributedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE64D5A17913CF4AAD855A9A /* AttributedLabel.swift */; };
 		2343C58289259920DD81620D /* ManualEntryErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88FD9148F64D2AA8989D361 /* ManualEntryErrorView.swift */; };
 		23DBA4240ED1727C47937A6B /* AccountPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CE72E38D41E86E0A1FAE9F /* AccountPickerViewController.swift */; };
@@ -75,7 +74,6 @@
 		645D6FF67167263F9A1C2BB0 /* bullet@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07BCA9D23511A3494C82B632 /* bullet@3x.png */; };
 		648FA50974B14CC861B08ECB /* APIPollingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF54EDA6123C7E4E78D9D56B /* APIPollingHelper.swift */; };
 		6744CB1B182C5F7220B0B804 /* AuthFlowHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC0D3ED86914DC4216CCCA /* AuthFlowHelpersTests.swift */; };
-		685CBD26771250C40E60F7A0 /* NetworkingSaveToLinkBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE553B86F5AC8B7D6190A04 /* NetworkingSaveToLinkBodyView.swift */; };
 		691619AE9A989548ABA36535 /* HitTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669BB8F3DA862C425897705 /* HitTestView.swift */; };
 		6944E131D351784058C7D734 /* FinancialConnectionsPaymentMethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191760EFAA9154C1F168E1D2 /* FinancialConnectionsPaymentMethodType.swift */; };
 		6A13B9822B48BD6C00FFA327 /* AccountPickerRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13B9812B48BD6C00FFA327 /* AccountPickerRowView.swift */; };
@@ -295,7 +293,6 @@
 		263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PaneWithCustomHeaderLayoutView.swift; path = ../PaneWithCustomHeaderLayoutView.swift; sourceTree = "<group>"; };
 		267B3586136203186882F5CE /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
 		283469CD0298E3AFCFDAF10F /* AccountPickerSelectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerSelectionListView.swift; sourceTree = "<group>"; };
-		2BE553B86F5AC8B7D6190A04 /* NetworkingSaveToLinkBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingSaveToLinkBodyView.swift; sourceTree = "<group>"; };
 		2C0F907D5B0AC58BE7A454BA /* StripeFinancialConnectionsBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeFinancialConnectionsBundleLocator.swift; sourceTree = "<group>"; };
 		2C10E841FF9EBFEA8C2E30AF /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		2D95E5F34BDEE0237F52DA0A /* APIVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIVersion.swift; sourceTree = "<group>"; };
@@ -512,7 +509,6 @@
 		F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA62F9B77C6A1D1B12F02CF5 /* AttachLinkedPaymentAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachLinkedPaymentAccountViewController.swift; sourceTree = "<group>"; };
 		FBC23DAC91962D0D8A713D37 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
-		FD137B9465B0DB96AED0AC98 /* NetworkingSaveToLinkFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingSaveToLinkFooterView.swift; sourceTree = "<group>"; };
 		FF54EDA6123C7E4E78D9D56B /* APIPollingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIPollingHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -923,8 +919,6 @@
 		B71852C5A10D21D52A586721 /* NetworkingSaveToLinkVerification */ = {
 			isa = PBXGroup;
 			children = (
-				2BE553B86F5AC8B7D6190A04 /* NetworkingSaveToLinkBodyView.swift */,
-				FD137B9465B0DB96AED0AC98 /* NetworkingSaveToLinkFooterView.swift */,
 				C3BDFEB5860F73D4CD90907A /* NetworkingSaveToLinkVerificationDataSource.swift */,
 				66D3CAB53EC9D33831C5A48B /* NetworkingSaveToLinkVerificationViewController.swift */,
 			);
@@ -1367,8 +1361,6 @@
 				333B9C3E3349F5369FBA7C32 /* NetworkingLinkVerificationDataSource.swift in Sources */,
 				31AD3BE92B0C2F000080C800 /* ScreenNativeScale.swift in Sources */,
 				C5FEC806A31021B7D119A73C /* NetworkingLinkVerificationViewController.swift in Sources */,
-				685CBD26771250C40E60F7A0 /* NetworkingSaveToLinkBodyView.swift in Sources */,
-				1F5DD8E2E0FCED964D636D00 /* NetworkingSaveToLinkFooterView.swift in Sources */,
 				2671241DE661B675E575C0AB /* NetworkingSaveToLinkVerificationDataSource.swift in Sources */,
 				6BC6DB482984F9288944FE25 /* NetworkingSaveToLinkVerificationViewController.swift in Sources */,
 				2AA0942F22A323B33CA6B7CA /* PartnerAuthDataSource.swift in Sources */,

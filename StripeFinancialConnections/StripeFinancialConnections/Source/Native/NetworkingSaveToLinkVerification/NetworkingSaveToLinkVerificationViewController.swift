@@ -30,13 +30,6 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
     private lazy var loadingView: SpinnerView = {
         return SpinnerView()
     }()
-    private lazy var bodyView: NetworkingSaveToLinkVerificationBodyView = {
-        let bodyView = NetworkingSaveToLinkVerificationBodyView(
-            email: dataSource.consumerSession.emailAddress,
-            otpView: otpView
-        )
-        return bodyView
-    }()
     private lazy var otpView: NetworkingOTPView = {
         let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
         otpView.delegate = self
@@ -60,31 +53,38 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
     }
 
     private func showContent(redactedPhoneNumber: String) {
-        let pane = PaneWithHeaderLayoutView(
-            title: STPLocalizedString(
-                "Sign in to Link",
-                "The title of a screen where users are informed that they can sign-in-to Link."
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: nil,
+                title: STPLocalizedString(
+                    "Verify it's you",
+                    "The title of a screen where users are informed that they can sign-in-to Link."
+                ),
+                subtitle: String(format: STPLocalizedString(
+                    "Enter the code sent to %@.",
+                    "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
+                ), redactedPhoneNumber),
+                contentView: otpView
             ),
-            subtitle: String(format: STPLocalizedString(
-                "Enter the code sent to %@.",
-                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
-            ), redactedPhoneNumber),
-            contentView: bodyView,
-            footerView: NetworkingSaveToLinkFooterView(
-                didSelectNotNow: { [weak self] in
-                    guard let self = self else { return }
-                    self.dataSource
-                        .analyticsClient
-                        .log(eventName: "click.not_now", pane: .networkingSaveToLinkVerification)
-                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
-                        self,
-                        saveToLinkWithStripeSucceeded: nil,
-                        error: nil
-                    )
-                }
+            footerView: PaneLayoutView.createFooterView(
+                primaryButtonConfiguration: nil,
+                secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                    title: STPLocalizedString("Not now", "Title of a button that allows users to skip the current screen."),
+                    action: { [weak self] in
+                        guard let self = self else { return }
+                        self.dataSource
+                            .analyticsClient
+                            .log(eventName: "click.not_now", pane: .networkingSaveToLinkVerification)
+                        self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
+                            self,
+                            saveToLinkWithStripeSucceeded: nil,
+                            error: nil
+                        )
+                    }
+                )
             )
         )
-        pane.addTo(view: view)
+        paneLayoutView.addTo(view: view)
     }
 
     private func showLoadingView(_ show: Bool) {
