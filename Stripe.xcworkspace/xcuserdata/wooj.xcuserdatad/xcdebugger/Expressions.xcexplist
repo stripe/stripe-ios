@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "PaymentSheetSnapshotTests.contentAddPaymentMethodViewController():PaymentSheetSnapshotTests.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "vc.view.subviews">
+            </PersistentString>
+            <PersistentString
+               value = "vc.view.subviews[0].subviews">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
