@@ -253,6 +253,7 @@ private func SetupPlayground(
         requestBody["custom_scenario"] = customScenario
         requestBody["custom_public_key"] = customPublicKey
         requestBody["custom_secret_key"] = customSecretKey
+        requestBody["v3_enabled"] = true // TODO(kgaidis): remove when shipping V3
         return try! JSONSerialization.data(
             withJSONObject: requestBody,
             options: .prettyPrinted

@@ -27,18 +27,8 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     private let dataSource: NetworkingLinkVerificationDataSource
     weak var delegate: NetworkingLinkVerificationViewControllerDelegate?
 
-    private lazy var loadingView: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .textDisabled
-        activityIndicator.backgroundColor = .customBackgroundColor
-        return activityIndicator
-    }()
-    private lazy var bodyView: NetworkingLinkVerificationBodyView = {
-        let bodyView = NetworkingLinkVerificationBodyView(
-            email: dataSource.accountholderCustomerEmailAddress,
-            otpView: otpView
-        )
-        return bodyView
+    private lazy var loadingView: UIView = {
+        return SpinnerView()
     }()
     private lazy var otpView: NetworkingOTPView = {
         let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
@@ -64,14 +54,14 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     private func showContent(redactedPhoneNumber: String) {
         let pane = PaneWithHeaderLayoutView(
             title: STPLocalizedString(
-                "Sign in to Link",
+                "Verify it's you",
                 "The title of a screen where users are informed that they can sign-in-to Link."
             ),
             subtitle: String(format: STPLocalizedString(
                 "Enter the code sent to %@.",
                 "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
             ), redactedPhoneNumber),
-            contentView: bodyView,
+            contentView: otpView,
             footerView: nil
         )
         pane.addTo(view: view)
@@ -84,11 +74,6 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         }
 
         loadingView.isHidden = !show
-        if show {
-            loadingView.startAnimating()
-        } else {
-            loadingView.stopAnimating()
-        }
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
 
