@@ -80,6 +80,7 @@
 		6A13B9842B48BF4300FFA327 /* AccountPickerRowLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13B9832B48BF4300FFA327 /* AccountPickerRowLabelView.swift */; };
 		6A13B9862B4CD04100FFA327 /* RetrieveAccountsLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13B9852B4CD04100FFA327 /* RetrieveAccountsLoadingView.swift */; };
 		6A13B9FA2B4E182A00FFA327 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13B9F92B4E182A00FFA327 /* SpinnerView.swift */; };
+		6A13B9FC2B58545F00FFA327 /* person@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A13B9FB2B58545F00FFA327 /* person@3x.png */; };
 		6A1D42FF2B1686FC005A1EB0 /* InstitutionTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D42FE2B1686FC005A1EB0 /* InstitutionTableView.swift */; };
 		6A1D43012B1687AB005A1EB0 /* InstitutionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43002B1687AB005A1EB0 /* InstitutionTableViewCell.swift */; };
 		6A1D43032B16B3DC005A1EB0 /* InstitutionCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43022B16B3DC005A1EB0 /* InstitutionCellView.swift */; };
@@ -354,6 +355,7 @@
 		6A13B9832B48BF4300FFA327 /* AccountPickerRowLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerRowLabelView.swift; sourceTree = "<group>"; };
 		6A13B9852B4CD04100FFA327 /* RetrieveAccountsLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveAccountsLoadingView.swift; sourceTree = "<group>"; };
 		6A13B9F92B4E182A00FFA327 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
+		6A13B9FB2B58545F00FFA327 /* person@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "person@3x.png"; sourceTree = "<group>"; };
 		6A1D42FE2B1686FC005A1EB0 /* InstitutionTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionTableView.swift; sourceTree = "<group>"; };
 		6A1D43002B1687AB005A1EB0 /* InstitutionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionTableViewCell.swift; sourceTree = "<group>"; };
 		6A1D43022B16B3DC005A1EB0 /* InstitutionCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionCellView.swift; sourceTree = "<group>"; };
@@ -550,6 +552,7 @@
 				EC561AF0993C02AD68472D11 /* chevron_down@3x.png */,
 				F1C7A2FE53419CB29CBB6C08 /* close@3x.png */,
 				6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */,
+				6A13B9FB2B58545F00FFA327 /* person@3x.png */,
 				1AD7571981F0FE2F10F68530 /* prepane_phone_background@3x.png */,
 				EF0111A8932418631FFA1663 /* search@3x.png */,
 				57B289E803B7A53B000D7919 /* spinner@3x.png */,
@@ -1222,6 +1225,7 @@
 				F10147CF75C2A09D66CB5C14 /* cancel_circle@3x.png in Resources */,
 				755140DEEE50DCD6E939E528 /* check@3x.png in Resources */,
 				16F2968DC3B2FC4558821970 /* chevron_down@3x.png in Resources */,
+				6A13B9FC2B58545F00FFA327 /* person@3x.png in Resources */,
 				C747113C75AC92643B283CBD /* close@3x.png in Resources */,
 				CF47070B2A4CA27FEE9AE5FA /* generic_error@3x.png in Resources */,
 				C11D48CC29E1A123D50A5094 /* prepane_phone_background@3x.png in Resources */,
