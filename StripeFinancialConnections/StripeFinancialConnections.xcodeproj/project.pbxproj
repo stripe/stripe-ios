@@ -129,7 +129,6 @@
 		99F41681B77ECB0090F34E31 /* SFSafariViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D38B3C816EAB38AD242B064 /* SFSafariViewController+Extensions.swift */; };
 		9AF6EC34D666BEB3C1397092 /* BulletPointLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591E8073D2AD30115ABDB60F /* BulletPointLabelView.swift */; };
 		9B2CAE99344C26D524EDCF26 /* ModalPresentationWrapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587CD174831344F15ADB538D /* ModalPresentationWrapperViewController.swift */; };
-		9C6CE8824A7AEA56A2F5E7F5 /* NetworkingLinkVerificationBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBF53BDBB2CDC5908C374D7 /* NetworkingLinkVerificationBodyView.swift */; };
 		9CE29EA549C4BFA447AB82E0 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C650E82A4195A7566AA54298 /* StripeCore.framework */; };
 		9E0044ABEC04E2A8C50E3658 /* FinancialConnectionsSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 429F985168AE9F9D700AE37B /* FinancialConnectionsSessionManifest.swift */; };
 		A10B5A3E5E8AE8767CF09C15 /* AccountPickerSelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283469CD0298E3AFCFDAF10F /* AccountPickerSelectionListView.swift */; };
@@ -416,7 +415,6 @@
 		97CE72E38D41E86E0A1FAE9F /* AccountPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerViewController.swift; sourceTree = "<group>"; };
 		97EE2BCD7B861ACA49DB56CD /* CheckboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxView.swift; sourceTree = "<group>"; };
 		9ACAB1B6DB88D74F5ECC1C6D /* AccountPickerFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerFooterView.swift; sourceTree = "<group>"; };
-		9CBF53BDBB2CDC5908C374D7 /* NetworkingLinkVerificationBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkVerificationBodyView.swift; sourceTree = "<group>"; };
 		9D8F7A75976314427E8087F9 /* LinkingAccountsLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkingAccountsLoadingView.swift; sourceTree = "<group>"; };
 		9EA0AA05BC9FC60A06AC1B5E /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9ED1CF95D441821773EA68EE /* InstitutionDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionDataSource.swift; sourceTree = "<group>"; };
@@ -579,7 +577,6 @@
 		24D2905794F8E635EEDEC0D8 /* NetworkingLinkVerification */ = {
 			isa = PBXGroup;
 			children = (
-				9CBF53BDBB2CDC5908C374D7 /* NetworkingLinkVerificationBodyView.swift */,
 				6DDB75C69FE9322C745943B3 /* NetworkingLinkVerificationDataSource.swift */,
 				CDD861E4EB8BA294545B7651 /* NetworkingLinkVerificationViewController.swift */,
 			);
@@ -1357,7 +1354,6 @@
 				3F835D5A1C797C1C9BCF05D0 /* NetworkingLinkStepUpVerificationBodyView.swift in Sources */,
 				11782289208971CCAA1037A5 /* NetworkingLinkStepUpVerificationDataSource.swift in Sources */,
 				C128C1681E46F0F12EB4EB9F /* NetworkingLinkStepUpVerificationViewController.swift in Sources */,
-				9C6CE8824A7AEA56A2F5E7F5 /* NetworkingLinkVerificationBodyView.swift in Sources */,
 				333B9C3E3349F5369FBA7C32 /* NetworkingLinkVerificationDataSource.swift in Sources */,
 				31AD3BE92B0C2F000080C800 /* ScreenNativeScale.swift in Sources */,
 				C5FEC806A31021B7D119A73C /* NetworkingLinkVerificationViewController.swift in Sources */,
