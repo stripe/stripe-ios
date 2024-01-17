@@ -206,6 +206,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 las.setLastPMDetails(pm: result.pm)
 
                 STPAnalyticsClient.sharedClient.logLinkPopupSuccess(sessionType: self.context.intent.linkPopupWebviewOption)
+                LinkSecureCookieStore.shared.markLinkAsUsed()
                 self.payWithLinkDelegate?.payWithLinkWebControllerDidComplete(self, intent: self.context.intent, with: paymentOption)
             case .logout:
                 // Delete the account information
