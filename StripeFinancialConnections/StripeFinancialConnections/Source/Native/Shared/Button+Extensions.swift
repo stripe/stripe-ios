@@ -26,11 +26,11 @@ extension Button.Configuration {
         primaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         primaryButtonConfiguration.cornerRadius = 12.0
         // default
-        primaryButtonConfiguration.backgroundColor = .textBrand
+        primaryButtonConfiguration.backgroundColor = .brand500
         primaryButtonConfiguration.foregroundColor = .white
         // disabled
-        primaryButtonConfiguration.disabledBackgroundColor = .textBrand
-        primaryButtonConfiguration.disabledForegroundColor = .white.withAlphaComponent(0.3)
+        primaryButtonConfiguration.disabledBackgroundColor = .brand500
+        primaryButtonConfiguration.disabledForegroundColor = .neutral0.withAlphaComponent(0.4)
         // pressed
         primaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.23)  // this tries to simulate `brand600`
         primaryButtonConfiguration.colorTransforms.highlightedForeground = nil
@@ -42,11 +42,11 @@ extension Button.Configuration {
         secondaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         secondaryButtonConfiguration.cornerRadius = 12.0
         // default
-        secondaryButtonConfiguration.foregroundColor = .textPrimary
-        secondaryButtonConfiguration.backgroundColor = .backgroundContainer
+        secondaryButtonConfiguration.foregroundColor = .textDefault
+        secondaryButtonConfiguration.backgroundColor = .neutral25
         // disabled
-        secondaryButtonConfiguration.disabledForegroundColor = .textPrimary.withAlphaComponent(0.3)
-        secondaryButtonConfiguration.disabledBackgroundColor = .backgroundContainer
+        secondaryButtonConfiguration.disabledForegroundColor = .textDefault.withAlphaComponent(0.4)
+        secondaryButtonConfiguration.disabledBackgroundColor = .neutral25
         // pressed
         secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04)  // this tries to simulate `neutral100`
         secondaryButtonConfiguration.colorTransforms.highlightedForeground = nil
