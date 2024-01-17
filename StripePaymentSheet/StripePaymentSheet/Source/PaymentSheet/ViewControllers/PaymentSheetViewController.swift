@@ -639,7 +639,7 @@ extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
         guard isLinkEnabled else {
             return false
         }
-        
+
         let isAccountNotRegisteredOrMissing = LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
         return isAccountNotRegisteredOrMissing && !LinkSecureCookieStore.shared.hasUsedLink
     }
