@@ -131,7 +131,7 @@ extension UIColor {
         return UIColor(red: 53 / 255.0, green: 58 / 255.0, blue: 68 / 255.0, alpha: 1)  // #353a44
     }
 
-    static var brand50: UIColor {
+    static var brand25: UIColor {
         return UIColor(red: 247 / 255.0, green: 245 / 255.0, blue: 253 / 255.0, alpha: 1)  // #f7f5fd
     }
 

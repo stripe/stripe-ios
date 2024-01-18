@@ -32,7 +32,7 @@ final class RoundedIconView: UIView {
             cornerRadius = diameter / 2
         }
 
-        backgroundColor = .brand50
+        backgroundColor = .brand25
         layer.cornerRadius = cornerRadius
 
         translatesAutoresizingMaskIntoConstraints = false
