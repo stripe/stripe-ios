@@ -48,8 +48,8 @@ final class LinkAccountPickerFooterView: UIView {
                     businessName: businessName,
                     permissions: permissions,
                     isNetworking: true,
-                    font: .body(.small),
-                    boldFont: .body(.smallEmphasized),
+                    font: .label(.small),
+                    boldFont: .label(.smallEmphasized),
                     alignCenter: true,
                     didSelectLearnMore: didSelectMerchantDataAccessLearnMore
                 ),
@@ -57,7 +57,14 @@ final class LinkAccountPickerFooterView: UIView {
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 24
+        verticalStackView.spacing = 16
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 16,
+            leading: 24,
+            bottom: 16,
+            trailing: 24
+        )
         addAndPinSubview(verticalStackView)
     }
 

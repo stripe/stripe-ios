@@ -57,9 +57,9 @@ extension PaneLayoutView {
 
         if let title = title {
             let titleLabel = AttributedTextView(
-                font: .heading(.large),
-                boldFont: .heading(.large),
-                linkFont: .heading(.large),
+                font: .heading(.extraLarge),
+                boldFont: .heading(.extraLarge),
+                linkFont: .heading(.extraLarge),
                 textColor: .textDefault
             )
             titleLabel.setText(title)
