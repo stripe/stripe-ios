@@ -143,9 +143,13 @@ final class LinkAccountPickerViewController: UIViewController {
         )
         self.footerView = footerView
 
-        let paneLayoutView = PaneWithHeaderLayoutView(
-            title: networkingAccountPicker.title,
-            contentView: bodyView,
+        let paneLayoutView =  PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: nil,
+                title: networkingAccountPicker.title,
+                subtitle: nil,
+                contentView: bodyView
+            ),
             footerView: footerView
         )
         paneLayoutView.addTo(view: view)

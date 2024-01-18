@@ -194,7 +194,6 @@
 		DC4DFC847378AC9E9112B443 /* AuthenticationSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 596A401ABA089532A5006584 /* AuthenticationSessionManager.swift */; };
 		E3F62D2F9C344A1178030E8E /* AttachLinkedPaymentAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA62F9B77C6A1D1B12F02CF5 /* AttachLinkedPaymentAccountViewController.swift */; };
 		E4D00DB842047E595DD85BEF /* CheckboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EE2BCD7B861ACA49DB56CD /* CheckboxView.swift */; };
-		E54BF330E72BA091AEA1833A /* LinkAccountPickerRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606B3546B822EE9F9F868B8C /* LinkAccountPickerRowView.swift */; };
 		E637387728FA1597B1B51E5D /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EA7801B85973F10F65DDB6 /* UIImage+Extensions.swift */; };
 		E760C94B619A8934D1D5E1D0 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC23DAC91962D0D8A713D37 /* UIColor+Extensions.swift */; };
 		E85DCFCA61299EF27B3201CF /* FinancialConnectionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D8397DB43DEC09BDF66E8A /* FinancialConnectionsSheet.swift */; };
@@ -343,7 +342,6 @@
 		5D555DB0657A602274596428 /* warning_triangle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning_triangle@3x.png"; sourceTree = "<group>"; };
 		5E48DB3155C1546B196DF97B /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5F856808B78F4F1975959805 /* NativeFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeFlowController.swift; sourceTree = "<group>"; };
-		606B3546B822EE9F9F868B8C /* LinkAccountPickerRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountPickerRowView.swift; sourceTree = "<group>"; };
 		60B7CFC14964440E8AA670A9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		6224E799E667DF223757D493 /* AccountNumberRetrievalErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountNumberRetrievalErrorView.swift; sourceTree = "<group>"; };
 		6516BB12D029D1DDCBA1534D /* ManualEntryTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryTextField.swift; sourceTree = "<group>"; };
@@ -764,7 +762,6 @@
 				524D3116FDA5A3AD68075AA4 /* LinkAccountPickerDataSource.swift */,
 				A680CB323B9139F838643EC1 /* LinkAccountPickerFooterView.swift */,
 				AFF070262170A321F5622CCF /* LinkAccountPickerNewAccountRowView.swift */,
-				606B3546B822EE9F9F868B8C /* LinkAccountPickerRowView.swift */,
 				1848547B588045C776236B3B /* LinkAccountPickerViewController.swift */,
 			);
 			path = LinkAccountPicker;
@@ -1328,7 +1325,6 @@
 				C55F79F4B85E1EB8730B02C6 /* LinkAccountPickerDataSource.swift in Sources */,
 				166ACB3BF53BDB4443E276E3 /* LinkAccountPickerFooterView.swift in Sources */,
 				F0495231F4C70E054149C03A /* LinkAccountPickerNewAccountRowView.swift in Sources */,
-				E54BF330E72BA091AEA1833A /* LinkAccountPickerRowView.swift in Sources */,
 				72BB9389206F10DE9B18E542 /* LinkAccountPickerViewController.swift in Sources */,
 				4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */,
 				6A78141A2B45D53700168992 /* DataAccessNoticeViewController.swift in Sources */,
