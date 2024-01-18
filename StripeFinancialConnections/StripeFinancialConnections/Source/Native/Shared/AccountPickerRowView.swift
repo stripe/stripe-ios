@@ -40,6 +40,17 @@ final class AccountPickerRowView: UIView {
             checkboxView.isSelected = isSelected
         }
     }
+    private lazy var horizontalStackView: UIStackView = {
+        return CreateHorizontalStackView(
+            arrangedSubviews: [
+                labelView,
+                checkboxView,
+            ]
+        )
+    }()
+    private lazy var institutionIconView: InstitutionIconView = {
+        return InstitutionIconView()
+    }()
     private lazy var checkboxView: CheckboxView = {
         let selectionView = CheckboxView()
         selectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -63,19 +74,18 @@ final class AccountPickerRowView: UIView {
         // necessary so the shadow does not appear under text
         backgroundColor = .customBackgroundColor
 
-        let horizontalStackView = CreateHorizontalStackView(
-            arrangedSubviews: [
-                labelView,
-                checkboxView,
-            ]
-        )
         if isDisabled {
             horizontalStackView.alpha = 0.25
         }
         addAndPinSubviewToSafeArea(horizontalStackView)
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
-        addGestureRecognizer(tapGestureRecognizer)
+        if !isDisabled {
+            let tapGestureRecognizer = UITapGestureRecognizer(
+                target: self,
+                action: #selector(didTapView)
+            )
+            addGestureRecognizer(tapGestureRecognizer)
+        }
 
         isSelected = false  // activate the setter to draw border
     }
@@ -95,11 +105,22 @@ final class AccountPickerRowView: UIView {
     }
 
     func set(
+        institutionIconUrl: String? = nil,
         title: String,
         subtitle: String?,
         balanceString: String? = nil,
         isSelected: Bool
     ) {
+        if let institutionIconUrl = institutionIconUrl {
+            let needToInsertInstitutionIconView = (institutionIconView.superview == nil)
+            if needToInsertInstitutionIconView {
+                horizontalStackView.insertArrangedSubview(institutionIconView, at: 0)
+            }
+            institutionIconView.setImageUrl(institutionIconUrl)
+        } else {
+            institutionIconView.removeFromSuperview()
+        }
+
         labelView.set(
             title: title,
             subtitle: subtitle,
@@ -134,11 +155,28 @@ import SwiftUI
 
 private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
 
+    let institutionIconUrl: String?
     let title: String
     let subtitle: String?
     let balanceString: String?
     let isSelected: Bool
     let isDisabled: Bool
+
+    init(
+        institutionIconUrl: String? = nil,
+        title: String,
+        subtitle: String?,
+        balanceString: String?,
+        isSelected: Bool,
+        isDisabled: Bool
+    ) {
+        self.institutionIconUrl = institutionIconUrl
+        self.title = title
+        self.subtitle = subtitle
+        self.balanceString = balanceString
+        self.isSelected = isSelected
+        self.isDisabled = isDisabled
+    }
 
     func makeUIView(context: Context) -> AccountPickerRowView {
         let view = AccountPickerRowView(
@@ -146,6 +184,7 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
             didSelect: {}
         )
         view.set(
+            institutionIconUrl: institutionIconUrl,
             title: title,
             subtitle: subtitle,
             balanceString: balanceString,
@@ -159,6 +198,7 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
         context: Context
     ) {
         uiView.set(
+            institutionIconUrl: institutionIconUrl,
             title: title,
             subtitle: subtitle,
             balanceString: balanceString,
@@ -172,6 +212,14 @@ struct AccountPickerRowView_Previews: PreviewProvider {
         if #available(iOS 14.0, *) {
             ScrollView {
                 VStack(spacing: 16) {
+                    AccountPickerRowViewUIViewRepresentable(
+                        institutionIconUrl: "https://b.stripecdn.com/connections-statics-srv/assets/BrandIcon--stripe-4x.png",
+                        title: "Joint Checking Very Long Name To Truncate",
+                        subtitle: "••••6789",
+                        balanceString: nil,
+                        isSelected: true,
+                        isDisabled: false
+                    ).frame(height: 88)
                     AccountPickerRowViewUIViewRepresentable(
                         title: "Joint Checking Very Long Name To Truncate",
                         subtitle: "••••6789",
