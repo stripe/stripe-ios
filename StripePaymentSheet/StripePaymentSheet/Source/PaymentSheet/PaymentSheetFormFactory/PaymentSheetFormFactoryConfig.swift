@@ -43,6 +43,14 @@ enum PaymentSheetFormFactoryConfig {
             return false
         }
     }
+    var overrideCountry: String? {
+        switch self {
+        case .paymentSheet(let config):
+            return config.userOverrideCountry
+        case .customerSheet:
+            return nil
+        }
+    }
     var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
         switch self {
         case .paymentSheet(let config):

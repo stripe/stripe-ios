@@ -166,6 +166,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum UserOverrideCountry: String, PickerEnum {
+        static var enumName: String { "UserOverrideCountry (debug only)" }
+
+        case off
+        case GB
+    }
+
     enum BillingDetailsAttachDefaults: String, PickerEnum {
         static var enumName: String { "Attach defaults" }
 
@@ -251,6 +258,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var defaultBillingAddress: DefaultBillingAddress
     var linkEnabled: LinkEnabled
     var linkV2Allowed: LinkV2Allowed
+    var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var checkoutEndpoint: String?
     var autoreload: Autoreload
@@ -281,6 +289,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             defaultBillingAddress: .off,
             linkEnabled: .off,
             linkV2Allowed: .off,
+            userOverrideCountry: .off,
             customCtaLabel: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,

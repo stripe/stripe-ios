@@ -179,7 +179,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
             settings
         )
 
-        app.buttons["Apple Pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         app.buttons["+ Add"].waitForExistenceAndTap()
 
         try! fillCardData(app)
@@ -210,7 +210,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Reload w/ same customer
         reload(app, settings: settings)
-        app.buttons["Apple Pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         XCTAssertEqual(app.cells.count, 3) // Should be "Add" and "Apple Pay" and "Link"
         app.buttons["+ Add"].waitForExistenceAndTap()
 
@@ -1331,7 +1331,8 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Reload w/ same customer
         reload(app, settings: settings)
         // This time, expect SEPA to be pre-selected as the default
-        XCTAssertEqual(paymentMethodButton.label, "••••3201")
+        XCTAssert(paymentMethodButton.label.hasPrefix("••••3201, sepa_debit"))
+
         // Tapping confirm without presenting flowcontroller should show the mandate
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.waitForExistence(timeout: 1))
@@ -1346,7 +1347,9 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Reload w/ same customer
         reload(app, settings: settings)
         // If you present the flowcontroller and see the mandate...
-        app.buttons["••••3201"].waitForExistenceAndTap()
+        XCTAssert(paymentMethodButton.label.hasPrefix("••••3201, sepa_debit"))
+        paymentMethodButton.waitForExistenceAndTap()
+
         XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.exists)
         // ...you shouldn't see the mandate again when you confirm
         app.buttons["Continue"].tap()
@@ -2301,12 +2304,30 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // Disable postal code input, it is pre-filled by `defaultBillingAddress`
         try! fillCardData(app, postalEnabled: false)
+        let emailField = app.textFields["Email"]
+        emailField.tap()
+        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+
+        let phoneField = app.textFields["Phone"]
+        // Phone field appears after the network call finishes. We want to wait for it to appear.
+        XCTAssert(phoneField.waitForExistence(timeout: 10))
+        phoneField.tap()
+        phoneField.typeText("3105551234")
+
+        // The name field is only required for non-US countries. Only fill it out if it exists.
+        let nameField = app.textFields["Full name"]
+        if nameField.exists {
+            // Country is geolocated from client's request - tests are expected to run in US
+            XCTFail("Name field should not exist")
+        }
+
+        // Pay!
         app.buttons["Pay $50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
     // Tests the #3 flow in PaymentSheet where the merchant enables saved payment methods, buyer has no SPMs and first time Link user
-    func testLinkPaymentSheet_enabledSPM_noSPMs_firstTimeLinkUser() {
+    func testLinkPaymentSheet_enabledSPM_noSPMs_firstTimeLinkUser() {() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
@@ -2561,6 +2582,44 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         app.buttons["+ Add"].waitForExistenceAndTap()
         assertLinkInlineSignupNotShown() // Link should not be shown in this flow
+    }
+
+    func testLinkInlineSignup_gb() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.userOverrideCountry = .GB
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        try fillCardData(app)
+
+        app.switches["Save your info for secure 1-click checkout with Link"].tap()
+
+        let emailField = app.textFields["Email"]
+        emailField.tap()
+        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+
+        let phoneField = app.textFields["Phone"]
+        // Phone field appears after the network call finishes. We want to wait for it to appear.
+        XCTAssert(phoneField.waitForExistence(timeout: 10))
+        phoneField.tap()
+        phoneField.typeText("3105551234")
+
+        // The name field is required for non-US countries
+        let nameField = app.textFields["Full name"]
+        XCTAssert(nameField.waitForExistence(timeout: 10))
+        nameField.tap()
+        nameField.typeText("Jane Doe")
+
+        // Pay!
+        app.buttons["Pay $50.99"].tap()
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
     // MARK: Link test helpers

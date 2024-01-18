@@ -10,6 +10,7 @@ import Foundation
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 import UIKit
 
 // MARK: - Configuration
@@ -168,6 +169,9 @@ extension PaymentSheet {
 
         /// If enabled, PaymentSheet will offer V2 Link features, such as passthrough mode
         @_spi(STP) public var allowLinkV2Features: Bool = false
+
+        /// Override country for test purposes
+        @_spi(STP) public var userOverrideCountry: String?
 
         /// Describes how billing details should be collected.
         /// All values default to `automatic`.
@@ -335,15 +339,24 @@ extension PaymentSheet {
         public var address: Address = Address()
 
         /// The customer's email
-        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        /// - Note: When used with defaultBillingDetails, the value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var email: String?
 
         /// The customer's full name
-        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        /// - Note: When used with defaultBillingDetails, the value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var name: String?
 
-        /// The customer's phone number without formatting (e.g. 5551234567)
+        /// The customer's phone number in e164 formatting (e.g. +15551234567)
+        /// - Note: When used with defaultBillingDetails, omitting '+' will assume a US based phone number.
         public var phone: String?
+
+        /// The customer's phone number formatted for display in your UI (e.g. "+1 (555) 555-5555")
+        public var phoneNumberForDisplay: String? {
+            guard let phone = self.phone else {
+                return nil
+            }
+            return PhoneNumber.fromE164(phone)?.string(as: .international)
+        }
 
         /// Initializes billing details
         public init(address: PaymentSheet.Address = Address(), email: String? = nil, name: String? = nil, phone: String? = nil) {
@@ -442,5 +455,20 @@ extension PaymentSheet.Configuration {
         || billingDetailsCollectionConfiguration.phone == .always
         || billingDetailsCollectionConfiguration.email == .always
         || billingDetailsCollectionConfiguration.address == .full
+    }
+}
+
+extension STPPaymentMethodBillingDetails {
+    func toPaymentSheetBillingDetails() -> PaymentSheet.BillingDetails {
+        let address = PaymentSheet.Address(city: self.address?.city,
+                                           country: self.address?.country,
+                                           line1: self.address?.line1,
+                                           line2: self.address?.line2,
+                                           postalCode: self.address?.postalCode,
+                                           state: self.address?.state)
+        return PaymentSheet.BillingDetails(address: address,
+                                           email: self.email,
+                                           name: self.name,
+                                           phone: self.phone)
     }
 }

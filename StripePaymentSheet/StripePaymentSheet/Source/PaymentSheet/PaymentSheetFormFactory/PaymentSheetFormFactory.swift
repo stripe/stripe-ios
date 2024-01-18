@@ -101,7 +101,7 @@ class PaymentSheetFormFactory {
                   isPaymentIntent: intent.isPaymentIntent,
                   currency: intent.currency,
                   amount: intent.amount,
-                  countryCode: intent.countryCode,
+                  countryCode: intent.countryCode(overrideCountry: configuration.overrideCountry),
                   saveMode: saveMode)
     }
 
