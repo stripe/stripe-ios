@@ -2327,7 +2327,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     }
 
     // Tests the #3 flow in PaymentSheet where the merchant enables saved payment methods, buyer has no SPMs and first time Link user
-    func testLinkPaymentSheet_enabledSPM_noSPMs_firstTimeLinkUser() {() throws {
+    func testLinkPaymentSheet_enabledSPM_noSPMs_firstTimeLinkUser() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
