@@ -408,6 +408,7 @@ extension PaymentSheet {
                         linkAccountService.setLastPMDetails(params: paymentMethodParams)
 
                         createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
+                        LinkSecureCookieStore.shared.markLinkAsUsed()
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure()
 

@@ -2272,9 +2272,10 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
 // MARK: - Link
 class PaymentSheetLinkUITests: PaymentSheetUITestCase {
-    // MARK: Inline signup
-    /// Tests the Link inline signup flow.
-    func testLinkInlineSignup() throws {
+    // MARK: PaymentSheet Link inline signup
+
+    // Tests the #1 flow in PaymentSheet where the merchant disable saved payment methods and first time Link user
+    func testLinkPaymentSheet_disabledSPM_firstTimeLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.apmsEnabled = .on
@@ -2282,34 +2283,287 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.linkV2Allowed = .on
 
         loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        fillLinkAndPay(mode: .checkbox)
+    }
 
-        app.buttons["Present PaymentSheet"].tap()
+    // Tests the #2 flow in PaymentSheet where the merchant disable saved payment methods and returning Link user
+    func testLinkPaymentSheet_disabledSPM_returningLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
-        try fillCardData(app)
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        // Ensure Link wallet button is shown in SPM view
+        XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
+        assertLinkInlineSignupNotShown()
 
-        app.switches["Save your info for secure 1-click checkout with Link"].tap()
-
-        let emailField = app.textFields["Email"]
-        emailField.tap()
-        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
-
-        let phoneField = app.textFields["Phone"]
-        // Phone field appears after the network call finishes. We want to wait for it to appear.
-        XCTAssert(phoneField.waitForExistence(timeout: 10))
-        phoneField.tap()
-        phoneField.typeText("3105551234")
-
-        // The name field is only required for non-US countries. Only fill it out if it exists.
-        let nameField = app.textFields["Full name"]
-        if nameField.exists {
-            // Country is geolocated from client's request - tests are expected to run in US
-            XCTFail("Name field should not exist")
-        }
-
-        // Pay!
+        // Disable postal code input, it is pre-filled by `defaultBillingAddress`
+        try! fillCardData(app, postalEnabled: false)
         app.buttons["Pay $50.99"].tap()
-
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
+    // Tests the #3 flow in PaymentSheet where the merchant enables saved payment methods, buyer has no SPMs and first time Link user
+    func testLinkPaymentSheet_enabledSPM_noSPMs_firstTimeLinkUser() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        fillLinkAndPay(mode: .fieldConsent)
+    }
+
+    // Tests the #4 flow in PaymentSheet where the merchant enables saved payment methods, buyer has no SPMs and returning Link user
+    func testLinkPaymentSheet_enabledSPM_noSPMs_returningLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
+
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        // Ensure Link wallet button is shown in SPM view
+        XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
+        assertLinkInlineSignupNotShown()
+
+        // Disable postal code input, it is pre-filled by `defaultBillingAddress`
+        try! fillCardData(app, postalEnabled: false)
+        app.buttons["Pay $50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
+    // Tests the #5 flow in PaymentSheet where the merchant enables saved payment methods, buyer has SPMs and first time Link user
+    func testLinkPaymentSheet_enabledSPM_hasSPMs_firstTimeLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Begin by saving a card for this new user who is not signed up for Link
+        try! fillCardData(app)
+        app.buttons["Pay $50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // reload w/ same customer
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        // Ensure Link wallet button is shown in SPM view
+        XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+        fillLinkAndPay(mode: .fieldConsent)
+    }
+
+    // Tests the #6 flow in PaymentSheet where the merchant enables saved payment methods, buyer has SPMs and returning Link user
+    func testLinkPaymentSheet_enabledSPM_hasSPMs_returningLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning // the hardcoded returning customer is signed up with Link
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Ensure Link wallet button is shown in SPM view
+        XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+        assertLinkInlineSignupNotShown()
+    }
+
+    // MARK: PaymentSheet.FlowController Link inline signup
+
+    // Tests the #7 flow in PaymentSheet.FlowController where the merchant disables Apple Pay and saved payment methods and first time Link user
+    // Seealso: testLinkOnlyFlowController for testing wallet button behavior in this flow
+    func testLinkPaymentSheetFlow_disabledApplePay_disabledSPM_firstTimeLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .guest
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.applePayEnabled = .off
+
+        loadPlayground(app, settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        fillLinkAndPay(mode: .checkbox, uiStyle: .flowController)
+    }
+
+    // Tests the #8 flow in PaymentSheet.FlowController where the merchant disables Apple Pay and saved payment methods and returning Link user
+    func testLinkPaymentSheetFlow_disabledApplePay_disabledSPM_returningLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .guest
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.applePayEnabled = .off
+        settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
+
+        loadPlayground(app, settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+
+        // Ensure Link wallet button is shown
+        XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
+        assertLinkInlineSignupNotShown()
+
+        // Disable postal code input, it is pre-filled by `defaultBillingAddress`
+        try! fillCardData(app, postalEnabled: false)
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
+    // Tests the #9 flow in PaymentSheet.FlowController where the merchant disables Apple Pay and enables saved payment methods and first time Link user
+    func testLinkPaymentSheetFlow_disabledApplePay_enabledSPM_firstTimeLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.applePayEnabled = .off
+
+        loadPlayground(app, settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        fillLinkAndPay(mode: .fieldConsent, uiStyle: .flowController)
+    }
+
+    // Tests the #10 flow in PaymentSheet.FlowController where the merchant disables Apple Pay and enables saved payment methods and returning Link user
+    func testLinkPaymentSheetFlow_disabledApplePay_enabledSPM_returningLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.applePayEnabled = .off
+        settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
+
+        loadPlayground(app, settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+
+        // Ensure Link wallet button is shown
+        XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
+        assertLinkInlineSignupNotShown()
+
+        // Disable postal code input, it is pre-filled by `defaultBillingAddress`
+        try! fillCardData(app, postalEnabled: false)
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
+    // Tests the #11 flow in PaymentSheet.FlowController where the merchant disables Apple Pay and enables saved payment methods and first time Link user
+    func testLinkPaymentSheetFlow_disabledApplePay_enabledSPM_hasSPMs_firstTimeLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.applePayEnabled = .off
+
+        loadPlayground(app, settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        // Begin by saving a card for this new user who is not signed up for Link
+        try! fillCardData(app)
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // reload w/ same customer
+        reload(app, settings: settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        // Ensure Link wallet button is NOT shown in SPM view
+        XCTAssertFalse(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+        fillLinkAndPay(mode: .fieldConsent, uiStyle: .flowController, showLinkWalletButton: false)
+    }
+
+    // Tests the #11.1 flow in PaymentSheet.FlowController where the merchant enables Apple Pay and enables saved payment methods and first time Link user
+    func testLinkPaymentSheetFlow_enabledApplePay_enabledSPM_hasSPMs_firstTimeLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.applePayEnabled = .on
+
+        loadPlayground(app, settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["+ Add"].waitForExistenceAndTap())
+        // Begin by saving a card for this new user who is not signed up for Link
+        try! fillCardData(app)
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // reload w/ same customer
+        reload(app, settings: settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        // Ensure Link wallet button is NOT shown in SPM view
+        XCTAssertFalse(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        addCardButton.tap()
+        fillLinkAndPay(mode: .fieldConsent, uiStyle: .flowController, showLinkWalletButton: false)
+    }
+
+    // Tests the #12 flow in PaymentSheet.FlowController where the merchant disables Apple Pay and enables saved payment methods and returning Link user
+    func testLinkPaymentSheetFlow_disabledApplePay_enabledSPM_hasSPMs_returningLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .returning // this customer is signed up with Link
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.applePayEnabled = .off
+
+        loadPlayground(app, settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        // Ensure Link wallet button is NOT shown in SPM view
+        XCTAssertFalse(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        assertLinkInlineSignupNotShown() // Link should not be shown in this flow
+    }
+
+    // Tests the #12.1 flow in PaymentSheet.FlowController where the merchant enables Apple Pay and enables saved payment methods and returning Link user
+    func testLinkPaymentSheetFlow_enablesApplePay_enabledSPM_hasSPMs_returningLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.customerMode = .returning // this customer is signed up with Link
+        settings.apmsEnabled = .on
+        settings.linkEnabled = .on
+        settings.linkV2Allowed = .on
+        settings.applePayEnabled = .on
+
+        loadPlayground(app, settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        // Ensure Link wallet button is NOT shown in SPM view
+        XCTAssertFalse(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        assertLinkInlineSignupNotShown() // Link should not be shown in this flow
     }
 
     func testLinkInlineSignup_gb() throws {
@@ -2322,7 +2576,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         loadPlayground(app, settings)
 
-        app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         try fillCardData(app)
 
@@ -2350,18 +2604,27 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
-    func testLinkInlineSignup_progressive() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.apmsEnabled = .on
-        settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
+    // MARK: Link test helpers
 
-        loadPlayground(app, settings)
+    private enum LinkMode {
+        case checkbox
+        case fieldConsent
+    }
 
-        app.buttons["Present PaymentSheet"].tap()
+    private func fillLinkAndPay(mode: LinkMode,
+                                uiStyle: PaymentSheetTestPlaygroundSettings.UIStyle = .paymentSheet,
+                                showLinkWalletButton: Bool = true) {
 
         try! fillCardData(app)
+
+        if showLinkWalletButton {
+            // Confirm Link wallet button is visible
+            XCTAssertTrue(app.buttons["pay_with_link_button"].exists)
+        }
+
+        if mode == .checkbox {
+            app.switches["Save your info for secure 1-click checkout with Link"].tap()
+        }
 
         let emailField = app.textFields["Email"]
         XCTAssertTrue(emailField.waitForExistence(timeout: 10))
@@ -2376,13 +2639,26 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         // The name field is only required for non-US countries. Only fill it out if it exists.
         let nameField = app.textFields["Name"]
         if nameField.exists {
-        nameField.tap()
-        nameField.typeText("Jane Done")
+            nameField.tap()
+            nameField.typeText("Jane Done")
         }
 
         // Pay!
-        app.buttons["Pay $50.99"].tap()
+        switch uiStyle {
+        case .paymentSheet:
+            app.buttons["Pay $50.99"].tap()
+        case .flowController:
+            app.buttons["Continue"].tap()
+            app.buttons["Confirm"].waitForExistenceAndTap()
+        }
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
+    private func assertLinkInlineSignupNotShown() {
+        // Ensure checkbox is not shown for checkbox mode
+        XCTAssertFalse(app.switches["Save your info for secure 1-click checkout with Link"].waitForExistence(timeout: 2))
+        // Ensure email is not shown for field consent mode
+        XCTAssertFalse(app.textFields["Email"].waitForExistence(timeout: 3))
     }
 
 //    TODO: This is disabled until the Link team adds some hooks for testing.

@@ -73,5 +73,6 @@ extension LinkCookieStore {
     func clear() {
         delete(key: .session)
         delete(key: .lastLogoutEmail)
+        delete(key: .hasUsedLink)
     }
 }

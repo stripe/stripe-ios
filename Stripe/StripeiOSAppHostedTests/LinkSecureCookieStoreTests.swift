@@ -73,4 +73,12 @@ class LinkSecureCookieStoreTests: XCTestCase {
         XCTAssertNil(cookieStore.read(key: .session))
     }
 
+    // MARK: Has used link
+
+    func testMarkLinkAsUsed() {
+        XCTAssertFalse(cookieStore.hasUsedLink)
+        cookieStore.markLinkAsUsed()
+        XCTAssertTrue(cookieStore.hasUsedLink)
+    }
+
 }

@@ -97,3 +97,13 @@ final class LinkSecureCookieStore: LinkCookieStore {
     }
 
 }
+
+extension LinkSecureCookieStore {
+    var hasUsedLink: Bool {
+        read(key: .hasUsedLink) == "true"
+    }
+
+    func markLinkAsUsed() {
+        write(key: .hasUsedLink, value: "true")
+    }
+}
