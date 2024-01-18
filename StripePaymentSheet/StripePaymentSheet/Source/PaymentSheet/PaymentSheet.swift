@@ -343,6 +343,7 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
         with paymentOption: PaymentOption
     ) {
         let psvc = self.findPaymentSheetViewController()
+        psvc?.clearTextFields()
         psvc?.pay(with: paymentOption)
     }
 

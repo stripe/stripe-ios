@@ -108,3 +108,27 @@ extension PaymentMethodElementWrapper: ElementDelegate {
         delegate?.continueToNextField(element: self)
     }
 }
+
+extension Element {
+    public func getAllSubElements() -> [Element] {
+        switch self {
+        case let container as ContainerElement:
+            return [container] + container.elements.flatMap { $0.getAllSubElements() }
+        case let wrapper as AnyPaymentMethodElementWrapper:
+            return [wrapper.anyElement] + wrapper.anyElement.getAllSubElements()
+        default:
+            return [self]
+        }
+    }
+}
+
+/// Helper protocol easily switch over `PaymentMethodElementWrapper`
+private protocol AnyPaymentMethodElementWrapper: Element {
+    var anyElement: Element { get }
+}
+
+extension PaymentMethodElementWrapper: AnyPaymentMethodElementWrapper {
+    var anyElement: Element {
+        return element
+    }
+}
