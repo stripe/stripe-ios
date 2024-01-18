@@ -170,6 +170,9 @@ extension PaymentSheet {
         /// If enabled, PaymentSheet will offer V2 Link features, such as passthrough mode
         @_spi(STP) public var allowLinkV2Features: Bool = false
 
+        /// Override country for test purposes
+        @_spi(STP) public var userOverrideCountry: String?
+
         /// Describes how billing details should be collected.
         /// All values default to `automatic`.
         /// If `never` is used for a required field for the Payment Method used during checkout,

@@ -57,7 +57,12 @@ extension Intent {
         return elementsSession.linkSettings?.popupWebviewOption ?? .shared
     }
 
-    var countryCode: String? {
+    func countryCode(overrideCountry: String?) -> String? {
+#if DEBUG
+        if let overrideCountry {
+            return overrideCountry
+        }
+#endif
         return elementsSession.countryCode
     }
 
