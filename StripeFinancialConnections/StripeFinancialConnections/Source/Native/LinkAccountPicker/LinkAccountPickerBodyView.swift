@@ -27,7 +27,7 @@ final class LinkAccountPickerBodyView: UIView {
     private lazy var verticalStackView: UIStackView = {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 12
+        verticalStackView.spacing = 16
         return verticalStackView
     }()
 
@@ -50,7 +50,7 @@ final class LinkAccountPickerBodyView: UIView {
         verticalStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         accountTuples.forEach { accountTuple in
-            let accountRowView = LinkAccountPickerRowView(
+            let accountRowView = AccountPickerRowView(
                 isDisabled: !accountTuple.accountPickerAccount.allowSelection,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
@@ -60,24 +60,21 @@ final class LinkAccountPickerBodyView: UIView {
                     )
                 }
             )
-            let rowTitles = AccountPickerHelpers.rowTitles(
-                forAccount: accountTuple.partnerAccount,
-                captionWillHideAccountNumbers: accountTuple.accountPickerAccount.caption != nil
+            let rowTitles = AccountPickerHelpers.rowInfo(
+                forAccount: accountTuple.partnerAccount
             )
-            accountRowView.configure(
-                institutionImageUrl: accountTuple.partnerAccount.institution?.icon?.default,
-                leadingTitle: rowTitles.leadingTitle,
-                trailingTitle: rowTitles.trailingTitle,
+            accountRowView.set(
+                institutionIconUrl: accountTuple.partnerAccount.institution?.icon?.default,
+                title: rowTitles.accountName,
                 subtitle: {
                     if let caption = accountTuple.accountPickerAccount.caption {
                         return caption
                     } else {
-                        return AccountPickerHelpers.rowSubtitle(
-                            forAccount: accountTuple.partnerAccount
-                        )
+                        return rowTitles.accountNumbers
                     }
                 }(),
-                trailingIconImageUrl: accountTuple.accountPickerAccount.icon?.default,
+                balanceString:
+                    (accountTuple.accountPickerAccount.caption == nil) ? rowTitles.balanceString : nil,
                 isSelected: selectedAccountTuple?.partnerAccount.id == accountTuple.partnerAccount.id
             )
             verticalStackView.addArrangedSubview(accountRowView)
