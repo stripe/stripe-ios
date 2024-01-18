@@ -128,6 +128,10 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
         delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveTerminalError: error)
     }
 
+    func networkingOTPViewWillConfirmVerification(_ view: NetworkingOTPView) {
+        // no-op
+    }
+
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
         dataSource.saveToLink()
             .observe { [weak self] result in
@@ -172,8 +176,17 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
             }
     }
 
-    func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error) {
-        delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveTerminalError: error)
+    func networkingOTPView(
+        _ view: NetworkingOTPView,
+        didFailToConfirmVerification error: Error,
+        isTerminal: Bool
+    ) {
+        if isTerminal {
+            delegate?.networkingSaveToLinkVerificationViewController(
+                self,
+                didReceiveTerminalError: error
+            )
+        }
     }
 
     func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {

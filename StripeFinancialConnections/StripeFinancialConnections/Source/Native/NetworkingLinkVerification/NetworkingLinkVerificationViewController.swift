@@ -155,6 +155,10 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
         delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
     }
 
+    func networkingOTPViewWillConfirmVerification(_ view: NetworkingOTPView) {
+        // no-op
+    }
+
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
         dataSource.markLinkVerified()
             .observe { [weak self] result in
@@ -213,7 +217,16 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
             }
     }
 
-    func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error) {
-        delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+    func networkingOTPView(
+        _ view: NetworkingOTPView,
+        didFailToConfirmVerification error: Error,
+        isTerminal: Bool
+    ) {
+        if isTerminal {
+            delegate?.networkingLinkVerificationViewController(
+                self,
+                didReceiveTerminalError: error
+            )
+        }
     }
 }
