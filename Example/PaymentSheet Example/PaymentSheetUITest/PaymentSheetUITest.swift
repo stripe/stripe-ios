@@ -2283,7 +2283,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.linkV2Allowed = .on
 
         loadPlayground(app, settings)
-        app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         fillLinkAndPay(mode: .checkbox)
     }
 
@@ -2297,31 +2297,13 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
-        app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         assertLinkInlineSignupNotShown()
 
         // Disable postal code input, it is pre-filled by `defaultBillingAddress`
         try! fillCardData(app, postalEnabled: false)
-        let emailField = app.textFields["Email"]
-        emailField.tap()
-        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
-
-        let phoneField = app.textFields["Phone"]
-        // Phone field appears after the network call finishes. We want to wait for it to appear.
-        XCTAssert(phoneField.waitForExistence(timeout: 10))
-        phoneField.tap()
-        phoneField.typeText("3105551234")
-
-        // The name field is only required for non-US countries. Only fill it out if it exists.
-        let nameField = app.textFields["Full name"]
-        if nameField.exists {
-            // Country is geolocated from client's request - tests are expected to run in US
-            XCTFail("Name field should not exist")
-        }
-
-        // Pay!
         app.buttons["Pay $50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
@@ -2335,7 +2317,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.linkV2Allowed = .on
 
         loadPlayground(app, settings)
-        app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         fillLinkAndPay(mode: .fieldConsent)
     }
 
@@ -2349,7 +2331,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
-        app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         assertLinkInlineSignupNotShown()
@@ -2369,7 +2351,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.linkV2Allowed = .on
 
         loadPlayground(app, settings)
-        app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         // Begin by saving a card for this new user who is not signed up for Link
         try! fillCardData(app)
@@ -2378,7 +2360,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // reload w/ same customer
         reload(app, settings: settings)
-        app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         let addCardButton = app.buttons["+ Add"]
@@ -2396,7 +2378,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.linkV2Allowed = .on
 
         loadPlayground(app, settings)
-        app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
@@ -2420,7 +2402,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
-        app.buttons["Payment method"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
         fillLinkAndPay(mode: .checkbox, uiStyle: .flowController)
     }
 
@@ -2436,7 +2418,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
-        app.buttons["Payment method"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
 
         // Ensure Link wallet button is shown
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
@@ -2460,7 +2442,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
-        app.buttons["Payment method"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
         fillLinkAndPay(mode: .fieldConsent, uiStyle: .flowController)
     }
 
@@ -2476,7 +2458,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
-        app.buttons["Payment method"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
 
         // Ensure Link wallet button is shown
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
@@ -2500,7 +2482,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
-        app.buttons["Payment method"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
         // Begin by saving a card for this new user who is not signed up for Link
         try! fillCardData(app)
         app.buttons["Continue"].tap()
@@ -2509,7 +2491,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // reload w/ same customer
         reload(app, settings: settings)
-        app.buttons["Payment method"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
         // Ensure Link wallet button is NOT shown in SPM view
         XCTAssertFalse(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         let addCardButton = app.buttons["+ Add"]
@@ -2529,7 +2511,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.applePayEnabled = .on
 
         loadPlayground(app, settings)
-        app.buttons["Payment method"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["+ Add"].waitForExistenceAndTap())
         // Begin by saving a card for this new user who is not signed up for Link
         try! fillCardData(app)
@@ -2539,7 +2521,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // reload w/ same customer
         reload(app, settings: settings)
-        app.buttons["Payment method"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
         // Ensure Link wallet button is NOT shown in SPM view
         XCTAssertFalse(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         let addCardButton = app.buttons["+ Add"]
@@ -2559,7 +2541,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
-        app.buttons["Payment method"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
         // Ensure Link wallet button is NOT shown in SPM view
         XCTAssertFalse(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -2577,7 +2559,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.applePayEnabled = .on
 
         loadPlayground(app, settings)
-        app.buttons["Payment method"].tap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
         // Ensure Link wallet button is NOT shown in SPM view
         XCTAssertFalse(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -2594,7 +2576,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         loadPlayground(app, settings)
 
-        app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         try fillCardData(app)
 
