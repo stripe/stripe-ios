@@ -625,6 +625,10 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         savedPaymentOptionsViewController.isRemovingPaymentMethods.toggle()
         configureEditSavedPaymentMethodsButton()
     }
+
+    func clearTextFields() {
+        addPaymentMethodViewController.clearTextFields()
+    }
 }
 
 // MARK: - AddPaymentMethodViewControllerDelegate

@@ -395,6 +395,10 @@ class AddPaymentMethodViewController: UIViewController {
             )
         }
     }
+
+    func clearTextFields() {
+        paymentMethodFormElement.clearTextFields()
+    }
 }
 
 // MARK: - PaymentMethodTypeCollectionViewDelegate
