@@ -23,8 +23,10 @@ protocol PaymentMethodElement: Element {
 
 extension PaymentMethodElement {
     func clearTextFields() {
-        for case let element as TextFieldElement in getAllUnwrappedSubElements() {
-            element.setText("")
+        for element in getAllUnwrappedSubElements() {
+            if let element = element as? TextFieldElement {
+                element.setText("")
+            }
         }
     }
 }

@@ -113,9 +113,9 @@ extension Element {
     public func getAllUnwrappedSubElements() -> [Element] {
         switch self {
         case let container as ContainerElement:
-            return [container] + container.elements.flatMap { $0.getAllSubElements() }
+            return [container] + container.elements.flatMap { $0.getAllUnwrappedSubElements() }
         case let wrapper as AnyPaymentMethodElementWrapper:
-            return wrapper.anyElement.getAllSubElements()
+            return wrapper.anyElement.getAllUnwrappedSubElements()
         default:
             return [self]
         }
@@ -123,7 +123,7 @@ extension Element {
 }
 
 /// Helper protocol easily switch over `PaymentMethodElementWrapper`
-private protocol AnyPaymentMethodElementWrapper: Element {
+private protocol AnyPaymentMethodElementWrapper {
     var anyElement: Element { get }
 }
 
