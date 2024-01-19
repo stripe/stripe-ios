@@ -66,6 +66,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         ) { [apiClient, cookieStore] result in
             switch result {
             case .success(let lookupResponse):
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
                 switch lookupResponse.responseType {
                 case .found(let session):
                     completion(.success(
@@ -95,7 +96,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                     completion(.success(nil))
                 }
             case .failure(let error):
-                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure()
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
                 completion(.failure(error))
             }
         }
