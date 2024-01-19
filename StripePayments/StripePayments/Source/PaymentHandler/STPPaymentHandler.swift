@@ -1416,7 +1416,9 @@ public class STPPaymentHandler: NSObject {
             pow(Double(1 + Self.maxChallengeRetries - retryCount), Double(2))
         )
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
+        // Cap the delay to 5 seconds, exponential back off is good for the first few retries
+        // But delays too longer after ~2 retries
+        DispatchQueue.main.asyncAfter(deadline: .now() + min(delayTime, 5)) {
             block()
         }
     }
@@ -1938,7 +1940,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    static let maxChallengeRetries = 2
+    static let maxChallengeRetries = 6
     func _markChallengeCompleted(
         withCompletion completion: @escaping STPBooleanSuccessBlock,
         retryCount: Int = maxChallengeRetries
