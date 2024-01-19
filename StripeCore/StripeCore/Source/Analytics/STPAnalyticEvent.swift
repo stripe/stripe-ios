@@ -114,6 +114,7 @@ import Foundation
     case linkSignupStart = "link.signup.start"
     case linkSignupComplete = "link.signup.complete"
     case linkSignupFailure = "link.signup.failure"
+    case linkSignupFailureInvalidSessionState = "link.signup.failure.invalidSessionState"
 
     // MARK: - Link Popup
     case linkPopupShow = "link.popup.show"
@@ -124,6 +125,7 @@ import Foundation
     case linkPopupLogout = "link.popup.logout"
 
     // MARK: - Link Misc
+    case linkAccountLookupComplete = "link.account_lookup.complete"
     case linkAccountLookupFailure = "link.account_lookup.failure"
 
     // MARK: - LUXE
