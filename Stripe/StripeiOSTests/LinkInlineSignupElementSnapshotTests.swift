@@ -23,11 +23,13 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    // WARNING: If this tests fails, see go/link-signup-consent-action-log to determine if a new consent_action is needed.
     func testExpandedState() {
         let sut = makeSUT(saveCheckboxChecked: true, emailAddress: "user@example.com")
         verify(sut)
     }
 
+    // WARNING: If this tests fails, see go/link-signup-consent-action-log to determine if a new consent_action is needed.
     func testExpandedState_nonUS() {
         let sut = makeSUT(
             saveCheckboxChecked: true,
@@ -55,11 +57,13 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    // WARNING: If this tests fails, see go/link-signup-consent-action-log to determine if a new consent_action is needed.
     func testExpandedState_textFieldsOnly() {
         let sut = makeSUT(saveCheckboxChecked: true, emailAddress: "user@example.com", mode: .textFieldsOnly)
         verify(sut)
     }
 
+    // WARNING: If this tests fails, see go/link-signup-consent-action-log to determine if a new consent_action is needed.
     func testExpandedState_nonUS_textFieldsOnly() {
         let sut = makeSUT(
             saveCheckboxChecked: true,
