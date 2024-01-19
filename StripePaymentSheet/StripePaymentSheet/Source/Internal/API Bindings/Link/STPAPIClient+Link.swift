@@ -293,7 +293,7 @@ extension STPAPIClient {
         ]
 
         if let cvc = cvc {
-            parameters["payment_method_options"] = ["card": ["cvc": cvc ]]
+            parameters["payment_method_options"] = ["card": ["cvc": cvc]]
         }
 
         post(

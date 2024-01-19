@@ -17,9 +17,6 @@ public class STPPaymentMethodLinkParams: NSObject, STPFormEncodable {
     @objc @_spi(STP) public var credentials: [AnyHashable: Any]?
 
     /// :nodoc:
-    @objc @_spi(STP) public var card: [AnyHashable: Any]?
-
-    /// :nodoc:
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     // MARK: - STPFormEncodable
@@ -33,7 +30,6 @@ public class STPPaymentMethodLinkParams: NSObject, STPFormEncodable {
         return [
             NSStringFromSelector(#selector(getter: credentials)): "credentials",
             NSStringFromSelector(#selector(getter: paymentDetailsID)): "payment_details_id",
-            NSStringFromSelector(#selector(getter: card)): "card",
         ]
     }
 }
