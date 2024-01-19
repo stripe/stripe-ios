@@ -227,7 +227,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
-    func sharePaymentDetails(id: String, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
+    func sharePaymentDetails(id: String, cvc: String?, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
         guard let session = currentSession else {
             assertionFailure()
             return completion(
@@ -241,6 +241,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             session.sharePaymentDetails(
                 with: apiClient,
                 id: id,
+                cvc: cvc,
                 consumerAccountPublishableKey: publishableKey,
                 completion: completionWrapper
             )
@@ -418,7 +419,7 @@ extension PaymentSheetLinkAccount {
     ///
     /// - Parameter paymentDetails: Payment details
     /// - Returns: Payment method params for paying with Link.
-    func makePaymentMethodParams(from paymentDetails: ConsumerPaymentDetails) -> STPPaymentMethodParams? {
+    func makePaymentMethodParams(from paymentDetails: ConsumerPaymentDetails, cvc: String?) -> STPPaymentMethodParams? {
         guard let currentSession = currentSession else {
             assertionFailure("Cannot make payment method params without an active session.")
             return nil
@@ -428,7 +429,7 @@ extension PaymentSheetLinkAccount {
         params.link?.paymentDetailsID = paymentDetails.stripeID
         params.link?.credentials = ["consumer_session_client_secret": currentSession.clientSecret]
 
-        if let cvc = paymentDetails.cvc {
+        if let cvc = cvc {
             params.link?.additionalAPIParameters["card"] = [
                 "cvc": cvc,
             ]

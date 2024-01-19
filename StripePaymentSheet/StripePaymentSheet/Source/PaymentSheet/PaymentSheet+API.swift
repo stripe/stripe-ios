@@ -340,9 +340,10 @@ extension PaymentSheet {
             let confirmWithPaymentDetails:
                 (
                     PaymentSheetLinkAccount,
-                    ConsumerPaymentDetails
-                ) -> Void = { linkAccount, paymentDetails in
-                    guard let paymentMethodParams = linkAccount.makePaymentMethodParams(from: paymentDetails) else {
+                    ConsumerPaymentDetails,
+                    String?
+                ) -> Void = { linkAccount, paymentDetails, cvc in
+                    guard let paymentMethodParams = linkAccount.makePaymentMethodParams(from: paymentDetails, cvc: cvc) else {
                         let error = PaymentSheetError.payingWithoutValidLinkSession
                         completion(.failed(error: error), nil)
                         return
@@ -371,7 +372,7 @@ extension PaymentSheet {
                         case .success(let paymentDetails):
                             if intent.linkPassthroughModeEnabled {
                                 // If passthrough mode, share payment details
-                                linkAccount.sharePaymentDetails(id: paymentDetails.stripeID) { result in
+                                linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
                                     switch result {
                                     case .success(let shareResponse):
                                         confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod))
@@ -383,7 +384,7 @@ extension PaymentSheet {
                                 }
                             } else {
                                 // If not passthrough mode, confirm details directly
-                                confirmWithPaymentDetails(linkAccount, paymentDetails)
+                                confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc)
                             }
                         case .failure:
                             assertionFailure("Failed to create payment details")
@@ -428,7 +429,7 @@ extension PaymentSheet {
                     }
                 }
             case .withPaymentDetails(let linkAccount, let paymentDetails):
-                confirmWithPaymentDetails(linkAccount, paymentDetails)
+                confirmWithPaymentDetails(linkAccount, paymentDetails, nil)
             case .withPaymentMethodParams(let linkAccount, let paymentMethodParams):
                 createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
             case .withPaymentMethod(let paymentMethod):
