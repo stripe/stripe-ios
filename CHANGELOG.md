@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### Payments
+* [Changed] Increased the maximum number of status update retries when waiting for an intent to update to a terminal state. This impacts Cash App Pay and 3DS2.
+
 ## 23.21.0 2024-01-16
 ### PaymentSheet
 * [Fixed] Fixed a few design issues on visionOS.
