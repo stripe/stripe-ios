@@ -7,7 +7,7 @@
 
 import XCTest
 
-@testable@_spi(STP) import StripePaymentSheet
+@testable import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
 @MainActor
