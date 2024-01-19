@@ -115,7 +115,7 @@ extension Element {
         case let container as ContainerElement:
             return [container] + container.elements.flatMap { $0.getAllSubElements() }
         case let wrapper as AnyPaymentMethodElementWrapper:
-            return [wrapper.anyElement] + wrapper.anyElement.getAllSubElements()
+            return wrapper.anyElement.getAllSubElements()
         default:
             return [self]
         }
