@@ -1412,7 +1412,7 @@ public class STPPaymentHandler: NSObject {
 
     func _retryAfterDelay(retryCount: Int, block: @escaping STPVoidBlock) {
         // Add some backoff time:
-        let delayTime = TimeInterval(5.0)
+        let delayTime = TimeInterval(3)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
             block()
@@ -1936,7 +1936,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    static let maxChallengeRetries = 3
+    static let maxChallengeRetries = 5
     func _markChallengeCompleted(
         withCompletion completion: @escaping STPBooleanSuccessBlock,
         retryCount: Int = maxChallengeRetries
