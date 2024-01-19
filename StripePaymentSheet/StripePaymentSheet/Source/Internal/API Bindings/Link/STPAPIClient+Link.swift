@@ -291,9 +291,9 @@ extension STPAPIClient {
             "request_surface": "ios_payment_element",
             "id": id,
         ]
-        
+
         if let cvc = cvc {
-            parameters["payment_method_options"] = ["card": ["cvc" : cvc ]]
+            parameters["payment_method_options"] = ["card": ["cvc": cvc ]]
         }
 
         post(

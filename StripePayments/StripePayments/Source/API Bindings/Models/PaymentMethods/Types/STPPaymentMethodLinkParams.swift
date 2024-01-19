@@ -18,7 +18,7 @@ public class STPPaymentMethodLinkParams: NSObject, STPFormEncodable {
 
     /// :nodoc:
     @objc @_spi(STP) public var card: [AnyHashable: Any]?
-    
+
     /// :nodoc:
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
