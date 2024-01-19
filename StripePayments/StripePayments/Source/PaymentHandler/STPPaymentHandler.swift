@@ -1410,11 +1410,9 @@ public class STPPaymentHandler: NSObject {
         return resultingUrl
     }
 
-    func _retryWithExponentialDelay(retryCount: Int, block: @escaping STPVoidBlock) {
+    func _retryAfterDelay(retryCount: Int, block: @escaping STPVoidBlock) {
         // Add some backoff time:
-        let delayTime = TimeInterval(
-            pow(Double(1 + Self.maxChallengeRetries - retryCount), Double(2))
-        )
+        let delayTime = TimeInterval(5.0)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
             block()
@@ -1469,7 +1467,7 @@ public class STPPaymentHandler: NSObject {
                                 !STPPaymentHandler._isProcessingIntentSuccess(for: type),
                                 retrievedPaymentIntent?.status == .processing && retryCount > 0
                             {
-                                self._retryWithExponentialDelay(retryCount: retryCount) {
+                                self._retryAfterDelay(retryCount: retryCount) {
                                     self._retrieveAndCheckIntentForCurrentAction(
                                         retryCount: retryCount - 1
                                     )
@@ -1500,7 +1498,7 @@ public class STPPaymentHandler: NSObject {
                                         if retryCount > 0
                                             && (shouldRetryForCard || shouldRetryForAppRedirect)
                                         {
-                                            self._retryWithExponentialDelay(retryCount: retryCount) {
+                                            self._retryAfterDelay(retryCount: retryCount) {
                                                 self._retrieveAndCheckIntentForCurrentAction(
                                                     retryCount: retryCount - 1
                                                 )
@@ -1544,7 +1542,7 @@ public class STPPaymentHandler: NSObject {
                         !STPPaymentHandler._isProcessingIntentSuccess(for: type),
                         retrievedSetupIntent?.status == .processing && retryCount > 0
                     {
-                        self._retryWithExponentialDelay(retryCount: retryCount) {
+                        self._retryAfterDelay(retryCount: retryCount) {
                             self._retrieveAndCheckIntentForCurrentAction(retryCount: retryCount - 1)
                         }
                     } else {
@@ -1566,7 +1564,7 @@ public class STPPaymentHandler: NSObject {
                                 let shouldRetryForCashApp = retrievedSetupIntent?.paymentMethod?.type == .cashApp
                                 if retryCount > 0
                                     && (shouldRetryForCard || shouldRetryForCashApp) {
-                                    self._retryWithExponentialDelay(retryCount: retryCount) {
+                                    self._retryAfterDelay(retryCount: retryCount) {
                                         self._retrieveAndCheckIntentForCurrentAction(
                                             retryCount: retryCount - 1
                                         )
@@ -1938,7 +1936,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    static let maxChallengeRetries = 2
+    static let maxChallengeRetries = 3
     func _markChallengeCompleted(
         withCompletion completion: @escaping STPBooleanSuccessBlock,
         retryCount: Int = maxChallengeRetries
@@ -1990,7 +1988,7 @@ public class STPPaymentHandler: NSObject {
                 if retryCount > 0
                     && (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue
                 {
-                    self._retryWithExponentialDelay(
+                    self._retryAfterDelay(
                         retryCount: retryCount,
                         block: {
                             self._markChallengeCompleted(
