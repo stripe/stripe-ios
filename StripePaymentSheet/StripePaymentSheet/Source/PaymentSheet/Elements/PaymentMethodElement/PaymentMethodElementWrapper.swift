@@ -110,7 +110,7 @@ extension PaymentMethodElementWrapper: ElementDelegate {
 }
 
 extension Element {
-    public func getAllSubElements() -> [Element] {
+    public func getAllUnwrappedSubElements() -> [Element] {
         switch self {
         case let container as ContainerElement:
             return [container] + container.elements.flatMap { $0.getAllSubElements() }
