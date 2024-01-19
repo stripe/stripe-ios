@@ -21,7 +21,7 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
         let sut = makeSUT()
 
         let paymentDetails = makePaymentDetailsStub()
-        let result = sut.makePaymentMethodParams(from: paymentDetails)
+        let result = sut.makePaymentMethodParams(from: paymentDetails, cvc: nil)
 
         XCTAssertEqual(result?.type, .link)
         XCTAssertEqual(result?.link?.paymentDetailsID, "1")
@@ -38,7 +38,7 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
         let sut = makeSUT()
 
         let paymentDetails = makePaymentDetailsStub(withCVC: "12345")
-        let result = sut.makePaymentMethodParams(from: paymentDetails)
+        let result = sut.makePaymentMethodParams(from: paymentDetails, cvc: paymentDetails.cvc)
 
         XCTAssertEqual(
             result?.link?.additionalAPIParameters["card"] as? [String: String],
