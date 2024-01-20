@@ -37,7 +37,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     // Dependencies
     let apiClient: STPAPIClient
-    
+
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
 

@@ -39,11 +39,11 @@ extension UserDefaults {
             setValue(newValue, forKey: key)
         }
     }
-    
+
     @_spi(STP) public func markLinkAsUsed() {
         customerHasUsedLink = true
     }
-    
+
     @_spi(STP) public func clearLinkDefaults() {
         customerHasUsedLink = false
     }

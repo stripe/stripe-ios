@@ -33,7 +33,7 @@ protocol LinkAccountServiceProtocol {
 final class LinkAccountService: LinkAccountServiceProtocol {
 
     let apiClient: STPAPIClient
-    
+
     init(
         apiClient: STPAPIClient = .shared
     ) {
