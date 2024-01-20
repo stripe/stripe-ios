@@ -66,8 +66,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-
-        LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
     }
 
     public override func tearDown() {

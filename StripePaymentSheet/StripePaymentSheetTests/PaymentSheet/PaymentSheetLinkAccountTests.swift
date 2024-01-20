@@ -75,8 +75,7 @@ extension PaymentSheetLinkAccountTests {
             email: "user@example.com",
             session: LinkStubs.consumerSession(),
             publishableKey: nil,
-            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-            cookieStore: LinkInMemoryCookieStore()
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         )
     }
 

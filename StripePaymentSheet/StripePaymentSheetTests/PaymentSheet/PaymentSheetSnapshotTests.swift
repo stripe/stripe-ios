@@ -47,7 +47,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "mockReturnUrl"
 
-        LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()  // use in-memory cookie store
 //                self.runAgainstLiveService = true
         if !self.runAgainstLiveService {
             APIStubbedTestCase.stubAllOutgoingRequests()
