@@ -275,11 +275,9 @@ extension STPAnalyticsClient {
         additionalParams["is_decoupled"] = intentConfig != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
         additionalParams["selected_lpm"] = paymentMethodTypeAnalyticsValue
-        if let error = error as? PaymentSheetError {
-            additionalParams["error_message"] = error.safeLoggingString
-        } else if let error = error as? NSError, let code = STPErrorCode(rawValue: error.code) {
-            // attempt log PII safe server error messages
-            additionalParams["error_message"] = code.description
+
+        if let error {
+            additionalParams["error_message"] = makeSafeLoggingString(from: error)
         }
 
         for (param, param_value) in params {
@@ -289,6 +287,39 @@ extension STPAnalyticsClient {
                                             productUsage: productUsage,
                                             additionalParams: additionalParams)
         log(analytic: analytic, apiClient: apiClient)
+    }
+
+    /// Returns a string describing the provided error that doesn't contain PII, suitable for logging.
+    func makeSafeLoggingString(from error: Error) -> String {
+        if type(of: error) == NSError.self {
+            // MARK: NSErrors
+            let error = error as NSError
+            if error.domain == STPError.stripeDomain, let code = STPErrorCode(rawValue: error.code) {
+                // An error from our networking layer
+                if code == .invalidRequestError {
+                    // `invalidRequestError` often indicates a problem with the SDK or merchant integration - log more details
+                    // See historical `error_message` values here https://hubble.corp.stripe.com/queries/yuki/13cb7ed7?filter-error_type=invalid_request_error
+                    return error.userInfo[STPError.errorMessageKey] as? String ?? code.description
+                } else {
+                    return code.description
+                }
+            } else {
+                // Some other NSError - probably from an iOS library.
+                // To avoid accidentally logging PII, just default to logging the domain and code.
+                return "\(error.domain), \(error.code)"
+            }
+        } else {
+            // MARK: Swift Errors
+            if let error = error as? PaymentSheetError {
+                return error.safeLoggingString
+            }
+            // Fall back to using the type of the error. Out of an abundance of caution, don't use the description (which could theoretically contain PII). Instead, print its type.
+            // Note: We use `String(reflecting:)` instead of String(describing:) because it has more detail
+            // Example:
+            //  - String(describing: type(of: Foo.Error.canceled)) //  "Error"
+            //  - String(reflecting: type(of: Foo.Error.canceled)) //  "Foo.Error"
+            return String(reflecting: type(of: error))
+        }
     }
 
     var isSimulatorOrTest: Bool {

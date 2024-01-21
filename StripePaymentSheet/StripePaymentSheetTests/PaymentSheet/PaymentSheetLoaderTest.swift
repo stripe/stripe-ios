@@ -20,6 +20,11 @@ final class PaymentSheetLoaderTest: XCTestCase {
         return config
     }()
 
+    override func setUp() async throws {
+        try await super.setUp()
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+    }
+
     func testPaymentSheetLoadWithPaymentIntent() async throws {
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
         let types = ["ideal", "card", "bancontact", "sofort"]
@@ -167,6 +172,12 @@ final class PaymentSheetLoaderTest: XCTestCase {
                 case .failure:
                     break
                 }
+                // Should send a load failure analytic
+                let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
+                XCTAssertFalse(analyticEvents.contains(where: { dict in
+                    (dict["event"] as? String) == STPAnalyticEvent.paymentSheetLoadFailed.rawValue
+                    && (dict["error_message"] as? String) == "TODO" // ...with an "todo" error_message
+                }))
             }
         }
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
@@ -259,7 +270,6 @@ final class PaymentSheetLoaderTest: XCTestCase {
     }
 
     func testPaymentSheetLoadWithInvalidExternalPaymentMethods() async throws {
-        STPAnalyticsClient.sharedClient._testLogHistory = []
         // Loading PaymentSheet...
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
         let types = ["ideal", "card", "bancontact", "sofort"]
