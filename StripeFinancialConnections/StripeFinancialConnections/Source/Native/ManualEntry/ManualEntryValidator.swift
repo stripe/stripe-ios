@@ -45,7 +45,7 @@ final class ManualEntryValidator {
         } else if !isStringDigits(accountNumber, withMaxLength: accountNumberMaxLength) {
             return String(
                 format: STPLocalizedString(
-                    "Invalid bank account number: must be at most %d digits long.",
+                    "Invalid bank account number: must be at most %d digits long, containing only numbers.",
                     "An error message that appears when a user is manually entering their bank account information. %d is replaced with the account number length (usually 17)."
                 ),
                 accountNumberMaxLength
