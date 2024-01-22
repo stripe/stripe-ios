@@ -25,7 +25,7 @@ struct LinkPMDisplayDetails {
 }
 
 class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
-    enum SessionState {
+    enum SessionState: String {
         case requiresSignUp
         case requiresVerification
         case verified
@@ -117,7 +117,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         guard case .requiresSignUp = sessionState else {
-            assertionFailure()
+            STPAnalyticsClient.sharedClient.logLinkInvalidSessionState(sessionState: sessionState)
             DispatchQueue.main.async {
                 completion(
                     .failure(

@@ -411,7 +411,7 @@ extension PaymentSheet {
                         createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
                         LinkSecureCookieStore.shared.markLinkAsUsed()
                     case .failure(let error as NSError):
-                        STPAnalyticsClient.sharedClient.logLinkSignupFailure()
+                        STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
 
                         let isUserInputError =
                             (error.domain == STPError.stripeDomain

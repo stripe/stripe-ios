@@ -26,18 +26,27 @@ extension STPAnalyticsClient {
         AnalyticsHelper.shared.startTimeMeasurement(.linkSignup)
         self.logPaymentSheetEvent(event: .linkSignupStart)
     }
+    func logLinkInvalidSessionState(sessionState: PaymentSheetLinkAccount.SessionState) {
+        let params = ["sessionState": sessionState.rawValue]
+        self.logPaymentSheetEvent(event: .linkSignupFailureInvalidSessionState, params: params)
+    }
 
     func logLinkSignupComplete() {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkSignup)
         self.logPaymentSheetEvent(event: .linkSignupComplete, duration: duration)
     }
 
-    func logLinkSignupFailure() {
-        self.logPaymentSheetEvent(event: .linkSignupFailure)
+    func logLinkSignupFailure(error: Error) {
+        self.logPaymentSheetEvent(event: .linkSignupFailure, error: error)
     }
 
-    func logLinkAccountLookupFailure() {
-        self.logPaymentSheetEvent(event: .linkAccountLookupFailure)
+    func logLinkAccountLookupComplete(lookupResult: ConsumerSession.LookupResponse.ResponseType) {
+        let params = ["lookupResult": lookupResult.analyticValue]
+        self.logPaymentSheetEvent(event: .linkAccountLookupComplete, params: params)
+    }
+
+    func logLinkAccountLookupFailure(error: Error) {
+        self.logPaymentSheetEvent(event: .linkAccountLookupFailure, error: error)
     }
 
     // MARK: - popup
