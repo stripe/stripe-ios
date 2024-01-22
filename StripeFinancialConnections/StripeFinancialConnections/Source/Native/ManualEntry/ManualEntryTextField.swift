@@ -15,7 +15,6 @@ protocol ManualEntryTextFieldDelegate: AnyObject {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool
-    func manualEntryTextFieldDidBeginEditing(_ textField: ManualEntryTextField)
     func manualEntryTextFieldDidEndEditing(_ textField: ManualEntryTextField)
 }
 
@@ -168,7 +167,6 @@ extension ManualEntryTextField: UITextFieldDelegate {
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
         updateBorder(highlighted: true)
-        delegate?.manualEntryTextFieldDidBeginEditing(self)
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {

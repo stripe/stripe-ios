@@ -194,9 +194,6 @@ extension ManualEntryFormView: ManualEntryTextFieldDelegate {
         return true
     }
 
-    func manualEntryTextFieldDidBeginEditing(_ textField: ManualEntryTextField) {
-    }
-
     func manualEntryTextFieldDidEndEditing(_ manualEntryTextField: ManualEntryTextField) {
         if manualEntryTextField === routingNumberTextField {
             didEndEditingOnceRoutingNumberTextField = true
