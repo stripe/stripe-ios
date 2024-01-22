@@ -148,14 +148,15 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         STPAnalyticsClient.sharedClient.logLinkPopupShow(sessionType: self.context.intent.linkPopupWebviewOption)
         do {
             // Generate Link URL, fetching the customer if needed
-            let linkPopupUrl = try LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
+            let linkPopupParams = try LinkURLGenerator.linkParams(configuration: self.context.configuration, intent: self.context.intent)
+            let linkPopupUrl = try LinkURLGenerator.url(params: linkPopupParams)
 
             let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
                 self.handleWebAuthenticationSessionCompletion(returnURL: returnURL, error: error)
             }
 
-            // Check if we're in the ephemeral session experiment
-            if self.context.intent.linkPopupWebviewOption == .ephemeral {
+            // Check if we're in the ephemeral session experiment or we have an email address
+            if self.context.intent.linkPopupWebviewOption == .ephemeral || linkPopupParams.customerInfo.email != nil {
                 webAuthSession.prefersEphemeralWebBrowserSession = true
             }
 
