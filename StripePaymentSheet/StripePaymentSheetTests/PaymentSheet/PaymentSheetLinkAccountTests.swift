@@ -36,8 +36,8 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
     func testMakePaymentMethodParams_withCVC() {
         let sut = makeSUT()
 
-        let paymentDetails = makePaymentDetailsStub(withCVC: "12345")
-        let result = sut.makePaymentMethodParams(from: paymentDetails, cvc: paymentDetails.cvc)
+        let paymentDetails = makePaymentDetailsStub()
+        let result = sut.makePaymentMethodParams(from: paymentDetails, cvc: "1234")
 
         XCTAssertEqual(
             result?.link?.additionalAPIParameters["card"] as? [String: String],
@@ -51,7 +51,7 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
 
 extension PaymentSheetLinkAccountTests {
 
-    func makePaymentDetailsStub(withCVC cvc: String? = nil) -> ConsumerPaymentDetails {
+    func makePaymentDetailsStub() -> ConsumerPaymentDetails {
         let card = ConsumerPaymentDetails.Details.Card(
             expiryYear: 2030,
             expiryMonth: 1,
@@ -59,8 +59,6 @@ extension PaymentSheetLinkAccountTests {
             last4: "4242",
             checks: nil
         )
-
-        card.cvc = cvc
 
         return ConsumerPaymentDetails(
             stripeID: "1",

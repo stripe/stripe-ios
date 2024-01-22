@@ -208,7 +208,7 @@ extension ConsumerPaymentDetails {
             return ""
         }
     }
-    
+
     var accessibilityDescription: String {
         switch details {
         case .card(let card):
