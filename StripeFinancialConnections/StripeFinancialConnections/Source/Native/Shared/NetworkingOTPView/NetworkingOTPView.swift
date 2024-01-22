@@ -44,15 +44,17 @@ final class NetworkingOTPView: UIView {
         let otpTextField = OneTimeCodeTextField(theme: theme)
         otpTextField.tintColor = .textBrand
         otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
+        otpTextField.tintColor = .textActionPrimaryFocused
         return otpTextField
     }()
     private lazy var theme: ElementsUITheme = {
         var theme: ElementsUITheme = .default
         theme.colors = {
             var colors = ElementsUITheme.Color()
-            colors.border = .borderNeutral
+            colors.border = .borderDefault
             colors.background = .customBackgroundColor
-            colors.textFieldText = .textPrimary
+            colors.textFieldText = .textDefault
+            colors.danger = .textFeedbackCritical
             return colors
         }()
         return theme
