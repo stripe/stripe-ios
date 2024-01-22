@@ -47,6 +47,10 @@ extension UIColor {
         return critical500
     }
 
+    static var textFeedbackCritical: UIColor {
+        return feedbackCritical600
+    }
+
     static var textSuccess: UIColor {
         return success500
     }
@@ -141,6 +145,10 @@ extension UIColor {
 
     private static var critical500: UIColor {
         return UIColor(red: 223 / 255.0, green: 27 / 255.0, blue: 65 / 255.0, alpha: 1)  // #df1b41
+    }
+
+    private static var feedbackCritical600: UIColor {
+        return UIColor(red: 192 / 255.0, green: 18 / 255.0, blue: 60 / 255.0, alpha: 1)  // #c0123c
     }
 
     static var success100: UIColor {

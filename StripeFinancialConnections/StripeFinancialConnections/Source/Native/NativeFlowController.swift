@@ -585,10 +585,15 @@ extension NativeFlowController: ManualEntryViewControllerDelegate {
         dataManager.accountNumberLast4 = accountNumberLast4
 
         if dataManager.manifest.manualEntryUsesMicrodeposits {
-            pushPane(.manualEntrySuccess, animated: true)
-        } else {
-            closeAuthFlow(error: nil)
+            dataManager.customSuccessPaneMessage = String(
+                format: STPLocalizedString(
+                    "You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions.",
+                    "The subtitle/description of the success screen that appears when a user manually entered their bank account information. It informs the user that their bank account information will have to be verified."
+                ),
+                accountNumberLast4
+            )
         }
+        pushPane(.success, animated: true)
     }
 }
 
@@ -1094,23 +1099,18 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .success:
-        if let linkedAccounts = dataManager.linkedAccounts, let institution = dataManager.institution {
-            let successDataSource = SuccessDataSourceImplementation(
-                manifest: dataManager.manifest,
-                linkedAccounts: linkedAccounts,
-                institution: institution,
-                saveToLinkWithStripeSucceeded: dataManager.saveToLinkWithStripeSucceeded,
-                apiClient: dataManager.apiClient,
-                clientSecret: dataManager.clientSecret,
-                analyticsClient: dataManager.analyticsClient
-            )
-            let successViewController = SuccessViewController(dataSource: successDataSource)
-            successViewController.delegate = nativeFlowController
-            viewController = successViewController
-        } else {
-            assertionFailure("Code logic error. Missing parameters for \(pane).")
-            viewController = nil
-        }
+        let successDataSource = SuccessDataSourceImplementation(
+            manifest: dataManager.manifest,
+            linkedAccountsCount: dataManager.linkedAccounts?.count ?? 0,
+            saveToLinkWithStripeSucceeded: dataManager.saveToLinkWithStripeSucceeded,
+            apiClient: dataManager.apiClient,
+            clientSecret: dataManager.clientSecret,
+            analyticsClient: dataManager.analyticsClient,
+            customSuccessPaneMessage: dataManager.customSuccessPaneMessage
+        )
+        let successViewController = SuccessViewController(dataSource: successDataSource)
+        successViewController.delegate = nativeFlowController
+        viewController = successViewController
     case .unexpectedError:
         viewController = nil
     case .authOptions:
