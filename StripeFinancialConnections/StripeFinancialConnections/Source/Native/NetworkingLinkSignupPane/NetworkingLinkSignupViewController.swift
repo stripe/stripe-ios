@@ -132,22 +132,26 @@ final class NetworkingLinkSignupViewController: UIViewController {
             }
         )
         self.footerView = footerView
-        let pane = PaneWithHeaderLayoutView(
-            title: networkingLinkSignup.title,
-            contentView: NetworkingLinkSignupBodyView(
-                bulletPoints: networkingLinkSignup.body.bullets,
-                formView: formView,
-                didSelectURL: { [weak self] url in
-                    self?.didSelectURLInTextFromBackend(url)
-                }
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: nil,
+                title: networkingLinkSignup.title,
+                subtitle: nil,
+                contentView: NetworkingLinkSignupBodyView(
+                    bulletPoints: networkingLinkSignup.body.bullets,
+                    formView: formView,
+                    didSelectURL: { [weak self] url in
+                        self?.didSelectURLInTextFromBackend(url)
+                    }
+                )
             ),
             footerView: footerView
         )
-        pane.addTo(view: view)
+        paneLayoutView.addTo(view: view)
 
         #if !canImport(CompositorServices)
         // if user drags, dismiss keyboard so the CTA buttons can be shown
-        pane.scrollView.keyboardDismissMode = .onDrag
+        paneLayoutView.scrollView.keyboardDismissMode = .onDrag
         #endif
 
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
@@ -156,6 +160,9 @@ final class NetworkingLinkSignupViewController: UIViewController {
         }
 
         assert(self.footerView != nil, "footer view should be initialized as part of displaying content")
+
+        // disable CTA if needed
+        adjustSaveToLinkButtonDisabledState()
     }
 
     private func showLoadingView(_ show: Bool) {
@@ -302,7 +309,6 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                                 self.formView.endEditingEmailAddressField()
                             }
                         }
-                        self.footerView?.showSaveToLinkButtonIfNeeded()
                     }
                 case .failure(let error):
                     self.dataSource.analyticsClient.logUnexpectedError(
