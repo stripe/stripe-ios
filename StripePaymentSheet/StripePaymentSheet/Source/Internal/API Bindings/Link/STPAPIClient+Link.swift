@@ -248,15 +248,20 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         id: String,
         consumerAccountPublishableKey: String?,
+        cvc: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/share"
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
             "id": id,
         ]
+
+        if let cvc = cvc {
+            parameters["payment_method_options"] = ["card": ["cvc": cvc]]
+        }
 
         post(
             resource: endpoint,
