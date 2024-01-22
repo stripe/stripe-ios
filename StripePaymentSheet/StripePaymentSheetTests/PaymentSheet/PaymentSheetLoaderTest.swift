@@ -174,10 +174,6 @@ final class PaymentSheetLoaderTest: XCTestCase {
                 }
                 // Should send a load failure analytic
                 let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
-                XCTAssertFalse(analyticEvents.contains(where: { dict in
-                    (dict["event"] as? String) == STPAnalyticEvent.paymentSheetLoadFailed.rawValue
-                    && (dict["error_message"] as? String) == "TODO" // ...with an "todo" error_message
-                }))
             }
         }
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
@@ -306,6 +302,29 @@ final class PaymentSheetLoaderTest: XCTestCase {
             }
         }
         await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+    
+    func testPaymentSheetLoadFailsSendsErrorMessage() {
+        let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
+        // Test PaymentSheetLoader.load can load various IntentConfigurations
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
+            XCTFail("Confirm handler shouldn't be called.")
+        }
+        let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 0, currency: "USD"), confirmHandler: confirmHandler)
+        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration) { result in
+            loadExpectation.fulfill()
+            switch result {
+            case .success:
+                XCTFail("Test case successfully loaded but it should have failed.")
+            case .failure:
+                break
+            }
+            // Should send a load failure analytic
+            let analyticEvent = STPAnalyticsClient.sharedClient._testLogHistory.last
+            XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetLoadFailed.rawValue)
+            XCTAssertEqual(analyticEvent?["error_message"] as? String, "This value must be greater than or equal to 1.")
+        }
+        wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testLoadPerformance() {
