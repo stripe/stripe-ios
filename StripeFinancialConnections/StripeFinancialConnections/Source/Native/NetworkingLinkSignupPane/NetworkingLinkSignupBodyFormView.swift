@@ -62,19 +62,22 @@ final class NetworkingLinkSignupBodyFormView: UIView {
     private lazy var theme: ElementsUITheme = {
         var theme: ElementsUITheme = .default
         theme.borderWidth = 1
-        theme.cornerRadius = 8
+        theme.cornerRadius = 12
         theme.shadow = nil
         theme.fonts = {
             var fonts = ElementsUITheme.Font()
+            // text field font
             fonts.subheadline = FinancialConnectionsFont.label(.large).uiFont
+            // error message font
+            fonts.footnote = FinancialConnectionsFont.label(.small).uiFont
             return fonts
         }()
         theme.colors = {
             var colors = ElementsUITheme.Color()
             colors.border = .borderNeutral
-            colors.danger = .textCritical
-            colors.placeholderText = .textSecondary
-            colors.textFieldText = .textPrimary
+            colors.danger = .textFeedbackCritical
+            colors.placeholderText = .textSubdued
+            colors.textFieldText = .textDefault
             colors.parentBackground = .customBackgroundColor
             colors.background = .customBackgroundColor
             return colors
