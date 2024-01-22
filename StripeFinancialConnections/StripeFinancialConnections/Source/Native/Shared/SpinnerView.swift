@@ -16,8 +16,25 @@ final class SpinnerView: UIView {
         let activityIndicator = ActivityIndicator(size: .large)
         activityIndicator.color = .iconActionPrimary
         activityIndicator.backgroundColor = .customBackgroundColor
-        addAndPinSubviewToSafeArea(activityIndicator)
         activityIndicator.startAnimating()
+        addSubview(activityIndicator)
+
+        // `ActivityIndicator` is hard-coded to have specific sizes, so here we scale it to our needs
+        let largeIconDiameter: CGFloat = 37
+        let desiredIconDiameter: CGFloat = 44
+        let transform = CGAffineTransform(
+            scaleX: desiredIconDiameter / largeIconDiameter,
+            y: desiredIconDiameter / largeIconDiameter
+        )
+        activityIndicator.transform = transform
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            activityIndicator.widthAnchor.constraint(equalToConstant: desiredIconDiameter),
+            activityIndicator.heightAnchor.constraint(equalToConstant: desiredIconDiameter),
+            activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
+        ])
+
     }
 
     required init?(coder: NSCoder) {

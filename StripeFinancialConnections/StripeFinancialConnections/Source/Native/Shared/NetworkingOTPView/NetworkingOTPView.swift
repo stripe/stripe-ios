@@ -19,8 +19,13 @@ protocol NetworkingOTPViewDelegate: AnyObject {
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData)
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error)
 
+    func networkingOTPViewWillConfirmVerification(_ view: NetworkingOTPView)
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView)
-    func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error)
+    func networkingOTPView(
+        _ view: NetworkingOTPView,
+        didFailToConfirmVerification error: Error,
+        isTerminal: Bool
+    )
 }
 
 final class NetworkingOTPView: UIView {
@@ -79,7 +84,7 @@ final class NetworkingOTPView: UIView {
         }
     }
 
-    private func showLoadingView(_ show: Bool) {
+    func showLoadingView(_ show: Bool) {
         lastFooterView?.removeFromSuperview()
         lastFooterView = nil
 
@@ -123,7 +128,7 @@ final class NetworkingOTPView: UIView {
             errorView.directionalLayoutMargins = NSDirectionalEdgeInsets(
                 top: 8,
                 leading: 0,
-                bottom: 8,
+                bottom: 0,
                 trailing: 0
             )
             self.lastFooterView = errorView
@@ -170,6 +175,7 @@ final class NetworkingOTPView: UIView {
     private func userDidEnterValidOTPCode(_ otpCode: String) {
         otpTextField.resignFirstResponder()
         showLoadingView(true)
+        delegate?.networkingOTPViewWillConfirmVerification(self)
 
         dataSource.confirmVerificationSession(otpCode: otpCode)
             .observe { [weak self] result in
@@ -180,6 +186,7 @@ final class NetworkingOTPView: UIView {
                 case .success:
                     self.delegate?.networkingOTPViewDidConfirmVerification(self)
                 case .failure(let error):
+                    let isTerminal: Bool
                     if let errorMessage = AuthFlowHelpers.networkingOTPErrorMessage(fromError: error, otpType: self.dataSource.otpType) {
                         self.dataSource
                             .analyticsClient
@@ -191,6 +198,7 @@ final class NetworkingOTPView: UIView {
 
                         self.otpTextField.performInvalidCodeAnimation(shouldClearValue: false)
                         self.showErrorText(errorMessage)
+                        isTerminal = false
                     } else {
                         self.dataSource
                             .analyticsClient
@@ -199,8 +207,13 @@ final class NetworkingOTPView: UIView {
                                 errorName: "ConfirmVerificationSessionError",
                                 pane: self.dataSource.pane
                             )
-                        self.delegate?.networkingOTPView(self, didTerminallyFailToConfirmVerification: error)
+                        isTerminal = true
                     }
+                    self.delegate?.networkingOTPView(
+                        self,
+                        didFailToConfirmVerification: error,
+                        isTerminal: isTerminal
+                    )
                 }
             }
     }
