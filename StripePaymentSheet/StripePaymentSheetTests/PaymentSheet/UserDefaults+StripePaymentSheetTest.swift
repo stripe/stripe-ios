@@ -17,16 +17,16 @@ class UserDefaults_StripePaymentSheetTest: XCTestCase {
     func testCustomerToLastSelectedPaymentMethod() throws {
         let userDefaults = UserDefaults(suiteName: #file)!
         userDefaults.removePersistentDomain(forName: #file)
-        
+
         let c = [UUID().uuidString: UUID().uuidString]
         userDefaults.customerToLastSelectedPaymentMethod = c
         XCTAssertEqual(userDefaults.customerToLastSelectedPaymentMethod, c)
     }
-    
+
     func testUsedLink() throws {
         let userDefaults = UserDefaults(suiteName: #file)!
         userDefaults.removePersistentDomain(forName: #file)
-        
+
         XCTAssertFalse(userDefaults.customerHasUsedLink)
         userDefaults.markLinkAsUsed()
         XCTAssertTrue(userDefaults.customerHasUsedLink)
