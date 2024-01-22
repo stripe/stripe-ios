@@ -50,7 +50,7 @@ class LinkURLGenerator {
 
         let merchantCountryCode = intent.merchantCountryCode ?? customerCountryCode
 
-        // Get email from the previously fetched account in the Link button, or the billing details, or the Customer object
+        // Get email from the previously fetched account in the Link button, or the billing details
         var customerEmail = LinkAccountContext.shared.account?.email
 
         if customerEmail == nil,

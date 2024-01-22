@@ -215,25 +215,23 @@ final class PayWithLinkButton: UIControl {
     init() {
         super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true
+        self.linkAccount = LinkAccountContext.shared.account
         setupUI()
         applyStyle()
         updateUI()
-        // TODO: Re-enable this once we work out the Link button last4/email details
-        // For now, don't show any information in the button.
-        //        // Listen for account changes
-        //        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+        // Listen for account changes
+        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
     }
-    // TODO: Re-enable this once we work out the Link button last4/email details
-    //    @objc
-    //    func onAccountChange(_ notification: Notification) {
-    //        DispatchQueue.main.async { [weak self] in
-    //            self?.linkAccount = notification.object as? PaymentSheetLinkAccount
-    //        }
-    //    }
-    //    deinit {
-    //        // Stop listening for account changes
-    //        LinkAccountContext.shared.removeObserver(self)
-    //    }
+    @objc
+    func onAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            self?.linkAccount = notification.object as? PaymentSheetLinkAccount
+        }
+    }
+    deinit {
+        // Stop listening for account changes
+        LinkAccountContext.shared.removeObserver(self)
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
