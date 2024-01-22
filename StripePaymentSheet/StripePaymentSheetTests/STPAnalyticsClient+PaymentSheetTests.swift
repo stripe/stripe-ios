@@ -27,10 +27,10 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         var debugDescription: String {
             return "Some debug description that accidentally contains PII"
         }
-        
+
         case foo
     }
-    
+
     func testMakeSafeLoggingString() {
         let testCases: [(Error, String)] = [
             // List of inputs and expected outputs
@@ -42,10 +42,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
              "cardError"),
             (NSError(domain: STPError.stripeDomain, code: STPErrorCode.invalidRequestError.rawValue),
              "invalidRequestError"),
-            (NSError(domain: STPError.stripeDomain, code: STPErrorCode.invalidRequestError.rawValue, userInfo: [STPError.errorMessageKey: "rate_limit_exceeded"]),
-             "rate_limit_exceeded"),
             (MyError.foo,
-             "StripePaymentSheetTests.STPAnalyticsClientPaymentSheetTest.MyError"),
+             "StripePaymentSheetTests.STPAnalyticsClientPaymentSheetTest.MyError, 0"),
 
         ]
         for testCase in testCases {

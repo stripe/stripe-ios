@@ -289,36 +289,19 @@ extension STPAnalyticsClient {
         log(analytic: analytic, apiClient: apiClient)
     }
 
-    /// Returns a string describing the provided error that doesn't contain PII, suitable for logging.
+    /// Returns a string describing the provided error that doesn't contain PII and is suitable for logging.
     func makeSafeLoggingString(from error: Error) -> String {
-        if type(of: error) == NSError.self {
-            // MARK: NSErrors
-            let error = error as NSError
-            if error.domain == STPError.stripeDomain, let code = STPErrorCode(rawValue: error.code) {
-                // An error from our networking layer
-                if code == .invalidRequestError {
-                    // `invalidRequestError` often indicates a problem with the SDK or merchant integration - log more details
-                    // See historical `error_message` values here https://hubble.corp.stripe.com/queries/yuki/13cb7ed7?filter-error_type=invalid_request_error
-                    return error.userInfo[STPError.errorMessageKey] as? String ?? code.description
-                } else {
-                    return code.description
-                }
-            } else {
-                // Some other NSError - probably from an iOS library.
-                // To avoid accidentally logging PII, just default to logging the domain and code.
-                return "\(error.domain), \(error.code)"
-            }
+        let error = error as NSError
+        if let error = error as? PaymentSheetError {
+            return error.safeLoggingString
+        } else if error.domain == STPError.stripeDomain, let code = STPErrorCode(rawValue: error.code) {
+            // An error from our networking layer
+            return code.description
         } else {
-            // MARK: Swift Errors
-            if let error = error as? PaymentSheetError {
-                return error.safeLoggingString
-            }
-            // Fall back to using the type of the error. Out of an abundance of caution, don't use the description (which could theoretically contain PII). Instead, print its type.
-            // Note: We use `String(reflecting:)` instead of String(describing:) because it has more detail
-            // Example:
-            //  - String(describing: type(of: Foo.Error.canceled)) //  "Error"
-            //  - String(reflecting: type(of: Foo.Error.canceled)) //  "Foo.Error"
-            return String(reflecting: type(of: error))
+            // Default behavior for other errors.
+            // Note: For Swift Error enums, `domain` is the type name and `code` is the case index
+            // e.g. `LinkURLGeneratorError.noPublishableKey` -> "StripePaymentSheet.LinkURLGeneratorError, 1"
+            return "\(error.domain), \(error.code)"
         }
     }
 

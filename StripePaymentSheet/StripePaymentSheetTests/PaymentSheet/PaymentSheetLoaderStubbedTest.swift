@@ -343,4 +343,35 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         }
         wait(for: [loaded2], timeout: 2)
     }
+
+    func testSendsErrorAnalytic() {
+        let analyticsClient = STPAnalyticsClient()
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
+        } response: { _ in
+            let notConnectedError = NSError(domain: NSURLErrorDomain, code: URLError.notConnectedToInternet.rawValue)
+            return HTTPStubsResponse(error: notConnectedError)
+        }
+
+        let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
+        // Test PaymentSheetLoader.load can load various IntentConfigurations
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
+            XCTFail("Confirm handler shouldn't be called.")
+        }
+        let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 0, currency: "USD"), confirmHandler: confirmHandler)
+        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: ._testValue_MostPermissive(), analyticsClient: analyticsClient) { result in
+            loadExpectation.fulfill()
+            switch result {
+            case .success:
+                XCTFail("Test case successfully loaded but it should have failed.")
+            case .failure:
+                break
+            }
+            // Should send a load failure analytic
+            let analyticEvent = analyticsClient._testLogHistory.last
+            XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetLoadFailed.rawValue)
+            XCTAssertEqual(analyticEvent?["error_message"] as? String, "NSURLErrorDomain, -1009")
+        }
+        wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
+    }
 }
