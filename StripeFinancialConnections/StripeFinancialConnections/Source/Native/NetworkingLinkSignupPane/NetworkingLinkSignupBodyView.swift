@@ -43,7 +43,7 @@ private func CreateMultipleBulletPointView(
 ) -> UIView {
     let verticalStackView = HitTestStackView()
     verticalStackView.axis = .vertical
-    verticalStackView.spacing = 12
+    verticalStackView.spacing = 16
     bulletPoints.forEach { bulletPoint in
         let bulletPointView = CreateBulletPointView(
             title: bulletPoint.title,
@@ -64,9 +64,10 @@ private func CreateBulletPointView(
 ) -> UIView {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
+    imageView.tintColor = .iconDefault
     imageView.setImage(with: iconUrl)
     imageView.translatesAutoresizingMaskIntoConstraints = false
-    let imageDiameter: CGFloat = 16
+    let imageDiameter: CGFloat = 20
     NSLayoutConstraint.activate([
         imageView.widthAnchor.constraint(equalToConstant: imageDiameter),
         imageView.heightAnchor.constraint(equalToConstant: imageDiameter),
@@ -98,7 +99,7 @@ private func CreateBulletPointView(
         ]
     )
     horizontalStackView.axis = .horizontal
-    horizontalStackView.spacing = 10
+    horizontalStackView.spacing = 16
     horizontalStackView.alignment = .top
     return horizontalStackView
 }

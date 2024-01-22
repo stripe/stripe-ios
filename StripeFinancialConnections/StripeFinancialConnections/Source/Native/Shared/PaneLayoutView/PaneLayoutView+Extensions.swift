@@ -75,6 +75,8 @@ extension PaneLayoutView {
         paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: isSheet ? 0 : 16, // the sheet handle adds some padding
             leading: 24,
+            // if there is a subtitle in the "body/content view,"
+            // we will add extra "8" padding
             bottom: 16,
             trailing: 24
         )
@@ -82,16 +84,22 @@ extension PaneLayoutView {
     }
 
     @available(iOSApplicationExtension, unavailable)
-    static func createBodyView(
+    private static func createBodyView(
         text: String?,
         contentView: UIView?
     ) -> UIView {
+        let willShowDescriptionText = (text != nil)
+
         let paddingStackView = HitTestStackView()
         paddingStackView.axis = .vertical
-        paddingStackView.spacing = 16
+        // add 24 spacing between the text and `contentView`
+        paddingStackView.spacing = willShowDescriptionText ? 24 : 0
         paddingStackView.isLayoutMarginsRelativeArrangement = true
         paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 0,
+            // when we don't show text, add extra 8 spacing
+            // to create 24 spacing between "content" and "header"
+            // where 16 spacing is already added in `createHeaderView`
+            top: willShowDescriptionText ? 0 : 8,
             leading: 24,
             bottom: 8,
             trailing: 24
