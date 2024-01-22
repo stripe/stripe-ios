@@ -278,6 +278,7 @@ extension STPAnalyticsClient {
 
         if let error {
             additionalParams["error_message"] = makeSafeLoggingString(from: error)
+            additionalParams["request_id"] = (error as NSError).userInfo[STPError.stripeRequestIDKey]
         }
 
         for (param, param_value) in params {

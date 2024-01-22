@@ -175,6 +175,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
                 // Should send a load failure analytic
                 let analyticEvent = analyticsClient._testLogHistory.last
                 XCTAssertEqual(analyticEvent?["error_message"] as? String, "invalidRequestError")
+                XCTAssertTrue((analyticEvent?["request_id"] as? String)?.starts(with: "req_") ?? false)
             }
         }
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)

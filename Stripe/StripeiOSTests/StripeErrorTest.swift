@@ -251,4 +251,23 @@ class StripeErrorTest: XCTestCase {
             "insufficient_funds"
         )
     }
+
+    func testErrorAddsRequestIdToUserInfo() {
+        let response = [
+            "error": [
+                "type": "card_error",
+                "code": "card_declined",
+                "decline_code": "insufficient_funds",
+            ],
+        ]
+        let httpURLResponse = HTTPURLResponse(url: URL(string: "https://api.stripe.com/v1/some_endpoint")!, statusCode: 400, httpVersion: nil, headerFields: ["request-id": "req_123"])
+        guard let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpURLResponse) else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(
+            error.userInfo[STPError.stripeRequestIDKey] as? String,
+            "req_123"
+        )
+    }
 }
