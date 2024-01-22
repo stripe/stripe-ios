@@ -116,9 +116,6 @@ final class PaymentSheetLoader {
 
         let linkAccountService = LinkAccountService(apiClient: configuration.apiClient)
         func lookUpConsumerSession(email: String?) async throws -> PaymentSheetLinkAccount? {
-            if let email = email, linkAccountService.hasEmailLoggedOut(email: email) {
-                return nil
-            }
             return try await withCheckedThrowingContinuation { continuation in
                 linkAccountService.lookupAccount(withEmail: email) { result in
                     switch result {

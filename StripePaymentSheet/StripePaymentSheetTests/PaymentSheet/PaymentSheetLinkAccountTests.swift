@@ -11,9 +11,8 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripePaymentsTestUtils
-
+@testable@_spi(STP) import StripePaymentsUI
 
 final class PaymentSheetLinkAccountTests: XCTestCase {
 
@@ -75,8 +74,7 @@ extension PaymentSheetLinkAccountTests {
             email: "user@example.com",
             session: LinkStubs.consumerSession(),
             publishableKey: nil,
-            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-            cookieStore: LinkInMemoryCookieStore()
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         )
     }
 

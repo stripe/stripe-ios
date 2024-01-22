@@ -15,7 +15,6 @@ import Foundation
 extension STPAPIClient {
     func lookupConsumerSession(
         for email: String?,
-        cookieStore: LinkCookieStore,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/lookup"
@@ -24,11 +23,6 @@ extension STPAPIClient {
         ]
         if let email = email {
             parameters["email_address"] = email.lowercased()
-        }
-
-        let cookies = cookieStore.formattedSessionCookies()
-        if let cookies = cookies {
-            parameters["cookies"] = cookies
         }
 
         guard parameters.keys.contains("email_address") || parameters.keys.contains("cookies") else {
@@ -46,18 +40,6 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: publishableKey
         ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
-            if case let .success(lookupResponse) = result {
-                switch lookupResponse.responseType {
-                case .found(let consumerSession):
-                    cookieStore.updateSessionCookie(with: consumerSession.authSessionClientSecret)
-                case .notFound where cookies != nil:
-                    // Delete invalid cookie, if any
-                    cookieStore.delete(key: .session)
-                default:
-                    break
-                }
-            }
-
             completion(result)
         }
     }
@@ -69,7 +51,6 @@ extension STPAPIClient {
         legalName: String?,
         countryCode: String?,
         consentAction: String?,
-        cookieStore: LinkCookieStore,
         completion: @escaping (Result<ConsumerSession.SessionWithPublishableKey, Error>) -> Void
     ) {
         let endpoint: String = "consumers/accounts/sign_up"
@@ -88,10 +69,6 @@ extension STPAPIClient {
 
         if let countryCode = countryCode {
             parameters["country"] = countryCode
-        }
-
-        if let cookies = cookieStore.formattedSessionCookies() {
-            parameters["cookies"] = cookies
         }
 
         if let consentAction = consentAction {
@@ -183,24 +160,14 @@ extension STPAPIClient {
     private func makeConsumerSessionRequest(
         endpoint: String,
         parameters: [String: Any],
-        cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
-        var parameters = parameters
-        if let cookies = cookieStore.formattedSessionCookies() {
-            parameters["cookies"] = cookies
-        }
-
         post(
             resource: endpoint,
             parameters: parameters,
             ephemeralKeySecret: consumerAccountPublishableKey
         ) { (result: Result<SessionResponse, Error>) in
-            if case .success(let session) = result {
-                cookieStore.updateSessionCookie(with: session.authSessionClientSecret)
-            }
-
             completion(result.map { $0.consumerSession })
         }
     }
@@ -363,7 +330,6 @@ extension STPAPIClient {
 
     func logout(
         consumerSessionClientSecret: String,
-        cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -379,7 +345,6 @@ extension STPAPIClient {
         makeConsumerSessionRequest(
             endpoint: endpoint,
             parameters: parameters,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
