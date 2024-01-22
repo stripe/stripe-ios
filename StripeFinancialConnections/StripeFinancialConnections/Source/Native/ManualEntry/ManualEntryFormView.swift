@@ -17,38 +17,25 @@ protocol ManualEntryFormViewDelegate: AnyObject {
 final class ManualEntryFormView: UIView {
 
     weak var delegate: ManualEntryFormViewDelegate?
-
-    private lazy var checkView: ManualEntryCheckView = {
-        let checkView = ManualEntryCheckView()
-        checkView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            checkView.heightAnchor.constraint(equalToConstant: ManualEntryCheckView.height)
-        ])
-        return checkView
-    }()
     private lazy var textFieldStackView: UIStackView = {
-        let spacerView = UIView()
-        spacerView.setContentHuggingPriority(.defaultLow, for: .vertical)
         let textFieldVerticalStackView = UIStackView(
             arrangedSubviews: [
                 routingNumberTextField,
                 accountNumberTextField,
                 accountNumberConfirmationTextField,
-                spacerView,
             ]
         )
         textFieldVerticalStackView.axis = .vertical
         textFieldVerticalStackView.spacing = 16
         return textFieldVerticalStackView
     }()
-    private var errorView: ManualEntryErrorView?
+    private var errorView: UIView?
     private lazy var routingNumberTextField: ManualEntryTextField = {
         let routingNumberTextField = ManualEntryTextField(
-            title: STPLocalizedString(
+            placeholder: STPLocalizedString(
                 "Routing number",
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number."
-            ),
-            placeholder: "123456789"
+            )
         )
         routingNumberTextField.delegate = self
         routingNumberTextField.textField.addTarget(
@@ -61,13 +48,7 @@ final class ManualEntryFormView: UIView {
     }()
     private lazy var accountNumberTextField: ManualEntryTextField = {
         let accountNumberTextField = ManualEntryTextField(
-            // STPLocalizedString_("Account number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the account number."),
-            title: "Account number",  // TODO: replace with String.Localized.accountNumber
-            placeholder: "000123456789",
-            footerText: STPLocalizedString(
-                "Please enter a checking account.",
-                "A description under a user-input-field that appears when a user is manually entering their bank account information. It the user that the bank account number can be either checkings or savings."
-            )
+            placeholder: STPLocalizedString("Account number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the account number.")
         )
         accountNumberTextField.textField.addTarget(
             self,
@@ -80,11 +61,10 @@ final class ManualEntryFormView: UIView {
     }()
     private lazy var accountNumberConfirmationTextField: ManualEntryTextField = {
         let accountNumberConfirmationTextField = ManualEntryTextField(
-            title: STPLocalizedString(
+            placeholder: STPLocalizedString(
                 "Confirm account number",
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it."
-            ),
-            placeholder: "000123456789"
+            )
         )
         accountNumberConfirmationTextField.textField.addTarget(
             self,
@@ -118,7 +98,6 @@ final class ManualEntryFormView: UIView {
         super.init(frame: .zero)
         let contentVerticalStackView = UIStackView(
             arrangedSubviews: [
-                checkView,
                 textFieldStackView,
             ]
         )
@@ -134,17 +113,6 @@ final class ManualEntryFormView: UIView {
     @objc private func textFieldTextDidChange() {
         delegate?.manualEntryFormViewTextDidChange(self)
         updateTextFieldErrorStates()
-    }
-
-    private func updateCheckViewState() {
-        checkView.highlightState = .none
-        if routingNumberTextField.textField.isFirstResponder {
-            checkView.highlightState = .routingNumber
-        } else if accountNumberTextField.textField.isFirstResponder
-            || accountNumberConfirmationTextField.textField.isFirstResponder
-        {
-            checkView.highlightState = .accountNumber
-        }
     }
 
     private func updateTextFieldErrorStates() {
@@ -168,9 +136,29 @@ final class ManualEntryFormView: UIView {
 
     func setError(text: String?) {
         if let text = text {
-            let errorView = ManualEntryErrorView(text: text)
-            self.errorView = errorView
-            textFieldStackView.insertArrangedSubview(errorView, at: 0)
+            let errorLabel = AttributedTextView(
+                font: .label(.medium),
+                boldFont: .label(.mediumEmphasized),
+                linkFont: .label(.medium),
+                textColor: .textFeedbackCritical,
+                linkColor: .textFeedbackCritical,
+                alignCenter: true
+            )
+            errorLabel.setText(text)
+            let paddingStackView = UIStackView(
+                arrangedSubviews: [
+                    errorLabel
+                ]
+            )
+            paddingStackView.isLayoutMarginsRelativeArrangement = true
+            paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                top: 8,
+                leading: 0,
+                bottom: 8,
+                trailing: 0
+            )
+            textFieldStackView.addArrangedSubview(paddingStackView)
+            self.errorView = paddingStackView
         } else {
             errorView?.removeFromSuperview()
             errorView = nil
@@ -206,10 +194,6 @@ extension ManualEntryFormView: ManualEntryTextFieldDelegate {
         return true
     }
 
-    func manualEntryTextFieldDidBeginEditing(_ textField: ManualEntryTextField) {
-        updateCheckViewState()
-    }
-
     func manualEntryTextFieldDidEndEditing(_ manualEntryTextField: ManualEntryTextField) {
         if manualEntryTextField === routingNumberTextField {
             didEndEditingOnceRoutingNumberTextField = true
@@ -221,7 +205,5 @@ extension ManualEntryFormView: ManualEntryTextFieldDelegate {
             assertionFailure("we should always be able to reference a textfield")
         }
         updateTextFieldErrorStates()
-
-        updateCheckViewState()
     }
 }
