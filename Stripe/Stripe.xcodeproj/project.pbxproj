@@ -133,7 +133,6 @@
 		5B6F1BF973FC2D8DD6127B7F /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E136A967522048B313E3C62F /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5C51167CC14F653E7117BA61 /* OCMock in Frameworks */ = {isa = PBXBuildFile; productRef = E804AA8C4156CC85FFD9595F /* OCMock */; };
 		5C5E1CE53D89DE8F0B867115 /* STPPaymentMethodSofortTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8063E8073A32E0B081A1DFA /* STPPaymentMethodSofortTests.swift */; };
-		5D1A9F97F79DAA3F46C82A28 /* LinkAccountServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC7B7ED388B6C6AE57D3D627 /* LinkAccountServiceTests.swift */; };
 		5D6B52EB4D7258129F134D07 /* STPImageLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C23F55BEADF9BC74DFBDB /* STPImageLibrary.swift */; };
 		5D7F632025C261B88F0C2016 /* STPFPXBankBrandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C29AE44D809CD677B5E52B /* STPFPXBankBrandTest.swift */; };
 		5D9EB3E2725C38D7098B9965 /* STPPaymentMethodParamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4002981AC12687681616D21E /* STPPaymentMethodParamsTest.swift */; };
@@ -738,7 +737,6 @@
 		BAFD938F3A149A56CC99FE96 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		BB08D2AC882B21C8ADD76B92 /* STPPaymentCardTextFieldKVOTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentCardTextFieldKVOTest.m; sourceTree = "<group>"; };
 		BB8FCDBC63A79CD1571A2DFB /* STPCustomerContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCustomerContext.swift; sourceTree = "<group>"; };
-		BC7B7ED388B6C6AE57D3D627 /* LinkAccountServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountServiceTests.swift; sourceTree = "<group>"; };
 		BCBEA9E4823F08C1F5057B5A /* STPAUBECSDebitFormViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAUBECSDebitFormViewSnapshotTests.swift; sourceTree = "<group>"; };
 		BD77D4B1C5B64E45F9DA09B5 /* STPConfirmCardOptionsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPConfirmCardOptionsTest.swift; sourceTree = "<group>"; };
 		BD89580A3E41D7167C30B287 /* STPAnalyticsClient+Payments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+Payments.swift"; sourceTree = "<group>"; };
@@ -1124,7 +1122,6 @@
 				0E10C4D64477638398251FFB /* Info.plist */,
 				8D866DCC403994A0D3CFB1D7 /* KlarnaHelperTest.swift */,
 				610DF5DB2B33597500DA6AAA /* HostedSurfaceTest.swift */,
-				BC7B7ED388B6C6AE57D3D627 /* LinkAccountServiceTests.swift */,
 				6BC5EC2C2B4609FF00CC75E8 /* LinkInlineSignupElementSnapshotTests.swift */,
 				835CB781FBC19773ACC20676 /* LinkLegalTermsViewSnapshotTests.swift */,
 				E7C7D85A7FAAFDF4F59BA85E /* LinkSignupViewModelTests.swift */,
@@ -1708,7 +1705,6 @@
 				ACF6CFE0F8B88FDBBB16968C /* FraudDetectionDataTest.swift in Sources */,
 				AF18D569B296BFC1EB5A7338 /* ImageTest.swift in Sources */,
 				87AACDD643A998FFDD505D22 /* KlarnaHelperTest.swift in Sources */,
-				5D1A9F97F79DAA3F46C82A28 /* LinkAccountServiceTests.swift in Sources */,
 				D0C81317E0AA8EB0370B1BA1 /* LinkLegalTermsViewSnapshotTests.swift in Sources */,
 				450FAE41FB4538462D05F2E4 /* LinkSignupViewModelTests.swift in Sources */,
 				FDD1858CAEFCEBB22BEC9BBC /* MKPlacemark+PaymentSheetTests.swift in Sources */,
