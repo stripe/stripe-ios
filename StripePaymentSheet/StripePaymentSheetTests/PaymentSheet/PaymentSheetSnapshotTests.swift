@@ -468,7 +468,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetWithLinkExistingCustomer() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
@@ -519,6 +519,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
                                                             confirmHandler: confirmHandler(_:_:_:))
@@ -932,7 +933,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
     }
-    
+
     private func stubConsumerSession() {
         guard !runAgainstLiveService else {
             return
@@ -944,7 +945,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
     }
-
 
     private func stubSessions(fileMock: FileMock, responseCallback: ((Data) -> Data)? = nil) {
         guard !runAgainstLiveService else {
