@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.21.1 2024-01-22
 ### Payments
 * [Changed] Increased the maximum number of status update retries when waiting for an intent to update to a terminal state. This impacts Cash App Pay and 3DS2.
 

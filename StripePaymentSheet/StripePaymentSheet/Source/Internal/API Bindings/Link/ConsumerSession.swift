@@ -79,10 +79,9 @@ extension ConsumerSession {
     class func lookupSession(
         for email: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
-        apiClient.lookupConsumerSession(for: email, cookieStore: cookieStore, completion: completion)
+        apiClient.lookupConsumerSession(for: email, completion: completion)
     }
 
     class func signUp(
@@ -93,7 +92,6 @@ extension ConsumerSession {
         countryCode: String?,
         consentAction: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         completion: @escaping (Result<SessionWithPublishableKey, Error>) -> Void
     ) {
         apiClient.createConsumer(
@@ -103,7 +101,6 @@ extension ConsumerSession {
             legalName: legalName,
             countryCode: countryCode,
             consentAction: consentAction,
-            cookieStore: cookieStore,
             completion: completion
         )
     }
@@ -171,6 +168,7 @@ extension ConsumerSession {
     func sharePaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,
+        cvc: String?,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
@@ -178,6 +176,7 @@ extension ConsumerSession {
             for: clientSecret,
             id: id,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
+            cvc: cvc,
             completion: completion)
     }
 
@@ -210,14 +209,12 @@ extension ConsumerSession {
 
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         // Logout from server.
         apiClient.logout(
             consumerSessionClientSecret: clientSecret,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }

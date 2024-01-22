@@ -597,7 +597,7 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
         }
 
         let isAccountNotRegisteredOrMissing = LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
-        return isAccountNotRegisteredOrMissing && !LinkSecureCookieStore.shared.hasUsedLink
+        return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
     }
 
     func updateErrorLabel(for error: Error?) {

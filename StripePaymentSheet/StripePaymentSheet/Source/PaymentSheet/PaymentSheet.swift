@@ -216,7 +216,7 @@ public class PaymentSheet {
     /// This will ensure that any persisted authentication state in PaymentSheet,
     /// such as authentication cookies, is also cleared during logout.
     public static func resetCustomer() {
-        LinkAccountService.defaultCookieStore.clear()
+        UserDefaults.standard.clearLinkDefaults()
     }
 
     // MARK: - Internal Properties

@@ -32,7 +32,6 @@ protocol PayWithLinkCoordinating: AnyObject {
     )
     func cancel()
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
-    func logout(cancel: Bool)
 }
 
 /// A view controller for paying with Link using ASWebAuthenticationSession.
@@ -173,9 +172,9 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
 
     private func canceledWithoutError() {
         STPAnalyticsClient.sharedClient.logLinkPopupCancel(sessionType: self.context.intent.linkPopupWebviewOption)
-//      If the user closed the popup, remove any Link account state.
-//      Otherwise, a user would have to *log in* if they wanted to log out.
-        LinkAccountService.defaultCookieStore.clear()
+        // If the user closed the popup, remove any Link account state.
+        // Otherwise, a user would have to *log in* if they wanted to log out.
+        // We don't have any account state at the moment. But if we did, we'd clear it here.
         self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
     }
 
@@ -202,16 +201,11 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             case .complete:
                 let paymentOption = PaymentOption.link(option: PaymentSheet.LinkConfirmOption.withPaymentMethod(paymentMethod: result.pm))
 
-                // Cache the PM details
-                let las = LinkAccountService()
-                las.setLastPMDetails(pm: result.pm)
-
                 STPAnalyticsClient.sharedClient.logLinkPopupSuccess(sessionType: self.context.intent.linkPopupWebviewOption)
-                LinkSecureCookieStore.shared.markLinkAsUsed()
+                UserDefaults.standard.markLinkAsUsed()
                 self.payWithLinkDelegate?.payWithLinkWebControllerDidComplete(self, intent: self.context.intent, with: paymentOption)
             case .logout:
                 // Delete the account information
-                LinkAccountService.defaultCookieStore.clear()
                 STPAnalyticsClient.sharedClient.logLinkPopupLogout(sessionType: self.context.intent.linkPopupWebviewOption)
                 self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
             }
@@ -245,15 +239,6 @@ extension PayWithLinkWebController: PayWithLinkCoordinating {
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
-    }
-
-    func logout(cancel: Bool) {
-        linkAccount?.logout()
-        linkAccount = nil
-
-        if cancel {
-            self.cancel()
-        }
     }
 
 }

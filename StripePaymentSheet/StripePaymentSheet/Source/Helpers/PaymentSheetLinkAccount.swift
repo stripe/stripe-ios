@@ -13,7 +13,6 @@ import UIKit
 
 protocol PaymentSheetLinkAccountInfoProtocol {
     var email: String { get }
-    var lastPM: LinkPMDisplayDetails? { get }
     var redactedPhoneNumber: String? { get }
     var isRegistered: Bool { get }
     var isLoggedIn: Bool { get }
@@ -38,19 +37,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     // Dependencies
     let apiClient: STPAPIClient
-    let cookieStore: LinkCookieStore
 
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
 
     let email: String
-    var last4: String?
-    var lastBrand: STPCardBrand?
-
-    var lastPM: LinkPMDisplayDetails? {
-        let linkAccountService = LinkAccountService(cookieStore: cookieStore)
-        return linkAccountService.getLastPMDetails()
-    }
 
     var redactedPhoneNumber: String? {
         return currentSession?.redactedPhoneNumber
@@ -84,14 +75,12 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         email: String,
         session: ConsumerSession?,
         publishableKey: String?,
-        apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared
+        apiClient: STPAPIClient = .shared
     ) {
         self.email = email
         self.currentSession = session
         self.publishableKey = publishableKey
         self.apiClient = apiClient
-        self.cookieStore = cookieStore
     }
 
     func signUp(
@@ -134,8 +123,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             legalName: legalName,
             countryCode: countryCode,
             consentAction: consentAction.rawValue,
-            with: apiClient,
-            cookieStore: cookieStore
+            with: apiClient
         ) { [weak self] result in
             switch result {
             case .success(let signupResponse):
@@ -227,7 +215,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
-    func sharePaymentDetails(id: String, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
+    func sharePaymentDetails(id: String, cvc: String?, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
         guard let session = currentSession else {
             assertionFailure()
             return completion(
@@ -241,6 +229,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             session.sharePaymentDetails(
                 with: apiClient,
                 id: id,
+                cvc: cvc,
                 consumerAccountPublishableKey: publishableKey,
                 completion: completionWrapper
             )
@@ -290,38 +279,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 completion: completionWrapper
             )
         }
-    }
-
-    func logout(completion: (() -> Void)? = nil) {
-        guard let session = currentSession else {
-            assertionFailure("Cannot logout without an active session")
-            completion?()
-            return
-        }
-
-        session.logout(
-            with: apiClient,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: publishableKey
-        ) { _ in
-            completion?()
-        }
-
-        // Delete cookie.
-        cookieStore.delete(key: .session)
-
-        markEmailAsLoggedOut()
-
-        // Forget current session.
-        self.currentSession = nil
-    }
-
-    func markEmailAsLoggedOut() {
-        guard let hashedEmail = email.lowercased().sha256 else {
-            return
-        }
-
-        cookieStore.write(key: .lastLogoutEmail, value: hashedEmail)
     }
 
 }
@@ -380,8 +337,7 @@ private extension PaymentSheetLinkAccount {
         // without providing an email address.
         ConsumerSession.lookupSession(
             for: nil,  // No email address
-            with: apiClient,
-            cookieStore: cookieStore
+            with: apiClient
         ) { [weak self] result in
             switch result {
             case .success(let response):
@@ -418,7 +374,7 @@ extension PaymentSheetLinkAccount {
     ///
     /// - Parameter paymentDetails: Payment details
     /// - Returns: Payment method params for paying with Link.
-    func makePaymentMethodParams(from paymentDetails: ConsumerPaymentDetails) -> STPPaymentMethodParams? {
+    func makePaymentMethodParams(from paymentDetails: ConsumerPaymentDetails, cvc: String?) -> STPPaymentMethodParams? {
         guard let currentSession = currentSession else {
             assertionFailure("Cannot make payment method params without an active session.")
             return nil
@@ -428,7 +384,7 @@ extension PaymentSheetLinkAccount {
         params.link?.paymentDetailsID = paymentDetails.stripeID
         params.link?.credentials = ["consumer_session_client_secret": currentSession.clientSecret]
 
-        if let cvc = paymentDetails.cvc {
+        if let cvc = cvc {
             params.link?.additionalAPIParameters["card"] = [
                 "cvc": cvc,
             ]
