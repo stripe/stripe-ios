@@ -35,7 +35,7 @@ final class NetworkingOTPView: UIView {
             ]
         )
         otpVerticalStackView.axis = .vertical
-        otpVerticalStackView.spacing = 8
+        otpVerticalStackView.spacing = 16
         return otpVerticalStackView
     }()
     // TODO(kgaidis): make changes to `OneTimeCodeTextField` to
@@ -57,7 +57,7 @@ final class NetworkingOTPView: UIView {
         }()
         return theme
     }()
-    private var lastErrorView: UIView?
+    private var lastFooterView: UIView?
 
     init(dataSource: NetworkingOTPDataSource) {
         self.dataSource = dataSource
@@ -77,14 +77,54 @@ final class NetworkingOTPView: UIView {
         }
     }
 
+    private func showLoadingView(_ show: Bool) {
+        lastFooterView?.removeFromSuperview()
+        lastFooterView = nil
+
+        if show {
+            let activityIndicator = ActivityIndicator(size: .medium)
+            activityIndicator.color = .iconActionPrimary
+            activityIndicator.startAnimating()
+            let loadingView = UIStackView(
+                arrangedSubviews: [activityIndicator]
+            )
+            loadingView.isLayoutMarginsRelativeArrangement = true
+            loadingView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                top: 8,
+                leading: 0,
+                bottom: 8,
+                trailing: 0
+            )
+            self.lastFooterView = loadingView
+            verticalStackView.addArrangedSubview(loadingView)
+        }
+    }
+
     private func showErrorText(_ errorText: String?) {
-        lastErrorView?.removeFromSuperview()
-        lastErrorView = nil
+        lastFooterView?.removeFromSuperview()
+        lastFooterView = nil
 
         if let errorText = errorText {
-            // TODO(kgaidis): rename & move `ManualEntryErrorView` to be more generic
-            let errorView = ManualEntryErrorView(text: errorText)
-            self.lastErrorView = errorView
+            let errorLabel = AttributedTextView(
+                font: .label(.medium),
+                boldFont: .label(.mediumEmphasized),
+                linkFont: .label(.medium),
+                textColor: .textFeedbackCritical,
+                linkColor: .textFeedbackCritical,
+                alignCenter: true
+            )
+            errorLabel.setText(errorText)
+            let errorView = UIStackView(
+                arrangedSubviews: [errorLabel]
+            )
+            errorView.isLayoutMarginsRelativeArrangement = true
+            errorView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                top: 8,
+                leading: 0,
+                bottom: 8,
+                trailing: 0
+            )
+            self.lastFooterView = errorView
             verticalStackView.addArrangedSubview(errorView)
         }
     }
@@ -127,10 +167,13 @@ final class NetworkingOTPView: UIView {
 
     private func userDidEnterValidOTPCode(_ otpCode: String) {
         otpTextField.resignFirstResponder()
+        showLoadingView(true)
 
         dataSource.confirmVerificationSession(otpCode: otpCode)
             .observe { [weak self] result in
                 guard let self = self else { return }
+                self.showLoadingView(false)
+
                 switch result {
                 case .success:
                     self.delegate?.networkingOTPViewDidConfirmVerification(self)
