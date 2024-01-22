@@ -42,7 +42,7 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
         XCTAssertEqual(
             result?.link?.additionalAPIParameters["card"] as? [String: String],
             [
-                "cvc": "12345"
+                "cvc": "1234"
             ]
         )
     }
