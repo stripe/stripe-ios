@@ -134,10 +134,6 @@ extension ConsumerPaymentDetails.Details {
             case checks
         }
 
-        /// A frontend convenience property, i.e. not part of the API Object
-        /// As such this is deliberately omitted from CodingKeys
-        var cvc: String?
-
         init(expiryYear: Int,
              expiryMonth: Int,
              brand: String,
@@ -212,18 +208,7 @@ extension ConsumerPaymentDetails {
             return ""
         }
     }
-
-    var cvc: String? {
-        switch details {
-        case .card(let card):
-            return card.cvc
-        case .bankAccount:
-            return nil
-        case .unparsable:
-            return nil
-        }
-    }
-
+    
     var accessibilityDescription: String {
         switch details {
         case .card(let card):
