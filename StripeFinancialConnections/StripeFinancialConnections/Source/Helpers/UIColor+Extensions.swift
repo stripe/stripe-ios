@@ -23,6 +23,10 @@ extension UIColor {
         return neutral600
     }
 
+    static var textActionPrimary: UIColor {
+        return brand600
+    }
+
     static var textActionPrimaryFocused: UIColor {
         return brand600
     }
