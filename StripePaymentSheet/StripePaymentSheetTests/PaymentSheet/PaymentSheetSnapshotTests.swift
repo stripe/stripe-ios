@@ -468,6 +468,21 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
+    
+    func testPaymentSheetWithLinkExistingCustomer() {
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+        stubConsumerSession()
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            automaticPaymentMethods: false,
+            useLink: true
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
 
     func testPaymentSheetWithLinkHiddenBorders() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
@@ -917,6 +932,19 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
     }
+    
+    private func stubConsumerSession() {
+        guard !runAgainstLiveService else {
+            return
+        }
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") ?? false
+        } response: { _ in
+            let mockResponseData = try! FileMock.consumers_lookup_200.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
+
 
     private func stubSessions(fileMock: FileMock, responseCallback: ((Data) -> Data)? = nil) {
         guard !runAgainstLiveService else {
