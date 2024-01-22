@@ -22,7 +22,14 @@ class NetworkingLinkSignupFooterView: HitTestView {
     private lazy var footerVerticalStackView: UIStackView = {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 24
+        verticalStackView.spacing = 16
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 16,
+            leading: 24,
+            bottom: 16,
+            trailing: 24
+        )
         verticalStackView.addArrangedSubview(aboveCtaLabel)
         verticalStackView.addArrangedSubview(buttonVerticalStack)
         return verticalStackView
@@ -30,10 +37,10 @@ class NetworkingLinkSignupFooterView: HitTestView {
 
     private lazy var aboveCtaLabel: AttributedTextView = {
         let termsAndPrivacyPolicyLabel = AttributedTextView(
-            font: .body(.small),
-            boldFont: .body(.smallEmphasized),
-            linkFont: .body(.smallEmphasized),
-            textColor: .textSecondary,
+            font: .label(.small),
+            boldFont: .label(.smallEmphasized),
+            linkFont: .label(.small),
+            textColor: .textDefault,
             alignCenter: true
         )
         termsAndPrivacyPolicyLabel.setText(
@@ -46,7 +53,8 @@ class NetworkingLinkSignupFooterView: HitTestView {
     private lazy var buttonVerticalStack: UIStackView = {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 12
+        verticalStackView.spacing = 8
+        verticalStackView.addArrangedSubview(saveToLinkButton)
         verticalStackView.addArrangedSubview(notNowButton)
         return verticalStackView
     }()
@@ -94,15 +102,6 @@ class NetworkingLinkSignupFooterView: HitTestView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    func showSaveToLinkButtonIfNeeded() {
-        guard saveToLinkButton.superview == nil else {
-            return  // already added
-        }
-        notNowButton.removeFromSuperview()
-        buttonVerticalStack.addArrangedSubview(saveToLinkButton)
-        buttonVerticalStack.addArrangedSubview(notNowButton)
     }
 
     func enableSaveToLinkButton(_ enable: Bool) {
