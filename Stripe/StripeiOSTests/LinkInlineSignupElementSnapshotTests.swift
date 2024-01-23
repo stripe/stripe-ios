@@ -138,12 +138,12 @@ extension LinkInlineSignupElementSnapshotTests {
         configuration.defaultBillingDetails.name = preFillName
         configuration.defaultBillingDetails.phone = preFillPhone
 
-        var linkAccount: PaymentSheetLinkAccount? = nil
-        
+        var linkAccount: PaymentSheetLinkAccount?
+
         if let prefilledEmailAddress = prefilledEmailAddress {
             linkAccount = PaymentSheetLinkAccount(email: prefilledEmailAddress, session: nil, publishableKey: nil)
         }
-        
+
         let viewModel = LinkInlineSignupViewModel(
             configuration: configuration,
             mode: mode,
