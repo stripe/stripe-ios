@@ -237,7 +237,7 @@ final class LinkInlineSignupViewModel {
             return didPrefillEmail
         }
     }
-    
+
     // Whether the email was prefilled when this view model was initialized.
     // If so, in textFieldsOnly mode we should use the phone number as the signup consent.
     var didPrefillEmail: Bool
