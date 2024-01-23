@@ -30,7 +30,6 @@ final class ConsumerSession: Decodable {
     private enum CodingKeys: String, CodingKey {
         case clientSecret
         case emailAddress
-        case redactedPhoneNumber
         case verificationSessions
     }
 
@@ -133,7 +132,7 @@ extension ConsumerSession {
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }
-
+/*
     func createLinkAccountSession(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,
@@ -144,7 +143,7 @@ extension ConsumerSession {
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }
-
+*/
     func listPaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,

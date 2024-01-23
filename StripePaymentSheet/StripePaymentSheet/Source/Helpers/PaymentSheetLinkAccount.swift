@@ -130,27 +130,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
-    func createLinkAccountSession(
-        completion: @escaping (Result<LinkAccountSession, Error>) -> Void
-    ) {
-        guard let session = currentSession else {
-            assertionFailure()
-            completion(
-                .failure(
-                    PaymentSheetError.linkingWithoutValidSession
-                )
-            )
-            return
-        }
-
-        retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
-            session.createLinkAccountSession(
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
-        }
-    }
-
     func createPaymentDetails(
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
@@ -166,42 +145,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
             session.createPaymentDetails(
                 paymentMethodParams: paymentMethodParams,
-                with: apiClient,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
-        }
-    }
-
-    func createPaymentDetails(
-        linkedAccountId: String,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        guard let session = currentSession else {
-            assertionFailure()
-            completion(.failure(PaymentSheetError.savingWithoutValidLinkSession))
-            return
-        }
-        retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
-            session.createPaymentDetails(
-                linkedAccountId: linkedAccountId,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
-        }
-    }
-
-    func listPaymentDetails(
-        completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
-    ) {
-        guard let session = currentSession else {
-            assertionFailure()
-            completion(.failure(PaymentSheetError.payingWithoutValidLinkSession))
-            return
-        }
-
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
-            session.listPaymentDetails(
                 with: apiClient,
                 consumerAccountPublishableKey: publishableKey,
                 completion: completionWrapper
@@ -229,52 +172,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             )
         }
     }
-
-    func deletePaymentDetails(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let session = currentSession else {
-            assertionFailure()
-            return completion(
-                .failure(
-                    PaymentSheetError.deletingWithoutValidLinkSession
-                )
-            )
-        }
-
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
-            session.deletePaymentDetails(
-                with: apiClient,
-                id: id,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
-        }
-    }
-
-    func updatePaymentDetails(
-        id: String,
-        updateParams: UpdatePaymentDetailsParams,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        guard let session = currentSession else {
-            assertionFailure()
-            return completion(
-                .failure(
-                    PaymentSheetError.updatingWithoutValidLinkSession
-                )
-            )
-        }
-
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
-            session.updatePaymentDetails(
-                with: apiClient,
-                id: id,
-                updateParams: updateParams,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
-        }
-    }
-
 }
 
 // MARK: - Equatable
