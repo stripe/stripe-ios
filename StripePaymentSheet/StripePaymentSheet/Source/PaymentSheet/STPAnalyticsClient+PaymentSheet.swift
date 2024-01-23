@@ -275,11 +275,9 @@ extension STPAnalyticsClient {
         additionalParams["is_decoupled"] = intentConfig != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
         additionalParams["selected_lpm"] = paymentMethodTypeAnalyticsValue
-        if let error = error as? PaymentSheetError {
-            additionalParams["error_message"] = error.safeLoggingString
-        } else if let error = error as? NSError, let code = STPErrorCode(rawValue: error.code) {
-            // attempt log PII safe server error messages
-            additionalParams["error_message"] = code.description
+
+        if let error {
+            additionalParams["error_message"] = makeSafeLoggingString(from: error)
         }
 
         for (param, param_value) in params {
@@ -289,6 +287,22 @@ extension STPAnalyticsClient {
                                             productUsage: productUsage,
                                             additionalParams: additionalParams)
         log(analytic: analytic, apiClient: apiClient)
+    }
+
+    /// Returns a string describing the provided error that doesn't contain PII and is suitable for logging.
+    func makeSafeLoggingString(from error: Error) -> String {
+        let error = error as NSError
+        if let error = error as? PaymentSheetError {
+            return error.safeLoggingString
+        } else if error.domain == STPError.stripeDomain, let code = STPErrorCode(rawValue: error.code) {
+            // An error from our networking layer
+            return code.description
+        } else {
+            // Default behavior for other errors.
+            // Note: For Swift Error enums, `domain` is the type name and `code` is the case index
+            // e.g. `LinkURLGeneratorError.noPublishableKey` -> "StripePaymentSheet.LinkURLGeneratorError, 1"
+            return "\(error.domain), \(error.code)"
+        }
     }
 
     var isSimulatorOrTest: Bool {
