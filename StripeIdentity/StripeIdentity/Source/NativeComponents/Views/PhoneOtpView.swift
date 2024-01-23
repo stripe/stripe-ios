@@ -67,7 +67,9 @@ class PhoneOtpView: UIView {
         errorString: String
     ) {
         otpTextField = OneTimeCodeTextField(
-            numberOfDigits: otpLength,
+            configuration: OneTimeCodeTextField.Configuration(
+                numberOfDigits: otpLength
+            ),
             theme: IdentityUI.identityElementsUITheme
         )
         otpBodyLabel.text = body
