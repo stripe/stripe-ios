@@ -16,18 +16,15 @@ final class ConsumerSession: Decodable {
     let clientSecret: String
     let emailAddress: String
     let verificationSessions: [VerificationSession]
-    let supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
 
     init(
         clientSecret: String,
         emailAddress: String,
-        verificationSessions: [VerificationSession],
-        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
+        verificationSessions: [VerificationSession]
     ) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
         self.verificationSessions = verificationSessions
-        self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -35,7 +32,6 @@ final class ConsumerSession: Decodable {
         case emailAddress
         case redactedPhoneNumber
         case verificationSessions
-        case supportedPaymentDetailsTypes = "supportPaymentDetailsTypes"
     }
 
     init(from decoder: Decoder) throws {
@@ -43,7 +39,6 @@ final class ConsumerSession: Decodable {
         self.clientSecret = try container.decode(String.self, forKey: .clientSecret)
         self.emailAddress = try container.decode(String.self, forKey: .emailAddress)
         self.verificationSessions = try container.decodeIfPresent([ConsumerSession.VerificationSession].self, forKey: .verificationSessions) ?? []
-        self.supportedPaymentDetailsTypes = try container.decodeIfPresent(Set<ConsumerPaymentDetails.DetailsType>.self, forKey: .supportedPaymentDetailsTypes) ?? []
     }
 
 }

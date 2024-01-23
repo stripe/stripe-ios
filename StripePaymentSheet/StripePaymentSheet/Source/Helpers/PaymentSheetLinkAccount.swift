@@ -14,7 +14,6 @@ import UIKit
 protocol PaymentSheetLinkAccountInfoProtocol {
     var email: String { get }
     var isRegistered: Bool { get }
-//    var isLoggedIn: Bool { get }
 }
 
 struct LinkPMDisplayDetails {
@@ -386,55 +385,6 @@ extension PaymentSheetLinkAccount {
         }
 
         return params
-    }
-
-}
-
-// MARK: - Payment method availability
-
-extension PaymentSheetLinkAccount {
-
-    /// Returns a set containing the Payment Details types that the user is able to use for confirming the given `intent`.
-    /// - Parameter intent: The Intent that the user is trying to confirm.
-    /// - Returns: A set containing the supported Payment Details types.
-    func supportedPaymentDetailsTypes(for intent: Intent) -> Set<ConsumerPaymentDetails.DetailsType> {
-        guard let currentSession = currentSession, let fundingSources = intent.linkFundingSources else {
-            return []
-        }
-
-        let fundingSourceDetailsTypes = Set(fundingSources.compactMap { $0.detailsType })
-
-        // Take the intersection of the consumer session types and the merchant-provided Link funding sources
-        var supportedPaymentDetailsTypes = fundingSourceDetailsTypes.intersection(currentSession.supportedPaymentDetailsTypes)
-
-        // Special testmode handling
-        if apiClient.isTestmode && Self.emailSupportsMultipleFundingSourcesOnTestMode(email) {
-            supportedPaymentDetailsTypes.insert(.bankAccount)
-        }
-
-        return supportedPaymentDetailsTypes
-    }
-
-    func supportedPaymentMethodTypes(for intent: Intent) -> [STPPaymentMethodType] {
-        var supportedPaymentMethodTypes = [STPPaymentMethodType]()
-
-        for paymentDetailsType in supportedPaymentDetailsTypes(for: intent) {
-            switch paymentDetailsType {
-            case .card:
-                supportedPaymentMethodTypes.append(.card)
-            case .bankAccount:
-                supportedPaymentMethodTypes.append(.linkInstantDebit)
-            case .unparsable:
-                break
-            }
-        }
-
-        if supportedPaymentMethodTypes.isEmpty {
-            // Card is the default payment method type when no other type is available.
-            supportedPaymentMethodTypes.append(.card)
-        }
-
-        return supportedPaymentMethodTypes
     }
 }
 
