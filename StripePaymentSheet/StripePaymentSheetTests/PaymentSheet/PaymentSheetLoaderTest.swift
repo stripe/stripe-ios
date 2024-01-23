@@ -20,6 +20,10 @@ final class PaymentSheetLoaderTest: XCTestCase {
         return config
     }()
 
+    override func setUp() async throws {
+        try await super.setUp()
+    }
+
     func testPaymentSheetLoadWithPaymentIntent() async throws {
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
         let types = ["ideal", "card", "bancontact", "sofort"]
@@ -142,6 +146,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
     }
 
     func testPaymentSheetLoadDeferredIntentFails() {
+        let analyticsClient = STPAnalyticsClient()
         let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
         // Test PaymentSheetLoader.load can load various IntentConfigurations
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
@@ -159,7 +164,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
         ]
         loadExpectation.expectedFulfillmentCount = intentConfigTestcases.count
         for (index, intentConfig) in intentConfigTestcases.enumerated() {
-            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration) { result in
+            PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, analyticsClient: analyticsClient) { result in
                 loadExpectation.fulfill()
                 switch result {
                 case .success:
@@ -167,6 +172,9 @@ final class PaymentSheetLoaderTest: XCTestCase {
                 case .failure:
                     break
                 }
+                // Should send a load failure analytic
+                let analyticEvent = analyticsClient._testLogHistory.last
+                XCTAssertEqual(analyticEvent?["error_message"] as? String, "invalidRequestError")
             }
         }
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
