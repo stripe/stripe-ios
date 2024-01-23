@@ -28,9 +28,6 @@ extension LinkStubs {
     }
 
     static func paymentMethods() -> [ConsumerPaymentDetails] {
-        let calendar = Calendar(identifier: .gregorian)
-        let nextYear = calendar.component(.year, from: Date()) + 1
-
         return [
             ConsumerPaymentDetails(
                 stripeID: "1"
