@@ -524,6 +524,11 @@ class CustomerSheetUITest: XCTestCase {
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
         app.buttons["Link account"].tap()
+
+        let notNowButton = app.buttons["Not now"]
+        XCTAssertTrue(notNowButton.waitForExistence(timeout: 10.0))
+        notNowButton.tap()
+
         XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
@@ -602,6 +607,11 @@ class CustomerSheetUITest: XCTestCase {
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
         app.buttons["Link account"].tap()
+
+        let notNowButton = app.buttons["Not now"]
+        XCTAssertTrue(notNowButton.waitForExistence(timeout: 10.0))
+        notNowButton.tap()
+
         XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
