@@ -228,6 +228,17 @@ final class LinkInlineSignupViewModel {
         }
     }
 
+    var isPhoneNumberOptional: Bool {
+        switch mode {
+        case .normal:
+            return false
+        case .textFieldsOnly:
+            // If the user has already passed in an email
+            // The phone number field should be marked as "(Optional)"
+            return emailAddress != nil
+        }
+    }
+
     init(
         configuration: PaymentSheet.Configuration,
         mode: Mode,

@@ -37,6 +37,7 @@ final class LinkLegalTermsView: UIView {
 
     weak var delegate: LinkLegalTermsViewDelegate?
     private let mode: LinkInlineSignupViewModel.Mode
+    private let emailWasPrefilled: Bool
 
     var textColor: UIColor? {
         get {
@@ -74,8 +75,10 @@ final class LinkLegalTermsView: UIView {
 
     init(textAlignment: NSTextAlignment = .left,
          mode: LinkInlineSignupViewModel.Mode = .normal,
+         emailWasPrefilled: Bool = false,
          delegate: LinkLegalTermsViewDelegate? = nil) {
         self.mode = mode
+        self.emailWasPrefilled = emailWasPrefilled
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment
         self.delegate = delegate
@@ -95,10 +98,17 @@ final class LinkLegalTermsView: UIView {
                     "Legal text shown when creating a Link account."
                 )
             case .textFieldsOnly:
-                return STPLocalizedString(
-                    "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
-                    "Legal text shown when creating a Link account."
-                )
+                if !emailWasPrefilled {
+                    return STPLocalizedString(
+                        "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                        "Legal text shown when creating a Link account."
+                    )
+                } else {
+                    return STPLocalizedString(
+                        "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                        "Legal text shown when creating a Link account."
+                    )
+                }
             }
         }()
 

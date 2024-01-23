@@ -44,10 +44,19 @@ final class LinkInlineSignupView: UIView {
         return TextFieldElement(configuration: configuration, theme: theme)
     }()
 
-    private(set) lazy var phoneNumberElement = PhoneNumberElement(
-        defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
-        defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone, theme: theme
-    )
+    private(set) lazy var phoneNumberElement = {
+        // Don't allow a default phone number in textFieldsOnly mode.
+        // Otherwise, we'd imply consumer consent when it hasn't occurred.
+        switch viewModel.mode {
+        case .normal:
+            PhoneNumberElement(
+            defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
+            defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone, theme: theme
+        )
+        case .textFieldsOnly:
+            PhoneNumberElement(isOptional: viewModel.isPhoneNumberOptional, theme: theme)
+        }
+    }()
 
     // MARK: Sections
 
@@ -81,6 +90,7 @@ final class LinkInlineSignupView: UIView {
     private(set) lazy var legalTermsElement: StaticElement = {
         let legalView = LinkLegalTermsView(textAlignment: .left,
                                            mode: viewModel.mode,
+                                           emailWasPrefilled: viewModel.emailAddress != nil,
                                            delegate: self)
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
@@ -195,7 +205,6 @@ final class LinkInlineSignupView: UIView {
             _ = phoneNumberElement.beginEditing()
         }
     }
-
 }
 
 extension LinkInlineSignupView: ElementDelegate {

@@ -111,7 +111,7 @@ class PlaygroundController: ObservableObject {
         configuration.returnURL = "payments-example://stripe-redirect"
         if settings.defaultBillingAddress == .on {
             configuration.defaultBillingDetails.name = "Jane Doe"
-            configuration.defaultBillingDetails.email = "foo@bar.com"
+            configuration.defaultBillingDetails.email = "foo123123@bar.com"
             configuration.defaultBillingDetails.phone = "+13105551234"
             configuration.defaultBillingDetails.address = .init(
                 city: "San Francisco",
