@@ -13,9 +13,8 @@ import UIKit
 
 protocol PaymentSheetLinkAccountInfoProtocol {
     var email: String { get }
-    var redactedPhoneNumber: String? { get }
     var isRegistered: Bool { get }
-    var isLoggedIn: Bool { get }
+//    var isLoggedIn: Bool { get }
 }
 
 struct LinkPMDisplayDetails {
@@ -42,10 +41,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     private(set) var publishableKey: String?
 
     let email: String
-
-    var redactedPhoneNumber: String? {
-        return currentSession?.redactedPhoneNumber
-    }
 
     var isRegistered: Bool {
         return currentSession != nil
