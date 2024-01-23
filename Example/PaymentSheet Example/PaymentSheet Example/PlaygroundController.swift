@@ -109,10 +109,9 @@ class PlaygroundController: ObservableObject {
         }
 
         configuration.returnURL = "payments-example://stripe-redirect"
-        if settings.defaultBillingAddress == .on {
+
+        if settings.defaultBillingAddress != .off {
             configuration.defaultBillingDetails.name = "Jane Doe"
-            configuration.defaultBillingDetails.email = "foo123123@bar.com"
-            configuration.defaultBillingDetails.phone = "+13105551234"
             configuration.defaultBillingDetails.address = .init(
                 city: "San Francisco",
                 country: "US",
@@ -121,6 +120,19 @@ class PlaygroundController: ObservableObject {
                 state: "California"
             )
         }
+        switch settings.defaultBillingAddress {
+        case .on:
+            configuration.defaultBillingDetails.email = "foo@bar.com"
+            configuration.defaultBillingDetails.phone = "+13105551234"
+        case .randomEmail:
+            configuration.defaultBillingDetails.email = "test-\(UUID().uuidString)@stripe.com"
+            configuration.defaultBillingDetails.phone = "+13105551234"
+        case .randomEmailNoPhone:
+            configuration.defaultBillingDetails.email = "test-\(UUID().uuidString)@stripe.com"
+        case .off:
+            break
+        }
+        
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
         }

@@ -49,12 +49,13 @@ final class LinkInlineSignupView: UIView {
         // Otherwise, we'd imply consumer consent when it hasn't occurred.
         switch viewModel.mode {
         case .normal:
-            PhoneNumberElement(
-            defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
-            defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone, theme: theme
+            return PhoneNumberElement(
+                defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
+                defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone, 
+                theme: theme
         )
         case .textFieldsOnly:
-            PhoneNumberElement(isOptional: viewModel.isPhoneNumberOptional, theme: theme)
+            return PhoneNumberElement(isOptional: viewModel.isPhoneNumberOptional, theme: theme)
         }
     }()
 
