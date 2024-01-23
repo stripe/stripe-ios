@@ -21,7 +21,6 @@ typealias ConsumerSessionWithPaymentDetails = (session: ConsumerSession, payment
 final class ConsumerPaymentDetails: Decodable {
     let stripeID: String
     let details: Details
-    var isDefault: Bool
 
     // TODO(csabol) : Billing address
 
@@ -30,12 +29,10 @@ final class ConsumerPaymentDetails: Decodable {
          isDefault: Bool) {
         self.stripeID = stripeID
         self.details = details
-        self.isDefault = isDefault
     }
 
     private enum CodingKeys: String, CodingKey {
         case stripeID = "id"
-        case isDefault
     }
 
     init(from decoder: Decoder) throws {
@@ -43,7 +40,6 @@ final class ConsumerPaymentDetails: Decodable {
         self.stripeID = try container.decode(String.self, forKey: .stripeID)
         // The payment details are included in the dictionary, so we pass the whole dict to Details
         self.details = try decoder.singleValueContainer().decode(Details.self)
-        self.isDefault = try container.decode(Bool.self, forKey: .isDefault)
     }
 }
 
