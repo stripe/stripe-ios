@@ -51,7 +51,7 @@ final class LinkInlineSignupView: UIView {
         case .normal:
             return PhoneNumberElement(
                 defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
-                defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone, 
+                defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone,
                 theme: theme
         )
         case .textFieldsOnly:
@@ -91,7 +91,7 @@ final class LinkInlineSignupView: UIView {
     private(set) lazy var legalTermsElement: StaticElement = {
         let legalView = LinkLegalTermsView(textAlignment: .left,
                                            mode: viewModel.mode,
-                                           emailWasPrefilled: viewModel.emailAddress != nil,
+                                           emailWasPrefilled: viewModel.didPrefillEmail,
                                            delegate: self)
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText

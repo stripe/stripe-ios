@@ -74,7 +74,9 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    // WARNING: If this tests fails, see go/link-signup-consent-action-log to determine if a new consent_action is needed.
     func testExpandedState_nonUS_preFilled_textFieldsOnly() {
+        // In textFieldsOnly mode, the phone number should *not* be prefilled.
         let sut = makeSUT(
             saveCheckboxChecked: true,
             emailAddress: "user@example.com",
@@ -143,6 +145,7 @@ extension LinkInlineSignupElementSnapshotTests {
         )
 
         viewModel.saveCheckboxChecked = saveCheckboxChecked
+        // Won't trigger the "email address prefilled" path, because it wasn't there when initialized
         viewModel.emailAddress = emailAddress
 
         if emailAddress != nil {

@@ -233,11 +233,14 @@ final class LinkInlineSignupViewModel {
         case .normal:
             return false
         case .textFieldsOnly:
-            // If the user has already passed in an email
-            // The phone number field should be marked as "(Optional)"
-            return emailAddress != nil
+            // If we started with an email address, the phone number field should be marked as "(Optional)"
+            return didPrefillEmail
         }
     }
+    
+    // Whether the email was prefilled when this view model was initialized.
+    // If so, in textFieldsOnly mode we should use the phone number as the signup consent.
+    var didPrefillEmail: Bool
 
     init(
         configuration: PaymentSheet.Configuration,
@@ -251,6 +254,7 @@ final class LinkInlineSignupViewModel {
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
+        self.didPrefillEmail = emailAddress != nil
         self.legalName = configuration.defaultBillingDetails.name
         self.country = country
     }

@@ -132,7 +132,7 @@ class PlaygroundController: ObservableObject {
         case .off:
             break
         }
-        
+
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
         }
