@@ -25,8 +25,7 @@ final class ConsumerPaymentDetails: Decodable {
     // TODO(csabol) : Billing address
 
     init(stripeID: String,
-         details: Details,
-         isDefault: Bool) {
+         details: Details) {
         self.stripeID = stripeID
         self.details = details
     }
@@ -116,58 +115,27 @@ extension ConsumerPaymentDetails.Details {
 // MARK: - Details.Card
 extension ConsumerPaymentDetails.Details {
     final class Card: Codable {
-        let expiryYear: Int
-        let expiryMonth: Int
         let brand: String
         let last4: String
-        let checks: CardChecks?
 
         private enum CodingKeys: String, CodingKey {
-            case expiryYear = "expYear"
-            case expiryMonth = "expMonth"
             case brand
             case last4
-            case checks
         }
 
-        init(expiryYear: Int,
-             expiryMonth: Int,
-             brand: String,
-             last4: String,
-             checks: CardChecks?) {
-            self.expiryYear = expiryYear
-            self.expiryMonth = expiryMonth
+        init(brand: String,
+             last4: String) {
             self.brand = brand
             self.last4 = last4
-            self.checks = checks
         }
     }
 }
 
 // MARK: - Details.Card - Helpers
 extension ConsumerPaymentDetails.Details.Card {
-
-    var shouldRecollectCardCVC: Bool {
-        switch checks?.cvcCheck {
-        case .fail, .unavailable, .unchecked:
-            return true
-        default:
-            return false
-        }
-    }
-
-    var expiryDate: CardExpiryDate {
-        return CardExpiryDate(month: expiryMonth, year: expiryYear)
-    }
-
-    var hasExpired: Bool {
-        return expiryDate.expired()
-    }
-
     var stpBrand: STPCardBrand {
         return STPCard.brand(from: brand)
     }
-
 }
 
 // MARK: - Details.BankAccount
