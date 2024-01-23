@@ -131,32 +131,6 @@ extension STPAPIClient {
         )
     }
 
-    func createPaymentDetails(
-        for consumerSessionClientSecret: String,
-        linkedAccountId: String,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        let endpoint: String = "consumers/payment_details"
-
-        let parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
-            "bank_account": [
-                "account": linkedAccountId,
-            ],
-            "type": "bank_account",
-            "is_default": true,
-        ]
-
-        makePaymentDetailsRequest(
-            endpoint: endpoint,
-            parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion
-        )
-    }
-
     private func makeConsumerSessionRequest(
         endpoint: String,
         parameters: [String: Any],
@@ -222,28 +196,6 @@ extension STPAPIClient {
         )
     }
 
-    func listPaymentDetails(
-        for consumerSessionClientSecret: String,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
-    ) {
-        let endpoint: String = "consumers/payment_details/list"
-
-        let parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
-            "types": ["card", "bank_account"],
-        ]
-
-        post(
-            resource: endpoint,
-            parameters: parameters,
-            ephemeralKeySecret: consumerAccountPublishableKey
-        ) { (result: Result<DetailsListResponse, Error>) in
-            completion(result.map { $0.redactedPaymentDetails })
-        }
-    }
-
     func sharePaymentDetails(
         for consumerSessionClientSecret: String,
         id: String,
@@ -267,90 +219,6 @@ extension STPAPIClient {
             resource: endpoint,
             parameters: parameters,
             ephemeralKeySecret: nil,
-            completion: completion
-        )
-    }
-
-    func deletePaymentDetails(
-        for consumerSessionClientSecret: String,
-        id: String,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        let endpoint: String = "consumers/payment_details/\(id)"
-
-        let parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
-        ]
-
-        APIRequest<STPEmptyStripeResponse>.delete(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters
-        ) { result in
-            completion(result.map { _ in () } )
-        }
-    }
-
-    func updatePaymentDetails(
-        for consumerSessionClientSecret: String,
-        id: String,
-        updateParams: UpdatePaymentDetailsParams,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        let endpoint: String = "consumers/payment_details/\(id)"
-
-        var parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
-        ]
-
-        if let details = updateParams.details, case .card(let expiryDate, let billingDetails) = details {
-            parameters["exp_month"] = expiryDate.month
-            parameters["exp_year"] = expiryDate.year
-
-            if let billingDetails = billingDetails {
-                parameters["billing_address"] = billingDetails.consumersAPIParams
-            }
-
-            if let billingEmailAddress = billingDetails?.email {
-                parameters["billing_email_address"] = billingEmailAddress
-            }
-        }
-
-        if let isDefault = updateParams.isDefault {
-            parameters["is_default"] = isDefault
-        }
-
-        makePaymentDetailsRequest(
-            endpoint: endpoint,
-            parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion
-        )
-    }
-
-    func logout(
-        consumerSessionClientSecret: String,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
-    ) {
-        let endpoint: String = "consumers/sessions/log_out"
-
-        let parameters: [String: Any] = [
-            "credentials": [
-                "consumer_session_client_secret": consumerSessionClientSecret
-            ],
-            "request_surface": "ios_payment_element",
-        ]
-
-        makeConsumerSessionRequest(
-            endpoint: endpoint,
-            parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }

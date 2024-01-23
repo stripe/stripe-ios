@@ -122,19 +122,6 @@ extension STPPaymentMethodParams {
     }
 }
 
-extension ConsumerPaymentDetails {
-    func makeIcon() -> UIImage {
-        switch details {
-        case .card(let card):
-            return STPImageLibrary.cardBrandImage(for: card.stpBrand)
-        case .bankAccount(let bankAccount):
-            return PaymentSheetImageLibrary.bankIcon(for: bankAccount.iconCode)
-        case .unparsable:
-            return UIImage()
-        }
-    }
-}
-
 extension STPPaymentMethodType {
 
     /// A few payment method type icons need to be tinted white or black as they do not have

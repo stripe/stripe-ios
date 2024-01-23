@@ -120,41 +120,6 @@ extension ConsumerSession {
             completion: completion)
     }
 
-    func createPaymentDetails(
-        linkedAccountId: String,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        apiClient.createPaymentDetails(
-            for: clientSecret,
-            linkedAccountId: linkedAccountId,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-/*
-    func createLinkAccountSession(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<LinkAccountSession, Error>) -> Void
-    ) {
-        apiClient.createLinkAccountSession(
-            for: clientSecret,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-*/
-    func listPaymentDetails(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
-    ) {
-        apiClient.listPaymentDetails(
-            for: clientSecret,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-
     func sharePaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,
@@ -167,45 +132,6 @@ extension ConsumerSession {
             id: id,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             cvc: cvc,
-            completion: completion)
-    }
-
-    func deletePaymentDetails(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        id: String,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        apiClient.deletePaymentDetails(
-            for: clientSecret,
-            id: id,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-
-    func updatePaymentDetails(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        id: String,
-        updateParams: UpdatePaymentDetailsParams,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        apiClient.updatePaymentDetails(
-            for: clientSecret, id: id,
-            updateParams: updateParams,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-
-    func logout(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
-    ) {
-        // Logout from server.
-        apiClient.logout(
-            consumerSessionClientSecret: clientSecret,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }
 
