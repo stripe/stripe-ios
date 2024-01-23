@@ -79,7 +79,7 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         // In textFieldsOnly mode, the phone number should *not* be prefilled.
         let sut = makeSUT(
             saveCheckboxChecked: true,
-            emailAddress: "user@example.com",
+            prefilledEmailAddress: "user@example.com",
             country: "CA",
             preFillName: "Jane Diaz",
             preFillPhone: "+13105551234",
@@ -126,6 +126,7 @@ extension LinkInlineSignupElementSnapshotTests {
 
     func makeSUT(
         saveCheckboxChecked: Bool = false,
+        prefilledEmailAddress: String? = nil,
         emailAddress: String? = nil,
         country: String = "US",
         preFillName: String? = nil,
@@ -137,18 +138,27 @@ extension LinkInlineSignupElementSnapshotTests {
         configuration.defaultBillingDetails.name = preFillName
         configuration.defaultBillingDetails.phone = preFillPhone
 
+        var linkAccount: PaymentSheetLinkAccount? = nil
+        
+        if let prefilledEmailAddress = prefilledEmailAddress {
+            linkAccount = PaymentSheetLinkAccount(email: prefilledEmailAddress, session: nil, publishableKey: nil)
+        }
+        
         let viewModel = LinkInlineSignupViewModel(
             configuration: configuration,
             mode: mode,
             accountService: MockAccountService(),
+            linkAccount: linkAccount,
             country: country
         )
 
         viewModel.saveCheckboxChecked = saveCheckboxChecked
         // Won't trigger the "email address prefilled" path, because it wasn't there when initialized
-        viewModel.emailAddress = emailAddress
+        if let emailAddress = emailAddress {
+            viewModel.emailAddress = emailAddress
+        }
 
-        if emailAddress != nil {
+        if emailAddress != nil || prefilledEmailAddress != nil  {
             // Wait for account to load
             let expectation = notNullExpectation(for: viewModel, keyPath: \.linkAccount)
             wait(for: [expectation], timeout: 10)
