@@ -205,10 +205,6 @@ final class PayWithLinkButton: UIControl {
             return .noValidAccount
         }
 
-        if let lastPM = linkAccount?.lastPM {
-            return .hasCard(last4: lastPM.last4, brand: lastPM.brand)
-        }
-
         if let email = linkAccount?.email {
             return .hasEmail(email: email)
         }

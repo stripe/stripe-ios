@@ -69,12 +69,6 @@ class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
-    func testRegistered_withCardInfo() {
-        let sut = PayWithLinkButton()
-        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true, lastPM: .init(last4: "3155", brand: .visa))
-        verify(sut)
-    }
-
     func verify(
         _ sut: UIView,
         identifier: String? = nil,
