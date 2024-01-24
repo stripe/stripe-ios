@@ -165,7 +165,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             self.webAuthSession = webAuthSession
             webAuthSession.start()
         } catch {
-            self.canceledWithError(error: error)
+            self.canceledWithError(error: error, returnURL: nil)
         }
     }
 
@@ -177,8 +177,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
     }
 
-    private func canceledWithError(error: Error?) {
-        STPAnalyticsClient.sharedClient.logLinkPopupError(error: error, sessionType: self.context.intent.linkPopupWebviewOption)
+    private func canceledWithError(error: Error?, returnURL: URL?) {
+        STPAnalyticsClient.sharedClient.logLinkPopupError(error: error, returnURL: returnURL, sessionType: self.context.intent.linkPopupWebviewOption)
         self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
     }
 
@@ -190,7 +190,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 self.canceledWithoutError()
             } else {
                 // Canceled for another reason - raise an error.
-                self.canceledWithError(error: error)
+                self.canceledWithError(error: error, returnURL: returnURL)
             }
             return
         }
@@ -209,7 +209,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
             }
         } catch {
-            self.canceledWithError(error: error)
+            self.canceledWithError(error: error, returnURL: returnURL)
         }
     }
 }

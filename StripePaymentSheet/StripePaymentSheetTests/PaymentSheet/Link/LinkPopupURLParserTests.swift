@@ -34,4 +34,23 @@ class LinkPopupURLParserTests: XCTestCase {
             XCTAssertEqual(error as! LinkPopupURLParserError, LinkPopupURLParserError.invalidURLParams)
         }
     }
+
+    func testRedactQueryStringWithKey() {
+        let result = LinkPopupURLParser.redactedURLForLogging(url: testURL)
+        XCTAssertEqual(result?.absoluteString, "link-popup://complete?link_status=complete&pm=%3Credacted%3E")
+    }
+    func testRedactQueryStringWithKey_noPm() {
+        let testURLNoPM = URL(string: "link-popup://complete?link_status=complete")!
+        let result = LinkPopupURLParser.redactedURLForLogging(url: testURLNoPM)
+        XCTAssertEqual(result?.absoluteString, "link-popup://complete?link_status=complete")
+    }
+    func testRedactQueryStringWithKey_multiPm() {
+        let testURLNoPM = URL(string: "link-popup://complete?link_status=complete&pm=pm1&pm=pm2")!
+        let result = LinkPopupURLParser.redactedURLForLogging(url: testURLNoPM)
+        XCTAssertEqual(result?.absoluteString, "link-popup://complete?link_status=complete&pm=%3Credacted%3E&pm=%3Credacted%3E")
+    }
+    func testRedactQueryStringWithKey_nil() {
+        let result = LinkPopupURLParser.redactedURLForLogging(url: nil)
+        XCTAssertNil(result)
+    }
 }

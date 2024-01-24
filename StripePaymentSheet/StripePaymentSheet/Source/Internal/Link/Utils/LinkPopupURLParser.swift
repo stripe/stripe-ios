@@ -26,6 +26,26 @@ class LinkPopupURLParser {
         let pm = try STPPaymentMethod.decodedObject(base64: pmItem)
         return LinkResult(link_status: status, pm: pm)
     }
+
+    static func redactedURLForLogging(url: URL?) -> URL? {
+        guard let url = url,
+              var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return nil
+        }
+        let originalQueryItems = components.queryItems
+
+        var updatedQueryItems: [URLQueryItem] = []
+        originalQueryItems?.forEach { item in
+            if item.name == "pm" {
+                let updatedItem = URLQueryItem(name: item.name, value: "<redacted>")
+                updatedQueryItems.append(updatedItem)
+            } else {
+                updatedQueryItems.append(item)
+            }
+        }
+        components.queryItems = updatedQueryItems
+        return components.url
+    }
 }
 
 extension STPPaymentMethod {
