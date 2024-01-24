@@ -52,18 +52,8 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
 extension PaymentSheetLinkAccountTests {
 
     func makePaymentDetailsStub() -> ConsumerPaymentDetails {
-        let card = ConsumerPaymentDetails.Details.Card(
-            expiryYear: 2030,
-            expiryMonth: 1,
-            brand: "visa",
-            last4: "4242",
-            checks: nil
-        )
-
         return ConsumerPaymentDetails(
-            stripeID: "1",
-            details: .card(card: card),
-            isDefault: true
+            stripeID: "1"
         )
     }
 
