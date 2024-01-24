@@ -255,6 +255,14 @@ final class InstitutionTableView: UIView {
         }
     }
     
+    func setTableHeaderView(_ tableHeaderView: UIView?) {
+        if let tableHeaderView = tableHeaderView {
+            tableView.setTableHeaderViewWithCompressedFrameSize(tableHeaderView)
+        } else {
+            tableView.tableHeaderView = nil
+        }
+    }
+    
     // the footer is always shown, except for when there is an error searching
     private func showTableFooterView(_ show: Bool, view: UIView?) {
         if show, let view = view {
