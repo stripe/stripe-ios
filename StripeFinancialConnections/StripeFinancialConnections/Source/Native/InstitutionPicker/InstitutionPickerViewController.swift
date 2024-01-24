@@ -30,12 +30,6 @@ class InstitutionPickerViewController: UIViewController {
     private let dataSource: InstitutionDataSource
     weak var delegate: InstitutionPickerViewControllerDelegate?
 
-    private lazy var loadingView: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .textDisabled
-        activityIndicator.backgroundColor = .customBackgroundColor
-        return activityIndicator
-    }()
     private lazy var headerView: UIView = {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -102,7 +96,6 @@ class InstitutionPickerViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = UIColor.customBackgroundColor
 
-        view.addAndPinSubview(loadingView)
         view.addAndPinSubview(institutionTableView)
         institutionTableView.setTableHeaderView(headerView)
 
@@ -130,13 +123,7 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private func showLoadingView(_ show: Bool) {
-        loadingView.isHidden = !show
-        if show {
-            loadingView.startAnimating()
-        } else {
-            loadingView.stopAnimating()
-        }
-        view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
+        institutionTableView.showLoadingView(show)
     }
 }
 
