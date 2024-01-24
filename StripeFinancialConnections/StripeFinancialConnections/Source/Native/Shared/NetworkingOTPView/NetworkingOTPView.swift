@@ -41,7 +41,7 @@ final class NetworkingOTPView: UIView {
     // TODO(kgaidis): make changes to `OneTimeCodeTextField` to
     // make the font larger
     private(set) lazy var otpTextField: OneTimeCodeTextField = {
-        let otpTextField = OneTimeCodeTextField(numberOfDigits: 6, theme: theme)
+        let otpTextField = OneTimeCodeTextField(theme: theme)
         otpTextField.tintColor = .textBrand
         otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
         return otpTextField

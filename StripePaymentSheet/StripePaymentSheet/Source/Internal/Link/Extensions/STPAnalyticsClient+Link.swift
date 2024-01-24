@@ -69,9 +69,16 @@ extension STPAnalyticsClient {
         logPaymentSheetEvent(event: .linkPopupSkipped)
     }
 
-    func logLinkPopupError(error: Error?, sessionType: LinkSettings.PopupWebviewOption) {
+    func logLinkPopupError(error: Error?, returnURL: URL?, sessionType: LinkSettings.PopupWebviewOption) {
         let duration = AnalyticsHelper.shared.getDuration(for: .linkPopup)
-        self.logLinkPopupEvent(event: .linkPopupError, duration: duration, sessionType: sessionType, error: error)
+        var params: [String: Any] = [:]
+        if let redactedURL = LinkPopupURLParser.redactedURLForLogging(url: returnURL) {
+            params["returnURL"] = redactedURL
+        }
+        if let error = error {
+            params["error"] = error.localizedDescription
+        }
+        logPaymentSheetEvent(event: .linkPopupError, duration: duration, linkSessionType: sessionType, params: params)
     }
 
     func logLinkPopupLogout(sessionType: LinkSettings.PopupWebviewOption) {
@@ -93,5 +100,4 @@ extension STPAnalyticsClient {
                                  linkSessionType: sessionType,
                                  params: params)
         }
-
 }

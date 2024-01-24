@@ -4,7 +4,7 @@
   "created": 1611111111,
   "default_source": null,
   "description": null,
-  "email": null,
+  "email": "foo@bar.com",
   "livemode": false,
   "shipping": null
 }
