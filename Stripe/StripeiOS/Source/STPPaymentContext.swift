@@ -378,7 +378,12 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     @objc public var addCardViewControllerFooterView: UIView?
     /// The API Client to use to make requests.
     /// Defaults to STPAPIClient.shared
-    public var apiClient: STPAPIClient = .shared
+    public var apiClient: STPAPIClient = .shared {
+        didSet {
+            analyticsLogger.apiClient = apiClient
+        }
+    }
+    private let analyticsLogger: AnalyticsLogger = .init()
 
     /// If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
     /// can in turn call this method to try loading again (if that hasn't been called,
@@ -386,6 +391,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     /// will be called again (and you can again call this to keep retrying, etc).
     @objc
     public func retryLoading() {
+        let loadingStartDate = Date()
+        analyticsLogger.logLoadStarted()
         // Clear any cached customer object and attached payment methods before refetching
         if apiAdapter is STPCustomerContext {
             let customerContext = apiAdapter as? STPCustomerContext
@@ -396,12 +403,14 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             guard let strongSelf = weakSelf else {
                 return
             }
+            strongSelf.analyticsLogger.logLoadFinished(isSuccess: true, loadStartDate: loadingStartDate)
             strongSelf.paymentOptions = tuple.paymentOptions
             strongSelf.selectedPaymentOption = tuple.selectedPaymentOption
         }).onFailure({ error in
             guard let strongSelf = weakSelf else {
                 return
             }
+            strongSelf.analyticsLogger.logLoadFinished(isSuccess: false, loadStartDate: loadingStartDate)
             if strongSelf.hostViewController != nil {
                 if strongSelf.paymentOptionsViewController != nil
                     && strongSelf.paymentOptionsViewController?.viewIfLoaded?.window != nil
@@ -608,19 +617,19 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                 strongSelf.presentPaymentOptionsViewController(withNewState: .requestingPayment)
             } else if strongSelf.requestPaymentShouldPresentShippingViewController() {
                 strongSelf.presentShippingViewController(withNewState: .requestingPayment)
-            } else if (strongSelf.selectedPaymentOption is STPPaymentMethod)
-                || (self.selectedPaymentOption is STPPaymentMethodParams)
+            } else if let selectedPaymentOption = strongSelf.selectedPaymentOption,
+                        (selectedPaymentOption is STPPaymentMethod || selectedPaymentOption is STPPaymentMethodParams)
             {
                 strongSelf.state = .requestingPayment
                 let result = STPPaymentResult(paymentOption: strongSelf.selectedPaymentOption!)
-                strongSelf.delegate?.paymentContext(self, didCreatePaymentResult: result) {
-                    status,
-                    error in
+                strongSelf.delegate?.paymentContext(self, didCreatePaymentResult: result) { status, error in
+                    // Note `selectedPaymentOption` is always an `STPPaymentMethod` for cards
+                    strongSelf.analyticsLogger.logPayment(status: status, paymentOption: selectedPaymentOption, error: error)
                     stpDispatchToMainThreadIfNecessary({
                         strongSelf.didFinish(with: status, error: error)
                     })
                 }
-            } else if strongSelf.selectedPaymentOption is STPApplePayPaymentOption {
+            } else if let selectedPaymentOption = strongSelf.selectedPaymentOption, selectedPaymentOption is STPApplePayPaymentOption {
                 assert(
                     strongSelf.hostViewController != nil,
                     "hostViewController must not be nil on STPPaymentContext. Next time, set the hostViewController property first!"
@@ -716,6 +725,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                         onPaymentAuthorization: paymentHandler,
                         onPaymentMethodCreation: applePayPaymentMethodHandler,
                         onFinish: { status, error in
+                            strongSelf.analyticsLogger.logPayment(status: status, paymentOption: selectedPaymentOption, error: error)
                             if strongSelf.applePayVC?.presentingViewController != nil {
                                 strongSelf.hostViewController?.dismiss(
                                     animated: strongSelf.transitionAnimationsEnabled()

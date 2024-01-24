@@ -258,7 +258,7 @@ extension STPAnalyticsClient {
         apiClient: STPAPIClient = .shared
     ) {
         var additionalParams = [:] as [String: Any]
-        if isSimulatorOrTest {
+        if Self.isSimulatorOrTest {
             additionalParams["is_development"] = true
         }
 
@@ -294,25 +294,10 @@ extension STPAnalyticsClient {
         let error = error as NSError
         if let error = error as? PaymentSheetError {
             return error.safeLoggingString
-        } else if error.domain == STPError.stripeDomain, let code = STPErrorCode(rawValue: error.code) {
-            // An error from our networking layer
-            return code.description
         } else {
-            // Default behavior for other errors.
-            // Note: For Swift Error enums, `domain` is the type name and `code` is the case index
-            // e.g. `LinkURLGeneratorError.noPublishableKey` -> "StripePaymentSheet.LinkURLGeneratorError, 1"
-            return "\(error.domain), \(error.code)"
+            return error.makeSafeLoggingString()
         }
     }
-
-    var isSimulatorOrTest: Bool {
-        #if targetEnvironment(simulator)
-            return true
-        #else
-            return NSClassFromString("XCTest") != nil
-        #endif
-    }
-
 }
 
 extension PaymentSheetViewController.Mode {

@@ -2,83 +2,75 @@
 //  STPAnalyticsClient+BasicUI.swift
 //  StripeiOS
 //
-//  Created by David Estes on 6/30/22.
-//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//  Created by Yuki Tokuhiro on 1/24/24.
 //
 
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-@objc(STPBasicUIAnalyticsSerializer)
-class STPBasicUIAnalyticsSerializer: NSObject, STPAnalyticsSerializer {
-    static func serializeConfiguration(
-        _ configuration: NSObject
-    ) -> [String:
-        String]
-    {
-        var dictionary: [String: String] = [:]
-        dictionary["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
+extension STPPaymentContext {
+    final class AnalyticsLogger {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let sessionID: String = UUID().uuidString.lowercased()
+        var apiClient: STPAPIClient = .shared
 
-        guard let configuration = configuration as? STPPaymentConfiguration else {
-            return dictionary
+        func logLoadStarted() {
+            analyticsClient.log(analytic: GenericAnalytic(event: .biLoadStarted, params: [:]), apiClient: apiClient)
         }
 
-        if configuration.applePayEnabled && !configuration.fpxEnabled {
-            dictionary["additional_payment_methods"] = "default"
-        } else if !configuration.applePayEnabled && !configuration.fpxEnabled {
-            dictionary["additional_payment_methods"] = "none"
-        } else if !configuration.applePayEnabled && configuration.fpxEnabled {
-            dictionary["additional_payment_methods"] = "fpx"
-        } else if configuration.applePayEnabled && configuration.fpxEnabled {
-            dictionary["additional_payment_methods"] = "applepay,fpx"
+        func logLoadFinished(isSuccess: Bool, loadStartDate: Date) {
+            let event: STPAnalyticEvent = isSuccess ? .biLoadSucceeded : .biLoadFailed
+            let duration = Date().timeIntervalSince(loadStartDate)
+            let params = ["duration": duration]
+            let analytic = GenericAnalytic(event: event, params: params)
+            analyticsClient.log(analytic: analytic, apiClient: apiClient)
         }
 
-        switch configuration.requiredBillingAddressFields {
-        case .none:
-            dictionary["required_billing_address_fields"] = "none"
-        case .postalCode:
-            dictionary["required_billing_address_fields"] = "zip"
-        case .full:
-            dictionary["required_billing_address_fields"] = "full"
-        case .name:
-            dictionary["required_billing_address_fields"] = "name"
-        default:
-            fatalError()
-        }
-
-        var shippingFields: [String] = []
-        if let shippingAddressFields = configuration.requiredShippingAddressFields {
-            if shippingAddressFields.contains(.name) {
-                shippingFields.append("name")
+        func logPayment(status: STPPaymentStatus, paymentOption: STPPaymentOption, error: Error?) {
+            let didSucceed: Bool
+            switch status {
+            case .userCancellation:
+                // Don't send analytic for cancels
+                return
+            case .success:
+                didSucceed = true
+            case .error:
+                didSucceed = false
+            @unknown default:
+                return
             }
-            if shippingAddressFields.contains(.emailAddress) {
-                shippingFields.append("email")
-            }
-            if shippingAddressFields.contains(.postalAddress) {
-                shippingFields.append("address")
-            }
-            if shippingAddressFields.contains(.phoneNumber) {
-                shippingFields.append("phone")
-            }
-        }
 
-        if shippingFields.isEmpty {
-            shippingFields.append("none")
-        }
-        dictionary["required_shipping_address_fields"] = shippingFields.joined(separator: "_")
+            let event: STPAnalyticEvent
+            let paymentMethodType: String
+            switch paymentOption {
+            case let paymentMethod as STPPaymentMethod:
+                paymentMethodType = paymentMethod.type.identifier
+                event = didSucceed ? .biPaymentCompleteSavedPMSuccess : .biPaymentCompleteSavedPMFailure
+            case let params as STPPaymentMethodParams:
+                paymentMethodType = params.type.identifier
+                event = didSucceed ? .biPaymentCompleteNewPMSuccess : .biPaymentCompleteNewPMFailure
+            case is STPApplePayPaymentOption:
+                paymentMethodType = "apple_pay"
+                event = didSucceed ? .biPaymentCompleteApplePaySuccess : .biPaymentCompleteApplePayFailure
+            default:
+                assertionFailure("Unknown payment option!")
+                return
+            }
 
-        switch configuration.shippingType {
-        case .shipping:
-            dictionary["shipping_type"] = "shipping"
-        case .delivery:
-            dictionary["shipping_type"] = "delivery"
-        @unknown default:
-            break
-        }
+            var params: [String: Any] = [
+                "selected_lpm": paymentMethodType,
+                "session_id": sessionID,
+            ]
+            if STPAnalyticsClient.isSimulatorOrTest {
+                params["is_development"] = true
+            }
+            if let error {
+                params["error_message"] = error.makeSafeLoggingString()
+            }
 
-        dictionary["company_name"] = configuration.companyName
-        dictionary["apple_merchant_identifier"] = configuration.appleMerchantIdentifier ?? "unknown"
-        return dictionary
+            let analytic = GenericAnalytic(event: event, params: params)
+            analyticsClient.log(analytic: analytic, apiClient: apiClient)
+        }
     }
 }
