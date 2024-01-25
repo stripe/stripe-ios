@@ -243,7 +243,7 @@ final class InstitutionTableView: UIView {
     }
     
     func setTableHeaderView(_ tableHeaderView: UIView?) {
-        if let tableHeaderView = tableHeaderView {
+        if let tableHeaderView {
             tableView.setTableHeaderViewWithCompressedFrameSize(tableHeaderView)
         } else {
             tableView.tableHeaderView = nil

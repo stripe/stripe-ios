@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class InstitutionTableLoadingView: UIView {
-    
+
     init() {
         super.init(frame: UIScreen.main.bounds)
         let verticalStackView = UIStackView(
@@ -30,7 +30,7 @@ final class InstitutionTableLoadingView: UIView {
         ])
         clipsToBounds = true
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -41,19 +41,11 @@ private class ShimmeringInstitutionRowView: ShimmeringView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
-        
-        let iconView = UIView()
-        iconView.backgroundColor = .backgroundOffset
-        iconView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            iconView.heightAnchor.constraint(equalToConstant: 56),
-            iconView.widthAnchor.constraint(equalToConstant: 56),
-        ])
-        
+
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
                 CreateRowIconView(),
-                CreateRowMultipleLabelView()
+                CreateRowMultipleLabelView(),
             ]
         )
         horizontalStackView.axis = .horizontal
