@@ -10,8 +10,11 @@ import Foundation
 import UIKit
 
 private let blurRadius = 3
+private let ellipsisViewWidth: CGFloat = 32.0
 
 final class ConsentLogoView: UIView {
+
+    private var multipleDotView: UIView?
 
     init(merchantLogo: [String]) {
         super.init(frame: .zero)
@@ -30,13 +33,16 @@ final class ConsentLogoView: UIView {
 
                 let isLastLogo = (i == merchantLogo.count - 1)
                 if !isLastLogo {
-                    horizontalStackView.addArrangedSubview(
-                        CreateEllipsisView(
-                            leftLogoUrl:
-                                merchantLogo[i],
-                            rightLogoUrl: merchantLogo[i+1]
-                        )
+                    let ellipsisViewTuple = CreateEllipsisView(
+                        leftLogoUrl:
+                            merchantLogo[i],
+                        rightLogoUrl: merchantLogo[i+1]
                     )
+                    self.multipleDotView = ellipsisViewTuple.multipleDotView
+                    horizontalStackView.addArrangedSubview(
+                        ellipsisViewTuple.ellipsisView
+                    )
+                    animateDots()
                 }
             }
         }
@@ -46,6 +52,35 @@ final class ConsentLogoView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func animateDots() {
+        guard let multipleDotView = multipleDotView else {
+            return
+        }
+        
+        // remove any previous animations if-needed
+        multipleDotView.layer.removeAllAnimations()
+        
+        multipleDotView.frame = CGRect(
+            x: -multipleDotView.bounds.width + ellipsisViewWidth,
+            y: 0,
+            width: multipleDotView.bounds.width,
+            height: multipleDotView.bounds.height
+        )
+        UIView.animate(
+            withDuration: 1.0,
+            delay: 0,
+            options: [.repeat, .curveLinear],
+            animations: {
+                multipleDotView.frame = CGRect(
+                    x: multipleDotView.frame.minX + MultipleDotView.dotRadius + MultipleDotView.dotSpacing,
+                    y: 0,
+                    width: multipleDotView.bounds.width,
+                    height: multipleDotView.bounds.height
+                )
+            }
+        )
     }
 }
 
@@ -67,9 +102,7 @@ private func CreateRoundedLogoView(urlString: String) -> UIView {
 private func CreateEllipsisView(
     leftLogoUrl: String?,
     rightLogoUrl: String?
-) -> UIView {
-    let ellipsisViewWidth: CGFloat = 32.0
-
+) -> (ellipsisView: UIView, multipleDotView: UIView) {
     let backgroundView = MergedLogoView(
         leftImageUrl: leftLogoUrl,
         rightImageUrl: rightLogoUrl
@@ -82,31 +115,9 @@ private func CreateEllipsisView(
     ])
 
     let multipleDotView = MultipleDotView()
-    multipleDotView.frame = CGRect(
-        x: -multipleDotView.bounds.width + ellipsisViewWidth,
-        y: 0,
-        width: multipleDotView.bounds.width,
-        height: multipleDotView.bounds.height
-    )
-
     backgroundView.mask = multipleDotView
 
-    // TODO(kgaidis): add code to repeat animation even when UIViewController is presented
-    UIView.animate(
-        withDuration: 1.0,
-        delay: 0,
-        options: [.repeat, .curveLinear],
-        animations: {
-            multipleDotView.frame = CGRect(
-                x: multipleDotView.frame.minX + MultipleDotView.dotRadius + MultipleDotView.dotSpacing,
-                y: 0,
-                width: multipleDotView.bounds.width,
-                height: multipleDotView.bounds.height
-            )
-        }
-    )
-
-    return backgroundView
+    return (backgroundView, multipleDotView)
 }
 
 /// A view that blurs two logos together.
