@@ -129,7 +129,12 @@ final class LinkInlineSignupViewModel {
     }
 
     var shouldShowEmailField: Bool {
-        return saveCheckboxChecked
+        if mode == .textFieldsOnly && didPrefillEmail {
+            // Only show email if the phone number field has contents
+            return !(phoneNumber?.isEmpty ?? true)
+        } else {
+            return saveCheckboxChecked
+        }
     }
 
     var shouldShowNameField: Bool {
@@ -138,17 +143,25 @@ final class LinkInlineSignupViewModel {
             return false
         }
 
-        return !linkAccount.isRegistered && requiresNameCollection
+        if mode == .textFieldsOnly && didPrefillEmail {
+            return !linkAccount.isRegistered && requiresNameCollection
+        } else {
+            return !linkAccount.isRegistered && requiresNameCollection && !(phoneNumber?.isEmpty ?? true)
+        }
     }
 
     var shouldShowPhoneField: Bool {
-        guard saveCheckboxChecked,
-              let linkAccount = linkAccount
-        else {
-            return false
-        }
+        if mode == .textFieldsOnly && didPrefillEmail {
+            guard saveCheckboxChecked,
+                  let linkAccount = linkAccount
+            else {
+                return false
+            }
 
-        return !linkAccount.isRegistered
+            return !linkAccount.isRegistered
+        } else {
+            return saveCheckboxChecked
+        }
     }
 
     var shouldShowLegalTerms: Bool {
@@ -224,7 +237,7 @@ final class LinkInlineSignupViewModel {
         case .normal:
             return false
         case .textFieldsOnly:
-            return true
+            return !didPrefillEmail
         }
     }
 

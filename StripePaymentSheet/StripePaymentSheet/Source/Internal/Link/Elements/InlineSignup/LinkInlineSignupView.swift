@@ -103,9 +103,12 @@ final class LinkInlineSignupView: UIView {
     }()
 
     private lazy var formElement: FormElement = {
-        var elements: [Element] = [emailSection,
-                        phoneNumberSection,
-                        nameSection, ]
+        var elements: [Element] = [nameSection]
+        if viewModel.didPrefillEmail {
+            elements.insert(contentsOf: [phoneNumberSection, emailSection], at: 0)
+        } else {
+            elements.insert(contentsOf: [emailSection, phoneNumberSection], at: 0)
+        }
         if viewModel.showCheckbox {
             elements.insert(checkboxElement, at: 0)
         }
