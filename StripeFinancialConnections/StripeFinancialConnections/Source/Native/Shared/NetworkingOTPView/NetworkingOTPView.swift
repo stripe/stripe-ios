@@ -43,10 +43,17 @@ final class NetworkingOTPView: UIView {
         otpVerticalStackView.spacing = 16
         return otpVerticalStackView
     }()
-    // TODO(kgaidis): make changes to `OneTimeCodeTextField` to
-    // make the font larger
     private(set) lazy var otpTextField: OneTimeCodeTextField = {
-        let otpTextField = OneTimeCodeTextField(theme: theme)
+        let otpTextField = OneTimeCodeTextField(
+            configuration: OneTimeCodeTextField.Configuration(
+                itemSpacing: 8,
+                enableDigitGrouping: false,
+                font: UIFont.systemFont(ofSize: 28, weight: .regular),
+                itemCornerRadius: 12,
+                itemHeight: 56
+            ),
+            theme: theme
+        )
         otpTextField.tintColor = .textBrand
         otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
         otpTextField.tintColor = .textActionPrimaryFocused
