@@ -20,6 +20,7 @@ extension PaymentSheet {
         case signUp(
             account: PaymentSheetLinkAccount,
             phoneNumber: PhoneNumber,
+            consentAction: PaymentSheetLinkAccount.ConsentAction,
             legalName: String?,
             paymentMethodParams: STPPaymentMethodParams
         )
@@ -52,7 +53,7 @@ extension PaymentSheet.LinkConfirmOption {
         switch self {
         case .wallet:
             return nil
-        case .signUp(let account, _, _, _):
+        case .signUp(let account, _, _, _, _):
             return account
         case .withPaymentDetails(let account, _):
             return account
@@ -67,7 +68,7 @@ extension PaymentSheet.LinkConfirmOption {
         switch self {
         case .wallet, .withPaymentDetails:
             return STPPaymentMethodType.link.displayName
-        case .signUp(_, _, _, let paymentMethodParams):
+        case .signUp(_, _, _, _, let paymentMethodParams):
             return paymentMethodParams.paymentSheetLabel
         case .withPaymentMethodParams(_, let paymentMethodParams):
             return paymentMethodParams.paymentSheetLabel
@@ -80,7 +81,7 @@ extension PaymentSheet.LinkConfirmOption {
         switch self {
         case .wallet:
             return nil
-        case .signUp(_, _, _, let paymentMethodParams):
+        case .signUp(_, _, _, _, let paymentMethodParams):
             return paymentMethodParams.billingDetails
         case .withPaymentDetails:
             return nil

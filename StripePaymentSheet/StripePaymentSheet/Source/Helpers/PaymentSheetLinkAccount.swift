@@ -29,8 +29,8 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
 
     enum ConsentAction: String {
-        case checkbox = "clicked_checkbox_mobile"
-        case button = "clicked_button_mobile"
+        case checkbox = "clicked_checkbox_no_spm_mobile_v0"
+        case implied = "implied_consent_withspm_mobile_v0"
     }
 
     // Dependencies

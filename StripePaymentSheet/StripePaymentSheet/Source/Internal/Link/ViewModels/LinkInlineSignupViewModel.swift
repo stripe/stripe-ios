@@ -76,6 +76,15 @@ final class LinkInlineSignupViewModel {
         }
     }
 
+    var consentAction: PaymentSheetLinkAccount.ConsentAction {
+        switch mode {
+        case .normal:
+            return .checkbox
+        case .textFieldsOnly:
+            return .implied
+        }
+    }
+
     private(set) var linkAccount: PaymentSheetLinkAccount? {
         didSet {
             if linkAccount !== oldValue {
