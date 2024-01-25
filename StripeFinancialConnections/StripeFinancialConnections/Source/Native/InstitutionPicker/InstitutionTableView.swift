@@ -85,19 +85,10 @@ final class InstitutionTableView: UIView {
         )
         return manualEntryTableFooterView
     }()
-    private lazy var loadingContainerView: UIView = {
-        let loadingContainerView = UIView()
-        loadingContainerView.backgroundColor = .customBackgroundColor
-        loadingContainerView.isHidden = true
-        return loadingContainerView
+    private lazy var loadingView: UIView = {
+        return InstitutionTableLoadingView()
     }()
-    private lazy var loadingView: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .textDisabled
-        activityIndicator.backgroundColor = .customBackgroundColor
-        return activityIndicator
-    }()
-
+    
     init(frame: CGRect, allowManualEntry: Bool) {
         self.allowManualEntry = allowManualEntry
         let cellIdentifier = "\(InstitutionTableViewCell.self)"
@@ -133,16 +124,8 @@ final class InstitutionTableView: UIView {
         tableView.register(InstitutionTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)
-
-        addAndPinSubview(loadingContainerView)
-        loadingContainerView.addSubview(loadingView)
-        loadingView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            // pin loading view to the top so it doesn't get blocked by keyboard
-            loadingView.topAnchor.constraint(equalTo: loadingContainerView.topAnchor),
-            loadingView.leadingAnchor.constraint(equalTo: loadingContainerView.leadingAnchor),
-            loadingView.trailingAnchor.constraint(equalTo: loadingContainerView.trailingAnchor),
-        ])
+        addAndPinSubview(loadingView)
+        showLoadingView(false)
     }
 
     required init?(coder: NSCoder) {
@@ -180,6 +163,15 @@ final class InstitutionTableView: UIView {
                 tableView.tableFooterView = tableFooterView
             }
         }
+        
+        // resize loading view to always be below header view
+        let headerViewHeight = tableView.tableHeaderView?.frame.height ?? 0
+        loadingView.frame = CGRect(
+            x: 0,
+            y: headerViewHeight,
+            width: bounds.width,
+            height: bounds.height - headerViewHeight
+        )
     }
 
     func load(
@@ -226,17 +218,12 @@ final class InstitutionTableView: UIView {
     }
 
     func showLoadingView(_ show: Bool) {
-        loadingContainerView.isHidden = !show
-        if show {
-            // do not call `startAnimating` if already animating because
-            // it will cause an animation glitch otherwise
-            if !loadingView.isAnimating {
-                loadingView.startAnimating()
-            }
-        } else {
-            loadingView.stopAnimating()
-        }
-        bringSubviewToFront(loadingContainerView)  // defensive programming to avoid loadingView being hiddden
+        loadingView.isHidden = !show
+        bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
+        
+        // ensure the loading view is resized to account for header view
+        setNeedsLayout()
+        layoutIfNeeded()
     }
 
     func showError(_ showError: Bool, isUserSearching: Bool) {
@@ -252,6 +239,14 @@ final class InstitutionTableView: UIView {
             if !isUserSearching {
                 showTableFooterView(true, view: searchMoreBanksTableFooterView)
             }
+        }
+    }
+    
+    func setTableHeaderView(_ tableHeaderView: UIView?) {
+        if let tableHeaderView {
+            tableView.setTableHeaderViewWithCompressedFrameSize(tableHeaderView)
+        } else {
+            tableView.tableHeaderView = nil
         }
     }
     

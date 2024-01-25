@@ -87,6 +87,8 @@
 		6A1D43052B17AD76005A1EB0 /* InstitutionTableFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43042B17AD76005A1EB0 /* InstitutionTableFooterView.swift */; };
 		6A1D43072B17AE37005A1EB0 /* RoundedIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43062B17AE37005A1EB0 /* RoundedIconView.swift */; };
 		6A1D43092B17CB04005A1EB0 /* InstitutionNoResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43082B17CB04005A1EB0 /* InstitutionNoResultsView.swift */; };
+		6A732C9A2B61C51C00828CB1 /* ShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732C992B61C51C00828CB1 /* ShimmeringView.swift */; };
+		6A732C9C2B61C56A00828CB1 /* InstitutionTableLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732C9B2B61C56A00828CB1 /* InstitutionTableLoadingView.swift */; };
 		6A78140D2B30F15400168992 /* SheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78140C2B30F15400168992 /* SheetViewController.swift */; };
 		6A7814112B32462100168992 /* CloseConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814102B32462100168992 /* CloseConfirmationViewController.swift */; };
 		6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814172B361C5000168992 /* PaneLayoutView+Extensions.swift */; };
@@ -360,6 +362,8 @@
 		6A1D43042B17AD76005A1EB0 /* InstitutionTableFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionTableFooterView.swift; sourceTree = "<group>"; };
 		6A1D43062B17AE37005A1EB0 /* RoundedIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedIconView.swift; sourceTree = "<group>"; };
 		6A1D43082B17CB04005A1EB0 /* InstitutionNoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionNoResultsView.swift; sourceTree = "<group>"; };
+		6A732C992B61C51C00828CB1 /* ShimmeringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmeringView.swift; sourceTree = "<group>"; };
+		6A732C9B2B61C56A00828CB1 /* InstitutionTableLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionTableLoadingView.swift; sourceTree = "<group>"; };
 		6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "generic_error@3x.png"; sourceTree = "<group>"; };
 		6A78140C2B30F15400168992 /* SheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetViewController.swift; sourceTree = "<group>"; };
 		6A7814102B32462100168992 /* CloseConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseConfirmationViewController.swift; sourceTree = "<group>"; };
@@ -714,6 +718,7 @@
 				4DA1C1B311E06C1165C6F6A2 /* InstitutionSearchBar.swift */,
 				6A1D43042B17AD76005A1EB0 /* InstitutionTableFooterView.swift */,
 				6A1D43082B17CB04005A1EB0 /* InstitutionNoResultsView.swift */,
+				6A732C9B2B61C56A00828CB1 /* InstitutionTableLoadingView.swift */,
 			);
 			path = InstitutionPicker;
 			sourceTree = "<group>";
@@ -989,6 +994,7 @@
 				6A13B9812B48BD6C00FFA327 /* AccountPickerRowView.swift */,
 				6A13B9832B48BF4300FFA327 /* AccountPickerRowLabelView.swift */,
 				6A13B9F92B4E182A00FFA327 /* SpinnerView.swift */,
+				6A732C992B61C51C00828CB1 /* ShimmeringView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1243,6 +1249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				648FA50974B14CC861B08ECB /* APIPollingHelper.swift in Sources */,
+				6A732C9A2B61C51C00828CB1 /* ShimmeringView.swift in Sources */,
 				BCEA321423DF0E7674C2544C /* APIVersion.swift in Sources */,
 				11FB97AC840FEB5B5BF85BF9 /* FinancialConnectionsAPIClient.swift in Sources */,
 				432463EBF562CDDC6D3DC252 /* BankAccountToken.swift in Sources */,
@@ -1330,6 +1337,7 @@
 				6A78141A2B45D53700168992 /* DataAccessNoticeViewController.swift in Sources */,
 				2343C58289259920DD81620D /* ManualEntryErrorView.swift in Sources */,
 				A1AEE72611F62550267C326C /* ManualEntryFooterView.swift in Sources */,
+				6A732C9C2B61C56A00828CB1 /* InstitutionTableLoadingView.swift in Sources */,
 				6D018BB3C1253ED4C1674E0B /* ManualEntryFormView.swift in Sources */,
 				6A78140D2B30F15400168992 /* SheetViewController.swift in Sources */,
 				1C5D953684456368EEF4C622 /* ManualEntryTextField.swift in Sources */,

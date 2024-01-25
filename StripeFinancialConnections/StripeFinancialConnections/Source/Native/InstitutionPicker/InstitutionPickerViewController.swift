@@ -30,21 +30,28 @@ class InstitutionPickerViewController: UIViewController {
     private let dataSource: InstitutionDataSource
     weak var delegate: InstitutionPickerViewControllerDelegate?
 
-    private lazy var loadingView: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .textDisabled
-        activityIndicator.backgroundColor = .customBackgroundColor
-        return activityIndicator
+    private lazy var headerView: UIView = {
+        let verticalStackView = UIStackView(
+            arrangedSubviews: [
+                CreateHeaderTitleLabel(),
+                searchBar,
+            ]
+        )
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 24
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 16,
+            leading: 24,
+            bottom: 16,
+            trailing: 24
+        )
+        return verticalStackView
     }()
     private lazy var searchBar: InstitutionSearchBar = {
         let searchBar = InstitutionSearchBar()
         searchBar.delegate = self
         return searchBar
-    }()
-    private lazy var contentContainerView: UIView = {
-        let contentContainerView = UIView()
-        contentContainerView.backgroundColor = .clear
-        return contentContainerView
     }()
     private lazy var institutionTableView: InstitutionTableView = {
         let institutionTableView = InstitutionTableView(
@@ -89,14 +96,8 @@ class InstitutionPickerViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = UIColor.customBackgroundColor
 
-        view.addAndPinSubview(loadingView)
-        view.addAndPinSubviewToSafeArea(
-            CreateMainView(
-                searchBar: searchBar,
-                contentContainerView: contentContainerView
-            )
-        )
-        contentContainerView.addAndPinSubview(institutionTableView)
+        view.addAndPinSubview(institutionTableView)
+        institutionTableView.setTableHeaderView(headerView)
 
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(
             target: self,
@@ -122,13 +123,7 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private func showLoadingView(_ show: Bool) {
-        loadingView.isHidden = !show
-        if show {
-            loadingView.startAnimating()
-        } else {
-            loadingView.stopAnimating()
-        }
-        view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
+        institutionTableView.showLoadingView(show)
     }
 }
 
@@ -292,9 +287,12 @@ extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
 
 extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
 
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch
+    ) -> Bool {
         let touchPoint = touch.location(in: view)
-        return !searchBar.frame.contains(touchPoint) && !contentContainerView.frame.contains(touchPoint)
+        return headerView.frame.contains(touchPoint) && !searchBar.frame.contains(touchPoint)
     }
 }
 
@@ -373,44 +371,6 @@ extension InstitutionPickerViewController {
 }
 
 // MARK: - Helpers
-
-private func CreateMainView(
-    searchBar: UIView,
-    contentContainerView: UIView
-) -> UIView {
-    let verticalStackView = UIStackView(
-        arrangedSubviews: [
-            CreateHeaderView(
-                searchBar: searchBar
-            ),
-            contentContainerView,
-        ]
-    )
-    verticalStackView.axis = .vertical
-    verticalStackView.spacing = 0
-    return verticalStackView
-}
-
-private func CreateHeaderView(
-    searchBar: UIView
-) -> UIView {
-    let verticalStackView = UIStackView(
-        arrangedSubviews: [
-            CreateHeaderTitleLabel(),
-            searchBar,
-        ]
-    )
-    verticalStackView.axis = .vertical
-    verticalStackView.spacing = 24
-    verticalStackView.isLayoutMarginsRelativeArrangement = true
-    verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 16,
-        leading: 24,
-        bottom: 16,
-        trailing: 24
-    )
-    return verticalStackView
-}
 
 private func CreateHeaderTitleLabel() -> UIView {
     let headerTitleLabel = AttributedLabel(
