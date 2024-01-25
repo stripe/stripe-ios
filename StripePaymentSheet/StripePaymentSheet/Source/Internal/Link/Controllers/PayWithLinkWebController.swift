@@ -147,14 +147,15 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         STPAnalyticsClient.sharedClient.logLinkPopupShow(sessionType: self.context.intent.linkPopupWebviewOption)
         do {
             // Generate Link URL, fetching the customer if needed
-            let linkPopupUrl = try LinkURLGenerator.url(configuration: self.context.configuration, intent: self.context.intent)
+            let linkPopupParams = try LinkURLGenerator.linkParams(configuration: self.context.configuration, intent: self.context.intent)
+            let linkPopupUrl = try LinkURLGenerator.url(params: linkPopupParams)
 
             let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
                 self.handleWebAuthenticationSessionCompletion(returnURL: returnURL, error: error)
             }
 
-            // Check if we're in the ephemeral session experiment
-            if self.context.intent.linkPopupWebviewOption == .ephemeral {
+            // Check if we're in the ephemeral session experiment or we have an email address
+            if self.context.intent.linkPopupWebviewOption == .ephemeral || linkPopupParams.customerInfo.email != nil {
                 webAuthSession.prefersEphemeralWebBrowserSession = true
             }
 
@@ -165,7 +166,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             self.webAuthSession = webAuthSession
             webAuthSession.start()
         } catch {
-            self.canceledWithError(error: error)
+            self.canceledWithError(error: error, returnURL: nil)
         }
     }
 
@@ -177,8 +178,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
     }
 
-    private func canceledWithError(error: Error?) {
-        STPAnalyticsClient.sharedClient.logLinkPopupError(error: error, sessionType: self.context.intent.linkPopupWebviewOption)
+    private func canceledWithError(error: Error?, returnURL: URL?) {
+        STPAnalyticsClient.sharedClient.logLinkPopupError(error: error, returnURL: returnURL, sessionType: self.context.intent.linkPopupWebviewOption)
         self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
     }
 
@@ -190,7 +191,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 self.canceledWithoutError()
             } else {
                 // Canceled for another reason - raise an error.
-                self.canceledWithError(error: error)
+                self.canceledWithError(error: error, returnURL: returnURL)
             }
             return
         }
@@ -209,7 +210,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
             }
         } catch {
-            self.canceledWithError(error: error)
+            self.canceledWithError(error: error, returnURL: returnURL)
         }
     }
 }

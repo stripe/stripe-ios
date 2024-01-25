@@ -31,14 +31,11 @@ final class PayWithLinkButton: UIControl {
 
     fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
-        let redactedPhoneNumber: String?
-        let lastPM: LinkPMDisplayDetails?
         let isRegistered: Bool
-        let isLoggedIn: Bool
     }
 
     /// Link account of the current user.
-    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountStub(email: "", redactedPhoneNumber: nil, lastPM: nil, isRegistered: false, isLoggedIn: false) {
+    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountStub(email: "", isRegistered: false) {
         didSet {
             updateUI()
         }
@@ -215,25 +212,23 @@ final class PayWithLinkButton: UIControl {
     init() {
         super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true
+        self.linkAccount = LinkAccountContext.shared.account
         setupUI()
         applyStyle()
         updateUI()
-        // TODO: Re-enable this once we work out the Link button last4/email details
-        // For now, don't show any information in the button.
-        //        // Listen for account changes
-        //        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+        // Listen for account changes
+        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
     }
-    // TODO: Re-enable this once we work out the Link button last4/email details
-    //    @objc
-    //    func onAccountChange(_ notification: Notification) {
-    //        DispatchQueue.main.async { [weak self] in
-    //            self?.linkAccount = notification.object as? PaymentSheetLinkAccount
-    //        }
-    //    }
-    //    deinit {
-    //        // Stop listening for account changes
-    //        LinkAccountContext.shared.removeObserver(self)
-    //    }
+    @objc
+    func onAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            self?.linkAccount = notification.object as? PaymentSheetLinkAccount
+        }
+    }
+    deinit {
+        // Stop listening for account changes
+        LinkAccountContext.shared.removeObserver(self)
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -482,10 +477,7 @@ struct UIViewPreview<View: UIView>: UIViewRepresentable {
 private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> PayWithLinkButton.LinkAccountStub {
     return PayWithLinkButton.LinkAccountStub(
         email: email,
-        redactedPhoneNumber: "+1********55",
-        lastPM: lastPM,
-        isRegistered: isRegistered,
-        isLoggedIn: false
+        isRegistered: isRegistered
     )
 }
 

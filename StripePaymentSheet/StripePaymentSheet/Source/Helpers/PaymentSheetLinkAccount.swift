@@ -13,9 +13,7 @@ import UIKit
 
 protocol PaymentSheetLinkAccountInfoProtocol {
     var email: String { get }
-    var redactedPhoneNumber: String? { get }
     var isRegistered: Bool { get }
-    var isLoggedIn: Bool { get }
 }
 
 struct LinkPMDisplayDetails {
@@ -42,10 +40,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     private(set) var publishableKey: String?
 
     let email: String
-
-    var redactedPhoneNumber: String? {
-        return currentSession?.redactedPhoneNumber
-    }
 
     var isRegistered: Bool {
         return currentSession != nil
@@ -136,27 +130,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
-    func createLinkAccountSession(
-        completion: @escaping (Result<LinkAccountSession, Error>) -> Void
-    ) {
-        guard let session = currentSession else {
-            assertionFailure()
-            completion(
-                .failure(
-                    PaymentSheetError.linkingWithoutValidSession
-                )
-            )
-            return
-        }
-
-        retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
-            session.createLinkAccountSession(
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
-        }
-    }
-
     func createPaymentDetails(
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
@@ -172,42 +145,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
             session.createPaymentDetails(
                 paymentMethodParams: paymentMethodParams,
-                with: apiClient,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
-        }
-    }
-
-    func createPaymentDetails(
-        linkedAccountId: String,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        guard let session = currentSession else {
-            assertionFailure()
-            completion(.failure(PaymentSheetError.savingWithoutValidLinkSession))
-            return
-        }
-        retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
-            session.createPaymentDetails(
-                linkedAccountId: linkedAccountId,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
-        }
-    }
-
-    func listPaymentDetails(
-        completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
-    ) {
-        guard let session = currentSession else {
-            assertionFailure()
-            completion(.failure(PaymentSheetError.payingWithoutValidLinkSession))
-            return
-        }
-
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
-            session.listPaymentDetails(
                 with: apiClient,
                 consumerAccountPublishableKey: publishableKey,
                 completion: completionWrapper
@@ -235,52 +172,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             )
         }
     }
-
-    func deletePaymentDetails(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let session = currentSession else {
-            assertionFailure()
-            return completion(
-                .failure(
-                    PaymentSheetError.deletingWithoutValidLinkSession
-                )
-            )
-        }
-
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
-            session.deletePaymentDetails(
-                with: apiClient,
-                id: id,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
-        }
-    }
-
-    func updatePaymentDetails(
-        id: String,
-        updateParams: UpdatePaymentDetailsParams,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        guard let session = currentSession else {
-            assertionFailure()
-            return completion(
-                .failure(
-                    PaymentSheetError.updatingWithoutValidLinkSession
-                )
-            )
-        }
-
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
-            session.updatePaymentDetails(
-                with: apiClient,
-                id: id,
-                updateParams: updateParams,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
-            )
-        }
-    }
-
 }
 
 // MARK: - Equatable
@@ -391,97 +282,5 @@ extension PaymentSheetLinkAccount {
         }
 
         return params
-    }
-
-}
-
-// MARK: - Payment method availability
-
-extension PaymentSheetLinkAccount {
-
-    /// Returns a set containing the Payment Details types that the user is able to use for confirming the given `intent`.
-    /// - Parameter intent: The Intent that the user is trying to confirm.
-    /// - Returns: A set containing the supported Payment Details types.
-    func supportedPaymentDetailsTypes(for intent: Intent) -> Set<ConsumerPaymentDetails.DetailsType> {
-        guard let currentSession = currentSession, let fundingSources = intent.linkFundingSources else {
-            return []
-        }
-
-        let fundingSourceDetailsTypes = Set(fundingSources.compactMap { $0.detailsType })
-
-        // Take the intersection of the consumer session types and the merchant-provided Link funding sources
-        var supportedPaymentDetailsTypes = fundingSourceDetailsTypes.intersection(currentSession.supportedPaymentDetailsTypes)
-
-        // Special testmode handling
-        if apiClient.isTestmode && Self.emailSupportsMultipleFundingSourcesOnTestMode(email) {
-            supportedPaymentDetailsTypes.insert(.bankAccount)
-        }
-
-        return supportedPaymentDetailsTypes
-    }
-
-    func supportedPaymentMethodTypes(for intent: Intent) -> [STPPaymentMethodType] {
-        var supportedPaymentMethodTypes = [STPPaymentMethodType]()
-
-        for paymentDetailsType in supportedPaymentDetailsTypes(for: intent) {
-            switch paymentDetailsType {
-            case .card:
-                supportedPaymentMethodTypes.append(.card)
-            case .bankAccount:
-                supportedPaymentMethodTypes.append(.linkInstantDebit)
-            case .unparsable:
-                break
-            }
-        }
-
-        if supportedPaymentMethodTypes.isEmpty {
-            // Card is the default payment method type when no other type is available.
-            supportedPaymentMethodTypes.append(.card)
-        }
-
-        return supportedPaymentMethodTypes
-    }
-}
-
-// MARK: - Helpers
-
-private extension PaymentSheetLinkAccount {
-
-    /// On *testmode* we use special email addresses for testing multiple funding sources. This method returns `true`
-    /// if the given `email` is one of such email addresses.
-    ///
-    /// - Parameter email: Email.
-    /// - Returns: Whether or not should enable multiple funding sources on test mode.
-    static func emailSupportsMultipleFundingSourcesOnTestMode(_ email: String) -> Bool {
-        return email.contains("+multiple_funding_sources@")
-    }
-
-}
-
-private extension LinkSettings.FundingSource {
-    var detailsType: ConsumerPaymentDetails.DetailsType? {
-        switch self {
-        case .card:
-            return .card
-        case .bankAccount:
-            return .bankAccount
-        }
-    }
-}
-
-// MARK: UpdatePaymentDetailsParams
-
-struct UpdatePaymentDetailsParams {
-    enum DetailsType {
-        case card(expiryDate: CardExpiryDate, billingDetails: STPPaymentMethodBillingDetails? = nil)
-        // updating bank not supported
-    }
-
-    let isDefault: Bool?
-    let details: DetailsType?
-
-    init(isDefault: Bool? = nil, details: DetailsType? = nil) {
-        self.isDefault = isDefault
-        self.details = details
     }
 }
