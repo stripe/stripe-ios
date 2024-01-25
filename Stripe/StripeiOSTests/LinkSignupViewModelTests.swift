@@ -125,7 +125,14 @@ class LinkInlineSignupViewModelTests: XCTestCase {
 
         XCTAssertEqual(sut.action, .continueWithoutLink)
     }
-
+    func test_consentAction_checkbox() {
+        let sut = makeSUT(country: "US", hasAccount: false)
+        XCTAssertEqual(sut.consentAction, .checkbox)
+    }
+    func test_consentAction_implied() {
+        let sut = makeSUT(country: "US", mode: .textFieldsOnly, hasAccount: false)
+        XCTAssertEqual(sut.consentAction, .implied)
+    }
 }
 
 extension LinkInlineSignupViewModelTests {
@@ -160,6 +167,7 @@ extension LinkInlineSignupViewModelTests {
 
     func makeSUT(
         country: String,
+        showCheckbox: Bool = true,
         hasAccount: Bool = false,
         shouldFailLookup: Bool = false
     ) -> LinkInlineSignupViewModel {
