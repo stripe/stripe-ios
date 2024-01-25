@@ -17,7 +17,7 @@ extension STPAnalyticsClient {
         apiClient: STPAPIClient
     ) {
         var additionalParams = [:] as [String: Any]
-        if isSimulatorOrTest {
+        if Self.isSimulatorOrTest {
             additionalParams["is_development"] = true
         }
 
