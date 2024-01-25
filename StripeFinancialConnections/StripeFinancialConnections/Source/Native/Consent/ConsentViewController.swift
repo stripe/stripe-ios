@@ -56,6 +56,7 @@ class ConsentViewController: UIViewController {
             }
         )
     }()
+    private var consentLogoView: ConsentLogoView?
 
     init(dataSource: ConsentDataSource) {
         self.dataSource = dataSource
@@ -73,9 +74,11 @@ class ConsentViewController: UIViewController {
         let paneLayoutView = PaneWithCustomHeaderLayoutView(
             headerView: {
                 if let merchantLogo = dataSource.merchantLogo {
+                    let consentLogoView = ConsentLogoView(merchantLogo: merchantLogo)
+                    self.consentLogoView = consentLogoView
                     let stackView = UIStackView(
                         arrangedSubviews: [
-                            ConsentLogoView(merchantLogo: merchantLogo),
+                            consentLogoView,
                             titleLabel,
                         ]
                     )
@@ -99,6 +102,13 @@ class ConsentViewController: UIViewController {
         paneLayoutView.addTo(view: view)
 
         dataSource.analyticsClient.logPaneLoaded(pane: .consent)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // this fixes an issue where presenting a UIViewController
+        // on top of ConsentViewController would stop the dot animation
+        consentLogoView?.animateDots()
     }
 
     private func didSelectAgree() {
