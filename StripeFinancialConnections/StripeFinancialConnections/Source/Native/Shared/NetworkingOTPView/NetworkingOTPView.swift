@@ -43,8 +43,6 @@ final class NetworkingOTPView: UIView {
         otpVerticalStackView.spacing = 16
         return otpVerticalStackView
     }()
-    // TODO(kgaidis): make changes to `OneTimeCodeTextField` to
-    // make the font larger
     private(set) lazy var otpTextField: OneTimeCodeTextField = {
         let otpTextField = OneTimeCodeTextField(
             configuration: OneTimeCodeTextField.Configuration(
