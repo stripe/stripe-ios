@@ -56,10 +56,11 @@ extension PaneLayoutView {
         }
 
         if let title = title {
+            let titleFont: FinancialConnectionsFont = isSheet ? .heading(.large) : .heading(.extraLarge)
             let titleLabel = AttributedTextView(
-                font: .heading(.extraLarge),
-                boldFont: .heading(.extraLarge),
-                linkFont: .heading(.extraLarge),
+                font: titleFont,
+                boldFont: titleFont,
+                linkFont: titleFont,
                 textColor: .textDefault
             )
             titleLabel.setText(title)
@@ -110,7 +111,7 @@ extension PaneLayoutView {
                 font: .body(.medium),
                 boldFont: .body(.mediumEmphasized),
                 linkFont: .body(.mediumEmphasized),
-                textColor: .textPrimary
+                textColor: .textDefault
             )
             textLabel.setText(text)
             paddingStackView.addArrangedSubview(textLabel)
