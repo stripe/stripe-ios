@@ -52,7 +52,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             guard let selectedPaymentOption = selectedPaymentOption else {
                 return .stripe(.unknown)
             }
-            if case let .saved(paymentMethod) = selectedPaymentOption {
+            if case let .saved(paymentMethod, _) = selectedPaymentOption {
                 return .stripe(paymentMethod.type)
             } else if case .applePay = selectedPaymentOption {
                 return .stripe(.card)
@@ -153,7 +153,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         configuration: PaymentSheet.Configuration,
         previousPaymentOption: PaymentOption? = nil,
         isApplePayEnabled: Bool,
-        isLinkEnabled: Bool
+        isLinkEnabled: Bool,
+        isCVCRecollectionEnabled: Bool
     ) {
         self.intent = intent
         self.isApplePayEnabled = isApplePayEnabled
@@ -196,8 +197,11 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 showLink: isLinkEnabled,
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
+                isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode
             ),
+            paymentSheetConfiguration: configuration,
+            intent: intent,
             appearance: configuration.appearance,
             cbcEligible: intent.cardBrandChoiceEligible
         )
@@ -491,6 +495,11 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
 // MARK: - SavedPaymentOptionsViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewControllerDelegate {
+    func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
+        // no-op
+        assertionFailure("Used to bubble up CVC Input. This should never happen for FlowController")
+
+    }
     func didSelectUpdate(viewController: SavedPaymentOptionsViewController,
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
                          updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {

@@ -9,10 +9,15 @@ import UIKit
 class CVCRecollectionView: UIView {
 
     lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [
+        let stackView = mode == .detailedWithInput
+        ? UIStackView(arrangedSubviews: [
             cvcPaymentMethodInformationView,
             textFieldElement.view,
         ])
+        : UIStackView(arrangedSubviews: [
+            textFieldElement.view,
+        ])
+
         stackView.distribution = .fillEqually
         stackView.spacing = 0
         stackView.axis = .horizontal
@@ -32,7 +37,9 @@ class CVCRecollectionView: UIView {
         let textFieldElement = TextFieldElement(configuration: cvcElementConfiguration, theme: appearance.asElementsTheme)
         textFieldElement.delegate = elementDelegate
         textFieldElement.view.backgroundColor = appearance.colors.componentBackground
-        textFieldElement.view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        textFieldElement.view.layer.maskedCorners = mode == .detailedWithInput
+        ? [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        : [.layerMaxXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMinYCorner, .layerMinXMaxYCorner]
         textFieldElement.view.layer.cornerRadius = appearance.cornerRadius
         return textFieldElement
     }()
@@ -45,6 +52,7 @@ class CVCRecollectionView: UIView {
 
     let defaultValues: CVCRecollectionElement.DefaultValues
     var paymentMethod: STPPaymentMethod
+    let mode: CVCRecollectionElement.Mode
     let appearance: PaymentSheet.Appearance
     weak var elementDelegate: ElementDelegate?
 
@@ -54,10 +62,12 @@ class CVCRecollectionView: UIView {
 
     init(defaultValues: CVCRecollectionElement.DefaultValues = .init(),
          paymentMethod: STPPaymentMethod,
+         mode: CVCRecollectionElement.Mode,
          appearance: PaymentSheet.Appearance,
          elementDelegate: ElementDelegate) {
         self.defaultValues = defaultValues
         self.paymentMethod = paymentMethod
+        self.mode = mode
         self.appearance = appearance
         self.elementDelegate = elementDelegate
         super.init(frame: .zero)
