@@ -34,11 +34,11 @@ import UIKit
         }
         return hStackView
     }()
-    
+
     // MARK: - sub-Elements
     let countryDropdownElement: DropdownFieldElement
     let textFieldElement: TextFieldElement
-    
+
     var infoView: UIView?
 
     // MARK: - Public properties

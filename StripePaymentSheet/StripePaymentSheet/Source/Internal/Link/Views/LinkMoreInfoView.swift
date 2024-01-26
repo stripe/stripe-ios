@@ -47,7 +47,7 @@ final class LinkMoreInfoView: UIView {
             logoView.heightAnchor.constraint(equalToConstant: Constants.logoHeight),
         ])
     }
-    
+
     override var intrinsicContentSize: CGSize {
         .init(width: Constants.logoWidth, height: Constants.logoHeight)
     }

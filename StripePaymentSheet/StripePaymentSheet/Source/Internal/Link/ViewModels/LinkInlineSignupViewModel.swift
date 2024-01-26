@@ -162,7 +162,7 @@ final class LinkInlineSignupViewModel {
             else {
                 return false
             }
-            
+
             return !linkAccount.isRegistered
         case .textFieldsOnlyPhoneFirst:
             return true
@@ -184,7 +184,7 @@ final class LinkInlineSignupViewModel {
         else {
             return .continueWithoutLink
         }
-        
+
         if linkAccount?.isRegistered ?? false {
             // User already has a Link account, they can't sign up
             STPAnalyticsClient.sharedClient.logLinkSignupFailureAccountExists()

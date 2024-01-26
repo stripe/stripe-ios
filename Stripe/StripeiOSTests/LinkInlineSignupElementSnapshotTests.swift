@@ -140,7 +140,7 @@ extension LinkInlineSignupElementSnapshotTests {
 
         var linkAccount: PaymentSheetLinkAccount?
 
-        if let linkAccountEmailAddress = linkAccountEmailAddress {
+        if let linkAccountEmailAddress {
             linkAccount = PaymentSheetLinkAccount(email: linkAccountEmailAddress, session: nil, publishableKey: nil)
         }
 
@@ -154,7 +154,7 @@ extension LinkInlineSignupElementSnapshotTests {
 
         viewModel.saveCheckboxChecked = saveCheckboxChecked
         // Won't trigger the "email address prefilled" path, because it wasn't there when initialized
-        if let userTypedEmailAddress = userTypedEmailAddress {
+        if let userTypedEmailAddress {
             viewModel.emailAddress = userTypedEmailAddress
         }
 
