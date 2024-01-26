@@ -105,7 +105,6 @@ extension ConsumerSession {
               let billingDetails = paymentMethodParams.billingDetails,
               let cardParams = paymentMethodParams.card else {
             DispatchQueue.main.async {
-                assertionFailure()
                 completion(.failure(NSError.stp_genericConnectionError()))
             }
             return
