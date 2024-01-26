@@ -38,11 +38,11 @@ final class LinkInlineSignupElement: Element {
         configuration: PaymentSheet.Configuration,
         linkAccount: PaymentSheetLinkAccount?,
         country: String?,
-        mode: LinkInlineSignupViewModel.Mode
+        showCheckbox: Bool
     ) {
         self.init(viewModel: LinkInlineSignupViewModel(
             configuration: configuration,
-            mode: mode,
+            showCheckbox: showCheckbox,
             accountService: LinkAccountService(apiClient: configuration.apiClient),
             linkAccount: linkAccount,
             country: country

@@ -27,7 +27,7 @@ struct PaymentSheetTestPlayground: View {
             SettingView(setting: $playgroundController.settings.applePayEnabled)
             SettingView(setting: $playgroundController.settings.applePayButtonType)
             SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
-            SettingView(setting: $playgroundController.settings.defaultBillingAddress)
+            SettingPickerView(setting: $playgroundController.settings.defaultBillingAddress)
         }
         Group {
             SettingView(setting: $playgroundController.settings.linkEnabled)

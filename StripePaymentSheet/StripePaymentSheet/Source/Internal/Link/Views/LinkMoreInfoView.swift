@@ -48,6 +48,10 @@ final class LinkMoreInfoView: UIView {
         ])
     }
 
+    override var intrinsicContentSize: CGSize {
+        .init(width: Constants.logoWidth, height: Constants.logoHeight)
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
