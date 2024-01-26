@@ -122,7 +122,7 @@ class PlaygroundController: ObservableObject {
         }
         switch settings.defaultBillingAddress {
         case .on:
-            configuration.defaultBillingDetails.email = "the-longest-email-in-the-world@gmail.com"
+            configuration.defaultBillingDetails.email = "foo@bar.com"
             configuration.defaultBillingDetails.phone = "+13105551234"
         case .randomEmail:
             configuration.defaultBillingDetails.email = "test-\(UUID().uuidString)@stripe.com"

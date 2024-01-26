@@ -82,7 +82,7 @@ final class LinkInlineSignupViewModel {
                 notifyUpdate()
 
                 if let linkAccount = linkAccount,
-                   linkAccount.isRegistered {
+                   !linkAccount.isRegistered {
                         STPAnalyticsClient.sharedClient.logLinkSignupStart()
                 }
             }
