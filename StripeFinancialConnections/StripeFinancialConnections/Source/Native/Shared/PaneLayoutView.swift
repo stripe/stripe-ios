@@ -58,4 +58,10 @@ final class PaneLayoutView {
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         scrollViewHeightConstraint.isActive = true
     }
+
+    func createView() -> UIView {
+        let containerView = UIView()
+        addTo(view: containerView)
+        return containerView
+    }
 }
