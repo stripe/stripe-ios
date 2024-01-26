@@ -36,55 +36,53 @@ final class TerminalErrorViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
 
-        let errorView = ReusableInformationView(
-            iconType: .view(CreateGenericErrorIconView()),
-            title: STPLocalizedString(
-                "Something went wrong",
-                "Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: RoundedIconView(
+                    image: .image(.warning_triangle),
+                    style: .circle
+                ),
+                title: STPLocalizedString(
+                    "Something went wrong",
+                    "Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."
+                ),
+                subtitle: {
+                    if allowManualEntry {
+                        return STPLocalizedString(
+                            "Your account can’t be connected at this time. Please enter your bank details manually or try again later.",
+                            "The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what."
+                        )
+                    } else {
+                        return STPLocalizedString(
+                            "Your account can’t be connected at this time. Please try again later.",
+                            "The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what."
+                        )
+                    }
+                }(),
+                contentView: nil
             ),
-            subtitle: {
-                if allowManualEntry {
-                    return STPLocalizedString(
-                        "Your account can't be linked at this time. Please enter your bank details manually or try again later.",
-                        "The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what."
-                    )
-                } else {
-                    return STPLocalizedString(
-                        "Your account can't be linked at this time. Please try again later.",
-                        "The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what."
-                    )
-                }
-            }(),
-            primaryButtonConfiguration: {
-                if allowManualEntry {
-                    return ReusableInformationView.ButtonConfiguration(
-                        title: String.Localized.enter_bank_details_manually,
-                        action: { [weak self] in
-                            guard let self = self else { return }
-                            self.delegate?.terminalErrorViewControllerDidSelectManualEntry(self)
-                        }
-                    )
-                } else {
-                    return ReusableInformationView.ButtonConfiguration(
-                        title: "Close",  // TODO: once we localize use String.Localized.close
-                        action: { [weak self] in
-                            guard let self = self else { return }
-                            self.delegate?.terminalErrorViewController(self, didCloseWithError: self.error)
-                        }
-                    )
-                }
-            }()
+            footerView: PaneLayoutView.createFooterView(
+                primaryButtonConfiguration: {
+                    if allowManualEntry {
+                        return PaneLayoutView.ButtonConfiguration(
+                            title: String.Localized.enter_bank_details_manually,
+                            action: { [weak self] in
+                                guard let self = self else { return }
+                                self.delegate?.terminalErrorViewControllerDidSelectManualEntry(self)
+                            }
+                        )
+                    } else {
+                        return PaneLayoutView.ButtonConfiguration(
+                            title: "Close",  // TODO: once we localize use String.Localized.close
+                            action: { [weak self] in
+                                guard let self = self else { return }
+                                self.delegate?.terminalErrorViewController(self, didCloseWithError: self.error)
+                            }
+                        )
+                    }
+                }()
+            )
         )
-        view.addAndPinSubviewToSafeArea(errorView)
+        paneLayoutView.addTo(view: view)
     }
-}
-
-private func CreateGenericErrorIconView() -> UIView {
-    let iconImageView = UIImageView(image: Image.generic_error.makeImage())
-    iconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        iconImageView.widthAnchor.constraint(equalToConstant: 40),
-        iconImageView.heightAnchor.constraint(equalToConstant: 40),
-    ])
-    return iconImageView
 }

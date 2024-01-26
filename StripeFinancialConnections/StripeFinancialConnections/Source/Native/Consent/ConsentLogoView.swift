@@ -58,10 +58,10 @@ final class ConsentLogoView: UIView {
         guard let multipleDotView = multipleDotView else {
             return
         }
-        
+
         // remove any previous animations if-needed
         multipleDotView.layer.removeAllAnimations()
-        
+
         multipleDotView.frame = CGRect(
             x: -multipleDotView.bounds.width + ellipsisViewWidth,
             y: 0,
