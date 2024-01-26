@@ -45,25 +45,8 @@ final class PartnerAuthViewController: UIViewController {
     private var lastHandledAuthenticationSessionReturnUrl: URL?
     weak var delegate: PartnerAuthViewControllerDelegate?
 
-    private lazy var establishingConnectionLoadingView: UIView = {
-        let establishingConnectionLoadingView = ReusableInformationView(
-            iconType: .loading,
-            title: STPLocalizedString(
-                "Establishing connection",
-                "The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank."
-            ),
-            subtitle: STPLocalizedString(
-                "Please wait while we connect to your bank.",
-                "The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank."
-            )
-        )
-        establishingConnectionLoadingView.isHidden = true
-        return establishingConnectionLoadingView
-    }()
-
-    private lazy var retrievingAccountsView: UIView = {
-        return buildRetrievingAccountsView()
-    }()
+    private var prepaneView: PrepaneView?
+    private var loadingView: UIView?
 
     init(dataSource: PartnerAuthDataSource) {
         self.dataSource = dataSource
@@ -86,13 +69,13 @@ final class PartnerAuthViewController: UIViewController {
     private func createAuthSession() {
         assertMainQueue()
 
-        showEstablishingConnectionLoadingView(true)
+        showLoadingView(true)
         dataSource
             .createAuthSession()
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 // order is important so be careful of moving
-                self.showEstablishingConnectionLoadingView(false)
+                self.showLoadingView(false)
                 switch result {
                 case .success(let authSession):
                     self.createdAuthSession(authSession)
@@ -109,6 +92,7 @@ final class PartnerAuthViewController: UIViewController {
         )
 
         if authSession.isOauthNonOptional, let prepaneModel = authSession.display?.text?.oauthPrepane {
+            self.prepaneView?.removeFromSuperview()
             let prepaneView = PrepaneView(
                 prepaneModel: prepaneModel,
                 isRepairSession: false, // TODO(kgaidis): change this for repair sessions
@@ -136,6 +120,7 @@ final class PartnerAuthViewController: UIViewController {
                     self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
                 }
             )
+            self.prepaneView = prepaneView
             view.addAndPinSubview(prepaneView)
 
             dataSource.recordAuthSessionEvent(
@@ -244,7 +229,7 @@ final class PartnerAuthViewController: UIViewController {
                                 self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
                             }
                         ) : nil
-                    )
+                    ).footerView
                 ).createView()
                 dataSource.analyticsClient.logExpectedError(
                     error,
@@ -287,7 +272,7 @@ final class PartnerAuthViewController: UIViewController {
                                 self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
                             }
                         ) : nil
-                    )
+                    ).footerView
                 ).createView()
                 dataSource.analyticsClient.logExpectedError(
                     error,
@@ -309,7 +294,7 @@ final class PartnerAuthViewController: UIViewController {
 
             // keep showing the loading view while we transition to
             // terminal error
-            showEstablishingConnectionLoadingView(true)
+            showLoadingView(true)
         }
 
         if let errorView = errorView {
@@ -436,13 +421,13 @@ final class PartnerAuthViewController: UIViewController {
             // This means banking app is not installed
             self.clearStateAndUnsubscribeFromNotifications()
 
-            self.showEstablishingConnectionLoadingView(true)
+            self.showLoadingView(true)
             self.dataSource
                 .clearReturnURL(authSession: authSession, authURL: urlString)
                 .observe(on: .main) { [weak self] result in
                     guard let self = self else { return }
                     // order is important so be careful of moving
-                    self.showEstablishingConnectionLoadingView(false)
+                    self.showLoadingView(false)
                     switch result {
                     case .success(let authSession):
                         self.openInstitutionAuthenticationWebView(authSession: authSession)
@@ -604,7 +589,7 @@ final class PartnerAuthViewController: UIViewController {
     }
 
     private func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) {
-        showRetrievingAccountsView(true)
+        showLoadingView(true)
         dataSource
             .authorizeAuthSession(authSession)
             .observe(on: .main) { [weak self] result in
@@ -622,10 +607,10 @@ final class PartnerAuthViewController: UIViewController {
                     // calling `showEstablishingConnectionLoadingView(false)` is
                     // defensive programming anyway
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-                        self?.showRetrievingAccountsView(false)
+                        self?.showLoadingView(false)
                     }
                 case .failure(let error):
-                    self.showRetrievingAccountsView(false)  // important to come BEFORE showing error view so we avoid showing back button
+                    self.showLoadingView(false)  // important to come BEFORE showing error view so we avoid showing back button
                     self.showErrorView(error)
                     assert(self.navigationItem.hidesBackButton)
                 }
@@ -636,22 +621,23 @@ final class PartnerAuthViewController: UIViewController {
         delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
     }
 
-    private func showEstablishingConnectionLoadingView(_ show: Bool) {
-        showView(loadingView: establishingConnectionLoadingView, show: show)
-    }
+    private func showLoadingView(_ show: Bool) {
+        loadingView?.removeFromSuperview()
+        loadingView = nil
 
-    private func showRetrievingAccountsView(_ show: Bool) {
-        showView(loadingView: retrievingAccountsView, show: show)
-    }
-
-    private func showView(loadingView: UIView, show: Bool) {
-        if loadingView.superview == nil {
-            view.addAndPinSubviewToSafeArea(loadingView)
+        // there's a chance we don't have the data yet to display a
+        // prepane-based loading view, so we have extra handling
+        // to handle both states
+        if let prepaneView = prepaneView {
+            prepaneView.showLoadingView(show)
+        } else {
+            if show {
+                let loadingView = SpinnerView()
+                self.loadingView = loadingView
+                view.addAndPinSubview(loadingView)
+            }
         }
-        view.bringSubviewToFront(loadingView)  // bring to front in-case something else is covering it
-
         navigationItem.hidesBackButton = show
-        loadingView.isHidden = !show
     }
 
     private func didSelectURLInTextFromBackend(_ url: URL) {
@@ -687,12 +673,12 @@ final class PartnerAuthViewController: UIViewController {
             return
         }
 
-        showEstablishingConnectionLoadingView(true)
+        showLoadingView(true)
         dataSource
             .retrieveAuthSession(authSession)
             .observe { [weak self] result in
                 guard let self = self else { return }
-                self.showEstablishingConnectionLoadingView(false)
+                self.showLoadingView(false)
 
                 self.dataSource
                     .analyticsClient

@@ -81,7 +81,7 @@ final class TerminalErrorViewController: UIViewController {
                         )
                     }
                 }()
-            )
+            ).footerView
         )
         paneLayoutView.addTo(view: view)
     }
