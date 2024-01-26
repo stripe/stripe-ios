@@ -167,9 +167,9 @@ final class PartnerAuthViewController: UIViewController {
             let institutionUnavailable = extraFields["institution_unavailable"] as? Bool,
             institutionUnavailable
         {
-            let institutionIconView = InstitutionIconView(size: .large, showWarning: true)
+            let institutionIconView = InstitutionIconView()
             institutionIconView.setImageUrl(institution.icon?.default)
-            let primaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
+            let primaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
                 title: String.Localized.select_another_bank,
                 action: { [weak self] in
                     guard let self = self else { return }
@@ -181,104 +181,114 @@ final class PartnerAuthViewController: UIViewController {
                 let dateFormatter = DateFormatter()
                 dateFormatter.timeStyle = .short
                 let expectedToBeAvailableTimeString = dateFormatter.string(from: expectedToBeAvailableDate)
-                errorView = ReusableInformationView(
-                    iconType: .view(institutionIconView),
-                    title: String(
-                        format: STPLocalizedString(
-                            "%@ is undergoing maintenance",
-                            "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                errorView = PaneLayoutView(
+                    contentView: PaneLayoutView.createContentView(
+                        iconView: institutionIconView,
+                        title: String(
+                            format: STPLocalizedString(
+                                "%@ is undergoing maintenance",
+                                "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                            ),
+                            institution.name
                         ),
-                        institution.name
+                        subtitle: {
+                            let beginningOfSubtitle: String = {
+                                if isToday(expectedToBeAvailableDate) {
+                                    return String(
+                                        format: STPLocalizedString(
+                                            "Maintenance is scheduled to end at %@.",
+                                            "The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                                        ),
+                                        expectedToBeAvailableTimeString
+                                    )
+                                } else {
+                                    let dateFormatter = DateFormatter()
+                                    dateFormatter.dateStyle = .short
+                                    let expectedToBeAvailableDateString = dateFormatter.string(
+                                        from: expectedToBeAvailableDate
+                                    )
+                                    return String(
+                                        format: STPLocalizedString(
+                                            "Maintenance is scheduled to end on %@ at %@.",
+                                            "The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                                        ),
+                                        expectedToBeAvailableDateString,
+                                        expectedToBeAvailableTimeString
+                                    )
+                                }
+                            }()
+                            let endOfSubtitle: String = {
+                                if allowManualEntryInErrors {
+                                    return STPLocalizedString(
+                                        "Please enter your bank details manually or select another bank.",
+                                        "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                                    )
+                                } else {
+                                    return STPLocalizedString(
+                                        "Please select another bank or try again later.",
+                                        "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                                    )
+                                }
+                            }()
+                            return beginningOfSubtitle + " " + endOfSubtitle
+                        }(),
+                        contentView: nil
                     ),
-                    subtitle: {
-                        let beginningOfSubtitle: String = {
-                            if isToday(expectedToBeAvailableDate) {
-                                return String(
-                                    format: STPLocalizedString(
-                                        "Maintenance is scheduled to end at %@.",
-                                        "The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                    ),
-                                    expectedToBeAvailableTimeString
-                                )
-                            } else {
-                                let dateFormatter = DateFormatter()
-                                dateFormatter.dateStyle = .short
-                                let expectedToBeAvailableDateString = dateFormatter.string(
-                                    from: expectedToBeAvailableDate
-                                )
-                                return String(
-                                    format: STPLocalizedString(
-                                        "Maintenance is scheduled to end on %@ at %@.",
-                                        "The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                    ),
-                                    expectedToBeAvailableDateString,
-                                    expectedToBeAvailableTimeString
-                                )
-                            }
-                        }()
-                        let endOfSubtitle: String = {
-                            if allowManualEntryInErrors {
-                                return STPLocalizedString(
-                                    "Please enter your bank details manually or select another bank.",
-                                    "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                )
-                            } else {
-                                return STPLocalizedString(
-                                    "Please select another bank or try again later.",
-                                    "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                )
-                            }
-                        }()
-                        return beginningOfSubtitle + " " + endOfSubtitle
-                    }(),
-                    primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: allowManualEntryInErrors
-                        ? ReusableInformationView.ButtonConfiguration(
+                    footerView: PaneLayoutView.createFooterView(
+                        primaryButtonConfiguration: primaryButtonConfiguration,
+                        secondaryButtonConfiguration: allowManualEntryInErrors
+                        ? PaneLayoutView.ButtonConfiguration(
                             title: String.Localized.enter_bank_details_manually,
                             action: { [weak self] in
                                 guard let self = self else { return }
                                 self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
                             }
                         ) : nil
-                )
+                    )
+                ).createView()
                 dataSource.analyticsClient.logExpectedError(
                     error,
                     errorName: "InstitutionPlannedDowntimeError",
                     pane: .partnerAuth
                 )
             } else {
-                errorView = ReusableInformationView(
-                    iconType: .view(institutionIconView),
-                    title: String(
-                        format: STPLocalizedString(
-                            "%@ is currently unavailable",
-                            "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                errorView = PaneLayoutView(
+                    contentView: PaneLayoutView.createContentView(
+                        iconView: institutionIconView,
+                        title: String(
+                            format: STPLocalizedString(
+                                "%@ is currently unavailable",
+                                "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                            ),
+                            institution.name
                         ),
-                        institution.name
+                        subtitle: {
+                            if allowManualEntryInErrors {
+                                return STPLocalizedString(
+                                    "Please enter your bank details manually or select another bank.",
+                                    "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                                )
+                            } else {
+                                return STPLocalizedString(
+                                    "Please select another bank or try again later.",
+                                    "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
+                                )
+                            }
+                        }(),
+                        contentView: nil
                     ),
-                    subtitle: {
-                        if allowManualEntryInErrors {
-                            return STPLocalizedString(
-                                "Please enter your bank details manually or select another bank.",
-                                "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                            )
-                        } else {
-                            return STPLocalizedString(
-                                "Please select another bank or try again later.",
-                                "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                            )
-                        }
-                    }(),
-                    primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: allowManualEntryInErrors
-                        ? ReusableInformationView.ButtonConfiguration(
+                    footerView: PaneLayoutView.createFooterView(
+                        primaryButtonConfiguration: primaryButtonConfiguration,
+                        secondaryButtonConfiguration: allowManualEntryInErrors
+                        ? PaneLayoutView.ButtonConfiguration(
                             title: String.Localized.enter_bank_details_manually,
                             action: { [weak self] in
                                 guard let self = self else { return }
                                 self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
                             }
                         ) : nil
-                )
+                    )
+                ).createView()
                 dataSource.analyticsClient.logExpectedError(
                     error,
                     errorName: "InstitutionUnplannedDowntimeError",
