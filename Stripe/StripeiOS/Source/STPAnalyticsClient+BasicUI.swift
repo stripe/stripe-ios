@@ -14,15 +14,19 @@ extension STPPaymentContext {
         let analyticsClient = STPAnalyticsClient.sharedClient
         let sessionID: String = UUID().uuidString.lowercased()
         var apiClient: STPAPIClient = .shared
+        lazy var commonParameters: [String: Any] = {
+            ["session_id": sessionID]
+        }()
 
         func logLoadStarted() {
-            analyticsClient.log(analytic: GenericAnalytic(event: .biLoadStarted, params: [:]), apiClient: apiClient)
+            analyticsClient.log(analytic: GenericAnalytic(event: .biLoadStarted, params: commonParameters), apiClient: apiClient)
         }
 
         func logLoadFinished(isSuccess: Bool, loadStartDate: Date) {
             let event: STPAnalyticEvent = isSuccess ? .biLoadSucceeded : .biLoadFailed
             let duration = Date().timeIntervalSince(loadStartDate)
-            let params = ["duration": duration]
+            var params = commonParameters
+            params["duration"] = duration
             let analytic = GenericAnalytic(event: event, params: params)
             analyticsClient.log(analytic: analytic, apiClient: apiClient)
         }
@@ -58,10 +62,8 @@ extension STPPaymentContext {
                 return
             }
 
-            var params: [String: Any] = [
-                "selected_lpm": paymentMethodType,
-                "session_id": sessionID,
-            ]
+            var params = commonParameters
+            params["selected_lpm"] = paymentMethodType
             if STPAnalyticsClient.isSimulatorOrTest {
                 params["is_development"] = true
             }
