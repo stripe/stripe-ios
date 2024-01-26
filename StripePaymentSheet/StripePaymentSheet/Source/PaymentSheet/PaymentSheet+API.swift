@@ -400,12 +400,12 @@ extension PaymentSheet {
                 linkController.present(completion: completion)
             case .signUp(let linkAccount, let phoneNumber, let legalName, let paymentMethodParams):
                 linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: .checkbox) { result in
+                    UserDefaults.standard.markLinkAsUsed()
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
 
                         createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
-                        UserDefaults.standard.markLinkAsUsed()
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
                         // Attempt to confirm directly with params as a fallback.
