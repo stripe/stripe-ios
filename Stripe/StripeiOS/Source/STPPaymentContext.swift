@@ -383,7 +383,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             analyticsLogger.apiClient = apiClient
         }
     }
-    private let analyticsLogger: AnalyticsLogger = .init()
+    internal let analyticsLogger: AnalyticsLogger = .init(product: STPPaymentContext.self)
 
     /// If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
     /// can in turn call this method to try loading again (if that hasn't been called,
@@ -403,14 +403,14 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             guard let strongSelf = weakSelf else {
                 return
             }
-            strongSelf.analyticsLogger.logLoadFinished(isSuccess: true, loadStartDate: loadingStartDate)
+            strongSelf.analyticsLogger.logLoadSucceeded(loadStartDate: loadingStartDate, defaultPaymentOption: tuple.selectedPaymentOption)
             strongSelf.paymentOptions = tuple.paymentOptions
             strongSelf.selectedPaymentOption = tuple.selectedPaymentOption
         }).onFailure({ error in
             guard let strongSelf = weakSelf else {
                 return
             }
-            strongSelf.analyticsLogger.logLoadFinished(isSuccess: false, loadStartDate: loadingStartDate)
+            strongSelf.analyticsLogger.logLoadFailed(loadStartDate: loadingStartDate, error: error)
             if strongSelf.hostViewController != nil {
                 if strongSelf.paymentOptionsViewController != nil
                     && strongSelf.paymentOptionsViewController?.viewIfLoaded?.window != nil

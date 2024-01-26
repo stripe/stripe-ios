@@ -14,22 +14,59 @@ extension STPPaymentContext {
         let analyticsClient = STPAnalyticsClient.sharedClient
         let sessionID: String = UUID().uuidString.lowercased()
         var apiClient: STPAPIClient = .shared
+        var product: String
         lazy var commonParameters: [String: Any] = {
-            ["session_id": sessionID]
+            [
+                "session_id": sessionID,
+                "product": product,
+            ]
         }()
 
-        func logLoadStarted() {
-            analyticsClient.log(analytic: GenericAnalytic(event: .biLoadStarted, params: commonParameters), apiClient: apiClient)
+        init<T: STPAnalyticsProtocol>(product: T.Type) {
+            self.product = product.stp_analyticsIdentifier
         }
 
-        func logLoadFinished(isSuccess: Bool, loadStartDate: Date) {
-            let event: STPAnalyticEvent = isSuccess ? .biLoadSucceeded : .biLoadFailed
-            let duration = Date().timeIntervalSince(loadStartDate)
-            var params = commonParameters
-            params["duration"] = duration
-            let analytic = GenericAnalytic(event: event, params: params)
-            analyticsClient.log(analytic: analytic, apiClient: apiClient)
+        // MARK: - Loading
+
+        func logLoadStarted() {
+            log(event: .biLoadStarted, params: [:])
         }
+
+        func logLoadSucceeded(loadStartDate: Date, defaultPaymentOption: STPPaymentOption?) {
+            let event: STPAnalyticEvent = .biLoadSucceeded
+            let duration = Date().timeIntervalSince(loadStartDate)
+            let defaultPaymentMethod: String = {
+                guard let defaultPaymentOption else {
+                    return "none"
+                }
+                switch defaultPaymentOption {
+                case is STPApplePayPaymentOption:
+                    return "apple_pay"
+                case let defaultPaymentMethod as STPPaymentMethod:
+                    return defaultPaymentMethod.type.identifier
+                default:
+                    assertionFailure()
+                    return "unknown"
+                }
+            }()
+            let params: [String: Any] = [
+                "duration": duration,
+                "default_payment_method": defaultPaymentMethod,
+            ]
+            log(event: event, params: params)
+        }
+
+        func logLoadFailed(loadStartDate: Date, error: Error) {
+            let event: STPAnalyticEvent = .biLoadFailed
+            let duration = Date().timeIntervalSince(loadStartDate)
+            let params: [String: Any] = [
+                "duration": duration,
+                "error_message": error.makeSafeLoggingString(),
+            ]
+            log(event: event, params: params)
+        }
+
+        // MARK: - Payment
 
         func logPayment(status: STPPaymentStatus, paymentOption: STPPaymentOption, error: Error?) {
             let didSucceed: Bool
@@ -62,8 +99,7 @@ extension STPPaymentContext {
                 return
             }
 
-            var params = commonParameters
-            params["selected_lpm"] = paymentMethodType
+            var params: [String: Any] = ["selected_lpm": paymentMethodType]
             if STPAnalyticsClient.isSimulatorOrTest {
                 params["is_development"] = true
             }
@@ -71,7 +107,53 @@ extension STPPaymentContext {
                 params["error_message"] = error.makeSafeLoggingString()
             }
 
-            let analytic = GenericAnalytic(event: event, params: params)
+            log(event: event, params: params)
+        }
+
+        // MARK: - UI
+
+        func logPaymentOptionsScreenAppeared() {
+            log(event: .biOptionsShown, params: [:])
+        }
+
+        func logFormShown(paymentMethodType: STPPaymentMethodType) {
+            let event = STPAnalyticEvent.biFormShown
+            let params = ["selected_lpm": paymentMethodType]
+            log(event: event, params: params)
+        }
+
+        /// - Parameter shownStartDate: The date when the form was first shown. This should never be nil.
+        func logDoneButtonTapped(paymentMethodType: STPPaymentMethodType, shownStartDate: Date?) {
+            let event = STPAnalyticEvent.biDoneButtonTapped
+
+            var params: [String: Any] = [
+                "selected_lpm": paymentMethodType,
+            ]
+            if let shownStartDate {
+                let duration = Date().timeIntervalSince(shownStartDate)
+                params["duration"] = duration
+            } else {
+                assertionFailure("Shown start date should never be nil!")
+            }
+
+            log(event: event, params: params)
+        }
+
+        func logFormInteracted(paymentMethodType: STPPaymentMethodType) {
+            log(event: .biFormInteracted, params: [:])
+        }
+
+        func logCardNumberCompleted() {
+            log(event: .biCardNumberCompleted, params: [:])
+        }
+
+        // MARK: - Helpers
+
+        private func log(event: STPAnalyticEvent, params: [String: Any]) {
+            let analytic = GenericAnalytic(event: event, params: params.merging(commonParameters, uniquingKeysWith: { new, _ in
+                assertionFailure("Constructing analytics parameters with duplicate keys")
+                return new
+            }))
             analyticsClient.log(analytic: analytic, apiClient: apiClient)
         }
     }

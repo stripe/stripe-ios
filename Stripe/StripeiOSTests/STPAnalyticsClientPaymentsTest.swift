@@ -126,8 +126,9 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         )
         let apiClient = STPAPIClient()
         let customerContext = STPCustomerContext.init(keyManager: keyManager, apiClient: apiClient)
-        _ = STPPaymentContext(customerContext: customerContext)
+        let paymentContext = STPPaymentContext(customerContext: customerContext)
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPCustomerContext"))
+        XCTAssertEqual(paymentContext.analyticsLogger.product, "STPPaymentContext")
     }
 
     func testApplePayContextAddsUsage() {
@@ -147,10 +148,19 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
     }
 
     func testAddCardVCAddsUsage() {
-        _ = STPAddCardViewController()
+        let addCardVC = STPAddCardViewController()
         XCTAssertTrue(
             STPAnalyticsClient.sharedClient.productUsage.contains("STPAddCardViewController")
         )
+        XCTAssertEqual(addCardVC.analyticsLogger.product, "STPPaymentContext")
+    }
+
+    func testPaymentOptionsVCAddsUsage() {
+        let paymentOptionsVC = STPPaymentOptionsViewController()
+        XCTAssertTrue(
+            STPAnalyticsClient.sharedClient.productUsage.contains("STPPaymentOptionsViewController")
+        )
+        XCTAssertEqual(paymentOptionsVC.analyticsLogger.product, "STPPaymentOptionsViewController")
     }
 
     func testBankSelectionVCAddsUsage() {
