@@ -90,7 +90,7 @@ private func CreateFooterView(
     footerStackView.axis = .vertical
     footerStackView.spacing = 12
     if let secondaryButtonConfiguration = secondaryButtonConfiguration {
-        let secondaryButton = Button(configuration: .financialConnectionsSecondary)
+        let secondaryButton = Button(configuration: FinancialConnectionsSecondaryButtonConfiguration())
         secondaryButton.title = secondaryButtonConfiguration.title
         secondaryButton.addTarget(
             view,
@@ -104,7 +104,7 @@ private func CreateFooterView(
         footerStackView.addArrangedSubview(secondaryButton)
     }
     if let primaryButtonConfiguration = primaryButtonConfiguration {
-        let primaryButton = Button(configuration: .financialConnectionsPrimary)
+        let primaryButton = Button(configuration: FinancialConnectionsPrimaryButtonConfiguration())
         primaryButton.title = primaryButtonConfiguration.title
         primaryButton.addTarget(
             view,
