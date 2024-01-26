@@ -136,6 +136,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
     var selectedPaymentOptionIntentConfirmParamsRequired: Bool {
         if let index = selectedViewModelIndex,
+           index < viewModels.count,
            case let .saved(paymentMethod) = viewModels[index] {
             let result = self.configuration.isCVCRecollectionEnabled && paymentMethod.type == .card
             return result
@@ -144,6 +145,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
     var selectedPaymentOptionIntentConfirmParams: IntentConfirmParams? {
         guard let index = selectedViewModelIndex,
+              index < viewModels.count,
            case let .saved(paymentMethod) = viewModels[index],
               self.configuration.isCVCRecollectionEnabled,
               paymentMethod.type == .card else {
@@ -207,6 +209,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     private func makeElement() -> PaymentMethodElement {
         guard let index = selectedViewModelIndex,
+              index < viewModels.count,
            case let .saved(paymentMethod) = viewModels[index],
               paymentMethod.type == .card else {
             return FormElement(autoSectioningElements: [])
@@ -337,9 +340,6 @@ class SavedPaymentOptionsViewController: UIViewController {
     private func updateFormElement() {
         cvcFormElement = makeElement()
         swapFormElementUIIfNeeded()
-        //This was causing a visual artifact, we may need this in fact though.
-//        sendEventToSubviews(.viewDidAppear, from: view)
-        updateBrand()
 
         let shouldHideCVCRecollection = !selectedPaymentOptionIntentConfirmParamsRequired
         if cvcRecollectionContainerView.isHidden != shouldHideCVCRecollection {
@@ -368,21 +368,6 @@ class SavedPaymentOptionsViewController: UIViewController {
                 }
             }
         }
-    }
-    private func updateBrand() {
-//        guard let selectedViewModelIndex = selectedViewModelIndex else {
-//            return
-//        }
-//        let viewModel = viewModels[selectedViewModelIndex]
-//
-//        guard case .saved(let paymentMethod) = viewModel else {
-//            return
-//        }
-//        if let cvcRecollectionElement = cvcFormElement as? CVCRecollectionElement,
-//           let brand = paymentMethod.card?.brand {
-//            
-////            cvcRecollectionElement.didUpdateCardBrand(updatedCardBrand: brand)
-//        }
     }
 
     private func unselectPaymentMethod() {
@@ -491,6 +476,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             )
         }
         updateMandateView()
+        updateFormElement()
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }
 }
