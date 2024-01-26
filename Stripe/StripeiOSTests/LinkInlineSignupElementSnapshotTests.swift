@@ -25,7 +25,7 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
     // WARNING: If this tests fails, see go/link-signup-consent-action-log to determine if a new consent_action is needed.
     func testExpandedState() {
-        let sut = makeSUT(saveCheckboxChecked: true, emailAddress: "user@example.com")
+        let sut = makeSUT(saveCheckboxChecked: true, userTypedEmailAddress: "user@example.com")
         verify(sut)
     }
 
@@ -33,7 +33,7 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
     func testExpandedState_nonUS() {
         let sut = makeSUT(
             saveCheckboxChecked: true,
-            emailAddress: "user@example.com",
+            userTypedEmailAddress: "user@example.com",
             country: "CA"
         )
         verify(sut)
@@ -42,7 +42,7 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
     func testExpandedState_nonUS_preFilled() {
         let sut = makeSUT(
             saveCheckboxChecked: true,
-            emailAddress: "user@example.com",
+            userTypedEmailAddress: "user@example.com",
             country: "CA",
             preFillName: "Jane Diaz",
             preFillPhone: "+13105551234"
@@ -53,13 +53,13 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
     // MARK: Textfield only mode
 
     func testDefaultState_textFieldsOnly() {
-        let sut = makeSUT(mode: .textFieldsOnly)
+        let sut = makeSUT(showCheckbox: false)
         verify(sut)
     }
 
     // WARNING: If this tests fails, see go/link-signup-consent-action-log to determine if a new consent_action is needed.
     func testExpandedState_textFieldsOnly() {
-        let sut = makeSUT(saveCheckboxChecked: true, emailAddress: "user@example.com", mode: .textFieldsOnly)
+        let sut = makeSUT(saveCheckboxChecked: true, userTypedEmailAddress: "user@example.com", showCheckbox: false)
         verify(sut)
     }
 
@@ -67,9 +67,9 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
     func testExpandedState_nonUS_textFieldsOnly() {
         let sut = makeSUT(
             saveCheckboxChecked: true,
-            emailAddress: "user@example.com",
+            userTypedEmailAddress: "user@example.com",
             country: "CA",
-            mode: .textFieldsOnly
+            showCheckbox: false
         )
         verify(sut)
     }
@@ -79,11 +79,11 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         // In textFieldsOnly mode, the phone number should *not* be prefilled.
         let sut = makeSUT(
             saveCheckboxChecked: true,
-            prefilledEmailAddress: "user@example.com",
+            linkAccountEmailAddress: "user@example.com",
             country: "CA",
             preFillName: "Jane Diaz",
             preFillPhone: "+13105551234",
-            mode: .textFieldsOnly
+            showCheckbox: false
         )
         verify(sut)
     }
@@ -126,12 +126,12 @@ extension LinkInlineSignupElementSnapshotTests {
 
     func makeSUT(
         saveCheckboxChecked: Bool = false,
-        prefilledEmailAddress: String? = nil,
-        emailAddress: String? = nil,
+        linkAccountEmailAddress: String? = nil,
+        userTypedEmailAddress: String? = nil,
         country: String = "US",
         preFillName: String? = nil,
         preFillPhone: String? = nil,
-        mode: LinkInlineSignupViewModel.Mode = .normal
+        showCheckbox: Bool = true
     ) -> LinkInlineSignupElement {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "[Merchant]"
@@ -140,13 +140,13 @@ extension LinkInlineSignupElementSnapshotTests {
 
         var linkAccount: PaymentSheetLinkAccount?
 
-        if let prefilledEmailAddress = prefilledEmailAddress {
-            linkAccount = PaymentSheetLinkAccount(email: prefilledEmailAddress, session: nil, publishableKey: nil)
+        if let linkAccountEmailAddress = linkAccountEmailAddress {
+            linkAccount = PaymentSheetLinkAccount(email: linkAccountEmailAddress, session: nil, publishableKey: nil)
         }
 
         let viewModel = LinkInlineSignupViewModel(
             configuration: configuration,
-            mode: mode,
+            showCheckbox: showCheckbox,
             accountService: MockAccountService(),
             linkAccount: linkAccount,
             country: country
@@ -154,11 +154,11 @@ extension LinkInlineSignupElementSnapshotTests {
 
         viewModel.saveCheckboxChecked = saveCheckboxChecked
         // Won't trigger the "email address prefilled" path, because it wasn't there when initialized
-        if let emailAddress = emailAddress {
-            viewModel.emailAddress = emailAddress
+        if let userTypedEmailAddress = userTypedEmailAddress {
+            viewModel.emailAddress = userTypedEmailAddress
         }
 
-        if emailAddress != nil || prefilledEmailAddress != nil  {
+        if userTypedEmailAddress != nil || linkAccountEmailAddress != nil  {
             // Wait for account to load
             let expectation = notNullExpectation(for: viewModel, keyPath: \.linkAccount)
             wait(for: [expectation], timeout: 10)

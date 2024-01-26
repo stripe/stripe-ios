@@ -45,7 +45,7 @@ import UIKit
     public var isEmpty: Bool {
         return number.isEmpty
     }
-    
+
     /// The phone number without the country prefix and containing only digits
     public let number: String
     private let metadata: Metadata

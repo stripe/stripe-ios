@@ -34,6 +34,7 @@ final class LinkInlineSignupView: UIView {
     private(set) lazy var emailElement: LinkEmailElement = {
         let element = LinkEmailElement(defaultValue: viewModel.emailAddress,
                                        isOptional: viewModel.isEmailOptional,
+                                       showLogo: viewModel.mode != .textFieldsOnlyPhoneFirst,
                                        theme: theme)
         element.indicatorTintColor = theme.colors.primary
         return element
@@ -48,14 +49,16 @@ final class LinkInlineSignupView: UIView {
         // Don't allow a default phone number in textFieldsOnly mode.
         // Otherwise, we'd imply consumer consent when it hasn't occurred.
         switch viewModel.mode {
-        case .normal:
+        case .checkbox:
             return PhoneNumberElement(
                 defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
                 defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone,
                 theme: theme
         )
-        case .textFieldsOnly:
+        case .textFieldsOnlyEmailFirst:
             return PhoneNumberElement(isOptional: viewModel.isPhoneNumberOptional, theme: theme)
+        case .textFieldsOnlyPhoneFirst:
+            return PhoneNumberElement(isOptional: viewModel.isPhoneNumberOptional, infoView: LinkMoreInfoView(), theme: theme)
         }
     }()
 
@@ -63,27 +66,27 @@ final class LinkInlineSignupView: UIView {
 
     private lazy var emailSection: Element = {
         switch viewModel.mode {
-        case .normal:
+        case .checkbox:
             return SectionElement(elements: [emailElement], theme: theme)
-        case .textFieldsOnly:
+        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
             return emailElement
         }
     }()
 
     private lazy var nameSection: Element = {
         switch viewModel.mode {
-        case .normal:
+        case .checkbox:
             return SectionElement(elements: [nameElement], theme: theme)
-        case .textFieldsOnly:
+        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
             return nameElement
         }
     }()
 
     private lazy var phoneNumberSection: Element = {
         switch viewModel.mode {
-        case .normal:
+        case .checkbox:
             return SectionElement(elements: [phoneNumberElement], theme: theme)
-        case .textFieldsOnly:
+        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
             return phoneNumberElement
         }
     }()
@@ -91,7 +94,6 @@ final class LinkInlineSignupView: UIView {
     private(set) lazy var legalTermsElement: StaticElement = {
         let legalView = LinkLegalTermsView(textAlignment: .left,
                                            mode: viewModel.mode,
-                                           emailWasPrefilled: viewModel.didPrefillEmail,
                                            delegate: self)
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
@@ -104,7 +106,7 @@ final class LinkInlineSignupView: UIView {
 
     private lazy var formElement: FormElement = {
         var elements: [Element] = [nameSection]
-        if viewModel.didPrefillEmail {
+        if viewModel.mode == .textFieldsOnlyPhoneFirst {
             elements.insert(contentsOf: [phoneNumberSection, emailSection], at: 0)
         } else {
             elements.insert(contentsOf: [emailSection, phoneNumberSection], at: 0)
@@ -172,10 +174,10 @@ final class LinkInlineSignupView: UIView {
         formElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
 
         switch viewModel.mode {
-        case .normal:
+        case .checkbox:
             // 2-way binding
             checkboxElement.isChecked = viewModel.saveCheckboxChecked
-        case .textFieldsOnly:
+        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
             // assume checkbox is checked in text field only mode
             viewModel.saveCheckboxChecked = true
         }

@@ -170,7 +170,7 @@ extension LinkInlineSignupViewModelTests {
 
         return LinkInlineSignupViewModel(
             configuration: .init(),
-            mode: .normal,
+            showCheckbox: true,
             accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
             linkAccount: linkAccount,
             country: country

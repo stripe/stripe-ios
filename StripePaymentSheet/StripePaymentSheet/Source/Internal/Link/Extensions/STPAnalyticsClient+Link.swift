@@ -39,6 +39,11 @@ extension STPAnalyticsClient {
     func logLinkSignupFailure(error: Error) {
         self.logPaymentSheetEvent(event: .linkSignupFailure, error: error)
     }
+    
+    func logLinkSignupFailureAccountExists() {
+        self.logPaymentSheetEvent(event: .linkSignupFailureAccountExists)
+    }
+
 
     func logLinkAccountLookupComplete(lookupResult: ConsumerSession.LookupResponse.ResponseType) {
         let params = ["lookupResult": lookupResult.analyticValue]
