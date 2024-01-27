@@ -70,7 +70,7 @@ final class CloseConfirmationViewController: SheetViewController {
                         self?.dismiss(animated: true)
                     }
                 )
-            )
+            ).footerView
         )
     }
 }
