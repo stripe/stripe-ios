@@ -116,6 +116,7 @@ import Foundation
     case linkSignupFailure = "link.signup.failure"
     case linkPaymentFailure = "link.payment.failure"
     case linkSignupFailureInvalidSessionState = "link.signup.failure.invalidSessionState"
+    case linkSignupFailureAccountExists = "link.signup.failure.account_exists"
 
     // MARK: - Link Popup
     case linkPopupShow = "link.popup.show"

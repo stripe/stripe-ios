@@ -149,6 +149,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "Default billing address" }
 
         case on
+        case randomEmail
+        case randomEmailNoPhone
         case off
     }
 

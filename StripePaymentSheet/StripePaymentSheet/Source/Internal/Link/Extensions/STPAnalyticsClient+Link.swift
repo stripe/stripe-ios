@@ -40,6 +40,10 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .linkSignupFailure, error: error)
     }
 
+    func logLinkSignupFailureAccountExists() {
+        self.logPaymentSheetEvent(event: .linkSignupFailureAccountExists)
+    }
+
     func logLinkPaymentFailure(error: Error) {
         self.logPaymentSheetEvent(event: .linkPaymentFailure, error: error)
     }
