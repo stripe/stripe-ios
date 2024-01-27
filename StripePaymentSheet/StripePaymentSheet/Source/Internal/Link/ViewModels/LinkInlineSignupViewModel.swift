@@ -75,13 +75,23 @@ final class LinkInlineSignupViewModel {
             }
         }
     }
+    var phoneNumberWasPrefilled: Bool = false
+    var emailWasPrefilled: Bool = false
 
     var consentAction: PaymentSheetLinkAccount.ConsentAction {
         switch mode {
-        case .normal:
-            return .checkbox
-        case .textFieldsOnly:
-            return .implied
+        case .checkbox:
+            if phoneNumberWasPrefilled && emailWasPrefilled {
+                return .checkbox_v0_1
+            } else if emailWasPrefilled {
+                return .checkbox_v0_0
+            } else {
+                return .checkbox_v0
+            }
+        case .textFieldsOnlyEmailFirst:
+            return .implied_v0
+        case .textFieldsOnlyPhoneFirst:
+            return .implied_v0_0
         }
     }
 
@@ -287,6 +297,10 @@ final class LinkInlineSignupViewModel {
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
+        if let email = self.emailAddress,
+           !email.isEmpty {
+            emailWasPrefilled = true
+        }
         if showCheckbox {
             self.mode = .checkbox
         } else {
