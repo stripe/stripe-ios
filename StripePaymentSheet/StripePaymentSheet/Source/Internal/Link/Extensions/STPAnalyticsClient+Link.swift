@@ -44,8 +44,12 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .linkSignupFailureAccountExists)
     }
 
-    func logLinkPaymentFailure(error: Error) {
-        self.logPaymentSheetEvent(event: .linkPaymentFailure, error: error)
+    func logLinkCreatePaymentDetailsFailure(error: Error) {
+        self.logPaymentSheetEvent(event: .linkCreatePaymentDetailsFailure, error: error)
+    }
+
+    func logLinkSharePaymentDetailsFailure(error: Error) {
+        self.logPaymentSheetEvent(event: .linkSharePaymentDetailsFailure, error: error)
     }
 
     func logLinkAccountLookupComplete(lookupResult: ConsumerSession.LookupResponse.ResponseType) {

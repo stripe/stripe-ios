@@ -377,7 +377,7 @@ extension PaymentSheet {
                                     case .success(let shareResponse):
                                         confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod))
                                     case .failure(let error):
-                                        STPAnalyticsClient.sharedClient.logLinkPaymentFailure(error: error)
+                                        STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                                         // If this fails, confirm directly
                                         confirmWithPaymentMethodParams(paymentMethodParams)
                                     }
@@ -387,7 +387,7 @@ extension PaymentSheet {
                                 confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc)
                             }
                         case .failure(let error):
-                            STPAnalyticsClient.sharedClient.logLinkPaymentFailure(error: error)
+                            STPAnalyticsClient.sharedClient.logLinkCreatePaymentDetailsFailure(error: error)
                             // Attempt to confirm directly with params
                             confirmWithPaymentMethodParams(paymentMethodParams)
                         }

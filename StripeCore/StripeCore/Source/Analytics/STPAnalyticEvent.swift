@@ -114,7 +114,8 @@ import Foundation
     case linkSignupStart = "link.signup.start"
     case linkSignupComplete = "link.signup.complete"
     case linkSignupFailure = "link.signup.failure"
-    case linkPaymentFailure = "link.payment.failure"
+    case linkCreatePaymentDetailsFailure = "link.payment.failure.create"
+    case linkSharePaymentDetailsFailure = "link.payment.failure.share"
     case linkSignupFailureInvalidSessionState = "link.signup.failure.invalidSessionState"
     case linkSignupFailureAccountExists = "link.signup.failure.account_exists"
 
