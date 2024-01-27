@@ -82,7 +82,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                         )
                     }
                 )
-            )
+            ).footerView
         )
         paneLayoutView.addTo(view: view)
     }

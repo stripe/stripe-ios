@@ -142,7 +142,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
                     }(),
                     action: didSelectAnotherBank
                 )
-            )
+            ).footerView
         )
         paneLayoutView.addTo(view: self)
     }

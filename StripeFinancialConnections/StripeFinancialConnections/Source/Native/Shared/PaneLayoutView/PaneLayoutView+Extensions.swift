@@ -85,7 +85,7 @@ extension PaneLayoutView {
     }
 
     @available(iOSApplicationExtension, unavailable)
-    private static func createBodyView(
+    static func createBodyView(
         text: String?,
         contentView: UIView?
     ) -> UIView {
@@ -146,11 +146,11 @@ extension PaneLayoutView {
         secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration? = nil,
         topText: String? = nil,
         didSelectURL: ((URL) -> Void)? = nil
-    ) -> UIView? {
+    ) -> (footerView: UIView?, primaryButton: StripeUICore.Button?, secondaryButton: StripeUICore.Button?) {
         guard
             primaryButtonConfiguration != nil || secondaryButtonConfiguration != nil
         else {
-            return nil  // display no footer
+            return (nil, nil, nil)  // display no footer
         }
         let footerStackView = FooterStackView(
             didSelectPrimaryButton: primaryButtonConfiguration?.action,
@@ -175,8 +175,10 @@ extension PaneLayoutView {
             footerStackView.setCustomSpacing(16, after: topTextLabel)
         }
 
+        var primaryButtonReference: StripeUICore.Button?
         if let primaryButtonConfiguration = primaryButtonConfiguration {
             let primaryButton = Button(configuration: FinancialConnectionsPrimaryButtonConfiguration())
+            primaryButtonReference = primaryButton
             primaryButton.title = primaryButtonConfiguration.title
             primaryButton.accessibilityIdentifier = primaryButtonConfiguration.accessibilityIdentifier
             primaryButton.addTarget(
@@ -191,8 +193,10 @@ extension PaneLayoutView {
             footerStackView.addArrangedSubview(primaryButton)
         }
 
+        var secondaryButtonReference: StripeUICore.Button?
         if let secondaryButtonConfiguration = secondaryButtonConfiguration {
             let secondaryButton = Button(configuration: FinancialConnectionsSecondaryButtonConfiguration())
+            secondaryButtonReference = secondaryButton
             secondaryButton.title = secondaryButtonConfiguration.title
             secondaryButton.accessibilityIdentifier = secondaryButtonConfiguration.accessibilityIdentifier
             secondaryButton.addTarget(
@@ -219,7 +223,7 @@ extension PaneLayoutView {
             bottom: 16,
             trailing: 24
         )
-        return paddingStackView
+        return (paddingStackView, primaryButtonReference, secondaryButtonReference)
     }
 }
 

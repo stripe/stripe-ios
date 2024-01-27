@@ -15,6 +15,18 @@ final class PrepaneView: UIView {
     private let didSelectContinue: () -> Void
     private let didSelectCancel: () -> Void
 
+    private let contentStackView: UIStackView = {
+        let contentStackView = UIStackView()
+        contentStackView.axis = .vertical
+        contentStackView.spacing = 0
+        return contentStackView
+    }()
+    private let headerView: UIView
+    private let bodyView: UIView
+    private var loadingView: UIView?
+    private var primaryButton: StripeUICore.Button?
+    private var secondaryButton: StripeUICore.Button?
+
     init(
         prepaneModel: FinancialConnectionsOAuthPrepane,
         isRepairSession: Bool,
@@ -24,53 +36,81 @@ final class PrepaneView: UIView {
     ) {
         self.didSelectContinue = didSelectContinue
         self.didSelectCancel = didSelectCancel
+        self.headerView = PaneLayoutView.createHeaderView(
+            iconView: {
+                if let institutionIconUrl = prepaneModel.institutionIcon?.default {
+                    let institutionIconView = InstitutionIconView()
+                    institutionIconView.setImageUrl(institutionIconUrl)
+                    return institutionIconView
+                } else {
+                    return nil
+                }
+            }(),
+            title: prepaneModel.title
+        )
+        self.bodyView = PaneLayoutView.createBodyView(
+            text: prepaneModel.subtitle,
+            contentView: CreateContentView(
+                prepaneBodyModel: prepaneModel.body,
+                didSelectURL: didSelectURL
+            )
+        )
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
 
-        let paneLayoutView = PaneLayoutView(
-            contentView: PaneLayoutView.createContentView(
-                iconView: {
-                    if let institutionIconUrl = prepaneModel.institutionIcon?.default {
-                        let institutionIconView = InstitutionIconView()
-                        institutionIconView.setImageUrl(institutionIconUrl)
-                        return institutionIconView
-                    } else {
-                        return nil
-                    }
-                }(),
-                title: prepaneModel.title,
-                subtitle: prepaneModel.subtitle,
-                contentView: CreateContentView(
-                    prepaneBodyModel: prepaneModel.body,
-                    didSelectURL: didSelectURL
-                )
+        contentStackView.addArrangedSubview(headerView)
+
+        let footerViewTuple = PaneLayoutView.createFooterView(
+            primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                title: prepaneModel.cta.text,
+                accessibilityIdentifier: "prepane_continue_button",
+                action: didSelectContinue
             ),
-            footerView: PaneLayoutView.createFooterView(
-                primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                    title: prepaneModel.cta.text,
-                    accessibilityIdentifier: "prepane_continue_button",
-                    action: didSelectContinue
-                ),
-                secondaryButtonConfiguration: {
-                    if isRepairSession {
-                        return nil
-                    } else {
-                        return PaneLayoutView.ButtonConfiguration(
-                            title: STPLocalizedString(
-                                "Choose a different bank",
-                                "Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one."
-                            ),
-                            action: didSelectCancel
-                        )
-                    }
-                }()
-            )
+            secondaryButtonConfiguration: {
+                if isRepairSession {
+                    return nil
+                } else {
+                    return PaneLayoutView.ButtonConfiguration(
+                        title: STPLocalizedString(
+                            "Choose a different bank",
+                            "Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one."
+                        ),
+                        action: didSelectCancel
+                    )
+                }
+            }()
+        )
+        self.primaryButton = footerViewTuple.primaryButton
+        self.secondaryButton = footerViewTuple.secondaryButton
+
+        let paneLayoutView = PaneLayoutView(
+            contentView: contentStackView,
+            footerView: footerViewTuple.footerView
         )
         paneLayoutView.addTo(view: self)
+
+        // setup the `contentContainerView`
+        showLoadingView(false)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func showLoadingView(_ show: Bool) {
+        bodyView.removeFromSuperview()
+        loadingView?.removeFromSuperview()
+        loadingView = nil
+
+        if show {
+            let loadingView = PrepaneLoadingView()
+            self.loadingView = loadingView
+            contentStackView.addArrangedSubview(loadingView)
+        } else {
+            contentStackView.addArrangedSubview(bodyView)
+        }
+        primaryButton?.isLoading = show
+        secondaryButton?.isEnabled = !show
     }
 
     @objc fileprivate func didSelectContinueButton() {
@@ -110,11 +150,54 @@ private func CreateContentView(
     return verticalStackView
 }
 
+private class PrepaneLoadingView: ShimmeringView {
+
+    init() {
+        super.init(frame: .zero)
+        let verticalStackView = UIStackView(
+            arrangedSubviews: [
+                CreateLoadingLabelView(width: 400),
+                CreateLoadingLabelView(width: 163),
+            ]
+        )
+        verticalStackView.axis = .vertical
+        verticalStackView.alignment = .leading
+        verticalStackView.spacing = 8
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 0,
+            leading: 24,
+            bottom: 0,
+            trailing: 24
+        )
+        addAndPinSubview(verticalStackView)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+private func CreateLoadingLabelView(width: CGFloat) -> UIView {
+    let labelView = UIView()
+    labelView.backgroundColor = .backgroundOffset
+    labelView.layer.cornerRadius = 8
+    labelView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        labelView.heightAnchor.constraint(equalToConstant: 16),
+        labelView.widthAnchor.constraint(equalToConstant: width),
+    ])
+    // make the width fit the screen if-needed
+    labelView.setContentCompressionResistancePriority(.fittingSizeLevel, for: .horizontal)
+    return labelView
+}
+
 #if DEBUG
 
 import SwiftUI
 
 private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
+
+    let isLoading: Bool
 
     func makeUIView(context: Context) -> PrepaneView {
         PrepaneView(
@@ -167,7 +250,9 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
         )
     }
 
-    func updateUIView(_ uiView: PrepaneView, context: Context) {}
+    func updateUIView(_ prepaneView: PrepaneView, context: Context) {
+        prepaneView.showLoadingView(isLoading)
+    }
 }
 
 @available(iOS 14.0, *)
@@ -175,14 +260,23 @@ struct PrepaneView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             VStack {
-                PrepaneViewUIViewRepresentable()
+                PrepaneViewUIViewRepresentable(isLoading: false)
             }
             .frame(maxWidth: .infinity)
             .background(Color.purple.opacity(0.1))
-            .navigationTitle("Stripe")
+            .navigationTitle("stripe")
             .navigationBarTitleDisplayMode(.inline)
         }
 
+        NavigationView {
+            VStack {
+                PrepaneViewUIViewRepresentable(isLoading: true)
+            }
+            .frame(maxWidth: .infinity)
+            .background(Color.purple.opacity(0.1))
+            .navigationTitle("stripe")
+            .navigationBarTitleDisplayMode(.inline)
+        }
     }
 }
 

@@ -78,7 +78,7 @@ final class NetworkingLinkLoginWarmupViewController: UIViewController {
                         self?.didSelectSkip()
                     }
                 )
-            )
+            ).footerView
         )
         paneLayoutView.addTo(view: view)
     }

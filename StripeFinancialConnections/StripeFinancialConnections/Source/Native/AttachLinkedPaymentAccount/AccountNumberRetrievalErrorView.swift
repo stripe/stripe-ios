@@ -61,7 +61,7 @@ final class AccountNumberRetrievalErrorView: UIView {
                         return nil
                     }
                 }()
-            )
+            ).footerView
         )
         paneLayoutView.addTo(view: self)
     }
