@@ -54,7 +54,7 @@ final class LegalDetailsNoticeViewController: SheetViewController {
                 secondaryButtonConfiguration: nil,
                 topText: legalDetailsNotice.disclaimer,
                 didSelectURL: didSelectUrl
-            )
+            ).footerView
         )
     }
 }
