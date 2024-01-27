@@ -80,7 +80,7 @@ final class AccountPickerAccountLoadErrorView: UIView {
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: primaryButtonConfiguration,
                 secondaryButtonConfiguration: secondaryButtonConfiguration
-            )
+            ).footerView
         )
         paneLayoutView.addTo(view: self)
     }

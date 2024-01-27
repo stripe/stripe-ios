@@ -54,7 +54,7 @@ final class DataAccessNoticeViewController: SheetViewController {
                 secondaryButtonConfiguration: nil,
                 topText: dataAccessNotice.disclaimer,
                 didSelectURL: didSelectUrl
-            )
+            ).footerView
         )
     }
 }
