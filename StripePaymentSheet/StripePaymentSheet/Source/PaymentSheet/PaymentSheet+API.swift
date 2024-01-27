@@ -398,8 +398,8 @@ extension PaymentSheet {
             case .wallet:
                 let linkController = PayWithLinkController(intent: intent, configuration: configuration)
                 linkController.present(completion: completion)
-            case .signUp(let linkAccount, let phoneNumber, let legalName, let paymentMethodParams):
-                linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: .checkbox) { result in
+            case .signUp(let linkAccount, let phoneNumber, let consentAction, let legalName, let paymentMethodParams):
+                linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: consentAction) { result in
                     UserDefaults.standard.markLinkAsUsed()
                     switch result {
                     case .success:

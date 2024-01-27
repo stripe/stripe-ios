@@ -153,6 +153,10 @@ final class LinkInlineSignupView: UIView {
 
     func setupDefaults() {
         viewModel.phoneNumber = phoneNumberElement.phoneNumber
+        if let phoneNumber = viewModel.phoneNumber,
+           !phoneNumber.isEmpty {
+            viewModel.phoneNumberWasPrefilled = true
+        }
     }
 
     func setupBindings() {
