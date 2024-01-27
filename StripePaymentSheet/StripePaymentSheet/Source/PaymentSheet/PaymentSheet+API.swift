@@ -377,7 +377,7 @@ extension PaymentSheet {
                                     case .success(let shareResponse):
                                         confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod))
                                     case .failure(let error):
-                                        assertionFailure("Failed to share payment details \(error)")
+                                        STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                                         // If this fails, confirm directly
                                         confirmWithPaymentMethodParams(paymentMethodParams)
                                     }
@@ -386,8 +386,8 @@ extension PaymentSheet {
                                 // If not passthrough mode, confirm details directly
                                 confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc)
                             }
-                        case .failure:
-                            assertionFailure("Failed to create payment details")
+                        case .failure(let error):
+                            STPAnalyticsClient.sharedClient.logLinkCreatePaymentDetailsFailure(error: error)
                             // Attempt to confirm directly with params
                             confirmWithPaymentMethodParams(paymentMethodParams)
                         }
@@ -400,28 +400,16 @@ extension PaymentSheet {
                 linkController.present(completion: completion)
             case .signUp(let linkAccount, let phoneNumber, let consentAction, let legalName, let paymentMethodParams):
                 linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: consentAction) { result in
+                    UserDefaults.standard.markLinkAsUsed()
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
 
                         createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
-                        UserDefaults.standard.markLinkAsUsed()
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
-
-                        let isUserInputError =
-                            (error.domain == STPError.stripeDomain
-                                && error.code == STPErrorCode.invalidRequestError.rawValue)
-
-                        if isUserInputError {
-                            // The request failed because invalid info was provided. In this case
-                            // we should surface the error and let the user correct the information
-                            // and try again.
-                            completion(.failed(error: error), nil)
-                        } else {
-                            // Attempt to confirm directly with params as a fallback.
-                            confirmWithPaymentMethodParams(paymentMethodParams)
-                        }
+                        // Attempt to confirm directly with params as a fallback.
+                        confirmWithPaymentMethodParams(paymentMethodParams)
                     }
                 }
             case .withPaymentDetails(let linkAccount, let paymentDetails):
