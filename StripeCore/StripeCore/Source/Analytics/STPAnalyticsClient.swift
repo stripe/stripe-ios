@@ -59,14 +59,18 @@ import UIKit
         additionalInfoSet.removeAll()
     }
 
+    public static var isSimulatorOrTest: Bool {
+        #if targetEnvironment(simulator)
+            return true
+        #else
+            return NSClassFromString("XCTest") != nil
+        #endif
+    }
+
     // MARK: - Card Scanning
 
-    @objc class func shouldCollectAnalytics() -> Bool {
-        #if targetEnvironment(simulator)
-            return false
-        #else
-            return NSClassFromString("XCTest") == nil
-        #endif
+    @objc public class func shouldCollectAnalytics() -> Bool {
+        return !isSimulatorOrTest
     }
 
     public func additionalInfo() -> [String] {

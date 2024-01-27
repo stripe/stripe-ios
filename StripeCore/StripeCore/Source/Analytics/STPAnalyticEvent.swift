@@ -204,4 +204,15 @@ import Foundation
     case customerSheetUpdateCardBrandFailed = "cs_update_card_failed"
     case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
 
+    // MARK: - Basic Integration
+    case biLoadStarted = "bi_load_started"
+    case biLoadSucceeded = "bi_load_succeeded"
+    case biLoadFailed = "bi_load_failed"
+
+    case biPaymentCompleteNewPMSuccess = "bi_complete_payment_newpm_success"
+    case biPaymentCompleteSavedPMSuccess = "bi_complete_payment_savedpm_success"
+    case biPaymentCompleteApplePaySuccess = "bi_complete_payment_applepay_success"
+    case biPaymentCompleteNewPMFailure = "bi_complete_payment_newpm_failure"
+    case biPaymentCompleteSavedPMFailure = "bi_complete_payment_savedpm_failure"
+    case biPaymentCompleteApplePayFailure = "bi_complete_payment_applepay_failure"
 }
