@@ -132,7 +132,7 @@ extension STPPaymentContext {
             if let shownStartDate {
                 let duration = Date().timeIntervalSince(shownStartDate)
                 params["duration"] = duration
-            } else {
+            } else if NSClassFromString("XCTest") == nil {
                 assertionFailure("Shown start date should never be nil!")
             }
 

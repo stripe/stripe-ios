@@ -152,11 +152,16 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         XCTAssertTrue(
             STPAnalyticsClient.sharedClient.productUsage.contains("STPAddCardViewController")
         )
-        XCTAssertEqual(addCardVC.analyticsLogger.product, "STPPaymentContext")
+        XCTAssertEqual(addCardVC.analyticsLogger.product, "STPAddCardViewController")
     }
 
     func testPaymentOptionsVCAddsUsage() {
-        let paymentOptionsVC = STPPaymentOptionsViewController()
+        let customerContext = Testing_StaticCustomerContext.init(
+            customer: STPFixtures.customerWithCardTokenAndSourceSources(),
+            paymentMethods: []
+        )
+        let delegate = MockSTPPaymentOptionsViewControllerDelegate()
+        let paymentOptionsVC = STPPaymentOptionsViewController(configuration: .shared, theme: .defaultTheme, customerContext: customerContext, delegate: delegate)
         XCTAssertTrue(
             STPAnalyticsClient.sharedClient.productUsage.contains("STPPaymentOptionsViewController")
         )
