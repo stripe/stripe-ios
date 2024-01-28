@@ -246,7 +246,6 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     private var lookupSucceeded = false
     private var scannerCompleteAnimationTimer: Timer?
     var didSendFormInteractedAnalytic = false
-    var didSendCardNumberCompletedAnalytic = false
 
     @objc(commonInitWithConfiguration:) func commonInit(with configuration: STPPaymentConfiguration)
     {
@@ -586,11 +585,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     /// Only send form interacted analytic once per time this screen is shown
     func sendCardNumberCompletedAnalyticIfNecessary(cardNumber: String?) {
-        if !didSendCardNumberCompletedAnalytic, let cardNumber {
-            if STPCardValidator.validationState(forNumber: cardNumber, validatingCardBrand: true) == .valid {
-                didSendCardNumberCompletedAnalytic = true
-                analyticsLogger.logCardNumberCompleted()
-            }
+        if let cardNumber, STPCardValidator.validationState(forNumber: cardNumber, validatingCardBrand: true) == .valid {
+            analyticsLogger.logCardNumberCompleted()
         }
     }
 
