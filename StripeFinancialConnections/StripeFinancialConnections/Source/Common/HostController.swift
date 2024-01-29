@@ -83,13 +83,6 @@ extension HostController: HostViewControllerDelegate {
     ) {
         delegate?.hostController(self, didReceiveEvent: FinancialConnectionsEvent(name: .open))
 
-        guard
-            let consentPaneModel = synchronizePayload.text?.consentPane
-        else {
-            continueWithWebFlow(synchronizePayload.manifest)
-            return
-        }
-
         let flowRouter = FlowRouter(
             synchronizePayload: synchronizePayload,
             analyticsClient: analyticsClient
@@ -111,7 +104,7 @@ extension HostController: HostViewControllerDelegate {
             manifest: synchronizePayload.manifest,
             visualUpdate: synchronizePayload.visual,
             returnURL: returnURL,
-            consentPaneModel: consentPaneModel,
+            consentPaneModel: synchronizePayload.text?.consentPane,
             apiClient: api,
             clientSecret: clientSecret,
             analyticsClient: analyticsClient

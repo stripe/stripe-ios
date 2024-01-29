@@ -13,7 +13,7 @@ protocol NativeFlowDataManager: AnyObject {
     var reducedBranding: Bool { get }
     var merchantLogo: [String]? { get }
     var returnURL: String? { get }
-    var consentPaneModel: FinancialConnectionsConsent { get }
+    var consentPaneModel: FinancialConnectionsConsent? { get }
     var apiClient: FinancialConnectionsAPIClient { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
@@ -77,7 +77,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         return visualUpdate.reduceManualEntryProminenceInErrors
     }
     let returnURL: String?
-    let consentPaneModel: FinancialConnectionsConsent
+    let consentPaneModel: FinancialConnectionsConsent?
     let apiClient: FinancialConnectionsAPIClient
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -97,7 +97,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         manifest: FinancialConnectionsSessionManifest,
         visualUpdate: FinancialConnectionsSynchronize.VisualUpdate,
         returnURL: String?,
-        consentPaneModel: FinancialConnectionsConsent,
+        consentPaneModel: FinancialConnectionsConsent?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient

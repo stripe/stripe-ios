@@ -63,9 +63,10 @@ class NativeFlowController {
 
     func startFlow() {
         assert(navigationController.analyticsClient != nil)
+        let pane = dataManager.manifest.nextPane
         guard
             let viewController = CreatePaneViewController(
-                pane: dataManager.manifest.nextPane,
+                pane: pane,
                 nativeFlowController: self,
                 dataManager: dataManager
             )
@@ -76,7 +77,13 @@ class NativeFlowController {
             showTerminalError()
             return
         }
-        setNavigationControllerViewControllers([viewController], animated: false)
+        if pane == .manualEntry && dataManager.manifest.manualEntryMode == .custom {
+            // if we ever activate "manual entry only" mode (ex. due to an incident)
+            // then also handle "custom manual entry mode"
+            closeAuthFlow(customManualEntry: true)
+        } else {
+            setNavigationControllerViewControllers([viewController], animated: false)
+        }
     }
 
     @objc private func didSelectNavigationBarCloseButton() {
@@ -927,17 +934,22 @@ private func CreatePaneViewController(
         assertionFailure("Not supported")
         viewController = nil
     case .consent:
-        let consentDataSource = ConsentDataSourceImplementation(
-            manifest: dataManager.manifest,
-            consent: dataManager.consentPaneModel,
-            merchantLogo: dataManager.merchantLogo,
-            apiClient: dataManager.apiClient,
-            clientSecret: dataManager.clientSecret,
-            analyticsClient: dataManager.analyticsClient
-        )
-        let consentViewController = ConsentViewController(dataSource: consentDataSource)
-        consentViewController.delegate = nativeFlowController
-        viewController = consentViewController
+        if let consentPaneModel = dataManager.consentPaneModel {
+            let consentDataSource = ConsentDataSourceImplementation(
+                manifest: dataManager.manifest,
+                consent: consentPaneModel,
+                merchantLogo: dataManager.merchantLogo,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let consentViewController = ConsentViewController(dataSource: consentDataSource)
+            consentViewController.delegate = nativeFlowController
+            viewController = consentViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
     case .institutionPicker:
         let dataSource = InstitutionAPIDataSource(
             manifest: dataManager.manifest,
