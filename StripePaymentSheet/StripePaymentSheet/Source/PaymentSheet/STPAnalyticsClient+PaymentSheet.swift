@@ -284,7 +284,6 @@ extension STPAnalyticsClient {
             additionalParams[param] = param_value
         }
         let analytic = PaymentSheetAnalytic(event: event,
-                                            productUsage: productUsage,
                                             additionalParams: additionalParams)
         log(analytic: analytic, apiClient: apiClient)
     }
@@ -354,7 +353,6 @@ extension PaymentSheet.PaymentOption {
 
 struct PaymentSheetAnalytic: StripePayments.PaymentAnalytic {
     let event: STPAnalyticEvent
-    let productUsage: Set<String>
     let additionalParams: [String: Any]
 }
 
