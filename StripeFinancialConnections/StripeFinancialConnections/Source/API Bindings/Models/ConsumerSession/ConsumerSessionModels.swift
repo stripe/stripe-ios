@@ -10,7 +10,7 @@ import Foundation
 struct ConsumerSessionData: Decodable {
     let clientSecret: String
     let emailAddress: String
-    let redactedPhoneNumber: String
+    let redactedFormattedPhoneNumber: String
 }
 
 struct LookupConsumerSessionResponse: Decodable {
