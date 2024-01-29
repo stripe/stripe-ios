@@ -968,7 +968,8 @@ private func CreatePaneViewController(
                 apiClient: dataManager.apiClient,
                 analyticsClient: dataManager.analyticsClient,
                 clientSecret: dataManager.clientSecret,
-                consumerSession: consumerSession
+                consumerSession: consumerSession,
+                dataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice
             )
             let linkAccountPickerViewController = LinkAccountPickerViewController(
                 dataSource: linkAccountPickerDataSource

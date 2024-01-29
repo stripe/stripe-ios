@@ -22,6 +22,7 @@ protocol LinkAccountPickerDataSource: AnyObject {
     var selectedAccountTuple: FinancialConnectionsAccountTuple? { get }
     var nextPaneOnAddAccount: FinancialConnectionsSessionManifest.NextPane? { get set }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var dataAccessNotice: FinancialConnectionsDataAccessNotice? { get }
 
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
     func selectNetworkedAccount(_ selectedAccount: FinancialConnectionsPartnerAccount) -> Future<FinancialConnectionsInstitutionList>
@@ -36,6 +37,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     private let consumerSession: ConsumerSessionData
+    let dataAccessNotice: FinancialConnectionsDataAccessNotice?
 
     private(set) var selectedAccountTuple: FinancialConnectionsAccountTuple? {
         didSet {
@@ -49,13 +51,15 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         apiClient: FinancialConnectionsAPIClient,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         clientSecret: String,
-        consumerSession: ConsumerSessionData
+        consumerSession: ConsumerSessionData,
+        dataAccessNotice: FinancialConnectionsDataAccessNotice?
     ) {
         self.manifest = manifest
         self.apiClient = apiClient
         self.analyticsClient = analyticsClient
         self.clientSecret = clientSecret
         self.consumerSession = consumerSession
+        self.dataAccessNotice = dataAccessNotice
     }
 
     func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse> {
