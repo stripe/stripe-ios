@@ -238,6 +238,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [collectionView, cvcRecollectionContainerView, sepaMandateView])
         stackView.axis = .vertical
+        stackView.toggleArrangedSubview(cvcRecollectionContainerView, shouldShow: false, animated: false)
         return stackView
     }()
 
@@ -307,6 +308,12 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
     }
 
+    func didFinishPresenting() {
+        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(750))) {
+            self.updateFormElement()
+        }
+    }
+
     // MARK: - Private methods
 
     private func updateUI() {
@@ -321,7 +328,9 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
         updateMandateView()
-        updateFormElement()
+        if isViewLoaded {
+            updateFormElement()
+        }
     }
 
     private func updateMandateView() {
@@ -337,6 +346,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             stackView.toggleArrangedSubview(sepaMandateView, shouldShow: !shouldHideSEPA, animated: isViewLoaded)
         }
     }
+
     private func updateFormElement() {
         cvcFormElement = makeElement()
         swapFormElementUIIfNeeded()
@@ -345,8 +355,8 @@ class SavedPaymentOptionsViewController: UIViewController {
         if cvcRecollectionContainerView.isHidden != shouldHideCVCRecollection {
             stackView.toggleArrangedSubview(cvcRecollectionContainerView, shouldShow: !shouldHideCVCRecollection, animated: isViewLoaded)
         }
-
     }
+
     private func swapFormElementUIIfNeeded() {
 
         if cvcFormElement.view !== cvcFormElementView {

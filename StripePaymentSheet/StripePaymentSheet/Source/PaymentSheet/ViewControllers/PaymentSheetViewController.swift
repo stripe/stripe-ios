@@ -544,6 +544,9 @@ class PaymentSheetViewController: UIViewController {
             }
         }
     }
+    func didFinishPresenting() {
+        self.savedPaymentOptionsViewController.didFinishPresenting()
+    }
 }
 
 // MARK: - Wallet Header Delegate
