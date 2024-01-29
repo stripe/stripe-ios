@@ -2372,12 +2372,22 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #6 flow in PaymentSheet where the merchant enables saved payment methods, buyer has SPMs and returning Link user
     func testLinkPaymentSheet_enabledSPM_hasSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .returning // the hardcoded returning customer is signed up with Link
+        settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
         settings.linkV2Allowed = .on
+        settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Setup a saved card to simulate having saved payment methods
+        try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
+        app.buttons["Pay $50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // reload w/ same customer
+        reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         // Ensure Link wallet button is shown in SPM view
@@ -2534,14 +2544,26 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     func testLinkPaymentSheetFlow_disabledApplePay_enabledSPM_hasSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
-        settings.customerMode = .returning // this customer is signed up with Link
+        settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
         settings.linkV2Allowed = .on
         settings.applePayEnabled = .off
+        settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
         app.buttons["Payment method"].waitForExistenceAndTap()
+
+        // Setup a saved card to simulate having saved payment methods
+        try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // reload w/ same customer
+        reload(app, settings: settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+
         // Ensure Link wallet button is NOT shown in SPM view
         XCTAssertFalse(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -2552,11 +2574,12 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     func testLinkPaymentSheetFlow_enablesApplePay_enabledSPM_hasSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
-        settings.customerMode = .returning // this customer is signed up with Link
+        settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
         settings.linkV2Allowed = .on
         settings.applePayEnabled = .on
+        settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
         app.buttons["Payment method"].waitForExistenceAndTap()
