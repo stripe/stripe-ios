@@ -45,6 +45,7 @@ extension PaymentSheetViewController {
 
             static let applePay = WalletOptions(rawValue: 1 << 0)
             static let link = WalletOptions(rawValue: 1 << 1)
+            static let setupIntent = WalletOptions(rawValue: 1 << 2)
         }
 
         weak var delegate: WalletHeaderViewDelegate?
@@ -76,6 +77,23 @@ extension PaymentSheetViewController {
 
         private var supportsPayWithLink: Bool {
             return options.contains(.link)
+        }
+
+        private var isSetupIntent: Bool {
+            return options.contains(.setupIntent)
+        }
+
+        private var separatorText: String {
+            switch (isSetupIntent, showsCardPaymentMessage) {
+            case (true, true):
+                return STPLocalizedString("Or set up with a card", "Section title below Apple Pay button for credit card form set up.")
+            case (true, false):
+                return STPLocalizedString("Or set up using", "Section title below Apple Pay button showing alternative set up methods.")
+            case (false, true):
+                return STPLocalizedString("Or pay with a card", "Section title below Apple Pay button for credit card payment.")
+            case (false, false):
+                return STPLocalizedString("Or pay using", "Section title below Apple Pay button showing alternative payment methods.")
+            }
         }
 
         init(options: WalletOptions,
@@ -148,18 +166,7 @@ extension PaymentSheetViewController {
             separatorLabel.textColor = appearance.colors.textSecondary
             separatorLabel.separatorColor = appearance.colors.background.contrastingColor.withAlphaComponent(0.2)
             separatorLabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 21)
-
-            if showsCardPaymentMessage {
-                separatorLabel.text = STPLocalizedString(
-                    "Or pay with a card",
-                    "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay."
-                )
-            } else {
-                separatorLabel.text = STPLocalizedString(
-                    "Or pay using",
-                    "Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay."
-                )
-            }
+            separatorLabel.text = separatorText
         }
 
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -132,6 +132,10 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             walletOptions.insert(.link)
         }
 
+        if !intent.isPaymentIntent {
+            walletOptions.insert(.setupIntent)
+        }
+
         let header = WalletHeaderView(
             options: walletOptions,
             appearance: configuration.appearance,
