@@ -14,7 +14,6 @@ enum Image: String, ImageMaker {
     typealias BundleLocator = StripeFinancialConnectionsBundleLocator
 
     case add
-    case arrow_right
     case back_arrow
     case bank
     case bank_check
@@ -24,6 +23,7 @@ enum Image: String, ImageMaker {
     case chevron_down
     case close
     case generic_error
+    case panel_arrow_right
     case person
     case prepane_phone_background
     case search
