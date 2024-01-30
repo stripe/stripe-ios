@@ -12,7 +12,6 @@ import Foundation
 /// An analytic specific to payments that serializes payment-specific
 /// information into its params.
 @_spi(STP) public protocol PaymentAnalytic: Analytic {
-    var productUsage: Set<String> { get }
     var additionalParams: [String: Any] { get }
 }
 

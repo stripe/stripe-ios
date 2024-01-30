@@ -16,9 +16,8 @@ extension STPAnalyticsClient {
         log(
             analytic: PaymentAPIAnalytic(
                 event: .paymentMethodCreation,
-                productUsage: productUsage,
                 additionalParams: [
-                    "source_type": paymentMethodType ?? "unknown"
+                    "source_type": paymentMethodType ?? "unknown",
                 ]
             )
         )
@@ -28,9 +27,8 @@ extension STPAnalyticsClient {
         log(
             analytic: PaymentAPIAnalytic(
                 event: .tokenCreation,
-                productUsage: productUsage,
                 additionalParams: [
-                    "token_type": tokenType ?? "unknown"
+                    "token_type": tokenType ?? "unknown",
                 ]
             )
         )
@@ -42,9 +40,8 @@ extension STPAnalyticsClient {
         log(
             analytic: PaymentAPIAnalytic(
                 event: .paymentMethodIntentCreation,
-                productUsage: productUsage,
                 additionalParams: [
-                    "source_type": paymentMethodType ?? "unknown"
+                    "source_type": paymentMethodType ?? "unknown",
                 ]
             )
         )
@@ -56,9 +53,8 @@ extension STPAnalyticsClient {
         log(
             analytic: PaymentAPIAnalytic(
                 event: .setupIntentConfirmationAttempt,
-                productUsage: productUsage,
                 additionalParams: [
-                    "source_type": paymentMethodType ?? "unknown"
+                    "source_type": paymentMethodType ?? "unknown",
                 ]
             )
         )
@@ -67,6 +63,5 @@ extension STPAnalyticsClient {
 
 struct PaymentAPIAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
-    let productUsage: Set<String>
     let additionalParams: [String: Any]
 }
