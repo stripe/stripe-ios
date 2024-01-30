@@ -211,10 +211,6 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         self.addPaymentMethodViewController.delegate = self
     }
 
-    func selectLink() {
-        savedPaymentOptionsViewController.selectLink()
-    }
-
     // MARK: - UIViewController Methods
 
     override func viewDidLoad() {

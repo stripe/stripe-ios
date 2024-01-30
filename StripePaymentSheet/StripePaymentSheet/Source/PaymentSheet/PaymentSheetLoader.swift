@@ -16,7 +16,8 @@ final class PaymentSheetLoader {
         case success(
             intent: Intent,
             savedPaymentMethods: [STPPaymentMethod],
-            isLinkEnabled: Bool
+            isLinkEnabled: Bool,
+            isApplePayEnabled: Bool
         )
         case failure(Error)
     }
@@ -26,6 +27,7 @@ final class PaymentSheetLoader {
         mode: PaymentSheet.InitializationMode,
         configuration: PaymentSheet.Configuration,
         analyticsClient: STPAnalyticsClient = .sharedClient,
+        isFlowController: Bool,
         completion: @escaping (LoadingResult) -> Void
     ) {
         let loadingStartDate = Date()
@@ -72,14 +74,30 @@ final class PaymentSheetLoader {
                             intent: intent
                         )
                     }
+
+                // Determine if Link and Apple Pay are enabled
                 let isLinkEnabled = isLinkEnabled(intent: intent, configuration: configuration)
-                analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadSucceeded,
-                                                                     duration: Date().timeIntervalSince(loadingStartDate))
+                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay()
+                    && configuration.applePay != nil
+                    && intent.isApplePayEnabled
+
+                // Send load finished analytic
+                // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
+                let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
+                    savedPaymentMethods: filteredSavedPaymentMethods,
+                    customerID: configuration.customer?.id,
+                    showApplePay: isFlowController ? isApplePayEnabled : PaymentSheetViewController.shouldShowApplePayAsSavedPaymentOption(isLinkEnabled: isLinkEnabled, isApplePayEnabled: isApplePayEnabled),
+                    showLink: isFlowController ? isLinkEnabled : false
+                )
+                analyticsClient.logPaymentSheetLoadSucceeded(loadingStartDate: loadingStartDate, defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex))
+
+                // Call completion
                 completion(
                     .success(
                         intent: intent,
                         savedPaymentMethods: filteredSavedPaymentMethods,
-                        isLinkEnabled: isLinkEnabled
+                        isLinkEnabled: isLinkEnabled,
+                        isApplePayEnabled: isApplePayEnabled
                     )
                 )
             } catch {
@@ -90,6 +108,46 @@ final class PaymentSheetLoader {
             }
         }
     }
+
+    // MARK: - Helpers
+
+    static func isLinkEnabled(intent: Intent, configuration: PaymentSheet.Configuration) -> Bool {
+        guard intent.supportsLink(allowV2Features: configuration.allowLinkV2Features) else {
+            return false
+        }
+        return !configuration.isUsingBillingAddressCollection()
+    }
+
+    /// Returns a list of viewmodels to display in SavedPaymentOptionsViewController aka the "saved PMs" screen.
+    static func makePaymentOptionsListViewModels(
+        savedPaymentMethods: [STPPaymentMethod],
+        configuration: PaymentSheet.Configuration,
+        showApplePay: Bool,
+        showLink: Bool
+    ) -> [SavedPaymentOptionsViewController.Selection] {
+        var savedPaymentMethods = savedPaymentMethods
+        let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+
+        // Move default to front
+        if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
+            $0.stripeId == defaultPaymentMethod?.value
+        }) {
+            let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
+            savedPaymentMethods.insert(defaultPM, at: 0)
+        }
+
+        // Transform saved PaymentMethods into view models
+        let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
+            return SavedPaymentOptionsViewController.Selection.saved(paymentMethod: paymentMethod)
+        }
+
+        return [.add]
+            + (showApplePay ? [.applePay] : [])
+            + (showLink ? [.link] : [])
+            + savedPMViewModels
+    }
+
+    // MARK: - Helper methods that load things
 
     /// Loads miscellaneous singletons
     static func loadMiscellaneousSingletons() async {
@@ -139,13 +197,6 @@ final class PaymentSheetLoader {
         } else {
             return nil
         }
-    }
-
-    static func isLinkEnabled(intent: Intent, configuration: PaymentSheet.Configuration) -> Bool {
-        guard intent.supportsLink(allowV2Features: configuration.allowLinkV2Features) else {
-            return false
-        }
-        return !configuration.isUsingBillingAddressCollection()
     }
 
     static func fetchIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentSheet.Configuration, analyticsClient: STPAnalyticsClient) async throws -> Intent {

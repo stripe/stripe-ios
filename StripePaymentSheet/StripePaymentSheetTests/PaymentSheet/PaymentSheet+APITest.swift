@@ -81,10 +81,11 @@ class PaymentSheetAPITest: XCTestCase {
                 // 1. Load the PI
                 PaymentSheetLoader.load(
                     mode: .paymentIntentClientSecret(clientSecret),
-                    configuration: self.configuration
+                    configuration: self.configuration,
+                    isFlowController: false
                 ) { result in
                     switch result {
-                    case .success(let paymentIntent, let paymentMethods, _):
+                    case .success(let paymentIntent, let paymentMethods, _, _):
                         XCTAssertEqual(
                             Set(paymentIntent.recommendedPaymentMethodTypes),
                             Set(expected)
@@ -162,10 +163,11 @@ class PaymentSheetAPITest: XCTestCase {
                                                             confirmHandler: confirmHandler)
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
-            configuration: self.configuration
+            configuration: self.configuration,
+            isFlowController: false
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _):
+            case .success(let intent, let paymentMethods, _, _):
                 XCTAssertEqual(
                     Set(intent.recommendedPaymentMethodTypes),
                     Set(expected)
@@ -227,10 +229,11 @@ class PaymentSheetAPITest: XCTestCase {
                                                             confirmHandler: serverSideConfirmHandler)
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
-            configuration: self.configuration
+            configuration: self.configuration,
+            isFlowController: false
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _):
+            case .success(let intent, let paymentMethods, _, _):
                 XCTAssertEqual(
                     Set(intent.recommendedPaymentMethodTypes),
                     Set(expected)
@@ -283,9 +286,10 @@ class PaymentSheetAPITest: XCTestCase {
             // 1. Load the PI
             PaymentSheetLoader.load(
                 mode: .paymentIntentClientSecret(clientSecret),
-                configuration: self.configuration
+                configuration: self.configuration,
+                isFlowController: false
             ) { result in
-                guard case .success(let paymentIntent, _, _) = result else {
+                guard case .success(let paymentIntent, _, _, _) = result else {
                     XCTFail()
                     return
                 }

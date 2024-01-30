@@ -148,6 +148,7 @@ extension PaymentSheet {
             intent: Intent,
             savedPaymentMethods: [STPPaymentMethod],
             isLinkEnabled: Bool,
+            isApplePayEnabled: Bool,
             configuration: Configuration
         ) {
             AnalyticsHelper.shared.generateSessionID()
@@ -156,7 +157,7 @@ extension PaymentSheet {
                                                                        configuration: configuration,
                                                                        intentConfig: intent.intentConfig)
             self.configuration = configuration
-            self.viewController = Self.makeViewController(intent: intent, savedPaymentMethods: savedPaymentMethods, isLinkEnabled: isLinkEnabled, configuration: configuration)
+            self.viewController = Self.makeViewController(intent: intent, savedPaymentMethods: savedPaymentMethods, isLinkEnabled: isLinkEnabled, isApplePayEnabled: isApplePayEnabled, configuration: configuration)
             self.viewController.delegate = self
         }
 
@@ -227,14 +228,16 @@ extension PaymentSheet {
         ) {
             PaymentSheetLoader.load(
                 mode: mode,
-                configuration: configuration
+                configuration: configuration,
+                isFlowController: true
             ) { result in
                 switch result {
-                case .success(let intent, let paymentMethods, let isLinkEnabled):
+                case .success(let intent, let paymentMethods, let isLinkEnabled, let isApplePayEnabled):
                     let flowController = FlowController(
                         intent: intent,
                         savedPaymentMethods: paymentMethods,
                         isLinkEnabled: isLinkEnabled,
+                        isApplePayEnabled: isApplePayEnabled,
                         configuration: configuration)
 
                     // Synchronously pre-load image into cache.
@@ -397,7 +400,8 @@ extension PaymentSheet {
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheetLoader.load(
                 mode: .deferredIntent(intentConfiguration),
-                configuration: configuration
+                configuration: configuration,
+                isFlowController: true
             ) { [weak self] loadResult in
                 assert(Thread.isMainThread, "PaymentSheet.FlowController.update load callback must be called from the main thread.")
                 guard let self = self else {
@@ -411,13 +415,14 @@ extension PaymentSheet {
                 }
 
                 switch loadResult {
-                case .success(let intent, let paymentMethods, let isLinkEnabled):
+                case .success(let intent, let paymentMethods, let isLinkEnabled, let isApplePayEnabled):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
                     self.viewController = Self.makeViewController(
                         intent: intent,
                         savedPaymentMethods: paymentMethods,
                         previousPaymentOption: self._paymentOption,
                         isLinkEnabled: isLinkEnabled,
+                        isApplePayEnabled: isApplePayEnabled,
                         configuration: self.configuration
                     )
                     self.viewController.delegate = self
@@ -457,9 +462,9 @@ extension PaymentSheet {
             savedPaymentMethods: [STPPaymentMethod],
             previousPaymentOption: PaymentOption? = nil,
             isLinkEnabled: Bool,
+            isApplePayEnabled: Bool,
             configuration: Configuration
         ) -> PaymentSheetFlowControllerViewController {
-            let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && configuration.applePay != nil
             let vc = PaymentSheetFlowControllerViewController(
                 intent: intent,
                 savedPaymentMethods: savedPaymentMethods,

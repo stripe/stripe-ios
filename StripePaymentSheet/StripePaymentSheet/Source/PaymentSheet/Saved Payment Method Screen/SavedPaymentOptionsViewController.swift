@@ -232,34 +232,24 @@ class SavedPaymentOptionsViewController: UIViewController {
         view.addAndPinSubview(stackView)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard let selectedIndexPath = collectionView.indexPathsForSelectedItems?.first else {
+            return
+        }
+        // For some reason, the selected cell loses its selected appearance
+        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
+    }
+
     // MARK: - Private methods
 
     private func updateUI() {
-        let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customerID)
-
-        // Move default to front
-        var savedPaymentMethods = self.savedPaymentMethods
-        if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
-            $0.stripeId == defaultPaymentMethod?.value
-        }) {
-            let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
-            savedPaymentMethods.insert(defaultPM, at: 0)
-        }
-
-        // Transform saved PaymentMethods into ViewModels
-        let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
-            return Selection.saved(paymentMethod: paymentMethod)
-        }
-
-        viewModels =
-            [.add]
-            + (configuration.showApplePay ? [.applePay] : [])
-            + (configuration.showLink ? [.link] : [])
-            + savedPMViewModels
-
-        // Select default
-        selectedViewModelIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod })
-            ?? 1
+        (self.selectedViewModelIndex, self.viewModels) = Self.makeViewModels(
+            savedPaymentMethods: savedPaymentMethods,
+            customerID: configuration.customerID,
+            showApplePay: configuration.showApplePay,
+            showLink: configuration.showLink
+        )
 
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
@@ -281,16 +271,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        guard let selectedIndexPath = collectionView.indexPathsForSelectedItems?.first else {
-            return
-        }
-        // For some reason, the selected cell loses its selected appearance
-        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
-    }
-
-    func unselectPaymentMethod() {
+    private func unselectPaymentMethod() {
         guard let selectedIndexPath = selectedIndexPath else {
             return
         }
@@ -299,14 +280,35 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.reloadItems(at: [selectedIndexPath])
     }
 
-    func selectLink() {
-        guard configuration.showLink else {
-            return
+    // MARK: - Helpers
+
+    /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
+    /// - Returns defaultSelectedIndex: The index of the view model that is the default e.g. in the above list, if "Visa 4242" is the default, the index is 3.
+    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
+
+        var savedPaymentMethods = savedPaymentMethods
+        // Get the default
+        let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+
+        // Move default to front
+        if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
+            $0.stripeId == defaultPaymentMethod?.value
+        }) {
+            let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
+            savedPaymentMethods.insert(defaultPM, at: 0)
         }
 
-        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
-        selectedViewModelIndex = viewModels.firstIndex(where: { $0 == .link })
-        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredHorizontally)
+        // Transform saved PaymentMethods into view models
+        let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
+            return Selection.saved(paymentMethod: paymentMethod)
+        }
+
+        let viewModels = [.add]
+            + (showApplePay ? [.applePay] : [])
+            + (showLink ? [.link] : [])
+            + savedPMViewModels
+        let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod }) ?? 1
+        return (defaultSelectedIndex, viewModels)
     }
 }
 

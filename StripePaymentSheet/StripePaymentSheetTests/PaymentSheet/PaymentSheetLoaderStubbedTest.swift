@@ -29,18 +29,26 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
 
         let loaded = expectation(description: "Loaded")
+        let analyticsClient = STPTestingAnalyticsClient()
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
-            configuration: self.configuration(apiClient: stubbedAPIClient())
+            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            analyticsClient: analyticsClient,
+            isFlowController: true
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _):
+            case .success(let intent, let paymentMethods, _, let applePayEnabled):
                 guard case .paymentIntent(_, let setupIntent) = intent else {
                     XCTFail("Expecting payment intent")
                     return
                 }
+                XCTAssertFalse(applePayEnabled)
                 XCTAssertEqual(setupIntent.stripeId, "pi_3Kth")
                 XCTAssertEqual(paymentMethods.count, 0)
+                // The last analytic should be a load succeeded event w/ default_payment_method set
+                let lastAnalytic = analyticsClient.events.last
+                XCTAssertEqual(lastAnalytic?.event, .paymentSheetLoadSucceeded)
+                XCTAssertEqual(lastAnalytic?.params["default_payment_method"] as? String, "none")
                 loaded.fulfill()
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
@@ -56,12 +64,15 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
 
         let loaded = expectation(description: "Loaded")
+        let analyticsClient = STPTestingAnalyticsClient()
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
-            configuration: self.configuration(apiClient: stubbedAPIClient())
+            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            analyticsClient: analyticsClient,
+            isFlowController: true
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _):
+            case .success(let intent, let paymentMethods, _, _):
                 guard case .paymentIntent(_, let setupIntent) = intent else {
                     XCTFail("Expecting payment intent")
                     return
@@ -69,6 +80,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
                 XCTAssertEqual(setupIntent.stripeId, "pi_3Kth")
                 XCTAssertEqual(paymentMethods.count, 1)
                 XCTAssertEqual(paymentMethods[0].type, .card)
+                // The last analytic should be a load succeeded event w/ default_payment_method set
+                let lastAnalytic = analyticsClient.events.last
+                XCTAssertEqual(lastAnalytic?.event, .paymentSheetLoadSucceeded)
+                XCTAssertEqual(lastAnalytic?.params["default_payment_method"] as? String, "card")
                 loaded.fulfill()
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
@@ -86,10 +101,11 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded = expectation(description: "Loaded")
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
-            configuration: self.configuration(apiClient: stubbedAPIClient())
+            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            isFlowController: true
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _):
+            case .success(let intent, let paymentMethods, _, _):
                 guard case .paymentIntent(_, let setupIntent) = intent else {
                     XCTFail("Expecting payment intent")
                     return
@@ -115,10 +131,11 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded = expectation(description: "Loaded")
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
-            configuration: self.configuration(apiClient: stubbedAPIClient())
+            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            isFlowController: true
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _):
+            case .success(let intent, let paymentMethods, _, _):
                 guard case .paymentIntent(_, let setupIntent) = intent else {
                     XCTFail("Expecting payment intent")
                     return
@@ -160,11 +177,12 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_1234_secret_1234"),
             configuration: self.configuration(apiClient: stubbedAPIClient()),
-            analyticsClient: analyticsClient
+            analyticsClient: analyticsClient,
+            isFlowController: false
         ) { result in
             loaded.fulfill()
             switch result {
-            case let .success(intent, paymentMethods, isLinkEnabled):
+            case let .success(intent, paymentMethods, isLinkEnabled, isApplePayEnabled):
                 // ...should still succeed...
                 guard case let .paymentIntent(elementsSession, paymentIntent) = intent else {
                     XCTFail()
@@ -182,6 +200,9 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
                 // ...and with link disabled
                 XCTAssertFalse(isLinkEnabled)
+
+                // ...and apple pay enabled
+                XCTAssertTrue(isApplePayEnabled)
 
                 // ...and should report analytics indicating the v1/elements/session load failed
                 let analyticEvents = analyticsClient.events.map { $0.event }
@@ -217,11 +238,12 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .setupIntentClientSecret("seti_1234_secret_1234"),
             configuration: self.configuration(apiClient: stubbedAPIClient()),
-            analyticsClient: analyticsClient
+            analyticsClient: analyticsClient,
+            isFlowController: false
         ) { result in
             loaded.fulfill()
             switch result {
-            case let .success(intent, paymentMethods, isLinkEnabled):
+            case let .success(intent, paymentMethods, isLinkEnabled, isApplePayEnabled):
                 // ...should still succeed...
                 guard case let .setupIntent(elementsSession, setupIntent) = intent else {
                     XCTFail()
@@ -239,6 +261,9 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
                 // ...and with link disabled
                 XCTAssertFalse(isLinkEnabled)
+
+                // ...and apple pay enabled
+                XCTAssertTrue(isApplePayEnabled)
 
                 // ...and should report analytics indicating the v1/elements/session load failed
                 let analyticEvents = analyticsClient.events.map { $0.event }
@@ -272,11 +297,12 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration(apiClient: stubbedAPIClient()),
-            analyticsClient: analyticsClient
+            analyticsClient: analyticsClient,
+            isFlowController: false
         ) { result in
             loaded.fulfill()
             switch result {
-            case let .success(intent, paymentMethods, isLinkEnabled):
+            case let .success(intent, paymentMethods, isLinkEnabled, isApplePayEnabled):
                 // ...should still succeed...
                 guard case let .deferredIntent(elementsSession, _) = intent else {
                     XCTFail()
@@ -295,6 +321,9 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
                 // ...and with link disabled
                 XCTAssertFalse(isLinkEnabled)
 
+                // ...and apple pay enabled
+                XCTAssertTrue(isApplePayEnabled)
+
                 // ...and should report analytics indicating the v1/elements/session load failed
                 let analyticEvents = analyticsClient.events.map { $0.event }
                 XCTAssertEqual(analyticEvents, [.paymentSheetLoadStarted, .paymentSheetElementsSessionLoadFailed, .paymentSheetLoadSucceeded])
@@ -311,11 +340,12 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration(apiClient: stubbedAPIClient()),
-            analyticsClient: analyticsClient
+            analyticsClient: analyticsClient,
+            isFlowController: false
         ) { result in
             loaded2.fulfill()
             switch result {
-            case let .success(intent, paymentMethods, isLinkEnabled):
+            case let .success(intent, paymentMethods, isLinkEnabled, isApplePayEnabled):
                 // ...should still succeed...
                 guard case let .deferredIntent(elementsSession, _) = intent else {
                     XCTFail()
@@ -333,6 +363,9 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
                 // ...and with link disabled
                 XCTAssertFalse(isLinkEnabled)
+
+                // ...and apple pay enabled
+                XCTAssertTrue(isApplePayEnabled)
 
                 // ...and should report analytics indicating the v1/elements/session load failed
                 let analyticEvents = analyticsClient.events.map { $0.event }
@@ -359,7 +392,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             XCTFail("Confirm handler shouldn't be called.")
         }
         let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 0, currency: "USD"), confirmHandler: confirmHandler)
-        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: ._testValue_MostPermissive(), analyticsClient: analyticsClient) { result in
+        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: ._testValue_MostPermissive(), analyticsClient: analyticsClient, isFlowController: false) { result in
             loadExpectation.fulfill()
             switch result {
             case .success:

@@ -55,6 +55,11 @@ class PaymentSheetViewController: UIViewController {
         }
     }
 
+    /// This is a hack to encapsulate this logic so that it can be reused by PaymentSheetLoader to determine whether Apple Pay will be shown as a payment option or not.
+    static func shouldShowApplePayAsSavedPaymentOption(isLinkEnabled: Bool, isApplePayEnabled: Bool) -> Bool {
+        return !isLinkEnabled && isApplePayEnabled
+    }
+
     // MARK: - Writable Properties
     weak var delegate: PaymentSheetViewControllerDelegate?
     private(set) var intent: Intent
@@ -77,15 +82,12 @@ class PaymentSheetViewController: UIViewController {
         )
     }()
     private lazy var savedPaymentOptionsViewController: SavedPaymentOptionsViewController = {
-        let showApplePay = !shouldShowWalletHeader && isApplePayEnabled
-        let showLink = !shouldShowWalletHeader && isLinkEnabled
-
         return SavedPaymentOptionsViewController(
             savedPaymentMethods: savedPaymentMethods,
             configuration: .init(
                 customerID: configuration.customer?.id,
-                showApplePay: showApplePay,
-                showLink: showLink,
+                showApplePay: Self.shouldShowApplePayAsSavedPaymentOption(isLinkEnabled: isLinkEnabled, isApplePayEnabled: isApplePayEnabled),
+                showLink: false,
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isTestMode: configuration.apiClient.isTestmode
