@@ -30,6 +30,7 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
         verticalStackView.addArrangedSubview(emailTextField)
+        verticalStackView.addArrangedSubview(phoneTextField)
         verticalStackView.addArrangedSubview(formElement.view)
         return verticalStackView
     }()
@@ -37,6 +38,11 @@ final class NetworkingLinkSignupBodyFormView: UIView {
        let emailTextField = EmailTextField()
         emailTextField.delegate = self
         return emailTextField
+    }()
+    private(set) lazy var phoneTextField: PhoneTextField = {
+       let phoneTextField = PhoneTextField()
+//        phoneTextField.delegate = self
+        return phoneTextField
     }()
     private lazy var formElement = FormElement(
         elements: [

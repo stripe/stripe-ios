@@ -18,12 +18,14 @@ protocol EmailTextFieldDelegate: AnyObject {
 }
 
 final class EmailTextField: UIView {
-    
+
     fileprivate lazy var textField: RoundedTextField = {
         let textField = RoundedTextField(
             placeholder: "Email address" // TODO(kgaidis) localize
         )
         textField.textField.keyboardType = .emailAddress
+        textField.textField.textContentType = .emailAddress
+        textField.textField.autocapitalizationType = .none
         textField
             .containerHorizontalStackView
             .addArrangedSubview(activityIndicator)
@@ -39,7 +41,7 @@ final class EmailTextField: UIView {
     // we will only start validating as user
     // types once editing ends
     fileprivate var didEndEditingOnce = false
-    
+
     var text: String {
         set {
             textField.text = newValue
@@ -52,18 +54,18 @@ final class EmailTextField: UIView {
     var isEmailValid: Bool {
         return STPEmailAddressValidator.stringIsValidEmailAddress(text)
     }
-    
+
     weak var delegate: EmailTextFieldDelegate?
-    
+
     init() {
         super.init(frame: .zero)
         addAndPinSubview(textField)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func showLoadingView(_ show: Bool) {
         if show {
             activityIndicator.startAnimating()
@@ -71,15 +73,15 @@ final class EmailTextField: UIView {
             activityIndicator.stopAnimating()
         }
     }
-    
+
     override func endEditing(_ force: Bool) -> Bool {
         _ = textField.endEditing(force)
         return super.endEditing(force)
     }
-    
+
     private func textDidChange() {
         textField.errorText = nil
-        
+
         if !isEmailValid {
             // only show error messages once
             // user cleared
@@ -92,7 +94,7 @@ final class EmailTextField: UIView {
                 }
             }
         }
-        
+
         delegate?.emailTextField(
             self,
             didChangeEmailAddress: text,
@@ -102,7 +104,7 @@ final class EmailTextField: UIView {
 }
 
 extension EmailTextField: RoundedTextFieldDelegate {
-    
+
     func roundedTextField(
         _ textField: RoundedTextField,
         shouldChangeCharactersIn range: NSRange,
@@ -110,14 +112,14 @@ extension EmailTextField: RoundedTextFieldDelegate {
     ) -> Bool {
         return true
     }
-    
+
     func roundedTextField(
         _ textField: RoundedTextField,
         textDidChange text: String
     ) {
         textDidChange()
     }
-    
+
     func roundedTextFieldDidEndEditing(
         _ textField: RoundedTextField
     ) {
@@ -133,7 +135,7 @@ private struct EmailTextFieldUIViewRepresentable: UIViewRepresentable {
 
     let text: String
     let isLoading: Bool
-    
+
     func makeUIView(context: Context) -> EmailTextField {
         EmailTextField()
     }
@@ -160,22 +162,22 @@ struct EmailTextField_Previews: PreviewProvider {
                     text: "",
                     isLoading: false
                 ).frame(height: 56)
-                
+
                 EmailTextFieldUIViewRepresentable(
                     text: "test@test.com",
                     isLoading: false
                 ).frame(height: 56)
-                
+
                 EmailTextFieldUIViewRepresentable(
                     text: "test@test-very-long-name-thats-very-long.com",
                     isLoading: true
                 ).frame(height: 56)
-                
+
                 EmailTextFieldUIViewRepresentable(
                     text: "wrongemail@wronger",
                     isLoading: false
                 ).frame(height: 90)
-                
+
                 Spacer()
             }
             .padding()

@@ -91,6 +91,7 @@
 		6A732CA02B6871EA00828CB1 /* panel_arrow_right@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A732C9F2B6871E900828CB1 /* panel_arrow_right@3x.png */; };
 		6A732CA22B69821300828CB1 /* RoundedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732CA12B69821300828CB1 /* RoundedTextField.swift */; };
 		6A732CA42B69871F00828CB1 /* EmailTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732CA32B69871F00828CB1 /* EmailTextField.swift */; };
+		6A732CA62B69A46D00828CB1 /* PhoneTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732CA52B69A46D00828CB1 /* PhoneTextField.swift */; };
 		6A78140D2B30F15400168992 /* SheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78140C2B30F15400168992 /* SheetViewController.swift */; };
 		6A7814112B32462100168992 /* CloseConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814102B32462100168992 /* CloseConfirmationViewController.swift */; };
 		6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814172B361C5000168992 /* PaneLayoutView+Extensions.swift */; };
@@ -369,6 +370,7 @@
 		6A732C9F2B6871E900828CB1 /* panel_arrow_right@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "panel_arrow_right@3x.png"; sourceTree = "<group>"; };
 		6A732CA12B69821300828CB1 /* RoundedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedTextField.swift; sourceTree = "<group>"; };
 		6A732CA32B69871F00828CB1 /* EmailTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailTextField.swift; sourceTree = "<group>"; };
+		6A732CA52B69A46D00828CB1 /* PhoneTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneTextField.swift; sourceTree = "<group>"; };
 		6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "generic_error@3x.png"; sourceTree = "<group>"; };
 		6A78140C2B30F15400168992 /* SheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetViewController.swift; sourceTree = "<group>"; };
 		6A7814102B32462100168992 /* CloseConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseConfirmationViewController.swift; sourceTree = "<group>"; };
@@ -1086,6 +1088,7 @@
 				72A74B9F667A3BF48253045E /* NetworkingLinkSignupFooterView.swift */,
 				6CDEF702710EEA29BA3DC653 /* NetworkingLinkSignupViewController.swift */,
 				6A732CA32B69871F00828CB1 /* EmailTextField.swift */,
+				6A732CA52B69A46D00828CB1 /* PhoneTextField.swift */,
 			);
 			path = NetworkingLinkSignupPane;
 			sourceTree = "<group>";
@@ -1272,6 +1275,7 @@
 				C7D2763ACCE2CC71E788E18F /* FinancialConnectionsLegalDetailsNotice.swift in Sources */,
 				B271AAF41C9FE6AE392B88D3 /* FinancialConnectionsMixedOAuthParams.swift in Sources */,
 				DAA51ABB496551074DBA1A20 /* FinancialConnectionsNetworkedAccountsResponse.swift in Sources */,
+				6A732CA62B69A46D00828CB1 /* PhoneTextField.swift in Sources */,
 				6FE9F171CF9A5D0EDB2035AA /* FinancialConnectionsNetworkingLinkSignup.swift in Sources */,
 				87198EFD873751CA4E4B5005 /* FinancialConnectionsOAuthPrepane.swift in Sources */,
 				77C7F9A1DD0461FA2B1B4328 /* FinancialConnectionsPartnerAccount.swift in Sources */,

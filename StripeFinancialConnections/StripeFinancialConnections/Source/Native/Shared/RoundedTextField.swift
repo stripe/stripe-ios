@@ -116,7 +116,7 @@ final class RoundedTextField: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func endEditing(_ force: Bool) -> Bool {
         _ = textField.endEditing(force)
         return super.endEditing(force)
@@ -165,7 +165,7 @@ final class RoundedTextField: UIView {
             }
         }
     }
-    
+
     @IBAction private func textFieldDidChange() {
         delegate?.roundedTextField(self, textDidChange: text)
     }
