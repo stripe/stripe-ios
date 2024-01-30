@@ -124,7 +124,7 @@ final class InstitutionTableView: UIView {
         tableView.register(InstitutionTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)
-        addAndPinSubview(loadingView)
+        addAndPinSubviewToSafeArea(loadingView)
         showLoadingView(false)
     }
 

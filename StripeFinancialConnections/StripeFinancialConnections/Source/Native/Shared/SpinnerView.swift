@@ -13,28 +13,21 @@ final class SpinnerView: UIView {
 
     init() {
         super.init(frame: .zero)
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .iconActionPrimary
-        activityIndicator.backgroundColor = .customBackgroundColor
-        activityIndicator.startAnimating()
-        addSubview(activityIndicator)
 
-        // `ActivityIndicator` is hard-coded to have specific sizes, so here we scale it to our needs
-        let largeIconDiameter: CGFloat = 37
-        let desiredIconDiameter: CGFloat = 44
-        let transform = CGAffineTransform(
-            scaleX: desiredIconDiameter / largeIconDiameter,
-            y: desiredIconDiameter / largeIconDiameter
-        )
-        activityIndicator.transform = transform
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        let imageView = UIImageView(image: Image.spinner.makeImage())
+        addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            activityIndicator.widthAnchor.constraint(equalToConstant: desiredIconDiameter),
-            activityIndicator.heightAnchor.constraint(equalToConstant: desiredIconDiameter),
-            activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
+        let rotatingAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotatingAnimation.byValue = 2 * Float.pi
+        rotatingAnimation.duration = 0.7
+        rotatingAnimation.isAdditive = true
+        rotatingAnimation.repeatCount = .infinity
+        imageView.layer.add(rotatingAnimation, forKey: "animation_key")
     }
 
     required init?(coder: NSCoder) {

@@ -132,7 +132,7 @@ final class PartnerAuthViewController: UIViewController {
             // during presenting + dismissing of the Web View, so
             // add a loading spinner to fill some of the blank space
             let loadingView = SpinnerView()
-            view.addAndPinSubview(loadingView)
+            view.addAndPinSubviewToSafeArea(loadingView)
 
             openInstitutionAuthenticationWebView(authSession: authSession)
         }
@@ -634,7 +634,7 @@ final class PartnerAuthViewController: UIViewController {
             if show {
                 let loadingView = SpinnerView()
                 self.loadingView = loadingView
-                view.addAndPinSubview(loadingView)
+                view.addAndPinSubviewToSafeArea(loadingView)
             }
         }
         navigationItem.hidesBackButton = show

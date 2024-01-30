@@ -90,7 +90,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
     private func showLoadingView(_ show: Bool) {
         if show && loadingView.superview == nil {
             // first-time we are showing this, so add the view to hierarchy
-            view.addAndPinSubview(loadingView)
+            view.addAndPinSubviewToSafeArea(loadingView)
         }
 
         loadingView.isHidden = !show
