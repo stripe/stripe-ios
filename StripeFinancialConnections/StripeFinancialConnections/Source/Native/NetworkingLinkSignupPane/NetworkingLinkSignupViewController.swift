@@ -100,7 +100,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             willNavigateToReturningConsumer = false
             // in case a user decides to go back from verification pane,
             // we clear the email so they can re-enter
-            formView.emailElement.emailAddressElement.setText("")
+            formView.emailTextField.text = ""
         }
     }
 
@@ -185,7 +185,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             )
 
         dataSource.saveToLink(
-            emailAddress: formView.emailElement.emailAddressString ?? "",
+            emailAddress: formView.emailTextField.text,
             phoneNumber: formView.phoneNumberElement.phoneNumber?.string(as: .e164) ?? "",
             countryCode: formView.phoneNumberElement.phoneNumber?.countryCode ?? "US"
         )
@@ -228,7 +228,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
     }
 
     private func adjustSaveToLinkButtonDisabledState() {
-        let isEmailValid = formView.emailElement.validationState.isValid
+        let isEmailValid = formView.emailTextField.isEmailValid
         let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid
         footerView?.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
     }
@@ -248,7 +248,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
         _ bodyFormView: NetworkingLinkSignupBodyFormView,
         didEnterValidEmailAddress emailAddress: String
     ) {
-        bodyFormView.emailElement.startAnimating()
+        bodyFormView.emailTextField.showLoadingView(true)
         dataSource
             .lookup(emailAddress: emailAddress)
             .observe { [weak self, weak bodyFormView] result in
@@ -321,7 +321,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                         didReceiveTerminalError: error
                     )
                 }
-                bodyFormView?.emailElement.stopAnimating()
+                bodyFormView?.emailTextField.showLoadingView(false)
             }
     }
 

@@ -25,23 +25,36 @@ final class NetworkingLinkSignupBodyFormView: UIView {
     private let accountholderPhoneNumber: String?
     weak var delegate: NetworkingLinkSignupBodyFormViewDelegate?
 
+    private lazy var verticalStackView: UIStackView = {
+       let verticalStackView = UIStackView()
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 16
+        verticalStackView.addArrangedSubview(emailTextField)
+        verticalStackView.addArrangedSubview(formElement.view)
+        return verticalStackView
+    }()
+    private(set) lazy var emailTextField: EmailTextField = {
+       let emailTextField = EmailTextField()
+        emailTextField.delegate = self
+        return emailTextField
+    }()
     private lazy var formElement = FormElement(
         elements: [
-            emailSection,
+//            emailSection,
             phoneNumberSection,
         ],
         theme: theme
     )
-    private lazy var emailSection = SectionElement(elements: [emailElement], theme: theme)
-    private (set) lazy var emailElement: LinkEmailElement = {
-        let emailElement = LinkEmailElement(theme: theme)
-        emailElement.indicatorTintColor = .textPrimary
-        emailElement.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            emailElement.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
-        ])
-        return emailElement
-    }()
+//    private lazy var emailSection = SectionElement(elements: [emailElement], theme: theme)
+//    private (set) lazy var emailElement: LinkEmailElement = {
+//        let emailElement = LinkEmailElement(theme: theme)
+//        emailElement.indicatorTintColor = .textPrimary
+//        emailElement.view.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            emailElement.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
+//        ])
+//        return emailElement
+//    }()
     private lazy var phoneNumberSection = SectionElement(
         elements: [phoneNumberElement],
         theme: theme
@@ -90,7 +103,7 @@ final class NetworkingLinkSignupBodyFormView: UIView {
     init(accountholderPhoneNumber: String?) {
         self.accountholderPhoneNumber = accountholderPhoneNumber
         super.init(frame: .zero)
-        addAndPinSubview(formElement.view)
+        addAndPinSubview(verticalStackView)
         formElement.delegate = self
         phoneNumberSection.view.isHidden = true
     }
@@ -106,7 +119,8 @@ final class NetworkingLinkSignupBodyFormView: UIView {
             return false // phone number field is already shown
         }
         formElement.setElements(
-            [emailSection, phoneNumberSection],
+//            [emailSection, phoneNumberSection],
+            [phoneNumberSection],
             hidden: false,
             animated: true
         )
@@ -117,11 +131,13 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         guard let emailAddress = emailAddress, !emailAddress.isEmpty else {
             return
         }
-        emailElement.emailAddressElement.setText(emailAddress)
+        emailTextField.text = emailAddress // TODO(kgaidis): test prefill!!!
+//        emailElement.emailAddressElement.setText(emailAddress)
     }
 
     func endEditingEmailAddressField() {
-        emailElement.view.endEditing(true)
+        _ = emailTextField.endEditing(true)
+//        emailElement.view.endEditing(true)
     }
 
     func beginEditingPhoneNumberField() {
@@ -129,43 +145,88 @@ final class NetworkingLinkSignupBodyFormView: UIView {
     }
 }
 
-extension NetworkingLinkSignupBodyFormView: ElementDelegate {
-    func didUpdate(element: StripeUICore.Element) {
+// MARK: - EmailTextFieldDelegate
+
+extension NetworkingLinkSignupBodyFormView: EmailTextFieldDelegate {
+    func emailTextField(
+        _ emailTextField: EmailTextField,
+        didChangeEmailAddress emailAddress: String,
+        isValid: Bool
+    ) {
         delegate?.networkingLinkSignupBodyFormViewDidUpdateFields(self)
 
-        switch emailElement.validationState {
-        case .valid:
-            if let emailAddress = emailElement.emailAddressString {
-                debounceEmailTimer?.invalidate()
-                debounceEmailTimer = Timer.scheduledTimer(
-                    // TODO(kgaidis): discuss this logic w/ team; Stripe.js is constant 0.3
-                    //
-                    // a valid e-mail will transition the user to the phone number
-                    // field (sometimes prematurely), so we increase debounce if
-                    // if there's a high chance the e-mail is not yet finished
-                    // being typed (high chance of not finishing == not .com suffix)
-                    withTimeInterval: emailAddress.hasSuffix(".com") ? 0.3 : 1.0,
-                    repeats: false
-                ) { [weak self] _ in
-                    guard let self = self else { return }
-                    if
-                        self.emailElement.validationState.isValid,
-                        // `lastValidEmail` ensures that we only
-                        // fire the delegate ONCE per unique valid email
+        if isValid {
+            debounceEmailTimer?.invalidate()
+            debounceEmailTimer = Timer.scheduledTimer(
+                // TODO(kgaidis): discuss this logic w/ team; Stripe.js is constant 0.3
+                //
+                // a valid e-mail will transition the user to the phone number
+                // field (sometimes prematurely), so we increase debounce if
+                // if there's a high chance the e-mail is not yet finished
+                // being typed (high chance of not finishing == not .com suffix)
+                withTimeInterval: emailAddress.hasSuffix(".com") ? 0.3 : 1.0,
+                repeats: false
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                if
+                    // make sure the email inputted is still valid
+                    // even after the debounce
+                    self.emailTextField.isEmailValid,
+                    // `lastValidEmail` ensures that we only
+                    // fire the delegate ONCE per unique valid email
                         emailAddress != self.lastValidEmail
-                    {
-                        self.lastValidEmail = emailAddress
-                        self.delegate?.networkingLinkSignupBodyFormView(
-                            self,
-                            didEnterValidEmailAddress: emailAddress
-                        )
-                    }
+                {
+                    self.lastValidEmail = emailAddress
+                    self.delegate?.networkingLinkSignupBodyFormView(
+                        self,
+                        didEnterValidEmailAddress: emailAddress
+                    )
                 }
             }
-        case .invalid:
+        } else {
             // errors are displayed automatically by the component
             lastValidEmail = nil
         }
+    }
+}
+
+extension NetworkingLinkSignupBodyFormView: ElementDelegate {
+    func didUpdate(element: StripeUICore.Element) {
+        delegate?.networkingLinkSignupBodyFormViewDidUpdateFields(self)
+//
+//        switch emailElement.validationState {
+//        case .valid:
+//            if let emailAddress = emailElement.emailAddressString {
+//                debounceEmailTimer?.invalidate()
+//                debounceEmailTimer = Timer.scheduledTimer(
+//                    // TODO(kgaidis): discuss this logic w/ team; Stripe.js is constant 0.3
+//                    //
+//                    // a valid e-mail will transition the user to the phone number
+//                    // field (sometimes prematurely), so we increase debounce if
+//                    // if there's a high chance the e-mail is not yet finished
+//                    // being typed (high chance of not finishing == not .com suffix)
+//                    withTimeInterval: emailAddress.hasSuffix(".com") ? 0.3 : 1.0,
+//                    repeats: false
+//                ) { [weak self] _ in
+//                    guard let self = self else { return }
+//                    if
+//                        self.emailElement.validationState.isValid,
+//                        // `lastValidEmail` ensures that we only
+//                        // fire the delegate ONCE per unique valid email
+//                        emailAddress != self.lastValidEmail
+//                    {
+//                        self.lastValidEmail = emailAddress
+//                        self.delegate?.networkingLinkSignupBodyFormView(
+//                            self,
+//                            didEnterValidEmailAddress: emailAddress
+//                        )
+//                    }
+//                }
+//            }
+//        case .invalid:
+//            // errors are displayed automatically by the component
+//            lastValidEmail = nil
+//        }
     }
 
     func continueToNextField(element: StripeUICore.Element) {}
