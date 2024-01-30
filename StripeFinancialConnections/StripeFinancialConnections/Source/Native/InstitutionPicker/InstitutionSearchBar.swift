@@ -51,6 +51,13 @@ final class InstitutionSearchBar: UIView {
             ]
         )
         textField.returnKeyType = .search
+        // fixes a 'bug' where if a user types a keyword, and autocorrect
+        // wants to correct it, pressing "search" button will choose
+        // the autocorrected word even though the intent was to use the
+        // typed-in word
+        //
+        // also, bank names are not always friendly to autocorrect suggestions
+        textField.autocorrectionType = .no
         textField.delegate = self
         textField.addTarget(
             self,
