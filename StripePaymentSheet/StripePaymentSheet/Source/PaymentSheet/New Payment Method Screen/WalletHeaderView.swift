@@ -86,13 +86,13 @@ extension PaymentSheetViewController {
         private var separatorText: String {
             switch (isSetupIntent, showsCardPaymentMessage) {
             case (true, true):
-                return STPLocalizedString("Or set up with a card", "Section title below Apple Pay button for credit card form set up.")
+                return STPLocalizedString("Or set up with a card", "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up.")
             case (true, false):
-                return STPLocalizedString("Or set up using", "Section title below Apple Pay button showing alternative set up methods.")
+                return STPLocalizedString("Or set up using", "Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up.")
             case (false, true):
-                return STPLocalizedString("Or pay with a card", "Section title below Apple Pay button for credit card payment.")
+                return STPLocalizedString("Or pay with a card", "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay.")
             case (false, false):
-                return STPLocalizedString("Or pay using", "Section title below Apple Pay button showing alternative payment methods.")
+                return STPLocalizedString("Or pay using", "Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay.")
             }
         }
 
