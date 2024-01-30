@@ -27,7 +27,7 @@ final class CloseConfirmationViewController: SheetViewController {
         setup(
             withContentView: PaneLayoutView.createContentView(
                 iconView: RoundedIconView(
-                    image: .image(.arrow_right),
+                    image: .image(.panel_arrow_right),
                     style: .circle
                 ),
                 title: STPLocalizedString(
@@ -63,7 +63,7 @@ final class CloseConfirmationViewController: SheetViewController {
                 ),
                 secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
                     title: STPLocalizedString(
-                        "No, continue",
+                        "Cancel",
                         "A button title. The user encounters it as part of a confirmation pop-up when trying to exit a screen. Pressing it will close the pop-up, and will ensure that the screen does NOT exit."
                     ),
                     action: { [weak self] in
