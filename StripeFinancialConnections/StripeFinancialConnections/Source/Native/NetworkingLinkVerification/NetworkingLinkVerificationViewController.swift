@@ -60,7 +60,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
             subtitle: String(format: STPLocalizedString(
                 "Enter the code sent to %@.",
                 "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
-            ), redactedPhoneNumber),
+            ), AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
             contentView: otpView,
             footerView: nil
         )
@@ -134,7 +134,7 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
 
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
         showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
-        showContent(redactedPhoneNumber: consumerSession.redactedPhoneNumber)
+        showContent(redactedPhoneNumber: consumerSession.redactedFormattedPhoneNumber)
     }
 
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {
