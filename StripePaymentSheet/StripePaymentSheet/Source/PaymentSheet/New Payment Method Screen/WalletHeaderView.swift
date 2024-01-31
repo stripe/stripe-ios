@@ -77,12 +77,12 @@ extension PaymentSheetViewController {
         private var supportsPayWithLink: Bool {
             return options.contains(.link)
         }
-        
+
         private var separatorText: String {
             if showsCardPaymentMessage {
                 return STPLocalizedString("Or use a card", "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay or set up.")
             }
-            
+
             return STPLocalizedString("Or use", "Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay or set up.")
         }
 
