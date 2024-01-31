@@ -14,6 +14,11 @@ import XCTest
 
 class STPElementsSessionTest: XCTestCase {
 
+    override func tearDown() {
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        super.tearDown()
+    }
+
     // MARK: - STPAPIResponseDecodable Tests
     func testDecodedObjectFromAPIResponseMapping() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
@@ -55,6 +60,23 @@ class STPElementsSessionTest: XCTestCase {
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
 
         XCTAssertFalse(elementsSession.isApplePayEnabled)
+    }
+
+    func testMissingEPMResponseDoesntFireAnalytic() {
+        // If STPElementsSession decodes a dict...
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        // ...that doesn't contain "external_payment_method_data"
+        elementsSessionJson["external_payment_method_data"] = nil
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        // ...it should successfully decode...
+        XCTAssertNotNil(elementsSession)
+        // ...with an empty `externalPaymentMethods` property
+        XCTAssertTrue(elementsSession.externalPaymentMethods.isEmpty)
+        // ...and not send a failure analytic
+        let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
+        XCTAssertFalse(analyticEvents.contains(where: { dict in
+            (dict["event"] as? String) == STPAnalyticEvent.paymentSheetElementsSessionEPMLoadFailed.rawValue
+        }))
     }
 
     func testFailedEPMParsing() {
