@@ -227,6 +227,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        STPAnalyticsClient.sharedClient.logPaymentSheetFormShown(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier, apiClient: configuration.apiClient)
         sendEventToSubviews(.viewDidAppear, from: view)
         delegate?.didUpdate(self)
     }

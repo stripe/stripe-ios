@@ -183,6 +183,8 @@ import Foundation
     // MARK: - PaymentSheet checkout
     case paymentSheetCarouselPaymentMethodTapped = "mc_carousel_payment_method_tapped"
     case paymentSheetConfirmButtonTapped = "mc_confirm_button_tapped"
+    case paymentSheetFormShown = "mc_form_shown"
+    case paymentSheetFormInteracted = "mc_form_interacted"
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
@@ -207,14 +209,23 @@ import Foundation
     case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
 
     // MARK: - Basic Integration
+    // Loading
     case biLoadStarted = "bi_load_started"
     case biLoadSucceeded = "bi_load_succeeded"
     case biLoadFailed = "bi_load_failed"
 
+    // Confirmation
     case biPaymentCompleteNewPMSuccess = "bi_complete_payment_newpm_success"
     case biPaymentCompleteSavedPMSuccess = "bi_complete_payment_savedpm_success"
     case biPaymentCompleteApplePaySuccess = "bi_complete_payment_applepay_success"
     case biPaymentCompleteNewPMFailure = "bi_complete_payment_newpm_failure"
     case biPaymentCompleteSavedPMFailure = "bi_complete_payment_savedpm_failure"
     case biPaymentCompleteApplePayFailure = "bi_complete_payment_applepay_failure"
+
+    // UI events
+    case biOptionsShown = "bi_options_shown"
+    case biFormShown = "bi_form_shown"
+    case biFormInteracted = "bi_form_interacted"
+    case biCardNumberCompleted = "bi_card_number_completed"
+    case biDoneButtonTapped = "bi_done_button_tapped"
 }

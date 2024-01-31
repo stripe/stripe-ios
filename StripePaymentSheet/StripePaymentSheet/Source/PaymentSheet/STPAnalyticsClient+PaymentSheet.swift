@@ -102,6 +102,10 @@ extension STPAnalyticsClient {
         )
     }
 
+    func logPaymentSheetFormShown(paymentMethodTypeIdentifier: String, apiClient: STPAPIClient) {
+        logPaymentSheetEvent(event: .paymentSheetFormShown, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier)
+    }
+
     enum DeferredIntentConfirmationType: String {
         case server = "server"
         case client = "client"
