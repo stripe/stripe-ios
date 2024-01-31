@@ -6,81 +6,76 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
 protocol PhoneCountryCodePickerViewDelegate: AnyObject {
-    
+
 }
 
 final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
-    weak var delegate: PhoneCountryCodePickerViewDelegate?
-    
+    private let height: CGFloat = 250
+    private let locale: Locale = .current
+
     private lazy var pickerView: UIPickerView = {
         let pickerView = UIPickerView()
         pickerView.dataSource = self
         pickerView.delegate = self
-//        pickerView.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            pickerView.heightAnchor.constraint(equalToConstant: 100),
-//        ])
         return pickerView
     }()
+    private lazy var rowItems: [CountryCodeRowItem] = {
+       return CreateCountryCodeItems(locale: locale)
+    }()
+    private lazy var selectedRow: Int = {
+        let defaultCountryCode = locale.stp_regionCode ?? ""
+        return rowItems.firstIndex(where: { $0.countryCode == defaultCountryCode }) ?? 0
+    }()
+
+    weak var delegate: PhoneCountryCodePickerViewDelegate?
 
     init() {
         super.init(frame: .zero)
         clipsToBounds = true
         addSubview(pickerView)
-//        addAndPinSubview(pickerView)
-        
-        let height: CGFloat = 150
-        
-        pickerView.translatesAutoresizingMaskIntoConstraints = false
+
         translatesAutoresizingMaskIntoConstraints = false
+        pickerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(
-                equalToConstant: height
-            ),
+            heightAnchor.constraint(equalToConstant: height),
             pickerView.widthAnchor.constraint(equalTo: widthAnchor),
+            // UIPickerView defines its own height so, to avoid breaking
+            // constraints/layout, we center it within the view, but
+            // `clipsToBounds` its edges
             pickerView.heightAnchor.constraint(greaterThanOrEqualToConstant: height),
             pickerView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
-        
-//        backgroundColor = .backgroundOffset
-//        layer.cornerRadius = 8
-//        clipsToBounds = true
-        
-//        let horizontalStackView = UIStackView(
-//            arrangedSubviews: [
-//                flagLabel,
-//                countryCodeLabel,
-//            ]
-//        )
-//        horizontalStackView.axis = .horizontal
-//        horizontalStackView.spacing = 8
-//        horizontalStackView.isLayoutMarginsRelativeArrangement = true
-//        horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-//            top: 12,
-//            leading: 12,
-//            bottom: 12,
-//            trailing: 12
-//        )
-//        addAndPinSubview(horizontalStackView)
-//        
-//        addAndPinSubview(textField)
+
+        adjustPickerViewToSelectedRow()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-//    override func endEditing(_ force: Bool) -> Bool {
-//        return super.endEditing(force)
-//    }
-    
+    // fixes a bug where height was not respected when put
+    // into `textField.inputView` unless this was overridden
+    override var intrinsicContentSize: CGSize {
+        var intrinsicContentSize = super.intrinsicContentSize
+        intrinsicContentSize.height = height
+        return intrinsicContentSize
+    }
+
+    private func adjustPickerViewToSelectedRow() {
+        if pickerView.selectedRow(inComponent: 0) != selectedRow {
+            pickerView.reloadComponent(0)
+            pickerView.selectRow(selectedRow, inComponent: 0, animated: false)
+        }
+    }
+
     // MARK: - UIPickerViewDataSource
-    
+
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -89,17 +84,18 @@ final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerVi
         _ pickerView: UIPickerView,
         numberOfRowsInComponent component: Int
     ) -> Int {
-        return 10
+        return rowItems.count
     }
 
     // MARK: - UIPickerViewDelegate
-    
+
     func pickerView(
         _ pickerView: UIPickerView,
         titleForRow row: Int,
         forComponent component: Int
     ) -> String? {
-        return "Meow"
+        let rowItem = rowItems[row]
+        return rowItem.displayTitle
     }
 
     func pickerView(
@@ -107,7 +103,27 @@ final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerVi
         didSelectRow row: Int,
         inComponent component: Int
     ) {
-        
+        selectedRow = row
+    }
+}
+
+private struct CountryCodeRowItem {
+    let displayTitle: String
+    let countryCode: String
+}
+
+private func CreateCountryCodeItems(locale: Locale) -> [CountryCodeRowItem] {
+    let countryCodes = locale.sortedByTheirLocalizedNames(
+        PhoneNumber.Metadata.allMetadata.map({ $0.regionCode })
+    )
+    return countryCodes.map { countryCode in
+        let countryFlag = String.countryFlagEmoji(for: countryCode) ?? ""              // 🇺🇸
+        let countryName = locale.localizedString(forRegionCode: countryCode) ?? countryCode          // United States
+        let phonePrefix = PhoneNumber.Metadata.metadata(for: countryCode)?.prefix ?? ""   // +1
+        return CountryCodeRowItem(
+            displayTitle: "\(countryFlag) \(countryName) (\(phonePrefix))",
+            countryCode: countryCode
+        )
     }
 }
 
@@ -116,30 +132,21 @@ final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerVi
 import SwiftUI
 
 private struct PhoneCountryCodePickerViewUIViewRepresentable: UIViewRepresentable {
-
-    let text: String
-
     func makeUIView(context: Context) -> PhoneCountryCodePickerView {
         PhoneCountryCodePickerView()
     }
 
     func updateUIView(
-        _ PhoneCountryCodePickerView: PhoneCountryCodePickerView,
+        _ phoneCountryCodePickerView: PhoneCountryCodePickerView,
         context: Context
-    ) {
-        
-    }
+    ) {}
 }
 
 struct PhoneCountryCodePickerView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
             VStack(spacing: 16) {
-                PhoneCountryCodePickerViewUIViewRepresentable(
-                    text: ""
-                )
-//                .frame(width: 72, height: 48)
-
+                    PhoneCountryCodePickerViewUIViewRepresentable()
                 Spacer()
             }
             .padding()

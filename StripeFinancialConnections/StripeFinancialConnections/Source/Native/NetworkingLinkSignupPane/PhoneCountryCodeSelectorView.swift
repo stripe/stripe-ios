@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol PhoneCountryCodeSelectorViewDelegate: AnyObject {
-    
+
 }
 
 final class PhoneCountryCodeSelectorView: UIView {
@@ -65,11 +65,11 @@ final class PhoneCountryCodeSelectorView: UIView {
 
     init() {
         super.init(frame: .zero)
-        
+
         backgroundColor = .backgroundOffset
         layer.cornerRadius = 8
         clipsToBounds = true
-        
+
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
                 flagLabel,
@@ -86,7 +86,7 @@ final class PhoneCountryCodeSelectorView: UIView {
             trailing: 12
         )
         addAndPinSubview(horizontalStackView)
-        
+
         addAndPinSubview(textField)
     }
 
@@ -106,7 +106,7 @@ extension PhoneCountryCodeSelectorView: DoneButtonToolbarDelegate {
     func didTapDone(_ toolbar: DoneButtonToolbar) {
         textField.endEditing(true)
     }
-    
+
     func didTapCancel(_ toolbar: DoneButtonToolbar) {
         textField.endEditing(true)
     }
@@ -147,7 +147,7 @@ private struct PhoneCountryCodeSelectorViewUIViewRepresentable: UIViewRepresenta
         _ PhoneCountryCodeSelectorView: PhoneCountryCodeSelectorView,
         context: Context
     ) {
-        
+
     }
 }
 
@@ -159,7 +159,6 @@ struct PhoneCountryCodeSelectorView_Previews: PreviewProvider {
                     text: ""
                 )
                 .frame(width: 72, height: 48)
-                
 
                 PhoneCountryCodeSelectorViewUIViewRepresentable(
                     text: "4015006000"
