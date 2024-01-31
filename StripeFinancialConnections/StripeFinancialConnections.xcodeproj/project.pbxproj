@@ -92,6 +92,8 @@
 		6A732CA22B69821300828CB1 /* RoundedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732CA12B69821300828CB1 /* RoundedTextField.swift */; };
 		6A732CA42B69871F00828CB1 /* EmailTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732CA32B69871F00828CB1 /* EmailTextField.swift */; };
 		6A732CA62B69A46D00828CB1 /* PhoneTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732CA52B69A46D00828CB1 /* PhoneTextField.swift */; };
+		6A732CA82B69C34F00828CB1 /* PhoneCountryCodeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732CA72B69C34F00828CB1 /* PhoneCountryCodeSelectorView.swift */; };
+		6A732CAA2B69CCDD00828CB1 /* PhoneCountryCodePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732CA92B69CCDD00828CB1 /* PhoneCountryCodePickerView.swift */; };
 		6A78140D2B30F15400168992 /* SheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78140C2B30F15400168992 /* SheetViewController.swift */; };
 		6A7814112B32462100168992 /* CloseConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814102B32462100168992 /* CloseConfirmationViewController.swift */; };
 		6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814172B361C5000168992 /* PaneLayoutView+Extensions.swift */; };
@@ -371,6 +373,8 @@
 		6A732CA12B69821300828CB1 /* RoundedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedTextField.swift; sourceTree = "<group>"; };
 		6A732CA32B69871F00828CB1 /* EmailTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailTextField.swift; sourceTree = "<group>"; };
 		6A732CA52B69A46D00828CB1 /* PhoneTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneTextField.swift; sourceTree = "<group>"; };
+		6A732CA72B69C34F00828CB1 /* PhoneCountryCodeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCountryCodeSelectorView.swift; sourceTree = "<group>"; };
+		6A732CA92B69CCDD00828CB1 /* PhoneCountryCodePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCountryCodePickerView.swift; sourceTree = "<group>"; };
 		6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "generic_error@3x.png"; sourceTree = "<group>"; };
 		6A78140C2B30F15400168992 /* SheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetViewController.swift; sourceTree = "<group>"; };
 		6A7814102B32462100168992 /* CloseConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseConfirmationViewController.swift; sourceTree = "<group>"; };
@@ -1089,6 +1093,8 @@
 				6CDEF702710EEA29BA3DC653 /* NetworkingLinkSignupViewController.swift */,
 				6A732CA32B69871F00828CB1 /* EmailTextField.swift */,
 				6A732CA52B69A46D00828CB1 /* PhoneTextField.swift */,
+				6A732CA72B69C34F00828CB1 /* PhoneCountryCodeSelectorView.swift */,
+				6A732CA92B69CCDD00828CB1 /* PhoneCountryCodePickerView.swift */,
 			);
 			path = NetworkingLinkSignupPane;
 			sourceTree = "<group>";
@@ -1263,6 +1269,8 @@
 				6A732CA22B69821300828CB1 /* RoundedTextField.swift in Sources */,
 				11FB97AC840FEB5B5BF85BF9 /* FinancialConnectionsAPIClient.swift in Sources */,
 				432463EBF562CDDC6D3DC252 /* BankAccountToken.swift in Sources */,
+				6A732CA82B69C34F00828CB1 /* PhoneCountryCodeSelectorView.swift in Sources */,
+				6A732CAA2B69CCDD00828CB1 /* PhoneCountryCodePickerView.swift in Sources */,
 				FBF513C7F73002FA30CC7C21 /* ConsumerSessionModels.swift in Sources */,
 				EC74B719F0FA1A977EF4708C /* FinancialConnectionsAccount.swift in Sources */,
 				460C7685096AA6C693309647 /* FinancialConnectionsAuthSession.swift in Sources */,

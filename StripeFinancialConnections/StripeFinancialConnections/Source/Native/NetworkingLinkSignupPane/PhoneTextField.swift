@@ -41,16 +41,7 @@ final class PhoneTextField: UIView {
         return textField
     }()
     private var countryCodeView: UIView = {
-        let countryCodeView = UIView()
-        countryCodeView.backgroundColor = .backgroundOffset
-        countryCodeView.layer.cornerRadius = 8
-        // 72 x 48
-        countryCodeView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            countryCodeView.widthAnchor.constraint(equalToConstant: 72),
-            countryCodeView.heightAnchor.constraint(equalToConstant: 48),
-        ])
-        return countryCodeView
+        return PhoneCountryCodeSelectorView()
     }()
     // we will only start validating as user
     // types once editing ends
@@ -65,7 +56,7 @@ final class PhoneTextField: UIView {
             textField.text
         }
     }
-    private var phoneNumber: PhoneNumber? {
+    var phoneNumber: PhoneNumber? {
         // TODO(kgaidis): adjust the US country code
         return PhoneNumber(number: text, countryCode: "US")
     }
