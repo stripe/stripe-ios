@@ -42,6 +42,13 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         return UIStackView()
     }()
 
+    private lazy var blurView: UIVisualEffectView = {
+        return UIVisualEffectView(frame: .zero)
+    }()
+    private lazy var spinnerView: UIActivityIndicatorView = {
+        return UIActivityIndicatorView(style: .large)
+    }()
+
     var contentStack: [BottomSheetContentViewController] = [] {
         didSet {
             if let top = contentStack.first {
@@ -66,6 +73,57 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         contentViewController = toVC
         return popped
     }
+    func addBlurEffect(animated: Bool, completion: @escaping () -> Void) {
+        if let containingSuperview = self.view.superview {
+            [self.blurView].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                containingSuperview.addSubview($0)
+            }
+            NSLayoutConstraint.activate([
+                self.blurView.topAnchor.constraint(equalTo: containingSuperview.topAnchor),
+                self.blurView.leadingAnchor.constraint(equalTo: containingSuperview.leadingAnchor),
+                self.blurView.trailingAnchor.constraint(equalTo: containingSuperview.trailingAnchor),
+                self.blurView.bottomAnchor.constraint(equalTo: containingSuperview.bottomAnchor)
+            ])
+            [self.spinnerView].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                self.blurView.contentView.addSubview($0)
+            }
+            NSLayoutConstraint.activate([
+                self.spinnerView.centerXAnchor.constraint(equalTo: self.blurView.centerXAnchor),
+                self.spinnerView.centerYAnchor.constraint(equalTo: self.blurView.centerYAnchor),
+            ])
+            UIView.animate(withDuration: 0.3, animations: {
+                self.spinnerView.startAnimating()
+                self.blurView.effect = UIBlurEffect(style: .systemUltraThinMaterial)
+            }, completion: { _ in
+                completion()
+            })
+        }
+    }
+
+    func removeBlurEffect(animated: Bool, completion: (() -> Void)? = nil) {
+        if self.blurView.superview != nil {
+            self.blurView.translatesAutoresizingMaskIntoConstraints = true
+            self.blurView.removeConstraints(self.blurView.constraints)
+            self.spinnerView.translatesAutoresizingMaskIntoConstraints = true
+            self.spinnerView.removeConstraints(self.spinnerView.constraints)
+            UIView.animate(withDuration: 0.3, animations: {
+                self.blurView.effect = nil
+            }, completion: { _ in
+                self.spinnerView.removeFromSuperview()
+                self.blurView.removeFromSuperview()
+                if let completion {
+                    completion()
+                }
+            })
+        } else {
+            if let completion {
+                completion()
+            }
+        }
+    }
+
 
     let isTestMode: Bool
     let appearance: PaymentSheet.Appearance

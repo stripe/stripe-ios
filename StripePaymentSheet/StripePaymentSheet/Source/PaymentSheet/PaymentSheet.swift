@@ -286,6 +286,20 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
             self.completion?(result)
         }
     }
+    func paymentSheetViewControllerFinishedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
+                                                 completion: @escaping () -> Void) {
+        self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
+    }
+
+    func paymentSheetViewControllerCanceledOnPay(_ paymentSheetViewController: PaymentSheetViewController) {
+        self.bottomSheetViewController.removeBlurEffect(animated: true)
+    }
+    func paymentSheetViewControllerFailedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
+                                               result: PaymentSheetResult,
+                                               completion: @escaping () -> Void) {
+        self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
+    }
+
 
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewController) {
         paymentSheetViewController.dismiss(animated: true) {
@@ -296,10 +310,12 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerDidSelectPayWithLink(
         _ paymentSheetViewController: PaymentSheetViewController
     ) {
-        presentPayWithLinkController(
-            from: paymentSheetViewController,
-            intent: paymentSheetViewController.intent
-        )
+        self.bottomSheetViewController.addBlurEffect(animated: true) {
+            self.presentPayWithLinkController(
+                from: paymentSheetViewController,
+                intent: paymentSheetViewController.intent
+            )
+        }
     }
 }
 
@@ -329,6 +345,7 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
+        self.bottomSheetViewController.removeBlurEffect(animated: true)
     }
 
     private func findPaymentSheetViewController() -> PaymentSheetViewController? {
