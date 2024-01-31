@@ -24,6 +24,7 @@ protocol AccountPickerDataSource: AnyObject {
     var selectedAccounts: [FinancialConnectionsPartnerAccount] { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var reduceManualEntryProminenceInErrors: Bool { get }
+    var dataAccessNotice: FinancialConnectionsDataAccessNotice? { get }
 
     func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts>
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount])
@@ -39,6 +40,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     let institution: FinancialConnectionsInstitution
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let reduceManualEntryProminenceInErrors: Bool
+    let dataAccessNotice: FinancialConnectionsDataAccessNotice?
 
     private(set) var selectedAccounts: [FinancialConnectionsPartnerAccount] = [] {
         didSet {
@@ -54,7 +56,8 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         manifest: FinancialConnectionsSessionManifest,
         institution: FinancialConnectionsInstitution,
         analyticsClient: FinancialConnectionsAnalyticsClient,
-        reduceManualEntryProminenceInErrors: Bool
+        reduceManualEntryProminenceInErrors: Bool,
+        dataAccessNotice: FinancialConnectionsDataAccessNotice?
     ) {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
@@ -63,6 +66,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         self.institution = institution
         self.analyticsClient = analyticsClient
         self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors
+        self.dataAccessNotice = dataAccessNotice
     }
 
     func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts> {

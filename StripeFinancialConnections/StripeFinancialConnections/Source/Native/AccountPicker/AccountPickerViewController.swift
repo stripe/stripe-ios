@@ -92,20 +92,27 @@ final class AccountPickerViewController: UIViewController {
             },
             didSelectMerchantDataAccessLearnMore: { [weak self] url in
                 guard let self = self else { return }
-                SFSafariViewController.present(url: url)
-
-                // TODO(kgaidis): fix/return `dataAccessNotice`
-//                let dataAccessNoticeViewController = DataAccessNoticeViewController(
-//                    dataAccessNotice: dataSource.consent.dataAccessNotice,
-//                    didSelectUrl: { [weak self] url in
-//                        self?.didSelectURLInTextFromBackend(url)
-//                    }
-//                )
-//                dataAccessNoticeViewController.present(on: self)
-
                 self.dataSource
                     .analyticsClient
                     .logMerchantDataAccessLearnMore(pane: .accountPicker)
+
+                if let dataAccessNotice = self.dataSource.dataAccessNotice {
+                    let dataAccessNoticeViewController = DataAccessNoticeViewController(
+                        dataAccessNotice: dataAccessNotice,
+                        didSelectUrl: { [weak self] url in
+                            guard let self = self else { return }
+                            AuthFlowHelpers.handleURLInTextFromBackend(
+                                url: url,
+                                pane: .accountPicker,
+                                analyticsClient: self.dataSource.analyticsClient,
+                                handleStripeScheme: { _ in }
+                            )
+                        }
+                    )
+                    dataAccessNoticeViewController.present(on: self)
+                } else {
+                    SFSafariViewController.present(url: url)
+                }
             }
         )
     }()
