@@ -139,6 +139,22 @@ final class LinkAccountPickerViewController: UIViewController {
                 self.dataSource
                     .analyticsClient
                     .logMerchantDataAccessLearnMore(pane: .linkAccountPicker)
+
+                if let dataAccessNotice = self.dataSource.dataAccessNotice {
+                    let dataAccessNoticeViewController = DataAccessNoticeViewController(
+                        dataAccessNotice: dataAccessNotice,
+                        didSelectUrl: { [weak self] url in
+                            guard let self = self else { return }
+                            AuthFlowHelpers.handleURLInTextFromBackend(
+                                url: url,
+                                pane: .linkAccountPicker,
+                                analyticsClient: self.dataSource.analyticsClient,
+                                handleStripeScheme: { _ in }
+                            )
+                        }
+                    )
+                    dataAccessNoticeViewController.present(on: self)
+                }
             }
         )
         self.footerView = footerView
