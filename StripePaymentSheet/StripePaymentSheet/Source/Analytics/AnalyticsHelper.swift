@@ -13,6 +13,7 @@ final class AnalyticsHelper {
         case checkout
         case linkSignup
         case linkPopup
+        case formShown
     }
 
     static let shared = AnalyticsHelper()

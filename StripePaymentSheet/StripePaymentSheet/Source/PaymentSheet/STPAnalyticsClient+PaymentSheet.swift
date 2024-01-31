@@ -127,6 +127,7 @@ extension STPAnalyticsClient {
 
     func logPaymentSheetFormShown(paymentMethodTypeIdentifier: String, apiClient: STPAPIClient) {
         AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = false
+        AnalyticsHelper.shared.startTimeMeasurement(.formShown)
         logPaymentSheetEvent(event: .paymentSheetFormShown, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier, apiClient: apiClient)
     }
     
@@ -135,6 +136,11 @@ extension STPAnalyticsClient {
             AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = true
             logPaymentSheetEvent(event: .paymentSheetFormInteracted, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier)
         }
+    }
+    
+    func logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: String) {
+        let duration = AnalyticsHelper.shared.getDuration(for: .formShown)
+        logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped, duration: duration, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier)
     }
 
     enum DeferredIntentConfirmationType: String {

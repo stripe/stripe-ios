@@ -25,7 +25,7 @@ extension PaymentSheet {
         case link(option: LinkConfirmOption)
         case external(paymentMethod: ExternalPaymentMethod, billingDetails: STPPaymentMethodBillingDetails)
 
-        var paymentMethodTypeAnalyticsValue: String? {
+        var paymentMethodTypeAnalyticsValue: String {
             switch self {
             case .applePay:
                 return "apple_pay"
