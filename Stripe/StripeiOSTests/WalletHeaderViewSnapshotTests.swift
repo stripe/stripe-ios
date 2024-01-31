@@ -161,17 +161,6 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
         verify(headerView)
     }
 
-    func testAllButtonsSetupIntent() {
-        let headerView = PaymentSheetViewController.WalletHeaderView(
-            options: [.applePay, .link, .setupIntent],
-            delegate: nil
-        )
-        verify(headerView)
-
-        headerView.showsCardPaymentMessage = true
-        verify(headerView, identifier: "Card only")
-    }
-
     func verify(
         _ view: UIView,
         identifier: String? = nil,

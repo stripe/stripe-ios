@@ -1,6 +1,6 @@
 ## x.x.x x-x-x
 ### PaymentSheet
-* [Changed] The separator text under the Apple Pay button from "Or pay with a card" to "Or set up with a card" when using a SetupIntent.
+* [Changed] The separator text under the Apple Pay button from "Or pay with a card" to "Or use a card" to be more generic in order to support SetupIntent language better.
 
 ## 23.21.1 2024-01-22
 ### Payments

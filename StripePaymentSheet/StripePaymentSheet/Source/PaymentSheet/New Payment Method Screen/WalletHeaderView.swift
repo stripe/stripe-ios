@@ -45,7 +45,6 @@ extension PaymentSheetViewController {
 
             static let applePay = WalletOptions(rawValue: 1 << 0)
             static let link = WalletOptions(rawValue: 1 << 1)
-            static let setupIntent = WalletOptions(rawValue: 1 << 2)
         }
 
         weak var delegate: WalletHeaderViewDelegate?
@@ -78,22 +77,13 @@ extension PaymentSheetViewController {
         private var supportsPayWithLink: Bool {
             return options.contains(.link)
         }
-
-        private var isSetupIntent: Bool {
-            return options.contains(.setupIntent)
-        }
-
+        
         private var separatorText: String {
-            switch (isSetupIntent, showsCardPaymentMessage) {
-            case (true, true):
-                return STPLocalizedString("Or set up with a card", "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up.")
-            case (true, false):
-                return STPLocalizedString("Or set up using", "Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up.")
-            case (false, true):
-                return STPLocalizedString("Or pay with a card", "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay.")
-            case (false, false):
-                return STPLocalizedString("Or pay using", "Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay.")
+            if showsCardPaymentMessage {
+                return STPLocalizedString("Or use a card", "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay or set up.")
             }
+            
+            return STPLocalizedString("Or use", "Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay or set up.")
         }
 
         init(options: WalletOptions,
