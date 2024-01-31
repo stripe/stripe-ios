@@ -17,6 +17,7 @@ final class PaymentSheetLoaderTest: XCTestCase {
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
+        config.applePay = .init(merchantId: "foo", merchantCountryCode: "US")
         return config
     }()
 

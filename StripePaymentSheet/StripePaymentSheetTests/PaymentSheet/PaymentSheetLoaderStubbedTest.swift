@@ -19,6 +19,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let customer = PaymentSheet.CustomerConfiguration(id: "123", ephemeralKeySecret: "ek_456")
         config.customer = customer
         config.allowsDelayedPaymentMethods = true
+        config.applePay = .init(merchantId: "foo", merchantCountryCode: "US")
         return config
     }
 
@@ -30,9 +31,12 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
         let loaded = expectation(description: "Loaded")
         let analyticsClient = STPTestingAnalyticsClient()
+        var configuration = self.configuration(apiClient: stubbedAPIClient())
+        configuration.applePay = nil
+
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
-            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            configuration: configuration,
             analyticsClient: analyticsClient,
             isFlowController: true
         ) { result in
@@ -65,9 +69,11 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
         let loaded = expectation(description: "Loaded")
         let analyticsClient = STPTestingAnalyticsClient()
+        var configuration = self.configuration(apiClient: stubbedAPIClient())
+        configuration.applePay = nil
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
-            configuration: self.configuration(apiClient: stubbedAPIClient()),
+            configuration: configuration,
             analyticsClient: analyticsClient,
             isFlowController: true
         ) { result in
