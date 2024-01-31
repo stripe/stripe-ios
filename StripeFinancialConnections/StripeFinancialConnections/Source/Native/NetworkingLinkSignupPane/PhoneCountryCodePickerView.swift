@@ -11,7 +11,10 @@ import Foundation
 import UIKit
 
 protocol PhoneCountryCodePickerViewDelegate: AnyObject {
-
+    func phoneCountryCodePickerView(
+        _ pickerView: PhoneCountryCodePickerView,
+        didSelectCountryCode countryCode: String
+    )
 }
 
 final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
@@ -25,17 +28,29 @@ final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerVi
         pickerView.delegate = self
         return pickerView
     }()
-    private lazy var rowItems: [CountryCodeRowItem] = {
-       return CreateCountryCodeItems(locale: locale)
-    }()
-    private lazy var selectedRow: Int = {
-        let defaultCountryCode = locale.stp_regionCode ?? ""
-        return rowItems.firstIndex(where: { $0.countryCode == defaultCountryCode }) ?? 0
-    }()
+    private let rowItems: [CountryCodeRowItem]
+    private var selectedRow: Int {
+        didSet {
+            delegate?.phoneCountryCodePickerView(
+                self,
+                didSelectCountryCode: selectedCountryCode
+            )
+        }
+    }
+    var selectedCountryCode: String {
+        return rowItems[selectedRow].countryCode
+    }
 
     weak var delegate: PhoneCountryCodePickerViewDelegate?
 
-    init() {
+    init(defaultCountryCode: String?) {
+        let locale = Locale.current
+        let rowItems = CreateCountryCodeRowItems(locale: locale)
+        let defaultCountryCode = defaultCountryCode ?? locale.stp_regionCode ?? ""
+        self.rowItems = rowItems
+        self.selectedRow = rowItems.firstIndex(
+            where: { $0.countryCode == defaultCountryCode }
+        ) ?? 0
         super.init(frame: .zero)
         clipsToBounds = true
         addSubview(pickerView)
@@ -112,7 +127,7 @@ private struct CountryCodeRowItem {
     let countryCode: String
 }
 
-private func CreateCountryCodeItems(locale: Locale) -> [CountryCodeRowItem] {
+private func CreateCountryCodeRowItems(locale: Locale) -> [CountryCodeRowItem] {
     let countryCodes = locale.sortedByTheirLocalizedNames(
         PhoneNumber.Metadata.allMetadata.map({ $0.regionCode })
     )
@@ -133,7 +148,7 @@ import SwiftUI
 
 private struct PhoneCountryCodePickerViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> PhoneCountryCodePickerView {
-        PhoneCountryCodePickerView()
+        PhoneCountryCodePickerView(defaultCountryCode: nil)
     }
 
     func updateUIView(

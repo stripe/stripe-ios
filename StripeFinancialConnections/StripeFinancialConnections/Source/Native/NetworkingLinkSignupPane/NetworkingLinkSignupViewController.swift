@@ -229,7 +229,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
 
     private func adjustSaveToLinkButtonDisabledState() {
         let isEmailValid = formView.emailTextField.isEmailValid
-        let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid
+        let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid && formView.phoneTextField.isPhoneNumberValid
         footerView?.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
     }
 

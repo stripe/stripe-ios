@@ -40,8 +40,8 @@ final class NetworkingLinkSignupBodyFormView: UIView {
         return emailTextField
     }()
     private(set) lazy var phoneTextField: PhoneTextField = {
-       let phoneTextField = PhoneTextField()
-//        phoneTextField.delegate = self
+       let phoneTextField = PhoneTextField(defaultPhoneNumber: accountholderPhoneNumber)
+        phoneTextField.delegate = self
         return phoneTextField
     }()
     private lazy var formElement = FormElement(
@@ -193,6 +193,17 @@ extension NetworkingLinkSignupBodyFormView: EmailTextFieldDelegate {
             // errors are displayed automatically by the component
             lastValidEmail = nil
         }
+    }
+}
+
+// MARK: - PhoneTextFieldDelegate
+
+extension NetworkingLinkSignupBodyFormView: PhoneTextFieldDelegate {
+    func phoneTextField(
+        _ phoneTextField: PhoneTextField,
+        didChangePhoneNumber phoneNumber: PhoneNumber?
+    ) {
+        delegate?.networkingLinkSignupBodyFormViewDidUpdateFields(self)
     }
 }
 

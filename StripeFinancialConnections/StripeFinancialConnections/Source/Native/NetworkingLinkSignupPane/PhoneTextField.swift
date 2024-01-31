@@ -12,8 +12,7 @@ import UIKit
 protocol PhoneTextFieldDelegate: AnyObject {
     func phoneTextField(
         _ phoneTextField: PhoneTextField,
-        didChangeEmailAddress emailAddress: String,
-        isValid: Bool
+        didChangePhoneNumber phoneNumber: PhoneNumber?
     )
 }
 
@@ -28,7 +27,7 @@ final class PhoneTextField: UIView {
         textField.textField.autocapitalizationType = .none
         textField
             .containerHorizontalStackView
-            .insertArrangedSubview(countryCodeView, at: 0)
+            .insertArrangedSubview(countryCodeSelectorView, at: 0)
         textField
             .containerHorizontalStackView
             .directionalLayoutMargins = NSDirectionalEdgeInsets(
@@ -40,9 +39,7 @@ final class PhoneTextField: UIView {
         textField.delegate = self
         return textField
     }()
-    private var countryCodeView: UIView = {
-        return PhoneCountryCodeSelectorView()
-    }()
+    private let countryCodeSelectorView: PhoneCountryCodeSelectorView
     // we will only start validating as user
     // types once editing ends
     fileprivate var didEndEditingOnce = false
@@ -50,15 +47,14 @@ final class PhoneTextField: UIView {
     var text: String {
         set {
             textField.text = newValue
-            textDidChange()
+            phoneNumberDidChange()
         }
         get {
             textField.text
         }
     }
     var phoneNumber: PhoneNumber? {
-        // TODO(kgaidis): adjust the US country code
-        return PhoneNumber(number: text, countryCode: "US")
+        return PhoneNumber(number: text, countryCode: countryCodeSelectorView.selectedCountryCode)
     }
     var isPhoneNumberValid: Bool {
         if let phoneNumber {
@@ -72,9 +68,20 @@ final class PhoneTextField: UIView {
 
     weak var delegate: PhoneTextFieldDelegate?
 
-    init() {
+    init(defaultPhoneNumber: String?) {
+        var defaultPhoneNumber = defaultPhoneNumber
+        var defaultCountryCode: String?
+        if let _defaultPhoneNumber = defaultPhoneNumber, let e164PhoneNumber = PhoneNumber.fromE164(_defaultPhoneNumber) {
+            defaultPhoneNumber = e164PhoneNumber.number
+            defaultCountryCode = e164PhoneNumber.countryCode
+        }
+        self.countryCodeSelectorView = PhoneCountryCodeSelectorView(
+            defaultCountryCode: defaultCountryCode
+        )
         super.init(frame: .zero)
+        countryCodeSelectorView.delegate = self
         addAndPinSubview(textField)
+        text = defaultPhoneNumber ?? ""
     }
 
     required init?(coder: NSCoder) {
@@ -86,7 +93,7 @@ final class PhoneTextField: UIView {
         return super.endEditing(force)
     }
 
-    private func textDidChange() {
+    private func phoneNumberDidChange() {
         // format the text (ex. "401500" -> "(401) 500")
         textField.text = phoneNumber?.string(as: .national) ?? text
 
@@ -103,13 +110,11 @@ final class PhoneTextField: UIView {
             }
         }
 
-        delegate?.phoneTextField(
-            self,
-            didChangeEmailAddress: text,
-            isValid: isPhoneNumberValid
-        )
+        delegate?.phoneTextField(self, didChangePhoneNumber: phoneNumber)
     }
 }
+
+// MARK: - RoundedTextFieldDelegate
 
 extension PhoneTextField: RoundedTextFieldDelegate {
 
@@ -125,7 +130,7 @@ extension PhoneTextField: RoundedTextFieldDelegate {
         _ textField: RoundedTextField,
         textDidChange text: String
     ) {
-        textDidChange()
+        phoneNumberDidChange()
     }
 
     func roundedTextFieldDidEndEditing(
@@ -135,27 +140,39 @@ extension PhoneTextField: RoundedTextFieldDelegate {
     }
 }
 
+// MARK: - PhoneCountryCodeSelectorViewDelegate
+
+extension PhoneTextField: PhoneCountryCodeSelectorViewDelegate {
+
+    func phoneCountryCodeSelectorView(
+        _ selectorView: PhoneCountryCodeSelectorView,
+        didSelectCountryCode countryCode: String
+    ) {
+        phoneNumberDidChange()
+    }
+}
+
 #if DEBUG
 
 import SwiftUI
 
 private struct PhoneTextFieldUIViewRepresentable: UIViewRepresentable {
 
-    let text: String
+    let defaultPhoneNumber: String
 
     func makeUIView(context: Context) -> PhoneTextField {
-        PhoneTextField()
+        PhoneTextField(defaultPhoneNumber: defaultPhoneNumber)
     }
 
     func updateUIView(
         _ phoneTextField: PhoneTextField,
         context: Context
     ) {
-        phoneTextField.text = text
+        // activate the error-view if needed
         phoneTextField.didEndEditingOnce = true
         phoneTextField.roundedTextField(
             phoneTextField.textField,
-            textDidChange: text
+            textDidChange: defaultPhoneNumber
         )
     }
 }
@@ -165,19 +182,23 @@ struct PhoneTextField_Previews: PreviewProvider {
         if #available(iOS 14.0, *) {
             VStack(spacing: 16) {
                 PhoneTextFieldUIViewRepresentable(
-                    text: ""
+                    defaultPhoneNumber: ""
                 ).frame(height: 56)
 
                 PhoneTextFieldUIViewRepresentable(
-                    text: "4015006000"
+                    defaultPhoneNumber: "4015006000"
                 ).frame(height: 56)
 
                 PhoneTextFieldUIViewRepresentable(
-                    text: "401500600"
+                    defaultPhoneNumber: "401500600"
                 ).frame(height: 90)
 
                 PhoneTextFieldUIViewRepresentable(
-                    text: "40150060003435"
+                    defaultPhoneNumber: "40150060003435"
+                ).frame(height: 90)
+
+                PhoneTextFieldUIViewRepresentable(
+                    defaultPhoneNumber: "+442079460321"
                 ).frame(height: 90)
 
                 Spacer()

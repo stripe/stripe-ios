@@ -10,7 +10,10 @@ import Foundation
 import UIKit
 
 protocol PhoneCountryCodeSelectorViewDelegate: AnyObject {
-
+    func phoneCountryCodeSelectorView(
+        _ selectorView: PhoneCountryCodeSelectorView,
+        didSelectCountryCode countryCode: String
+    )
 }
 
 final class PhoneCountryCodeSelectorView: UIView {
@@ -20,7 +23,6 @@ final class PhoneCountryCodeSelectorView: UIView {
             font: .label(.large),
             textColor: .textDefault
         )
-        flagLabel.setText("🇺🇸")
         return flagLabel
     }()
     private lazy var countryCodeLabel: AttributedLabel = {
@@ -28,7 +30,6 @@ final class PhoneCountryCodeSelectorView: UIView {
             font: .label(.large),
             textColor: .textDefault
         )
-        flagLabel.setText("+1")
         return flagLabel
     }()
     private lazy var textField: UITextField = {
@@ -56,15 +57,17 @@ final class PhoneCountryCodeSelectorView: UIView {
         )
         return keyboardToolbar
     }()
-    private lazy var pickerView: PhoneCountryCodePickerView = {
-        let pickerView = PhoneCountryCodePickerView()
-        return pickerView
-    }()
+    private let pickerView: PhoneCountryCodePickerView
+    var selectedCountryCode: String {
+        return pickerView.selectedCountryCode
+    }
 
     weak var delegate: PhoneCountryCodeSelectorViewDelegate?
 
-    init() {
+    init(defaultCountryCode: String?) {
+        self.pickerView = PhoneCountryCodePickerView(defaultCountryCode: defaultCountryCode)
         super.init(frame: .zero)
+        pickerView.delegate = self
 
         backgroundColor = .backgroundOffset
         layer.cornerRadius = 8
@@ -86,8 +89,9 @@ final class PhoneCountryCodeSelectorView: UIView {
             trailing: 12
         )
         addAndPinSubview(horizontalStackView)
-
         addAndPinSubview(textField)
+
+        updateLabelsBasedOffSelectedCountryCode()
     }
 
     required init?(coder: NSCoder) {
@@ -97,6 +101,22 @@ final class PhoneCountryCodeSelectorView: UIView {
     override func endEditing(_ force: Bool) -> Bool {
         _ = textField.endEditing(force)
         return super.endEditing(force)
+    }
+
+    private func updateLabelsBasedOffSelectedCountryCode() {
+        flagLabel.setText(String.countryFlagEmoji(for: selectedCountryCode) ?? "🇺🇸")
+        countryCodeLabel.setText(PhoneNumber.Metadata.metadata(for: selectedCountryCode)?.prefix ?? "")
+    }
+}
+
+extension PhoneCountryCodeSelectorView: PhoneCountryCodePickerViewDelegate {
+
+    func phoneCountryCodePickerView(
+        _ pickerView: PhoneCountryCodePickerView,
+        didSelectCountryCode countryCode: String
+    ) {
+        updateLabelsBasedOffSelectedCountryCode()
+        delegate?.phoneCountryCodeSelectorView(self, didSelectCountryCode: countryCode)
     }
 }
 
@@ -140,7 +160,7 @@ private struct PhoneCountryCodeSelectorViewUIViewRepresentable: UIViewRepresenta
     let text: String
 
     func makeUIView(context: Context) -> PhoneCountryCodeSelectorView {
-        PhoneCountryCodeSelectorView()
+        PhoneCountryCodeSelectorView(defaultCountryCode: nil)
     }
 
     func updateUIView(
