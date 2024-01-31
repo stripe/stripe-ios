@@ -51,7 +51,7 @@ extension STPPaymentContext {
             }()
             let params: [String: Any] = [
                 "duration": duration,
-                "default_payment_method": defaultPaymentMethod,
+                "selected_lpm": defaultPaymentMethod,
             ]
             log(event: event, params: params)
         }

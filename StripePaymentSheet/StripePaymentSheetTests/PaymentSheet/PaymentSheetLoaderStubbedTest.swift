@@ -45,10 +45,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
                 XCTAssertFalse(applePayEnabled)
                 XCTAssertEqual(setupIntent.stripeId, "pi_3Kth")
                 XCTAssertEqual(paymentMethods.count, 0)
-                // The last analytic should be a load succeeded event w/ default_payment_method set
+                // The last analytic should be a load succeeded event w/ selected_lpm set
                 let lastAnalytic = analyticsClient.events.last
                 XCTAssertEqual(lastAnalytic?.event, .paymentSheetLoadSucceeded)
-                XCTAssertEqual(lastAnalytic?.params["default_payment_method"] as? String, "none")
+                XCTAssertEqual(lastAnalytic?.params["selected_lpm"] as? String, "none")
                 loaded.fulfill()
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
@@ -80,10 +80,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
                 XCTAssertEqual(setupIntent.stripeId, "pi_3Kth")
                 XCTAssertEqual(paymentMethods.count, 1)
                 XCTAssertEqual(paymentMethods[0].type, .card)
-                // The last analytic should be a load succeeded event w/ default_payment_method set
+                // The last analytic should be a load succeeded event w/ selected_lpm set
                 let lastAnalytic = analyticsClient.events.last
                 XCTAssertEqual(lastAnalytic?.event, .paymentSheetLoadSucceeded)
-                XCTAssertEqual(lastAnalytic?.params["default_payment_method"] as? String, "card")
+                XCTAssertEqual(lastAnalytic?.params["selected_lpm"] as? String, "card")
                 loaded.fulfill()
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)

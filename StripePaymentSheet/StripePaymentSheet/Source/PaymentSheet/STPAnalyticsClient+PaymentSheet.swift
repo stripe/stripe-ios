@@ -121,7 +121,7 @@ extension STPAnalyticsClient {
         logPaymentSheetEvent(
             event: .paymentSheetLoadSucceeded,
             duration: Date().timeIntervalSince(loadingStartDate),
-            params: ["default_payment_method": defaultPaymentMethodAnalyticsValue]
+            params: ["selected_lpm": defaultPaymentMethodAnalyticsValue]
         )
     }
 
