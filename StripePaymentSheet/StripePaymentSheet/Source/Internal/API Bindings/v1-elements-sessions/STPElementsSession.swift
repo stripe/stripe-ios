@@ -123,10 +123,10 @@ extension STPElementsSession: STPAPIResponseDecodable {
         let applePayPreference = response["apple_pay_preference"] as? String
         let isApplePayEnabled = applePayPreference != "disabled"
         let externalPaymentMethods: [ExternalPaymentMethod] = {
-            guard
-                let epmsJSON = response["external_payment_method_data"] as? [[AnyHashable: Any]],
-                let epms = ExternalPaymentMethod.decoded(fromAPIResponse: epmsJSON)
-            else {
+            guard let epmsJSON = response["external_payment_method_data"] as? [[AnyHashable: Any]] else {
+                return []
+            }
+            guard let epms = ExternalPaymentMethod.decoded(fromAPIResponse: epmsJSON) else {
                 // We don't want to fail the entire v1/elements/sessions request if we fail to parse external_payment_methods_data
                 // Instead, fall back to an empty array and log an error.
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionEPMLoadFailed)
