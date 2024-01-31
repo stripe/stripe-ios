@@ -420,6 +420,7 @@ extension AddPaymentMethodViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
+        STPAnalyticsClient.sharedClient.logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier)
         delegate?.didUpdate(self)
         animateHeightChange()
     }

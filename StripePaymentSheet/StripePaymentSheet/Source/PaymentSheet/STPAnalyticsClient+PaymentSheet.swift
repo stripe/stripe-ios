@@ -126,7 +126,15 @@ extension STPAnalyticsClient {
     }
 
     func logPaymentSheetFormShown(paymentMethodTypeIdentifier: String, apiClient: STPAPIClient) {
-        logPaymentSheetEvent(event: .paymentSheetFormShown, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier)
+        AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = false
+        logPaymentSheetEvent(event: .paymentSheetFormShown, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier, apiClient: apiClient)
+    }
+    
+    func logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: String) {
+        if !AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown {
+            AnalyticsHelper.shared.didSendPaymentSheetFormInteractedEventAfterFormShown = true
+            logPaymentSheetEvent(event: .paymentSheetFormInteracted, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier)
+        }
     }
 
     enum DeferredIntentConfirmationType: String {

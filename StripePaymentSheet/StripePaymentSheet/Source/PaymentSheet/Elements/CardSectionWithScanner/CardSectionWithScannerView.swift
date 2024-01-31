@@ -60,6 +60,7 @@ final class CardSectionWithScannerView: UIView {
     }
 
     @objc func didTapCardScanButton() {
+        STPAnalyticsClient.sharedClient.logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: "card")
         setCardScanVisible(true)
         cardScanningView.start()
         becomeFirstResponder()
