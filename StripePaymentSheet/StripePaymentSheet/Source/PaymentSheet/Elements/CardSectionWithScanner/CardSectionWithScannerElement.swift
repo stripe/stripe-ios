@@ -180,7 +180,7 @@ final class CardSection: ContainerElement {
         }
 
         fetchAndUpdateCardBrands()
-        
+
         /// Send an analytic whenever the card number field is completed
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {
             lastPanElementValidationState = panElement.validationState
