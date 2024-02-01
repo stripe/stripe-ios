@@ -556,14 +556,15 @@ class ConfirmButton: UIView {
     class CheckProgressView: UIView {
         let circleLayer = CAShapeLayer()
         let checkmarkLayer = CAShapeLayer()
-
+        let baseLineWidth: CGFloat
         var color: UIColor = .white {
             didSet {
                 colorDidChange()
             }
         }
 
-        override init(frame: CGRect) {
+        init(frame: CGRect, baseLineWidth: CGFloat = 1.0) {
+            self.baseLineWidth = baseLineWidth
             // Circle
             let circlePath = UIBezierPath(
                 arcCenter: CGPoint(
@@ -578,7 +579,7 @@ class ConfirmButton: UIView {
             circleLayer.path = circlePath.cgPath
             circleLayer.fillColor = UIColor.clear.cgColor
             circleLayer.lineCap = .round
-            circleLayer.lineWidth = 1.0
+            circleLayer.lineWidth = baseLineWidth
             circleLayer.strokeEnd = 0.0
 
             // Checkmark
@@ -595,7 +596,7 @@ class ConfirmButton: UIView {
             checkmarkLayer.path = checkmarkPath.cgPath
             checkmarkLayer.lineCap = .round
             checkmarkLayer.fillColor = UIColor.clear.cgColor
-            checkmarkLayer.lineWidth = 1.5
+            checkmarkLayer.lineWidth = baseLineWidth + 0.5
             checkmarkLayer.strokeEnd = 0.0
 
             checkmarkLayer.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
@@ -631,7 +632,14 @@ class ConfirmButton: UIView {
             circleLayer.add(rotationAnimation, forKey: "animateRotate")
         }
 
-        func completeProgress() {
+        func completeProgress(completion: (() -> Void)? = nil) {
+            CATransaction.begin()
+            // Note: Make sure the completion block is set before adding any animations
+            CATransaction.setCompletionBlock {
+                if let completion {
+                    completion()
+                }
+            }
             circleLayer.removeAnimation(forKey: "animateCircle")
 
             // Close the circle
@@ -654,6 +662,7 @@ class ConfirmButton: UIView {
             animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
             checkmarkLayer.strokeEnd = 1.0
             checkmarkLayer.add(animation, forKey: "animateFinishCircle")
+            CATransaction.commit()
         }
 
         private func colorDidChange() {
