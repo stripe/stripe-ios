@@ -632,7 +632,7 @@ class ConfirmButton: UIView {
             circleLayer.add(rotationAnimation, forKey: "animateRotate")
         }
 
-        func completeProgress(completion: (()->Void)? = nil) {
+        func completeProgress(completion: (() -> Void)? = nil) {
             CATransaction.begin()
             // Note: Make sure the completion block is set before adding any animations
             CATransaction.setCompletionBlock {
