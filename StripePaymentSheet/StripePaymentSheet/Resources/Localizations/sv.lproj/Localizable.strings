@@ -102,10 +102,6 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Ta bort %1$@ med slutsiffrorna %2$@";
-
-"Remove Card" = "Ta bort kort";
-
 "Save" = "Spara";
 
 "Save a new payment method" = "Spara en ny betalningsmetod";
@@ -113,8 +109,6 @@
 "Save address" = "Spara adress";
 
 "Save for future payments" = "Spara för framtida betalningar";
-
-"Save my info for secure 1-click checkout" = "Spara mina uppgifter för säker betalning med ett klick";
 
 "Save this account for future %@ payments" = "Spara detta konto för framtida betalningar hos %@";
 

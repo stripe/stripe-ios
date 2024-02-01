@@ -80,7 +80,7 @@
 
 "Pay another way" = "Pay another way";
 
-"Pay faster at %@ and thousands of merchants." = "Pay faster at %@ and thousands of merchants.";
+"Pay faster at %@ and thousands of merchants." = "Pay faster at %@ and thousands of businesses.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";
 
@@ -102,10 +102,6 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Remove %1$@ ending in %2$@";
-
-"Remove Card" = "Remove Card";
-
 "Save" = "Save";
 
 "Save a new payment method" = "Save a new payment method";
@@ -113,8 +109,6 @@
 "Save address" = "Save address";
 
 "Save for future payments" = "Save for future payments";
-
-"Save my info for secure 1-click checkout" = "Save my info for secure 1-click checkout";
 
 "Save this account for future %@ payments" = "Save this account for future %@ payments";
 

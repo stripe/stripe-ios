@@ -102,10 +102,6 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Poista %1$@, joka päättyy numeroihin %2$@";
-
-"Remove Card" = "Poista kortti";
-
 "Save" = "Tallenna";
 
 "Save a new payment method" = "Tallenna uusi maksutapa";
@@ -113,8 +109,6 @@
 "Save address" = "Tallenna osoite";
 
 "Save for future payments" = "Tallenna tulevia maksuja varten";
-
-"Save my info for secure 1-click checkout" = "Tallenna tietoni turvalliselle yhden napsautuksen maksamiselle";
 
 "Save this account for future %@ payments" = "Tallenna tämä tili tulevia maksuja %@ varten";
 

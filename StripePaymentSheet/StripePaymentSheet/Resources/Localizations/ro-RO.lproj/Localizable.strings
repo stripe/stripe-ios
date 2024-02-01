@@ -102,10 +102,6 @@
 
 "Przelewy24 Bank" = "Banca Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Eliminați cardul %1$@ care se termină în %2$@";
-
-"Remove Card" = "Eliminare card";
-
 "Save" = "Salvare";
 
 "Save a new payment method" = "Salvați o metodă de plată nouă";
@@ -113,8 +109,6 @@
 "Save address" = "Salvare adresă";
 
 "Save for future payments" = "Salvați pentru plăți viitoare";
-
-"Save my info for secure 1-click checkout" = "Salvează informațiile mele pentru o finalizare securizată a comenzii cu un singur clic";
 
 "Save this account for future %@ payments" = "Salvați acest cont pentru plăți viitoare către %@";
 

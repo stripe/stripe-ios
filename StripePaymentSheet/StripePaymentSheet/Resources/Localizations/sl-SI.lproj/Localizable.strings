@@ -102,10 +102,6 @@
 
 "Przelewy24 Bank" = "Banka Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Odstranite kartico %1$@, ki se konča s/z %2$@";
-
-"Remove Card" = "Odstranite kartico";
-
 "Save" = "Shrani";
 
 "Save a new payment method" = "Shranite nov način plačila";
@@ -113,8 +109,6 @@
 "Save address" = "Shrani naslov";
 
 "Save for future payments" = "Shrani za prihodnja plačila";
-
-"Save my info for secure 1-click checkout" = "Shrani moje podatke za varno izvedbo plačila z enim klikom";
 
 "Save this account for future %@ payments" = "Shrani ta računa za prihodnja plačila %@";
 
