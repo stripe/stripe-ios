@@ -171,23 +171,7 @@ public class PaymentSheet {
                     let updateBottomSheet: () -> Void = {
                         self.bottomSheetViewController.contentStack = [paymentSheetVC]
                     }
-
-                    if LinkAccountContext.shared.account?.sessionState == .verified {
-                        self.presentPayWithLinkController(
-                            from: self.bottomSheetViewController,
-                            intent: intent,
-                            shouldOfferApplePay: justVerifiedLinkOTP,
-                            shouldFinishOnClose: true,
-                            completion: {
-                                // Update the bottom sheet after presenting the Link controller
-                                // to avoid briefly flashing the PaymentSheet in the middle of
-                                // the View Controller transition.
-                                updateBottomSheet()
-                            }
-                        )
-                    } else {
-                        updateBottomSheet()
-                    }
+                    updateBottomSheet()
                 }
                 presentPaymentSheetVC(false)
             case .failure(let error):
@@ -368,15 +352,11 @@ private extension PaymentSheet {
     func presentPayWithLinkController(
         from presentingController: UIViewController,
         intent: Intent,
-        shouldOfferApplePay: Bool = false,
-        shouldFinishOnClose: Bool = false,
         completion: (() -> Void)? = nil
     ) {
         let payWithLinkVC = PayWithLinkWebController(
             intent: intent,
-            configuration: configuration,
-            shouldOfferApplePay: shouldOfferApplePay,
-            shouldFinishOnClose: shouldFinishOnClose
+            configuration: configuration
         )
 
         payWithLinkVC.payWithLinkDelegate = self
