@@ -63,6 +63,12 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
 }
 
 extension PaymentSheetViewControllerSnapshotTests: PaymentSheetViewControllerDelegate {
+    func paymentSheetViewControllerFinishedOnPay(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewController, completion: (() -> Void)?) {
+    }
+    func paymentSheetViewControllerCanceledOnPay(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewController, completion: (() -> Void)?) {
+    }
+    func paymentSheetViewControllerFailedOnPay(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewController, result: StripePaymentSheet.PaymentSheetResult, completion: (() -> Void)?) {
+    }
     func paymentSheetViewControllerShouldConfirm(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewController, with paymentOption: StripePaymentSheet.PaymentOption, completion: @escaping (StripePaymentSheet.PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
     }
 
