@@ -79,6 +79,14 @@ final class RoundedTextField: UIView {
         textField.placeholderLabel.font = textField.font
         textField.tintColor = textField.textColor
         textField.delegate = self
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            // not ideal, but height constraint fixes an odd bug
+            // where on landscape the text field gets compressed
+            textField.heightAnchor.constraint(
+                greaterThanOrEqualToConstant: FloatingPlaceholderTextField.LayoutConstants.defaultHeight
+            ),
+        ])
         return textField
     }()
     private var currentFooterView: UIView?
@@ -222,7 +230,7 @@ private class IncreasedHitTestTextField: FloatingPlaceholderTextField {
 
 private class FloatingPlaceholderTextField: UITextField {
 
-    private struct LayoutConstants {
+    fileprivate struct LayoutConstants {
         static let defaultHeight: CGFloat = 40
 
         static let horizontalMargin: CGFloat = 0
