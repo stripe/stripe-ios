@@ -47,6 +47,7 @@ stages:
     - ui-tests-2: {}
     - integration-all: {}
     - deploy-dry-run: {}
+    - lokalise-upload: {}
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
