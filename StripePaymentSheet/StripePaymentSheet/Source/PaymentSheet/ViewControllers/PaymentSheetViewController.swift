@@ -503,9 +503,7 @@ class PaymentSheetViewController: UIViewController {
                     if PaymentSheetError.isUnrecoverable(error: error) {
                         self.delegate?.paymentSheetViewControllerDidFinish(self, result: result)
                     } else {
-                        self.delegate?.paymentSheetViewControllerFailedOnPay(self, result: result) {
-
-                        }
+                        self.delegate?.paymentSheetViewControllerFailedOnPay(self, result: result, completion: nil)
                     }
                     self.updateUI()
                     UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
@@ -527,11 +525,11 @@ class PaymentSheetViewController: UIViewController {
                     }
                     /*
                     self.error = PaymentSheetError.unknown(debugDescription: "something went wrong")
-                    self.delegate?.paymentSheetViewControllerFailedOnPay(self, result: result) {
+                        self.delegate?.paymentSheetViewControllerFailedOnPay(self, result: result) {
                         self.updateUI()
                         UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
                     }
-*/
+                    */
                 }
             }
         }
