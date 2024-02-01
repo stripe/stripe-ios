@@ -156,7 +156,7 @@ public class PaymentSheet {
                     && self.configuration.applePay != nil
                     && intent.isApplePayEnabled
 
-                let presentPaymentSheetVC = { (justVerifiedLinkOTP: Bool) in
+                let presentPaymentSheetVC = {
                     let paymentSheetVC = PaymentSheetViewController(
                         intent: intent,
                         savedPaymentMethods: savedPaymentMethods,
@@ -173,7 +173,7 @@ public class PaymentSheet {
                     }
                     updateBottomSheet()
                 }
-                presentPaymentSheetVC(false)
+                presentPaymentSheetVC()
             case .failure(let error):
                 completion(.failed(error: error))
             }
