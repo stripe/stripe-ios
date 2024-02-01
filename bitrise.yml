@@ -17,8 +17,8 @@ app:
       is_expand: false
     FASTLANE_LANE: ios integration_all
 trigger_map:
-- push_branch: master
-  pipeline: main-trigger-pipeline
+- push_branch: porter/automate-localizations
+  pipeline: main-trigger-pipeline-master
 - pull_request_source_branch: releases/*
   pipeline: releases-trigger-pipeline
 - pull_request_source_branch: '*'
@@ -34,6 +34,10 @@ pipelines:
     stages:
     - stage-nightly-all: {}
 stages:
+  state-trigger-run-all-master:
+    workflows:
+    - stage-trigger-run-all: {}
+    - lokalise-upload: {}
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
@@ -47,7 +51,6 @@ stages:
     - ui-tests-2: {}
     - integration-all: {}
     - deploy-dry-run: {}
-    - lokalise-upload: {}
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
@@ -492,7 +495,7 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: sh ci_scripts/upload_localized_strings_to_lokalise.sh
+        - content: 'sh $BITRISE_SOURCE_DIR/ci_scripts/upload_localized_strings_to_lokalise.sh'
   notify_ci:
     steps:
     - script@1:
