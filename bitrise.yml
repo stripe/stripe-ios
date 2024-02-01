@@ -18,15 +18,12 @@ app:
     FASTLANE_LANE: ios integration_all
 trigger_map:
 - push_branch: master
-  pipeline: main-trigger-pipeline-master
+  pipeline: main-trigger-pipeline
 - pull_request_source_branch: releases/*
   pipeline: releases-trigger-pipeline
 - pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
 pipelines:
-  main-trigger-pipeline-master:
-    stages:
-    - stage-trigger-run-all-master: {}
   main-trigger-pipeline:
     stages:
     - stage-trigger-run-all: {}
@@ -37,21 +34,6 @@ pipelines:
     stages:
     - stage-nightly-all: {}
 stages:
-  state-trigger-run-all-master:
-    workflows:
-    - framework-tests: {}
-    - test-builds-xcode-143: {}
-    - test-builds-xcode-15: {}
-    - test-builds-xcode-143-release: {}
-    - test-builds-vision: {}
-    - install-tests-non-carthage: {}
-    - lint-tests: {}
-    - size-report: {}
-    - ui-tests-1: {}
-    - ui-tests-2: {}
-    - integration-all: {}
-    - deploy-dry-run: {}
-    - lokalise-upload: {}
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
@@ -65,7 +47,6 @@ stages:
     - ui-tests-2: {}
     - integration-all: {}
     - deploy-dry-run: {}
-    - lokalise-upload: {} # todo delete porter
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
