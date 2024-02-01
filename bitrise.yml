@@ -492,7 +492,7 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: ./ci_scripts/upload_localized_strings_to_lokalise.sh
+        - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
         title: Upload strings to lokalise
     before_run:
     - prep_all
