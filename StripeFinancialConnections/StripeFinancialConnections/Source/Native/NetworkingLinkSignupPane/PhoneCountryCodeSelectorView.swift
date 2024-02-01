@@ -52,7 +52,7 @@ final class PhoneCountryCodeSelectorView: UIView {
         }()
         let keyboardToolbar = DoneButtonToolbar(
             delegate: self,
-            showCancelButton: true,
+            showCancelButton: false,
             theme: theme
         )
         return keyboardToolbar
@@ -124,10 +124,6 @@ extension PhoneCountryCodeSelectorView: PhoneCountryCodePickerViewDelegate {
 
 extension PhoneCountryCodeSelectorView: DoneButtonToolbarDelegate {
     func didTapDone(_ toolbar: DoneButtonToolbar) {
-        textField.endEditing(true)
-    }
-
-    func didTapCancel(_ toolbar: DoneButtonToolbar) {
         textField.endEditing(true)
     }
 }

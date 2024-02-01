@@ -25,6 +25,8 @@ protocol RoundedTextFieldDelegate: AnyObject {
 
 final class RoundedTextField: UIView {
 
+    private let showDoneToolbar: Bool
+
     // Used to optionally add an error message
     // at the bottom of the text field
     private lazy var verticalStackView: UIStackView = {
@@ -80,6 +82,9 @@ final class RoundedTextField: UIView {
         textField.placeholderLabel.font = textField.font
         textField.tintColor = textField.textColor
         textField.delegate = self
+        if showDoneToolbar {
+            textField.inputAccessoryView = keyboardToolbar
+        }
         textField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             // not ideal, but height constraint fixes an odd bug
@@ -91,6 +96,21 @@ final class RoundedTextField: UIView {
         return textField
     }()
     private var currentFooterView: UIView?
+    private lazy var keyboardToolbar: DoneButtonToolbar = {
+        var theme: ElementsUITheme = .default
+        theme.colors = {
+            var colors = ElementsUITheme.Color()
+            colors.primary = .brand500
+            colors.secondaryText = .textSubdued
+            return colors
+        }()
+        let keyboardToolbar = DoneButtonToolbar(
+            delegate: self,
+            showCancelButton: false,
+            theme: theme
+        )
+        return keyboardToolbar
+    }()
 
     var text: String {
         get {
@@ -112,7 +132,12 @@ final class RoundedTextField: UIView {
     }
     weak var delegate: RoundedTextFieldDelegate?
 
-    init(placeholder: String, footerText: String? = nil) {
+    init(
+        placeholder: String,
+        footerText: String? = nil,
+        showDoneToolbar: Bool = false
+    ) {
+        self.showDoneToolbar = showDoneToolbar
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
         textField.placeholder = placeholder
@@ -214,6 +239,14 @@ extension RoundedTextField: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         updateBorder(highlighted: false)
         delegate?.roundedTextFieldDidEndEditing(self)
+    }
+}
+
+// MARK: - DoneButtonToolbarDelegate
+
+extension RoundedTextField: DoneButtonToolbarDelegate {
+    func didTapDone(_ toolbar: DoneButtonToolbar) {
+        textField.endEditing(true)
     }
 }
 

@@ -20,7 +20,8 @@ final class PhoneTextField: UIView {
 
     fileprivate lazy var textField: RoundedTextField = {
         let textField = RoundedTextField(
-            placeholder: "Phone number" // TODO(kgaidis) localize
+            placeholder: "Phone number", // TODO(kgaidis) localize
+            showDoneToolbar: true
         )
         textField.textField.keyboardType = .phonePad
         textField.textField.textContentType = .telephoneNumber
