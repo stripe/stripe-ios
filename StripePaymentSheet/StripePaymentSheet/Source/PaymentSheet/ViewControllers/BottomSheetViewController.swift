@@ -118,10 +118,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     func transitionSpinnerToComplete(animated: Bool, completion: @escaping () -> Void) {
         self.checkProgressView.color = appearance.primaryButton.successBackgroundColor
-        self.checkProgressView.completeProgress()
-        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(750))) {
+        self.checkProgressView.completeProgress(completion: {
             completion()
-        }
+        })
     }
 
     func removeBlurEffect(animated: Bool, completion: (() -> Void)? = nil) {

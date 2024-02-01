@@ -632,7 +632,14 @@ class ConfirmButton: UIView {
             circleLayer.add(rotationAnimation, forKey: "animateRotate")
         }
 
-        func completeProgress() {
+        func completeProgress(completion: (()->Void)? = nil) {
+            CATransaction.begin()
+            // Note: Make sure the completion block is set before adding any animations
+            CATransaction.setCompletionBlock {
+                if let completion {
+                    completion()
+                }
+            }
             circleLayer.removeAnimation(forKey: "animateCircle")
 
             // Close the circle
@@ -655,6 +662,7 @@ class ConfirmButton: UIView {
             animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
             checkmarkLayer.strokeEnd = 1.0
             checkmarkLayer.add(animation, forKey: "animateFinishCircle")
+            CATransaction.commit()
         }
 
         private func colorDidChange() {
