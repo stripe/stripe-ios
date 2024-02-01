@@ -93,7 +93,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 self.spinnerView.centerXAnchor.constraint(equalTo: self.blurView.centerXAnchor),
                 self.spinnerView.centerYAnchor.constraint(equalTo: self.blurView.centerYAnchor),
             ])
-            UIView.animate(withDuration: 0.3, animations: {
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration, animations: {
                 self.spinnerView.startAnimating()
                 self.blurView.effect = UIBlurEffect(style: .systemUltraThinMaterial)
             }, completion: { _ in
@@ -106,9 +106,11 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         if self.blurView.superview != nil {
             self.blurView.translatesAutoresizingMaskIntoConstraints = true
             self.blurView.removeConstraints(self.blurView.constraints)
+
             self.spinnerView.translatesAutoresizingMaskIntoConstraints = true
             self.spinnerView.removeConstraints(self.spinnerView.constraints)
-            UIView.animate(withDuration: 0.3, animations: {
+
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration, animations: {
                 self.blurView.effect = nil
             }, completion: { _ in
                 self.spinnerView.removeFromSuperview()

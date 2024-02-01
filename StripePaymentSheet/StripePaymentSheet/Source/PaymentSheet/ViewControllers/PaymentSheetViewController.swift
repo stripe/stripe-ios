@@ -32,15 +32,16 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
 
     func paymentSheetViewControllerFinishedOnPay(
         _ paymentSheetViewController: PaymentSheetViewController,
-        completion: @escaping ()-> Void)
+        completion: (()-> Void)?)
 
     func paymentSheetViewControllerCanceledOnPay(
-        _ paymentSheetViewController: PaymentSheetViewController)
+        _ paymentSheetViewController: PaymentSheetViewController,
+        completion: (()-> Void)?)
 
     func paymentSheetViewControllerFailedOnPay(
         _ paymentSheetViewController: PaymentSheetViewController,
         result: PaymentSheetResult,
-        completion: @escaping () -> Void)
+        completion: (()-> Void)?)
 
 }
 
@@ -491,7 +492,7 @@ class PaymentSheetViewController: UIViewController {
                 case .canceled:
                     // Do nothing, keep customer on payment sheet
                     self.updateUI()
-                    self.delegate?.paymentSheetViewControllerCanceledOnPay(self)
+                    self.delegate?.paymentSheetViewControllerCanceledOnPay(self, completion: nil)
                 case .failed(let error):
                     #if !canImport(CompositorServices)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)

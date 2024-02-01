@@ -287,16 +287,17 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         }
     }
     func paymentSheetViewControllerFinishedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
-                                                 completion: @escaping () -> Void) {
+                                                 completion: (() -> Void)? = nil) {
         self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
     }
 
-    func paymentSheetViewControllerCanceledOnPay(_ paymentSheetViewController: PaymentSheetViewController) {
-        self.bottomSheetViewController.removeBlurEffect(animated: true)
+    func paymentSheetViewControllerCanceledOnPay(_ paymentSheetViewController: PaymentSheetViewController,
+                                                 completion: (() -> Void)? = nil) {
+        self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
     }
     func paymentSheetViewControllerFailedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
                                                result: PaymentSheetResult,
-                                               completion: @escaping () -> Void) {
+                                               completion: (() -> Void)? = nil) {
         self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
     }
 
@@ -374,7 +375,9 @@ private extension PaymentSheet {
         )
 
         payWithLinkVC.payWithLinkDelegate = self
-        payWithLinkVC.present(over: presentingController)
+        self.bottomSheetViewController.addBlurEffect(animated: true) {
+            payWithLinkVC.present(over: presentingController)
+        }
     }
 
 }
