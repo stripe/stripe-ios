@@ -492,7 +492,10 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: 'sh $BITRISE_SOURCE_DIR/ci_scripts/upload_localized_strings_to_lokalise.sh'
+        - content: |
+            #!/usr/bin/env bash
+            set -ex
+            sh $BITRISE_SOURCE_DIR/ci_scripts/upload_localized_strings_to_lokalise.sh
   notify_ci:
     steps:
     - script@1:
