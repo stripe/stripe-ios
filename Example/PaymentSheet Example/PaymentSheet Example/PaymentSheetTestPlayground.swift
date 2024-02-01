@@ -65,6 +65,9 @@ struct PaymentSheetTestPlayground: View {
                 VStack {
                     Group {
                         HStack {
+                            if ProcessInfo.processInfo.environment["UITesting"] != nil {
+                                AnalyticsLogForTesting(analyticsLog: $playgroundController.analyticsLog)
+                            }
                             Text("Backend")
                                 .font(.headline)
                             Spacer()
@@ -309,6 +312,20 @@ struct PaymentSheetButtons: View {
                 }
             }
         }
+    }
+}
+
+/// A zero-sized view whose only purpose is to let XCUITests access the analytics sent by the SDK.
+struct AnalyticsLogForTesting: View {
+    @Binding var analyticsLog: [[String: Any]]
+    var analyticsLogString: String {
+        return try! JSONSerialization.data(withJSONObject: analyticsLog).base64EncodedString()
+    }
+    var body: some View {
+        Text(analyticsLogString)
+            .frame(width: 0, height: 0)
+            .accessibility(identifier: "_testAnalyticsLog")
+            .accessibility(label: Text(analyticsLogString))
     }
 }
 
