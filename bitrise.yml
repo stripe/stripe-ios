@@ -494,6 +494,12 @@ workflows:
         inputs:
         - content: ./ci_scripts/upload_localized_strings_to_lokalise.sh
         title: Upload strings to lokalise
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core
   notify_ci:
     steps:
     - script@1:
