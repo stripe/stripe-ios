@@ -118,35 +118,6 @@ final class PaymentSheetLoader {
         return !configuration.isUsingBillingAddressCollection()
     }
 
-    /// Returns a list of viewmodels to display in SavedPaymentOptionsViewController aka the "saved PMs" screen.
-    static func makePaymentOptionsListViewModels(
-        savedPaymentMethods: [STPPaymentMethod],
-        configuration: PaymentSheet.Configuration,
-        showApplePay: Bool,
-        showLink: Bool
-    ) -> [SavedPaymentOptionsViewController.Selection] {
-        var savedPaymentMethods = savedPaymentMethods
-        let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
-
-        // Move default to front
-        if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
-            $0.stripeId == defaultPaymentMethod?.value
-        }) {
-            let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
-            savedPaymentMethods.insert(defaultPM, at: 0)
-        }
-
-        // Transform saved PaymentMethods into view models
-        let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
-            return SavedPaymentOptionsViewController.Selection.saved(paymentMethod: paymentMethod)
-        }
-
-        return [.add]
-            + (showApplePay ? [.applePay] : [])
-            + (showLink ? [.link] : [])
-            + savedPMViewModels
-    }
-
     // MARK: - Helper methods that load things
 
     /// Loads miscellaneous singletons
