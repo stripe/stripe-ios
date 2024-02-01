@@ -32,17 +32,19 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
 
     func paymentSheetViewControllerFinishedOnPay(
         _ paymentSheetViewController: PaymentSheetViewController,
-        completion: (()-> Void)?)
+        completion: (() -> Void)?
+    )
 
     func paymentSheetViewControllerCanceledOnPay(
         _ paymentSheetViewController: PaymentSheetViewController,
-        completion: (()-> Void)?)
+        completion: (() -> Void)?
+    )
 
     func paymentSheetViewControllerFailedOnPay(
         _ paymentSheetViewController: PaymentSheetViewController,
         result: PaymentSheetResult,
-        completion: (()-> Void)?)
-
+        completion: (() -> Void)?
+    )
 }
 
 /// For internal SDK use only
@@ -508,6 +510,7 @@ class PaymentSheetViewController: UIViewController {
                     self.updateUI()
                     UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
                 case .completed:
+                    /*
                     self.delegate?.paymentSheetViewControllerFinishedOnPay(self) {
                         // We're done!
                         let delay: TimeInterval =
@@ -522,14 +525,14 @@ class PaymentSheetViewController: UIViewController {
                                 self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                             }
                         }
-                    }
-                    /*
+                    }*/
+
                     self.error = PaymentSheetError.unknown(debugDescription: "something went wrong")
                         self.delegate?.paymentSheetViewControllerFailedOnPay(self, result: result) {
                         self.updateUI()
                         UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
                     }
-                    */
+                    
                 }
             }
         }
