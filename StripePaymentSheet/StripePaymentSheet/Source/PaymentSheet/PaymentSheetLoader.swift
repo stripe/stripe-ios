@@ -90,6 +90,9 @@ final class PaymentSheetLoader {
                     showLink: isFlowController ? isLinkEnabled : false
                 )
                 analyticsClient.logPaymentSheetLoadSucceeded(loadingStartDate: loadingStartDate, defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex))
+                if isFlowController {
+                    AnalyticsHelper.shared.startTimeMeasurement(.checkout)
+                }
 
                 // Call completion
                 completion(

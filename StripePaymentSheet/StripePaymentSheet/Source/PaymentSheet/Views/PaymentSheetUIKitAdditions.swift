@@ -29,7 +29,7 @@ enum PaymentSheetUI {
     static let minimumTapSize: CGSize = CGSize(width: 44, height: 44)
     static let defaultAnimationDuration: TimeInterval = 0.2
     static let quickAnimationDuration: TimeInterval = 0.1
-    /// The minimnum amount of time to spend processing before transitioning to success/failure
+    /// The minimum amount of time to spend processing before transitioning to success/failure
     static let minimumFlightTime: TimeInterval = 1
     static let delayBetweenSuccessAndDismissal: TimeInterval = 1.5
     static let minimumHitArea = CGSize(width: 44, height: 44)
