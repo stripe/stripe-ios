@@ -21,8 +21,9 @@ final class PaymentSheetLoaderTest: XCTestCase {
         return config
     }()
 
-    override func setUp() async throws {
-        try await super.setUp()
+    override func tearDown() {
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        super.tearDown()
     }
 
     func testPaymentSheetLoadWithPaymentIntent() async throws {
