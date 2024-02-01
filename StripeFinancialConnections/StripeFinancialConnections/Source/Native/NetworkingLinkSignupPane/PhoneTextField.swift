@@ -60,9 +60,14 @@ final class PhoneTextField: UIView {
         if let phoneNumber {
             return phoneNumber.isComplete
         } else {
-            // Assume user has entered a format or for a region the SDK doesn't know about.
-            // Return valid as long as it's non-empty and let the server decide.
-            return true
+            if text.isEmpty {
+                // empty phone number
+               return false
+            } else {
+                // Assume user has entered a format or for a region the SDK doesn't know about.
+                // Return valid as long as it's non-empty and let the server decide.
+                return true
+            }
         }
     }
 
@@ -134,6 +139,10 @@ extension PhoneTextField: RoundedTextFieldDelegate {
         textDidChange text: String
     ) {
         phoneNumberDidChange()
+    }
+
+    func roundedTextFieldUserDidPressReturnKey(_ textField: RoundedTextField) {
+        // no-op
     }
 
     func roundedTextFieldDidEndEditing(

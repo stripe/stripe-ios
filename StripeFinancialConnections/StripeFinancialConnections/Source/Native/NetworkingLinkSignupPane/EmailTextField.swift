@@ -15,6 +15,7 @@ protocol EmailTextFieldDelegate: AnyObject {
         didChangeEmailAddress emailAddress: String,
         isValid: Bool
     )
+    func emailTextFieldUserDidPressReturnKey(_ textField: EmailTextField)
 }
 
 final class EmailTextField: UIView {
@@ -120,9 +121,11 @@ extension EmailTextField: RoundedTextFieldDelegate {
         textDidChange()
     }
 
-    func roundedTextFieldDidEndEditing(
-        _ textField: RoundedTextField
-    ) {
+    func roundedTextFieldUserDidPressReturnKey(_ textField: RoundedTextField) {
+        delegate?.emailTextFieldUserDidPressReturnKey(self)
+    }
+
+    func roundedTextFieldDidEndEditing(_ textField: RoundedTextField) {
         didEndEditingOnce = true
     }
 }

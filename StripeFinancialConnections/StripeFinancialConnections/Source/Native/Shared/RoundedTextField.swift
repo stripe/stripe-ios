@@ -19,6 +19,7 @@ protocol RoundedTextFieldDelegate: AnyObject {
         _ textField: RoundedTextField,
         textDidChange text: String
     )
+    func roundedTextFieldUserDidPressReturnKey(_ textField: RoundedTextField)
     func roundedTextFieldDidEndEditing(_ textField: RoundedTextField)
 }
 
@@ -186,6 +187,10 @@ final class RoundedTextField: UIView {
 
 extension RoundedTextField: UITextFieldDelegate {
 
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        updateBorder(highlighted: true)
+    }
+
     func textField(
         _ textField: UITextField,
         shouldChangeCharactersIn range: NSRange,
@@ -198,8 +203,12 @@ extension RoundedTextField: UITextFieldDelegate {
         ) ?? true
     }
 
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        updateBorder(highlighted: true)
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        delegate?.roundedTextFieldUserDidPressReturnKey(self)
+
+        // the return value (whether true or false) seems to be a no-op
+        // in all practical test cases
+        return false
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {

@@ -86,6 +86,7 @@ final class NetworkingLinkSignupBodyFormView: UIView {
 // MARK: - EmailTextFieldDelegate
 
 extension NetworkingLinkSignupBodyFormView: EmailTextFieldDelegate {
+
     func emailTextField(
         _ emailTextField: EmailTextField,
         didChangeEmailAddress emailAddress: String,
@@ -124,6 +125,15 @@ extension NetworkingLinkSignupBodyFormView: EmailTextFieldDelegate {
         } else {
             // errors are displayed automatically by the component
             lastValidEmail = nil
+        }
+    }
+
+    func emailTextFieldUserDidPressReturnKey(_ textField: EmailTextField) {
+        _ = textField.endEditing(true)
+        // move keyboard to phone field if phone is not valid,
+        // otherwise just dismiss it
+        if !phoneTextField.isHidden, !phoneTextField.isPhoneNumberValid {
+            _ = phoneTextField.becomeFirstResponder()
         }
     }
 }
