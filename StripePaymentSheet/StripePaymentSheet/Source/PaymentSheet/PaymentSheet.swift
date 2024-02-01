@@ -147,15 +147,12 @@ public class PaymentSheet {
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
         PaymentSheetLoader.load(
             mode: mode,
-            configuration: configuration
+            configuration: configuration,
+            isFlowController: false
         ) { result in
             switch result {
-            case .success(let intent, let savedPaymentMethods, let isLinkEnabled):
+            case .success(let intent, let savedPaymentMethods, let isLinkEnabled, let isApplePayEnabled):
                 // Set the PaymentSheetViewController as the content of our bottom sheet
-                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay()
-                    && self.configuration.applePay != nil
-                    && intent.isApplePayEnabled
-
                 let presentPaymentSheetVC = {
                     let paymentSheetVC = PaymentSheetViewController(
                         intent: intent,

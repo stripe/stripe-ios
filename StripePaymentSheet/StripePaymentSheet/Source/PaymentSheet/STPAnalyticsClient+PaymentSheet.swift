@@ -102,6 +102,29 @@ extension STPAnalyticsClient {
         )
     }
 
+    func logPaymentSheetLoadSucceeded(loadingStartDate: Date, defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?) {
+        let defaultPaymentMethodAnalyticsValue: String = {
+            switch defaultPaymentMethod {
+            case .applePay:
+                return "apple_pay"
+            case .link:
+                return "link"
+            case .saved(paymentMethod: let paymentMethod):
+                return paymentMethod.type.identifier
+            case nil:
+                return "none"
+            case .add:
+                assertionFailure("Caller should ensure that default payment method is `nil` in this case.")
+                return "none"
+            }
+        }()
+        logPaymentSheetEvent(
+            event: .paymentSheetLoadSucceeded,
+            duration: Date().timeIntervalSince(loadingStartDate),
+            params: ["selected_lpm": defaultPaymentMethodAnalyticsValue]
+        )
+    }
+
     func logPaymentSheetFormShown(paymentMethodTypeIdentifier: String, apiClient: STPAPIClient) {
         logPaymentSheetEvent(event: .paymentSheetFormShown, paymentMethodTypeAnalyticsValue: paymentMethodTypeIdentifier)
     }
