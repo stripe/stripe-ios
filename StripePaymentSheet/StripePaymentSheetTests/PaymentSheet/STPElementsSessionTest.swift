@@ -67,7 +67,7 @@ class STPElementsSessionTest: XCTestCase {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         // ...that doesn't contain "external_payment_method_data"
         elementsSessionJson["external_payment_method_data"] = nil
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
         // ...it should successfully decode...
         XCTAssertNotNil(elementsSession)
         // ...with an empty `externalPaymentMethods` property
@@ -75,6 +75,18 @@ class STPElementsSessionTest: XCTestCase {
         // ...and not send a failure analytic
         let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
         XCTAssertFalse(analyticEvents.contains(where: { dict in
+            (dict["event"] as? String) == STPAnalyticEvent.paymentSheetElementsSessionEPMLoadFailed.rawValue
+        }))
+
+        // Same test as above, but when "external_payment_method_data" is NSNull...
+        elementsSessionJson["external_payment_method_data"] = NSNull()
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        // ...it should successfully decode...
+        XCTAssertNotNil(elementsSession)
+        // ...with an empty `externalPaymentMethods` property
+        XCTAssertTrue(elementsSession.externalPaymentMethods.isEmpty)
+        // ...and not send a failure analytic
+        XCTAssertFalse(STPAnalyticsClient.sharedClient._testLogHistory.contains(where: { dict in
             (dict["event"] as? String) == STPAnalyticEvent.paymentSheetElementsSessionEPMLoadFailed.rawValue
         }))
     }

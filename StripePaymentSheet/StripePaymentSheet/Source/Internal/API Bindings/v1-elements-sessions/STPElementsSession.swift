@@ -124,7 +124,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
         let isApplePayEnabled = applePayPreference != "disabled"
         let externalPaymentMethods: [ExternalPaymentMethod] = {
             let externalPaymentMethodDataKey = "external_payment_method_data"
-            guard response.keys.contains(externalPaymentMethodDataKey) else {
+            guard response[externalPaymentMethodDataKey] != nil, !(response[externalPaymentMethodDataKey] is NSNull) else {
                 return []
             }
             guard
