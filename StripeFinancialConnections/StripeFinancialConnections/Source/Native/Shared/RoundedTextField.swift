@@ -117,9 +117,12 @@ final class RoundedTextField: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func becomeFirstResponder() -> Bool {
+        return textField.becomeFirstResponder()
+    }
+
     override func endEditing(_ force: Bool) -> Bool {
-        _ = textField.endEditing(force)
-        return super.endEditing(force)
+        return textField.endEditing(force)
     }
 
     private func didUpdateFooterText() {

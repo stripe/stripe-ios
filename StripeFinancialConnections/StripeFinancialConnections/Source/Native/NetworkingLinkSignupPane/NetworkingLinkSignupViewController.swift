@@ -186,8 +186,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
 
         dataSource.saveToLink(
             emailAddress: formView.emailTextField.text,
-            phoneNumber: formView.phoneNumberElement.phoneNumber?.string(as: .e164) ?? "",
-            countryCode: formView.phoneNumberElement.phoneNumber?.countryCode ?? "US"
+            phoneNumber: formView.phoneTextField.phoneNumber?.string(as: .e164) ?? "",
+            countryCode: formView.phoneTextField.phoneNumber?.countryCode ?? "US"
         )
         .observe { [weak self] result in
             guard let self = self else { return }
@@ -229,7 +229,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
 
     private func adjustSaveToLinkButtonDisabledState() {
         let isEmailValid = formView.emailTextField.isEmailValid
-        let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid && formView.phoneTextField.isPhoneNumberValid
+        let isPhoneNumberValid = formView.phoneTextField.isPhoneNumberValid
         footerView?.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
     }
 
@@ -283,7 +283,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                         // we want to only jump to the phone number the
                         // first time they enter the e-mail
                         if didShowPhoneNumberFieldForTheFirstTime {
-                            let didPrefillPhoneNumber = (self.formView.phoneNumberElement.phoneNumber?.number ?? "").count > 1
+                            let didPrefillPhoneNumber = (self.formView.phoneTextField.phoneNumber?.number ?? "").count > 1
                             // if the phone number is pre-filled, we don't focus on the phone number field
                             if !didPrefillPhoneNumber {
                                 let didPrefillEmailAddress = {
