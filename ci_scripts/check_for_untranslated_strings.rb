@@ -18,22 +18,19 @@ def api_get_request(endpoint, token)
 end
 
 def get_added_strings(current_dir)
-  puts Dir.pwd
-  puts Dir.entries(".")
-  system 'git branch'
-
   new_strings = {}
-#  Dir.chdir(current_dir) do
-    strings_files = `git diff --name-only origin/master...`.split("\n").select { |f| f.end_with?(".strings") }
-    strings_files.each do |file|
-      added_lines = `git diff origin/master... -- #{file}`.split("\n").select do |line|
-        line.start_with?('+') && !line.start_with?('+++') && line.include?('=') && !line.match(/^\/\//)
-      end
-      new_strings[file] = added_lines.map do |line|
-        line.delete_prefix('+').strip.split('=')[0].gsub(/\"/, '').strip
-      end
+  
+  strings_files = `git diff --name-only origin/master...`.split("\n").select { |f| f.end_with?(".strings") }
+
+  strings_files.each do |file|
+    added_lines = `git diff origin/master... -- #{file}`.split("\n").select do |line|
+      line.start_with?('+') && !line.start_with?('+++') && line.include?('=') && !line.match(/^\/\//)
     end
-#  end
+   
+    new_strings[file] = added_lines.map do |line|
+      line.delete_prefix('+').strip.split('=')[0].gsub(/\"/, '').strip
+    end
+  end
 
   new_strings
 end
