@@ -23,6 +23,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             configuration: ._testValue_MostPermissive(),
             isApplePayEnabled: false,
             isLinkEnabled: false,
+            isCVCRecollectionEnabled: false,
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)
@@ -39,6 +40,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             configuration: ._testValue_MostPermissive(),
             isApplePayEnabled: false,
             isLinkEnabled: false,
+            isCVCRecollectionEnabled: false,
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)
@@ -55,6 +57,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             configuration: ._testValue_MostPermissive(),
             isApplePayEnabled: false,
             isLinkEnabled: false,
+            isCVCRecollectionEnabled: false,
             delegate: self
         )
         sut.view.autosizeHeight(width: 375)
