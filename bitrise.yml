@@ -511,6 +511,7 @@ workflows:
         title: Check for any new untranslated strings
         envs:
         - LOKALISE_API_KEY: $LOKALISE_API_KEY
+        - BITRISE_SOURCE_DIR: $BITRISE_SOURCE_DIR
     before_run:
     - prep_all
     meta:

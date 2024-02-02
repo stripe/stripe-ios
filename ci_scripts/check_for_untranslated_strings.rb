@@ -2,11 +2,13 @@ require 'net/http'
 require 'json'
 require 'uri'
 
-# get the current working directory
-current_dir = Dir.pwd
-
-# use 'git rev-parse --show-toplevel' to get the git root directory
-repo_path = `git -C #{current_dir} rev-parse --show-toplevel`.strip
+if ENV['BITRISE_SOURCE_DIR']
+  # On Bitrise, use the source directory provided by Bitrise
+  current_dir = ENV['BITRISE_SOURCE_DIR']
+else
+  # Locally, get the current working directory and find the git root
+  current_dir = `git rev-parse --show-toplevel`.strip
+end
 
 def api_get_request(endpoint, token)
   uri = URI(endpoint)
