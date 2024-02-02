@@ -64,7 +64,7 @@ import Foundation
                 partialResult[key] = value
             }
         }
-        
+
         return LinkSettings(
             fundingSources: validFundingSources,
             popupWebviewOption: webviewOption,
