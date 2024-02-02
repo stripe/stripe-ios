@@ -64,5 +64,7 @@ def check_lokalise_translations(api_token, project_id, new_added_strings)
   exit 1 unless all_keys_exist
 end
 
+puts "Checking for any untranslated strings..."
 new_strings_added = get_added_strings(repo_path)
 check_lokalise_translations(ENV['LOKALISE_API_KEY'], '747824695e51bc2f4aa912.89576472', new_strings_added)
+puts "Done!"
