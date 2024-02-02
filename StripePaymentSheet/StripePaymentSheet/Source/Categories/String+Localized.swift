@@ -29,11 +29,11 @@ extension String.Localized {
     static func pay_faster_at_$merchant_and_thousands_of_merchants(merchantDisplayName: String) -> String {
         String(
             format: STPLocalizedString(
-                "Pay faster at %@ and thousands of merchants.",
+                "Pay faster at %@ and thousands of businesses.",
                 """
                 Label describing the benefit of signing up for Link.
-                Pay faster at {Merchant Name} and thousands of merchants
-                e.g, 'Pay faster at Example, Inc. and thousands of merchants.'
+                Pay faster at {Merchant Name} and thousands of businesses
+                e.g, 'Pay faster at Example, Inc. and thousands of businesses.'
                 """
             ),
             merchantDisplayName

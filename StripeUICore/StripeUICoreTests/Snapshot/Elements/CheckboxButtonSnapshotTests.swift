@@ -35,7 +35,7 @@ class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
     func testMultiline() {
         let checkbox = CheckboxButton(
             text: "Save my info for secure 1-click checkout",
-            description: "Pay faster at [Merchant] and thousands of merchants."
+            description: "Pay faster at [Merchant] and thousands of businesses."
         )
 
         verify(checkbox)
@@ -48,7 +48,7 @@ class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
 
         let checkbox = CheckboxButton(
             text: "Save my info for secure 1-click checkout",
-            description: "Pay faster at [Merchant] and thousands of merchants.",
+            description: "Pay faster at [Merchant] and thousands of businesses.",
             theme: theme
         )
 
