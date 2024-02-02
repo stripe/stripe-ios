@@ -111,7 +111,7 @@ import UIKit
         let payload = payload(from: analytic, apiClient: apiClient)
 
         #if DEBUG
-            NSLog("LOG ANALYTICS: \(payload)")
+        NSLog("LOG ANALYTICS: \(analytic.event.rawValue) - \(analytic.params.sorted { $0.0 > $1.0 })")
         #endif
 
         guard type(of: self).shouldCollectAnalytics(),

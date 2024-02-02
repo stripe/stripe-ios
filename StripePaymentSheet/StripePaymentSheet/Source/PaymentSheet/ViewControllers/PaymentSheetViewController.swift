@@ -437,17 +437,18 @@ class PaymentSheetViewController: UIViewController {
 
     @objc
     private func didTapBuyButton() {
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped)
+        let paymentOption: PaymentOption
         switch mode {
         case .addingNew:
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
                 addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
+                return
             } else {
                 guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
                     assertionFailure()
                     return
                 }
-                pay(with: newPaymentOption)
+                paymentOption = newPaymentOption
             }
         case .selectingSaved:
             guard
@@ -456,8 +457,10 @@ class PaymentSheetViewController: UIViewController {
                 assertionFailure()
                 return
             }
-            pay(with: selectedPaymentOption)
+            paymentOption = selectedPaymentOption
         }
+        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: paymentOption.paymentMethodTypeAnalyticsValue)
+        pay(with: paymentOption)
     }
 
     func pay(with paymentOption: PaymentOption) {
