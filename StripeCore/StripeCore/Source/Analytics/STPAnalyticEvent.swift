@@ -185,6 +185,7 @@ import Foundation
     case paymentSheetConfirmButtonTapped = "mc_confirm_button_tapped"
     case paymentSheetFormShown = "mc_form_shown"
     case paymentSheetFormInteracted = "mc_form_interacted"
+    case paymentSheetCardNumberCompleted = "mc_card_number_completed"
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"

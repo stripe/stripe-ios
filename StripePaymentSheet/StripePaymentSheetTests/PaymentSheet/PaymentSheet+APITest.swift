@@ -753,6 +753,7 @@ class PaymentSheetAPITest: XCTestCase {
     // MARK: - update tests
 
     func testUpdate() {
+        STPAnalyticsClient.sharedClient._testLogHistory = []
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in
             // These tests don't confirm, so this is unused
         }
@@ -781,6 +782,20 @@ class PaymentSheetAPITest: XCTestCase {
                         XCTAssertNil(sut.paymentOption)
                         XCTAssertFalse(sut.viewController.intent.isSettingUp)
                         XCTAssertTrue(sut.viewController.intent.isPaymentIntent)
+
+                        // Sanity check that the analytics...
+                        let analytics = STPAnalyticsClient.sharedClient._testLogHistory
+                        let loadStartedEvents = analytics.filter { $0["event"] as? String == "mc_load_started" }
+                        let loadSucceededEvents = analytics.filter { $0["event"] as? String == "mc_load_succeeded" }
+                        // ...have the expected # of start and succeeded events...
+                        XCTAssertEqual(loadStartedEvents.count, 3)
+                        XCTAssertEqual(loadSucceededEvents.count, 3)
+                        // ..and all have the same session id...
+                        let sessionID = analytics.first?["session_id"] as? String
+                        (loadStartedEvents + loadSucceededEvents).map { $0["session_id"] as? String }.forEach {
+                            XCTAssertEqual($0, sessionID)
+                        }
+
                         secondUpdateExpectation.fulfill()
                     }
                 }
