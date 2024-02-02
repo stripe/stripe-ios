@@ -58,7 +58,6 @@ extension PaymentSheetViewController {
         private let options: WalletOptions
         private let appearance: PaymentSheet.Appearance
         private let applePayButtonType: PKPaymentButtonType
-        private let isPaymentIntent: Bool
         private var stackView = UIStackView()
 
         private lazy var payWithLinkButton: PayWithLinkButton = {
@@ -79,36 +78,13 @@ extension PaymentSheetViewController {
             return options.contains(.link)
         }
 
-        var separatorText: String {
-            switch (isPaymentIntent, showsCardPaymentMessage) {
-            case (true, true):
-                return STPLocalizedString(
-                    "Or pay with a card",
-                    "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay.")
-            case (true, false):
-                return STPLocalizedString(
-                    "Or pay using",
-                    "Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay.")
-            case (false, true):
-                return STPLocalizedString(
-                    "Or use a card",
-                    "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up.")
-            case (false, false):
-                return STPLocalizedString(
-                    "Or use",
-                    "Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up.")
-            }
-        }
-
         init(options: WalletOptions,
              appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
              applePayButtonType: PKPaymentButtonType = .plain,
-             isPaymentIntent: Bool = true,
              delegate: WalletHeaderViewDelegate?) {
             self.options = options
             self.appearance = appearance
             self.applePayButtonType = applePayButtonType
-            self.isPaymentIntent = isPaymentIntent
             self.delegate = delegate
             super.init(frame: .zero)
 
@@ -172,7 +148,8 @@ extension PaymentSheetViewController {
             separatorLabel.textColor = appearance.colors.textSecondary
             separatorLabel.separatorColor = appearance.colors.background.contrastingColor.withAlphaComponent(0.2)
             separatorLabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 21)
-            separatorLabel.text = separatorText
+
+            separatorLabel.text = STPLocalizedString("Test123", "test")
         }
 
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
