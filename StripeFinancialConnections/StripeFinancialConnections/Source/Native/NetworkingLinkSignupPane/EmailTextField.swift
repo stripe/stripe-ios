@@ -39,8 +39,6 @@ final class EmailTextField: UIView {
         activityIndicator.color = .iconActionPrimary
         return activityIndicator
     }()
-    // we will only start validating as user
-    // types once editing ends
     fileprivate var didEndEditingOnce = false
 
     var text: String {
@@ -76,16 +74,14 @@ final class EmailTextField: UIView {
     }
 
     override func endEditing(_ force: Bool) -> Bool {
-        _ = textField.endEditing(force)
-        return super.endEditing(force)
+        return textField.endEditing(force)
     }
 
     private func textDidChange() {
         textField.errorText = nil
-
         if !isEmailValid {
-            // only show error messages once
-            // user cleared
+            // do not show error messages unless the user
+            // stopped editing the text field at least once
             if didEndEditingOnce {
                 if text.isEmpty {
                     // no error message if empty
@@ -126,6 +122,8 @@ extension EmailTextField: RoundedTextFieldDelegate {
 
     func roundedTextFieldDidEndEditing(_ textField: RoundedTextField) {
         didEndEditingOnce = true
+        // check whether we need to update error state
+        textDidChange()
     }
 }
 

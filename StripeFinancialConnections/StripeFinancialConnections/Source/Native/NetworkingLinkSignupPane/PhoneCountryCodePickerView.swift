@@ -20,7 +20,6 @@ protocol PhoneCountryCodePickerViewDelegate: AnyObject {
 final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
     private let height: CGFloat = 250
-    private let locale: Locale = .current
 
     private lazy var pickerView: UIPickerView = {
         let pickerView = UIPickerView()
@@ -67,7 +66,11 @@ final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerVi
             pickerView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
-        adjustPickerViewToSelectedRow()
+        // adjusted pickerview to selected row
+        if pickerView.selectedRow(inComponent: 0) != selectedRow {
+            pickerView.reloadComponent(0)
+            pickerView.selectRow(selectedRow, inComponent: 0, animated: false)
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -80,13 +83,6 @@ final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerVi
         var intrinsicContentSize = super.intrinsicContentSize
         intrinsicContentSize.height = height
         return intrinsicContentSize
-    }
-
-    private func adjustPickerViewToSelectedRow() {
-        if pickerView.selectedRow(inComponent: 0) != selectedRow {
-            pickerView.reloadComponent(0)
-            pickerView.selectRow(selectedRow, inComponent: 0, animated: false)
-        }
     }
 
     // MARK: - UIPickerViewDataSource

@@ -32,7 +32,9 @@ final class PhoneCountryCodeSelectorView: UIView {
         )
         return flagLabel
     }()
-    private lazy var textField: UITextField = {
+    // to show the `pickerView` as a keyboard, we need an
+    // "invisible" UITextField for the user to tap on
+    private lazy var invisbleTextField: UITextField = {
         let textField = UnselectableTextField()
         textField.autocorrectionType = .no
         textField.tintColor = .clear
@@ -89,8 +91,10 @@ final class PhoneCountryCodeSelectorView: UIView {
             trailing: 12
         )
         addAndPinSubview(horizontalStackView)
-        addAndPinSubview(textField)
+        addAndPinSubview(invisbleTextField)
 
+        // this will update the view based off whatever the
+        // default is in the picker view
         updateLabelsBasedOffSelectedCountryCode()
     }
 
@@ -99,8 +103,7 @@ final class PhoneCountryCodeSelectorView: UIView {
     }
 
     override func endEditing(_ force: Bool) -> Bool {
-        _ = textField.endEditing(force)
-        return super.endEditing(force)
+        return invisbleTextField.endEditing(force)
     }
 
     private func updateLabelsBasedOffSelectedCountryCode() {
@@ -108,6 +111,8 @@ final class PhoneCountryCodeSelectorView: UIView {
         countryCodeLabel.setText(PhoneNumber.Metadata.metadata(for: selectedCountryCode)?.prefix ?? "")
     }
 }
+
+// MARK: - PhoneCountryCodePickerViewDelegate
 
 extension PhoneCountryCodeSelectorView: PhoneCountryCodePickerViewDelegate {
 
@@ -124,22 +129,23 @@ extension PhoneCountryCodeSelectorView: PhoneCountryCodePickerViewDelegate {
 
 extension PhoneCountryCodeSelectorView: DoneButtonToolbarDelegate {
     func didTapDone(_ toolbar: DoneButtonToolbar) {
-        textField.endEditing(true)
+        invisbleTextField.endEditing(true)
     }
 }
 
 private class UnselectableTextField: UITextField {
     override func caretRect(for position: UITextPosition) -> CGRect {
-        // Disallow selection
         return .zero
     }
 
     override func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
-        // Disallow selection
         return []
     }
 
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+    override func canPerformAction(
+        _ action: Selector,
+        withSender sender: Any?
+    ) -> Bool {
         if action == #selector(UIResponderStandardEditActions.paste(_:)) {
             return false
         }
