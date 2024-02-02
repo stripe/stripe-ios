@@ -22,7 +22,7 @@ final class EmailTextField: UIView {
 
     fileprivate lazy var textField: RoundedTextField = {
         let textField = RoundedTextField(
-            placeholder: "Email address" // TODO(kgaidis) localize
+            placeholder: STPLocalizedString("Email address", "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address.")
         )
         textField.textField.keyboardType = .emailAddress
         textField.textField.textContentType = .emailAddress
@@ -90,8 +90,7 @@ final class EmailTextField: UIView {
                 if text.isEmpty {
                     // no error message if empty
                 } else {
-                    // only
-                    textField.errorText = "Your email address is invalid." // TODO(kgaidis): localize
+                    textField.errorText = STPLocalizedString("Your email address is invalid.", "An error message that instructs the user to keep typing their email address in a user-input field.")
                 }
             }
         }

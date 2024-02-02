@@ -20,7 +20,7 @@ final class PhoneTextField: UIView {
 
     fileprivate lazy var textField: RoundedTextField = {
         let textField = RoundedTextField(
-            placeholder: "Phone number", // TODO(kgaidis) localize
+            placeholder: STPLocalizedString("Phone number", "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type a phone number."),
             showDoneToolbar: true
         )
         textField.textField.keyboardType = .phonePad
@@ -58,17 +58,15 @@ final class PhoneTextField: UIView {
         return PhoneNumber(number: text, countryCode: countryCodeSelectorView.selectedCountryCode)
     }
     var isPhoneNumberValid: Bool {
-        if let phoneNumber {
+        if text.isEmpty {
+            // empty phone number
+            return false
+        } else if let phoneNumber {
             return phoneNumber.isComplete
         } else {
-            if text.isEmpty {
-                // empty phone number
-               return false
-            } else {
-                // Assume user has entered a format or for a region the SDK doesn't know about.
-                // Return valid as long as it's non-empty and let the server decide.
-                return true
-            }
+            // Assume user has entered a format or for a region the SDK doesn't know about.
+            // Return valid as long as it's non-empty and let the server decide.
+            return true
         }
     }
 
@@ -114,7 +112,7 @@ final class PhoneTextField: UIView {
                 if text.isEmpty {
                     // no error message if empty
                 } else {
-                    textField.errorText = "Your mobile phone number is incomplete." // TODO(kgaidis): localize
+                    textField.errorText = STPLocalizedString("Your mobile phone number is incomplete.", "An error message that instructs the user to keep typing their phone number in a user-input field.")
                 }
             }
         }
