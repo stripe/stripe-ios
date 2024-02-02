@@ -429,7 +429,6 @@ class PaymentSheetViewController: UIViewController {
         }
     }
 
-    //TODO: FIX -- pay button can become enabled despite cvc not being complete by toggling edit button
     func buyButtonEnabledForSavedPayments() -> ConfirmButton.Status {
         if savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParamsRequired &&
             savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams == nil {
@@ -654,7 +653,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             navigationBar.additionalButton.setTitle(UIButton.doneButtonTitle, for: .normal)
             buyButton.update(state: .disabled)
         } else {
-            buyButton.update(state: .enabled)
+            buyButton.update(state: buyButtonEnabledForSavedPayments())
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
         navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
