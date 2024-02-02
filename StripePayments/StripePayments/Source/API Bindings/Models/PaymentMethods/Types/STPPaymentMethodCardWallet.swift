@@ -23,6 +23,8 @@ public enum STPPaymentMethodCardWalletType: Int {
     case samsungPay
     /// Visa Checkout
     case visaCheckout
+    /// Link
+    case link
     /// An unknown Card Wallet type.
     case unknown
 }
@@ -61,6 +63,7 @@ public class STPPaymentMethodCardWallet: NSObject, STPAPIResponseDecodable {
             "masterpass": NSNumber(value: STPPaymentMethodCardWalletType.masterpass.rawValue),
             "samsung_pay": NSNumber(value: STPPaymentMethodCardWalletType.samsungPay.rawValue),
             "visa_checkout": NSNumber(value: STPPaymentMethodCardWalletType.visaCheckout.rawValue),
+            "link": NSNumber(value: STPPaymentMethodCardWalletType.link.rawValue),
         ]
     }
 
