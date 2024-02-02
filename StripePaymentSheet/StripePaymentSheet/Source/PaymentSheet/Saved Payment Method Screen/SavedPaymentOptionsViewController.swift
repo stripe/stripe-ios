@@ -307,7 +307,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             + (showApplePay ? [.applePay] : [])
             + (showLink ? [.link] : [])
             + savedPMViewModels
-                
+
         // Terrible hack, we should refactor the selection logic
         // If the first payment method is Link, we *don't* want to select it by default.
         // Instead, we should set the default index to the option next to Link (either the last saved PM or nothing)
