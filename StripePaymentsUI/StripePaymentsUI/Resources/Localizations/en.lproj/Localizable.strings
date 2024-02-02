@@ -31,6 +31,9 @@
 /* Label for card number entry text field */
 "Card number" = "Card number";
 
+/* Section title for entering your CVC/CVV. e.g. 'Confirm your CVC' or 'Confirm your CVV' */
+"Confirm your %@" = "Confirm your %@";
+
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
 

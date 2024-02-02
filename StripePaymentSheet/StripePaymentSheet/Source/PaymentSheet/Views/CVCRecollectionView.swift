@@ -2,11 +2,16 @@
 //  CVCRecollectionView.swift
 //  StripePaymentSheet
 //
-
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripePaymentsUI
+
 import UIKit
 
 class CVCRecollectionView: UIView {
+    lazy var titleLabel: UILabel = {
+        return ElementsUI.makeSectionTitleLabel(theme: appearance.asElementsTheme)
+    }()
 
     lazy var stackView: UIStackView = {
         let stackView = mode == .detailedWithInput
@@ -71,7 +76,17 @@ class CVCRecollectionView: UIView {
         self.appearance = appearance
         self.elementDelegate = elementDelegate
         super.init(frame: .zero)
-        addAndPinSubview(stackView)
+
+        self.titleLabel.isHidden = mode == .detailedWithInput
+        let brand = (self.paymentMethod.card?.brand ?? .unknown) == .amex
+        ? String.Localized.cvv
+        : String.Localized.cvc
+        
+        self.titleLabel.text = String(format: String.Localized.cvc_section_title, brand)
+        let stack = UIStackView(arrangedSubviews: [titleLabel, stackView])
+        stack.axis = .vertical
+        stack.spacing = 4
+        addAndPinSubview(stack)
 
     }
     #if !canImport(CompositorServices)
