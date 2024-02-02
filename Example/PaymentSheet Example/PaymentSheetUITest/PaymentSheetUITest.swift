@@ -6,7 +6,6 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-import StripePayments
 import XCTest
 
 class PaymentSheetUITestCase: XCTestCase {
@@ -1421,6 +1420,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         )
 
         app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Pay $50.99"].waitForExistence(timeout: 10)
 
         XCTAssertEqual(
             // Ignore luxe_* analytics since there are a lot and I'm not sure if they're the same every time
