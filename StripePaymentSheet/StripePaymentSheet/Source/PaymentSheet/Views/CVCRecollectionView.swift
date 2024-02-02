@@ -3,8 +3,8 @@
 //  StripePaymentSheet
 //
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 
 import UIKit
 
@@ -81,7 +81,7 @@ class CVCRecollectionView: UIView {
         let brand = (self.paymentMethod.card?.brand ?? .unknown) == .amex
         ? String.Localized.cvv
         : String.Localized.cvc
-        
+
         self.titleLabel.text = String(format: String.Localized.cvc_section_title, brand)
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, stackView])
