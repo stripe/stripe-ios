@@ -2108,7 +2108,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["••••4242"].waitForExistenceAndTap(timeout: 10))
     }
 
-    func testCVCRecollectionFlowController() throws {
+    func testCVCRecollectionFlowController_deferredCSC() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.integrationType = .deferred_csc
@@ -2146,10 +2146,120 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
                 confirmButtons.element(boundBy: index).tap()
             }
         }
-
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
+    func testCVCRecollectionComplete_deferredCSC() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .paymentSheet
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.requireCVCRecollection = .on
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+
+        let payButton = app.buttons["Pay $50.99"]
+        XCTAssert(payButton.isEnabled)
+        payButton.tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+
+        XCTAssertFalse(successText.exists)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        let cvcField = app.textFields["CVC"]
+        cvcField.forceTapWhenHittableInTestCase(self)
+        app.typeText("123")
+        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testCVCRecollectionFlowController_intentFirstCSC() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.integrationType = .normal
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.requireCVCRecollection = .on
+
+        loadPlayground(app, settings)
+
+        let paymentMethodButton = app.buttons["Payment method"]
+
+        paymentMethodButton.waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        // CVC field should already be selected
+        app.typeText("123")
+
+        let confirmButtons: XCUIElementQuery = app.buttons.matching(identifier: "Confirm")
+        for index in 0..<confirmButtons.count {
+            if confirmButtons.element(boundBy: index).isHittable {
+                confirmButtons.element(boundBy: index).tap()
+            }
+        }
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+    func testCVCRecollectionComplete_intentFirstCSC() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .paymentSheet
+        settings.integrationType = .normal
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.requireCVCRecollection = .on
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+
+        let payButton = app.buttons["Pay $50.99"]
+        XCTAssert(payButton.isEnabled)
+        payButton.tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+
+        XCTAssertFalse(successText.exists)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        let cvcField = app.textFields["CVC"]
+        cvcField.forceTapWhenHittableInTestCase(self)
+        app.typeText("123")
+        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
     func testLinkOnlyFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
