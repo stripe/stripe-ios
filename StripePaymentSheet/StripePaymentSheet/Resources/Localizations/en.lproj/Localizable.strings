@@ -37,9 +37,6 @@
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
-/* Amazon Pay mandate text */
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
-
 /* Paypal mandate text */
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
@@ -131,18 +128,6 @@
 /* Separator label between two options */
 "Or" = "Or";
 
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay. */
-"Or pay using" = "Or pay using";
-
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
-"Or pay with a card" = "Or pay with a card";
-
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up. */
-"Or use" = "Or use";
-
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up. */
-"Or use a card" = "Or use a card";
-
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Pay %@";
 
@@ -150,9 +135,9 @@
 "Pay another way" = "Pay another way";
 
 /* Label describing the benefit of signing up for Link.
-Pay faster at {Merchant Name} and thousands of businesses
-e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
-"Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
+Pay faster at {Merchant Name} and thousands of merchants
+e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
+"Pay faster at %@ and thousands of merchants." = "Pay faster at %@ and thousands of merchants.";
 
 /* Pay in templated string for afterpay/clearpay */
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";
@@ -233,6 +218,9 @@ is not supported by the merchant */
 
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
+
+/* test */
+"Test123" = "Test123";
 
 /* An error message. */
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
