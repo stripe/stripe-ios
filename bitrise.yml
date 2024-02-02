@@ -494,6 +494,8 @@ workflows:
         inputs:
         - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
         title: Upload strings to lokalise
+        envs:
+        - LOKALISE_API_KEY: $LOKALISE_API_KEY
     before_run:
     - prep_all
     meta:
