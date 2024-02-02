@@ -2,13 +2,8 @@ require 'net/http'
 require 'json'
 require 'uri'
 
-if ENV['BITRISE_SOURCE_DIR']
-  # On Bitrise, use the source directory provided by Bitrise
-  current_dir = ENV['BITRISE_SOURCE_DIR']
-else
-  # Locally, get the current working directory and find the git root
-  current_dir = `git rev-parse --show-toplevel`.strip
-end
+$SCRIPT_DIR = __dir__
+$ROOT_DIR = File.expand_path('..', $SCRIPT_DIR)
 
 def api_get_request(endpoint, token)
   uri = URI(endpoint)
@@ -66,7 +61,7 @@ def check_lokalise_translations(api_token, project_id, new_added_strings)
   exit 1 unless all_keys_exist
 end
 
-new_strings_added = get_added_strings(current_dir)
+new_strings_added = get_added_strings($ROOT_DIR)
 puts(new_strings_added)
 check_lokalise_translations(ENV['LOKALISE_API_KEY'], '747824695e51bc2f4aa912.89576472', new_strings_added)
 puts "Done!"
