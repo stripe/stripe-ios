@@ -77,7 +77,9 @@ extension STPAnalyticsClient {
         intentConfig: PaymentSheet.IntentConfiguration? = nil,
         apiClient: STPAPIClient
     ) {
-        AnalyticsHelper.shared.startTimeMeasurement(.checkout)
+        if !isCustom {
+            AnalyticsHelper.shared.startTimeMeasurement(.checkout)
+        }
         logPaymentSheetEvent(
             event: paymentSheetShowEventValue(isCustom: isCustom, paymentMethod: paymentMethod),
             linkEnabled: linkEnabled,
