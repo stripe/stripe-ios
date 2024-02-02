@@ -507,7 +507,7 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: bundle exec ruby ./ci_scripts/check_for_untranslated_strings.rb
+        - content: ./ci_scripts/check_for_untranslated_strings.rb
         title: Check for any new untranslated strings
         envs:
         - LOKALISE_API_KEY: $LOKALISE_API_KEY
