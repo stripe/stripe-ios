@@ -66,5 +66,6 @@ end
 
 puts "Checking for any untranslated strings..."
 new_strings_added = get_added_strings(repo_path)
+puts(new_strings_added)
 check_lokalise_translations(ENV['LOKALISE_API_KEY'], '747824695e51bc2f4aa912.89576472', new_strings_added)
 puts "Done!"
