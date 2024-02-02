@@ -83,7 +83,14 @@ class CVCRecollectionView: UIView {
         : String.Localized.cvc
         
         self.titleLabel.text = String(format: String.Localized.cvc_section_title, brand)
+
         let stack = UIStackView(arrangedSubviews: [titleLabel, stackView])
+        if mode == .inputOnly {
+            let spacerView = UIView(frame: .zero)
+            spacerView.translatesAutoresizingMaskIntoConstraints = false
+            spacerView.heightAnchor.constraint(equalToConstant: 10).isActive = true
+            stack.insertArrangedSubview(spacerView, at: 0)
+        }
         stack.axis = .vertical
         stack.spacing = 4
         addAndPinSubview(stack)
