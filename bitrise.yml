@@ -492,14 +492,8 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: |
-            #!/bin/env bash
-            if [ "$BITRISE_GIT_BRANCH" == "master" ]; then
-              bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
-            else
-              echo "This is not the master branch, skipping."
-            fi
-        title: Upload strings to lokalise (if master branch)
+        - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
+        title: Upload strings to lokalise
         envs:
         - LOKALISE_API_KEY: $LOKALISE_API_KEY
     before_run:
