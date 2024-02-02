@@ -48,6 +48,7 @@ stages:
     - integration-all: {}
     - deploy-dry-run: {}
     - lokalise-upload: {}
+    - check-for-untranslated: {}
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
@@ -494,6 +495,20 @@ workflows:
         inputs:
         - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
         title: Upload strings to lokalise
+        envs:
+        - LOKALISE_API_KEY: $LOKALISE_API_KEY
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core
+  check-for-untranslated:
+    steps:
+    - script@1:
+        inputs:
+        - content: bundle exec ruby ./ci_scripts/check_for_untranslated_strings.rb
+        title: Check for any new untranslated strings
         envs:
         - LOKALISE_API_KEY: $LOKALISE_API_KEY
     before_run:
