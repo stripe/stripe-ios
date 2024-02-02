@@ -22,17 +22,17 @@ def api_get_request(endpoint, token)
   JSON.parse(res.body)
 end
 
-def get_added_strings(repo_path)
+def get_added_strings(current_dir)
   new_strings = {}
-  Dir.chdir(repo_path) do
+  Dir.chdir(current_dir) do
     strings_files = `git diff --name-only master...`.split("\n").select { |f| f.end_with?(".strings") }
     strings_files.each do |file|
-      added_lines = `git diff master... -- #{file}`.split("\n").select do |line| 
-        line.start_with?('+') && !line.start_with?('+++') && line.include?('=') && !line.match(/^\/\//) 
+      added_lines = `git diff master... -- #{file}`.split("\n").select do |line|
+        line.start_with?('+') && !line.start_with?('+++') && line.include?('=') && !line.match(/^\/\//)
       end
-      new_strings[file] = added_lines.map do |line| 
+      new_strings[file] = added_lines.map do |line|
         line.delete_prefix('+').strip.split('=')[0].gsub(/\"/, '').strip
-      end 
+      end
     end
   end
 
@@ -66,8 +66,7 @@ def check_lokalise_translations(api_token, project_id, new_added_strings)
   exit 1 unless all_keys_exist
 end
 
-puts "Checking for any untranslated strings..."
-new_strings_added = get_added_strings(repo_path)
+new_strings_added = get_added_strings(current_dir)
 puts(new_strings_added)
 check_lokalise_translations(ENV['LOKALISE_API_KEY'], '747824695e51bc2f4aa912.89576472', new_strings_added)
 puts "Done!"
