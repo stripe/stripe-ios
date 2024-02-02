@@ -21,6 +21,17 @@ extension Intent {
     var onlySupportsLinkBank: Bool {
         return supportsLink(allowV2Features: false) && (linkFundingSources == [.bankAccount])
     }
+    
+    var linkFlags: [String: Bool] {
+        switch self {
+        case .paymentIntent(let paymentIntent, _):
+            return paymentIntent.linkSettings?.linkFlags ?? [:]
+        case .setupIntent(let setupIntent, _):
+            return setupIntent.linkSettings?.linkFlags ?? [:]
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.linkSettings?.linkFlags ?? [:]
+        }
+    }
 
     var callToAction: ConfirmButton.CallToActionType {
         switch self {
