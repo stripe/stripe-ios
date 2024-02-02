@@ -203,15 +203,15 @@ struct PhoneTextField_Previews: PreviewProvider {
 
                 PhoneTextFieldUIViewRepresentable(
                     defaultPhoneNumber: "401500600"
-                ).frame(height: 90)
+                ).frame(height: 56)
 
                 PhoneTextFieldUIViewRepresentable(
                     defaultPhoneNumber: "40150060003435"
-                ).frame(height: 90)
+                ).frame(height: 56)
 
                 PhoneTextFieldUIViewRepresentable(
                     defaultPhoneNumber: "+442079460321"
-                ).frame(height: 90)
+                ).frame(height: 56)
 
                 Spacer()
             }

@@ -159,18 +159,16 @@ import SwiftUI
 
 private struct PhoneCountryCodeSelectorViewUIViewRepresentable: UIViewRepresentable {
 
-    let text: String
+    let defaultCountryCode: String?
 
     func makeUIView(context: Context) -> PhoneCountryCodeSelectorView {
-        PhoneCountryCodeSelectorView(defaultCountryCode: nil)
+        PhoneCountryCodeSelectorView(defaultCountryCode: defaultCountryCode)
     }
 
     func updateUIView(
         _ PhoneCountryCodeSelectorView: PhoneCountryCodeSelectorView,
         context: Context
-    ) {
-
-    }
+    ) {}
 }
 
 struct PhoneCountryCodeSelectorView_Previews: PreviewProvider {
@@ -178,24 +176,19 @@ struct PhoneCountryCodeSelectorView_Previews: PreviewProvider {
         if #available(iOS 14.0, *) {
             VStack(spacing: 16) {
                 PhoneCountryCodeSelectorViewUIViewRepresentable(
-                    text: ""
+                    defaultCountryCode: ""
+                )
+                .frame(width: 85, height: 48)
+
+                PhoneCountryCodeSelectorViewUIViewRepresentable(
+                    defaultCountryCode: "US"
                 )
                 .frame(width: 72, height: 48)
 
                 PhoneCountryCodeSelectorViewUIViewRepresentable(
-                    text: "4015006000"
+                    defaultCountryCode: "GB"
                 )
-                .frame(width: 72, height: 48)
-
-                PhoneCountryCodeSelectorViewUIViewRepresentable(
-                    text: "401500600"
-                )
-                .frame(width: 72, height: 48)
-
-                PhoneCountryCodeSelectorViewUIViewRepresentable(
-                    text: "40150060003435"
-                )
-                .frame(width: 72, height: 48)
+                .frame(width: 85, height: 48)
 
                 Spacer()
             }

@@ -677,27 +677,31 @@ struct RoundedTextField_Previews: PreviewProvider {
                     footerText: nil,
                     errorText: nil
                 )
-                .frame(height: 80)
+                .frame(height: 56)
                 RoundedTextFieldUIViewRepresentable(
                     placeholder: "Account number",
                     footerText: "Your account can be checkings or savings.",
                     errorText: nil
                 )
+                .frame(height: 80)
                 RoundedTextFieldUIViewRepresentable(
                     placeholder: "Confirm account number",
                     footerText: nil,
                     errorText: nil
                 )
+                .frame(height: 56)
                 RoundedTextFieldUIViewRepresentable(
                     placeholder: "Routing number",
                     footerText: nil,
                     errorText: "Routing number is required."
                 )
+                .frame(height: 80)
                 RoundedTextFieldUIViewRepresentable(
                     placeholder: "Account number",
                     footerText: "Your account can be checkings or savings.",
                     errorText: "Account number is required."
                 )
+                .frame(height: 80)
                 Spacer()
             }
             .padding()

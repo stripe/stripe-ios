@@ -156,12 +156,11 @@ private struct PhoneCountryCodePickerViewUIViewRepresentable: UIViewRepresentabl
 struct PhoneCountryCodePickerView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
-            VStack(spacing: 16) {
-                    PhoneCountryCodePickerViewUIViewRepresentable()
+            VStack(spacing: 0) {
+                PhoneCountryCodePickerViewUIViewRepresentable()
                 Spacer()
             }
-            .padding()
-            .background(Color(UIColor.customBackgroundColor))
+            .padding(.horizontal, 40)
         }
     }
 }
