@@ -23,6 +23,8 @@ trigger_map:
   pipeline: releases-trigger-pipeline
 - pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
+- push_branch: master
+  workflow: lokalise-upload
 pipelines:
   main-trigger-pipeline:
     stages:
@@ -492,14 +494,8 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: |
-            #!/bin/env bash
-            if [ "$BITRISE_GIT_BRANCH" == "master" ]; then
-              bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
-            else
-              echo "This is not the master branch, skipping."
-            fi
-        title: Upload strings to lokalise (if master branch)
+        - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
+        title: Upload strings to Lokalise
         envs:
         - LOKALISE_API_KEY: $LOKALISE_API_KEY
     before_run:
