@@ -218,7 +218,7 @@ extension STPAPIClient {
         post(
             resource: endpoint,
             parameters: parameters,
-            ephemeralKeySecret: nil,
+            ephemeralKeySecret: consumerAccountPublishableKey,
             completion: completion
         )
     }
