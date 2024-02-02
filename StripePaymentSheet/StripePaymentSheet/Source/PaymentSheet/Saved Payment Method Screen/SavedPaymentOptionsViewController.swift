@@ -307,7 +307,14 @@ class SavedPaymentOptionsViewController: UIViewController {
             + (showApplePay ? [.applePay] : [])
             + (showLink ? [.link] : [])
             + savedPMViewModels
-        let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod }) ?? 1
+                
+        // Terrible hack, we should refactor the selection logic
+        // If the first payment method is Link, we *don't* want to select it by default.
+        // Instead, we should set the default index to the option next to Link (either the last saved PM or nothing)
+        let firstPaymentMethodIsLink = !showApplePay && showLink
+        let defaultIndex = firstPaymentMethodIsLink ? 2 : 1
+
+        let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod }) ?? defaultIndex
         return (defaultSelectedIndex, viewModels)
     }
 }
