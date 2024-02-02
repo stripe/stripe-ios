@@ -18,8 +18,9 @@ def api_get_request(endpoint, token)
 end
 
 def get_added_strings(current_dir)
+  puts Dir.pwd
   new_strings = {}
-  Dir.chdir(current_dir) do
+#  Dir.chdir(current_dir) do
     strings_files = `git diff --name-only master...`.split("\n").select { |f| f.end_with?(".strings") }
     strings_files.each do |file|
       added_lines = `git diff master... -- #{file}`.split("\n").select do |line|
@@ -29,7 +30,7 @@ def get_added_strings(current_dir)
         line.delete_prefix('+').strip.split('=')[0].gsub(/\"/, '').strip
       end
     end
-  end
+#  end
 
   new_strings
 end
@@ -63,5 +64,5 @@ end
 
 new_strings_added = get_added_strings($ROOT_DIR)
 puts(new_strings_added)
-check_lokalise_translations(ENV['LOKALISE_API_KEY'], '747824695e51bc2f4aa912.89576472', new_strings_added)
+check_lokalise_translations('76d2ea07881599c74d109d85848fcb4a5c48ca2d', '747824695e51bc2f4aa912.89576472', new_strings_added)
 puts "Done!"
