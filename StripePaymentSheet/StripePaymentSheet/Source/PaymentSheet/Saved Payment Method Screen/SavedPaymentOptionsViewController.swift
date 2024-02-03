@@ -164,7 +164,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
         return IndexPath(item: index, section: 0)
     }
-    
+
     /// Whether or not there are any payment options we can show
     /// i.e. Are there any cells besides the Add cell? If so, we should move Link to the new PM sheet
     var hasOptionsExcludingAdd: Bool {
