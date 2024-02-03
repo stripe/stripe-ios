@@ -48,9 +48,9 @@ def check_lokalise_translations(api_token, project_id, new_added_strings)
       if key
         translated_count = key['translations'].count { |t| !t['translation'].empty? }
         if translated_count > 30 #Arbitrary number, if we have 30 translations at least we consider it translated
-          puts "Translation for '#{str}' exists."
+          puts "Translations for '#{str}' exists."
         else
-          puts "Translation for '#{str}' does not exist."
+          puts "Translations for '#{str}' does not exist."
           all_keys_exist = false
         end
       else
@@ -64,6 +64,4 @@ def check_lokalise_translations(api_token, project_id, new_added_strings)
 end
 
 new_strings_added = get_added_strings($ROOT_DIR)
-puts(new_strings_added)
 check_lokalise_translations(ENV['LOKALISE_API_KEY'], '747824695e51bc2f4aa912.89576472', new_strings_added)
-puts "Done!"
