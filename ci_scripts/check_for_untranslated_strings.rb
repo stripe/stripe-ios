@@ -50,7 +50,7 @@ def check_lokalise_translations(api_token, project_id, new_added_strings)
         if translated_count > 30 #Arbitrary number, if we have 30 translations at least we consider it translated
           puts "Translations for '#{str}' exists."
         else
-          puts "Translations for '#{str}' does not exist."
+          puts "Translations for '#{str}' do not exist."
           all_keys_exist = false
         end
       else
