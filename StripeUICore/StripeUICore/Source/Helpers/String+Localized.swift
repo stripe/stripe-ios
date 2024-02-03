@@ -78,7 +78,7 @@ import Foundation
     // MARK: - Phone number
 
     static var phone: String {
-        STPLocalizedString("Phone", "Caption for Phone field on address form")
+        STPLocalizedString("Phone number", "Caption for Phone field on address form")
     }
 
     static var incomplete_phone_number: String {
