@@ -36,24 +36,25 @@ def get_added_strings(current_dir)
 end
 
 def check_lokalise_translations(api_token, project_id, new_added_strings)
-  keys = api_get_request("https://api.lokalise.com/api2/projects/#{project_id}/keys", api_token)
-
+  keys = api_get_request("https://api.lokalise.com/api2/projects/#{project_id}/keys?limit=5000&include_translations=1", api_token)
   all_keys_exist = true
-
+  
   new_added_strings.each do |file_path, new_strings|
     puts "Checking translation for file #{file_path}"
+
     new_strings.each do |str|
       key = keys['keys'].find { |k| k['key_name']['other'] == str }
+
       if key
-        translated_count = key['platforms']['ios']['is_translated']
-        if translated_count
+        translated_count = key['translations'].count { |t| !t['translation'].empty? }
+        if translated_count > 30 #Arbitrary number, if we have 30 translations at least we consider it translated
           puts "Translation for '#{str}' exists."
         else
           puts "Translation for '#{str}' does not exist."
           all_keys_exist = false
         end
       else
-        puts "Key '#{str}' does not exist."
+        puts "String '#{str}' does not exist. Make sure you have uploaded your strings to Lokalise."
         all_keys_exist = false
       end
     end
