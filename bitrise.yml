@@ -539,7 +539,6 @@ workflows:
   check-for-untranslated:
     steps:
     - script@1:
-        is_skippable: true
         inputs:
         - content: ruby ./ci_scripts/check_for_untranslated_strings.rb
         title: Check for any new untranslated strings
