@@ -75,4 +75,4 @@ end
 should_skip_translation_check()
 new_strings_added = get_added_strings($ROOT_DIR)
 check_lokalise_translations(ENV['LOKALISE_API_KEY'], '747824695e51bc2f4aa912.89576472', new_strings_added)
-puts 'If you would like to skip this check, push a commit with the prefix "[skip translations]" e.g. git commit --allow-empty -m "[skip translations] Skip translations"
+puts 'If you would like to skip this check, push a commit with the prefix "[skip translations]" e.g. git commit --allow-empty -m "[skip translations] Skip translations"'
