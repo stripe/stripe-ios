@@ -8,8 +8,8 @@ $ROOT_DIR = File.expand_path('..', $SCRIPT_DIR)
 def should_skip_translation_check()
   last_commit_message = ENV['BITRISE_GIT_MESSAGE']
   puts last_commit_message
-  if last_commit_message&.include?('[skip translations]')
-    puts 'Translation check skipped due to commit message.'
+  if last_commit_message&.include?('Translations are not required for this pull request.')
+    puts 'Translation check skipped due to pull request summary containing "Translations are not required for this pull request.".'
     exit 0
   end
 end
@@ -68,7 +68,7 @@ def check_lokalise_translations(api_token, project_id, new_added_strings)
       end
     end
   end
-  puts 'If you would like to skip this check, push a commit with the prefix "[skip translations]" e.g. git commit --allow-empty -m "[skip translations] Skip translations"'
+  puts 'If you would like to skip this check, update your pull request summary to include "Translations are not required for this pull request." and re-run this check.'
   exit 1 unless all_keys_exist
 end
 
