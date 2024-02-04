@@ -5,6 +5,14 @@ require 'uri'
 $SCRIPT_DIR = __dir__
 $ROOT_DIR = File.expand_path('..', $SCRIPT_DIR)
 
+def should_skip_translation_check()
+  last_commit_message = `git log -1 --pretty=%B`.chomp
+  if last_commit_message.start_with?('[skip translations]')
+    puts 'Translation check skipped due to commit message.'
+    exit 0
+  end
+end
+
 def api_get_request(endpoint, token)
   uri = URI(endpoint)
   req = Net::HTTP::Get.new(uri)
@@ -63,5 +71,8 @@ def check_lokalise_translations(api_token, project_id, new_added_strings)
   exit 1 unless all_keys_exist
 end
 
+# early exit if last commit has '[skip translations]' prefix.
+should_skip_translation_check()
 new_strings_added = get_added_strings($ROOT_DIR)
 check_lokalise_translations(ENV['LOKALISE_API_KEY'], '747824695e51bc2f4aa912.89576472', new_strings_added)
+puts 'If you would like to skip this check, push a commit with the prefix "[skip translations]" e.g. git commit --allow-empty -m "[skip translations] Skip translations"
