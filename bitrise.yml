@@ -545,6 +545,7 @@ workflows:
         envs:
         - LOKALISE_API_KEY: $LOKALISE_API_KEY
         - BITRISE_SOURCE_DIR: $BITRISE_SOURCE_DIR
+        - BITRISE_GIT_MESSAGE: $BITRISE_GIT_MESSAGE
     before_run:
     - prep_all
     meta:
