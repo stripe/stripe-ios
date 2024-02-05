@@ -424,6 +424,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                               removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .customerSheet,
+                                              canRemoveCard: true,
                                               isTestMode: configuration.isTestMode)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)

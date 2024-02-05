@@ -71,13 +71,24 @@ class SavedPaymentOptionsViewController: UIViewController {
         let removeSavedPaymentMethodMessage: String?
         let merchantDisplayName: String
         let isTestMode: Bool
+        let allowRemovalOfLastSavedPaymentMethod: Bool
     }
 
-    var hasRemovablePaymentMethods: Bool {
-        return (
-            configuration.customerID != nil &&
-            !savedPaymentMethods.isEmpty
-        )
+    // MARK: - Internal Properties
+
+    /// Whether or not you can edit save payment methods by removing or updating them.
+    var canEditPaymentMethods: Bool {
+        switch savedPaymentMethods.count {
+        case 0:
+            return false
+        case 1:
+            // If there's exactly one PM, customer can only edit if configuration allows removal or if that single PM is editable
+            return configuration.allowRemovalOfLastSavedPaymentMethod || viewModels.contains(where: {
+                $0.isCoBrandedCard && cbcEligible
+            })
+        default:
+            return true
+        }
     }
 
     var isRemovingPaymentMethods: Bool {
@@ -111,7 +122,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         return nil
     }
 
-    // MARK: - Internal Properties
     let configuration: Configuration
 
     var selectedPaymentOption: PaymentOption? {
@@ -163,7 +173,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - Private Properties
     private var selectedViewModelIndex: Int?
     private var viewModels: [Selection] = []
-    private var cbcEligible: Bool
+    private let cbcEligible: Bool
 
     private var selectedIndexPath: IndexPath? {
         guard
@@ -397,6 +407,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
+                                              canRemoveCard: savedPaymentMethods.count > 1 || configuration.allowRemovalOfLastSavedPaymentMethod,
                                               isTestMode: configuration.isTestMode)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
@@ -422,38 +433,38 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
     }
 
     private func removePaymentMethod(paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
-            guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
-                  case .saved(let paymentMethod) = viewModels[indexPath.row]
-            else {
-                assertionFailure()
-                return
-            }
-            let viewModel = viewModels[indexPath.row]
-            self.viewModels.remove(at: indexPath.row)
-            // the deletion needs to be in a performBatchUpdates so we make sure it is completed
-            // before potentially leaving edit mode (which triggers a reload that may collide with
-            // this deletion)
-            self.collectionView.performBatchUpdates {
-                self.collectionView.deleteItems(at: [indexPath])
-            } completion: { _ in
-                self.savedPaymentMethods.removeAll(where: {
-                    $0.stripeId == paymentMethod.stripeId
-                })
-
-                if let index = self.selectedViewModelIndex {
-                    if indexPath.row == index {
-                        self.selectedViewModelIndex = min(1, self.viewModels.count - 1)
-                    } else if indexPath.row < index {
-                        self.selectedViewModelIndex = index - 1
-                    }
-                }
-
-                self.delegate?.didSelectRemove(
-                    viewController: self,
-                    paymentMethodSelection: viewModel
-                )
-            }
+        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
+              case .saved(let paymentMethod) = viewModels[indexPath.row]
+        else {
+            assertionFailure()
+            return
         }
+        let viewModel = viewModels[indexPath.row]
+        self.viewModels.remove(at: indexPath.row)
+        // the deletion needs to be in a performBatchUpdates so we make sure it is completed
+        // before potentially leaving edit mode (which triggers a reload that may collide with
+        // this deletion)
+        self.collectionView.performBatchUpdates {
+            self.collectionView.deleteItems(at: [indexPath])
+        } completion: { _ in
+            self.savedPaymentMethods.removeAll(where: {
+                $0.stripeId == paymentMethod.stripeId
+            })
+
+            if let index = self.selectedViewModelIndex {
+                if indexPath.row == index {
+                    self.selectedViewModelIndex = min(1, self.viewModels.count - 1)
+                } else if indexPath.row < index {
+                    self.selectedViewModelIndex = index - 1
+                }
+            }
+
+            self.delegate?.didSelectRemove(
+                viewController: self,
+                paymentMethodSelection: viewModel
+            )
+        }
+    }
 }
 
 // MARK: - UpdateCardViewControllerDelegate
