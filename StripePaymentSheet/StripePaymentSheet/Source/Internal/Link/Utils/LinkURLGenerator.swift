@@ -37,6 +37,7 @@ struct LinkURLParams: Encodable {
     var flags: [String: Bool]
     var loggerMetadata: [String: Bool]
     var locale: String
+    var mobileSessionId: String?
 }
 
 class LinkURLGenerator {
@@ -77,7 +78,8 @@ class LinkURLGenerator {
                              customerInfo: customerInfo,
                              paymentInfo: paymentInfo,
                              experiments: [:], flags: [:], loggerMetadata: [:],
-                             locale: Locale.current.toLanguageTag())
+                             locale: Locale.current.toLanguageTag(),
+                             mobileSessionId: AnalyticsHelper.shared.sessionID)
     }
 
     static func url(params: LinkURLParams) throws -> URL {

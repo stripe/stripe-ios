@@ -24,7 +24,9 @@ class LinkURLGeneratorTests: XCTestCase {
                                    experiments: [:],
                                    flags: [:],
                                    loggerMetadata: [:],
-                                   locale: Locale.init(identifier: "en_US").toLanguageTag())
+                                   locale: Locale.init(identifier: "en_US").toLanguageTag(),
+                                   mobileSessionId: "mobile-session-id"
+    )
 
     func testURLCreation() {
         let url = try! LinkURLGenerator.url(params: testParams)
