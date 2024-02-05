@@ -86,6 +86,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             customerAdapter: self.customerAdapter,
             configuration: .init(
                 showApplePay: showApplePay,
+                allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
                 isTestMode: configuration.apiClient.isTestmode
             ),
             appearance: configuration.appearance,
@@ -307,7 +308,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             {
                 switch mode {
                 case .selectingSaved:
-                    if self.savedPaymentOptionsViewController.hasRemovablePaymentMethods {
+                    if self.savedPaymentOptionsViewController.canEditPaymentMethods {
                         self.configureEditSavedPaymentMethodsButton()
                         return .close(showAdditionalButton: true)
                     } else {
@@ -803,8 +804,7 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
                     return
                 }
 
-                if let originalPaymentMethodSelection = originalPaymentMethodSelection,
-                   paymentMethodSelection == originalPaymentMethodSelection {
+                if let originalPaymentMethodSelection, paymentMethodSelection == originalPaymentMethodSelection {
                     do {
                         try await self.customerAdapter.setSelectedPaymentOption(paymentOption: nil)
                     } catch {
@@ -819,7 +819,14 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
                 } else {
                     STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenRemovePMSuccess()
                 }
-                updateBottomNotice()
+
+                // If the customer can't edit anything anymore...
+                if !savedPaymentOptionsViewController.canEditPaymentMethods {
+                    // ...kick them out of edit mode. We'll do that by acting as if they tapped the "Done" button
+                    didSelectEditSavedPaymentMethodsButton()
+                } else {
+                    updateBottomNotice()
+                }
             }
         }
 

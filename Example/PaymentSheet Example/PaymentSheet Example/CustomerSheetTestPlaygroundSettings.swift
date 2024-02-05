@@ -92,6 +92,12 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
             }
         }
     }
+    enum AllowsRemovalOfLastSavedPaymentMethod: String, PickerEnum {
+        static let enumName: String = "AllowsRemovalOfLastSavedPaymentMethod"
+
+        case on
+        case off
+    }
 
     var customerMode: CustomerMode
     var customerId: String?
@@ -108,6 +114,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var collectAddress: BillingDetailsAddress
     var merchantCountryCode: MerchantCountry
     var preferredNetworksEnabled: PreferredNetworksEnabled
+    var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethod
 
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
@@ -123,7 +130,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    collectPhone: .automatic,
                                                    collectAddress: .automatic,
                                                    merchantCountryCode: .US,
-                                                   preferredNetworksEnabled: .off)
+                                                   preferredNetworksEnabled: .off,
+                                                   allowsRemovalOfLastSavedPaymentMethod: .on)
     }
 
     var base64Data: String {

@@ -69,6 +69,11 @@ extension CustomerSheet {
             }
         }
 
+        /// This is an experimental feature that may be removed at any time.
+        /// If true (the default), the customer can delete all saved payment methods.
+        /// If false, the customer can't delete if they only have one saved payment method remaining.
+        @_spi(STP) public var allowsRemovalOfLastSavedPaymentMethod = true
+
         public init () {
         }
     }
