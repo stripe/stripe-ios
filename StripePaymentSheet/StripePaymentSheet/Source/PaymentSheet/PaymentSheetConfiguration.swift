@@ -195,7 +195,7 @@ extension PaymentSheet {
         /// This is an experimental feature that may be removed at any time.
         /// If true (the default), the customer can delete all saved payment methods.
         /// If false, the customer can't delete if they only have one saved payment method remaining.
-        @_spi(STP) public var allowRemovalOfLastSavedPaymentMethod = true
+        @_spi(ExperimentalAllowRemovalOfLastSavedPaymentMethodAPI) public var allowRemovalOfLastSavedPaymentMethod = true
     }
 
     /// Configuration related to the Stripe Customer

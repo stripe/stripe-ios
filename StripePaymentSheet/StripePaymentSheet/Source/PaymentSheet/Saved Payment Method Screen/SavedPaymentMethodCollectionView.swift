@@ -339,7 +339,6 @@ extension SavedPaymentMethodCollectionView {
                 if case .saved = viewModel {
                     accessoryButton.isHidden = false
                     if shouldAllowEditing {
-                        // TODO: Disable remove in editing mode?
                         accessoryButton.set(style: .edit, with: appearance.colors.danger)
                         accessoryButton.backgroundColor = UIColor.dynamic(
                             light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))

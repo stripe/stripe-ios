@@ -108,7 +108,6 @@ class PlaygroundController: ObservableObject {
             configuration.userOverrideCountry = settings.userOverrideCountry.rawValue
         }
         configuration.returnURL = "payments-example://stripe-redirect"
-        configuration.allowRemovalOfLastSavedPaymentMethod = false
 
         if settings.defaultBillingAddress != .off {
             configuration.defaultBillingDetails.name = "Jane Doe"
