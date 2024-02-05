@@ -445,6 +445,8 @@ extension STPPaymentMethodCardWalletType: CustomStringConvertible {
             return "masterpass"
         case .samsungPay:
             return "samsungPay"
+        case .link:
+            return "link"
         case .unknown:
             return "unknown"
         case .visaCheckout:

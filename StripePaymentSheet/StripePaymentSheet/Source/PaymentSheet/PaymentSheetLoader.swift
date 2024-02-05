@@ -253,10 +253,10 @@ final class PaymentSheetLoader {
                     continuation.resume(throwing: error)
                     return
                 }
-                // Remove cards that originated from Apple or Google Pay
+                // Remove cards that originated from Apple Pay, Google Pay, or Link
                 paymentMethods = paymentMethods.filter { paymentMethod in
-                    let isAppleOrGooglePay = paymentMethod.type == .card && [.applePay, .googlePay].contains(paymentMethod.card?.wallet?.type)
-                    return !isAppleOrGooglePay
+                    let isWalletCard = paymentMethod.type == .card && [.applePay, .googlePay, .link].contains(paymentMethod.card?.wallet?.type)
+                    return !isWalletCard
                 }
                 continuation.resume(returning: paymentMethods)
             }
