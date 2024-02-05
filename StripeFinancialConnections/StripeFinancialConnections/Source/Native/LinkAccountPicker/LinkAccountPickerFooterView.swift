@@ -85,4 +85,8 @@ final class LinkAccountPickerFooterView: UIView {
 
         connectAccountButton.isEnabled = selectedAccountTuple != nil
     }
+
+    func showLoadingView(_ show: Bool) {
+        connectAccountButton.isLoading = show
+    }
 }
