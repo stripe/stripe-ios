@@ -49,6 +49,42 @@ final class LinkAccountPickerViewController: UIViewController {
     private var businessName: String? {
         return dataSource.manifest.businessName
     }
+    private lazy var contentStackView: UIStackView = {
+        let verticalStackView = UIStackView(
+            arrangedSubviews: [
+                // this sets up an initial `headerView` and `bodyView`
+                // for the loading state
+                PaneLayoutView.createHeaderView(
+                    iconView: nil,
+                    title: {
+                        if dataSource.manifest.singleAccount {
+                            return STPLocalizedString(
+                                "Select account",
+                                "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
+                            )
+                        } else {
+                            return STPLocalizedString(
+                                "Select accounts",
+                                "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
+                            )
+                        }
+                    }()
+                ),
+                // `createBodyView` adds extra padding
+                // around the loading view
+                PaneLayoutView.createBodyView(
+                    text: nil,
+                    contentView: LinkAccountPickerLoadingView()
+                ),
+            ]
+        )
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 0
+        return verticalStackView
+    }()
+    private lazy var footerContainerView: UIView = {
+        return UIView()
+    }()
     private weak var bodyView: LinkAccountPickerBodyView?
     private weak var footerView: LinkAccountPickerFooterView?
 
@@ -68,17 +104,20 @@ final class LinkAccountPickerViewController: UIViewController {
         navigationItem.hidesBackButton = true
         view.backgroundColor = .customBackgroundColor
 
+        let paneLayoutView =  PaneLayoutView(
+            contentView: contentStackView,
+            footerView: footerContainerView
+        )
+        paneLayoutView.addTo(view: view)
+
         fetchNetworkedAccounts()
     }
 
     private func fetchNetworkedAccounts() {
-        let retreivingAccountsLoadingView = buildRetrievingAccountsView()
-        view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
         dataSource
             .fetchNetworkedAccounts()
             .observe { [weak self] result in
                 guard let self = self else { return }
-                retreivingAccountsLoadingView.removeFromSuperview()
                 switch result {
                 case .success(let networkedAccountsResponse):
                     if let returningNetworkingUserAccountPicker = networkedAccountsResponse.display?.text?.returningNetworkingUserAccountPicker {
@@ -115,12 +154,30 @@ final class LinkAccountPickerViewController: UIViewController {
             partnerAccounts: partnerAccounts,
             accountPickerAccounts: networkingAccountPicker.accounts
         )
+
         let bodyView = LinkAccountPickerBodyView(
             accountTuples: accountTuples,
             addNewAccount: networkingAccountPicker.addNewAccount
         )
         bodyView.delegate = self
         self.bodyView = bodyView
+
+        // clear the stack
+        contentStackView.subviews.forEach { subview in
+            subview.removeFromSuperview()
+        }
+        contentStackView.addArrangedSubview(
+            PaneLayoutView.createHeaderView(
+                iconView: nil,
+                title: networkingAccountPicker.title
+            )
+        )
+        contentStackView.addArrangedSubview(
+            PaneLayoutView.createBodyView(
+                text: nil,
+                contentView: bodyView
+            )
+        )
 
         let footerView = LinkAccountPickerFooterView(
             defaultCta: networkingAccountPicker.defaultCta,
@@ -158,17 +215,7 @@ final class LinkAccountPickerViewController: UIViewController {
             }
         )
         self.footerView = footerView
-
-        let paneLayoutView =  PaneLayoutView(
-            contentView: PaneLayoutView.createContentView(
-                iconView: nil,
-                title: networkingAccountPicker.title,
-                subtitle: nil,
-                contentView: bodyView
-            ),
-            footerView: footerView
-        )
-        paneLayoutView.addTo(view: view)
+        footerContainerView.addAndPinSubview(footerView)
 
         bodyView.selectAccount(nil) // activate the logic to list all accounts
     }
@@ -206,11 +253,11 @@ final class LinkAccountPickerViewController: UIViewController {
         )
 
         if nextPane == .success {
-            let linkingAccountsLoadingView = LinkingAccountsLoadingView(
-                numberOfSelectedAccounts: 1,
-                businessName: businessName
-            )
-            view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
+            footerView?.showLoadingView(true)
+            // prevent user from accidentally pressing
+            // a button on the screen; this is safe because
+            // next step will transition away from this screen
+            view.isUserInteractionEnabled = false
 
             dataSource
                 .selectNetworkedAccount(selectedAccountTuple.partnerAccount)
