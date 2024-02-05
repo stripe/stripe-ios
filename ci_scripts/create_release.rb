@@ -65,6 +65,7 @@ def create_pr
     - [ ] All *.podspec files
     - [ ] StripeAPIConfiguration+Version.swift
   - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section.
+  Translations are not required for this pull request. (Skip translation CI step for release PRs)
   }
 
   unless @is_dry_run
