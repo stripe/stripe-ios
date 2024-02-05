@@ -1,60 +1,75 @@
 //
-//  ManualEntryTextField.swift
+//  RoundedTextField.swift
 //  StripeFinancialConnections
 //
-//  Created by Krisjanis Gaidis on 8/23/22.
+//  Created by Krisjanis Gaidis on 1/30/24.
 //
 
 import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol ManualEntryTextFieldDelegate: AnyObject {
-    func manualEntryTextField(
-        _ textField: ManualEntryTextField,
+protocol RoundedTextFieldDelegate: AnyObject {
+    func roundedTextField(
+        _ textField: RoundedTextField,
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool
-    func manualEntryTextFieldDidEndEditing(_ textField: ManualEntryTextField)
+    func roundedTextField(
+        _ textField: RoundedTextField,
+        textDidChange text: String
+    )
+    func roundedTextFieldUserDidPressReturnKey(_ textField: RoundedTextField)
+    func roundedTextFieldDidEndEditing(_ textField: RoundedTextField)
 }
 
-final class ManualEntryTextField: UIView {
+final class RoundedTextField: UIView {
+
+    private let showDoneToolbar: Bool
 
     // Used to optionally add an error message
     // at the bottom of the text field
     private lazy var verticalStackView: UIStackView = {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                textFieldContainerView,
+                containerHorizontalStackView,
             ]
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 6
         return verticalStackView
     }()
-    private lazy var textFieldContainerView: UIView = {
-        let textFieldStackView = UIStackView(
+    lazy var containerHorizontalStackView: UIStackView = {
+        let containerStackView = UIStackView(
             arrangedSubviews: [
-                textField
+                textFieldContainerView
             ]
         )
-        textFieldStackView.backgroundColor = .customBackgroundColor
-        textFieldStackView.axis = .vertical
-        textFieldStackView.spacing = 0
-        textFieldStackView.isLayoutMarginsRelativeArrangement = true
-        textFieldStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+        containerStackView.backgroundColor = .customBackgroundColor
+        containerStackView.axis = .horizontal
+        containerStackView.spacing = 12
+        containerStackView.isLayoutMarginsRelativeArrangement = true
+        containerStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 8,
             leading: 16,
             bottom: 8,
             trailing: 16
         )
-        textFieldStackView.layer.cornerRadius = 12
-        textFieldStackView.layer.shadowColor = UIColor.black.cgColor
-        textFieldStackView.layer.shadowRadius = 2 / UIScreen.main.nativeScale
-        textFieldStackView.layer.shadowOpacity = 0.1
-        textFieldStackView.layer.shadowOffset = CGSize(
+        containerStackView.layer.cornerRadius = 12
+        containerStackView.layer.shadowColor = UIColor.black.cgColor
+        containerStackView.layer.shadowRadius = 2 / UIScreen.main.nativeScale
+        containerStackView.layer.shadowOpacity = 0.1
+        containerStackView.layer.shadowOffset = CGSize(
             width: 0,
             height: 1 / UIScreen.main.nativeScale
+        )
+        return containerStackView
+    }()
+    lazy var textFieldContainerView: UIView = {
+        let textFieldStackView = UIStackView(
+            arrangedSubviews: [
+                textField
+            ]
         )
         return textFieldStackView
     }()
@@ -65,11 +80,37 @@ final class ManualEntryTextField: UIView {
         textField.defaultPlaceholderColor = .textSubdued
         textField.floatingPlaceholderColor = .textSubdued
         textField.placeholderLabel.font = textField.font
-        textField.keyboardType = .numberPad
+        textField.tintColor = textField.textColor
         textField.delegate = self
+        if showDoneToolbar {
+            textField.inputAccessoryView = keyboardToolbar
+        }
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            // not ideal, but height constraint fixes an odd bug
+            // where on landscape the text field gets compressed
+            textField.heightAnchor.constraint(
+                greaterThanOrEqualToConstant: FloatingPlaceholderTextField.LayoutConstants.defaultHeight
+            ),
+        ])
         return textField
     }()
     private var currentFooterView: UIView?
+    private lazy var keyboardToolbar: DoneButtonToolbar = {
+        var theme: ElementsUITheme = .default
+        theme.colors = {
+            var colors = ElementsUITheme.Color()
+            colors.primary = .brand500
+            colors.secondaryText = .textSubdued
+            return colors
+        }()
+        let keyboardToolbar = DoneButtonToolbar(
+            delegate: self,
+            showCancelButton: false,
+            theme: theme
+        )
+        return keyboardToolbar
+    }()
 
     var text: String {
         get {
@@ -89,19 +130,33 @@ final class ManualEntryTextField: UIView {
             didUpdateFooterText()
         }
     }
-    weak var delegate: ManualEntryTextFieldDelegate?
+    weak var delegate: RoundedTextFieldDelegate?
 
-    init(placeholder: String, footerText: String? = nil) {
+    init(
+        placeholder: String,
+        footerText: String? = nil,
+        showDoneToolbar: Bool = false
+    ) {
+        self.showDoneToolbar = showDoneToolbar
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
         textField.placeholder = placeholder
         self.footerText = footerText
         didUpdateFooterText()  // simulate `didSet`. it not get called in `init`
         updateBorder(highlighted: false)
+        textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func becomeFirstResponder() -> Bool {
+        return textField.becomeFirstResponder()
+    }
+
+    override func endEditing(_ force: Bool) -> Bool {
+        return textField.endEditing(force)
     }
 
     private func didUpdateFooterText() {
@@ -110,9 +165,9 @@ final class ManualEntryTextField: UIView {
 
         let footerTextLabel: UIView?
         if let errorText = errorText, footerText != nil {
-            footerTextLabel = ManualEntryErrorView(text: errorText)
+            footerTextLabel = CreateErrorLabel(text: errorText)
         } else if let errorText = errorText {
-            footerTextLabel = ManualEntryErrorView(text: errorText)
+            footerTextLabel = CreateErrorLabel(text: errorText)
         } else if let footerText = footerText {
             let footerLabel = AttributedLabel(
                 font: .label(.large),
@@ -135,44 +190,76 @@ final class ManualEntryTextField: UIView {
         let highlighted = textField.isFirstResponder
 
         if errorText != nil && !highlighted {
-            textFieldContainerView.layer.borderColor = UIColor.textFeedbackCritical.cgColor
-            textFieldContainerView.layer.borderWidth = 2.0
+            containerHorizontalStackView.layer.borderColor = UIColor.textFeedbackCritical.cgColor
+            containerHorizontalStackView.layer.borderWidth = 2.0
         } else {
             if highlighted {
-                textFieldContainerView.layer.borderColor = UIColor.textActionPrimaryFocused.cgColor
-                textFieldContainerView.layer.borderWidth = 2.0
+                containerHorizontalStackView.layer.borderColor = UIColor.textActionPrimaryFocused.cgColor
+                containerHorizontalStackView.layer.borderWidth = 2.0
             } else {
-                textFieldContainerView.layer.borderColor = UIColor.borderNeutral.cgColor
-                textFieldContainerView.layer.borderWidth = 1.0
+                containerHorizontalStackView.layer.borderColor = UIColor.borderNeutral.cgColor
+                containerHorizontalStackView.layer.borderWidth = 1.0
             }
         }
+    }
+
+    @IBAction private func textFieldDidChange() {
+        delegate?.roundedTextField(self, textDidChange: text)
     }
 }
 
 // MARK: - UITextFieldDelegate
 
-extension ManualEntryTextField: UITextFieldDelegate {
+extension RoundedTextField: UITextFieldDelegate {
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        updateBorder(highlighted: true)
+    }
 
     func textField(
         _ textField: UITextField,
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
-        return delegate?.manualEntryTextField(
+        return delegate?.roundedTextField(
             self,
             shouldChangeCharactersIn: range,
             replacementString: string
         ) ?? true
     }
 
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        updateBorder(highlighted: true)
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        delegate?.roundedTextFieldUserDidPressReturnKey(self)
+
+        // the return value (whether true or false) seems to be a no-op
+        // in all practical test cases
+        return false
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         updateBorder(highlighted: false)
-        delegate?.manualEntryTextFieldDidEndEditing(self)
+        delegate?.roundedTextFieldDidEndEditing(self)
     }
+}
+
+// MARK: - DoneButtonToolbarDelegate
+
+extension RoundedTextField: DoneButtonToolbarDelegate {
+    func didTapDone(_ toolbar: DoneButtonToolbar) {
+        textField.endEditing(true)
+    }
+}
+
+private func CreateErrorLabel(text: String) -> UIView {
+    let errorLabel = AttributedTextView(
+        font: .label(.small),
+        boldFont: .label(.smallEmphasized),
+        linkFont: .label(.small),
+        textColor: .textFeedbackCritical,
+        linkColor: .textFeedbackCritical
+    )
+    errorLabel.setText(text)
+    return errorLabel
 }
 
 private class IncreasedHitTestTextField: FloatingPlaceholderTextField {
@@ -185,7 +272,7 @@ private class IncreasedHitTestTextField: FloatingPlaceholderTextField {
 
 private class FloatingPlaceholderTextField: UITextField {
 
-    private struct LayoutConstants {
+    fileprivate struct LayoutConstants {
         static let defaultHeight: CGFloat = 40
 
         static let horizontalMargin: CGFloat = 0
@@ -563,54 +650,58 @@ private class FloatingPlaceholderTextField: UITextField {
 
 import SwiftUI
 
-private struct ManualEntryTextFieldUIViewRepresentable: UIViewRepresentable {
+private struct RoundedTextFieldUIViewRepresentable: UIViewRepresentable {
 
     let placeholder: String
     let footerText: String?
     let errorText: String?
 
-    func makeUIView(context: Context) -> ManualEntryTextField {
-        ManualEntryTextField(
+    func makeUIView(context: Context) -> RoundedTextField {
+        RoundedTextField(
             placeholder: placeholder,
             footerText: footerText
         )
     }
 
-    func updateUIView(_ uiView: ManualEntryTextField, context: Context) {
+    func updateUIView(_ uiView: RoundedTextField, context: Context) {
         uiView.errorText = errorText
     }
 }
 
-struct ManualEntryTextField_Previews: PreviewProvider {
+struct RoundedTextField_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
             VStack(spacing: 16) {
-                ManualEntryTextFieldUIViewRepresentable(
+                RoundedTextFieldUIViewRepresentable(
                     placeholder: "Routing number",
                     footerText: nil,
                     errorText: nil
                 )
-                .frame(height: 80)
-                ManualEntryTextFieldUIViewRepresentable(
+                .frame(height: 56)
+                RoundedTextFieldUIViewRepresentable(
                     placeholder: "Account number",
                     footerText: "Your account can be checkings or savings.",
                     errorText: nil
                 )
-                ManualEntryTextFieldUIViewRepresentable(
+                .frame(height: 80)
+                RoundedTextFieldUIViewRepresentable(
                     placeholder: "Confirm account number",
                     footerText: nil,
                     errorText: nil
                 )
-                ManualEntryTextFieldUIViewRepresentable(
+                .frame(height: 56)
+                RoundedTextFieldUIViewRepresentable(
                     placeholder: "Routing number",
                     footerText: nil,
                     errorText: "Routing number is required."
                 )
-                ManualEntryTextFieldUIViewRepresentable(
+                .frame(height: 80)
+                RoundedTextFieldUIViewRepresentable(
                     placeholder: "Account number",
                     footerText: "Your account can be checkings or savings.",
                     errorText: "Account number is required."
                 )
+                .frame(height: 80)
                 Spacer()
             }
             .padding()
