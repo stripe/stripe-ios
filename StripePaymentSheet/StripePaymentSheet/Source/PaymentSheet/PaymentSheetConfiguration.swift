@@ -191,6 +191,8 @@ extension PaymentSheet {
         /// - Example: ["card", "external_paypal", "klarna"]
         /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
         public var paymentMethodOrder: [String]?
+
+        @_spi(STP) public var allowRemovalOfLastSavedPaymentMethod = true
     }
 
     /// Configuration related to the Stripe Customer
