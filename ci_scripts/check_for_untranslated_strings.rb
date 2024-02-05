@@ -7,8 +7,7 @@ $ROOT_DIR = File.expand_path('..', $SCRIPT_DIR)
 
 def should_skip_translation_check()
   last_commit_message = ENV['BITRISE_GIT_MESSAGE']
-  puts last_commit_message
-  if last_commit_message&.include?('Translations are not required for this pull request.')
+  if last_commit_message&.include?('Translations are not required for this pull request')
     puts 'Translation check skipped due to pull request summary containing "Translations are not required for this pull request.".'
     exit 0
   end

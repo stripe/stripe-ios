@@ -36,19 +36,19 @@ pipelines:
 stages:
   stage-trigger-run-all:
     workflows:
-#    - framework-tests: {}
-#    - test-builds-xcode-143: {}
-#    - test-builds-xcode-15: {}
-#    - test-builds-xcode-143-release: {}
-#    - test-builds-vision: {}
-#    - install-tests-non-carthage: {}
-#    - lint-tests: {}
-#    - size-report: {}
-#    - ui-tests-1: {}
-#    - ui-tests-2: {}
-#    - integration-all: {}
-#    - deploy-dry-run: {}
-#    - lokalise-upload: {}
+    - framework-tests: {}
+    - test-builds-xcode-143: {}
+    - test-builds-xcode-15: {}
+    - test-builds-xcode-143-release: {}
+    - test-builds-vision: {}
+    - install-tests-non-carthage: {}
+    - lint-tests: {}
+    - size-report: {}
+    - ui-tests-1: {}
+    - ui-tests-2: {}
+    - integration-all: {}
+    - deploy-dry-run: {}
+    - lokalise-upload: {}
     - check-for-untranslated: {}
   stage-releases-run-all:
     workflows:
