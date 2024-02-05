@@ -100,7 +100,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             willNavigateToReturningConsumer = false
             // in case a user decides to go back from verification pane,
             // we clear the email so they can re-enter
-            formView.emailElement.emailAddressElement.setText("")
+            formView.emailTextField.text = ""
         }
     }
 
@@ -185,9 +185,9 @@ final class NetworkingLinkSignupViewController: UIViewController {
             )
 
         dataSource.saveToLink(
-            emailAddress: formView.emailElement.emailAddressString ?? "",
-            phoneNumber: formView.phoneNumberElement.phoneNumber?.string(as: .e164) ?? "",
-            countryCode: formView.phoneNumberElement.phoneNumber?.countryCode ?? "US"
+            emailAddress: formView.emailTextField.text,
+            phoneNumber: formView.phoneTextField.phoneNumber?.string(as: .e164) ?? "",
+            countryCode: formView.phoneTextField.phoneNumber?.countryCode ?? "US"
         )
         .observe { [weak self] result in
             guard let self = self else { return }
@@ -228,8 +228,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
     }
 
     private func adjustSaveToLinkButtonDisabledState() {
-        let isEmailValid = formView.emailElement.validationState.isValid
-        let isPhoneNumberValid = formView.phoneNumberElement.validationState.isValid
+        let isEmailValid = formView.emailTextField.isEmailValid
+        let isPhoneNumberValid = formView.phoneTextField.isPhoneNumberValid
         footerView?.enableSaveToLinkButton(isEmailValid && isPhoneNumberValid)
     }
 
@@ -248,7 +248,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
         _ bodyFormView: NetworkingLinkSignupBodyFormView,
         didEnterValidEmailAddress emailAddress: String
     ) {
-        bodyFormView.emailElement.startAnimating()
+        bodyFormView.emailTextField.showLoadingView(true)
         dataSource
             .lookup(emailAddress: emailAddress)
             .observe { [weak self, weak bodyFormView] result in
@@ -283,7 +283,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                         // we want to only jump to the phone number the
                         // first time they enter the e-mail
                         if didShowPhoneNumberFieldForTheFirstTime {
-                            let didPrefillPhoneNumber = (self.formView.phoneNumberElement.phoneNumber?.number ?? "").count > 1
+                            let didPrefillPhoneNumber = (self.formView.phoneTextField.phoneNumber?.number ?? "").count > 1
                             // if the phone number is pre-filled, we don't focus on the phone number field
                             if !didPrefillPhoneNumber {
                                 let didPrefillEmailAddress = {
@@ -321,7 +321,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                         didReceiveTerminalError: error
                     )
                 }
-                bodyFormView?.emailElement.stopAnimating()
+                bodyFormView?.emailTextField.showLoadingView(false)
             }
     }
 
