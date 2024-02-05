@@ -2178,7 +2178,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         // Re-tapping the payment method button should present the saved payment view
         app.buttons["Payment method"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["Select your payment method"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 5))
     }
 
     /* Disable Link test
