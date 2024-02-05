@@ -19,7 +19,6 @@
 		11FB97AC840FEB5B5BF85BF9 /* FinancialConnectionsAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2EAD7059FF8358E674774A /* FinancialConnectionsAPIClient.swift */; };
 		136B704C025F6F69D55A625C /* PlaceholderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C163A50C423B593C7F620630 /* PlaceholderViewController.swift */; };
 		152B480EA85D541CC64451A1 /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D5A45DB15DF6148F1C85A /* RadioButtonView.swift */; };
-		1599A235CE57409AA2F678E1 /* LinkingAccountsLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8F7A75976314427E8087F9 /* LinkingAccountsLoadingView.swift */; };
 		15EC9F36187C341800164428 /* FinancialConnectionsAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBF5CEE2C9030B2D374BC76 /* FinancialConnectionsAnalyticsClient.swift */; };
 		163E387D567068E4A64A4C13 /* AccountPickerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DEDE8871A732D603E96E2B /* AccountPickerSelectionView.swift */; };
 		166ACB3BF53BDB4443E276E3 /* LinkAccountPickerFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A680CB323B9139F838643EC1 /* LinkAccountPickerFooterView.swift */; };
@@ -92,6 +91,7 @@
 		6A732CA62B69A46D00828CB1 /* PhoneTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732CA52B69A46D00828CB1 /* PhoneTextField.swift */; };
 		6A732CA82B69C34F00828CB1 /* PhoneCountryCodeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732CA72B69C34F00828CB1 /* PhoneCountryCodeSelectorView.swift */; };
 		6A732CAA2B69CCDD00828CB1 /* PhoneCountryCodePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732CA92B69CCDD00828CB1 /* PhoneCountryCodePickerView.swift */; };
+		6A732C9E2B64787E00828CB1 /* LinkAccountPickerLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732C9D2B64787E00828CB1 /* LinkAccountPickerLoadingView.swift */; };
 		6A78140D2B30F15400168992 /* SheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78140C2B30F15400168992 /* SheetViewController.swift */; };
 		6A7814112B32462100168992 /* CloseConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814102B32462100168992 /* CloseConfirmationViewController.swift */; };
 		6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7814172B361C5000168992 /* PaneLayoutView+Extensions.swift */; };
@@ -123,7 +123,6 @@
 		87198EFD873751CA4E4B5005 /* FinancialConnectionsOAuthPrepane.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC5894A5EB74F6157C7DE95 /* FinancialConnectionsOAuthPrepane.swift */; };
 		87E22AF1E35FB63C20AEE9DF /* warning_triangle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D555DB0657A602274596428 /* warning_triangle@3x.png */; };
 		8927328EE28A0C94B5AB69DB /* ConsentLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0281E0221BDE01D0845DC0F9 /* ConsentLogoView.swift */; };
-		8A424D8F321E80945AD42B1A /* ReusableInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1C8781095363382A0F7BE5 /* ReusableInformationView.swift */; };
 		8C985491C17431278097D0FF /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2710EA52082B4A983294567 /* Placeholder.swift */; };
 		8DC6C2A239456994091BF3EE /* NetworkingLinkSignupFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A74B9F667A3BF48253045E /* NetworkingLinkSignupFooterView.swift */; };
 		91A3583A0BDE0F8F0C4AD3E2 /* InstitutionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939D10B20D3ECA7BF7021BF8 /* InstitutionIconView.swift */; };
@@ -372,6 +371,7 @@
 		6A732CA52B69A46D00828CB1 /* PhoneTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneTextField.swift; sourceTree = "<group>"; };
 		6A732CA72B69C34F00828CB1 /* PhoneCountryCodeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCountryCodeSelectorView.swift; sourceTree = "<group>"; };
 		6A732CA92B69CCDD00828CB1 /* PhoneCountryCodePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCountryCodePickerView.swift; sourceTree = "<group>"; };
+		6A732C9D2B64787E00828CB1 /* LinkAccountPickerLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountPickerLoadingView.swift; sourceTree = "<group>"; };
 		6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "generic_error@3x.png"; sourceTree = "<group>"; };
 		6A78140C2B30F15400168992 /* SheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetViewController.swift; sourceTree = "<group>"; };
 		6A7814102B32462100168992 /* CloseConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseConfirmationViewController.swift; sourceTree = "<group>"; };
@@ -385,7 +385,6 @@
 		6DA6A57067FB5EF86FEBD5B3 /* FinancialConnectionsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsNavigationController.swift; sourceTree = "<group>"; };
 		6DDB75C69FE9322C745943B3 /* NetworkingLinkVerificationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkVerificationDataSource.swift; sourceTree = "<group>"; };
 		6E2D765AC793D89D26B74FC4 /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
-		6F1C8781095363382A0F7BE5 /* ReusableInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableInformationView.swift; sourceTree = "<group>"; };
 		6FA941D5F7178E89DE70076F /* ConsentBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentBodyView.swift; sourceTree = "<group>"; };
 		710183EE587F6FDA077FC150 /* APIPollingHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIPollingHelperTests.swift; sourceTree = "<group>"; };
 		723996D53965EC2286267A01 /* SpinnerIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerIconView.swift; sourceTree = "<group>"; };
@@ -427,7 +426,6 @@
 		97CE72E38D41E86E0A1FAE9F /* AccountPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerViewController.swift; sourceTree = "<group>"; };
 		97EE2BCD7B861ACA49DB56CD /* CheckboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxView.swift; sourceTree = "<group>"; };
 		9ACAB1B6DB88D74F5ECC1C6D /* AccountPickerFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerFooterView.swift; sourceTree = "<group>"; };
-		9D8F7A75976314427E8087F9 /* LinkingAccountsLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkingAccountsLoadingView.swift; sourceTree = "<group>"; };
 		9EA0AA05BC9FC60A06AC1B5E /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9ED1CF95D441821773EA68EE /* InstitutionDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionDataSource.swift; sourceTree = "<group>"; };
 		A00D518C15FF3FAED7C193C2 /* HitTestStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitTestStackView.swift; sourceTree = "<group>"; };
@@ -706,7 +704,6 @@
 				72DEDE8871A732D603E96E2B /* AccountPickerSelectionView.swift */,
 				97CE72E38D41E86E0A1FAE9F /* AccountPickerViewController.swift */,
 				97EE2BCD7B861ACA49DB56CD /* CheckboxView.swift */,
-				9D8F7A75976314427E8087F9 /* LinkingAccountsLoadingView.swift */,
 				7A4D5A45DB15DF6148F1C85A /* RadioButtonView.swift */,
 				6A13B9852B4CD04100FFA327 /* RetrieveAccountsLoadingView.swift */,
 			);
@@ -772,6 +769,7 @@
 				0DD5619FDD6C8D85FC352F99 /* LinkAccountPickerBodyView.swift */,
 				524D3116FDA5A3AD68075AA4 /* LinkAccountPickerDataSource.swift */,
 				A680CB323B9139F838643EC1 /* LinkAccountPickerFooterView.swift */,
+				6A732C9D2B64787E00828CB1 /* LinkAccountPickerLoadingView.swift */,
 				AFF070262170A321F5622CCF /* LinkAccountPickerNewAccountRowView.swift */,
 				1848547B588045C776236B3B /* LinkAccountPickerViewController.swift */,
 			);
@@ -1280,6 +1278,7 @@
 				6A732CA62B69A46D00828CB1 /* PhoneTextField.swift in Sources */,
 				6FE9F171CF9A5D0EDB2035AA /* FinancialConnectionsNetworkingLinkSignup.swift in Sources */,
 				87198EFD873751CA4E4B5005 /* FinancialConnectionsOAuthPrepane.swift in Sources */,
+				6A732C9E2B64787E00828CB1 /* LinkAccountPickerLoadingView.swift in Sources */,
 				77C7F9A1DD0461FA2B1B4328 /* FinancialConnectionsPartnerAccount.swift in Sources */,
 				6A1D43092B17CB04005A1EB0 /* InstitutionNoResultsView.swift in Sources */,
 				D926228B6C7601AE4C806C93 /* FinancialConnectionsPaymentAccountResource.swift in Sources */,
@@ -1327,7 +1326,6 @@
 				E4D00DB842047E595DD85BEF /* CheckboxView.swift in Sources */,
 				6A1D43032B16B3DC005A1EB0 /* InstitutionCellView.swift in Sources */,
 				6A1D43072B17AE37005A1EB0 /* RoundedIconView.swift in Sources */,
-				1599A235CE57409AA2F678E1 /* LinkingAccountsLoadingView.swift in Sources */,
 				152B480EA85D541CC64451A1 /* RadioButtonView.swift in Sources */,
 				716E12A9AC0B790F14FB72C6 /* AccountNumberRetrievalErrorView.swift in Sources */,
 				3446145FCA3278D51A9D4B80 /* AttachLinkedPaymentAccountDataSource.swift in Sources */,
@@ -1403,7 +1401,6 @@
 				6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */,
 				B8F440921DB172F96F912CD0 /* PaneWithCustomHeaderLayoutView.swift in Sources */,
 				A6DB232AD8CB25B0C9F4C79C /* PaneWithHeaderLayoutView.swift in Sources */,
-				8A424D8F321E80945AD42B1A /* ReusableInformationView.swift in Sources */,
 				99F41681B77ECB0090F34E31 /* SFSafariViewController+Extensions.swift in Sources */,
 				62F9AC317C04285853345A0C /* SpinnerIconView.swift in Sources */,
 				4AADAA347EF70ECB8BE28E84 /* SuccessIconView.swift in Sources */,
