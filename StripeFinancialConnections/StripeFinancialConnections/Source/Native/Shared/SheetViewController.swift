@@ -13,6 +13,14 @@ class SheetViewController: UIViewController {
 
     private static let cornerRadius: CGFloat = 20
 
+    // Indicates whether to enable sheet-specific logic.
+    //
+    // Due to `SheetViewController` being a subclass, and auth flow
+    // design constraints of dynamically presenting panes either
+    // as sheets or full-screen, we need this boolean to handle
+    // both states (sheet or full-screen).
+    private let presentAsSheet: Bool
+
     // The `contentView` represents the area of the sheet
     // where content is displayed. It's about 80% of the
     // screen and does NOT contain the dark overlay at the top.
@@ -26,7 +34,9 @@ class SheetViewController: UIViewController {
         contentStackView.spacing = 0
         contentStackView.layer.cornerRadius = Self.cornerRadius
         contentStackView.clipsToBounds = true
-        contentStackView.addArrangedSubview(handleView)
+        if presentAsSheet {
+            contentStackView.addArrangedSubview(handleView)
+        }
         return contentStackView
     }()
 
@@ -53,7 +63,8 @@ class SheetViewController: UIViewController {
         return tapGestureRecognizer
     }()
 
-    init() {
+    init(presentAsSheet: Bool = true) {
+        self.presentAsSheet = presentAsSheet
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -63,73 +74,85 @@ class SheetViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .clear
-        view.addSubview(contentView)
+        view.backgroundColor = presentAsSheet ? .clear : .customBackgroundColor
 
-        contentStackView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(contentStackView)
-        NSLayoutConstraint.activate([
-            contentStackView.topAnchor.constraint(
-                // keep the `contentStackView` flexible to resize
-                greaterThanOrEqualTo: contentView.topAnchor,
-                constant: 0
-            ),
-            contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            contentStackView.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor),
-        ])
+        if presentAsSheet {
+            view.addSubview(contentView)
 
-        Self.addBottomExtensionView(toView: contentView)
+            contentStackView.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(contentStackView)
+            NSLayoutConstraint.activate([
+                contentStackView.topAnchor.constraint(
+                    // keep the `contentStackView` flexible to resize
+                    greaterThanOrEqualTo: contentView.topAnchor,
+                    constant: 0
+                ),
+                contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                contentStackView.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor),
+            ])
 
-        let panGestureRecognizer = UIPanGestureRecognizer(
-            target: self,
-            action: #selector(handlePanGesture(_:))
-        )
-        view.addGestureRecognizer(panGestureRecognizer)
+            Self.addBottomExtensionView(toView: contentView)
 
-        view.addGestureRecognizer(darkAreaTapGestureRecognizer)
+            let panGestureRecognizer = UIPanGestureRecognizer(
+                target: self,
+                action: #selector(handlePanGesture(_:))
+            )
+            view.addGestureRecognizer(panGestureRecognizer)
+
+            view.addGestureRecognizer(darkAreaTapGestureRecognizer)
+        }
+        // non-sheet logic
+        else {
+            view.addAndPinSubview(contentView)
+            contentView.addAndPinSubview(contentStackView)
+        }
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        var contentViewMinY = view.window?.safeAreaInsets.top ?? 0
-        // estimated iOS value of how far default sheet
-        // stretches beyond safeAreaInset.top
-        contentViewMinY += 10
-        contentViewMinY += UINavigationController().navigationBar.bounds.height
-        contentViewMinY += 24 // typical Financial Connecitons padding
-        let didChangeContentViewMinY = (self.contentViewMinY != contentViewMinY)
-        self.contentViewMinY = contentViewMinY
+        if presentAsSheet {
+            var contentViewMinY = view.window?.safeAreaInsets.top ?? 0
+            // estimated iOS value of how far default sheet
+            // stretches beyond safeAreaInset.top
+            contentViewMinY += 10
+            contentViewMinY += UINavigationController().navigationBar.bounds.height
+            contentViewMinY += 24 // typical Financial Connecitons padding
+            let didChangeContentViewMinY = (self.contentViewMinY != contentViewMinY)
+            self.contentViewMinY = contentViewMinY
 
-        // we only want `contentView.frame` to be adjusted
-        // if view changes (ex. first presentation or rotation)
-        // otherwise, there could be layout/animation glitches
-        if didChangeContentViewMinY {
-            var contentViewFrame = view.bounds
-            contentViewFrame.size.height -= contentViewMinY
-            contentViewFrame.origin.y = view.bounds.height - contentViewFrame.height
-            contentView.frame = contentViewFrame
+            // we only want `contentView.frame` to be adjusted
+            // if view changes (ex. first presentation or rotation)
+            // otherwise, there could be layout/animation glitches
+            if didChangeContentViewMinY {
+                var contentViewFrame = view.bounds
+                contentViewFrame.size.height -= contentViewMinY
+                contentViewFrame.origin.y = view.bounds.height - contentViewFrame.height
+                contentView.frame = contentViewFrame
 
-            // animate the sheet from top to bottom
-            if !performedSheetPresentationAnimation {
-                performedSheetPresentationAnimation = true
+                // animate the sheet from top to bottom
+                if !performedSheetPresentationAnimation {
+                    performedSheetPresentationAnimation = true
 
-                var initialFrame = contentViewFrame
-                initialFrame.origin.y += contentViewFrame.height
-                let finalFrame = contentViewFrame
+                    var initialFrame = contentViewFrame
+                    initialFrame.origin.y += contentViewFrame.height
+                    let finalFrame = contentViewFrame
 
-                contentView.frame = initialFrame
-                UIView.animate(
-                    withDuration: sheetAnimationDuration,
-                    delay: 0,
-                    options: .curveEaseOut,
-                    animations: {
-                        self.contentView.frame = finalFrame
-                    },
-                    completion: { _ in }
-                )
+                    contentView.frame = initialFrame
+                    UIView.animate(
+                        withDuration: sheetAnimationDuration,
+                        delay: 0,
+                        options: .curveEaseOut,
+                        animations: {
+                            self.contentView.frame = finalFrame
+                        },
+                        completion: { _ in }
+                    )
+                }
             }
+        } else {
+            // non-sheet layout is handled by auto-layout
         }
     }
 
@@ -149,21 +172,23 @@ class SheetViewController: UIViewController {
     }
 
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        // animate dismiss animation
-        UIView.animate(
-            withDuration: sheetAnimationDuration,
-            delay: 0,
-            usingSpringWithDamping: 1.0,
-            initialSpringVelocity: abs(dismissAnimationInitialSpringVelocityY)/view.bounds.height,
-            options: [.curveEaseOut]
-        ) {
-            self.contentView.frame = CGRect(
-                x: 0,
-                y: self.view.bounds.height,
-                width: self.contentView.bounds.width,
-                height: self.contentView.bounds.height
-            )
-            self.removeContentViewSnapshot()
+        if presentAsSheet {
+            // animate dismiss animation
+            UIView.animate(
+                withDuration: sheetAnimationDuration,
+                delay: 0,
+                usingSpringWithDamping: 1.0,
+                initialSpringVelocity: abs(dismissAnimationInitialSpringVelocityY)/view.bounds.height,
+                options: [.curveEaseOut]
+            ) {
+                self.contentView.frame = CGRect(
+                    x: 0,
+                    y: self.view.bounds.height,
+                    width: self.contentView.bounds.width,
+                    height: self.contentView.bounds.height
+                )
+                self.removeContentViewSnapshot()
+            }
         }
 
         super.dismiss(animated: flag, completion: completion)
