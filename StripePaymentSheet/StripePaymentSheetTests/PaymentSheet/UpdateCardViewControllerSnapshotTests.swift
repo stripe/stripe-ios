@@ -29,7 +29,7 @@ final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
                                            paymentMethod: STPFixtures.paymentMethod(),
                                            removeSavedPaymentMethodMessage: "Test removal string",
                                            appearance: appearance,
-                                           hostedSurface: .paymentSheet, 
+                                           hostedSurface: .paymentSheet,
                                            canRemoveCard: true,
                                            isTestMode: false)
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
