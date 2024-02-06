@@ -51,7 +51,9 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
 @objc(STP_Internal_PaymentSheetViewController)
 class PaymentSheetViewController: UIViewController {
     // MARK: - Read-only Properties
-    let savedPaymentMethods: [STPPaymentMethod]
+    var savedPaymentMethods: [STPPaymentMethod] {
+        return savedPaymentOptionsViewController.savedPaymentMethods
+    }
     let isApplePayEnabled: Bool
     let configuration: PaymentSheet.Configuration
 
@@ -98,26 +100,8 @@ class PaymentSheetViewController: UIViewController {
             delegate: self
         )
     }()
-    private lazy var savedPaymentOptionsViewController: SavedPaymentOptionsViewController = {
-        return SavedPaymentOptionsViewController(
-            savedPaymentMethods: savedPaymentMethods,
-            configuration: .init(
-                customerID: configuration.customer?.id,
-                showApplePay: Self.shouldShowApplePayAsSavedPaymentOption(hasSavedPaymentMethods: !savedPaymentMethods.isEmpty, isLinkEnabled: isLinkEnabled, isApplePayEnabled: isApplePayEnabled),
-                showLink: false,
-                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                merchantDisplayName: configuration.merchantDisplayName,
-                isCVCRecollectionEnabled: isCVCRecollectionEnabled,
-                isTestMode: configuration.apiClient.isTestmode,
-                allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod
-            ),
-            paymentSheetConfiguration: configuration,
-            intent: intent,
-            appearance: configuration.appearance,
-            cbcEligible: intent.cardBrandChoiceEligible,
-            delegate: self
-        )
-    }()
+
+    private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     internal lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(
             isTestMode: configuration.apiClient.isTestmode,
@@ -205,12 +189,28 @@ class PaymentSheetViewController: UIViewController {
         delegate: PaymentSheetViewControllerDelegate
     ) {
         self.intent = intent
-        self.savedPaymentMethods = savedPaymentMethods
         self.configuration = configuration
         self.isApplePayEnabled = isApplePayEnabled
         self.isLinkEnabled = isLinkEnabled
         self.isCVCRecollectionEnabled = isCVCRecollectionEnabled
         self.delegate = delegate
+        self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
+            savedPaymentMethods: savedPaymentMethods,
+            configuration: .init(
+                customerID: configuration.customer?.id,
+                showApplePay: Self.shouldShowApplePayAsSavedPaymentOption(hasSavedPaymentMethods: !savedPaymentMethods.isEmpty, isLinkEnabled: isLinkEnabled, isApplePayEnabled: isApplePayEnabled),
+                showLink: false,
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                merchantDisplayName: configuration.merchantDisplayName,
+                isCVCRecollectionEnabled: isCVCRecollectionEnabled,
+                isTestMode: configuration.apiClient.isTestmode,
+                allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod
+            ),
+            paymentSheetConfiguration: configuration,
+            intent: intent,
+            appearance: configuration.appearance,
+            cbcEligible: intent.cardBrandChoiceEligible
+        )
 
         if savedPaymentMethods.isEmpty {
             self.mode = .addingNew
@@ -219,7 +219,7 @@ class PaymentSheetViewController: UIViewController {
         }
 
         super.init(nibName: nil, bundle: nil)
-
+        self.savedPaymentOptionsViewController.delegate = self
         self.view.backgroundColor = configuration.appearance.colors.background
     }
 
@@ -313,7 +313,7 @@ class PaymentSheetViewController: UIViewController {
                         action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside
                     )
-                    return savedPaymentMethods.isEmpty ? .close(showAdditionalButton: false) : .back
+                    return !savedPaymentOptionsViewController.hasPaymentOptions ? .close(showAdditionalButton: false) : .back
                 }
             }()
         )
@@ -641,14 +641,17 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         ) { (_) in
             // no-op
         }
+
         if !savedPaymentOptionsViewController.canEditPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
-            // calling updateUI() at this point causes an issue with the height of the add card vc
-            // if you do a subsequent presentation. Since bottom sheet height stuff is complicated,
-            // just update the nav bar which is all we need to do anyway
-            configureNavBar()
         }
-        updateBottomNotice()
+
+        // If there are no more options in the saved screen, switch to the "add" screen
+        if !savedPaymentOptionsViewController.hasPaymentOptions {
+            error = nil  // Clear any errors
+            mode = .addingNew // Switch to the "Add" screen
+        }
+        updateUI()
     }
 
     // MARK: Helpers
