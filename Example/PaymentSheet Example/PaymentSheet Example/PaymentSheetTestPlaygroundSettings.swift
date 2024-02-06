@@ -244,6 +244,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum AllowsRemovalOfLastSavedPaymentMethodEnabled: String, PickerEnum {
+        static let enumName: String = "allowsRemovalOfLastSavedPaymentMethod"
+        case on
+        case off
+    }
+
     var uiStyle: UIStyle
     var mode: Mode
     var customerId: String?
@@ -267,6 +273,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var externalPayPalEnabled: ExternalPayPalEnabled
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
+    var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
 
     var attachDefaults: BillingDetailsAttachDefaults
     var collectName: BillingDetailsName
@@ -298,6 +305,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             externalPayPalEnabled: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
+            allowsRemovalOfLastSavedPaymentMethod: .on,
             attachDefaults: .off,
             collectName: .automatic,
             collectEmail: .automatic,

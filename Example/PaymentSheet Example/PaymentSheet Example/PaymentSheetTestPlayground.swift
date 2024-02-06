@@ -35,6 +35,7 @@ struct PaymentSheetTestPlayground: View {
             SettingView(setting: $playgroundController.settings.userOverrideCountry)
             SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
             SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
+            SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
         }
         Group {
             SettingView(setting: $playgroundController.settings.requireCVCRecollection)

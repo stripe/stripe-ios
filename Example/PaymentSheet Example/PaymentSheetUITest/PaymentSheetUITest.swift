@@ -288,13 +288,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
-        let removeButton = app.buttons["Remove"]
-        XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))
-        removeButton.tap()
-
-        let confirmRemoval = app.alerts.buttons["Remove"]
-        XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
-        confirmRemoval.tap()
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         XCTAssertEqual(app.cells.count, 3) // Should be "Add", "Apple Pay", "Link"
     }
@@ -2153,6 +2148,117 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         payButton.tap()
         app.alerts.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
+    }
+
+    // MARK: - Remove last saved PM
+
+    func testRemoveLastSavedPaymentMethodPaymentSheet() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .paymentSheet
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .new
+        settings.applePayEnabled = .on
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .on
+        settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+
+        // Complete payment
+        app.buttons["Pay $50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Pay $50.99"].isEnabled)
+        // Shouldn't be able to edit only one saved PM when allowsRemovalOfLastSavedPaymentMethod = .off
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+
+        // Add another PM
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app)
+        app.buttons["Pay $50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Pay $50.99"].isEnabled)
+        // Should be able to edit two saved PMs
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+
+        // Remove one saved PM
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Should be kicked out of edit mode now that we have one saved PM
+        XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
+    }
+
+    func testRemoveLastSavedPaymentMethodFlowController() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .flowController
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .new
+        settings.applePayEnabled = .on
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .on
+        settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        app.buttons["+ Add"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+
+        // Complete payment
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        app.staticTexts["••••4242"].waitForExistenceAndTap()  // The card should be saved now and selected as default instead of Apple Pay
+
+        // Shouldn't be able to edit only one saved PM when allowsRemovalOfLastSavedPaymentMethod = .off
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+
+        // Add another PM
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app)
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Should be able to edit two saved PMs
+        reload(app, settings: settings)
+        app.staticTexts["••••4242"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+
+        // Remove one saved PM
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Should be kicked out of edit mode now that we have one saved PM
+        XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
     }
 
     func testPreservesSelectionAfterDismissPaymentSheetFlowController() throws {
