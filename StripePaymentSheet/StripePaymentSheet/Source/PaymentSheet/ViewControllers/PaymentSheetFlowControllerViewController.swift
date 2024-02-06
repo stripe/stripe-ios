@@ -37,6 +37,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             } else if let paymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
                 // If no valid payment option from adding, fallback on any saved payment method
                 return paymentOption
+            } else if isHackyLinkButtonSelected {
+                return .link(option: .wallet)
             } else if isApplePayEnabled {
                 return .applePay
             }
@@ -72,7 +74,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     }()
     /// Returns true if Apple Pay is not enabled and Link is enabled and there are no saved payment methods
     private var linkOnlyMode: Bool {
-        return !isApplePayEnabled && isLinkEnabled && !savedPaymentOptionsViewController.hasOptionsExcludingLink
+        return !isApplePayEnabled && isLinkEnabled && !savedPaymentOptionsViewController.hasOptionsExcludingAdd
     }
     // Only show the wallet header when Link is the only available PM
     private var shouldShowWalletHeader: Bool {
@@ -96,6 +98,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     private var isVerificationInProgress: Bool = false
     private let isApplePayEnabled: Bool
     private let isLinkEnabled: Bool
+    private var isHackyLinkButtonSelected: Bool = false
 
     // MARK: - Views
     private let addPaymentMethodViewController: AddPaymentMethodViewController
@@ -460,6 +463,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     }
 
     func didDismiss(didCancel: Bool) {
+        // When we close the window, unset the hacky Link button. This will reset the PaymentOption to nil, if needed.
+        isHackyLinkButtonSelected = false
         // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen
         delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: didCancel)
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
@@ -633,9 +638,10 @@ extension PaymentSheetFlowControllerViewController: WalletHeaderViewDelegate {
     }
 
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
-        // Link should be the selected payment option as the Link header button is only available in `linkOnlyMode`
-        mode = .selectingSaved
+        // Link should be the selected payment option, as the Link header button is only available in `linkOnlyMode`
+        mode = .addingNew
         didDismiss(didCancel: false)
+        isHackyLinkButtonSelected = true
         updateUI()
     }
 }

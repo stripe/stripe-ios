@@ -145,18 +145,6 @@ class SavedPaymentOptionsViewController: UIViewController {
             return true
         }
     }
-    /// Whether or not there are any payment options we can show
-    /// i.e. Are there any cells besides the Add and Link cell?
-    var hasOptionsExcludingLink: Bool {
-        return viewModels.contains {
-            switch $0 {
-            case .add, .link:
-                return false
-            default:
-                return true
-            }
-        }
-    }
     weak var delegate: SavedPaymentOptionsViewControllerDelegate?
     var appearance = PaymentSheet.Appearance.default
 
@@ -175,6 +163,19 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
 
         return IndexPath(item: index, section: 0)
+    }
+
+    /// Whether or not there are any payment options we can show
+    /// i.e. Are there any cells besides the Add cell? If so, we should move Link to the new PM sheet
+    var hasOptionsExcludingAdd: Bool {
+        return viewModels.contains {
+            switch $0 {
+            case .add:
+                return false
+            default:
+                return true
+            }
+        }
     }
 
     // MARK: - Views
@@ -303,11 +304,21 @@ class SavedPaymentOptionsViewController: UIViewController {
             return Selection.saved(paymentMethod: paymentMethod)
         }
 
+        // Only add Link if other PMs exist
+        let showLinkInSPMs = showLink && (showApplePay || !savedPMViewModels.isEmpty)
+
         let viewModels = [.add]
             + (showApplePay ? [.applePay] : [])
-            + (showLink ? [.link] : [])
+            + (showLinkInSPMs ? [.link] : [])
             + savedPMViewModels
-        let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod }) ?? 1
+
+        // Terrible hack, we should refactor the selection logic
+        // If the first payment method is Link, we *don't* want to select it by default.
+        // Instead, we should set the default index to the option next to Link (either the last saved PM or nothing)
+        let firstPaymentMethodIsLink = !showApplePay && showLink
+        let defaultIndex = firstPaymentMethodIsLink ? 2 : 1
+
+        let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod }) ?? defaultIndex
         return (defaultSelectedIndex, viewModels)
     }
 }
