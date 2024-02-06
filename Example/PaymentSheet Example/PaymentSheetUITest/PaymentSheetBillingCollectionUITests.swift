@@ -24,7 +24,7 @@ class PaymentSheetBillingCollectionUITestCase: XCTestCase {
     var fullNameField: XCUIElement { app.textFields["Full name"] }
     var nameOnCardField: XCUIElement { app.textFields["Name on card"] }
     var emailField: XCUIElement { app.textFields["Email"] }
-    var phoneField: XCUIElement { app.textFields["Phone number"] }
+    var phoneField: XCUIElement { app.textFields["Phone"] }
     var billingAddressField: XCUIElement { app.staticTexts["Billing address"] }
     var countryField: XCUIElement { app.textFields["Country or region"] }
     var line1Field: XCUIElement { app.textFields["Address line 1"] }

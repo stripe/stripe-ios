@@ -127,7 +127,7 @@ Label of an address field */
 "Parish" = "Parish";
 
 /* Caption for Phone field on address form */
-"Phone number" = "Phone number";
+"Phone" = "Phone";
 
 /* Label of an address field
 Short string for postal code (text used in non-US countries) */
