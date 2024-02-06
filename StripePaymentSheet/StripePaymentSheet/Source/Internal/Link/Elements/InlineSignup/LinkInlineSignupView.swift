@@ -66,32 +66,14 @@ final class LinkInlineSignupView: UIView {
 
     private lazy var emailSection: Element = {
         return emailElement
-//        switch viewModel.mode {
-//        case .checkbox:
-//            return emailElement//SectionElement(elements: [emailElement], theme: theme)
-//        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
-//            return emailElement
-//        }
     }()
 
     private lazy var nameSection: Element = {
         return nameElement
-//        switch viewModel.mode {
-//        case .checkbox:
-//            return SectionElement(elements: [nameElement], theme: theme)
-//        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
-//            return nameElement
-//        }
     }()
 
     private lazy var phoneNumberSection: Element = {
         return phoneNumberElement
-//        switch viewModel.mode {
-//        case .checkbox:
-//            return phoneNumberElement
-//        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
-//            return phoneNumberElement
-//        }
     }()
 
     private(set) lazy var legalTermsElement: StaticElement = {
@@ -106,22 +88,21 @@ final class LinkInlineSignupView: UIView {
             view: legalView
         )
     }()
+
     private lazy var combinedEmailNameSection: Element = {
-        return SectionElement(elements: [emailSection, phoneNumberSection, nameSection], theme: theme)
+        return SectionElement(elements: [emailSection, phoneNumberSection, nameElement], theme: theme)
     }()
+
     private lazy var formElement: FormElement = {
-        var elements: [Element] = [nameSection]
+        var elements: [Element] = []
         if viewModel.mode == .textFieldsOnlyPhoneFirst {
-            elements.insert(contentsOf: [phoneNumberSection, emailSection], at: 0)
+            elements.insert(contentsOf: [phoneNumberSection, emailSection, nameSection], at: 0)
         } else if viewModel.mode == .textFieldsOnlyEmailFirst {
-            elements.insert(contentsOf: [emailSection, phoneNumberSection], at: 0)
+            elements.insert(contentsOf: [emailSection, phoneNumberSection, nameSection], at: 0)
         } else if viewModel.mode == .checkbox {
             elements.insert(contentsOf: [checkboxElement], at: 0)
             elements.insert(contentsOf: [combinedEmailNameSection], at: 1)
         }
-//        if viewModel.showCheckbox {
-//            elements.insert(checkboxElement, at: 0)
-//        }
 
         let style: FormElement.Style = viewModel.showCheckbox ? .plain : .bordered
         let formElement = FormElement(elements: elements, style: style, theme: theme)
