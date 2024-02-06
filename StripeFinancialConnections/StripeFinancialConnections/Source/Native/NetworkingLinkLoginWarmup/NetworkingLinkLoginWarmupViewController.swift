@@ -27,10 +27,10 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
     init(
         dataSource: NetworkingLinkLoginWarmupDataSource,
-        presentAsSheet: Bool
+        panePresentationStyle: PanePresentationStyle
     ) {
         self.dataSource = dataSource
-        super.init(presentAsSheet: presentAsSheet)
+        super.init(panePresentationStyle: panePresentationStyle)
     }
 
     required init?(coder: NSCoder) {

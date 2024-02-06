@@ -218,7 +218,7 @@ extension NativeFlowController {
             pane: pane,
             nativeFlowController: self,
             dataManager: dataManager,
-            presentAsSheet: true
+            panePresentationStyle: .sheet
         )
         guard let paneViewController = paneViewController as? SheetViewController else {
             assertionFailure("expected the pane to always be a sheet if `presentAsSheet` is used")
@@ -934,7 +934,7 @@ private func CreatePaneViewController(
     pane: FinancialConnectionsSessionManifest.NextPane,
     nativeFlowController: NativeFlowController,
     dataManager: NativeFlowDataManager,
-    presentAsSheet: Bool = false
+    panePresentationStyle: PanePresentationStyle = .fullscreen
 ) -> UIViewController? {
     let viewController: UIViewController?
     switch pane {
@@ -1189,7 +1189,7 @@ private func CreatePaneViewController(
         )
         let networkingLinkWarmupViewController = NetworkingLinkLoginWarmupViewController(
             dataSource: networkingLinkWarmupDataSource,
-            presentAsSheet: presentAsSheet
+            panePresentationStyle: panePresentationStyle
         )
         networkingLinkWarmupViewController.delegate = nativeFlowController
         viewController = networkingLinkWarmupViewController

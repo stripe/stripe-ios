@@ -9,17 +9,21 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+enum PanePresentationStyle {
+    case fullscreen
+    case sheet
+}
+
 class SheetViewController: UIViewController {
 
     private static let cornerRadius: CGFloat = 20
 
-    // Indicates whether to enable sheet-specific logic.
+    // Used to toggle between sheet-specific logic and fullscreen.
     //
     // Due to `SheetViewController` being a subclass, and auth flow
     // design constraints of dynamically presenting panes either
-    // as sheets or full-screen, we need this boolean to handle
-    // both states (sheet or full-screen).
-    private let presentAsSheet: Bool
+    // as sheets or fullscreen, we need this to handle both states.
+    private let panePresentationStyle: PanePresentationStyle
 
     // The `contentView` represents the area of the sheet
     // where content is displayed. It's about 80% of the
@@ -34,7 +38,7 @@ class SheetViewController: UIViewController {
         contentStackView.spacing = 0
         contentStackView.layer.cornerRadius = Self.cornerRadius
         contentStackView.clipsToBounds = true
-        if presentAsSheet {
+        if panePresentationStyle == .sheet {
             contentStackView.addArrangedSubview(handleView)
         }
         return contentStackView
@@ -63,8 +67,8 @@ class SheetViewController: UIViewController {
         return tapGestureRecognizer
     }()
 
-    init(presentAsSheet: Bool = true) {
-        self.presentAsSheet = presentAsSheet
+    init(panePresentationStyle: PanePresentationStyle = .sheet) {
+        self.panePresentationStyle = panePresentationStyle
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -74,9 +78,9 @@ class SheetViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = presentAsSheet ? .clear : .customBackgroundColor
+        view.backgroundColor = panePresentationStyle == .sheet ? .clear : .customBackgroundColor
 
-        if presentAsSheet {
+        if panePresentationStyle == .sheet {
             view.addSubview(contentView)
 
             contentStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +116,7 @@ class SheetViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        if presentAsSheet {
+        if panePresentationStyle == .sheet {
             var contentViewMinY = view.window?.safeAreaInsets.top ?? 0
             // estimated iOS value of how far default sheet
             // stretches beyond safeAreaInset.top
@@ -172,7 +176,7 @@ class SheetViewController: UIViewController {
     }
 
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        if presentAsSheet {
+        if panePresentationStyle == .sheet {
             // animate dismiss animation
             UIView.animate(
                 withDuration: sheetAnimationDuration,
