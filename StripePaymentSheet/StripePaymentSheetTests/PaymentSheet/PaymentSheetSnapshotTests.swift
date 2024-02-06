@@ -13,7 +13,7 @@ import UIKit
 import XCTest
 
 @_spi(STP)@testable import StripeCore
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(STP)@_spi(EarlyAccessCVCRecollectionFeature)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
@@ -422,6 +422,25 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             applePayEnabled: false
         )
         presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetCVCRecollection() {
+        stubReturningCustomerResponse()
+
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
+                                                            confirmHandler: confirmHandler(_:_:_:),
+                                                            isCVCRecollectionEnabledCallback: {
+            return true
+        })
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            applePayEnabled: false,
+            intentConfig: intentConfig
+        )
+        presentPaymentSheet(darkMode: false)
+        sleepInBackground(numSeconds: 1)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
@@ -1128,6 +1147,20 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         paymentSheet.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
             preferredContentSizeCategory: preferredContentSizeCategory
         )
+    }
+
+    private func sleepInBackground(numSeconds: Int) {
+        let waitExpectation = XCTestExpectation(description: "Waiting in background")
+        let maxCount = numSeconds * 2
+        DispatchQueue.global(qos: .background).async {
+            var count = 0
+            while count < maxCount {
+                count += 1
+                usleep(500000)  // 500ms
+            }
+            waitExpectation.fulfill()
+        }
+        wait(for: [waitExpectation], timeout: 10.0)
     }
 
     func verify(

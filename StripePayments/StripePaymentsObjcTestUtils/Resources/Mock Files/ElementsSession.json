@@ -34,7 +34,6 @@
     "elements_enable_external_payment_method_venmo": false,
     "elements_enable_mobilepay": false,
     "elements_enable_mx_card_installments": false,
-    "elements_enable_payment_element_vertical_layout": false,
     "elements_enable_revolut_pay": false,
     "elements_link_enable_email_domain_correction": false,
     "elements_lpm_discoverability_downward_arrow": false,
@@ -56,9 +55,7 @@
     "link_elements_pageload_sign_up_disabled": false,
     "link_email_verification_login_enabled": false,
     "link_financial_incentives_experiment_enabled": false,
-    "link_funding_sources": [
-      "CARD"
-    ],
+    "link_funding_sources": ["CARD"],
     "link_instant_debits_create_link_account_session_on_instantiation": false,
     "link_local_storage_login_enabled": false,
     "link_m2_default_integration_enabled": true,

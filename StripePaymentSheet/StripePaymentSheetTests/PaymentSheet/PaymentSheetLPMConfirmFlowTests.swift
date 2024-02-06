@@ -323,7 +323,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                     configuration: configuration,
                     authenticationContext: self,
                     intent: intent,
-                    paymentOption: .saved(paymentMethod: savedSepaPM),
+                    paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
                     paymentHandler: STPPaymentHandler(apiClient: apiClient)
                 ) { result, _  in
                     e.fulfill()

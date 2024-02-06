@@ -392,7 +392,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                         }
                     }
 
-                case .saved(let paymentMethod):
+                case .saved(let paymentMethod, _):
                     let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
                     let type = STPPaymentMethod.string(from: paymentMethod.type)
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
@@ -652,7 +652,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
         if mode == .selectingSaved && !self.savedPaymentOptionsViewController.unsyncedSavedPaymentMethods.isEmpty {
             if let selectedPaymentOption = self.savedPaymentOptionsViewController.selectedPaymentOption,
-               case .saved(let selectedPaymentMethod) = selectedPaymentOption,
+               case .saved(let selectedPaymentMethod, _) = selectedPaymentOption,
                self.savedPaymentOptionsViewController.unsyncedSavedPaymentMethods.first?.stripeId == selectedPaymentMethod.stripeId {
                 didTapActionButton()
             } else {
