@@ -639,7 +639,9 @@ extension PaymentSheet.IntentConfiguration.Mode {
 
 extension PlaygroundController: STPAnalyticsClientDelegate {
     func analyticsClientDidLog(analyticsClient: StripeCore.STPAnalyticsClient, payload: [String: Any]) {
-        analyticsLog.append(payload)
+        DispatchQueue.main.async {
+            self.analyticsLog.append(payload)
+        }
     }
 }
 
