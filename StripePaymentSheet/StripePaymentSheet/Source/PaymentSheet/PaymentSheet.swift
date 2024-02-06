@@ -293,7 +293,10 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerFinishedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
                                                  completion: (() -> Void)? = nil) {
         self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
-            self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
+            self.bottomSheetViewController.removeBlurEffect(animated: true)
+            if let completion {
+                completion()
+            }
         }
     }
 
@@ -316,12 +319,10 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerDidSelectPayWithLink(
         _ paymentSheetViewController: PaymentSheetViewController
     ) {
-        self.bottomSheetViewController.addBlurEffect(animated: true) {
-            self.presentPayWithLinkController(
-                from: paymentSheetViewController,
-                intent: paymentSheetViewController.intent
-            )
-        }
+        self.presentPayWithLinkController(
+            from: paymentSheetViewController,
+            intent: paymentSheetViewController.intent
+        )
     }
 }
 
@@ -345,14 +346,16 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
         intent: Intent,
         with paymentOption: PaymentOption
     ) {
-        self.bottomSheetViewController.startSpinner()
-        let psvc = self.findPaymentSheetViewController()
-        psvc?.clearTextFields()
-        psvc?.pay(with: paymentOption)
+        let backgroundColor = self.configuration.appearance.colors.background.withAlphaComponent(0.9)
+        self.bottomSheetViewController.addBlurEffect(animated: false, backgroundColor: backgroundColor) {
+            self.bottomSheetViewController.startSpinner()
+            let psvc = self.findPaymentSheetViewController()
+            psvc?.clearTextFields()
+            psvc?.pay(with: paymentOption)
+        }
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
-        self.bottomSheetViewController.removeBlurEffect(animated: true)
     }
 
     private func findPaymentSheetViewController() -> PaymentSheetViewController? {
@@ -381,9 +384,7 @@ private extension PaymentSheet {
         )
 
         payWithLinkVC.payWithLinkDelegate = self
-        self.bottomSheetViewController.addBlurEffect(animated: true) {
-            payWithLinkVC.present(over: presentingController)
-        }
+        payWithLinkVC.present(over: presentingController)
     }
 
 }
