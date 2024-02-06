@@ -533,7 +533,12 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
     }
 
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController) {
-        navigationController.popViewController(animated: true)
+        switch viewController.panePresentationStyle {
+        case .sheet:
+            viewController.dismiss(animated: true)
+        case .fullscreen:
+            navigationController.popViewController(animated: true)
+        }
     }
 
     func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController) {
@@ -1155,7 +1160,10 @@ private func CreatePaneViewController(
                 analyticsClient: dataManager.analyticsClient,
                 reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors
             )
-            let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
+            let partnerAuthViewController = PartnerAuthViewController(
+                dataSource: partnerAuthDataSource,
+                panePresentationStyle: panePresentationStyle
+            )
             partnerAuthViewController.delegate = nativeFlowController
             viewController = partnerAuthViewController
         } else {
