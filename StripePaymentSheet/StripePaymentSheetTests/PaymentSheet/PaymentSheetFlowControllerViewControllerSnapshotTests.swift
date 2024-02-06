@@ -22,7 +22,8 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             savedPaymentMethods: paymentMethods,
             configuration: ._testValue_MostPermissive(),
             isApplePayEnabled: false,
-            isLinkEnabled: false
+            isLinkEnabled: false,
+            isCVCRecollectionEnabled: false
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -37,7 +38,8 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             savedPaymentMethods: paymentMethods,
             configuration: ._testValue_MostPermissive(),
             isApplePayEnabled: false,
-            isLinkEnabled: false
+            isLinkEnabled: false,
+            isCVCRecollectionEnabled: false
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -52,7 +54,8 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             savedPaymentMethods: paymentMethods,
             configuration: ._testValue_MostPermissive(),
             isApplePayEnabled: false,
-            isLinkEnabled: false
+            isLinkEnabled: false,
+            isCVCRecollectionEnabled: false
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)

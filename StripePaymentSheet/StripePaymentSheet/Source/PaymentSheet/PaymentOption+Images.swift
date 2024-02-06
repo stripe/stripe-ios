@@ -21,7 +21,7 @@ extension PaymentOption {
         switch self {
         case .applePay:
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
-        case .saved(let paymentMethod):
+        case .saved(let paymentMethod, _):
             return paymentMethod.makeIcon()
         case .new(let confirmParams):
             return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
@@ -40,7 +40,7 @@ extension PaymentOption {
         switch self {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false)
-        case .saved(let paymentMethod):
+        case .saved(let paymentMethod, _):
             return paymentMethod.makeSavedPaymentMethodCellImage()
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")

@@ -14,6 +14,7 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
+    func didUpdate(_ viewController: SavedPaymentOptionsViewController)
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
@@ -70,6 +71,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let showLink: Bool
         let removeSavedPaymentMethodMessage: String?
         let merchantDisplayName: String
+        let isCVCRecollectionEnabled: Bool
         let isTestMode: Bool
     }
 
@@ -103,7 +105,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
     }
     var bottomNoticeAttributedString: NSAttributedString? {
-        if case .saved(let paymentMethod) = selectedPaymentOption {
+        if case .saved(let paymentMethod, _) = selectedPaymentOption {
             if paymentMethod.usBankAccount != nil {
                 return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(theme: appearance.asElementsTheme)
             }
@@ -113,6 +115,8 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Internal Properties
     let configuration: Configuration
+    private let intent: Intent
+    private let paymentSheetConfiguration: PaymentSheet.Configuration
 
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex, viewModels.indices.contains(index) else {
@@ -127,8 +131,31 @@ class SavedPaymentOptionsViewController: UIViewController {
         case .link:
             return .link(option: .wallet)
         case let .saved(paymentMethod):
-            return .saved(paymentMethod: paymentMethod)
+            return .saved(paymentMethod: paymentMethod, confirmParams: selectedPaymentOptionIntentConfirmParams)
         }
+    }
+    var selectedPaymentOptionIntentConfirmParamsRequired: Bool {
+        if let index = selectedViewModelIndex,
+           index < viewModels.count,
+           case let .saved(paymentMethod) = viewModels[index] {
+            let result = self.configuration.isCVCRecollectionEnabled && paymentMethod.type == .card
+            return result
+        }
+        return false
+    }
+    var selectedPaymentOptionIntentConfirmParams: IntentConfirmParams? {
+        guard let index = selectedViewModelIndex,
+              index < viewModels.count,
+           case let .saved(paymentMethod) = viewModels[index],
+              self.configuration.isCVCRecollectionEnabled,
+              paymentMethod.type == .card else {
+            return nil
+        }
+        let params = IntentConfirmParams(type: .stripe(paymentMethod.type))
+        if let updatedParams = cvcFormElement.updateParams(params: params) {
+            return updatedParams
+        }
+        return nil
     }
     private(set) var savedPaymentMethods: [STPPaymentMethod] {
         didSet {
@@ -164,6 +191,29 @@ class SavedPaymentOptionsViewController: UIViewController {
 
         return IndexPath(item: index, section: 0)
     }
+    private lazy var cvcFormElement: PaymentMethodElement = {
+        return makeElement()
+    }()
+
+    private func makeElement() -> PaymentMethodElement {
+        guard let index = selectedViewModelIndex,
+              index < viewModels.count,
+           case let .saved(paymentMethod) = viewModels[index],
+              paymentMethod.type == .card else {
+            return FormElement(autoSectioningElements: [])
+        }
+
+        let formElement = PaymentSheetFormFactory(
+            intent: intent,
+            configuration: .paymentSheet(paymentSheetConfiguration),
+            paymentMethod: .stripe(.card),
+            previousCustomerInput: nil)
+        let cvcCollectionElement = formElement.makeCardCVCCollection(paymentMethod: paymentMethod,
+                                                                     mode: .inputOnly,
+                                                                     appearance: appearance)
+        cvcCollectionElement.delegate = self
+        return cvcCollectionElement
+    }
 
     /// Whether or not there are any payment options we can show
     /// i.e. Are there any cells besides the Add cell? If so, we should move Link to the new PM sheet
@@ -187,8 +237,9 @@ class SavedPaymentOptionsViewController: UIViewController {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [collectionView, sepaMandateView])
+        let stackView = UIStackView(arrangedSubviews: [collectionView, cvcRecollectionContainerView, sepaMandateView])
         stackView.axis = .vertical
+        stackView.toggleArrangedSubview(cvcRecollectionContainerView, shouldShow: false, animated: false)
         return stackView
     }()
 
@@ -206,16 +257,32 @@ class SavedPaymentOptionsViewController: UIViewController {
         return view
     }()
 
+    private lazy var cvcFormElementView: UIView = {
+        return cvcFormElement.view
+    }()
+
+    private lazy var cvcRecollectionContainerView: DynamicHeightContainerView = {
+        let view = DynamicHeightContainerView(pinnedDirection: .top)
+        view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        view.addPinnedSubview(cvcFormElementView)
+        view.updateHeight()
+        return view
+    }()
+
     // MARK: - Inits
     required init(
         savedPaymentMethods: [STPPaymentMethod],
         configuration: Configuration,
+        paymentSheetConfiguration: PaymentSheet.Configuration,
+        intent: Intent,
         appearance: PaymentSheet.Appearance,
         cbcEligible: Bool = false,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
         self.configuration = configuration
+        self.paymentSheetConfiguration = paymentSheetConfiguration
+        self.intent = intent
         self.appearance = appearance
         self.cbcEligible = cbcEligible
         self.delegate = delegate
@@ -242,6 +309,12 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
     }
 
+    func didFinishPresenting() {
+        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(750))) {
+            self.updateFormElement()
+        }
+    }
+
     // MARK: - Private methods
 
     private func updateUI() {
@@ -256,6 +329,9 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
         updateMandateView()
+        if isViewLoaded {
+            updateFormElement()
+        }
     }
 
     private func updateMandateView() {
@@ -269,6 +345,39 @@ class SavedPaymentOptionsViewController: UIViewController {
         }()
         if sepaMandateView.isHidden != shouldHideSEPA {
             stackView.toggleArrangedSubview(sepaMandateView, shouldShow: !shouldHideSEPA, animated: isViewLoaded)
+        }
+    }
+
+    private func updateFormElement() {
+        cvcFormElement = makeElement()
+        swapFormElementUIIfNeeded()
+
+        let shouldHideCVCRecollection = !selectedPaymentOptionIntentConfirmParamsRequired
+        if cvcRecollectionContainerView.isHidden != shouldHideCVCRecollection {
+            stackView.toggleArrangedSubview(cvcRecollectionContainerView, shouldShow: !shouldHideCVCRecollection, animated: isViewLoaded)
+        }
+    }
+
+    private func swapFormElementUIIfNeeded() {
+
+        if cvcFormElement.view !== cvcFormElementView {
+            let oldView = cvcFormElementView
+            let newView = cvcFormElement.view
+            self.cvcFormElementView = newView
+
+            cvcRecollectionContainerView.addPinnedSubview(newView)
+            cvcRecollectionContainerView.layoutIfNeeded()
+            newView.alpha = 0
+
+            animateHeightChange {
+                self.cvcRecollectionContainerView.updateHeight()
+                oldView.alpha = 0
+                newView.alpha = 1
+            } completion: { _ in
+                if oldView !== self.cvcFormElementView {
+                    oldView.removeFromSuperview()
+                }
+            }
         }
     }
 
@@ -388,6 +497,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             )
         }
         updateMandateView()
+        updateFormElement()
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }
 }
@@ -558,5 +668,16 @@ extension UIAlertController {
         alertController.addAction(alert)
 
         return alertController
+    }
+}
+
+extension SavedPaymentOptionsViewController: ElementDelegate {
+    func continueToNextField(element: Element) {
+        delegate?.didUpdate(self)
+    }
+
+    func didUpdate(element: Element) {
+        delegate?.didUpdate(self)
+        animateHeightChange()
     }
 }

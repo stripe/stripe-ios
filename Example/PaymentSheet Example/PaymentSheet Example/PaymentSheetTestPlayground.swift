@@ -22,7 +22,7 @@ struct PaymentSheetTestPlayground: View {
         // Note: Use group to work around XCode 14: "Extra Argument in Call" issue
         //  (each view can hold 10 direct subviews)
         Group {
-            SettingView(setting: uiStyle)
+            SettingView(setting: $playgroundController.settings.uiStyle)
             SettingView(setting: $playgroundController.settings.shippingInfo)
             SettingView(setting: $playgroundController.settings.applePayEnabled)
             SettingView(setting: $playgroundController.settings.applePayButtonType)
@@ -37,25 +37,10 @@ struct PaymentSheetTestPlayground: View {
             SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
         }
         Group {
-            if playgroundController.settings.uiStyle == .flowController {
-                if playgroundController.settings.integrationType == .deferred_csc {
-                    SettingView(setting: $playgroundController.settings.requireCVCRecollection)
-                }
-            }
+            SettingView(setting: $playgroundController.settings.requireCVCRecollection)
         }
         Group {
             SettingView(setting: $playgroundController.settings.autoreload)
-        }
-    }
-
-    var uiStyle: Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
-        Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
-            return playgroundController.settings.uiStyle
-        } set: { newValue in
-            if newValue != .flowController {
-                playgroundController.settings.requireCVCRecollection = .off
-            }
-            playgroundController.settings.uiStyle = newValue
         }
     }
 
@@ -91,7 +76,7 @@ struct PaymentSheetTestPlayground: View {
                                 })
                         }
                         SettingView(setting: $playgroundController.settings.mode)
-                        SettingPickerView(setting: integrationType)
+                        SettingPickerView(setting: $playgroundController.settings.integrationType)
                         SettingView(setting: customerModeBinding)
                         TextField("CustomerId", text: customerIdBinding)
                             .disabled(true)
@@ -134,17 +119,6 @@ struct PaymentSheetTestPlayground: View {
             Divider()
             PaymentSheetButtons()
                 .environmentObject(playgroundController)
-        }
-    }
-
-    var integrationType: Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
-        Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
-            return playgroundController.settings.integrationType
-        } set: { newValue in
-            if newValue != .deferred_csc {
-                playgroundController.settings.requireCVCRecollection = .off
-            }
-            playgroundController.settings.integrationType = newValue
         }
     }
 
