@@ -2793,7 +2793,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         emailField.tap()
         emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
 
-        let phoneField = app.textFields["Phone"]
+        let phoneField = app.textFields["Phone number"]
         // Phone field appears after the network call finishes. We want to wait for it to appear.
         XCTAssert(phoneField.waitForExistence(timeout: 10))
         phoneField.tap()
