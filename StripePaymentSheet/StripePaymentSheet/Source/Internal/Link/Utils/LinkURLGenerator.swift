@@ -76,7 +76,9 @@ class LinkURLGenerator {
                              merchantInfo: merchantInfo,
                              customerInfo: customerInfo,
                              paymentInfo: paymentInfo,
-                             experiments: [:], flags: [:], loggerMetadata: [:],
+                             experiments: [:],
+                             flags: intent.linkFlags,
+                             loggerMetadata: [:],
                              locale: Locale.current.toLanguageTag())
     }
 
