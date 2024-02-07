@@ -288,8 +288,13 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
-        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
-        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+        let removeButton = app.buttons["Remove"]
+        XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))
+        removeButton.tap()
+
+        let confirmRemoval = app.alerts.buttons["Remove"]
+        XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
+        confirmRemoval.tap()
 
         XCTAssertEqual(app.cells.count, 3) // Should be "Add", "Apple Pay", "Link"
     }
