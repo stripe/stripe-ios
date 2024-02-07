@@ -202,31 +202,3 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         }
     }
 }
-
-// MARK: - Coordinating
-
-extension PayWithLinkWebController: PayWithLinkCoordinating {
-
-    func confirm(
-        with linkAccount: PaymentSheetLinkAccount,
-        paymentDetails: ConsumerPaymentDetails
-    ) {
-        payWithLinkDelegate?.payWithLinkWebControllerDidComplete(
-            self,
-            intent: context.intent,
-            with: PaymentOption.link(
-                option: .withPaymentDetails(account: linkAccount, paymentDetails: paymentDetails)
-            )
-        )
-    }
-
-    func cancel() {
-        webAuthSession?.cancel()
-        payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
-    }
-
-    func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
-        self.linkAccount = linkAccount
-    }
-
-}

@@ -186,6 +186,15 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             )
         }
     }
+
+    func logout() {
+        guard let session = currentSession else {
+            return
+        }
+        session.logout(with: apiClient, consumerAccountPublishableKey: publishableKey) { _ in
+            // Nothing to do if logout fails.
+        }
+    }
 }
 
 // MARK: - Equatable
