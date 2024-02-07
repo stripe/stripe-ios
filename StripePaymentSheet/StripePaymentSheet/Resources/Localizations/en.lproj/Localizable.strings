@@ -141,9 +141,9 @@
 "Pay another way" = "Pay another way";
 
 /* Label describing the benefit of signing up for Link.
-Pay faster at {Merchant Name} and thousands of merchants
-e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
-"Pay faster at %@ and thousands of merchants." = "Pay faster at %@ and thousands of merchants.";
+Pay faster at {Merchant Name} and thousands of businesses
+e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
+"Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
 
 /* Pay in templated string for afterpay/clearpay */
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";

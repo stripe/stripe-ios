@@ -65,30 +65,15 @@ final class LinkInlineSignupView: UIView {
     // MARK: Sections
 
     private lazy var emailSection: Element = {
-        switch viewModel.mode {
-        case .checkbox:
-            return SectionElement(elements: [emailElement], theme: theme)
-        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
-            return emailElement
-        }
+        return emailElement
     }()
 
     private lazy var nameSection: Element = {
-        switch viewModel.mode {
-        case .checkbox:
-            return SectionElement(elements: [nameElement], theme: theme)
-        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
-            return nameElement
-        }
+        return nameElement
     }()
 
     private lazy var phoneNumberSection: Element = {
-        switch viewModel.mode {
-        case .checkbox:
-            return SectionElement(elements: [phoneNumberElement], theme: theme)
-        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
-            return phoneNumberElement
-        }
+        return phoneNumberElement
     }()
 
     private(set) lazy var legalTermsElement: StaticElement = {
@@ -104,15 +89,19 @@ final class LinkInlineSignupView: UIView {
         )
     }()
 
+    private lazy var combinedEmailNameSection: Element = {
+        return SectionElement(elements: [emailSection, phoneNumberSection, nameElement], theme: theme)
+    }()
+
     private lazy var formElement: FormElement = {
-        var elements: [Element] = [nameSection]
+        var elements: [Element] = []
         if viewModel.mode == .textFieldsOnlyPhoneFirst {
-            elements.insert(contentsOf: [phoneNumberSection, emailSection], at: 0)
-        } else {
-            elements.insert(contentsOf: [emailSection, phoneNumberSection], at: 0)
-        }
-        if viewModel.showCheckbox {
-            elements.insert(checkboxElement, at: 0)
+            elements.insert(contentsOf: [phoneNumberSection, emailSection, nameSection], at: 0)
+        } else if viewModel.mode == .textFieldsOnlyEmailFirst {
+            elements.insert(contentsOf: [emailSection, phoneNumberSection, nameSection], at: 0)
+        } else if viewModel.mode == .checkbox {
+            elements.insert(contentsOf: [checkboxElement], at: 0)
+            elements.insert(contentsOf: [combinedEmailNameSection], at: 1)
         }
 
         let style: FormElement.Style = viewModel.showCheckbox ? .plain : .bordered
@@ -171,7 +160,9 @@ final class LinkInlineSignupView: UIView {
         } else {
             emailElement.stopAnimating()
         }
-
+        if viewModel.mode == .checkbox {
+            formElement.toggleChild(combinedEmailNameSection, show: viewModel.shouldShowEmailField, animated: animated)
+        }
         formElement.toggleChild(emailSection, show: viewModel.shouldShowEmailField, animated: animated)
         formElement.toggleChild(phoneNumberSection, show: viewModel.shouldShowPhoneField, animated: animated)
         formElement.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
