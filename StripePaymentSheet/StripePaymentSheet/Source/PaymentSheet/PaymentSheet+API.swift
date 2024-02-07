@@ -423,10 +423,6 @@ extension PaymentSheet {
                         confirmWithPaymentMethodParams(paymentMethodParams)
                     }
                 }
-            case .withPaymentDetails(let linkAccount, let paymentDetails):
-                confirmWithPaymentDetails(linkAccount, paymentDetails, nil)
-            case .withPaymentMethodParams(let linkAccount, let paymentMethodParams):
-                createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
             case .withPaymentMethod(let paymentMethod):
                 confirmWithPaymentMethod(paymentMethod)
             }
