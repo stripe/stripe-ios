@@ -51,7 +51,7 @@ final class PartnerAuthViewController: SheetViewController {
     private var isLoadingViewVisible: Bool {
         return loadingView != nil
     }
-    private var viewDidAppear = false
+    private var showLegacyBrowserOnViewDidAppear = false
 
     init(
         dataSource: PartnerAuthDataSource,
@@ -78,6 +78,7 @@ final class PartnerAuthViewController: SheetViewController {
                 // for legacy (non-oauth), start showing the loading indicator,
                 // and wait until `viewDidAppear` gets called
                 insertLegacyLoadingView()
+                showLegacyBrowserOnViewDidAppear = true
             }
         } else {
             assert(
@@ -90,8 +91,8 @@ final class PartnerAuthViewController: SheetViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if !viewDidAppear {
-            viewDidAppear = true
+        if showLegacyBrowserOnViewDidAppear {
+            showLegacyBrowserOnViewDidAppear = false
             // wait until `viewDidAppear` gets called for legacy (non-oauth) because
             // calling `createdAuthSession` WHILE the VC is animating causes an
             // animation glitch due to ASWebAuthenticationSession browser animation

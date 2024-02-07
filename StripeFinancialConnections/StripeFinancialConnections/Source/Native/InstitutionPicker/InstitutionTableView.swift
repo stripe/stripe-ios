@@ -274,6 +274,7 @@ final class InstitutionTableView: UIView {
         loadingCell.showLoadingView(show)
     }
 
+    /// Grays out all visible rows except the one with `institution`.
     func showOverlayView(
         _ show: Bool,
         exceptForInstitution institution: FinancialConnectionsInstitution? = nil

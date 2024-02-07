@@ -130,8 +130,6 @@ class InstitutionPickerViewController: UIViewController {
         dataSource.createAuthSession(institutionId: institution.id)
             .observe { [weak self] result in
                 guard let self else { return }
-                showLoadingView(false)
-
                 switch result {
                 case .success(let authSession):
                     self.delegate?.institutionPickerViewController(
@@ -141,12 +139,11 @@ class InstitutionPickerViewController: UIViewController {
                     )
 
                     if authSession.isOauthNonOptional {
-                        // only oauth presents a sheet where we
-                        // do not clear the overlay until the
-                        // sheet is dismissed
-                        observePartnerAuthSheetDismissToClearOverlay()
+                        // oauth presents a sheet where we do not hide
+                        // the overlay until the sheet is dismissed
+                        observePartnerAuthDismissToHideOverlay()
                     } else {
-                        clearOverlayView()
+                        hideOverlayView()
                     }
                 case .failure(let error):
                     // TODO(kgaidis): handle errors...
@@ -161,7 +158,7 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private var partnerAuthDismissObserver: Any?
-    private func observePartnerAuthSheetDismissToClearOverlay() {
+    private func observePartnerAuthDismissToHideOverlay() {
         partnerAuthDismissObserver = NotificationCenter.default.addObserver(
             forName: .sheetViewControllerWillDismiss,
             object: nil,
@@ -171,12 +168,12 @@ class InstitutionPickerViewController: UIViewController {
             guard notification.object is PartnerAuthViewController else {
                 return
             }
-            clearOverlayView()
+            hideOverlayView()
             partnerAuthDismissObserver = nil
         }
     }
 
-    private func clearOverlayView() {
+    private func hideOverlayView() {
         institutionTableView.showOverlayView(false)
     }
 }
