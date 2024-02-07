@@ -10,10 +10,10 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
-import StripeCoreTestUtils
 
 class ConsumerSessionTests: XCTestCase {
 
@@ -21,7 +21,6 @@ class ConsumerSessionTests: XCTestCase {
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         return apiClient
     }()
-
 
     func testLookupSession_noParams() {
         let expectation = self.expectation(description: "Lookup ConsumerSession")
@@ -157,7 +156,6 @@ class ConsumerSessionTests: XCTestCase {
             address.postalCode = "55555"
             address.country = "US"
             billingParams.address = address
-            
 
             let paymentMethodParams = STPPaymentMethodParams.paramsWith(
                 card: cardParams,
@@ -185,7 +183,7 @@ class ConsumerSessionTests: XCTestCase {
                                 case .success(let success):
                                     XCTFail("Logout failed to invalidate token")
                                 case .failure(let error):
-                                    
+
                                     guard let stripeError = error as? StripeError,
                                         case let .apiError(stripeAPIError) = stripeError else {
                                         XCTFail("Received unexpected error response")
