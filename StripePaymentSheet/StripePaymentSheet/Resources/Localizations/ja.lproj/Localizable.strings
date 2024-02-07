@@ -76,6 +76,10 @@
 
 "Or pay with a card" = "または、カードで支払う";
 
+"Or use" = "または次を使用:";
+
+"Or use a card" = "またはカードを使用";
+
 "Pay %@" = "%@ を支払う";
 
 "Pay another way" = "別の方法で支払う";
@@ -102,10 +106,6 @@
 
 "Przelewy24 Bank" = "Przelewy24 銀行";
 
-"Remove %1$@ ending in %2$@" = "末尾が %2$@ の %1$@ を削除";
-
-"Remove Card" = "カードを削除";
-
 "Save" = "保存";
 
 "Save a new payment method" = "新しい決済手段を保存する";
@@ -113,8 +113,6 @@
 "Save address" = "住所を保存する";
 
 "Save for future payments" = "今後の支払いのために保存する";
-
-"Save my info for secure 1-click checkout" = "安全なワンクリックでの購入に使用する情報を保存する";
 
 "Save this account for future %@ payments" = "今後の %@ の支払いのためにこの口座を保存する";
 

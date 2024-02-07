@@ -76,6 +76,10 @@
 
 "Or pay with a card" = "Alebo zaplaťte kartou";
 
+"Or use" = "Alebo použite";
+
+"Or use a card" = "Alebo použite kartu";
+
 "Pay %@" = "Zaplatiť %@";
 
 "Pay another way" = "Zaplatiť iným spôsobom";
@@ -102,10 +106,6 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Odstrániť %1$@ končiace na %2$@";
-
-"Remove Card" = "Odstrániť kartu";
-
 "Save" = "Uložiť";
 
 "Save a new payment method" = "Uložiť nový spôsob platby";
@@ -113,8 +113,6 @@
 "Save address" = "Uložiť adresu";
 
 "Save for future payments" = "Uložiť pre budúce platby";
-
-"Save my info for secure 1-click checkout" = "Uložiť moje údaje pre bezpečnú platbu jedným kliknutím";
 
 "Save this account for future %@ payments" = "Uložiť tento účet pre budúce platby obchodníkovi %@";
 

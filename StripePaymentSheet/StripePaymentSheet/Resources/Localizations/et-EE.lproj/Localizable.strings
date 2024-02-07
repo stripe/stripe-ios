@@ -76,6 +76,10 @@
 
 "Or pay with a card" = "Või makske kaardiga";
 
+"Or use" = "Või kasuta";
+
+"Or use a card" = "Või kasuta kaarti";
+
 "Pay %@" = "Maksa %@";
 
 "Pay another way" = "Maksa muul viisil";
@@ -102,10 +106,6 @@
 
 "Przelewy24 Bank" = "Pank Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Eemalda %1$@, mille lõpus on %2$@";
-
-"Remove Card" = "Kaardi eemaldamine";
-
 "Save" = "Salvesta";
 
 "Save a new payment method" = "Uue makseviisi salvestamine";
@@ -113,8 +113,6 @@
 "Save address" = "Salvesta aadress";
 
 "Save for future payments" = "Salvestage tulevasteks makseteks";
-
-"Save my info for secure 1-click checkout" = "Salvesta minu teave, et võimaldada turvaline ühe klõpsuga makse lõpuleviimine";
 
 "Save this account for future %@ payments" = "Salvesta see konto tulevaste %@ maksete jaoks";
 
