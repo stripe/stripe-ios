@@ -108,7 +108,8 @@ class PaymentSheetViewController: UIViewController {
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
-                isTestMode: configuration.apiClient.isTestmode
+                isTestMode: configuration.apiClient.isTestmode,
+                allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
@@ -295,7 +296,7 @@ class PaymentSheetViewController: UIViewController {
             {
                 switch mode {
                 case .selectingSaved:
-                    if self.savedPaymentOptionsViewController.hasRemovablePaymentMethods {
+                    if self.savedPaymentOptionsViewController.canEditPaymentMethods {
                         self.configureEditSavedPaymentMethodsButton()
                         return .close(showAdditionalButton: true)
                     } else {
@@ -640,7 +641,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         ) { (_) in
             // no-op
         }
-        if !savedPaymentOptionsViewController.hasRemovablePaymentMethods {
+        if !savedPaymentOptionsViewController.canEditPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
             // calling updateUI() at this point causes an issue with the height of the add card vc
             // if you do a subsequent presentation. Since bottom sheet height stuff is complicated,

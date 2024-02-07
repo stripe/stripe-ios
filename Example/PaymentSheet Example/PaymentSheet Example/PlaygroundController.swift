@@ -108,7 +108,6 @@ class PlaygroundController: ObservableObject {
         if settings.userOverrideCountry != .off {
             configuration.userOverrideCountry = settings.userOverrideCountry.rawValue
         }
-
         configuration.returnURL = "payments-example://stripe-redirect"
 
         if settings.defaultBillingAddress != .off {
