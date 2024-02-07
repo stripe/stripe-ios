@@ -35,11 +35,25 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         scrollView.delegate = self
         return scrollView
     }()
+
     private lazy var navigationBarContainerView: UIStackView = {
         return UIStackView()
     }()
+
     private lazy var contentContainerView: UIStackView = {
         return UIStackView()
+    }()
+
+    private lazy var blurView: UIVisualEffectView = {
+        return UIVisualEffectView(frame: .zero)
+    }()
+
+    private let spinnerSize = CGSize(width: 88, height: 88)
+    private lazy var checkProgressView: ConfirmButton.CheckProgressView = {
+        let view = ConfirmButton.CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize),
+                                                   baseLineWidth: 5.0)
+        view.color = .white
+        return view
     }()
 
     var contentStack: [BottomSheetContentViewController] = [] {
@@ -65,6 +79,73 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         let popped = contentStack.remove(at: 0)
         contentViewController = toVC
         return popped
+    }
+    func addBlurEffect(animated: Bool, completion: @escaping () -> Void) {
+        if let containingSuperview = self.view.superview {
+            [self.blurView].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                containingSuperview.addSubview($0)
+            }
+            NSLayoutConstraint.activate([
+                self.blurView.topAnchor.constraint(equalTo: containingSuperview.topAnchor),
+                self.blurView.leadingAnchor.constraint(equalTo: containingSuperview.leadingAnchor),
+                self.blurView.trailingAnchor.constraint(equalTo: containingSuperview.trailingAnchor),
+                self.blurView.bottomAnchor.constraint(equalTo: containingSuperview.bottomAnchor),
+            ])
+
+            [self.checkProgressView].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                self.blurView.contentView.addSubview($0)
+            }
+            NSLayoutConstraint.activate([
+                self.checkProgressView.centerXAnchor.constraint(equalTo: self.blurView.contentView.centerXAnchor),
+                self.checkProgressView.centerYAnchor.constraint(equalTo: self.blurView.contentView.centerYAnchor),
+                self.checkProgressView.heightAnchor.constraint(equalToConstant: spinnerSize.height),
+                self.checkProgressView.widthAnchor.constraint(equalToConstant: spinnerSize.width),
+            ])
+
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration, animations: {
+                self.blurView.effect = UIBlurEffect(style: .systemUltraThinMaterial)
+            }, completion: { _ in
+                completion()
+            })
+        }
+    }
+
+    func startSpinner() {
+        self.checkProgressView.beginProgress()
+    }
+
+    func transitionSpinnerToComplete(animated: Bool, completion: @escaping () -> Void) {
+        self.checkProgressView.color = appearance.primaryButton.successBackgroundColor
+        self.checkProgressView.completeProgress(completion: {
+            completion()
+        })
+    }
+
+    func removeBlurEffect(animated: Bool, completion: (() -> Void)? = nil) {
+        if self.blurView.superview != nil {
+            self.blurView.translatesAutoresizingMaskIntoConstraints = true
+            self.blurView.removeConstraints(self.blurView.constraints)
+
+            if checkProgressView.superview != nil {
+                self.checkProgressView.translatesAutoresizingMaskIntoConstraints = true
+                self.checkProgressView.removeConstraints(self.checkProgressView.constraints)
+            }
+
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration, animations: {
+                self.blurView.effect = nil
+            }, completion: { _ in
+                self.blurView.removeFromSuperview()
+                if let completion {
+                    completion()
+                }
+            })
+        } else {
+            if let completion {
+                completion()
+            }
+        }
     }
 
     let isTestMode: Bool

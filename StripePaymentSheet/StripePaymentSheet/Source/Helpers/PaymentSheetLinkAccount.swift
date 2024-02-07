@@ -31,13 +31,13 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     // More information: go/link-signup-consent-action-log
     enum ConsentAction: String {
         // Checkbox, no fields prefilled
-        case checkbox_v0 = "clicked_checkbox_no_spm_mobile_v0"
+        case checkbox_v0 = "clicked_checkbox_nospm_mobile_v0"
 
         // Checkbox, w/ email prefilled
-        case checkbox_v0_0 = "clicked_checkbox_no_spm_mobile_v0_0"
+        case checkbox_v0_0 = "clicked_checkbox_nospm_mobile_v0_0"
 
         // Checkbox, w/ email & phone prefilled
-        case checkbox_v0_1 = "clicked_checkbox_no_spm_mobile_v0_1"
+        case checkbox_v0_1 = "clicked_checkbox_nospm_mobile_v0_1"
 
         // Inline, no fields prefilled
         case implied_v0 = "implied_consent_withspm_mobile_v0"

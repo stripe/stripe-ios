@@ -123,8 +123,12 @@ extension STPElementsSession: STPAPIResponseDecodable {
         let applePayPreference = response["apple_pay_preference"] as? String
         let isApplePayEnabled = applePayPreference != "disabled"
         let externalPaymentMethods: [ExternalPaymentMethod] = {
+            let externalPaymentMethodDataKey = "external_payment_method_data"
+            guard response[externalPaymentMethodDataKey] != nil, !(response[externalPaymentMethodDataKey] is NSNull) else {
+                return []
+            }
             guard
-                let epmsJSON = response["external_payment_method_data"] as? [[AnyHashable: Any]],
+                let epmsJSON = response[externalPaymentMethodDataKey] as? [[AnyHashable: Any]],
                 let epms = ExternalPaymentMethod.decoded(fromAPIResponse: epmsJSON)
             else {
                 // We don't want to fail the entire v1/elements/sessions request if we fail to parse external_payment_methods_data

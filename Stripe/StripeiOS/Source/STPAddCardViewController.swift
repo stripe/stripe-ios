@@ -51,7 +51,8 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
             }
         }
     }
-
+    // Should be overwritten if this class is used by STPPaymentContext or STPPaymentOptionsViewController
+    internal var analyticsLogger: STPPaymentContext.AnalyticsLogger = .init(product: STPAddCardViewController.self)
     private var _customFooterView: UIView?
     /// Provide this view controller with a footer view.
     /// When the footer view needs to be resized, it will be sent a
@@ -195,6 +196,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     }
     private var addressHeaderView: STPSectionHeaderView?
     var paymentCell: STPPaymentCardTextFieldCell?
+    var viewDidAppearStartTime: Date?
 
     private var _loading = false
     @objc var loading: Bool {
@@ -243,6 +245,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     private var inputAccessoryToolbar: UIToolbar?
     private var lookupSucceeded = false
     private var scannerCompleteAnimationTimer: Timer?
+    var didSendFormInteractedAnalytic = false
 
     @objc(commonInitWithConfiguration:) func commonInit(with configuration: STPPaymentConfiguration)
     {
@@ -425,6 +428,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         view.endEditing(true)
         isScanning = true
         cardScanner?.start()
+        sendFormInteractedAnalyticIfNecessary()
     }
 
     @objc func endEditing() {
@@ -458,6 +462,9 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     @objc
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        viewDidAppearStartTime = Date()
+        analyticsLogger.logFormShown(paymentMethodType: .card)
+
         stp_beginObservingKeyboardAndInsettingScrollView(
             tableView,
             onChange: nil
@@ -486,6 +493,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     }
 
     @objc func nextPressed(_ sender: Any?) {
+        analyticsLogger.logDoneButtonTapped(paymentMethodType: .card, shownStartDate: viewDidAppearStartTime)
         loading = true
         guard let cardParams = paymentCell?.paymentField?.paymentMethodParams.card else {
             return
@@ -567,9 +575,26 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         paymentCell?.inputAccessoryView = hasAddressCells ? inputAccessoryToolbar : nil
     }
 
+    /// Only send form interacted analytic once per time this screen is shown
+    func sendFormInteractedAnalyticIfNecessary() {
+        if !didSendFormInteractedAnalytic {
+            didSendFormInteractedAnalytic = true
+            analyticsLogger.logFormInteracted(paymentMethodType: .card)
+        }
+    }
+
+    /// Only send form interacted analytic once per time this screen is shown
+    func sendCardNumberCompletedAnalyticIfNecessary(cardNumber: String?) {
+        if let cardNumber, STPCardValidator.validationState(forNumber: cardNumber, validatingCardBrand: true) == .valid {
+            analyticsLogger.logCardNumberCompleted()
+        }
+    }
+
     // MARK: - STPPaymentCardTextField
     @objc
     public func paymentCardTextFieldDidChange(_ textField: STPPaymentCardTextField) {
+        sendFormInteractedAnalyticIfNecessary()
+        sendCardNumberCompletedAnalyticIfNecessary(cardNumber: textField.cardNumber)
         inputAccessoryToolbar?.stp_setEnabled(textField.isValid)
         updateDoneButton()
     }

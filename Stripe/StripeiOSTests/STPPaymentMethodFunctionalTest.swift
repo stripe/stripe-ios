@@ -85,6 +85,41 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    func testUpdateCardPaymentMethod() async throws {
+         let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
+
+         // A hardcoded test Customer
+         let testCustomerID = "cus_PTf9mhkFv9ZGXl"
+
+         // Create a new EK for the Customer
+         let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "fr")
+
+         // Create a new payment method
+         let paymentMethod = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
+
+         // Attach the payment method to the customer
+         try await client.attachPaymentMethod(paymentMethod.stripeId,
+                                    customerID: customerAndEphemeralKey.customer,
+                                    ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+
+         // Update the expiry year for the card by 1 year
+         let card = STPPaymentMethodCardParams()
+         card.expYear = (paymentMethod.card!.expYear + 1) as NSNumber
+
+         let params = STPPaymentMethodUpdateParams(card: card, billingDetails: nil)
+
+         let updatedPaymentMethod = try await client.updatePaymentMethod(with: paymentMethod.stripeId,
+                                                                         paymentMethodUpdateParams: params,
+                                                                         ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+
+         // Verify
+         XCTAssertEqual(updatedPaymentMethod.card!.expYear, (paymentMethod.card!.expYear + 1))
+
+        // Clean up, detach the payment method as a customer can only have 400 payment methods saved
+        try await client.detachPaymentMethod(paymentMethod.stripeId,
+                                             fromCustomerUsing: customerAndEphemeralKey.ephemeralKeySecret)
+     }
+
     func testCreateBacsPaymentMethod() {
         let client = STPAPIClient(publishableKey: "pk_test_z6Ct4bpx0NUjHii0rsi4XZBf00jmM8qA28")
 

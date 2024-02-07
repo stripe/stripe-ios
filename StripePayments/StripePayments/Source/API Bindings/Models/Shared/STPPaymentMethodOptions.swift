@@ -11,13 +11,16 @@ import UIKit
 @_spi(STP) public class STPPaymentMethodOptions: NSObject, STPAPIResponseDecodable {
 
     @_spi(STP) public let usBankAccount: USBankAccount?
+    @_spi(STP) public let card: Card?
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
     @_spi(STP) public init(
         usBankAccount: USBankAccount?,
+        card: Card?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.usBankAccount = usBankAccount
+        self.card = card
         self.allResponseFields = allResponseFields
     }
 
@@ -32,12 +35,46 @@ import UIKit
             usBankAccount: USBankAccount.decodedObject(
                 fromAPIResponse: response["us_bank_account"] as? [AnyHashable: Any]
             ),
+            card: Card.decodedObject(
+                fromAPIResponse: response["card"] as? [AnyHashable: Any]
+            ),
             allResponseFields: response
         ) as? Self
     }
 
 }
+// MARK: - card
 
+extension STPPaymentMethodOptions {
+    @_spi(STP) public class Card: NSObject, STPAPIResponseDecodable {
+
+        @_spi(STP) public let requireCvcRecollection: Bool?
+        @_spi(STP) public let allResponseFields: [AnyHashable: Any]
+
+        @_spi(STP) public init(
+            requireCvcRecollection: Bool?,
+            allResponseFields: [AnyHashable: Any]
+        ) {
+            self.requireCvcRecollection = requireCvcRecollection
+            self.allResponseFields = allResponseFields
+        }
+
+        @_spi(STP) public static func decodedObject(
+            fromAPIResponse response: [AnyHashable: Any]?
+        ) -> Self? {
+            guard let response = response,
+                let requireCvcRecollection = response["require_cvc_recollection"] as? Bool
+            else {
+                return nil
+            }
+
+            return Card(
+                requireCvcRecollection: requireCvcRecollection,
+                allResponseFields: response
+            ) as? Self
+        }
+    }
+}
 // MARK: - us_bank_account
 
 extension STPPaymentMethodOptions {

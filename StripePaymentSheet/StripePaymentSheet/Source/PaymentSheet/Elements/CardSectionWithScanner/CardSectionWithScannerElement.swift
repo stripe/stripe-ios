@@ -138,6 +138,7 @@ final class CardSection: ContainerElement {
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element
         self.preferredNetworks = preferredNetworks
+        self.lastPanElementValidationState = panElement.validationState
         cardSection.delegate = self
 
         // Hook up CBC analytics after self is initialized
@@ -168,6 +169,8 @@ final class CardSection: ContainerElement {
         return .init(rawValue: cardBrandCaseIndex) ?? .unknown
     }
 
+    /// Tracks the last known validation state of the PAN element, so that we can know when it changes from invalid to valid
+    var lastPanElementValidationState: ElementValidationState
     func didUpdate(element: Element) {
         // Update the CVC field if the card brand changes
         let cardBrand = selectedBrand ?? STPCardValidator.brand(forNumber: panElement.text)
@@ -177,6 +180,14 @@ final class CardSection: ContainerElement {
         }
 
         fetchAndUpdateCardBrands()
+
+        /// Send an analytic whenever the card number field is completed
+        if lastPanElementValidationState.isValid != panElement.validationState.isValid {
+            lastPanElementValidationState = panElement.validationState
+            if case .valid = panElement.validationState {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted)
+            }
+        }
         delegate?.didUpdate(element: self)
     }
 

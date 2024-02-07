@@ -141,7 +141,7 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
             configuration: configuration,
             authenticationContext: self,
             intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.dashboardPaymentIntentClientSecret)),
-            paymentOption: .saved(paymentMethod: MockParams.cardPaymentMethod),
+            paymentOption: .saved(paymentMethod: MockParams.cardPaymentMethod, confirmParams: nil),
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
             completion: { _, _ in
                 exp.fulfill()
@@ -216,7 +216,7 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
             configuration: configuration,
             authenticationContext: self,
             intent: .deferredIntent(elementsSession: .emptyElementsSession, intentConfig: MockParams.deferredSetupIntentConfiguration(clientSecret: MockParams.dashboardSetupIntentClientSecret)),
-            paymentOption: .saved(paymentMethod: MockParams.cardPaymentMethod),
+            paymentOption: .saved(paymentMethod: MockParams.cardPaymentMethod, confirmParams: nil),
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
             completion: { _, _ in
                 exp.fulfill()

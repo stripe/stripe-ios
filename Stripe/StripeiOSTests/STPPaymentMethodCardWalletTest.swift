@@ -25,6 +25,8 @@ class STPPaymentMethodCardWalletTest: XCTestCase {
         XCTAssertEqual(STPPaymentMethodCardWallet.type(from: "SAMSUNG_PAY"), .samsungPay)
         XCTAssertEqual(STPPaymentMethodCardWallet.type(from: "visa_checkout"), .visaCheckout)
         XCTAssertEqual(STPPaymentMethodCardWallet.type(from: "VISA_CHECKOUT"), .visaCheckout)
+        XCTAssertEqual(STPPaymentMethodCardWallet.type(from: "link"), .link)
+        XCTAssertEqual(STPPaymentMethodCardWallet.type(from: "LINK"), .link)
     }
 
     // MARK: - STPAPIResponseDecodable Tests

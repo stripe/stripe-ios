@@ -105,7 +105,8 @@ extension PaymentSheetFormFactory {
         }
     }
     func makeCardCVCCollection(paymentMethod: STPPaymentMethod,
+                               mode: CVCRecollectionElement.Mode,
                                appearance: PaymentSheet.Appearance) -> CVCRecollectionElement {
-        return CVCRecollectionElement(paymentMethod: paymentMethod, appearance: appearance)
+        return CVCRecollectionElement(paymentMethod: paymentMethod, mode: mode, appearance: appearance)
     }
 }
