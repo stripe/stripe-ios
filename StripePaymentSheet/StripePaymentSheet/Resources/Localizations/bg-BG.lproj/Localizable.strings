@@ -102,10 +102,6 @@
 
 "Przelewy24 Bank" = "Банка Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Премахване на %1$@, завършваща на %2$@";
-
-"Remove Card" = "Премахване на банкова карта";
-
 "Save" = "Запазване";
 
 "Save a new payment method" = "Запазете нов метод на плащане";
@@ -113,8 +109,6 @@
 "Save address" = "Запазване на адреса";
 
 "Save for future payments" = "Запазване за бъдещи плащания";
-
-"Save my info for secure 1-click checkout" = "Запазване на моята информация за защитено финализиране с едно щракване";
 
 "Save this account for future %@ payments" = "Запазете тази сметка за следващи %@ плащания";
 

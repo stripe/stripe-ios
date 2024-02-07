@@ -102,10 +102,6 @@
 
 "Przelewy24 Bank" = "Ngân hàng Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Xóa thẻ %1$@ kết thúc bằng %2$@";
-
-"Remove Card" = "Xóa thẻ";
-
 "Save" = "Lưu";
 
 "Save a new payment method" = "Lưu một phương thức thanh toán mới";
@@ -113,8 +109,6 @@
 "Save address" = "Lưu địa chỉ";
 
 "Save for future payments" = "Tiết kiệm cho các khoản thanh toán trong tương lai";
-
-"Save my info for secure 1-click checkout" = "Lưu thông tin của tôi để thanh toán bảo mật bằng 1 cú nhấp chuột";
 
 "Save this account for future %@ payments" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
 

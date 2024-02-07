@@ -102,10 +102,6 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Fjern %1$@, der slutter på %2$@";
-
-"Remove Card" = "Fjern kort";
-
 "Save" = "Gem";
 
 "Save a new payment method" = "Gem en ny betalingsmetode";
@@ -113,8 +109,6 @@
 "Save address" = "Gem adresse";
 
 "Save for future payments" = "Gem til fremtidige betalinger";
-
-"Save my info for secure 1-click checkout" = "Gem mine oplysninger for sikker 1-kliks-betaling";
 
 "Save this account for future %@ payments" = "Gem denne konto til fremtidige %@-betalinger";
 
