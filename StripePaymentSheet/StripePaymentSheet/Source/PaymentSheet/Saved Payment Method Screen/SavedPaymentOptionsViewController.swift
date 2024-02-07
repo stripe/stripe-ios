@@ -71,7 +71,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let removeSavedPaymentMethodMessage: String?
         let merchantDisplayName: String
         let isTestMode: Bool
-        let allowRemovalOfLastSavedPaymentMethod: Bool
+        let allowsRemovalOfLastSavedPaymentMethod: Bool
     }
 
     // MARK: - Internal Properties
@@ -83,7 +83,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             return false
         case 1:
             // If there's exactly one PM, customer can only edit if configuration allows removal or if that single PM allows for the card brand choice to be updated.
-            return configuration.allowRemovalOfLastSavedPaymentMethod || viewModels.contains(where: {
+            return configuration.allowsRemovalOfLastSavedPaymentMethod || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
             })
         default:
@@ -407,7 +407,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
-                                              canRemoveCard: savedPaymentMethods.count > 1 || configuration.allowRemovalOfLastSavedPaymentMethod,
+                                              canRemoveCard: savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod,
                                               isTestMode: configuration.isTestMode)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)

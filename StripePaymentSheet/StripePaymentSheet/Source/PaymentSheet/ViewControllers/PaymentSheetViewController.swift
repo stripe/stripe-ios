@@ -107,7 +107,7 @@ class PaymentSheetViewController: UIViewController {
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isTestMode: configuration.apiClient.isTestmode,
-                allowRemovalOfLastSavedPaymentMethod: configuration.allowRemovalOfLastSavedPaymentMethod
+                allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod
             ),
             appearance: configuration.appearance,
             cbcEligible: intent.cardBrandChoiceEligible,
