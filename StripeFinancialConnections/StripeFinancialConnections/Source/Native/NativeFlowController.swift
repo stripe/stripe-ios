@@ -491,7 +491,8 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
 
     func institutionPickerViewController(
         _ viewController: InstitutionPickerViewController,
-        didSelect institution: FinancialConnectionsInstitution
+        didSelect institution: FinancialConnectionsInstitution,
+        authSession: FinancialConnectionsAuthSession
     ) {
         delegate?.nativeFlowController(
             self,
@@ -502,10 +503,14 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
                 )
             )
         )
-
         dataManager.institution = institution
+        dataManager.authSession = authSession
 
-        pushPane(.partnerAuth, animated: true)
+        if authSession.isOauthNonOptional {
+            presentPaneAsSheet(.partnerAuth)
+        } else {
+            pushPane(.partnerAuth, animated: true)
+        }
     }
 
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
@@ -529,10 +534,14 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
 extension NativeFlowController: PartnerAuthViewControllerDelegate {
 
     func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController) {
+        dataManager.authSession = nil // clear any lingering auth sessions
+
         didSelectAnotherBank()
     }
 
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController) {
+        dataManager.authSession = nil // clear any lingering auth sessions
+
         switch viewController.panePresentationStyle {
         case .sheet:
             viewController.dismiss(animated: true)
@@ -541,7 +550,11 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
         }
     }
 
-    func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController) {
+    func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(
+        _ viewController: PartnerAuthViewController
+    ) {
+        dataManager.authSession = nil // clear any lingering auth sessions
+
         pushPane(.manualEntry, animated: true)
     }
 
@@ -567,6 +580,8 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
         _ viewController: PartnerAuthViewController,
         didReceiveTerminalError error: Error
     ) {
+        dataManager.authSession = nil // clear any lingering auth sessions
+
         showTerminalError(error)
     }
 
@@ -1152,6 +1167,7 @@ private func CreatePaneViewController(
     case .partnerAuth:
         if let institution = dataManager.institution {
             let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
+                authSession: dataManager.authSession,
                 institution: institution,
                 manifest: dataManager.manifest,
                 returnURL: dataManager.returnURL,

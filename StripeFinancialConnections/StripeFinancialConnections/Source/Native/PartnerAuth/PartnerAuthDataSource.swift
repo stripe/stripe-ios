@@ -46,6 +46,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     private(set) var pendingAuthSession: FinancialConnectionsAuthSession?
 
     init(
+        authSession: FinancialConnectionsAuthSession?,
         institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
         returnURL: String?,
@@ -54,6 +55,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         analyticsClient: FinancialConnectionsAnalyticsClient,
         reduceManualEntryProminenceInErrors: Bool
     ) {
+        self.pendingAuthSession = authSession
         self.institution = institution
         self.manifest = manifest
         self.returnURL = returnURL

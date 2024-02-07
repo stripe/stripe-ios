@@ -60,7 +60,7 @@ final class PrepaneViews {
                 didSelectURL: didSelectURL
             )
         )
-        
+
         contentStackView.addArrangedSubview(headerView)
 
         let footerViewTuple = PaneLayoutView.createFooterView(
@@ -98,10 +98,10 @@ final class PrepaneViews {
         self.secondaryButton = footerViewTuple.secondaryButton
 
         contentStackView.addArrangedSubview(bodyView)
-        
+
         showLoadingView(false)
     }
-    
+
     deinit {
         contentStackView.removeFromSuperview()
         footerView?.removeFromSuperview()
@@ -154,7 +154,7 @@ private func CreateContentView(
 import SwiftUI
 
 private class PrepanePreviewView: UIView {
-    
+
     let prepaneViews = PrepaneViews(
         prepaneModel: FinancialConnectionsOAuthPrepane(
             institutionIcon: nil,
@@ -204,7 +204,7 @@ private class PrepanePreviewView: UIView {
         didSelectContinue: {},
         didSelectCancel: {}
     )
-    
+
     init() {
         super.init(frame: .zero)
         let paneLayoutView = PaneLayoutView(
@@ -214,7 +214,7 @@ private class PrepanePreviewView: UIView {
         paneLayoutView.addTo(view: self)
         backgroundColor = .customBackgroundColor
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

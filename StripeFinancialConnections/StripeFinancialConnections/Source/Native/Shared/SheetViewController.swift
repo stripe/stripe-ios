@@ -14,6 +14,10 @@ enum PanePresentationStyle {
     case sheet
 }
 
+extension Notification.Name {
+    static let sheetViewControllerWillDismiss = Notification.Name("FinancialConnectionsSheetViewControllerWillDismiss")
+}
+
 class SheetViewController: UIViewController {
 
     private static let cornerRadius: CGFloat = 20
@@ -110,6 +114,13 @@ class SheetViewController: UIViewController {
         else {
             view.addAndPinSubview(contentView)
             contentView.addAndPinSubview(contentStackView)
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isBeingDismissed {
+            NotificationCenter.default.post(name: .sheetViewControllerWillDismiss, object: self)
         }
     }
 
