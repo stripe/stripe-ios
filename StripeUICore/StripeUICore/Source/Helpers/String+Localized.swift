@@ -81,6 +81,10 @@ import Foundation
         STPLocalizedString("Phone", "Caption for Phone field on address form")
     }
 
+    static var phoneNumber: String {
+        STPLocalizedString("Phone number", "Caption for Phone number field on address form")
+    }
+
     static var incomplete_phone_number: String {
         STPLocalizedString("Incomplete phone number", "Error description for incomplete phone number")
     }
