@@ -24,7 +24,7 @@ extension PaymentSheet {
             legalName: String?,
             paymentMethodParams: STPPaymentMethodParams
         )
-        
+
         /// Confirm with Payment Method.
         case withPaymentMethod(
             paymentMethod: STPPaymentMethod
