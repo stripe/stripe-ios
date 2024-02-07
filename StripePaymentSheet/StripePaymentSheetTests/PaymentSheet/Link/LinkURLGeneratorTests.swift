@@ -24,13 +24,12 @@ class LinkURLGeneratorTests: XCTestCase {
                                    experiments: [:],
                                    flags: [:],
                                    loggerMetadata: [:],
-                                   locale: Locale.init(identifier: "en_US").toLanguageTag(),
-                                   mobileSessionId: "mobile-session-id"
+                                   locale: Locale.init(identifier: "en_US").toLanguageTag()
     )
 
     func testURLCreation() {
         let url = try! LinkURLGenerator.url(params: testParams)
-        XCTAssertEqual(url.absoluteString, "https://checkout.link.com/#eyJsb2dnZXJNZXRhZGF0YSI6e30sImN1c3RvbWVySW5mbyI6eyJjb3VudHJ5IjoiVVMiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20ifSwicGF5bWVudE9iamVjdCI6ImxpbmtfcGF5bWVudF9tZXRob2QiLCJtb2JpbGVTZXNzaW9uSWQiOiJtb2JpbGUtc2Vzc2lvbi1pZCIsImV4cGVyaW1lbnRzIjp7fSwicGF5bWVudFVzZXJBZ2VudCI6InRlc3QiLCJsb2NhbGUiOiJlbi1VUyIsInBhdGgiOiJtb2JpbGVfcGF5IiwicGF5bWVudEluZm8iOnsiY3VycmVuY3kiOiJVU0QiLCJhbW91bnQiOjEwMH0sIm1lcmNoYW50SW5mbyI6eyJjb3VudHJ5IjoiVVMiLCJidXNpbmVzc05hbWUiOiJUZXN0IHRlc3QifSwicHVibGlzaGFibGVLZXkiOiJwa190ZXN0XzEyMyIsImZsYWdzIjp7fSwiaW50ZWdyYXRpb25UeXBlIjoibW9iaWxlIn0=")
+        XCTAssertEqual(url.absoluteString, "https://checkout.link.com/#eyJsb2dnZXJNZXRhZGF0YSI6e30sImN1c3RvbWVySW5mbyI6eyJjb3VudHJ5IjoiVVMiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20ifSwicGF5bWVudE9iamVjdCI6ImxpbmtfcGF5bWVudF9tZXRob2QiLCJleHBlcmltZW50cyI6e30sInBheW1lbnRVc2VyQWdlbnQiOiJ0ZXN0IiwibG9jYWxlIjoiZW4tVVMiLCJwYXRoIjoibW9iaWxlX3BheSIsInBheW1lbnRJbmZvIjp7ImN1cnJlbmN5IjoiVVNEIiwiYW1vdW50IjoxMDB9LCJtZXJjaGFudEluZm8iOnsiY291bnRyeSI6IlVTIiwiYnVzaW5lc3NOYW1lIjoiVGVzdCB0ZXN0In0sInB1Ymxpc2hhYmxlS2V5IjoicGtfdGVzdF8xMjMiLCJmbGFncyI6e30sImludGVncmF0aW9uVHlwZSI6Im1vYmlsZSJ9=")
     }
 
     func testURLCreationRegularUnicode() {
@@ -58,6 +57,11 @@ class LinkURLGeneratorTests: XCTestCase {
         }
         config.apiClient.publishableKey = "pk_123"
         let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
+        
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
+        let sessionID = AnalyticsHelper.shared.sessionID!
+        
         let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent)
 
         let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
@@ -68,7 +72,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            paymentInfo: LinkURLParams.PaymentInfo(currency: "USD", amount: 100),
                                            experiments: [:],
                                            flags: [:],
-                                           loggerMetadata: [:],
+                                           loggerMetadata: ["mobile_session_id": sessionID],
                                            locale: Locale.init(identifier: "en_US").toLanguageTag())
 
         XCTAssertEqual(params, expectedParams)
