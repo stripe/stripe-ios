@@ -63,8 +63,8 @@ class PaymentSheet_AddressTests: XCTestCase {
         XCTAssertFalse(saveAddressButton.isEnabled)
         app.textFields["ZIP"].tap()
         app.typeText("94102")
-        app.textFields["Phone"].tap()
-        app.textFields["Phone"].typeText("5555555555")
+        app.textFields["Phone number"].tap()
+        app.textFields["Phone number"].typeText("5555555555")
 
         XCTAssertTrue(saveAddressButton.isEnabled)
         saveAddressButton.tap()
@@ -163,8 +163,8 @@ US
         XCTAssertEqual(app.textFields["ZIP"].value as! String, "94080")
 
         // Type in phone number
-        app.textFields["Phone"].tap()
-        app.textFields["Phone"].typeText("5555555555")
+        app.textFields["Phone number"].tap()
+        app.textFields["Phone number"].typeText("5555555555")
 
         // Type in the name to complete the form
         app.textFields["Full name"].tap()
@@ -231,8 +231,8 @@ US
         XCTAssertFalse(saveAddressButton.isEnabled)
         app.textFields["Postal code"].tap()
         app.typeText("7300")
-        app.textFields["Phone"].tap()
-        app.textFields["Phone"].typeText("5555555555")
+        app.textFields["Phone number"].tap()
+        app.textFields["Phone number"].typeText("5555555555")
         XCTAssertTrue(saveAddressButton.isEnabled)
         saveAddressButton.tap()
 

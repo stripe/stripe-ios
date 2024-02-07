@@ -2838,7 +2838,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         emailField.tap()
         emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
 
-        let phoneField = app.textFields["Phone"]
+        let phoneField = app.textFields["Phone number"]
         XCTAssert(phoneField.waitForExistence(timeout: 10))
         phoneField.tap()
         phoneField.typeText("3105551234")
