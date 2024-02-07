@@ -48,18 +48,15 @@ class LinkLegalTermsViewSnapshotTests: STPSnapshotTestCase {
     func testLocalization_it() {
         performLocalizedSnapshotTest(forLanguage: "it")
     }
-// TODO: Uncomment when we drop XCode 14
-//    func testLocalization_ja() {
-//        performLocalizedSnapshotTest(forLanguage: "ja")
-//    }
+    func testLocalization_ja() {
+        performLocalizedSnapshotTest(forLanguage: "ja")
+    }
     func testLocalization_ko() {
         performLocalizedSnapshotTest(forLanguage: "ko")
     }
-
-// TODO: Uncomment when we drop XCode 14
-//    func testLocalization_zh_hans() {
-//        performLocalizedSnapshotTest(forLanguage: "zh-Hans")
-//    }
+    func testLocalization_zh_hans() {
+        performLocalizedSnapshotTest(forLanguage: "zh-Hans")
+    }
 
 }
 

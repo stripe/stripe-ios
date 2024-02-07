@@ -60,15 +60,13 @@ class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
         verify(greekCheckbox, identifier: "Greek")
     }
 
-// TODO: Uncomment when we drop XCode 14
-/*
     func testLocalization_chinese() {
         let chineseCheckbox = CheckboxButton(
             text: "保存我的信息以便一键结账",
             description: "在[Merchant]及千万商家使用快捷支付")
         verify(chineseCheckbox, identifier: "Chinese")
     }
-*/
+
     func testLocalization_hindi() {
         let hindiCheckbox = CheckboxButton(
             text: "सुरक्षित 1-क्लिक चेकआउट के लिए मेरी जानकारी सहेजें",
