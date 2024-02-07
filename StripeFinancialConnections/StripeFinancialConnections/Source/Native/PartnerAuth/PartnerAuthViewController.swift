@@ -26,7 +26,7 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
     )
 }
 
-final class PartnerAuthViewController: UIViewController {
+final class PartnerAuthViewController: SheetViewController {
 
     /**
      Unfortunately there is a need for this state-full parameter. When we get url callback the app might not be in foreground state.
@@ -45,12 +45,15 @@ final class PartnerAuthViewController: UIViewController {
     private var lastHandledAuthenticationSessionReturnUrl: URL?
     weak var delegate: PartnerAuthViewControllerDelegate?
 
-    private var prepaneView: PrepaneView?
+    private var prepaneViews: PrepaneViews?
     private var loadingView: UIView?
 
-    init(dataSource: PartnerAuthDataSource) {
+    init(
+        dataSource: PartnerAuthDataSource,
+        panePresentationStyle: PanePresentationStyle
+    ) {
         self.dataSource = dataSource
-        super.init(nibName: nil, bundle: nil)
+        super.init(panePresentationStyle: panePresentationStyle)
     }
 
     required init?(coder: NSCoder) {
@@ -59,7 +62,6 @@ final class PartnerAuthViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
         dataSource
             .analyticsClient
             .logPaneLoaded(pane: .partnerAuth)
@@ -92,10 +94,11 @@ final class PartnerAuthViewController: UIViewController {
         )
 
         if authSession.isOauthNonOptional, let prepaneModel = authSession.display?.text?.oauthPrepane {
-            self.prepaneView?.removeFromSuperview()
-            let prepaneView = PrepaneView(
+            prepaneViews = nil // the `deinit` of prepane views will remove views
+            let prepaneViews = PrepaneViews(
                 prepaneModel: prepaneModel,
                 isRepairSession: false, // TODO(kgaidis): change this for repair sessions
+                panePresentationStyle: panePresentationStyle,
                 didSelectURL: { [weak self] url in
                     self?.didSelectURLInTextFromBackend(url)
                 },
@@ -120,8 +123,12 @@ final class PartnerAuthViewController: UIViewController {
                     self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
                 }
             )
-            self.prepaneView = prepaneView
-            view.addAndPinSubview(prepaneView)
+            self.prepaneViews = prepaneViews
+
+            setup(
+                withContentView: prepaneViews.contentStackView,
+                footerView: prepaneViews.footerView
+            )
 
             dataSource.recordAuthSessionEvent(
                 eventName: "loaded",
@@ -628,8 +635,8 @@ final class PartnerAuthViewController: UIViewController {
         // there's a chance we don't have the data yet to display a
         // prepane-based loading view, so we have extra handling
         // to handle both states
-        if let prepaneView = prepaneView {
-            prepaneView.showLoadingView(show)
+        if let prepaneViews {
+            prepaneViews.showLoadingView(show)
         } else {
             if show {
                 let loadingView = SpinnerView()

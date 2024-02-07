@@ -23,7 +23,7 @@ class SheetViewController: UIViewController {
     // Due to `SheetViewController` being a subclass, and auth flow
     // design constraints of dynamically presenting panes either
     // as sheets or fullscreen, we need this to handle both states.
-    private let panePresentationStyle: PanePresentationStyle
+    let panePresentationStyle: PanePresentationStyle
 
     // The `contentView` represents the area of the sheet
     // where content is displayed. It's about 80% of the
