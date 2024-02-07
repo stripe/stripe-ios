@@ -27,7 +27,7 @@ protocol LinkLegalTermsViewDelegate: AnyObject {
 @objc(STP_Internal_LinkLegalTermsView)
 final class LinkLegalTermsView: UIView {
     struct Constants {
-        static let lineHeight: CGFloat = 1.5
+        static let lineHeight: CGFloat = 1.0
     }
 
     private let links: [String: URL] = [

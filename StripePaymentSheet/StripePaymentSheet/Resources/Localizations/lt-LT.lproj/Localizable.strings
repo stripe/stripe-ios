@@ -76,6 +76,10 @@
 
 "Or pay with a card" = "Arba mokėti kortele";
 
+"Or use" = "Arba naudokite";
+
+"Or use a card" = "Arba naudokite kortelę";
+
 "Pay %@" = "Mokėti %@";
 
 "Pay another way" = "Mokėkite kitu būdu";
@@ -102,10 +106,6 @@
 
 "Przelewy24 Bank" = "Bankas „Przelewy24“";
 
-"Remove %1$@ ending in %2$@" = "Pašalinti %1$@, kuri baigiasi %2$@";
-
-"Remove Card" = "Šalinti kortelę";
-
 "Save" = "Išsaugoti";
 
 "Save a new payment method" = "Išsaugoti naują mokėjimo būdą";
@@ -113,8 +113,6 @@
 "Save address" = "išsaugoti adresą";
 
 "Save for future payments" = "Išsaugokite vėlesniems mokėjimams";
-
-"Save my info for secure 1-click checkout" = "Išsaugoti mano informaciją saugiam atsiskaitymui vienu spustelėjimu";
 
 "Save this account for future %@ payments" = "Išsaugoti šią sąskaitą vėlesniems %@ mokėjimams";
 

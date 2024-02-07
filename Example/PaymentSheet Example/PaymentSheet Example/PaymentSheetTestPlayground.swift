@@ -22,7 +22,7 @@ struct PaymentSheetTestPlayground: View {
         // Note: Use group to work around XCode 14: "Extra Argument in Call" issue
         //  (each view can hold 10 direct subviews)
         Group {
-            SettingView(setting: uiStyle)
+            SettingView(setting: $playgroundController.settings.uiStyle)
             SettingView(setting: $playgroundController.settings.shippingInfo)
             SettingView(setting: $playgroundController.settings.applePayEnabled)
             SettingView(setting: $playgroundController.settings.applePayButtonType)
@@ -37,25 +37,10 @@ struct PaymentSheetTestPlayground: View {
             SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
         }
         Group {
-            if playgroundController.settings.uiStyle == .flowController {
-                if playgroundController.settings.integrationType == .deferred_csc {
-                    SettingView(setting: $playgroundController.settings.requireCVCRecollection)
-                }
-            }
+            SettingView(setting: $playgroundController.settings.requireCVCRecollection)
         }
         Group {
             SettingView(setting: $playgroundController.settings.autoreload)
-        }
-    }
-
-    var uiStyle: Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
-        Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
-            return playgroundController.settings.uiStyle
-        } set: { newValue in
-            if newValue != .flowController {
-                playgroundController.settings.requireCVCRecollection = .off
-            }
-            playgroundController.settings.uiStyle = newValue
         }
     }
 
@@ -65,6 +50,9 @@ struct PaymentSheetTestPlayground: View {
                 VStack {
                     Group {
                         HStack {
+                            if ProcessInfo.processInfo.environment["UITesting"] != nil {
+                                AnalyticsLogForTesting(analyticsLog: $playgroundController.analyticsLog)
+                            }
                             Text("Backend")
                                 .font(.headline)
                             Spacer()
@@ -91,7 +79,7 @@ struct PaymentSheetTestPlayground: View {
                                 })
                         }
                         SettingView(setting: $playgroundController.settings.mode)
-                        SettingPickerView(setting: integrationType)
+                        SettingPickerView(setting: $playgroundController.settings.integrationType)
                         SettingView(setting: customerModeBinding)
                         TextField("CustomerId", text: customerIdBinding)
                             .disabled(true)
@@ -134,17 +122,6 @@ struct PaymentSheetTestPlayground: View {
             Divider()
             PaymentSheetButtons()
                 .environmentObject(playgroundController)
-        }
-    }
-
-    var integrationType: Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
-        Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
-            return playgroundController.settings.integrationType
-        } set: { newValue in
-            if newValue != .deferred_csc {
-                playgroundController.settings.requireCVCRecollection = .off
-            }
-            playgroundController.settings.integrationType = newValue
         }
     }
 
@@ -309,6 +286,20 @@ struct PaymentSheetButtons: View {
                 }
             }
         }
+    }
+}
+
+/// A zero-sized view whose only purpose is to let XCUITests access the analytics sent by the SDK.
+struct AnalyticsLogForTesting: View {
+    @Binding var analyticsLog: [[String: Any]]
+    var analyticsLogString: String {
+        return try! JSONSerialization.data(withJSONObject: analyticsLog).base64EncodedString()
+    }
+    var body: some View {
+        Text(analyticsLogString)
+            .frame(width: 0, height: 0)
+            .accessibility(identifier: "_testAnalyticsLog")
+            .accessibility(label: Text(analyticsLogString))
     }
 }
 

@@ -134,6 +134,12 @@
 /* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
 "Or pay with a card" = "Or pay with a card";
 
+/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up. */
+"Or use" = "Or use";
+
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up. */
+"Or use a card" = "Or use a card";
+
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Pay %@";
 
@@ -141,9 +147,9 @@
 "Pay another way" = "Pay another way";
 
 /* Label describing the benefit of signing up for Link.
-Pay faster at {Merchant Name} and thousands of merchants
-e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
-"Pay faster at %@ and thousands of merchants." = "Pay faster at %@ and thousands of merchants.";
+Pay faster at {Merchant Name} and thousands of businesses
+e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
+"Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
 
 /* Pay in templated string for afterpay/clearpay */
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";

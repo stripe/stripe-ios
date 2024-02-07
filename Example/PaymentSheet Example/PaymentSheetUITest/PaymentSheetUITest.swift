@@ -6,11 +6,25 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-import StripePayments
 import XCTest
 
 class PaymentSheetUITestCase: XCTestCase {
     var app: XCUIApplication!
+
+    /// This element's `label` contains all the analytic events sent by the SDK since the the playground was loaded, as a base-64 encoded string.
+    /// - Note: Only exists in test playground.
+    lazy var analyticsLogElement: XCUIElement = { app.staticTexts["_testAnalyticsLog"] }()
+    /// Convenience var to grab all the events sent since the playground was loaded.
+    var analyticsLog: [[String: Any]] {
+        let logRawString = analyticsLogElement.label
+        guard
+            let data = Data(base64Encoded: logRawString),
+            let json = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]]
+        else {
+            return []
+        }
+        return json
+    }
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -180,7 +194,17 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         )
 
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        XCTAssertEqual(
+            analyticsLog.map({ $0[string: "event"] }),
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_savedpm_show"]
+        )
+        // `mc_load_succeeded` event `selected_lpm` should be "apple_pay", the default payment method.
+        XCTAssertEqual(analyticsLog[2][string: "selected_lpm"], "apple_pay")
         app.buttons["+ Add"].waitForExistenceAndTap()
+
+        // Should fire the `mc_form_shown` event w/ `selected_lpm` = card
+        XCTAssertEqual(analyticsLog.last?[string: "event"], "mc_form_shown")
+        XCTAssertEqual(analyticsLog.last?[string: "selected_lpm"], "card")
 
         try! fillCardData(app)
 
@@ -204,13 +228,38 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Complete payment
         app.buttons["Continue"].tap()
+
+        // Check analytics
+        XCTAssertEqual(
+            analyticsLog.suffix(3).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped"]
+        )
+
         app.buttons["Confirm"].tap()
         var successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        XCTAssertEqual(analyticsLog.last?[string: "event"], "mc_custom_payment_newpm_success")
+        XCTAssertEqual(analyticsLog.last?[string: "selected_lpm"], "card")
+        // Make sure they all have the same session id
+        let sessionID = analyticsLog.first![string: "session_id"]
+        XCTAssertTrue(!sessionID!.isEmpty)
+        for analytic in analyticsLog {
+            if analytic[string: "event"] == "stripeios.payment_intent_confirmation" {
+                continue
+            }
+            XCTAssertEqual(analytic[string: "session_id"], sessionID)
+        }
+        // Make sure the appropriate events have "selected_lpm" = "card"
+        for analytic in analyticsLog {
+            if ["mc_form_shown", "mc_form_interacted", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"].contains(analytic[string: "event"]) {
+               XCTAssertEqual(analytic[string: "selected_lpm"], "card")
+            }
+        }
 
         // Reload w/ same customer
         reload(app, settings: settings)
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        XCTAssertNotEqual(analyticsLog.first?[string: "session_id"], sessionID) // Sanity check this has a different session ID than before
         XCTAssertEqual(app.cells.count, 3) // Should be "Add" and "Apple Pay" and "Link"
         app.buttons["+ Add"].waitForExistenceAndTap()
 
@@ -1371,12 +1420,37 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         )
 
         app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Pay $50.99"].waitForExistence(timeout: 10)
+
+        XCTAssertEqual(
+            // Ignore luxe_* analytics since there are a lot and I'm not sure if they're the same every time
+            analyticsLog.map({ $0[string: "event"] }).filter({ $0 != "luxe_image_selector_icon_from_bundle" && $0 != "luxe_image_selector_icon_downloaded" }),
+            ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "mc_complete_sheet_newpm_show", "mc_form_shown"]
+        )
+        XCTAssertEqual(analyticsLog.last?[string: "selected_lpm"], "card")
+
         try? fillCardData(app, container: nil)
 
         app.buttons["Pay $50.99"].tap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        XCTAssertEqual(
+            analyticsLog.suffix(6).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.payment_intent_confirmation", "mc_complete_payment_newpm_success"]
+        )
+
+        // Make sure they all have the same session id
+        let sessionID = analyticsLog.first![string: "session_id"]
+        XCTAssertTrue(!sessionID!.isEmpty)
+        for analytic in analyticsLog {
+            if (analytic["event"] as! String).starts(with: "stripeios") {
+                continue
+            }
+            XCTAssertEqual(analytic[string: "session_id"], sessionID)
+        }
+
     }
 
     func testDeferredPaymentIntent_ClientSideConfirmation_LostCardDecline() {
@@ -2108,7 +2182,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["••••4242"].waitForExistenceAndTap(timeout: 10))
     }
 
-    func testCVCRecollectionFlowController() throws {
+    func testCVCRecollectionFlowController_deferredCSC() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
         settings.integrationType = .deferred_csc
@@ -2146,10 +2220,120 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
                 confirmButtons.element(boundBy: index).tap()
             }
         }
-
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
+    func testCVCRecollectionComplete_deferredCSC() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .paymentSheet
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.requireCVCRecollection = .on
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+
+        let payButton = app.buttons["Pay $50.99"]
+        XCTAssert(payButton.isEnabled)
+        payButton.tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+
+        XCTAssertFalse(successText.exists)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        let cvcField = app.textFields["CVC"]
+        cvcField.forceTapWhenHittableInTestCase(self)
+        app.typeText("123")
+        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testCVCRecollectionFlowController_intentFirstCSC() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.integrationType = .normal
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.requireCVCRecollection = .on
+
+        loadPlayground(app, settings)
+
+        let paymentMethodButton = app.buttons["Payment method"]
+
+        paymentMethodButton.waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        // CVC field should already be selected
+        app.typeText("123")
+
+        let confirmButtons: XCUIElementQuery = app.buttons.matching(identifier: "Confirm")
+        for index in 0..<confirmButtons.count {
+            if confirmButtons.element(boundBy: index).isHittable {
+                confirmButtons.element(boundBy: index).tap()
+            }
+        }
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+    func testCVCRecollectionComplete_intentFirstCSC() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .paymentSheet
+        settings.integrationType = .normal
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .off
+        settings.requireCVCRecollection = .on
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+
+        let payButton = app.buttons["Pay $50.99"]
+        XCTAssert(payButton.isEnabled)
+        payButton.tap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+
+        XCTAssertFalse(successText.exists)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        let cvcField = app.textFields["CVC"]
+        cvcField.forceTapWhenHittableInTestCase(self)
+        app.typeText("123")
+        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
     func testLinkOnlyFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
@@ -2178,7 +2362,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         // Re-tapping the payment method button should present the saved payment view
         app.buttons["Payment method"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["Select your payment method"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 5))
     }
 
     /* Disable Link test
@@ -2609,7 +2793,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         emailField.tap()
         emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
 
-        let phoneField = app.textFields["Phone"]
+        let phoneField = app.textFields["Phone number"]
         // Phone field appears after the network call finishes. We want to wait for it to appear.
         XCTAssert(phoneField.waitForExistence(timeout: 10))
         phoneField.tap()
@@ -2654,7 +2838,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         emailField.tap()
         emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
 
-        let phoneField = app.textFields["Phone"]
+        let phoneField = app.textFields["Phone number"]
         XCTAssert(phoneField.waitForExistence(timeout: 10))
         phoneField.tap()
         phoneField.typeText("3105551234")
@@ -2928,5 +3112,11 @@ extension XCUIApplication {
         let offset = CGVector(dx: point.x, dy: point.y)
         let coordinate = normalized.withOffset(offset)
         coordinate.tap()
+    }
+}
+
+extension Dictionary {
+    subscript(string key: Key) -> String? {
+        return self[key] as? String
     }
 }

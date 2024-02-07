@@ -261,6 +261,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             )
             let paymentMethodOptions = STPPaymentMethodOptions(
                 usBankAccount: usBankOptions,
+                card: nil,
                 allResponseFields: [:]
             )
             let pi = STPFixtures.makePaymentIntent(

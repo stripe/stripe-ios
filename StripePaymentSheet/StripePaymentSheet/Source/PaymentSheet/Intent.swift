@@ -68,6 +68,17 @@ enum Intent {
         }
     }
 
+    var cvcRecollectionEnabled: Bool {
+        switch self {
+        case .deferredIntent(_, let intentConfig):
+            return intentConfig.isCVCRecollectionEnabledCallback()
+        case .paymentIntent(_, let paymentIntent):
+            return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
+        case .setupIntent:
+            return false
+        }
+    }
+
     var currency: String? {
         switch self {
         case .paymentIntent(_, let pi):
@@ -100,7 +111,7 @@ enum Intent {
         }
     }
 
-    /// True if this ia PaymentIntent with sfu not equal to none or a SetupIntent
+    /// True if this is a PaymentIntent with sfu not equal to none or a SetupIntent
     var isSettingUp: Bool {
         switch self {
         case .paymentIntent(_, let paymentIntent):
@@ -118,22 +129,10 @@ enum Intent {
     }
 
     var cardBrandChoiceEligible: Bool {
-        switch self {
-        case .paymentIntent(let elementsSession, _),
-             .setupIntent(let elementsSession, _),
-             .deferredIntent(let elementsSession, _):
-            return (elementsSession.cardBrandChoice?.eligible ?? false)
-        }
+        return elementsSession.cardBrandChoice?.eligible ?? false
     }
 
     var isApplePayEnabled: Bool {
-        switch self {
-        case .paymentIntent(let elementSession, _):
-            return elementSession.isApplePayEnabled
-        case .deferredIntent(let elementsSession, _):
-            return elementsSession.isApplePayEnabled
-        case .setupIntent(let elementsSession, _):
-            return elementsSession.isApplePayEnabled
-        }
+        return elementsSession.isApplePayEnabled
     }
 }

@@ -76,6 +76,10 @@
 
 "Or pay with a card" = "Sau folosiți ca metodă de plată un card";
 
+"Or use" = "Sau utilizați";
+
+"Or use a card" = "Sau utilizați un card";
+
 "Pay %@" = "Plătiți %@";
 
 "Pay another way" = "Folosiți altă metodă de plată";
@@ -102,10 +106,6 @@
 
 "Przelewy24 Bank" = "Banca Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Eliminați cardul %1$@ care se termină în %2$@";
-
-"Remove Card" = "Eliminare card";
-
 "Save" = "Salvare";
 
 "Save a new payment method" = "Salvați o metodă de plată nouă";
@@ -113,8 +113,6 @@
 "Save address" = "Salvare adresă";
 
 "Save for future payments" = "Salvați pentru plăți viitoare";
-
-"Save my info for secure 1-click checkout" = "Salvează informațiile mele pentru o finalizare securizată a comenzii cu un singur clic";
 
 "Save this account for future %@ payments" = "Salvați acest cont pentru plăți viitoare către %@";
 

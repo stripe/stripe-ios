@@ -11,9 +11,12 @@ import Foundation
 import UIKit
 
 final class CVCRecollectionElement: Element {
-
+    enum Mode {
+        case inputOnly
+        case detailedWithInput
+    }
     weak var delegate: ElementDelegate?
-
+    var mode: Mode
     lazy var view: UIView = {
         return cvcRecollectionView
     }()
@@ -21,8 +24,10 @@ final class CVCRecollectionElement: Element {
     lazy var cvcRecollectionView: CVCRecollectionView = {
         return CVCRecollectionView(defaultValues: defaultValues,
                                    paymentMethod: paymentMethod,
+                                   mode: mode,
                                    appearance: appearance,
                                    elementDelegate: self)
+
     }()
 
     let defaultValues: DefaultValues
@@ -39,11 +44,13 @@ final class CVCRecollectionElement: Element {
     init(
         defaultValues: DefaultValues = .init(),
         paymentMethod: STPPaymentMethod,
+        mode: Mode,
         appearance: PaymentSheet.Appearance
     ) {
         self.defaultValues = defaultValues
         self.paymentMethod = paymentMethod
         self.appearance = appearance
+        self.mode = mode
     }
 
     func didFinishPresenting() {
