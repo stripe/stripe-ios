@@ -12,10 +12,11 @@
 import Combine
 import Contacts
 import PassKit
+@_spi(STP) import StripeCore
 import StripePayments
-@_spi(STP) import StripePaymentSheet
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 @_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -259,6 +260,8 @@ class PlaygroundController: ObservableObject {
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
     var currentDataTask: URLSessionDataTask?
+    /// All analytic events sent by the SDK since the playground was loaded.
+    @Published var analyticsLog: [[String: Any]] = []
 
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
@@ -296,6 +299,9 @@ class PlaygroundController: ObservableObject {
                 self.load()
             }
         }.store(in: &subscribers)
+
+        // Listen for analytics
+        STPAnalyticsClient.sharedClient.delegate = self
     }
 
     func buildPaymentSheet() {
@@ -448,6 +454,7 @@ extension PlaygroundController {
             }
 
             DispatchQueue.main.async {
+                self.analyticsLog.removeAll()
                 self.lastPaymentResult = nil
                 self.clientSecret = json["intentClientSecret"]
                 self.ephemeralKey = json["customerEphemeralKeySecret"]
@@ -623,6 +630,16 @@ extension PaymentSheet.IntentConfiguration.Mode {
             return "setup"
         @unknown default:
             fatalError()
+        }
+    }
+}
+
+// MARK: - STPAnalyticsClientDelegate
+
+extension PlaygroundController: STPAnalyticsClientDelegate {
+    func analyticsClientDidLog(analyticsClient: StripeCore.STPAnalyticsClient, payload: [String: Any]) {
+        DispatchQueue.main.async {
+            self.analyticsLog.append(payload)
         }
     }
 }

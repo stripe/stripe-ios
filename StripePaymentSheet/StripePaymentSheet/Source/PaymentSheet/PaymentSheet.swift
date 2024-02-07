@@ -152,6 +152,8 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let intent, let savedPaymentMethods, let isLinkEnabled, let isApplePayEnabled):
+                let isCVCRecollectionEnabled = intent.cvcRecollectionEnabled
+
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let presentPaymentSheetVC = {
                     let paymentSheetVC = PaymentSheetViewController(
@@ -160,6 +162,7 @@ public class PaymentSheet {
                         configuration: self.configuration,
                         isApplePayEnabled: isApplePayEnabled,
                         isLinkEnabled: isLinkEnabled,
+                        isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                         delegate: self
                     )
 
@@ -167,6 +170,7 @@ public class PaymentSheet {
 
                     let updateBottomSheet: () -> Void = {
                         self.bottomSheetViewController.contentStack = [paymentSheetVC]
+                        paymentSheetVC.didFinishPresenting()
                     }
                     updateBottomSheet()
                 }

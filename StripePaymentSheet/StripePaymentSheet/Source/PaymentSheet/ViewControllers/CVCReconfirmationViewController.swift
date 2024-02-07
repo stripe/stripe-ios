@@ -27,6 +27,7 @@ class CVCReconfirmationViewController: UIViewController {
             previousCustomerInput: nil)
         let cvcCollectionElement = formElement.makeCardCVCCollection(
             paymentMethod: paymentMethod,
+            mode: .detailedWithInput,
             appearance: configuration.appearance)
         cvcCollectionElement.delegate = self
         return cvcCollectionElement

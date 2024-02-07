@@ -298,7 +298,7 @@ class PaymentSheetAPITest: XCTestCase {
                     configuration: self.configuration,
                     authenticationContext: self,
                     intent: paymentIntent,
-                    paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa")),
+                    paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa"), confirmParams: nil),
                     paymentHandler: self.paymentHandler
                 ) { result, _ in
                     switch result {
@@ -408,28 +408,28 @@ class PaymentSheetAPITest: XCTestCase {
 
     func testDeferredConfirm_valid_saved_card() {
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod()),
+            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod(), confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .completed,
             isPaymentIntent: true, // PaymentIntent
             isServerSideConfirm: false // Client-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod()),
+            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod(), confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .completed,
             isPaymentIntent: true, // PaymentIntent
             isServerSideConfirm: true // Server-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod()),
+            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod(), confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .completed,
             isPaymentIntent: false, // SetupIntent
             isServerSideConfirm: false // Client-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod()),
+            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod(), confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .completed,
             isPaymentIntent: false, // SetupIntent
@@ -506,28 +506,28 @@ class PaymentSheetAPITest: XCTestCase {
     func testDeferredConfirm_saved_insufficient_funds_card() {
         let insufficient_funds_saved_PM = STPPaymentMethod(stripeId: "pm_card_visa_chargeDeclinedInsufficientFunds")
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM),
+            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM, confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .failed(error: ExpectedError(errorDescription: "Your card has insufficient funds.")),
             isPaymentIntent: true, // PaymentIntent
             isServerSideConfirm: false // Client-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM),
+            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM, confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .failed(error: ExpectedError(errorDescription: "Your card has insufficient funds.")),
             isPaymentIntent: true, // PaymentIntent
             isServerSideConfirm: true // Server-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM),
+            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM, confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .failed(error: ExpectedError(errorDescription: "Your card has insufficient funds.")),
             isPaymentIntent: false, // SetupIntent
             isServerSideConfirm: false // Client-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM),
+            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM, confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .failed(error: ExpectedError(errorDescription: "Your card has insufficient funds.")),
             isPaymentIntent: false, // SetupIntent

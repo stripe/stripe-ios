@@ -68,6 +68,17 @@ enum Intent {
         }
     }
 
+    var cvcRecollectionEnabled: Bool {
+        switch self {
+        case .deferredIntent(_, let intentConfig):
+            return intentConfig.isCVCRecollectionEnabledCallback()
+        case .paymentIntent(_, let paymentIntent):
+            return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
+        case .setupIntent:
+            return false
+        }
+    }
+
     var currency: String? {
         switch self {
         case .paymentIntent(_, let pi):

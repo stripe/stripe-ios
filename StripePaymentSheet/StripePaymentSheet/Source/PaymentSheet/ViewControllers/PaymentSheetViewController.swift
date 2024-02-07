@@ -56,6 +56,7 @@ class PaymentSheetViewController: UIViewController {
     let configuration: PaymentSheet.Configuration
 
     let isLinkEnabled: Bool
+    let isCVCRecollectionEnabled: Bool
 
     var isWalletEnabled: Bool {
         return isApplePayEnabled || isLinkEnabled
@@ -106,9 +107,12 @@ class PaymentSheetViewController: UIViewController {
                 showLink: false,
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
+                isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod
             ),
+            paymentSheetConfiguration: configuration,
+            intent: intent,
             appearance: configuration.appearance,
             cbcEligible: intent.cardBrandChoiceEligible,
             delegate: self
@@ -197,6 +201,7 @@ class PaymentSheetViewController: UIViewController {
         configuration: PaymentSheet.Configuration,
         isApplePayEnabled: Bool,
         isLinkEnabled: Bool,
+        isCVCRecollectionEnabled: Bool,
         delegate: PaymentSheetViewControllerDelegate
     ) {
         self.intent = intent
@@ -204,6 +209,7 @@ class PaymentSheetViewController: UIViewController {
         self.configuration = configuration
         self.isApplePayEnabled = isApplePayEnabled
         self.isLinkEnabled = isLinkEnabled
+        self.isCVCRecollectionEnabled = isCVCRecollectionEnabled
         self.delegate = delegate
 
         if savedPaymentMethods.isEmpty {
@@ -386,7 +392,7 @@ class PaymentSheetViewController: UIViewController {
             } else {
                 buyButtonStyle = .stripe
             }
-            buyButtonStatus = .enabled
+            buyButtonStatus = buyButtonEnabledForSavedPayments()
             showBuyButton = savedPaymentOptionsViewController.selectedPaymentOption != nil
         case .addingNew:
             buyButtonStyle = .stripe
@@ -422,6 +428,14 @@ class PaymentSheetViewController: UIViewController {
         } else {
             updateButtonVisibility()
         }
+    }
+
+    func buyButtonEnabledForSavedPayments() -> ConfirmButton.Status {
+        if savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParamsRequired &&
+            savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams == nil {
+            return .disabled
+        }
+        return .enabled
     }
 
     func updateBottomNotice() {
@@ -533,6 +547,9 @@ class PaymentSheetViewController: UIViewController {
             }
         }
     }
+    func didFinishPresenting() {
+        self.savedPaymentOptionsViewController.didFinishPresenting()
+    }
 }
 
 // MARK: - Wallet Header Delegate
@@ -572,6 +589,11 @@ extension PaymentSheetViewController: BottomSheetContentViewController {
 // MARK: - SavedPaymentOptionsViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate {
+
+    func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
+        error = nil  // clear error
+        updateUI()
+    }
 
     func didSelectUpdate(viewController: SavedPaymentOptionsViewController,
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
@@ -635,7 +657,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             navigationBar.additionalButton.setTitle(UIButton.doneButtonTitle, for: .normal)
             buyButton.update(state: .disabled)
         } else {
-            buyButton.update(state: .enabled)
+            buyButton.update(state: buyButtonEnabledForSavedPayments())
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
         navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
