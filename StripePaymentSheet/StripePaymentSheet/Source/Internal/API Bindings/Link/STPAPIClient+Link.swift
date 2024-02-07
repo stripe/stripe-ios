@@ -222,7 +222,7 @@ extension STPAPIClient {
             completion: completion
         )
     }
-    
+
     func logout(
         consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
