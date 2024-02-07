@@ -2,6 +2,9 @@
 ### Payments
 * [Added] Support for CVC recollection PaymentSheet and PaymentSheet.FlowController (client-side confirmation)
 
+### PaymentSheet
+* [Fixed] Fixed a bug where deleting the last saved payment method in PaymentSheet wouldn't automatically transition to the "Add a payment method" screen.
+
 ## 23.21.2 2024-02-05
 ### Payments
 * [Changed] We now auto append `mandate_data` when using Klarna with a SetupIntent. If you are interested in using Klarna with SetupIntents you sign up for the beta [here](https://stripe.com/docs/payments/klarna/accept-a-payment). 
