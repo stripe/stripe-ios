@@ -321,7 +321,9 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     func didFinishPresenting() {
         DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(750))) {
-            self.updateFormElement()
+            if self.isViewLoaded {
+                self.updateFormElement()
+            }
         }
     }
 
