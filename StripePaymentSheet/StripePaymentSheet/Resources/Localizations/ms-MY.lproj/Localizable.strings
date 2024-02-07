@@ -76,6 +76,10 @@
 
 "Or pay with a card" = "Atau bayar dengan kad";
 
+"Or use" = "Atau gunakan";
+
+"Or use a card" = "Atau gunakan kad";
+
 "Pay %@" = "Bayar %@";
 
 "Pay another way" = "Bayar dengan cara lain";
@@ -102,10 +106,6 @@
 
 "Przelewy24 Bank" = "Bank Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Alih keluar %1$@ yang berakhir dengan %2$@";
-
-"Remove Card" = "Alih Keluar Kad";
-
 "Save" = "Simpan";
 
 "Save a new payment method" = "Simpan kaedah pembayaran baharu";
@@ -113,8 +113,6 @@
 "Save address" = "Simpan alamat";
 
 "Save for future payments" = "Simpan untuk pembayaran masa hadapan";
-
-"Save my info for secure 1-click checkout" = "Simpan maklumat saya untuk proses bayar dan keluar yang selamat dengan satu klik";
 
 "Save this account for future %@ payments" = "Simpan akaun ini untuk pembayaran %@ masa hadapan";
 

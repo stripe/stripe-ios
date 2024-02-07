@@ -76,6 +76,10 @@
 
 "Or pay with a card" = "Eller betal med eit kort";
 
+"Or use" = "Eller bruk";
+
+"Or use a card" = "Eller bruk eit kort";
+
 "Pay %@" = "Betal %@";
 
 "Pay another way" = "Betal på ein annan måte";
@@ -102,10 +106,6 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Fjern %1$@ som endar på %2$@";
-
-"Remove Card" = "Fjern kort";
-
 "Save" = "Lagre";
 
 "Save a new payment method" = "Lagre ein ny betalingsmåte";
@@ -113,8 +113,6 @@
 "Save address" = "Lagre adressa";
 
 "Save for future payments" = "Lagre for framtidige betalingar";
-
-"Save my info for secure 1-click checkout" = "Lagre min info for trygg betaling med 1-klikk";
 
 "Save this account for future %@ payments" = "Lagre denne kontoen for framtidige %@-betalingar";
 

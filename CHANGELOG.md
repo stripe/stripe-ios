@@ -1,4 +1,7 @@
 ## x.x.x x-x-x
+### PaymentSheet
+* [Changed] The separator text under the Apple Pay button from "Or pay with a card" to "Or use a card" when using a SetupIntent.
+
 ### Payments
 * [Added] Support for CVC recollection PaymentSheet and PaymentSheet.FlowController (client-side confirmation)
 

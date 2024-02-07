@@ -76,6 +76,10 @@
 
 "Or pay with a card" = "Vai maksāt ar karti";
 
+"Or use" = "Vai izmantojiet";
+
+"Or use a card" = "Vai izmantojiet karti";
+
 "Pay %@" = "Maksāt %@";
 
 "Pay another way" = "Maksāt citā veidā";
@@ -102,10 +106,6 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Noņemt %1$@ pēdējos ciparus %2$@";
-
-"Remove Card" = "Noņemt karti";
-
 "Save" = "Saglabāt";
 
 "Save a new payment method" = "Saglabāt jaunu maksājuma veidu";
@@ -113,8 +113,6 @@
 "Save address" = "saglabāt adresi";
 
 "Save for future payments" = "Saglabāt nākotnes maksājumiem";
-
-"Save my info for secure 1-click checkout" = "Saglabāt manu informāciju, lai varētu droši norēķināties ar vienu klikšķi";
 
 "Save this account for future %@ payments" = "Saglabāt šo kontu nākotnes %@ maksājumiem";
 

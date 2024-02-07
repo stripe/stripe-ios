@@ -76,6 +76,10 @@
 
 "Or pay with a card" = "O magbayad gamit ang kard";
 
+"Or use" = "O gumamit ng";
+
+"Or use a card" = "O gumamit ng kard";
+
 "Pay %@" = "Magbayad ng %@";
 
 "Pay another way" = "Magbayad sa ibang paraan";
@@ -102,10 +106,6 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Alisin ang %1$@na nagtatapos sa %2$@";
-
-"Remove Card" = "Alisin ang Kard";
-
 "Save" = "I-save";
 
 "Save a new payment method" = "I-save ang bagong paraan ng pagbabayad";
@@ -113,8 +113,6 @@
 "Save address" = "I-save ang address";
 
 "Save for future payments" = "I-save para sa mga pagbabayad sa hinaharap";
-
-"Save my info for secure 1-click checkout" = "I-save ang aking info para sa tiyak na 1-click na pag-checkout";
 
 "Save this account for future %@ payments" = "I-save ang account na ito para sa mga pagbabayad sa hinaharap sa %@";
 

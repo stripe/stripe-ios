@@ -134,6 +134,12 @@
 /* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
 "Or pay with a card" = "Or pay with a card";
 
+/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up. */
+"Or use" = "Or use";
+
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up. */
+"Or use a card" = "Or use a card";
+
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Pay %@";
 

@@ -76,6 +76,10 @@
 
 "Or pay with a card" = "Ya da kartla ödeyin";
 
+"Or use" = "Veya kullan";
+
+"Or use a card" = "Veya kart kullan";
+
 "Pay %@" = "%@ öde";
 
 "Pay another way" = "Başka bir ödeme şekli kullanın";
@@ -102,10 +106,6 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "%2$@ ile biten %1$@ kartını kaldırın";
-
-"Remove Card" = "Kartı Kaldır";
-
 "Save" = "Kaydet";
 
 "Save a new payment method" = "Yeni bir ödeme yöntemi kaydedin";
@@ -113,8 +113,6 @@
 "Save address" = "Adresi kaydet";
 
 "Save for future payments" = "Gelecekteki ödemeler için kaydedilsin";
-
-"Save my info for secure 1-click checkout" = "Tek tıklamayla güvenli ödeme için bilgilerimi kaydet";
 
 "Save this account for future %@ payments" = "Bu hesabı gelecekteki %@ ödemeleri için kaydedin";
 

@@ -111,7 +111,7 @@ enum Intent {
         }
     }
 
-    /// True if this ia PaymentIntent with sfu not equal to none or a SetupIntent
+    /// True if this is a PaymentIntent with sfu not equal to none or a SetupIntent
     var isSettingUp: Bool {
         switch self {
         case .paymentIntent(_, let paymentIntent):

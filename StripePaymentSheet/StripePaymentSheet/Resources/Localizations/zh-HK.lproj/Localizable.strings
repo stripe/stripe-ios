@@ -76,6 +76,10 @@
 
 "Or pay with a card" = "或用銀行卡支付";
 
+"Or use" = "或使用";
+
+"Or use a card" = "或使用銀行卡";
+
 "Pay %@" = "支付%@";
 
 "Pay another way" = "用另一方式支付";
@@ -102,10 +106,6 @@
 
 "Przelewy24 Bank" = "Przelewy24 銀行";
 
-"Remove %1$@ ending in %2$@" = "移除尾號為 %2$@ 的 %1$@";
-
-"Remove Card" = "移除卡";
-
 "Save" = "保存";
 
 "Save a new payment method" = "保存新的支付方式";
@@ -113,8 +113,6 @@
 "Save address" = "保存地址";
 
 "Save for future payments" = "保存以用於未來的付款";
-
-"Save my info for secure 1-click checkout" = "保存我的資訊，安全地一鍵結賬";
 
 "Save this account for future %@ payments" = "保存該賬戶，方便未來向 %@ 付款";
 
