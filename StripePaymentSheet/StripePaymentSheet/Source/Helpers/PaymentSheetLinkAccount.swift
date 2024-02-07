@@ -192,7 +192,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             return
         }
         session.logout(with: apiClient, consumerAccountPublishableKey: publishableKey) { _ in
-            // Nothing to do if logout fails.
+            // We don't need to do anything if this fails, the key will expire automatically.
         }
     }
 }

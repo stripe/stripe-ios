@@ -139,7 +139,6 @@ extension ConsumerSession {
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
-        // Logout from server.
         apiClient.logout(
             consumerSessionClientSecret: clientSecret,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
