@@ -47,6 +47,7 @@ final class PartnerAuthViewController: SheetViewController {
 
     private var prepaneViews: PrepaneViews?
     private var loadingView: UIView?
+    private var legacyLoadingView: UIView?
     private var isLoadingViewVisible: Bool {
         return loadingView != nil
     }
@@ -70,14 +71,13 @@ final class PartnerAuthViewController: SheetViewController {
             .analyticsClient
             .logPaneLoaded(pane: .partnerAuth)
 
-        // handle a case where partner auth is initialized with an auth session
         if let authSession = dataSource.pendingAuthSession {
             if authSession.isOauthNonOptional {
                 createdAuthSession(authSession)
             } else {
                 // for legacy (non-oauth), start showing the loading indicator,
                 // and wait until `viewDidAppear` gets called
-                showLoadingView(true)
+                insertLegacyLoadingView()
             }
         } else {
             assert(
@@ -90,7 +90,6 @@ final class PartnerAuthViewController: SheetViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
         if !viewDidAppear {
             viewDidAppear = true
             // wait until `viewDidAppear` gets called for legacy (non-oauth) because
@@ -173,13 +172,26 @@ final class PartnerAuthViewController: SheetViewController {
                 authSessionId: authSession.id
             )
         } else {
-            // a legacy (non-oauth) institution will have a blank background
-            // during presenting + dismissing of the Web View, so
-            // add a loading spinner to fill some of the blank space
-            showLoadingView(true)
+            insertLegacyLoadingView()
 
             openInstitutionAuthenticationWebView(authSession: authSession)
         }
+    }
+
+    private func insertLegacyLoadingView() {
+        legacyLoadingView?.removeFromSuperview()
+        legacyLoadingView = nil
+
+        // a legacy (non-oauth) institution will have a blank background
+        // during presenting + dismissing of the Web View, so
+        // add a loading spinner to fill some of the blank space
+        //
+        // note that this is purposefully separate from `showLoadingView`
+        // function because it avoids animation glitches where
+        // `showLoadingView(false)` can remove the loading view
+        let loadingView = SpinnerView()
+        self.legacyLoadingView = loadingView
+        view.addAndPinSubviewToSafeArea(loadingView)
     }
 
     private func showErrorView(_ error: Error) {
@@ -666,10 +678,8 @@ final class PartnerAuthViewController: SheetViewController {
     }
 
     private func showLoadingView(_ show: Bool) {
-        if isLoadingViewVisible {
-            loadingView?.removeFromSuperview()
-            loadingView = nil
-        }
+        loadingView?.removeFromSuperview()
+        loadingView = nil
 
         // there's a chance we don't have the data yet to display a
         // prepane-based loading view, so we have extra handling
@@ -719,24 +729,12 @@ final class PartnerAuthViewController: SheetViewController {
             return
         }
 
-        // fixes a legacy (non-oauth) animation glitch:
-        // 1. pick a legacy institution
-        // 2. cancel it
-        // 3. notice loading view temporarily disappears while VC dismisses
-        let isShowingLoadingViewAlready = (
-            !authSession.isOauthNonOptional
-            && isLoadingViewVisible
-        )
-        if !isShowingLoadingViewAlready {
-            showLoadingView(true)
-        }
+        showLoadingView(true)
         dataSource
             .retrieveAuthSession(authSession)
             .observe { [weak self] result in
                 guard let self = self else { return }
-                if !isShowingLoadingViewAlready {
-                    self.showLoadingView(false)
-                }
+                self.showLoadingView(false)
 
                 self.dataSource
                     .analyticsClient
