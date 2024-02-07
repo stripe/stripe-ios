@@ -44,15 +44,15 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         return UIStackView()
     }()
 
-    private lazy var blurView: UIVisualEffectView = {
-        return UIVisualEffectView(frame: .zero)
+    private lazy var blurView: UIView = {
+        return UIView(frame: .zero)
     }()
 
     private let spinnerSize = CGSize(width: 88, height: 88)
     private lazy var checkProgressView: ConfirmButton.CheckProgressView = {
         let view = ConfirmButton.CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize),
                                                    baseLineWidth: 5.0)
-        view.color = .white
+        view.color = UIColor.dynamic(light: .black, dark: .white)
         return view
     }()
 
@@ -80,14 +80,14 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         contentViewController = toVC
         return popped
     }
-    func addBlurEffect(animated: Bool, completion: @escaping () -> Void) {
+    func addBlurEffect(animated: Bool, backgroundColor: UIColor, completion: @escaping () -> Void) {
         if let containingSuperview = self.view.superview {
             [self.blurView].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 containingSuperview.addSubview($0)
             }
             NSLayoutConstraint.activate([
-                self.blurView.topAnchor.constraint(equalTo: containingSuperview.topAnchor),
+                self.blurView.topAnchor.constraint(equalTo: self.view.topAnchor),
                 self.blurView.leadingAnchor.constraint(equalTo: containingSuperview.leadingAnchor),
                 self.blurView.trailingAnchor.constraint(equalTo: containingSuperview.trailingAnchor),
                 self.blurView.bottomAnchor.constraint(equalTo: containingSuperview.bottomAnchor),
@@ -95,17 +95,17 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
             [self.checkProgressView].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
-                self.blurView.contentView.addSubview($0)
+                self.blurView.addSubview($0)
             }
             NSLayoutConstraint.activate([
-                self.checkProgressView.centerXAnchor.constraint(equalTo: self.blurView.contentView.centerXAnchor),
-                self.checkProgressView.centerYAnchor.constraint(equalTo: self.blurView.contentView.centerYAnchor),
+                self.checkProgressView.centerXAnchor.constraint(equalTo: self.blurView.centerXAnchor),
+                self.checkProgressView.centerYAnchor.constraint(equalTo: self.blurView.centerYAnchor),
                 self.checkProgressView.heightAnchor.constraint(equalToConstant: spinnerSize.height),
                 self.checkProgressView.widthAnchor.constraint(equalToConstant: spinnerSize.width),
             ])
 
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration, animations: {
-                self.blurView.effect = UIBlurEffect(style: .systemUltraThinMaterial)
+                self.blurView.backgroundColor = backgroundColor
             }, completion: { _ in
                 completion()
             })
@@ -117,7 +117,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }
 
     func transitionSpinnerToComplete(animated: Bool, completion: @escaping () -> Void) {
-        self.checkProgressView.color = appearance.primaryButton.successBackgroundColor
         self.checkProgressView.completeProgress(completion: {
             completion()
         })
@@ -134,7 +133,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             }
 
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration, animations: {
-                self.blurView.effect = nil
+                self.blurView.backgroundColor = .clear
             }, completion: { _ in
                 self.blurView.removeFromSuperview()
                 if let completion {
