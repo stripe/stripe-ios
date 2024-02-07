@@ -320,6 +320,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     func didFinishPresenting() {
+        // Wait ~750ms after the view is presented to emphasize to users to enter their CVC
         DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(750))) {
             if self.isViewLoaded {
                 self.updateFormElement()
