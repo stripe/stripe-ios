@@ -67,7 +67,7 @@ class LinkURLGenerator {
             }
             return nil
         }()
-        
+
         var loggerMetadata: [String: String] = [:]
         if let sessionID = AnalyticsHelper.shared.sessionID {
             loggerMetadata = ["mobile_session_id": sessionID]

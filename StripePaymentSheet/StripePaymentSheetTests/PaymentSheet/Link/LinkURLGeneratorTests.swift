@@ -57,11 +57,11 @@ class LinkURLGeneratorTests: XCTestCase {
         }
         config.apiClient.publishableKey = "pk_123"
         let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
-        
+
         // Create a session ID
         AnalyticsHelper.shared.generateSessionID()
         let sessionID = AnalyticsHelper.shared.sessionID!
-        
+
         let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent)
 
         let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
