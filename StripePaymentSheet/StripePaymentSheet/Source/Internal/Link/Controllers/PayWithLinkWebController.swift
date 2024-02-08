@@ -25,15 +25,6 @@ protocol PayWithLinkWebControllerDelegate: AnyObject {
 
 }
 
-protocol PayWithLinkCoordinating: AnyObject {
-    func confirm(
-        with linkAccount: PaymentSheetLinkAccount,
-        paymentDetails: ConsumerPaymentDetails
-    )
-    func cancel()
-    func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
-}
-
 /// A view controller for paying with Link using ASWebAuthenticationSession.
 ///
 /// Instantiate and present this controller when the user chooses to pay with Link.
@@ -201,32 +192,4 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             self.canceledWithError(error: error, returnURL: returnURL)
         }
     }
-}
-
-// MARK: - Coordinating
-
-extension PayWithLinkWebController: PayWithLinkCoordinating {
-
-    func confirm(
-        with linkAccount: PaymentSheetLinkAccount,
-        paymentDetails: ConsumerPaymentDetails
-    ) {
-        payWithLinkDelegate?.payWithLinkWebControllerDidComplete(
-            self,
-            intent: context.intent,
-            with: PaymentOption.link(
-                option: .withPaymentDetails(account: linkAccount, paymentDetails: paymentDetails)
-            )
-        )
-    }
-
-    func cancel() {
-        webAuthSession?.cancel()
-        payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
-    }
-
-    func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
-        self.linkAccount = linkAccount
-    }
-
 }

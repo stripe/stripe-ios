@@ -25,18 +25,6 @@ extension PaymentSheet {
             paymentMethodParams: STPPaymentMethodParams
         )
 
-        /// Confirm intent with paymentDetails.
-        case withPaymentDetails(
-            account: PaymentSheetLinkAccount,
-            paymentDetails: ConsumerPaymentDetails
-        )
-
-        /// Confirm with Payment Method Params.
-        case withPaymentMethodParams(
-            account: PaymentSheetLinkAccount,
-            paymentMethodParams: STPPaymentMethodParams
-        )
-
         /// Confirm with Payment Method.
         case withPaymentMethod(
             paymentMethod: STPPaymentMethod
@@ -55,10 +43,6 @@ extension PaymentSheet.LinkConfirmOption {
             return nil
         case .signUp(let account, _, _, _, _):
             return account
-        case .withPaymentDetails(let account, _):
-            return account
-        case .withPaymentMethodParams(let account, _):
-            return account
         case .withPaymentMethod:
             return nil
         }
@@ -66,11 +50,9 @@ extension PaymentSheet.LinkConfirmOption {
 
     var paymentSheetLabel: String {
         switch self {
-        case .wallet, .withPaymentDetails:
+        case .wallet:
             return STPPaymentMethodType.link.displayName
         case .signUp(_, _, _, _, let paymentMethodParams):
-            return paymentMethodParams.paymentSheetLabel
-        case .withPaymentMethodParams(_, let paymentMethodParams):
             return paymentMethodParams.paymentSheetLabel
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.paymentSheetLabel
@@ -82,10 +64,6 @@ extension PaymentSheet.LinkConfirmOption {
         case .wallet:
             return nil
         case .signUp(_, _, _, _, let paymentMethodParams):
-            return paymentMethodParams.billingDetails
-        case .withPaymentDetails:
-            return nil
-        case .withPaymentMethodParams(_, let paymentMethodParams):
             return paymentMethodParams.billingDetails
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.billingDetails

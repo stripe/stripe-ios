@@ -68,13 +68,6 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
         }
 
         switch inlineSignupElement.action {
-        case .pay(let account):
-            return .link(
-                option: .withPaymentMethodParams(
-                    account: account,
-                    paymentMethodParams: params.paymentMethodParams
-                )
-            )
         case .signupAndPay(let account, let phoneNumber, let legalName):
             return .link(
                 option: .signUp(
