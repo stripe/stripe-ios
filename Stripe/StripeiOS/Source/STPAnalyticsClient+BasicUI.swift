@@ -68,7 +68,7 @@ extension STPPaymentContext {
 
         // MARK: - Payment
 
-        func logPayment(status: STPPaymentStatus, paymentOption: STPPaymentOption, error: Error?) {
+        func logPayment(status: STPPaymentStatus, loadStartDate: Date?, paymentOption: STPPaymentOption, error: Error?) {
             let didSucceed: Bool
             switch status {
             case .userCancellation:
@@ -106,6 +106,9 @@ extension STPPaymentContext {
             if let error {
                 params["error_message"] = error.makeSafeLoggingString()
             }
+            if let loadStartDate {
+                params["duration"] = Date().timeIntervalSince(loadStartDate)
+            }
 
             log(event: event, params: params)
         }
@@ -140,7 +143,9 @@ extension STPPaymentContext {
         }
 
         func logFormInteracted(paymentMethodType: STPPaymentMethodType) {
-            log(event: .biFormInteracted, params: [:])
+            log(event: .biFormInteracted, params: [
+                "selected_lpm": paymentMethodType,
+            ])
         }
 
         func logCardNumberCompleted() {

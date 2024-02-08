@@ -384,6 +384,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         }
     }
     internal let analyticsLogger: AnalyticsLogger = .init(product: STPPaymentContext.self)
+    internal var loadingStartDate: Date?
 
     /// If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
     /// can in turn call this method to try loading again (if that hasn't been called,
@@ -392,6 +393,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     @objc
     public func retryLoading() {
         let loadingStartDate = Date()
+        self.loadingStartDate = loadingStartDate
         analyticsLogger.logLoadStarted()
         // Clear any cached customer object and attached payment methods before refetching
         if apiAdapter is STPCustomerContext {
@@ -624,7 +626,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                 let result = STPPaymentResult(paymentOption: strongSelf.selectedPaymentOption!)
                 strongSelf.delegate?.paymentContext(self, didCreatePaymentResult: result) { status, error in
                     // Note `selectedPaymentOption` is always an `STPPaymentMethod` for cards
-                    strongSelf.analyticsLogger.logPayment(status: status, paymentOption: selectedPaymentOption, error: error)
+                    strongSelf.analyticsLogger.logPayment(status: status, loadStartDate: strongSelf.loadingStartDate, paymentOption: selectedPaymentOption, error: error)
                     stpDispatchToMainThreadIfNecessary({
                         strongSelf.didFinish(with: status, error: error)
                     })
@@ -725,7 +727,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                         onPaymentAuthorization: paymentHandler,
                         onPaymentMethodCreation: applePayPaymentMethodHandler,
                         onFinish: { status, error in
-                            strongSelf.analyticsLogger.logPayment(status: status, paymentOption: selectedPaymentOption, error: error)
+                            strongSelf.analyticsLogger.logPayment(status: status, loadStartDate: strongSelf.loadingStartDate, paymentOption: selectedPaymentOption, error: error)
                             if strongSelf.applePayVC?.presentingViewController != nil {
                                 strongSelf.hostViewController?.dismiss(
                                     animated: strongSelf.transitionAnimationsEnabled()
