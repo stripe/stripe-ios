@@ -28,7 +28,7 @@ jobs:
       - name: Read missing translations
         id: missing
         run: echo "::set-output name=translations::$(<missing_translations.txt)"
-      - uses: peter-evans/find-comment@v3
+      - uses: peter-evans/find-comment@v3.0.0
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
