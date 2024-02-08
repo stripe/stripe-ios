@@ -120,10 +120,6 @@ class CustomerSheetUITest: XCTestCase {
 
         removeFirstPaymentMethodInList()
 
-        let doneButton = app.staticTexts["Done"]
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
-        doneButton.tap()
-
         let cardPresence_afterRemoval = app.staticTexts["••••4242"]
         XCTAssertFalse(cardPresence_afterRemoval.exists)
 
@@ -326,10 +322,6 @@ class CustomerSheetUITest: XCTestCase {
         removeFirstPaymentMethodInList()
         removeFirstPaymentMethodInList()
 
-        let doneButton = app.staticTexts["Done"]
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
-        doneButton.tap()
-
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
         closeButton.tap()
@@ -362,10 +354,6 @@ class CustomerSheetUITest: XCTestCase {
 
         removeFirstPaymentMethodInList()
         removeFirstPaymentMethodInList()
-
-        let doneButton = app.staticTexts["Done"]
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
-        doneButton.tap()
 
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
