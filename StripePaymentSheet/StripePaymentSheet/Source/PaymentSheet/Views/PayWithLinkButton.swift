@@ -103,8 +103,8 @@ final class PayWithLinkButton: UIControl {
         linkView.lineBreakMode = .byTruncatingMiddle
         linkView.adjustsFontForContentSizeCategory = true
         linkView.translatesAutoresizingMaskIntoConstraints = false
-        linkView.font = UIFont.systemFont(ofSize: 15, weight: .medium)
-            .scaled(withTextStyle: .callout, maximumPointSize: 16)
+        linkView.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+            .scaled(withTextStyle: .callout, maximumPointSize: 22)
 
         let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link)
 
