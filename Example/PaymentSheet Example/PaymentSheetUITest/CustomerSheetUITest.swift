@@ -120,10 +120,6 @@ class CustomerSheetUITest: XCTestCase {
 
         removeFirstPaymentMethodInList()
 
-        let doneButton = app.staticTexts["Done"]
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
-        doneButton.tap()
-
         let cardPresence_afterRemoval = app.staticTexts["••••4242"]
         XCTAssertFalse(cardPresence_afterRemoval.exists)
 
@@ -326,10 +322,6 @@ class CustomerSheetUITest: XCTestCase {
         removeFirstPaymentMethodInList()
         removeFirstPaymentMethodInList()
 
-        let doneButton = app.staticTexts["Done"]
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
-        doneButton.tap()
-
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
         closeButton.tap()
@@ -362,10 +354,6 @@ class CustomerSheetUITest: XCTestCase {
 
         removeFirstPaymentMethodInList()
         removeFirstPaymentMethodInList()
-
-        let doneButton = app.staticTexts["Done"]
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
-        doneButton.tap()
 
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
@@ -847,6 +835,69 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["Confirm"].waitForExistenceAndTap(timeout: 5)
         let successText = app.staticTexts["Complete"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    // MARK: - allowsRemovalOfLastSavedPaymentMethod
+
+    func testRemoveLastSavedPaymentMethod() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.merchantCountryCode = .FR
+        settings.customerMode = .new
+        settings.applePay = .on
+        settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        loadPlayground(
+            app,
+            settings
+        )
+
+        // Save a card
+        app.staticTexts["None"].waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: 10))
+
+        // Shouldn't be able to edit only one saved PM when allowsRemovalOfLastSavedPaymentMethod = .off
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+
+        // Add another PM
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: 10))
+
+        // Should be able to edit two saved PMs
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+
+        // Remove one saved PM
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Should be kicked out of edit mode now that we have one saved PM
+        XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
+
+        // Add a CBC enabled PM
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: 10))
+
+        // Should be able to edit two saved PMs
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+
+        // Remove the 4242 saved PM
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Should be able to edit CBC enabled PM even though it's the only one
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.buttons["Update card"].waitForExistence(timeout: 5))
+
+        // ...but should not be able to remove it.
+        XCTAssertFalse(app.buttons["Remove card"].exists)
     }
 
     // MARK: - Helpers
