@@ -5,14 +5,6 @@ require 'uri'
 $SCRIPT_DIR = __dir__
 $ROOT_DIR = File.expand_path('..', $SCRIPT_DIR)
 
-def should_skip_translation_check()
-  last_commit_message = ENV['BITRISE_GIT_MESSAGE']
-  if last_commit_message&.include?('Translations are not required for this pull request')
-    puts 'Translation check skipped due to pull request summary containing "Translations are not required for this pull request.".'
-    exit 0
-  end
-end
-
 def api_get_request(endpoint, token)
   uri = URI(endpoint)
   req = Net::HTTP::Get.new(uri)
@@ -27,14 +19,14 @@ end
 
 def get_added_strings(current_dir)
   new_strings = {}
-  
+
   strings_files = `git diff --name-only origin/master...`.split("\n").select { |f| f.end_with?(".strings") }
 
   strings_files.each do |file|
     added_lines = `git diff origin/master... -- #{file}`.split("\n").select do |line|
       line.start_with?('+') && !line.start_with?('+++') && line.include?('=') && !line.match(/^\/\//)
     end
-   
+
     new_strings[file] = added_lines.map do |line|
       line.delete_prefix('+').strip.split('=')[0].gsub(/\"/, '').strip
     end
@@ -45,8 +37,8 @@ end
 
 def check_lokalise_translations(api_token, project_id, new_added_strings)
   keys = api_get_request("https://api.lokalise.com/api2/projects/#{project_id}/keys?limit=5000&include_translations=1", api_token)
-  all_keys_exist = true
-  
+  missing_translations = []
+
   new_added_strings.each do |file_path, new_strings|
     puts "Checking translation for file #{file_path}"
 
@@ -55,23 +47,25 @@ def check_lokalise_translations(api_token, project_id, new_added_strings)
 
       if key
         translated_count = key['translations'].count { |t| !t['translation'].empty? }
-        if translated_count > 30 #Arbitrary number, if we have 30 translations at least we consider it translated
+        if translated_count > 30
           puts "Translations for '#{str}' exists."
         else
           puts "Translations for '#{str}' do not exist."
-          all_keys_exist = false
+          missing_translations << str
         end
       else
         puts "String '#{str}' does not exist. Make sure you have uploaded your strings to Lokalise."
-        all_keys_exist = false
+        missing_translations << str
       end
     end
   end
-  puts 'If you would like to skip this check, update your pull request summary to include "Translations are not required for this pull request." and re-run this check.'
-  exit 1 unless all_keys_exist
+
+  missing_translations
 end
 
-# early exit if last commit has '[skip translations]' prefix.
-should_skip_translation_check()
 new_strings_added = get_added_strings($ROOT_DIR)
-check_lokalise_translations(ENV['LOKALISE_API_KEY'], '747824695e51bc2f4aa912.89576472', new_strings_added)
+missing_translations = check_lokalise_translations(ENV['LOKALISE_API_KEY'], '747824695e51bc2f4aa912.89576472', new_strings_added)
+
+if missing_translations.any?
+  File.open("missing_translations.txt", 'w') { |f| f.write missing_translations.join("\n") }
+end

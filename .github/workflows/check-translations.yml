@@ -1,0 +1,50 @@
+name: Check Missing Translations
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled, synchronize]
+    paths:
+      - '**.strings'
+
+jobs:
+  check-translations:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+      - name: Install dependencies
+        run: gem install net-http net-uri json
+      - name: Run translation check script
+        env:
+          LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
+        run: ruby .github/workflows/check_translations.rb
+      - name: Read missing translations
+        id: missing
+        run: echo "::set-output name=translations::$(<missing_translations.txt)"
+      - uses: peter-evans/find-comment@a54c31d7fa095754bfef525c0c8e5e5674c4b4b1
+        id: find_comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Missing Translations
+      - uses: peter-evans/create-or-update-comment@67dcc547d311b736a8e6c5c236542148a47adc3d
+        with:
+          body: |
+            Missing Translations
+             
+            The following translations are missing:
+            ${{ steps.missing.outputs.translations }}
+            
+            By adding the label `ship-without-translations` to this PR, I acknowledge that there are missing translations.
+          edit-mode: replace
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fail if not accepted
+        if: "!contains(github.event.pull_request.labels.*.name, 'ship-without-translations')"
+        run: exit 1
