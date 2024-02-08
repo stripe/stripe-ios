@@ -22,7 +22,7 @@ jobs:
       - name: Run translation check script
         env:
           LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
-        run: ruby .github/workflows/check_translations.rb
+        run: ruby ci_scripts/check_for_untranslated_strings.rb
       - name: Read missing translations
         id: missing
         run: echo "::set-output name=translations::$(<missing_translations.txt)"
