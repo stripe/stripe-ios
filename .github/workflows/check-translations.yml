@@ -2,7 +2,7 @@ name: Check Missing Translations
 on:
   pull_request:
     types: [opened, labeled, unlabeled, synchronize]
-  push:
+  push: #todo remove just for testing
 
 jobs:
   check-translations:
@@ -28,6 +28,15 @@ jobs:
       - name: Read missing translations
         id: missing
         run: echo "::set-output name=translations::$(<missing_translations.txt)"
+      - name: Exit if no missing translations
+        id: check_translations
+        run: |
+          if [ -z "${{ steps.missing.outputs.translations }}" ]; then
+            echo "No missing translations found, exiting..."
+            exit 0
+          else
+            echo "Missing translations detected, continue workflow..."
+          fi
       - uses: peter-evans/find-comment@v3.0.0
         id: find_comment
         with:
