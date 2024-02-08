@@ -80,7 +80,7 @@ class ConsumerSessionTests: XCTestCase {
         let expectation = self.expectation(description: "Lookup ConsumerSession")
 
         ConsumerSession.lookupSession(
-            for: "mobile-payments-sdk-ci+not-a-consumer@stripe.com",
+            for: "mobile-payments-sdk-ci+not-a-consumer+\(UUID())@stripe.com",
             with: apiClient
         ) { result in
             switch result {
@@ -116,7 +116,7 @@ class ConsumerSessionTests: XCTestCase {
             phoneNumber: "+13105551234",
             legalName: nil,
             countryCode: "US",
-            consentAction: "clicked_checkbox_nospm_mobile_v0",
+            consentAction: PaymentSheetLinkAccount.ConsentAction.checkbox_v0.rawValue,
             with: apiClient
         ) { result in
             switch result {
