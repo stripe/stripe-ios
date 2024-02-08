@@ -77,7 +77,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         emailTextField.tap()
         emailTextField.typeText(emailAddress)
 
-        let phoneTextField = app.textFields["Phone"]
+        let phoneTextField = app.textFields["Phone number"]
         XCTAssertTrue(phoneTextField.waitForExistence(timeout: 120.0))  // wait for lookup to complete
         phoneTextField.tap()
         phoneTextField.typeText("4015006000")
