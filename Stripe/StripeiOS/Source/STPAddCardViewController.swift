@@ -583,10 +583,16 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         }
     }
 
-    /// Only send form interacted analytic once per time this screen is shown
+    /// Only send card number completed analytic once per time the card number changes from invalid to valid
+    var shouldSendCardNumberCompletedAnalytic = false
     func sendCardNumberCompletedAnalyticIfNecessary(cardNumber: String?) {
-        if let cardNumber, STPCardValidator.validationState(forNumber: cardNumber, validatingCardBrand: true) == .valid {
+        let isCardNumberValid = STPCardValidator.validationState(forNumber: cardNumber, validatingCardBrand: true) == .valid
+        if isCardNumberValid, shouldSendCardNumberCompletedAnalytic {
             analyticsLogger.logCardNumberCompleted()
+            shouldSendCardNumberCompletedAnalytic = false
+        } else if !isCardNumberValid {
+            // Reset shouldSendCardNumberCompletedAnalytic when the card number is invalid, so that it gets sent when the card number becomes valid.
+            shouldSendCardNumberCompletedAnalytic = true
         }
     }
 
