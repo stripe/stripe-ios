@@ -2,6 +2,7 @@ name: Check Missing Translations
 on:
   pull_request:
     types: [opened, labeled, unlabeled, synchronize]
+  push:
 
 jobs:
   check-translations:
