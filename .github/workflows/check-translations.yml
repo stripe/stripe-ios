@@ -51,7 +51,7 @@ jobs:
             The following translations are missing:
             ${{ steps.missing.outputs.translations }}
             
-            By adding the label `ship-without-translations` to this PR, I acknowledge that there are missing translations.
+            By adding the label `ship without translations` to this PR, I acknowledge that there are missing translations.
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
 #          issue-number: ${{ github.event.pull_request.number }}
