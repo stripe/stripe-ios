@@ -2210,6 +2210,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // Should be kicked out of edit mode now that we have one saved PM
         XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
+        XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 1))
     }
 
     func testRemoveLastSavedPaymentMethodFlowController() throws {
@@ -2264,6 +2265,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // Should be kicked out of edit mode now that we have one saved PM
         XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
+        XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 1))
     }
 
     func testPreservesSelectionAfterDismissPaymentSheetFlowController() throws {
