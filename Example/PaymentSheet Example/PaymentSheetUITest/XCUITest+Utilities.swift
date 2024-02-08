@@ -64,6 +64,26 @@ extension XCUIApplication {
 
 // https://gist.github.com/jlnquere/d2cd529874ca73624eeb7159e3633d0f
 func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) -> XCUIElement? {
+    return scroll(collectionView: collectionView) { collectionView in
+        let cell = collectionView.cells[identifier]
+        if cell.exists {
+            return cell
+        }
+        return nil
+    }
+}
+
+func scroll(collectionView: XCUIElement, toFindButtonWithId identifier: String) -> XCUIElement? {
+    return scroll(collectionView: collectionView) { collectionView in
+        let button = collectionView.buttons[identifier].firstMatch
+        if button.exists {
+            return button
+        }
+        return nil
+    }
+}
+
+func scroll(collectionView: XCUIElement, toFindElementInCollectionView getElementInCollectionView: (XCUIElement) -> XCUIElement?) -> XCUIElement? {
     guard collectionView.elementType == .collectionView else {
         fatalError("XCUIElement is not a collectionView.")
     }
@@ -72,11 +92,9 @@ func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) ->
     var allVisibleElements = [String]()
 
     while !reachedTheEnd {
-        let cell = collectionView.cells[identifier]
-
-        // Did we find our cell ?
-        if cell.exists {
-            return cell
+        // Did we find our element ?
+        if let element = getElementInCollectionView(collectionView) {
+           return element
         }
 
         // If not: we store the list of all the elements we've got in the CollectionView
