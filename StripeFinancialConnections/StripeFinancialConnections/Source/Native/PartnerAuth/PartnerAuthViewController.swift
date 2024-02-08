@@ -12,10 +12,7 @@ import Foundation
 import UIKit
 
 protocol PartnerAuthViewControllerDelegate: AnyObject {
-    func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController)
-    func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController)
-    func partnerAuthViewController(_ viewController: PartnerAuthViewController, didReceiveTerminalError error: Error)
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
         didCompleteWithAuthSession authSession: FinancialConnectionsAuthSession
@@ -23,6 +20,10 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
         didReceiveEvent event: FinancialConnectionsEvent
+    )
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didReceiveError error: Error
     )
 }
 
@@ -196,167 +197,7 @@ final class PartnerAuthViewController: SheetViewController {
     }
 
     private func showErrorView(_ error: Error) {
-        // all Partner Auth errors hide the back button
-        // and all errors end up in user having to exit
-        // PartnerAuth to try again
-        navigationItem.hidesBackButton = true
-
-        let allowManualEntryInErrors = (dataSource.manifest.allowManualEntry && !dataSource.reduceManualEntryProminenceInErrors)
-        let errorView: UIView?
-        if let error = error as? StripeError,
-            case .apiError(let apiError) = error,
-            let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
-            let institutionUnavailable = extraFields["institution_unavailable"] as? Bool,
-            institutionUnavailable
-        {
-            let institutionIconView = InstitutionIconView()
-            institutionIconView.setImageUrl(institution.icon?.default)
-            let primaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
-                title: String.Localized.select_another_bank,
-                action: { [weak self] in
-                    guard let self = self else { return }
-                    self.delegate?.partnerAuthViewControllerUserDidSelectAnotherBank(self)
-                }
-            )
-            if let expectedToBeAvailableAt = extraFields["expected_to_be_available_at"] as? TimeInterval {
-                let expectedToBeAvailableDate = Date(timeIntervalSince1970: expectedToBeAvailableAt)
-                let dateFormatter = DateFormatter()
-                dateFormatter.timeStyle = .short
-                let expectedToBeAvailableTimeString = dateFormatter.string(from: expectedToBeAvailableDate)
-                errorView = PaneLayoutView(
-                    contentView: PaneLayoutView.createContentView(
-                        iconView: institutionIconView,
-                        title: String(
-                            format: STPLocalizedString(
-                                "%@ is undergoing maintenance",
-                                "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                            ),
-                            institution.name
-                        ),
-                        subtitle: {
-                            let beginningOfSubtitle: String = {
-                                if isToday(expectedToBeAvailableDate) {
-                                    return String(
-                                        format: STPLocalizedString(
-                                            "Maintenance is scheduled to end at %@.",
-                                            "The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                        ),
-                                        expectedToBeAvailableTimeString
-                                    )
-                                } else {
-                                    let dateFormatter = DateFormatter()
-                                    dateFormatter.dateStyle = .short
-                                    let expectedToBeAvailableDateString = dateFormatter.string(
-                                        from: expectedToBeAvailableDate
-                                    )
-                                    return String(
-                                        format: STPLocalizedString(
-                                            "Maintenance is scheduled to end on %@ at %@.",
-                                            "The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                        ),
-                                        expectedToBeAvailableDateString,
-                                        expectedToBeAvailableTimeString
-                                    )
-                                }
-                            }()
-                            let endOfSubtitle: String = {
-                                if allowManualEntryInErrors {
-                                    return STPLocalizedString(
-                                        "Please enter your bank details manually or select another bank.",
-                                        "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                    )
-                                } else {
-                                    return STPLocalizedString(
-                                        "Please select another bank or try again later.",
-                                        "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                    )
-                                }
-                            }()
-                            return beginningOfSubtitle + " " + endOfSubtitle
-                        }(),
-                        contentView: nil
-                    ),
-                    footerView: PaneLayoutView.createFooterView(
-                        primaryButtonConfiguration: primaryButtonConfiguration,
-                        secondaryButtonConfiguration: allowManualEntryInErrors
-                        ? PaneLayoutView.ButtonConfiguration(
-                            title: String.Localized.enter_bank_details_manually,
-                            action: { [weak self] in
-                                guard let self = self else { return }
-                                self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
-                            }
-                        ) : nil
-                    ).footerView
-                ).createView()
-                dataSource.analyticsClient.logExpectedError(
-                    error,
-                    errorName: "InstitutionPlannedDowntimeError",
-                    pane: .partnerAuth
-                )
-            } else {
-                errorView = PaneLayoutView(
-                    contentView: PaneLayoutView.createContentView(
-                        iconView: institutionIconView,
-                        title: String(
-                            format: STPLocalizedString(
-                                "%@ is currently unavailable",
-                                "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                            ),
-                            institution.name
-                        ),
-                        subtitle: {
-                            if allowManualEntryInErrors {
-                                return STPLocalizedString(
-                                    "Please enter your bank details manually or select another bank.",
-                                    "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                )
-                            } else {
-                                return STPLocalizedString(
-                                    "Please select another bank or try again later.",
-                                    "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                )
-                            }
-                        }(),
-                        contentView: nil
-                    ),
-                    footerView: PaneLayoutView.createFooterView(
-                        primaryButtonConfiguration: primaryButtonConfiguration,
-                        secondaryButtonConfiguration: allowManualEntryInErrors
-                        ? PaneLayoutView.ButtonConfiguration(
-                            title: String.Localized.enter_bank_details_manually,
-                            action: { [weak self] in
-                                guard let self = self else { return }
-                                self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
-                            }
-                        ) : nil
-                    ).footerView
-                ).createView()
-                dataSource.analyticsClient.logExpectedError(
-                    error,
-                    errorName: "InstitutionUnplannedDowntimeError",
-                    pane: .partnerAuth
-                )
-            }
-        } else {
-            dataSource.analyticsClient.logUnexpectedError(
-                error,
-                errorName: "PartnerAuthError",
-                pane: .partnerAuth
-            )
-
-            // if we didn't get specific errors back, we don't know
-            // what's wrong, so show a generic error
-            delegate?.partnerAuthViewController(self, didReceiveTerminalError: error)
-            errorView = nil
-
-            // keep showing the loading view while we transition to
-            // terminal error
-            showLoadingView(true)
-        }
-
-        if let errorView = errorView {
-            view.addAndPinSubviewToSafeArea(errorView)
-        }
+        delegate?.partnerAuthViewController(self, didReceiveError: error)
     }
 
     private func handleAuthSessionCompletionWithStatus(

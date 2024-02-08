@@ -13,7 +13,11 @@ import UIKit
 protocol InstitutionPickerViewControllerDelegate: AnyObject {
     func institutionPickerViewController(
         _ viewController: InstitutionPickerViewController,
-        didSelect institution: FinancialConnectionsInstitution,
+        didSelect institution: FinancialConnectionsInstitution
+    )
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didFinishSelecting institution: FinancialConnectionsInstitution,
         authSession: FinancialConnectionsAuthSession
     )
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
@@ -21,6 +25,10 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
     )
     func institutionPickerViewControllerDidSearch(
         _ viewController: InstitutionPickerViewController
+    )
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didReceiveError error: Error
     )
 }
 
@@ -113,6 +121,8 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private func didSelectInstitution(_ institution: FinancialConnectionsInstitution) {
+        delegate?.institutionPickerViewController(self, didSelect: institution)
+
         searchBar.resignFirstResponder()
 
         let showLoadingView: (Bool) -> Void = { [weak self] show in
@@ -134,7 +144,7 @@ class InstitutionPickerViewController: UIViewController {
                 case .success(let authSession):
                     self.delegate?.institutionPickerViewController(
                         self,
-                        didSelect: institution,
+                        didFinishSelecting: institution,
                         authSession: authSession
                     )
 
@@ -146,8 +156,10 @@ class InstitutionPickerViewController: UIViewController {
                         hideOverlayView()
                     }
                 case .failure(let error):
-                    // TODO(kgaidis): handle errors...
-                    print(error)
+                    delegate?.institutionPickerViewController(
+                        self,
+                        didReceiveError: error
+                    )
                 }
                 showLoadingView(false)
             }
