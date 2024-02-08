@@ -13,7 +13,7 @@ import Foundation
 public class STPIntentActionCashAppRedirectToApp: NSObject {
 
     /// The native URL you must redirect your customer to in order to authenticate the payment.
-    @objc public let mobileAuthURL: URL?
+    @objc public let hostedInstructionsUrl: URL?
 
     /// :nodoc:
     @objc public let allResponseFields: [AnyHashable: Any]
@@ -28,17 +28,17 @@ public class STPIntentActionCashAppRedirectToApp: NSObject {
                 self
             ),
             // RedirectToURL details (alphabetical)
-            "mobileAuthURL = \(String(describing: mobileAuthURL))",
+            "hostedInstructionsUrl = \(String(describing: hostedInstructionsUrl))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
     }
 
     internal init(
-        mobileAuthURL: URL,
+        hostedInstructionsUrl: URL,
         allResponseFields: [AnyHashable: Any]
     ) {
-        self.mobileAuthURL = mobileAuthURL
+        self.hostedInstructionsUrl = hostedInstructionsUrl
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -50,14 +50,14 @@ extension STPIntentActionCashAppRedirectToApp: STPAPIResponseDecodable {
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
-            let mobileAuthURLString = dict["mobile_auth_url"] as? String,
-            let mobileAuthURL = URL(string: mobileAuthURLString)
+            let mobileAuthURLString = dict["hosted_instructions_url"] as? String,
+            let hostedInstructionsUrl = URL(string: mobileAuthURLString)
         else {
             return nil
         }
 
         return STPIntentActionCashAppRedirectToApp(
-            mobileAuthURL: mobileAuthURL,
+            hostedInstructionsUrl: hostedInstructionsUrl,
             allResponseFields: dict
         ) as? Self
     }
