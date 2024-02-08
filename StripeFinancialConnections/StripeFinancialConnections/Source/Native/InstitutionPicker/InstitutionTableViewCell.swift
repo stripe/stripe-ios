@@ -17,6 +17,12 @@ final class InstitutionTableViewCell: UITableViewCell {
     private lazy var institutionCellView: InstitutionCellView = {
         return InstitutionCellView()
     }()
+    private lazy var overlayView: UIView = {
+        let overlayView = UIView()
+        overlayView.backgroundColor = .customBackgroundColor.withAlphaComponent(0.8)
+        overlayView.alpha = 0
+        return overlayView
+    }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -35,6 +41,25 @@ final class InstitutionTableViewCell: UITableViewCell {
 
     private func adjustBackgroundColor(isHighlighted: Bool) {
         contentView.backgroundColor = isHighlighted ? .backgroundContainer : .customBackgroundColor
+    }
+
+    func showLoadingView(_ show: Bool) {
+        institutionCellView.showLoadingView(show)
+    }
+
+    func showOverlayView(_ show: Bool) {
+        if overlayView.superview == nil {
+            contentView.addAndPinSubview(overlayView)
+        }
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 0.3,
+            animations: {
+                self.overlayView.alpha = show ? 1.0 : 0
+            }
+        )
     }
 }
 
@@ -60,6 +85,9 @@ import SwiftUI
 @available(iOS 14.0, *)
 private struct InstitutionTableViewCellUIViewRepresentable: UIViewRepresentable {
 
+    let showLoadingView: Bool
+    let showOverlayView: Bool
+
     func makeUIView(context: Context) -> InstitutionTableViewCell {
         InstitutionTableViewCell(style: .default, reuseIdentifier: "test")
     }
@@ -75,6 +103,8 @@ private struct InstitutionTableViewCellUIViewRepresentable: UIViewRepresentable 
                 logo: nil
             )
         )
+        uiView.showLoadingView(showLoadingView)
+        uiView.showOverlayView(showOverlayView)
     }
 }
 
@@ -82,8 +112,20 @@ private struct InstitutionTableViewCellUIViewRepresentable: UIViewRepresentable 
 struct InstitutionTableViewCell_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
-            InstitutionTableViewCellUIViewRepresentable()
-                .frame(width: 343, height: 72)
+            InstitutionTableViewCellUIViewRepresentable(
+                showLoadingView: false,
+                showOverlayView: false
+            ).frame(width: 343, height: 72)
+
+            InstitutionTableViewCellUIViewRepresentable(
+                showLoadingView: true,
+                showOverlayView: false
+            ).frame(width: 343, height: 72)
+
+            InstitutionTableViewCellUIViewRepresentable(
+                showLoadingView: false,
+                showOverlayView: true
+            ).frame(width: 343, height: 72)
             Spacer()
         }
         .background(Color.gray.opacity(0.5).ignoresSafeArea())

@@ -13,7 +13,8 @@ import UIKit
 protocol InstitutionPickerViewControllerDelegate: AnyObject {
     func institutionPickerViewController(
         _ viewController: InstitutionPickerViewController,
-        didSelect institution: FinancialConnectionsInstitution
+        didSelect institution: FinancialConnectionsInstitution,
+        authSession: FinancialConnectionsAuthSession
     )
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
         _ viewController: InstitutionPickerViewController
@@ -113,17 +114,67 @@ class InstitutionPickerViewController: UIViewController {
 
     private func didSelectInstitution(_ institution: FinancialConnectionsInstitution) {
         searchBar.resignFirstResponder()
-        // clear search results
-        searchBar.text = ""
-        institutionTableView.load(
-            institutions: dataSource.featuredInstitutions,
-            isUserSearching: false
+
+        let showLoadingView: (Bool) -> Void = { [weak self] show in
+            guard let self else { return }
+            view.isUserInteractionEnabled = !show // prevent accidental taps
+            institutionTableView.showLoadingView(show, forInstitution: institution)
+        }
+
+        showLoadingView(true)
+        institutionTableView.showOverlayView(
+            true,
+            exceptForInstitution: institution
         )
-        delegate?.institutionPickerViewController(self, didSelect: institution)
+
+        dataSource.createAuthSession(institutionId: institution.id)
+            .observe { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let authSession):
+                    self.delegate?.institutionPickerViewController(
+                        self,
+                        didSelect: institution,
+                        authSession: authSession
+                    )
+
+                    if authSession.isOauthNonOptional {
+                        // oauth presents a sheet where we do not hide
+                        // the overlay until the sheet is dismissed
+                        observePartnerAuthDismissToHideOverlay()
+                    } else {
+                        hideOverlayView()
+                    }
+                case .failure(let error):
+                    // TODO(kgaidis): handle errors...
+                    print(error)
+                }
+                showLoadingView(false)
+            }
     }
 
     private func showLoadingView(_ show: Bool) {
         institutionTableView.showLoadingView(show)
+    }
+
+    private var partnerAuthDismissObserver: Any?
+    private func observePartnerAuthDismissToHideOverlay() {
+        partnerAuthDismissObserver = NotificationCenter.default.addObserver(
+            forName: .sheetViewControllerWillDismiss,
+            object: nil,
+            queue: nil
+        ) { [weak self] notification in
+            guard let self else { return }
+            guard notification.object is PartnerAuthViewController else {
+                return
+            }
+            hideOverlayView()
+            partnerAuthDismissObserver = nil
+        }
+    }
+
+    private func hideOverlayView() {
+        institutionTableView.showOverlayView(false)
     }
 }
 
