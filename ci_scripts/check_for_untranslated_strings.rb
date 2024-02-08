@@ -65,7 +65,7 @@ end
 
 new_strings_added = get_added_strings($ROOT_DIR)
 missing_translations = check_lokalise_translations(ENV['LOKALISE_API_KEY'], '747824695e51bc2f4aa912.89576472', new_strings_added)
-
+puts(missing_translations)
 if missing_translations.any?
   File.open("missing_translations.txt", 'w') { |f| f.write missing_translations.join("\n") }
 end
