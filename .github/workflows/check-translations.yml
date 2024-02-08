@@ -58,5 +58,5 @@ jobs:
           issue-number: 3241 #hardcode for now https://github.com/peter-evans/find-comment/issues/172
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Fail if not accepted
-        if: "!contains(github.event.pull_request.labels.*.name, 'ship without translations')"
+        if: "steps.missing.outputs.translations && !contains(github.event.pull_request.labels.*.name, 'ship without translations')"
         run: exit 1
