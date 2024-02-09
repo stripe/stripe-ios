@@ -190,7 +190,7 @@ final class LinkInlineSignupViewModel {
     var shouldShowLegalTerms: Bool {
         switch mode {
         case .checkbox:
-            return shouldShowPhoneField
+            return saveCheckboxChecked
         case .textFieldsOnlyPhoneFirst, .textFieldsOnlyEmailFirst:
             return true
         }
