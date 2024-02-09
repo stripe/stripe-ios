@@ -151,6 +151,9 @@ extension PaymentSheet {
             isApplePayEnabled: Bool,
             configuration: Configuration
         ) {
+            assert(configuration.returnURL != nil,
+                   "Configuring a return URL is required to initialize PaymentSheet. See the documentation for more details: https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-set-up-return-url")
+
             STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
             STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true,
                                                                        configuration: configuration,

@@ -104,6 +104,9 @@ public class PaymentSheet {
     }
 
     required init(mode: InitializationMode, configuration: Configuration) {
+        assert(configuration.returnURL != nil,
+               "Configuring a return URL is required to initialize PaymentSheet. See the documentation for more details: https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-set-up-return-url")
+
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.mode = mode
