@@ -22,6 +22,8 @@
 
 "Card number" = "Číslo karty";
 
+"Confirm your %@" = "Potvrďte svoje číslo %@";
+
 "Invalid data." = "Neplatné údaje.";
 
 "MM / YY" = "MM / RR";

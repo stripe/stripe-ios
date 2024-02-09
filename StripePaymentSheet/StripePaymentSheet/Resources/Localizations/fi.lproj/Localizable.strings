@@ -84,7 +84,7 @@
 
 "Pay another way" = "Maksa toisella tavalla";
 
-"Pay faster at %@ and thousands of merchants." = "Maksa nopeammin palvelussa %@ ja tuhansilla muilla kauppiailla.";
+"Pay faster at %@ and thousands of businesses." = "Maksa nopeammin kohteessa %@ ja tuhansissa muissa paikoissa.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Maksu <num_installments/> korottomassa <installment_price/> osassa maksutavalla <img/>";
 
