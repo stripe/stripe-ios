@@ -44,10 +44,40 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
             apiClient: paymentContext.apiClient,
             analyticsLogger: paymentContext.analyticsLogger,
             loadingPromise: paymentContext.currentValuePromise,
+            setupPromise: Self.successfulPromise(value: true),
             theme: paymentContext.theme,
             shippingAddress: paymentContext.shippingAddress,
             delegate: paymentContext
         )
+    }
+
+    convenience init(
+        paymentContext: STPPaymentContext,
+        setupPromise: STPPromise<Bool>?
+    ) {
+        self.init(
+            configuration: paymentContext.configuration,
+            apiAdapter: paymentContext.apiAdapter,
+            apiClient: paymentContext.apiClient,
+            analyticsLogger: paymentContext.analyticsLogger,
+            loadingPromise: paymentContext.currentValuePromise,
+            setupPromise: setupPromise ?? Self.successfulPromise(value: true),
+            theme: paymentContext.theme,
+            shippingAddress: paymentContext.shippingAddress,
+            delegate: paymentContext)
+    }
+
+    convenience init(
+        configuration: STPPaymentConfiguration?,
+        apiAdapter: STPBackendAPIAdapter,
+        apiClient: STPAPIClient?,
+        analyticsLogger: STPPaymentContext.AnalyticsLogger,
+        loadingPromise: STPPromise<STPPaymentOptionTuple>?,
+        theme: STPTheme?,
+        shippingAddress: STPAddress?,
+        delegate: STPPaymentOptionsViewControllerDelegate
+    ) {
+        self.init(configuration: configuration, apiAdapter: apiAdapter, apiClient: apiClient, analyticsLogger: analyticsLogger, loadingPromise: loadingPromise, setupPromise: Self.successfulPromise(value: true), theme: theme, shippingAddress: shippingAddress, delegate: delegate)
     }
 
     init(
@@ -56,6 +86,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         apiClient: STPAPIClient?,
         analyticsLogger: STPPaymentContext.AnalyticsLogger,
         loadingPromise: STPPromise<STPPaymentOptionTuple>?,
+        setupPromise: STPPromise<Bool>,
         theme: STPTheme?,
         shippingAddress: STPAddress?,
         delegate: STPPaymentOptionsViewControllerDelegate
@@ -68,6 +99,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
             apiAdapter: apiAdapter,
             apiClient: apiClient,
             loadingPromise: loadingPromise,
+            setupPromise: setupPromise,
             shippingAddress: shippingAddress,
             delegate: delegate
         )
@@ -78,6 +110,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         apiAdapter: STPBackendAPIAdapter,
         apiClient: STPAPIClient?,
         loadingPromise: STPPromise<STPPaymentOptionTuple>?,
+        setupPromise: STPPromise<Bool>,
         shippingAddress: STPAddress?,
         delegate: STPPaymentOptionsViewControllerDelegate
     ) {
@@ -99,84 +132,86 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
 
         weak var weakSelf = self
         loadingPromise?.onSuccess({ tuple in
-            guard let strongSelf = weakSelf else {
-                return
-            }
-            var `internal`: UIViewController?
-            if (tuple.paymentOptions.count) > 0 {
-                let customerContext = strongSelf.apiAdapter as? STPCustomerContext
-
-                var payMethodsInternal: STPPaymentOptionsInternalViewController?
-                if let configuration1 = strongSelf.configuration {
-                    payMethodsInternal = STPPaymentOptionsInternalViewController(
-                        configuration: configuration1,
-                        customerContext: customerContext,
-                        analyticsLogger: strongSelf.analyticsLogger,
-                        apiClient: strongSelf.apiClient,
-                        theme: strongSelf.theme,
-                        prefilledInformation: strongSelf.prefilledInformation,
-                        shippingAddress: strongSelf.shippingAddress,
-                        paymentOptionTuple: tuple,
-                        delegate: strongSelf
-                    )
+            setupPromise.onSuccess({ _ in
+                guard let strongSelf = weakSelf else {
+                    return
                 }
-                if strongSelf.paymentOptionsViewControllerFooterView != nil {
-                    payMethodsInternal?.customFooterView =
+                var `internal`: UIViewController?
+                if (tuple.paymentOptions.count) > 0 {
+                    let customerContext = strongSelf.apiAdapter as? STPCustomerContext
+
+                    var payMethodsInternal: STPPaymentOptionsInternalViewController?
+                    if let configuration1 = strongSelf.configuration {
+                        payMethodsInternal = STPPaymentOptionsInternalViewController(
+                            configuration: configuration1,
+                            customerContext: customerContext,
+                            analyticsLogger: strongSelf.analyticsLogger,
+                            apiClient: strongSelf.apiClient,
+                            theme: strongSelf.theme,
+                            prefilledInformation: strongSelf.prefilledInformation,
+                            shippingAddress: strongSelf.shippingAddress,
+                            paymentOptionTuple: tuple,
+                            delegate: strongSelf
+                        )
+                    }
+                    if strongSelf.paymentOptionsViewControllerFooterView != nil {
+                        payMethodsInternal?.customFooterView =
                         strongSelf.paymentOptionsViewControllerFooterView
-                }
-                if strongSelf.addCardViewControllerFooterView != nil {
-                    payMethodsInternal?.addCardViewControllerCustomFooterView =
+                    }
+                    if strongSelf.addCardViewControllerFooterView != nil {
+                        payMethodsInternal?.addCardViewControllerCustomFooterView =
                         strongSelf.addCardViewControllerFooterView
-                }
-                `internal` = payMethodsInternal
-            } else {
-                var addCardViewController: STPAddCardViewController?
-                if let configuration1 = strongSelf.configuration {
-                    addCardViewController = STPAddCardViewController(
-                        configuration: configuration1,
-                        theme: strongSelf.theme
-                    )
-                }
-                addCardViewController?.analyticsLogger = strongSelf.analyticsLogger
-                addCardViewController?.apiClient = strongSelf.apiClient
-                addCardViewController?.delegate = strongSelf
-                addCardViewController?.prefilledInformation = strongSelf.prefilledInformation
-                addCardViewController?.shippingAddress = strongSelf.shippingAddress
-                `internal` = addCardViewController
+                    }
+                    `internal` = payMethodsInternal
+                } else {
+                    var addCardViewController: STPAddCardViewController?
+                    if let configuration1 = strongSelf.configuration {
+                        addCardViewController = STPAddCardViewController(
+                            configuration: configuration1,
+                            theme: strongSelf.theme
+                        )
+                    }
+                    addCardViewController?.analyticsLogger = strongSelf.analyticsLogger
+                    addCardViewController?.apiClient = strongSelf.apiClient
+                    addCardViewController?.delegate = strongSelf
+                    addCardViewController?.prefilledInformation = strongSelf.prefilledInformation
+                    addCardViewController?.shippingAddress = strongSelf.shippingAddress
+                    `internal` = addCardViewController
 
-                if strongSelf.addCardViewControllerFooterView != nil {
-                    addCardViewController?.customFooterView =
+                    if strongSelf.addCardViewControllerFooterView != nil {
+                        addCardViewController?.customFooterView =
                         strongSelf.addCardViewControllerFooterView
+                    }
                 }
-            }
 
-            `internal`?.stp_navigationItemProxy = strongSelf.navigationItem
-            if let controller = `internal` {
-                strongSelf.addChild(controller)
-            }
-            `internal`?.view.alpha = 0
-            if let view = `internal`?.view, let activityIndicator1 = strongSelf.activityIndicator {
-                strongSelf.view.insertSubview(view, belowSubview: activityIndicator1)
-            }
-            if let view = `internal`?.view {
-                strongSelf.view.addSubview(view)
-            }
-            `internal`?.view.frame = strongSelf.view.bounds
-            `internal`?.didMove(toParent: strongSelf)
-            UIView.animate(
-                withDuration: 0.2,
-                animations: {
-                    strongSelf.activityIndicator?.alpha = 0
-                    `internal`?.view.alpha = 1
+                `internal`?.stp_navigationItemProxy = strongSelf.navigationItem
+                if let controller = `internal` {
+                    strongSelf.addChild(controller)
                 }
-            ) { _ in
-                strongSelf.activityIndicator?.animating = false
-            }
-            strongSelf.navigationItem.setRightBarButton(
-                `internal`?.stp_navigationItemProxy?.rightBarButtonItem,
-                animated: true
-            )
-            strongSelf.internalViewController = `internal`
+                `internal`?.view.alpha = 0
+                if let view = `internal`?.view, let activityIndicator1 = strongSelf.activityIndicator {
+                    strongSelf.view.insertSubview(view, belowSubview: activityIndicator1)
+                }
+                if let view = `internal`?.view {
+                    strongSelf.view.addSubview(view)
+                }
+                `internal`?.view.frame = strongSelf.view.bounds
+                `internal`?.didMove(toParent: strongSelf)
+                UIView.animate(
+                    withDuration: 0.2,
+                    animations: {
+                        strongSelf.activityIndicator?.alpha = 0
+                        `internal`?.view.alpha = 1
+                    }
+                ) { _ in
+                    strongSelf.activityIndicator?.animating = false
+                }
+                strongSelf.navigationItem.setRightBarButton(
+                    `internal`?.stp_navigationItemProxy?.rightBarButtonItem,
+                    animated: true
+                )
+                strongSelf.internalViewController = `internal`
+            })
         })
     }
 
@@ -235,6 +270,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
             apiAdapter: apiAdapter,
             apiClient: STPAPIClient.shared,
             loadingPromise: promise,
+            setupPromise: Self.successfulPromise(value: true),
             shippingAddress: nil,
             delegate: delegate
         )
@@ -603,6 +639,12 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         completion: @escaping STPErrorBlock
     ) {
         internalViewControllerDidCreatePaymentOption(paymentMethod, completion: completion)
+    }
+
+    private static func successfulPromise<T>(value: T) -> STPPromise<T> {
+        let promise = STPPromise<T>.init()
+        promise.succeed(value)
+        return promise
     }
 }
 

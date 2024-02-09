@@ -530,8 +530,10 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         if state == STPPaymentContextState.none {
             state = .showingRequestedViewController
 
+            let setupPromise = STPPromise<Bool>.init()
             let paymentOptionsViewController = STPPaymentOptionsViewController(paymentContext: self)
             self.paymentOptionsViewController = paymentOptionsViewController
+
             paymentOptionsViewController.prefilledInformation = prefilledInformation
             paymentOptionsViewController.defaultPaymentMethod = defaultPaymentMethod
             paymentOptionsViewController.paymentOptionsViewControllerFooterView =
@@ -540,6 +542,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                 addCardViewControllerFooterView
             paymentOptionsViewController.navigationItem.largeTitleDisplayMode =
                 largeTitleDisplayMode
+
+            setupPromise.succeed(true)
 
             navigationController?.pushViewController(
                 paymentOptionsViewController,
@@ -807,8 +811,11 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         )
         if self.state == STPPaymentContextState.none {
             self.state = state
-            let paymentOptionsViewController = STPPaymentOptionsViewController(paymentContext: self)
+
+            let setupPromise = STPPromise<Bool>.init()
+            let paymentOptionsViewController = STPPaymentOptionsViewController(paymentContext: self, setupPromise: setupPromise)
             self.paymentOptionsViewController = paymentOptionsViewController
+
             paymentOptionsViewController.prefilledInformation = prefilledInformation
             paymentOptionsViewController.defaultPaymentMethod = defaultPaymentMethod
             paymentOptionsViewController.paymentOptionsViewControllerFooterView =
@@ -817,6 +824,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                 addCardViewControllerFooterView
             paymentOptionsViewController.navigationItem.largeTitleDisplayMode =
                 largeTitleDisplayMode
+
+            setupPromise.succeed(true)
 
             let navigationController = UINavigationController(
                 rootViewController: paymentOptionsViewController
