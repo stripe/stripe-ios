@@ -9,14 +9,14 @@ import Foundation
 @_spi(STP) import StripeCore
 
 final class ErrorDataSource {
-    
+
     let error: Error
     let referrerPane: FinancialConnectionsSessionManifest.NextPane
     let manifest: FinancialConnectionsSessionManifest
     let reduceManualEntryProminenceInErrors: Bool
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let institution: FinancialConnectionsInstitution?
-    
+
     init(
         error: Error,
         referrerPane: FinancialConnectionsSessionManifest.NextPane,

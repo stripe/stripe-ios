@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol ErrorViewControllerDelegate: AnyObject {
     func errorViewControllerDidSelectAnotherBank(_ viewController: ErrorViewController)
@@ -23,20 +23,20 @@ protocol ErrorViewControllerDelegate: AnyObject {
 /// all types of errors and the naming of "unexpected_error" is just a
 /// convention from old backend naming.
 final class ErrorViewController: UIViewController {
-    
+
     private let dataSource: ErrorDataSource
-    
+
     weak var delegate: ErrorViewControllerDelegate?
-    
+
     init(dataSource: ErrorDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
@@ -55,7 +55,7 @@ final class ErrorViewController: UIViewController {
                 dataSource.institution != nil,
                 "expected institution to be set before handling institution errors"
             )
-            
+
             let institutionIconView = InstitutionIconView()
             institutionIconView.setImageUrl(dataSource.institution?.icon?.default)
             let primaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(

@@ -49,9 +49,6 @@ final class PartnerAuthViewController: SheetViewController {
     private var prepaneViews: PrepaneViews?
     private var loadingView: UIView?
     private var legacyLoadingView: UIView?
-    private var isLoadingViewVisible: Bool {
-        return loadingView != nil
-    }
     private var showLegacyBrowserOnViewDidAppear = false
 
     init(
@@ -784,8 +781,4 @@ extension PartnerAuthViewController: ASWebAuthenticationPresentationContextProvi
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return self.view.window ?? ASPresentationAnchor()
     }
-}
-
-private func isToday(_ comparisonDate: Date) -> Bool {
-    return Calendar.current.startOfDay(for: comparisonDate) == Calendar.current.startOfDay(for: Date())
 }
