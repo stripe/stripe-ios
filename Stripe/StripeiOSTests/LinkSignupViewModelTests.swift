@@ -79,6 +79,13 @@ class LinkInlineSignupViewModelTests: XCTestCase {
         sut.saveCheckboxChecked = true
         XCTAssertTrue(sut.shouldShowNameField, "Should show name field for non-US customers")
     }
+    
+    func test_shouldShowLegalText() {
+        let sut = makeSUT(country: "US", showCheckbox: false, hasAccountObject: false)
+        XCTAssertFalse(sut.shouldShowLegalTerms)
+        sut.saveCheckboxChecked = true
+        XCTAssertTrue(sut.shouldShowLegalTerms)
+    }
 
     func test_action_returnsNilUnlessPhoneRequirementIsFulfilled() {
         let sut = makeSUT(country: "US", showCheckbox: true, hasAccountObject: true)
