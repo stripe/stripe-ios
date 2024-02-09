@@ -22,6 +22,8 @@
 
 "Card number" = "Kártyaszám";
 
+"Confirm your %@" = "%@ megerősítése";
+
 "Invalid data." = "Érvénytelen adat.";
 
 "MM / YY" = "HH / ÉÉ";

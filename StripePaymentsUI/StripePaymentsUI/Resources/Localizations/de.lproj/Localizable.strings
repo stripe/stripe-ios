@@ -22,6 +22,8 @@
 
 "Card number" = "Kartennummer";
 
+"Confirm your %@" = "%@ bestätigen";
+
 "Invalid data." = "Ungültige Daten.";
 
 "MM / YY" = "MM/JJ";

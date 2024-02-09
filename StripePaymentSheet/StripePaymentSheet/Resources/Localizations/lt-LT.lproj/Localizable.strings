@@ -76,15 +76,11 @@
 
 "Or pay with a card" = "Arba mokėti kortele";
 
-"Or use" = "Arba naudokite";
-
-"Or use a card" = "Arba naudokite kortelę";
-
 "Pay %@" = "Mokėti %@";
 
 "Pay another way" = "Mokėkite kitu būdu";
 
-"Pay faster at %@ and thousands of merchants." = "Mokėkite greičiau „%@“ ir daugybei kitų prekybininkų.";
+"Pay faster at %@ and thousands of businesses." = "Mokėkite greičiau „%@“ ir daugybei kitų įmonių.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Mokėti <num_installments/> be palūkanų <installment_price/> mokėjimus naudojant <img/>";
 
