@@ -71,6 +71,7 @@ class LinkInlineSignupViewModelTests: XCTestCase {
         )
         wait(for: [hidePhoneFieldExpectation], timeout: accountLookupTimeout)
         XCTAssertFalse(sut.shouldShowNameField)
+        sut.saveCheckboxChecked = false
         XCTAssertFalse(sut.shouldShowLegalTerms)
     }
 
@@ -79,9 +80,10 @@ class LinkInlineSignupViewModelTests: XCTestCase {
         sut.saveCheckboxChecked = true
         XCTAssertTrue(sut.shouldShowNameField, "Should show name field for non-US customers")
     }
-    
+
     func test_shouldShowLegalText() {
-        let sut = makeSUT(country: "US", showCheckbox: false, hasAccountObject: false)
+        let sut = makeSUT(country: "US", showCheckbox: true, hasAccountObject: false)
+        sut.saveCheckboxChecked = false
         XCTAssertFalse(sut.shouldShowLegalTerms)
         sut.saveCheckboxChecked = true
         XCTAssertTrue(sut.shouldShowLegalTerms)
