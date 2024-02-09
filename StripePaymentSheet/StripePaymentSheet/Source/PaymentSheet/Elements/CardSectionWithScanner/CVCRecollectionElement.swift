@@ -21,7 +21,9 @@ final class CVCRecollectionElement: Element {
         return cvcRecollectionView
     }()
 
+    var isViewInitialized: Bool = false
     lazy var cvcRecollectionView: CVCRecollectionView = {
+        isViewInitialized = true
         return CVCRecollectionView(defaultValues: defaultValues,
                                    paymentMethod: paymentMethod,
                                    mode: mode,
@@ -58,10 +60,18 @@ final class CVCRecollectionElement: Element {
             self.cvcRecollectionView.textFieldElement.beginEditing()
         }
     }
+
+    var validationState: ElementValidationState {
+        return cvcRecollectionView.textFieldElement.validationState
+    }
 }
 
 extension CVCRecollectionElement: ElementDelegate {
     func didUpdate(element: Element) {
+        if isViewInitialized {
+            cvcRecollectionView.update()
+        }
+
         delegate?.didUpdate(element: cvcRecollectionView.textFieldElement)
     }
     func continueToNextField(element: Element) {

@@ -12,6 +12,9 @@ class CVCRecollectionView: UIView {
     lazy var titleLabel: UILabel = {
         return ElementsUI.makeSectionTitleLabel(theme: appearance.asElementsTheme)
     }()
+    lazy var errorLabel: UILabel = {
+        return ElementsUI.makeErrorLabel(theme: appearance.asElementsTheme)
+    }()
 
     lazy var stackView: UIStackView = {
         let stackView = mode == .detailedWithInput
@@ -84,7 +87,7 @@ class CVCRecollectionView: UIView {
 
         self.titleLabel.text = String(format: String.Localized.cvc_section_title, brand)
 
-        let stack = UIStackView(arrangedSubviews: [titleLabel, stackView])
+        let stack = UIStackView(arrangedSubviews: [titleLabel, stackView, errorLabel])
         if mode == .inputOnly {
             let spacerView = UIView(frame: .zero)
             spacerView.translatesAutoresizingMaskIntoConstraints = false
@@ -102,4 +105,15 @@ class CVCRecollectionView: UIView {
         self.stackView.layer.borderColor = appearance.colors.componentBorder.cgColor
     }
     #endif
+
+    func update() {
+        if case let .invalid(error, shouldDisplay) = textFieldElement.validationState, shouldDisplay {
+            errorLabel.text = error.localizedDescription
+            errorLabel.isHidden = false
+            errorLabel.textColor = appearance.asElementsTheme.colors.danger
+        } else {
+            errorLabel.text = nil
+            errorLabel.isHidden = true
+        }
+    }
 }
