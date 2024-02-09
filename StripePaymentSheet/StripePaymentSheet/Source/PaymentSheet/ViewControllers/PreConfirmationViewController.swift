@@ -30,9 +30,6 @@ class PreConfirmationViewController: UIViewController {
     private lazy var paymentContainerView: DynamicHeightContainerView = {
         return DynamicHeightContainerView()
     }()
-    private lazy var errorLabel: UILabel = {
-        return ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
-    }()
     private lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(
             callToAction: .custom(title: confirmButtonCTA),
@@ -87,7 +84,6 @@ class PreConfirmationViewController: UIViewController {
         let stackView = UIStackView(arrangedSubviews: [
             headerLabel,
             paymentContainerView,
-            errorLabel,
             confirmButton,
         ])
         stackView.bringSubviewToFront(headerLabel)
@@ -134,15 +130,6 @@ class PreConfirmationViewController: UIViewController {
             to: targetViewController,
             containerView: paymentContainerView
         )
-
-        if let error = self.cvcReconfirmationViewController.error {
-            self.errorLabel.text = error.localizedDescription
-        } else {
-            self.errorLabel.text = nil
-        }
-        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-            self.errorLabel.setHiddenIfNecessary(self.errorLabel.text == nil)
-        }
         updateButton()
 
         let headerLabelText = self.cardBrand == .amex
