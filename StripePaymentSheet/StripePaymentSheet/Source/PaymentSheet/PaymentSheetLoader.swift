@@ -30,6 +30,10 @@ final class PaymentSheetLoader {
         isFlowController: Bool,
         completion: @escaping (LoadingResult) -> Void
     ) {
+        guard configuration.returnURL != nil else {
+            assertionFailure("Setting a return URL is required to use PaymentSheet. See the documentation for more details: https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-set-up-return-url")
+            return
+        }
         let loadingStartDate = Date()
         analyticsClient.logPaymentSheetEvent(event: .paymentSheetLoadStarted)
 
