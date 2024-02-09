@@ -96,7 +96,7 @@ class PreConfirmationViewController: UIViewController {
         stackView.spacing = 10
         stackView.axis = .vertical
         stackView.setCustomSpacing(16, after: headerLabel)
-        stackView.setCustomSpacing(14, after: paymentContainerView)
+        stackView.setCustomSpacing(32, after: paymentContainerView)
         [stackView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
@@ -194,7 +194,8 @@ extension PreConfirmationViewController: BottomSheetContentViewController {
     }
 
     func didTapOrSwipeToDismiss() {
-        onCancel(self)
+        // Users may be attempting to double tap "done", and may actually dismiss the sheet.
+        // Therefore, do not dismiss sheet if customer taps the scrim
     }
 
 }
