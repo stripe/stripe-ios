@@ -1375,12 +1375,12 @@ public class STPPaymentHandler: NSObject {
         case .swishHandleRedirect:
             guard
                 let returnURL = URL(string: currentAction.returnURLString ?? ""),
-                let mobileAuthURL = authenticationAction.swishHandleRedirect?.mobileAuthURL
+                let hostedInstructionsURL = authenticationAction.swishHandleRedirect?.hostedInstructionsURL
             else {
                 fatalError()
             }
 
-            _handleRedirect(to: mobileAuthURL, withReturn: returnURL)
+            _handleRedirect(to: hostedInstructionsURL, withReturn: returnURL)
         @unknown default:
             fatalError()
         }

@@ -12,7 +12,7 @@ import Foundation
 public class STPIntentActionSwishHandleRedirect: NSObject {
 
     /// The native URL you must redirect your customer to in order to authenticate the payment.
-    @objc public let mobileAuthURL: URL
+    @objc public let hostedInstructionsURL: URL
 
     /// :nodoc:
     @objc public let allResponseFields: [AnyHashable: Any]
@@ -26,17 +26,17 @@ public class STPIntentActionSwishHandleRedirect: NSObject {
                 NSStringFromClass(STPIntentActionSwishHandleRedirect.self),
                 self
             ),
-            "mobileAuthURL = \(String(describing: mobileAuthURL))",
+            "hostedInstructionsURL = \(String(describing: hostedInstructionsURL))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
     }
 
     internal init(
-        mobileAuthURL: URL,
+        hostedInstructionsURL: URL,
         allResponseFields: [AnyHashable: Any]
     ) {
-        self.mobileAuthURL = mobileAuthURL
+        self.hostedInstructionsURL = hostedInstructionsURL
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -49,14 +49,14 @@ extension STPIntentActionSwishHandleRedirect: STPAPIResponseDecodable {
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard
             let dict = response,
-            let mobileAuthURLString = dict["mobile_auth_url"] as? String,
-            let mobileAuthURL = URL(string: mobileAuthURLString)
+            let hostedInstructionsURLString = dict["hosted_instructions_url"] as? String,
+            let hostedInstructionsURL = URL(string: hostedInstructionsURLString)
         else {
             return nil
         }
 
         return STPIntentActionSwishHandleRedirect(
-            mobileAuthURL: mobileAuthURL,
+            hostedInstructionsURL: hostedInstructionsURL,
             allResponseFields: dict
         ) as? Self
     }
