@@ -48,10 +48,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         return UIView(frame: .zero)
     }()
 
-    private let spinnerSize = CGSize(width: 88, height: 88)
+    private let spinnerSize = CGSize(width: 48, height: 48)
     private lazy var checkProgressView: ConfirmButton.CheckProgressView = {
         let view = ConfirmButton.CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize),
-                                                   baseLineWidth: 5.0)
+                                                   baseLineWidth: 2.5)
         view.color = UIColor.dynamic(light: .black, dark: .white)
         return view
     }()
