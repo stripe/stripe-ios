@@ -9,30 +9,21 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-class ContinueStateView: UIView {
+final class ContinueStateViews {
 
-    // MARK: - Properties
+    private init() {}
 
-    private let didSelectContinue: () -> Void
-
-    // MARK: - UIView
-
-    init(
-        institutionImageUrl: String?,
-        didSelectContinue: @escaping () -> Void
-    ) {
-        self.didSelectContinue = didSelectContinue
-        super.init(frame: .zero)
-        backgroundColor = .customBackgroundColor
-
-        let paneLayoutView = PaneWithHeaderLayoutView(
-            icon: .view(
-                {
-                    let institutionIconView = InstitutionIconView(size: .large)
+    static func createContentView(institutionImageUrl: String?) -> UIView {
+        return PaneLayoutView.createContentView(
+            iconView: {
+                if let institutionImageUrl {
+                    let institutionIconView = InstitutionIconView()
                     institutionIconView.setImageUrl(institutionImageUrl)
                     return institutionIconView
-                }()
-            ),
+                } else {
+                    return nil
+                }
+            }(),
             title: STPLocalizedString(
                 "Continue linking your account",
                 "Title for a label of a screen telling users to tap below to continue linking process."
@@ -41,42 +32,32 @@ class ContinueStateView: UIView {
                 "You haven't finished linking your account. Press continue to finish the process.",
                 "Title for a label explaining that the linking process hasn't finished yet."
             ),
-            contentView: {
-                let clearView = UIView()
-                clearView.backgroundColor = .clear
-                return clearView
-            }(),
-            footerView: CreateFooterView(
-                view: self
-            )
+            contentView: nil
         )
-        paneLayoutView.addTo(view: self)
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    static func createFooterView(
+        didSelectContinue: @escaping () -> Void,
+        didSelectCancel: (() -> Void)? = nil
+    ) -> UIView? {
+        return PaneLayoutView.createFooterView(
+            primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                title: "Continue", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`,
+                action: didSelectContinue
+            ),
+            secondaryButtonConfiguration: {
+                if let didSelectCancel {
+                    return PaneLayoutView.ButtonConfiguration(
+                        title: STPLocalizedString(
+                            "Cancel",
+                            "Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one."
+                        ),
+                        action: didSelectCancel
+                    )
+                } else {
+                    return nil
+                }
+            }()
+        ).footerView
     }
-
-    @objc fileprivate func didSelectContinueButton() {
-        didSelectContinue()
-    }
-}
-
-private func CreateFooterView(
-    view: ContinueStateView
-) -> UIView {
-    let continueButton = Button(configuration: .financialConnectionsPrimary)
-    continueButton.title = "Continue"  // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
-    continueButton.addTarget(view, action: #selector(ContinueStateView.didSelectContinueButton), for: .touchUpInside)
-    continueButton.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        continueButton.heightAnchor.constraint(equalToConstant: 56)
-    ])
-
-    let footerStackView = UIStackView()
-    footerStackView.axis = .vertical
-    footerStackView.spacing = 20
-    footerStackView.addArrangedSubview(continueButton)
-
-    return footerStackView
 }

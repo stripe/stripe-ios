@@ -51,7 +51,8 @@ final class PrepaneViews {
                     return nil
                 }
             }(),
-            title: prepaneModel.title
+            title: prepaneModel.title,
+            isSheet: (panePresentationStyle == .sheet)
         )
         self.bodyView = PaneLayoutView.createBodyView(
             text: prepaneModel.subtitle,
