@@ -23,6 +23,8 @@ protocol NativeFlowDataManager: AnyObject {
     var authSession: FinancialConnectionsAuthSession? { get set }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get set }
     var terminalError: Error? { get set }
+    var errorPaneError: Error? { get set }
+    var errorPaneReferrerPane: FinancialConnectionsSessionManifest.NextPane? { get set }
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get set }
     var accountNumberLast4: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
@@ -86,6 +88,8 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var authSession: FinancialConnectionsAuthSession?
     var linkedAccounts: [FinancialConnectionsPartnerAccount]?
     var terminalError: Error?
+    var errorPaneError: Error?
+    var errorPaneReferrerPane: FinancialConnectionsSessionManifest.NextPane?
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource?
     var accountNumberLast4: String?
     var consumerSession: ConsumerSessionData?
