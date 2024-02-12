@@ -443,6 +443,20 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         sleepInBackground(numSeconds: 1)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
+    
+    func testPaymentSheetWithLinkSignupDisabled() {
+        stubSessions(fileMock: .elementsSessions_link_signup_disabled_200)
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(
+            customer: "guest",
+            automaticPaymentMethods: false,
+            useLink: true
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
 
     func testPaymentSheetWithLinkDarkMode() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)

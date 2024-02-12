@@ -604,10 +604,10 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
     }
 
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard isLinkEnabled else {
+        guard isLinkEnabled && !intent.disableLinkSignup else {
             return false
         }
-
+        
         let isAccountNotRegisteredOrMissing = LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
         return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
     }

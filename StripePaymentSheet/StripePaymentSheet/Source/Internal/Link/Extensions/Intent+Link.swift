@@ -59,6 +59,17 @@ extension Intent {
             return elementsSession.linkSettings?.passthroughModeEnabled ?? false
         }
     }
+    
+    var disableLinkSignup: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent, _):
+            return paymentIntent.linkSettings?.disableSignup ?? false
+        case .setupIntent(let setupIntent, _):
+            return setupIntent.linkSettings?.disableSignup ?? false
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.linkSettings?.disableSignup ?? false
+        }
+    }
 
     var linkFundingSources: Set<LinkSettings.FundingSource>? {
         return elementsSession.linkSettings?.fundingSources
