@@ -89,13 +89,14 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
 
     func testPaymentSheetAddsUsage() {
         let client = STPAnalyticsClient.sharedClient
-        _ = PaymentSheet(
-            paymentIntentClientSecret: "",
-            configuration: PaymentSheet.Configuration()
-        )
-        XCTAssertTrue(client.productUsage.contains("PaymentSheet"))
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "dummy-return-url"
+        _ = PaymentSheet(
+            paymentIntentClientSecret: "",
+            configuration: configuration
+        )
+        XCTAssertTrue(client.productUsage.contains("PaymentSheet"))
+
         _ = PaymentSheet.FlowController(
             intent: .paymentIntent(elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()), paymentIntent: STPFixtures.paymentIntent()),
             savedPaymentMethods: [],
