@@ -29,6 +29,7 @@ class PaymentSheetAPITest: XCTestCase {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
         config.allowsDelayedPaymentMethods = true
+        config.returnURL = "dummy-return-url"
         config.shippingDetails = {
             return .init(
                 address: .init(
