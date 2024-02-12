@@ -90,7 +90,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     func testPaymentSheetAddsUsage() {
         let client = STPAnalyticsClient.sharedClient
         var configuration = PaymentSheet.Configuration()
-        configuration.returnURL = "dummy-return-url"
+        configuration.returnURL = "foo://bar"
         _ = PaymentSheet(
             paymentIntentClientSecret: "",
             configuration: configuration

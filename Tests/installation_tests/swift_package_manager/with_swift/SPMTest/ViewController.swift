@@ -41,7 +41,7 @@ class ViewController: UIViewController {
         )
 
         var configuration = PaymentSheet.Configuration()
-        configuration.returnURL = "dummy-return-url"
+        configuration.returnURL = "foo://bar"
         let _ = PaymentSheet(
             setupIntentClientSecret: "",
             configuration: configuration
