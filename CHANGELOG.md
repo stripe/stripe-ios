@@ -1,12 +1,8 @@
-## x.x.x x-x-x
+## 23.22.0 2024-02-12
 ### PaymentSheet
 * [Changed] The separator text under the Apple Pay button from "Or pay with a card" to "Or use a card" when using a SetupIntent.
-
-### Payments
-* [Added] Support for CVC recollection PaymentSheet and PaymentSheet.FlowController (client-side confirmation)
-
-### PaymentSheet
 * [Fixed] Fixed a bug where deleting the last saved payment method in PaymentSheet wouldn't automatically transition to the "Add a payment method" screen.
+* [Added] Support for CVC recollection in PaymentSheet and PaymentSheet.FlowController (client-side confirmation)
 
 ## 23.21.2 2024-02-05
 ### Payments
