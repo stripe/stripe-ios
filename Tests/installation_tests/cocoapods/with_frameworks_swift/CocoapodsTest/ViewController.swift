@@ -38,9 +38,11 @@ class ViewController: UIViewController {
             )
         }
 
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "dummy-return-url"
         let _ = PaymentSheet(
             paymentIntentClientSecret: "",
-            configuration: PaymentSheet.Configuration()
+            configuration: configuration
         )
         // Do any additional setup after loading the view, typically from a nib.
     }

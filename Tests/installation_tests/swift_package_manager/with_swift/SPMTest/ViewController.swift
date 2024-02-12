@@ -40,9 +40,11 @@ class ViewController: UIViewController {
             cardImageVerificationIntentSecret: "foo"
         )
 
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "dummy-return-url"
         let _ = PaymentSheet(
             setupIntentClientSecret: "",
-            configuration: PaymentSheet.Configuration()
+            configuration: configuration
         )
         // Do any additional setup after loading the view.
 
