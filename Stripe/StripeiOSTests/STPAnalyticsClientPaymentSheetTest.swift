@@ -94,13 +94,14 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             configuration: PaymentSheet.Configuration()
         )
         XCTAssertTrue(client.productUsage.contains("PaymentSheet"))
-
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "dummy-return-url"
         _ = PaymentSheet.FlowController(
             intent: .paymentIntent(elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()), paymentIntent: STPFixtures.paymentIntent()),
             savedPaymentMethods: [],
             isLinkEnabled: false,
             isApplePayEnabled: false,
-            configuration: PaymentSheet.Configuration()
+            configuration: configuration
         )
         XCTAssertTrue(client.productUsage.contains("PaymentSheet.FlowController"))
     }
