@@ -377,7 +377,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                       formCompleter: (PaymentMethodElement) -> Void) async throws {
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        
+
         let configuration: PaymentSheet.Configuration = {
             var config = PaymentSheet.Configuration()
             config.apiClient = apiClient
@@ -386,7 +386,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             config.allowsPaymentMethodsRequiringShippingAddress = true
             return config
         }()
-        
+
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
         let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _, _ in })
         _ = PaymentSheet(mode: .deferredIntent(ic), configuration: configuration)
