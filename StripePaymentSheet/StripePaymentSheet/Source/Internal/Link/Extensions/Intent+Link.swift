@@ -59,7 +59,7 @@ extension Intent {
             return elementsSession.linkSettings?.passthroughModeEnabled ?? false
         }
     }
-    
+
     var disableLinkSignup: Bool {
         switch self {
         case .paymentIntent(let paymentIntent, _):

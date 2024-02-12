@@ -443,7 +443,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         sleepInBackground(numSeconds: 1)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetWithLinkSignupDisabled() {
         stubSessions(fileMock: .elementsSessions_link_signup_disabled_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
