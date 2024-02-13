@@ -95,7 +95,7 @@ public extension PaymentSheet {
         /// The account (if any) for which the funds of the intent are intended.
         /// - Seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-on_behalf_of
         public var onBehalfOf: String?
-        
+
         /// Optional configuration ID for the selected payment method configuration.
         /// See https://stripe.com/docs/payments/multiple-payment-method-configs for more information.
         public var paymentMethodConfiguration: String?
