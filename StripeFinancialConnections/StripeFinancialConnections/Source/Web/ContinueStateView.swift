@@ -48,10 +48,7 @@ final class ContinueStateViews {
             secondaryButtonConfiguration: {
                 if let didSelectCancel {
                     return PaneLayoutView.ButtonConfiguration(
-                        title: STPLocalizedString(
-                            "Cancel",
-                            "Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one."
-                        ),
+                        title: "Cancel", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
                         action: didSelectCancel
                     )
                 } else {

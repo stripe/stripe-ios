@@ -78,15 +78,12 @@ final class PrepaneViews {
                         title: {
                             switch panePresentationStyle {
                             case .fullscreen:
-                                STPLocalizedString(
+                                return STPLocalizedString(
                                    "Choose a different bank",
                                    "Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one."
                                )
                             case .sheet:
-                                STPLocalizedString(
-                                   "Cancel",
-                                   "Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one."
-                               )
+                                return "Cancel" // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
                             }
                         }(),
                         action: didSelectCancel
