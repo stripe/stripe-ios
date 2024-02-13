@@ -44,14 +44,17 @@ public extension PaymentSheet {
         ///   - mode: The mode of this intent, either payment or setup
         ///   - paymentMethodTypes: The payment method types for the intent
         ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
+        ///   - paymentMethodConfiguration: Configuration ID (if any) for the selected payment method configuration
         ///   - confirmHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
         public init(mode: Mode,
                     paymentMethodTypes: [String]? = nil,
                     onBehalfOf: String? = nil,
+                    paymentMethodConfiguration: String? = nil,
                     confirmHandler: @escaping ConfirmHandler) {
             self.mode = mode
             self.paymentMethodTypes = paymentMethodTypes
             self.onBehalfOf = onBehalfOf
+            self.paymentMethodConfiguration = paymentMethodConfiguration
             self.confirmHandler = confirmHandler
             self.isCVCRecollectionEnabledCallback = { return false }
         }
@@ -61,17 +64,20 @@ public extension PaymentSheet {
         ///   - mode: The mode of this intent, either payment or setup
         ///   - paymentMethodTypes: The payment method types for the intent
         ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
+        ///   - paymentMethodConfiguration: Configuration ID (if any) for the selected payment method configuration
         ///   - confirmHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
         ///   - isCVCRecollectionEnabledCallback: Callback to determine whether to display the CVC recollection form
         @_spi(EarlyAccessCVCRecollectionFeature)
         public init(mode: Mode,
                     paymentMethodTypes: [String]? = nil,
                     onBehalfOf: String? = nil,
+                    paymentMethodConfiguration: String? = nil,
                     confirmHandler: @escaping ConfirmHandler,
                     isCVCRecollectionEnabledCallback: CVCRecollectionEnabledCallback? = nil) {
             self.mode = mode
             self.paymentMethodTypes = paymentMethodTypes
             self.onBehalfOf = onBehalfOf
+            self.paymentMethodConfiguration = paymentMethodConfiguration
             self.confirmHandler = confirmHandler
             self.isCVCRecollectionEnabledCallback = isCVCRecollectionEnabledCallback ?? { return false }
         }
@@ -89,6 +95,10 @@ public extension PaymentSheet {
         /// The account (if any) for which the funds of the intent are intended.
         /// - Seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-on_behalf_of
         public var onBehalfOf: String?
+        
+        /// Optional configuration ID for the selected payment method configuration.
+        /// See https://stripe.com/docs/payments/multiple-payment-method-configs for more information.
+        public var paymentMethodConfiguration: String?
 
         /// A callback that controls when to recollect the CVC for saved cards
         /// In the case of client-side confirmation, the CVC/CVV value will be

@@ -268,6 +268,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkV2Allowed: LinkV2Allowed
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
+    var paymentMethodSettingsID: String?
     var checkoutEndpoint: String?
     var autoreload: Autoreload
     var externalPayPalEnabled: ExternalPayPalEnabled
@@ -300,6 +301,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkV2Allowed: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
+            paymentMethodSettingsID: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
             externalPayPalEnabled: .off,
