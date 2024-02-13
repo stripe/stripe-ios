@@ -36,7 +36,6 @@ final class PartnerAuthViewController: SheetViewController {
     private var unprocessedReturnURL: URL?
     private var subscribedToURLNotifications = false
     private var subscribedToAppActiveNotifications = false
-    private var continueStateView: ContinueStateView?
 
     private let dataSource: PartnerAuthDataSource
     private var institution: FinancialConnectionsInstitution {
@@ -283,7 +282,9 @@ final class PartnerAuthViewController: SheetViewController {
         }
     }
 
-    private func openInstitutionAuthenticationNativeRedirect(authSession: FinancialConnectionsAuthSession) {
+    private func openInstitutionAuthenticationNativeRedirect(
+        authSession: FinancialConnectionsAuthSession
+    ) {
         guard
             let urlString = authSession.url?.droppingNativeRedirectPrefix(),
             let url = URL(string: urlString)
@@ -295,25 +296,36 @@ final class PartnerAuthViewController: SheetViewController {
             )
             return
         }
-        self.continueStateView = ContinueStateView(
-            institutionImageUrl: self.institution.icon?.default,
-            didSelectContinue: { [weak self] in
-                guard let self = self else { return }
-                self.dataSource.analyticsClient.log(
-                    eventName: "click.apptoapp.continue",
-                    pane: .partnerAuth
-                )
-                self.continueStateView?.removeFromSuperview()
-                self.continueStateView = nil
-                self.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
-            }
+        setup(
+            withContentView: ContinueStateViews.createContentView(
+                institutionImageUrl: institution.icon?.default
+            ),
+            footerView: ContinueStateViews.createFooterView(
+                didSelectContinue: { [weak self] in
+                    guard let self else { return }
+                    dataSource.analyticsClient.log(
+                        eventName: "click.apptoapp.continue",
+                        pane: .partnerAuth
+                    )
+                    openInstitutionAuthenticationNativeRedirect(authSession: authSession)
+                },
+                didSelectCancel: { [weak self] in
+                    guard let self else { return }
+                    delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
+                }
+            )
         )
-        self.view.addAndPinSubview(self.continueStateView!)
 
-        self.subscribeToURLAndAppActiveNotifications()
-        UIApplication.shared.open(url, options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: true]) { (success) in
-            if success { return }
-            // This means banking app is not installed
+        subscribeToURLAndAppActiveNotifications()
+        UIApplication.shared.open(
+            url,
+            options: [.universalLinksOnly: true]
+        ) { (didOpenBankingApp) in
+            guard !didOpenBankingApp else {
+                // we pass control to the bank app
+                return
+            }
+            // if we get here, it means the banking app is not installed
             self.clearStateAndUnsubscribeFromNotifications()
 
             self.showLoadingView(true)
@@ -732,9 +744,12 @@ private extension PartnerAuthViewController {
 
     private func clearStateAndUnsubscribeFromNotifications() {
         unprocessedReturnURL = nil
-        continueStateView?.removeFromSuperview()
-        continueStateView = nil
         unsubscribeFromNotifications()
+
+        if let authSession = dataSource.pendingAuthSession {
+            // re-create the views
+            createdAuthSession(authSession)
+        }
     }
 
     private func handleAuthSessionCompletionFromNativeRedirectIfNeeded() {
