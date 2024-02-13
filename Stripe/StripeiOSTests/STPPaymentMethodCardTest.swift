@@ -87,6 +87,7 @@ class STPPaymentMethodCardTest: XCTestCase {
         XCTAssertEqual(card?.fingerprint, "6gVyxfIhqc8Z0g0X")
         XCTAssertNotNil(card?.threeDSecureUsage)
         XCTAssertEqual(card?.threeDSecureUsage?.supported, true)
+        XCTAssertEqual(card?.displayBrand, "cartes_bancaires")
         XCTAssertNotNil(card?.wallet)
     }
 }
