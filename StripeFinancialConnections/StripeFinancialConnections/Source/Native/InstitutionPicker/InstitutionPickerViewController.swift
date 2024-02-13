@@ -112,6 +112,7 @@ class InstitutionPickerViewController: UIViewController {
             target: self,
             action: #selector(didTapOutsideOfSearchBar)
         )
+        dismissSearchBarTapGestureRecognizer.cancelsTouchesInView = false
         dismissSearchBarTapGestureRecognizer.delegate = self
         view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
     }
@@ -354,6 +355,18 @@ extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
         _ gestureRecognizer: UIGestureRecognizer,
         shouldReceive touch: UITouch
     ) -> Bool {
+        let scrollView = institutionTableView.tableView
+        let isTableViewScrolledToTop = scrollView.contentOffset.y <= -scrollView.contentInset.top
+        guard isTableViewScrolledToTop else {
+            // only consider `dismissSearchBarTapGestureRecognizer` when the
+            // table view is scrolled to the top
+            //
+            // because the dismiss functionality is purely optional, and because frame
+            // calculation gets complicated in a scroll view, this logic helps
+            // to keep the calculations simple so we avoid unintentionally
+            // blocking user interaction
+            return false
+        }
         let touchPoint = touch.location(in: view)
         return headerView.frame.contains(touchPoint) && !searchBar.frame.contains(touchPoint)
     }
