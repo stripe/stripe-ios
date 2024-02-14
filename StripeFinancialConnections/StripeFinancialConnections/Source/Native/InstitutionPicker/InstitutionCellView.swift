@@ -50,6 +50,27 @@ final class InstitutionCellView: UIView {
         return subtitleLabel
     }()
     private var iconView: UIView?
+    private lazy var loadingView: ActivityIndicator = {
+        let activityIndicator = ActivityIndicator(size: .medium)
+        activityIndicator.color = .iconActionPrimary
+        activityIndicator.startAnimating()
+
+        // re-size `ActivityIndicator` to a size we desire
+        // because its hard-coded
+        let mediumIconDiameter: CGFloat = 20
+        let desiredIconDiameter: CGFloat = 24
+        let transform = CGAffineTransform(
+            scaleX: desiredIconDiameter / mediumIconDiameter,
+            y: desiredIconDiameter / mediumIconDiameter
+        )
+        activityIndicator.transform = transform
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            activityIndicator.widthAnchor.constraint(equalToConstant: desiredIconDiameter),
+            activityIndicator.heightAnchor.constraint(equalToConstant: desiredIconDiameter),
+        ])
+        return activityIndicator
+    }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -81,5 +102,16 @@ final class InstitutionCellView: UIView {
             self.iconView = iconView
         }
         horizontalStackView.addArrangedSubview(labelStackView)
+    }
+
+    func showLoadingView(_ show: Bool) {
+        loadingView.removeFromSuperview()
+
+        if show {
+            horizontalStackView.addArrangedSubview(loadingView)
+            loadingView.startAnimating()
+        } else {
+            loadingView.stopAnimating()
+        }
     }
 }

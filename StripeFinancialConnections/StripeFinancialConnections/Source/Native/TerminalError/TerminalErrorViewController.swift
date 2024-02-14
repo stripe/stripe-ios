@@ -36,53 +36,17 @@ final class TerminalErrorViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
 
-        let paneLayoutView = PaneLayoutView(
-            contentView: PaneLayoutView.createContentView(
-                iconView: RoundedIconView(
-                    image: .image(.warning_triangle),
-                    style: .circle
-                ),
-                title: STPLocalizedString(
-                    "Something went wrong",
-                    "Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."
-                ),
-                subtitle: {
-                    if allowManualEntry {
-                        return STPLocalizedString(
-                            "Your account can’t be connected at this time. Please enter your bank details manually or try again later.",
-                            "The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what."
-                        )
-                    } else {
-                        return STPLocalizedString(
-                            "Your account can’t be connected at this time. Please try again later.",
-                            "The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what."
-                        )
-                    }
-                }(),
-                contentView: nil
-            ),
-            footerView: PaneLayoutView.createFooterView(
-                primaryButtonConfiguration: {
-                    if allowManualEntry {
-                        return PaneLayoutView.ButtonConfiguration(
-                            title: String.Localized.enter_bank_details_manually,
-                            action: { [weak self] in
-                                guard let self = self else { return }
-                                self.delegate?.terminalErrorViewControllerDidSelectManualEntry(self)
-                            }
-                        )
-                    } else {
-                        return PaneLayoutView.ButtonConfiguration(
-                            title: "Close",  // TODO: once we localize use String.Localized.close
-                            action: { [weak self] in
-                                guard let self = self else { return }
-                                self.delegate?.terminalErrorViewController(self, didCloseWithError: self.error)
-                            }
-                        )
-                    }
-                }()
-            ).footerView
+        let terminalErrorView = TerminalErrorView(
+            allowManualEntry: true,
+            didSelectManualEntry: { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.terminalErrorViewControllerDidSelectManualEntry(self)
+            },
+            didSelectClose: { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.terminalErrorViewController(self, didCloseWithError: self.error)
+            }
         )
-        paneLayoutView.addTo(view: view)
+        view.addAndPinSubview(terminalErrorView)
     }
 }

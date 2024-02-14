@@ -62,10 +62,7 @@ final class CloseConfirmationViewController: SheetViewController {
                     }
                 ),
                 secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                    title: STPLocalizedString(
-                        "Cancel",
-                        "A button title. The user encounters it as part of a confirmation pop-up when trying to exit a screen. Pressing it will close the pop-up, and will ensure that the screen does NOT exit."
-                    ),
+                    title: "Cancel", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
                     action: { [weak self] in
                         self?.dismiss(animated: true)
                     }

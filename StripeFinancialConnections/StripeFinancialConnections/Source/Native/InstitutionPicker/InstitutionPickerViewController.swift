@@ -15,11 +15,20 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
         _ viewController: InstitutionPickerViewController,
         didSelect institution: FinancialConnectionsInstitution
     )
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didFinishSelecting institution: FinancialConnectionsInstitution,
+        authSession: FinancialConnectionsAuthSession
+    )
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
         _ viewController: InstitutionPickerViewController
     )
     func institutionPickerViewControllerDidSearch(
         _ viewController: InstitutionPickerViewController
+    )
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didReceiveError error: Error
     )
 }
 
@@ -103,6 +112,7 @@ class InstitutionPickerViewController: UIViewController {
             target: self,
             action: #selector(didTapOutsideOfSearchBar)
         )
+        dismissSearchBarTapGestureRecognizer.cancelsTouchesInView = false
         dismissSearchBarTapGestureRecognizer.delegate = self
         view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
     }
@@ -112,18 +122,72 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private func didSelectInstitution(_ institution: FinancialConnectionsInstitution) {
-        searchBar.resignFirstResponder()
-        // clear search results
-        searchBar.text = ""
-        institutionTableView.load(
-            institutions: dataSource.featuredInstitutions,
-            isUserSearching: false
-        )
         delegate?.institutionPickerViewController(self, didSelect: institution)
+
+        searchBar.resignFirstResponder()
+
+        let showLoadingView: (Bool) -> Void = { [weak self] show in
+            guard let self else { return }
+            view.isUserInteractionEnabled = !show // prevent accidental taps
+            institutionTableView.showLoadingView(show, forInstitution: institution)
+        }
+
+        showLoadingView(true)
+        institutionTableView.showOverlayView(
+            true,
+            exceptForInstitution: institution
+        )
+
+        dataSource.createAuthSession(institutionId: institution.id)
+            .observe { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let authSession):
+                    self.delegate?.institutionPickerViewController(
+                        self,
+                        didFinishSelecting: institution,
+                        authSession: authSession
+                    )
+
+                    if authSession.isOauthNonOptional {
+                        // oauth presents a sheet where we do not hide
+                        // the overlay until the sheet is dismissed
+                        observePartnerAuthDismissToHideOverlay()
+                    } else {
+                        hideOverlayView()
+                    }
+                case .failure(let error):
+                    delegate?.institutionPickerViewController(
+                        self,
+                        didReceiveError: error
+                    )
+                }
+                showLoadingView(false)
+            }
     }
 
     private func showLoadingView(_ show: Bool) {
         institutionTableView.showLoadingView(show)
+    }
+
+    private var partnerAuthDismissObserver: Any?
+    private func observePartnerAuthDismissToHideOverlay() {
+        partnerAuthDismissObserver = NotificationCenter.default.addObserver(
+            forName: .sheetViewControllerWillDismiss,
+            object: nil,
+            queue: nil
+        ) { [weak self] notification in
+            guard let self else { return }
+            guard notification.object is PartnerAuthViewController else {
+                return
+            }
+            hideOverlayView()
+            partnerAuthDismissObserver = nil
+        }
+    }
+
+    private func hideOverlayView() {
+        institutionTableView.showOverlayView(false)
     }
 }
 
@@ -291,6 +355,18 @@ extension InstitutionPickerViewController: UIGestureRecognizerDelegate {
         _ gestureRecognizer: UIGestureRecognizer,
         shouldReceive touch: UITouch
     ) -> Bool {
+        let scrollView = institutionTableView.tableView
+        let isTableViewScrolledToTop = scrollView.contentOffset.y <= -scrollView.contentInset.top
+        guard isTableViewScrolledToTop else {
+            // only consider `dismissSearchBarTapGestureRecognizer` when the
+            // table view is scrolled to the top
+            //
+            // because the dismiss functionality is purely optional, and because frame
+            // calculation gets complicated in a scroll view, this logic helps
+            // to keep the calculations simple so we avoid unintentionally
+            // blocking user interaction
+            return false
+        }
         let touchPoint = touch.location(in: view)
         return headerView.frame.contains(touchPoint) && !searchBar.frame.contains(touchPoint)
     }
