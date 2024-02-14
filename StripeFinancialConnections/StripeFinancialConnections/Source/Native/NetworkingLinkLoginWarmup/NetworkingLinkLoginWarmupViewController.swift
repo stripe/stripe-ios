@@ -20,14 +20,17 @@ protocol NetworkingLinkLoginWarmupViewControllerDelegate: AnyObject {
     func networkingLinkLoginWarmupViewController(_ viewController: NetworkingLinkLoginWarmupViewController, didReceiveTerminalError error: Error)
 }
 
-final class NetworkingLinkLoginWarmupViewController: UIViewController {
+final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
     private let dataSource: NetworkingLinkLoginWarmupDataSource
     weak var delegate: NetworkingLinkLoginWarmupViewControllerDelegate?
 
-    init(dataSource: NetworkingLinkLoginWarmupDataSource) {
+    init(
+        dataSource: NetworkingLinkLoginWarmupDataSource,
+        panePresentationStyle: PanePresentationStyle
+    ) {
         self.dataSource = dataSource
-        super.init(nibName: nil, bundle: nil)
+        super.init(panePresentationStyle: panePresentationStyle)
     }
 
     required init?(coder: NSCoder) {
@@ -36,10 +39,8 @@ final class NetworkingLinkLoginWarmupViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
-
-        let paneLayoutView = PaneLayoutView(
-            contentView: PaneLayoutView.createContentView(
+        setup(
+            withContentView: PaneLayoutView.createContentView(
                 iconView: RoundedIconView(
                     image: .image(.person),
                     style: .circle
@@ -80,7 +81,6 @@ final class NetworkingLinkLoginWarmupViewController: UIViewController {
                 )
             ).footerView
         )
-        paneLayoutView.addTo(view: view)
     }
 
     private func didSelectContinue() {

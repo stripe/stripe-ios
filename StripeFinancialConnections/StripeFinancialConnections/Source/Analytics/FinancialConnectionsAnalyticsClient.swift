@@ -211,6 +211,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .networkingSaveToLinkVerification
         case is LinkAccountPickerViewController:
             return .linkAccountPicker
+        case is ErrorViewController:
+            return .unexpectedError
         default:
             return .unparsable
         }
