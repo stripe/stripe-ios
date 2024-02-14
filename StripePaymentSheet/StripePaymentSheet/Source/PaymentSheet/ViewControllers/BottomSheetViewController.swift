@@ -75,7 +75,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     var bottomSheetPresentationController: BottomSheetPresentationController {
         rootParent.presentationController as! BottomSheetPresentationController
     }
-    
+
     private var contentViewController: BottomSheetContentViewController {
         didSet(oldContentViewController) {
             guard self.contentViewController !== oldContentViewController else {
@@ -140,7 +140,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     private var scrollViewHeightConstraint: NSLayoutConstraint?
 
     private var bottomAnchor: NSLayoutConstraint?
-    
+
     /// :nodoc:
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -161,7 +161,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            bottomAnchor
+            bottomAnchor,
         ])
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -266,7 +266,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             self.view.superview?.layoutIfNeeded()
         }
     }
-    
+
     // MARK: - BottomSheetPresentable
 
     var panScrollable: UIScrollView? {

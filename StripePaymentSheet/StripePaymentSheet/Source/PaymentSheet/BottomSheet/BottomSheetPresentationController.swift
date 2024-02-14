@@ -59,7 +59,6 @@ class BottomSheetPresentationController: UIPresentationController {
         return view
     }()
 
-    
     // Blur view over sheet
     private lazy var blurView: UIView = {
         return UIView(frame: .zero)
@@ -72,8 +71,7 @@ class BottomSheetPresentationController: UIPresentationController {
         view.color = UIColor.dynamic(light: .black, dark: .white)
         return view
     }()
-    
-    
+
     func addBlurEffect(animated: Bool, backgroundColor: UIColor, completion: @escaping () -> Void) {
         let containingSuperview = self.presentedView
             [self.blurView].forEach {
@@ -139,7 +137,7 @@ class BottomSheetPresentationController: UIPresentationController {
             }
         }
     }
-    
+
     /**
      Override presented view to return non-optional
      */

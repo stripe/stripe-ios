@@ -56,7 +56,6 @@ import UIKit
         _ notification: Notification,
         animations: @escaping () -> Void
     ) {
-        
 
         guard let userInfo = notification.userInfo,
               let animationCurveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int,
