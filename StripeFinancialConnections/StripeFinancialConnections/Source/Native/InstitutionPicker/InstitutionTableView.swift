@@ -33,7 +33,7 @@ protocol InstitutionTableViewDelegate: AnyObject {
 final class InstitutionTableView: UIView {
 
     private let allowManualEntry: Bool
-    private let tableView: UITableView
+    let tableView: UITableView
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     private lazy var didSelectManualEntry: (() -> Void)? = {
         return allowManualEntry
