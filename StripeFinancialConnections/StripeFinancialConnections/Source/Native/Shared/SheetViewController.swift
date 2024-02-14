@@ -61,6 +61,7 @@ class SheetViewController: UIViewController {
 
     private var paneViewContainerView: UIView?
     private var paneView: PaneLayoutView?
+    private var sheetTopConstraint: NSLayoutConstraint?
 
     private lazy var darkAreaTapGestureRecognizer: UITapGestureRecognizer = {
         let tapGestureRecognizer = UITapGestureRecognizer(
@@ -89,12 +90,15 @@ class SheetViewController: UIViewController {
 
             contentStackView.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(contentStackView)
+
+            let sheetTopConstraint = contentStackView.topAnchor.constraint(
+                // keep the `contentStackView` flexible to resize
+                greaterThanOrEqualTo: contentView.topAnchor,
+                constant: 0
+            )
+            self.sheetTopConstraint = sheetTopConstraint
             NSLayoutConstraint.activate([
-                contentStackView.topAnchor.constraint(
-                    // keep the `contentStackView` flexible to resize
-                    greaterThanOrEqualTo: contentView.topAnchor,
-                    constant: 0
-                ),
+                sheetTopConstraint,
                 contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
                 contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
                 contentStackView.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor),
@@ -145,6 +149,11 @@ class SheetViewController: UIViewController {
                 contentViewFrame.size.height -= contentViewMinY
                 contentViewFrame.origin.y = view.bounds.height - contentViewFrame.height
                 contentView.frame = contentViewFrame
+
+                // fixes a bug where rotations wouldn't properly
+                // resize the sheet
+                sheetTopConstraint?.isActive = false
+                sheetTopConstraint?.isActive = true
 
                 // animate the sheet from top to bottom
                 if !performedSheetPresentationAnimation {
