@@ -207,7 +207,7 @@ extension PaymentSheet {
                     switch paymentMethod {
                     case .card:
                         return []
-                    case .payPal, .cashApp, .revolutPay:
+                    case .payPal, .cashApp, .revolutPay, .klarna:
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
@@ -219,7 +219,7 @@ extension PaymentSheet {
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .klarna, .link, .linkInstantDebit,
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .linkInstantDebit,
                         .affirm, .paynow, .zip, .amazonPay, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish:
                         return [.unsupportedForSetup]
                     @unknown default:
@@ -362,7 +362,7 @@ extension STPPaymentMethod {
     func supportsSavedPaymentMethod(configuration: PaymentSheet.Configuration, intent: Intent) -> Bool {
         let requirements: [PaymentMethodTypeRequirement] = {
             switch type {
-            case .card:
+            case .card, .klarna:
                 return []
             case .USBankAccount, .SEPADebit:
                 return [.userSupportsDelayedPaymentMethods]

@@ -39,6 +39,7 @@ class PaymentSheetFormFactory {
     let currency: String?
     let amount: Int?
     let countryCode: String?
+    let merchantCountryCode: String?
     let cardBrandChoiceEligible: Bool
 
     var canSaveToLink: Bool {
@@ -102,6 +103,7 @@ class PaymentSheetFormFactory {
                   currency: intent.currency,
                   amount: intent.amount,
                   countryCode: intent.countryCode(overrideCountry: configuration.overrideCountry),
+                  merchantCountryCode: intent.merchantCountryCode,
                   saveMode: saveMode)
     }
 
@@ -118,6 +120,7 @@ class PaymentSheetFormFactory {
         currency: String?,
         amount: Int?,
         countryCode: String?,
+        merchantCountryCode: String?,
         saveMode: SaveMode
     ) {
         self.configuration = configuration
@@ -136,6 +139,7 @@ class PaymentSheetFormFactory {
         self.currency = currency
         self.amount = amount
         self.countryCode = countryCode
+        self.merchantCountryCode = merchantCountryCode
         self.saveMode = saveMode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
     }
@@ -666,25 +670,34 @@ extension PaymentSheetFormFactory {
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
-        guard let currency = currency else {
-            assertionFailure("Klarna requires a non-nil currency")
-            return nil
+
+        var countryOptions: [String] = []
+        if let currency = currency {
+            countryOptions = Locale.current.sortedByTheirLocalizedNames(
+                KlarnaHelper.availableCountries(currency: currency)
+            )
+        } else if let merchantCountry = self.merchantCountryCode {
+            let validCountryOptionsForMerchant = KlarnaHelper.validKlarnaCountriesForMerchantCountry(merchantCountry: merchantCountry)
+            let klarnaCountries = Array(KlarnaHelper.KLARNA_COUNTRIES_BY_CURRENCY.values.flatMap { $0 })
+            let _countryOptions = klarnaCountries.filter {
+                validCountryOptionsForMerchant.contains($0)
+            }
+            countryOptions = Locale.current.sortedByTheirLocalizedNames(
+                _countryOptions
+            )
         }
 
-        let countryCodes = Locale.current.sortedByTheirLocalizedNames(
-            KlarnaHelper.availableCountries(currency: currency)
-        )
         let defaultValue = getPreviousCustomerInput(for: apiPath) ?? defaultBillingDetails(countryAPIPath: apiPath).address.country
         let country = PaymentMethodElementWrapper(
             DropdownFieldElement.Address.makeCountry(
                 label: String.Localized.country,
-                countryCodes: countryCodes,
+                countryCodes: countryOptions,
                 theme: theme,
                 defaultCountry: defaultValue,
                 locale: Locale.current
             )
         ) { dropdown, params in
-            let countryCode = countryCodes[dropdown.selectedIndex]
+            let countryCode = countryOptions[dropdown.selectedIndex]
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = countryCode
             } else {

@@ -222,6 +222,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             currency: nil,
             amount: nil,
             countryCode: nil,
+            merchantCountryCode: nil,
             saveMode: .merchantRequired)
             .make()
         formElement.delegate = self
