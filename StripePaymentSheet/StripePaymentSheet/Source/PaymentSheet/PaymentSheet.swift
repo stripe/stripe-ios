@@ -292,19 +292,19 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     }
     func paymentSheetViewControllerFinishedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
                                                  completion: (() -> Void)? = nil) {
-        self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
-            self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
+        self.bottomSheetViewController.bottomSheetPresentationController.transitionSpinnerToComplete(animated: true) {
+            completion?()
         }
     }
 
     func paymentSheetViewControllerCanceledOnPay(_ paymentSheetViewController: PaymentSheetViewController,
                                                  completion: (() -> Void)? = nil) {
-        self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
+        self.bottomSheetViewController.bottomSheetPresentationController.removeBlurEffect(animated: true, completion: completion)
     }
     func paymentSheetViewControllerFailedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
                                                result: PaymentSheetResult,
                                                completion: (() -> Void)? = nil) {
-        self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
+        self.bottomSheetViewController.bottomSheetPresentationController.removeBlurEffect(animated: true, completion: completion)
     }
 
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewController) {
@@ -344,8 +344,8 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
         with paymentOption: PaymentOption
     ) {
         let backgroundColor = self.configuration.appearance.colors.background.withAlphaComponent(0.85)
-        self.bottomSheetViewController.addBlurEffect(animated: false, backgroundColor: backgroundColor) {
-            self.bottomSheetViewController.startSpinner()
+        self.bottomSheetViewController.bottomSheetPresentationController.addBlurEffect(animated: false, backgroundColor: backgroundColor) {
+            self.bottomSheetViewController.bottomSheetPresentationController.startSpinner()
             let psvc = self.findPaymentSheetViewController()
             psvc?.clearTextFields()
             psvc?.pay(with: paymentOption, animateBuybutton: false)

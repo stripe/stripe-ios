@@ -12,10 +12,10 @@ import UIKit
     /// Use this to animate changes that affect the height of the sheet
     func animateHeightChange(forceAnimation: Bool = false, duration: CGFloat = 0.5, _ animations: (() -> Void)? = nil, completion: ((Bool) -> Void)? = nil)
     {
-        guard forceAnimation || !isBeingPresented else {
-            animations?()
-            return
-        }
+//        guard forceAnimation || !isBeingPresented else {
+//            animations?()
+//            return
+//        }
         // Note: For unknown reasons, using `UIViewPropertyAnimator` here caused an infinite layout loop
         UIView.animate(
             withDuration: duration,

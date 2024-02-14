@@ -124,6 +124,7 @@ struct PaymentSheetTestPlayground: View {
             PaymentSheetButtons()
                 .environmentObject(playgroundController)
         }
+        .background(.orange)
     }
 
     var customCTABinding: Binding<String> {

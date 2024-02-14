@@ -259,7 +259,12 @@ class PlaygroundController: ObservableObject {
     var amount: Int?
     var checkoutEndpoint: String = PaymentSheetTestPlaygroundSettings.defaultCheckoutEndpoint
     var addressViewController: AddressViewController?
-    var appearance = PaymentSheet.Appearance.default
+    var appearance = {
+        var app = PaymentSheet.Appearance.default
+        app.colors.background = .yellow
+        app.colors.componentBackground = .yellow
+        return app
+    }()
     var currentDataTask: URLSessionDataTask?
     /// All analytic events sent by the SDK since the playground was loaded.
     @Published var analyticsLog: [[String: Any]] = []

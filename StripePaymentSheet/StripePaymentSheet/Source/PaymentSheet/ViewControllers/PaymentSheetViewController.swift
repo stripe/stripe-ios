@@ -286,9 +286,9 @@ class PaymentSheetViewController: UIViewController {
     func set(error: Error?) {
         self.error = error
         self.errorLabel.text = error?.nonGenericDescription
-        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-            self.errorLabel.setHiddenIfNecessary(self.error == nil)
-        }
+//        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+//            self.errorLabel.setHiddenIfNecessary(self.error == nil)
+//        }
     }
 
     // MARK: Private Methods
@@ -374,10 +374,10 @@ class PaymentSheetViewController: UIViewController {
         case .selectingSaved:
             errorLabel.text = error?.nonGenericDescription
         }
-        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-            self.errorLabel.setHiddenIfNecessary(self.error == nil)
-        }
-
+//        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+//            self.errorLabel.setHiddenIfNecessary(self.error == nil)
+//        }
+//
         // Buy button
         let buyButtonStyle: ConfirmButton.Style
         var buyButtonStatus: ConfirmButton.Status
@@ -447,9 +447,9 @@ class PaymentSheetViewController: UIViewController {
         case .addingNew:
             self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
         }
-        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-            self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
-        }
+//        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+//            self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
+//        }
     }
 
     @objc

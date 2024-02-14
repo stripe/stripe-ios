@@ -59,6 +59,87 @@ class BottomSheetPresentationController: UIPresentationController {
         return view
     }()
 
+    
+    // Blur view over sheet
+    private lazy var blurView: UIView = {
+        return UIView(frame: .zero)
+    }()
+
+    private let spinnerSize = CGSize(width: 48, height: 48)
+    private lazy var checkProgressView: ConfirmButton.CheckProgressView = {
+        let view = ConfirmButton.CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize),
+                                                   baseLineWidth: 2.5)
+        view.color = UIColor.dynamic(light: .black, dark: .white)
+        return view
+    }()
+    
+    
+    func addBlurEffect(animated: Bool, backgroundColor: UIColor, completion: @escaping () -> Void) {
+        let containingSuperview = self.presentedView
+            [self.blurView].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                containingSuperview.addSubview($0)
+            }
+            NSLayoutConstraint.activate([
+                self.blurView.topAnchor.constraint(equalTo: containingSuperview.topAnchor),
+                self.blurView.leadingAnchor.constraint(equalTo: containingSuperview.leadingAnchor),
+                self.blurView.trailingAnchor.constraint(equalTo: containingSuperview.trailingAnchor),
+                self.blurView.bottomAnchor.constraint(equalTo: containingSuperview.bottomAnchor),
+            ])
+
+            [self.checkProgressView].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                self.blurView.addSubview($0)
+            }
+            NSLayoutConstraint.activate([
+                self.checkProgressView.centerXAnchor.constraint(equalTo: self.blurView.centerXAnchor),
+                self.checkProgressView.centerYAnchor.constraint(equalTo: self.blurView.centerYAnchor),
+                self.checkProgressView.heightAnchor.constraint(equalToConstant: spinnerSize.height),
+                self.checkProgressView.widthAnchor.constraint(equalToConstant: spinnerSize.width),
+            ])
+
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration, animations: {
+                self.blurView.backgroundColor = backgroundColor
+            }, completion: { _ in
+                completion()
+            })
+    }
+
+    func startSpinner() {
+        self.checkProgressView.beginProgress()
+    }
+
+    func transitionSpinnerToComplete(animated: Bool, completion: @escaping () -> Void) {
+        self.checkProgressView.completeProgress(completion: {
+            completion()
+        })
+    }
+
+    func removeBlurEffect(animated: Bool, completion: (() -> Void)? = nil) {
+        if self.blurView.superview != nil {
+            self.blurView.translatesAutoresizingMaskIntoConstraints = true
+            self.blurView.removeConstraints(self.blurView.constraints)
+
+            if checkProgressView.superview != nil {
+                self.checkProgressView.translatesAutoresizingMaskIntoConstraints = true
+                self.checkProgressView.removeConstraints(self.checkProgressView.constraints)
+            }
+
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration, animations: {
+                self.blurView.backgroundColor = .clear
+            }, completion: { _ in
+                self.blurView.removeFromSuperview()
+                if let completion {
+                    completion()
+                }
+            })
+        } else {
+            if let completion {
+                completion()
+            }
+        }
+    }
+    
     /**
      Override presented view to return non-optional
      */
@@ -141,27 +222,28 @@ extension BottomSheetPresentationController {
         containerView.addSubview(presentedView)
 
         // We'll use this constraint to handle the keyboard
-        let bottomAnchor = presentedView.bottomAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.bottomAnchor)
+        let bottomAnchor = presentedView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        bottomAnchor.priority = .defaultLow
         self.bottomAnchor = bottomAnchor
 
         // Add a view between the bottom of the VC and the bottom of the screen for 2 reasons
         // 1. The keyboard animation is sometimes erroneous and results in the bottom of the presented view decoupling from the top of the keyboard, exposing the view behind it.
         // 2. The presented view (BottomSheetVC) does not inherit safeAreaLayoutGuide.bottom
-        let coverUpBottomView = UIView()
-        containerView.addSubview(coverUpBottomView)
-        coverUpBottomView.backgroundColor = presentedView.backgroundColor
-        coverUpBottomView.translatesAutoresizingMaskIntoConstraints = false
-
+//        let coverUpBottomView = UIView()
+//        containerView.addSubview(coverUpBottomView)
+//        coverUpBottomView.backgroundColor = presentedView.backgroundColor
+//        coverUpBottomView.translatesAutoresizingMaskIntoConstraints = false
+//
         NSLayoutConstraint.activate([
             presentedView.topAnchor.constraint(greaterThanOrEqualTo: containerView.safeAreaLayoutGuide.topAnchor),
             presentedView.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor),
             presentedView.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
             bottomAnchor,
-
-            coverUpBottomView.topAnchor.constraint(equalTo: presentedView.bottomAnchor),
-            coverUpBottomView.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor),
-            coverUpBottomView.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
-            coverUpBottomView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+//
+//            coverUpBottomView.topAnchor.constraint(equalTo: presentedView.bottomAnchor),
+//            coverUpBottomView.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor),
+//            coverUpBottomView.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
+//            coverUpBottomView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
         ])
 
         fullHeightConstraint.isActive = forceFullHeight
@@ -180,37 +262,37 @@ extension BottomSheetPresentationController {
     }
 
     private func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(adjustForKeyboard),
-            name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(adjustForKeyboard),
-            name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+//        NotificationCenter.default.addObserver(
+//            self, selector: #selector(adjustForKeyboard),
+//            name: UIResponder.keyboardWillHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(
+//            self, selector: #selector(adjustForKeyboard),
+//            name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
 
     @objc
     private func adjustForKeyboard(notification: Notification) {
-        guard
-            let keyboardScreenEndFrame =
-                (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?
-                .cgRectValue,
-            let containerView = containerView,
-            let bottomAnchor = bottomAnchor
-        else {
-            return
-        }
 
-        let keyboardViewEndFrame = containerView.convert(keyboardScreenEndFrame, from: containerView.window)
-        let keyboardInViewHeight = containerView.bounds.intersection(keyboardViewEndFrame).height - containerView.safeAreaInsets.bottom
-        if notification.name == UIResponder.keyboardWillHideNotification {
-            bottomAnchor.constant = 0
-        } else {
-            bottomAnchor.constant = -keyboardInViewHeight
-        }
-
-        containerView.setNeedsLayout()
+        self.containerView?.setNeedsLayout()
         UIView.animateAlongsideKeyboard(notification) {
-            containerView.layoutIfNeeded()
+            guard
+                let keyboardScreenEndFrame =
+                    (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?
+                    .cgRectValue,
+                let bottomAnchor = self.bottomAnchor
+            else {
+                return
+            }
+
+            let keyboardViewEndFrame = self.presentedView.convert(keyboardScreenEndFrame, from: self.presentedView.window)
+            let keyboardInViewHeight = self.presentedView.bounds.intersection(keyboardViewEndFrame).height - self.presentedView.safeAreaInsets.bottom
+            if notification.name == UIResponder.keyboardWillHideNotification {
+                bottomAnchor.constant = 0
+            } else {
+                bottomAnchor.constant = -keyboardInViewHeight
+            }
+
+            self.containerView?.layoutIfNeeded()
         }
     }
 }
