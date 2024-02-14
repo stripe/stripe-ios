@@ -138,21 +138,27 @@ class NativeFlowController {
 
 extension NativeFlowController {
 
-    private func setNavigationControllerViewControllers(_ viewControllers: [UIViewController], animated: Bool = true) {
-        viewControllers.forEach { viewController in
-            FinancialConnectionsNavigationController.configureNavigationItemForNative(
-                viewController.navigationItem,
-                closeItem: navigationBarCloseBarButtonItem,
-                shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
-                    forViewController: viewController,
-                    reducedBranding: dataManager.reducedBranding,
-                    merchantLogo: dataManager.merchantLogo
-                ),
-                shouldLeftAlignStripeLogo: viewControllers.first == viewController
-                    && viewController is ConsentViewController
-            )
+    private func setNavigationControllerViewControllers(
+        _ viewControllers: [UIViewController],
+        animated: Bool = true
+    ) {
+        dismissVisibleSheetsIfNeeded { [weak self] in
+            guard let self else { return }
+            viewControllers.forEach { viewController in
+                FinancialConnectionsNavigationController.configureNavigationItemForNative(
+                    viewController.navigationItem,
+                    closeItem: self.navigationBarCloseBarButtonItem,
+                    shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                        forViewController: viewController,
+                        reducedBranding: self.dataManager.reducedBranding,
+                        merchantLogo: self.dataManager.merchantLogo
+                    ),
+                    shouldLeftAlignStripeLogo: viewControllers.first == viewController
+                        && viewController is ConsentViewController
+                )
+            }
+            navigationController.setViewControllers(viewControllers, animated: animated)
         }
-        navigationController.setViewControllers(viewControllers, animated: animated)
     }
 
     private func pushPane(
@@ -183,22 +189,74 @@ extension NativeFlowController {
     }
 
     private func pushViewController(_ viewController: UIViewController?, animated: Bool) {
-        if let viewController = viewController {
-            FinancialConnectionsNavigationController.configureNavigationItemForNative(
-                viewController.navigationItem,
-                closeItem: navigationBarCloseBarButtonItem,
-                shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
-                    forViewController: viewController,
-                    reducedBranding: dataManager.reducedBranding,
-                    merchantLogo: dataManager.merchantLogo
-                ),
-                shouldLeftAlignStripeLogo: false  // if we `push`, this is not the first VC
+        dismissVisibleSheetsIfNeeded { [weak self] in
+            guard let self else { return }
+            if let viewController = viewController {
+                FinancialConnectionsNavigationController.configureNavigationItemForNative(
+                    viewController.navigationItem,
+                    closeItem: navigationBarCloseBarButtonItem,
+                    shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
+                        forViewController: viewController,
+                        reducedBranding: dataManager.reducedBranding,
+                        merchantLogo: dataManager.merchantLogo
+                    ),
+                    shouldLeftAlignStripeLogo: false  // if we `push`, this is not the first VC
+                )
+                navigationController.pushViewController(viewController, animated: animated)
+            } else {
+                // when we can't find a view controller to present,
+                // show a terminal error
+                showTerminalError()
+            }
+        }
+    }
+
+    private func presentPaneAsSheet(
+        _ pane: FinancialConnectionsSessionManifest.NextPane
+    ) {
+        let paneViewController = CreatePaneViewController(
+            pane: pane,
+            nativeFlowController: self,
+            dataManager: dataManager,
+            panePresentationStyle: .sheet
+        )
+        guard let paneViewController = paneViewController as? SheetViewController else {
+            assertionFailure("expected the pane to always be a sheet if `presentAsSheet` is used")
+            pushPane(pane, animated: true)
+            return
+        }
+        paneViewController.present(on: navigationController)
+    }
+
+    private func dismissVisibleSheetsIfNeeded(
+        animated: Bool = true,
+        completionHandler: @escaping () -> Void
+    ) {
+        if let viewController = navigationController.presentedViewController {
+            viewController.dismiss(
+                animated: animated,
+                completion: { [weak self] in
+                    // recursively dismiss any presented VC until
+                    // there are none
+                    //
+                    // this is likely not needed, but it's there as
+                    // an extra safe-guard
+                    self?.dismissVisibleSheetsIfNeeded(completionHandler: completionHandler)
+                }
             )
-            navigationController.pushViewController(viewController, animated: animated)
         } else {
-            // when we can't find a view controller to present,
-            // show a terminal error
-            showTerminalError()
+            completionHandler()
+        }
+    }
+
+    private func dismissCurrentPane(animated: Bool) {
+        if
+            let sheetViewController = navigationController.presentedViewController as? SheetViewController,
+            sheetViewController.panePresentationStyle == .sheet
+        {
+            sheetViewController.dismiss(animated: animated)
+        } else {
+            navigationController.popViewController(animated: animated)
         }
     }
 }
@@ -411,6 +469,20 @@ extension NativeFlowController {
                     .paneFromViewController(navigationController.topViewController)
             )
     }
+
+    private func showErrorPane(
+        forError error: Error,
+        referrerPane: FinancialConnectionsSessionManifest.NextPane
+    ) {
+        // the error pane acts as a replacement
+        // for the current pane so we need to first
+        // dismiss the current pane
+        dismissCurrentPane(animated: false)
+
+        dataManager.errorPaneError = error
+        dataManager.errorPaneReferrerPane = referrerPane
+        pushPane(.unexpectedError, animated: false)
+    }
 }
 
 // MARK: - ConsentViewControllerDelegate
@@ -428,7 +500,12 @@ extension NativeFlowController: ConsentViewControllerDelegate {
 
         dataManager.manifest = manifest
 
-        pushPane(manifest.nextPane, animated: true)
+        let nextPane = manifest.nextPane
+        if nextPane == .networkingLinkLoginWarmup {
+            presentPaneAsSheet(nextPane)
+        } else {
+            pushPane(nextPane, animated: true)
+        }
     }
 
     func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController) {
@@ -444,6 +521,15 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
         _ viewController: InstitutionPickerViewController,
         didSelect institution: FinancialConnectionsInstitution
     ) {
+        // necessary to pass on institution for `ErrorViewController`
+        dataManager.institution = institution
+    }
+
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didFinishSelecting institution: FinancialConnectionsInstitution,
+        authSession: FinancialConnectionsAuthSession
+    ) {
         delegate?.nativeFlowController(
             self,
             didReceiveEvent: FinancialConnectionsEvent(
@@ -453,10 +539,14 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
                 )
             )
         )
-
         dataManager.institution = institution
+        dataManager.authSession = authSession
 
-        pushPane(.partnerAuth, animated: true)
+        if authSession.isOauthNonOptional {
+            presentPaneAsSheet(.partnerAuth)
+        } else {
+            pushPane(.partnerAuth, animated: true)
+        }
     }
 
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
@@ -473,22 +563,28 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
             didReceiveEvent: FinancialConnectionsEvent(name: .searchInitiated)
         )
     }
+
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didReceiveError error: Error
+    ) {
+        showErrorPane(forError: error, referrerPane: .institutionPicker)
+    }
 }
 
 // MARK: - PartnerAuthViewControllerDelegate
 
 extension NativeFlowController: PartnerAuthViewControllerDelegate {
 
-    func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController) {
-        didSelectAnotherBank()
-    }
-
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController) {
-        navigationController.popViewController(animated: true)
-    }
+        dataManager.authSession = nil // clear any lingering auth sessions
 
-    func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController) {
-        pushPane(.manualEntry, animated: true)
+        switch viewController.panePresentationStyle {
+        case .sheet:
+            viewController.dismiss(animated: true)
+        case .fullscreen:
+            navigationController.popViewController(animated: true)
+        }
     }
 
     func partnerAuthViewController(
@@ -511,16 +607,18 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
 
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
-        didReceiveTerminalError error: Error
+        didReceiveEvent event: FinancialConnectionsEvent
     ) {
-        showTerminalError(error)
+        delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
 
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveError error: Error
     ) {
-        delegate?.nativeFlowController(self, didReceiveEvent: event)
+        dataManager.authSession = nil // clear any lingering auth sessions
+
+        showErrorPane(forError: error, referrerPane: .partnerAuth)
     }
 }
 
@@ -879,12 +977,32 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
     }
 }
 
+// MARK: - ErrorViewControllerDelegate
+
+extension NativeFlowController: ErrorViewControllerDelegate {
+    func errorViewControllerDidSelectAnotherBank(_ viewController: ErrorViewController) {
+        didSelectAnotherBank()
+    }
+
+    func errorViewControllerDidSelectManualEntry(_ viewController: ErrorViewController) {
+        pushPane(.manualEntry, animated: true)
+    }
+
+    func errorViewController(
+        _ viewController: ErrorViewController,
+        didSelectCloseWithError error: Error
+    ) {
+        closeAuthFlow(error: error)
+    }
+}
+
 // MARK: - Static Helpers
 
 private func CreatePaneViewController(
     pane: FinancialConnectionsSessionManifest.NextPane,
     nativeFlowController: NativeFlowController,
-    dataManager: NativeFlowDataManager
+    dataManager: NativeFlowDataManager,
+    panePresentationStyle: PanePresentationStyle = .fullscreen
 ) -> UIViewController? {
     let viewController: UIViewController?
     switch pane {
@@ -1097,15 +1215,18 @@ private func CreatePaneViewController(
     case .partnerAuth:
         if let institution = dataManager.institution {
             let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
+                authSession: dataManager.authSession,
                 institution: institution,
                 manifest: dataManager.manifest,
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
-                analyticsClient: dataManager.analyticsClient,
-                reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors
+                analyticsClient: dataManager.analyticsClient
             )
-            let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
+            let partnerAuthViewController = PartnerAuthViewController(
+                dataSource: partnerAuthDataSource,
+                panePresentationStyle: panePresentationStyle
+            )
             partnerAuthViewController.delegate = nativeFlowController
             viewController = partnerAuthViewController
         } else {
@@ -1126,7 +1247,26 @@ private func CreatePaneViewController(
         successViewController.delegate = nativeFlowController
         viewController = successViewController
     case .unexpectedError:
-        viewController = nil
+        if
+            let errorPaneError = dataManager.errorPaneError,
+            let errorPaneReferrerPane = dataManager.errorPaneReferrerPane
+        {
+            let errorDataSource = ErrorDataSource(
+                error: errorPaneError,
+                referrerPane: errorPaneReferrerPane,
+                manifest: dataManager.manifest,
+                reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors,
+                analyticsClient: dataManager.analyticsClient,
+                institution: dataManager.institution
+            )
+            let errorViewController = ErrorViewController(dataSource: errorDataSource)
+            errorViewController.delegate = nativeFlowController
+            viewController = errorViewController
+        } else {
+            // if backend returns `unexpected_error`, the parameters being NULL
+            // might be OK and we will go to terminal error
+            viewController = nil
+        }
     case .authOptions:
         assertionFailure("Not supported")
         viewController = nil
@@ -1138,7 +1278,8 @@ private func CreatePaneViewController(
             analyticsClient: dataManager.analyticsClient
         )
         let networkingLinkWarmupViewController = NetworkingLinkLoginWarmupViewController(
-            dataSource: networkingLinkWarmupDataSource
+            dataSource: networkingLinkWarmupDataSource,
+            panePresentationStyle: panePresentationStyle
         )
         networkingLinkWarmupViewController.delegate = nativeFlowController
         viewController = networkingLinkWarmupViewController

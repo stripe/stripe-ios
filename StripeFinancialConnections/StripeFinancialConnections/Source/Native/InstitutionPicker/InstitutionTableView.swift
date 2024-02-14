@@ -33,7 +33,7 @@ protocol InstitutionTableViewDelegate: AnyObject {
 final class InstitutionTableView: UIView {
 
     private let allowManualEntry: Bool
-    private let tableView: UITableView
+    let tableView: UITableView
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     private lazy var didSelectManualEntry: (() -> Void)? = {
         return allowManualEntry
@@ -88,7 +88,7 @@ final class InstitutionTableView: UIView {
     private lazy var loadingView: UIView = {
         return InstitutionTableLoadingView()
     }()
-    
+
     init(frame: CGRect, allowManualEntry: Bool) {
         self.allowManualEntry = allowManualEntry
         let cellIdentifier = "\(InstitutionTableViewCell.self)"
@@ -163,7 +163,7 @@ final class InstitutionTableView: UIView {
                 tableView.tableFooterView = tableFooterView
             }
         }
-        
+
         // resize loading view to always be below header view
         let headerViewHeight = tableView.tableHeaderView?.frame.height ?? 0
         loadingView.frame = CGRect(
@@ -190,7 +190,7 @@ final class InstitutionTableView: UIView {
 
         // clear state (some of this is defensive programming)
         showError(false, isUserSearching: isUserSearching)
-        
+
         if isUserSearching {
             if institutions.isEmpty {
                 showTableFooterView(
@@ -220,7 +220,7 @@ final class InstitutionTableView: UIView {
     func showLoadingView(_ show: Bool) {
         loadingView.isHidden = !show
         bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
-        
+
         // ensure the loading view is resized to account for header view
         setNeedsLayout()
         layoutIfNeeded()
@@ -241,7 +241,7 @@ final class InstitutionTableView: UIView {
             }
         }
     }
-    
+
     func setTableHeaderView(_ tableHeaderView: UIView?) {
         if let tableHeaderView {
             tableView.setTableHeaderViewWithCompressedFrameSize(tableHeaderView)
@@ -249,7 +249,7 @@ final class InstitutionTableView: UIView {
             tableView.tableHeaderView = nil
         }
     }
-    
+
     // the footer is always shown, except for when there is an error searching
     private func showTableFooterView(_ show: Bool, view: UIView?) {
         if show, let view = view {
@@ -257,6 +257,53 @@ final class InstitutionTableView: UIView {
         } else {
             tableView.tableFooterView = nil
         }
+    }
+
+    func showLoadingView(
+        _ show: Bool,
+        forInstitution institution: FinancialConnectionsInstitution
+    ) {
+        guard
+            let index = institutions.firstIndex(where: { $0.id == institution.id }),
+            let loadingCell = tableView.cellForRow(
+                at: IndexPath(row: index, section: 0)
+            ) as? InstitutionTableViewCell
+        else {
+            return
+        }
+        loadingCell.showLoadingView(show)
+    }
+
+    /// Grays out all visible rows except the one with `institution`.
+    func showOverlayView(
+        _ show: Bool,
+        exceptForInstitution institution: FinancialConnectionsInstitution? = nil
+    ) {
+        let exceptInstitutionCell: UITableViewCell? = {
+            if
+                let institution,
+                let index = institutions.firstIndex(where: { $0.id == institution.id }),
+                let cell = tableView.cellForRow(
+                    at: IndexPath(row: index, section: 0)
+                )
+            {
+                return cell
+            } else {
+                return nil
+            }
+        }()
+
+        tableView
+            .visibleCells
+            .forEach { visibleCell in
+                guard
+                    let visibleCell = visibleCell as? InstitutionTableViewCell,
+                    visibleCell !== exceptInstitutionCell
+                else {
+                    return
+                }
+                visibleCell.showOverlayView(show)
+            }
     }
 }
 
