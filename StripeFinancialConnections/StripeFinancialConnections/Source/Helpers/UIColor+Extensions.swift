@@ -31,14 +31,6 @@ extension UIColor {
         return brand600
     }
 
-    static var textPrimary: UIColor {
-        return neutral800
-    }
-
-    static var textSecondary: UIColor {
-        return neutral500
-    }
-
     static var textBrand: UIColor {
         return brand500
     }
