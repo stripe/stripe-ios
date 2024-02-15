@@ -52,19 +52,22 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     }
 
     private func showContent(redactedPhoneNumber: String) {
-        let pane = PaneWithHeaderLayoutView(
-            title: STPLocalizedString(
-                "Verify it's you",
-                "The title of a screen where users are informed that they can sign-in-to Link."
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: nil,
+                title: STPLocalizedString(
+                    "Verify it's you",
+                    "The title of a screen where users are informed that they can sign-in-to Link."
+                ),
+                subtitle: String(format: STPLocalizedString(
+                    "Enter the code sent to %@.",
+                    "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
+                ), AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
+                contentView: otpView
             ),
-            subtitle: String(format: STPLocalizedString(
-                "Enter the code sent to %@.",
-                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
-            ), AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
-            contentView: otpView,
             footerView: nil
         )
-        pane.addTo(view: view)
+        paneLayoutView.addTo(view: view)
     }
 
     private func showLoadingView(_ show: Bool) {
