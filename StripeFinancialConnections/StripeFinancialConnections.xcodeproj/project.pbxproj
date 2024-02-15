@@ -140,7 +140,6 @@
 		A1AEE72611F62550267C326C /* ManualEntryFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2922EAE205D76B40ED7FC92 /* ManualEntryFooterView.swift */; };
 		A34AB3AC6D071605CABFFC9B /* UIViewController+KeyboardAvoiding.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */; };
 		A573468B2800DABF384CAB43 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCC4356AE3295B4A2F4A28 /* Image.swift */; };
-		A6DB232AD8CB25B0C9F4C79C /* PaneWithHeaderLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD362DF2D937D22E803C1DD /* PaneWithHeaderLayoutView.swift */; };
 		A79D6A26EE9FF96D24F4AC5C /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267B3586136203186882F5CE /* NSAttributedString+Extensions.swift */; };
 		A9F9E63FD6B72F5552A8A850 /* ResetFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA81F9910A88A7DEB0F0BFD /* ResetFlowViewController.swift */; };
 		AA80602323C28AFAC391358D /* TimeInterval+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E813BE6B34901E4E050FFE13 /* TimeInterval+Extensions.swift */; };
@@ -181,7 +180,6 @@
 		CBEAB081DD7353928F485071 /* APIPollingHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710183EE587F6FDA077FC150 /* APIPollingHelperTests.swift */; };
 		CBF7BE2271D309F2B1E794CC /* FinancialConnectionsDataAccessNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32ED8A7E94822F14AD94A698 /* FinancialConnectionsDataAccessNotice.swift */; };
 		CF47070B2A4CA27FEE9AE5FA /* generic_error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */; };
-		CF8152B40B6CA74FD15602BF /* warning_circle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 956668158B27ACD34A6B2657 /* warning_circle@3x.png */; };
 		D0C1EF46A418A8F8774B7418 /* FinancialConnectionsSession_both_accounts_la.json in Resources */ = {isa = PBXBuildFile; fileRef = F6CF7F1005B57D566E139DE3 /* FinancialConnectionsSession_both_accounts_la.json */; };
 		D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */; };
 		D10FB0DAC5E452D4569CEA14 /* back_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */; };
@@ -281,7 +279,6 @@
 		1E80DD2D042B327D9756E083 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1F2C7AE6509C80B6F30662AA /* FinancialConnectionsCustomManualEntryRequiredError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsCustomManualEntryRequiredError.swift; sourceTree = "<group>"; };
 		1F9D6F0CC79B7949D037DE66 /* NetworkingLinkStepUpVerificationBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkStepUpVerificationBodyView.swift; sourceTree = "<group>"; };
-		1FD362DF2D937D22E803C1DD /* PaneWithHeaderLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PaneWithHeaderLayoutView.swift; path = ../PaneWithHeaderLayoutView.swift; sourceTree = "<group>"; };
 		20E7725EF317C3BD62ADF845 /* FinancialConnectionsSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSheetTests.swift; sourceTree = "<group>"; };
 		24701CABF53C21DD7BCF3E48 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		248D51F7AADE404E49957DDA /* FinancialConnectionsSDKImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSDKImplementation.swift; sourceTree = "<group>"; };
@@ -412,7 +409,6 @@
 		939D10B20D3ECA7BF7021BF8 /* InstitutionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionIconView.swift; sourceTree = "<group>"; };
 		93C4ECB724BD75320A999C42 /* HostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostController.swift; sourceTree = "<group>"; };
 		94869BACB486153419B30DE5 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		956668158B27ACD34A6B2657 /* warning_circle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning_circle@3x.png"; sourceTree = "<group>"; };
 		965814B0C5F3D13158E610E3 /* SessionFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFetcherTests.swift; sourceTree = "<group>"; };
 		97948A848C99ACD1A498F841 /* AttributedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedTextView.swift; sourceTree = "<group>"; };
 		97CE72E38D41E86E0A1FAE9F /* AccountPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerViewController.swift; sourceTree = "<group>"; };
@@ -554,7 +550,6 @@
 				EF0111A8932418631FFA1663 /* search@3x.png */,
 				57B289E803B7A53B000D7919 /* spinner@3x.png */,
 				B4F56BF50DBF4A353D2526A6 /* stripe_logo@3x.png */,
-				956668158B27ACD34A6B2657 /* warning_circle@3x.png */,
 				5D555DB0657A602274596428 /* warning_triangle@3x.png */,
 			);
 			path = Images;
@@ -771,7 +766,6 @@
 				34452D5FDC1ED566A13427FE /* PaneLayoutView.swift */,
 				6A7814172B361C5000168992 /* PaneLayoutView+Extensions.swift */,
 				263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */,
-				1FD362DF2D937D22E803C1DD /* PaneWithHeaderLayoutView.swift */,
 			);
 			path = PaneLayoutView;
 			sourceTree = "<group>";
@@ -1228,7 +1222,6 @@
 				3AE1C7A78FB5B220F5200F49 /* search@3x.png in Resources */,
 				BD3C87E03EB44F7D1C11664C /* spinner@3x.png in Resources */,
 				97032B101B54E6A98178FD73 /* stripe_logo@3x.png in Resources */,
-				CF8152B40B6CA74FD15602BF /* warning_circle@3x.png in Resources */,
 				87E22AF1E35FB63C20AEE9DF /* warning_triangle@3x.png in Resources */,
 				D949AE695F3288F84258BACD /* Localizable.strings in Resources */,
 			);
@@ -1385,7 +1378,6 @@
 				444884F264D13FF654EA7471 /* PaneLayoutView.swift in Sources */,
 				6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */,
 				B8F440921DB172F96F912CD0 /* PaneWithCustomHeaderLayoutView.swift in Sources */,
-				A6DB232AD8CB25B0C9F4C79C /* PaneWithHeaderLayoutView.swift in Sources */,
 				99F41681B77ECB0090F34E31 /* SFSafariViewController+Extensions.swift in Sources */,
 				AA80602323C28AFAC391358D /* TimeInterval+Extensions.swift in Sources */,
 				E637387728FA1597B1B51E5D /* UIImage+Extensions.swift in Sources */,
