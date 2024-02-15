@@ -251,21 +251,21 @@ class ConfirmButton: UIView {
         override var isHighlighted: Bool {
             didSet {
                 highlightDimView.frame = bounds
-//                if self.isHighlighted {
-//                    UIView.animate(
-//                        withDuration: PaymentSheetUI.defaultAnimationDuration, delay: 0.2,
-//                        options: [.beginFromCurrentState],
-//                        animations: {
-//                            self.highlightDimView.alpha = 1
-//                        }, completion: nil)
-//                } else {
-//                    UIView.animate(
-//                        withDuration: PaymentSheetUI.quickAnimationDuration, delay: 0,
-//                        options: [.beginFromCurrentState],
-//                        animations: {
-//                            self.highlightDimView.alpha = 0
-//                        }, completion: nil)
-//                }
+                if self.isHighlighted {
+                    UIView.animate(
+                        withDuration: PaymentSheetUI.defaultAnimationDuration, delay: 0.2,
+                        options: [.beginFromCurrentState],
+                        animations: {
+                            self.highlightDimView.alpha = 1
+                        }, completion: nil)
+                } else {
+                    UIView.animate(
+                        withDuration: PaymentSheetUI.quickAnimationDuration, delay: 0,
+                        options: [.beginFromCurrentState],
+                        animations: {
+                            self.highlightDimView.alpha = 0
+                        }, completion: nil)
+                }
             }
         }
         lazy var titleLabel: UILabel = {

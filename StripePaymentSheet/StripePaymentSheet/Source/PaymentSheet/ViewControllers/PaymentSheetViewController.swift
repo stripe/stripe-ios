@@ -377,7 +377,7 @@ class PaymentSheetViewController: UIViewController {
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
-//
+
         // Buy button
         let buyButtonStyle: ConfirmButton.Style
         var buyButtonStatus: ConfirmButton.Status
@@ -426,7 +426,6 @@ class PaymentSheetViewController: UIViewController {
         }
 
         if animated {
-//            TODO: Check this, it interrupts the animation and causes a glitch/jitter shortly after paymentsheet presents
             animateHeightChange(updateButtonVisibility)
         } else {
             updateButtonVisibility()

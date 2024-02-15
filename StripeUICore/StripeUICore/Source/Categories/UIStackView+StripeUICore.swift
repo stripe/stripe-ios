@@ -96,22 +96,22 @@ import UIKit
                 view.transform = shouldShow ? outTransform : .identity
             }
 
-//            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
-//                viewsToUpdate.forEach { view in
-//                    view.isHidden = !shouldShow
-//                    view.alpha = shouldShow ? 1 : 0
-//                    view.transform = shouldShow ? .identity : outTransform
-//                }
-//
-//                self.setNeedsLayout()
-//                self.layoutIfNeeded()
-//            } completion: { done in
-//                viewsToUpdate.forEach { view in
-//                    view.transform = .identity
-//                }
-//
-//                completion?(done)
-//            }
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
+                viewsToUpdate.forEach { view in
+                    view.isHidden = !shouldShow
+                    view.alpha = shouldShow ? 1 : 0
+                    view.transform = shouldShow ? .identity : outTransform
+                }
+
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
+            } completion: { done in
+                viewsToUpdate.forEach { view in
+                    view.transform = .identity
+                }
+
+                completion?(done)
+            }
         } else {
             viewsToUpdate.forEach { view in
                 view.isHidden = !shouldShow
