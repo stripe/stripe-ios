@@ -96,7 +96,7 @@ private func CreateSingleBulletinView(
         imageView.setImage(with: iconUrl)
     } else {
         imageView.image = Image.bullet.makeImage().withRenderingMode(.alwaysTemplate)
-        imageView.tintColor = .textPrimary
+        imageView.tintColor = .textDefault
     }
     imageView.translatesAutoresizingMaskIntoConstraints = false
     let imageDiameter: CGFloat = 20

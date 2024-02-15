@@ -95,8 +95,7 @@ class NativeFlowController {
 
         let showConfirmationAlert =
             !(navigationController.topViewController is ConsentViewController
-                || navigationController.topViewController is SuccessViewController
-                || navigationController.topViewController is ManualEntrySuccessViewController)
+                || navigationController.topViewController is SuccessViewController)
 
         let finishClosingAuthFlow = { [weak self] in
             self?.closeAuthFlow()
@@ -698,16 +697,7 @@ extension NativeFlowController: ManualEntryViewControllerDelegate {
                 accountNumberLast4
             )
         }
-        pushPane(.success, animated: true)
-    }
-}
-
-// MARK: - ManualEntrySuccessViewControllerDelegate
-
-extension NativeFlowController: ManualEntrySuccessViewControllerDelegate {
-
-    func manualEntrySuccessViewControllerDidFinish(_ viewController: ManualEntrySuccessViewController) {
-        closeAuthFlow(error: nil)
+        pushPane(paymentAccountResource.nextPane ?? .success, animated: true)
     }
 }
 
@@ -1119,21 +1109,6 @@ private func CreatePaneViewController(
         let manualEntryViewController = ManualEntryViewController(dataSource: dataSource)
         manualEntryViewController.delegate = nativeFlowController
         viewController = manualEntryViewController
-    case .manualEntrySuccess:
-        if let paymentAccountResource = dataManager.paymentAccountResource,
-           let accountNumberLast4 = dataManager.accountNumberLast4
-        {
-            let manualEntrySuccessViewController = ManualEntrySuccessViewController(
-                microdepositVerificationMethod: paymentAccountResource.microdepositVerificationMethod,
-                accountNumberLast4: accountNumberLast4,
-                analyticsClient: dataManager.analyticsClient
-            )
-            manualEntrySuccessViewController.delegate = nativeFlowController
-            viewController = manualEntrySuccessViewController
-        } else {
-            assertionFailure("Code logic error. Missing parameters for \(pane).")
-            viewController = nil
-        }
     case .networkingLinkSignupPane:
         if let linkedAccountIds = dataManager.linkedAccounts?.map({ $0.id }) {
             let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
@@ -1233,6 +1208,8 @@ private func CreatePaneViewController(
             assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil
         }
+    case .manualEntrySuccess:
+        fallthrough
     case .success:
         let successDataSource = SuccessDataSourceImplementation(
             manifest: dataManager.manifest,
@@ -1316,7 +1293,10 @@ private func CreatePaneViewController(
         // this assert should ensure that it's nearly impossible to miss
         // adding new cases to `paneFromViewController`
         assert(
-            FinancialConnectionsAnalyticsClient.paneFromViewController(viewController) == pane,
+            FinancialConnectionsAnalyticsClient.paneFromViewController(viewController) == pane
+            // `manualEntrySuccess` is a special case where it maps to the
+            // same thing as `success` so this assert is not necessary
+            || pane == .manualEntrySuccess,
             "Found a new view controller (\(viewController.self)) that needs to be added to `paneFromViewController`."
         )
 

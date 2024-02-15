@@ -193,8 +193,6 @@ extension FinancialConnectionsAnalyticsClient {
             return .success
         case is ManualEntryViewController:
             return .manualEntry
-        case is ManualEntrySuccessViewController:
-            return .manualEntrySuccess
         case is ResetFlowViewController:
             return .resetFlow
         case is TerminalErrorViewController:
