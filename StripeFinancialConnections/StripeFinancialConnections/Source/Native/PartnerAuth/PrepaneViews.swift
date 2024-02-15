@@ -130,7 +130,7 @@ private func CreateContentView(
                 font: .label(.large),
                 boldFont: .label(.largeEmphasized),
                 linkFont: .label(.largeEmphasized),
-                textColor: .textPrimary
+                textColor: .textDefault
             )
             label.setText(text, action: didSelectURL)
             verticalStackView.addArrangedSubview(label)

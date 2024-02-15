@@ -41,7 +41,7 @@ final class InstitutionTableViewCell: UITableViewCell {
 
     private func adjustBackgroundColor(isHighlighted: Bool) {
         contentView.backgroundColor = isHighlighted ? .backgroundContainer : .customBackgroundColor
-        
+
         // fix a bug where the background color of a
         // rotated, selected cell was wrong
         let selectedBackgroundView = UIView()
