@@ -330,7 +330,6 @@ extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
 extension BottomSheetViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > 0 {
-//            TODO: ANIMATE THIS?
             contentViewController.navigationBar.setShadowHidden(false)
         } else {
             contentViewController.navigationBar.setShadowHidden(true)
@@ -357,6 +356,9 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
     func present(
         _ authenticationViewController: UIViewController, completion: @escaping () -> Void
     ) {
+        // Remove a blur effect, if any
+        self.bottomSheetPresentationController.removeBlurEffect(animated: true, completion: completion)
+
         let threeDS2ViewController = BottomSheet3DS2ViewController(
             challengeViewController: authenticationViewController, appearance: appearance, isTestMode: isTestMode)
         threeDS2ViewController.delegate = self
