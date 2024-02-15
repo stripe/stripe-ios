@@ -113,8 +113,11 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             navigationBarContainerView.layoutIfNeeded()
             // Layout is mostly completed at this point. The new height is the navigation bar + content + the unsafe area at the bottom.
             let newHeight = self.contentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height + view.safeAreaInsets.bottom
+
             // Force the old height, then force a layout pass
-            manualHeightConstraint.isActive = true
+            if self.modalPresentationStyle == .custom { // Only if we're using the custom presentation style (e.g. pinned to the bottom)
+                manualHeightConstraint.isActive = true
+            }
             self.rootParent.presentationController?.containerView?.layoutIfNeeded()
             self.contentViewController.view.alpha = 0
             // Now animate to the correct height.
@@ -345,33 +348,46 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     @objc
     private func adjustForKeyboard(notification: Notification, animations: @escaping () -> Void) {
+        let adjustForKeyboard = {
+            self.view.superview?.setNeedsLayout()
+            UIView.animateAlongsideKeyboard(notification) {
+                guard
+                    let keyboardScreenEndFrame =
+                        (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?
+                        .cgRectValue,
+                    let bottomAnchor = self.bottomAnchor
+                else {
+                    return
+                }
 
-        self.view.superview?.setNeedsLayout()
-        UIView.animateAlongsideKeyboard(notification) {
-            guard
-                let keyboardScreenEndFrame =
-                    (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?
-                    .cgRectValue,
-                let bottomAnchor = self.bottomAnchor
-            else {
-                return
+                let keyboardViewEndFrame = self.view.convert(keyboardScreenEndFrame, from: self.view.window)
+                var keyboardInViewHeight = self.view.bounds.intersection(keyboardViewEndFrame).height
+                if self.modalPresentationStyle == .custom {
+                    // If we're presenting in the custom (pinned to bottom of screen) style, incorporate the safe area insets
+                    keyboardInViewHeight -= self.view.safeAreaInsets.bottom
+                }
+
+                if notification.name == UIResponder.keyboardWillHideNotification {
+                    bottomAnchor.constant = 0
+                } else {
+                    bottomAnchor.constant = -keyboardInViewHeight
+                }
+
+                self.view.superview?.layoutIfNeeded()
+                animations()
             }
-
-            let keyboardViewEndFrame = self.view.convert(keyboardScreenEndFrame, from: self.view.window)
-            var keyboardInViewHeight = self.view.bounds.intersection(keyboardViewEndFrame).height
-            if self.modalPresentationStyle == .custom {
-                // If we're presenting in the custom (pinned to bottom) style, incorporate the safe area insets
-                keyboardInViewHeight -= self.view.safeAreaInsets.bottom
+        }
+        if self.modalPresentationStyle == .formSheet {
+            // If we're presenting as a form sheet (on an iPad etc), the form sheet presenter might move us around to center us on the screen.
+            // Then we can't calculate the keyboard's location correctly, because we'll be estimating based on the keyboard's size
+            // in our *old* location instead of the new one.
+            // To work around this, wait for a turn of the runloop, then add the keyboard padding.
+            DispatchQueue.main.async {
+                adjustForKeyboard()
             }
-
-            if notification.name == UIResponder.keyboardWillHideNotification {
-                bottomAnchor.constant = 0
-            } else {
-                bottomAnchor.constant = -keyboardInViewHeight
-            }
-
-            self.view.superview?.layoutIfNeeded()
-            animations()
+        } else {
+            // But usually we can do this immediately, as we control the presentation and know we'll always be pinned to the bottom of the screen.
+            adjustForKeyboard()
         }
     }
 
