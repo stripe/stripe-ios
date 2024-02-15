@@ -136,9 +136,9 @@ struct PaymentSheetTestPlayground: View {
     }
     var paymentMethodSettingsBinding: Binding<String> {
         Binding<String> {
-            return playgroundController.settings.paymentMethodSettingsID ?? ""
+            return playgroundController.settings.paymentMethodConfigurationId ?? ""
         } set: { newString in
-            playgroundController.settings.paymentMethodSettingsID = (newString != "") ? newString : nil
+            playgroundController.settings.paymentMethodConfigurationId = (newString != "") ? newString : nil
         }
     }
     var customerModeBinding: Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {

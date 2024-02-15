@@ -22,7 +22,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                                                                            captureMethod: .automaticAsync),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
-                                                            paymentMethodConfiguration: "pmc_234",
+                                                            paymentMethodConfigurationId: "pmc_234",
                                                             confirmHandler: { _, _, _ in })
         var config = PaymentSheet.Configuration()
         config.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_foo", "external_bar"], externalPaymentMethodConfirmHandler: { _, _, _ in })
