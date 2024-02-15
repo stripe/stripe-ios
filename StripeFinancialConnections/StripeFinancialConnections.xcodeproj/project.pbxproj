@@ -166,7 +166,6 @@
 		BF5F964E1CA6312755D4161E /* SessionFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965814B0C5F3D13158E610E3 /* SessionFetcherTests.swift */; };
 		BFF222008EEEDC3FACE342D9 /* AccountPickerFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACAB1B6DB88D74F5ECC1C6D /* AccountPickerFooterView.swift */; };
 		C0831318A33A32BF2EAB641A /* AccountPickerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1362591D12A04CA663A69A47 /* AccountPickerHelpers.swift */; };
-		C11D48CC29E1A123D50A5094 /* prepane_phone_background@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AD7571981F0FE2F10F68530 /* prepane_phone_background@3x.png */; };
 		C128C1681E46F0F12EB4EB9F /* NetworkingLinkStepUpVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6D662AB9854F3BDB90D8FD /* NetworkingLinkStepUpVerificationViewController.swift */; };
 		C19996D0AC7E046DA87B6B32 /* ManualEntryValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C7FDF59D906EA5C6B7A514 /* ManualEntryValidatorTests.swift */; };
 		C1A079E8E76A02EBCB2588DA /* AccountPickerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D715516C6703A780913E66EB /* AccountPickerDataSource.swift */; };
@@ -279,7 +278,6 @@
 		14CED33665ED3D8EE8D5D7B7 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
 		1848547B588045C776236B3B /* LinkAccountPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountPickerViewController.swift; sourceTree = "<group>"; };
 		191760EFAA9154C1F168E1D2 /* FinancialConnectionsPaymentMethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPaymentMethodType.swift; sourceTree = "<group>"; };
-		1AD7571981F0FE2F10F68530 /* prepane_phone_background@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "prepane_phone_background@3x.png"; sourceTree = "<group>"; };
 		1CD19E0601599AE89976DB4D /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		1CE32B7E492EFD8143F687F2 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1CFE14532C10471EC61BB05A /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -567,7 +565,6 @@
 				6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */,
 				6A732C9F2B6871E900828CB1 /* panel_arrow_right@3x.png */,
 				6A13B9FB2B58545F00FFA327 /* person@3x.png */,
-				1AD7571981F0FE2F10F68530 /* prepane_phone_background@3x.png */,
 				EF0111A8932418631FFA1663 /* search@3x.png */,
 				57B289E803B7A53B000D7919 /* spinner@3x.png */,
 				B4F56BF50DBF4A353D2526A6 /* stripe_logo@3x.png */,
@@ -1257,7 +1254,6 @@
 				6A13B9FC2B58545F00FFA327 /* person@3x.png in Resources */,
 				C747113C75AC92643B283CBD /* close@3x.png in Resources */,
 				CF47070B2A4CA27FEE9AE5FA /* generic_error@3x.png in Resources */,
-				C11D48CC29E1A123D50A5094 /* prepane_phone_background@3x.png in Resources */,
 				3AE1C7A78FB5B220F5200F49 /* search@3x.png in Resources */,
 				BD3C87E03EB44F7D1C11664C /* spinner@3x.png in Resources */,
 				97032B101B54E6A98178FD73 /* stripe_logo@3x.png in Resources */,

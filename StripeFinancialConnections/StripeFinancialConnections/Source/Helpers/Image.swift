@@ -25,7 +25,6 @@ enum Image: String, ImageMaker {
     case generic_error
     case panel_arrow_right
     case person
-    case prepane_phone_background
     case search
     case stripe_logo
     case spinner
