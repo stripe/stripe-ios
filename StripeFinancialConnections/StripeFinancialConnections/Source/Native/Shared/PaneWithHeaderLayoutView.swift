@@ -87,7 +87,7 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String?) -> UIV
         font: .heading(.large),
         boldFont: .heading(.large),
         linkFont: .heading(.large),
-        textColor: .textPrimary
+        textColor: .textDefault
     )
     titleLabel.setText(title)
     labelStackView.addArrangedSubview(titleLabel)
@@ -97,7 +97,7 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String?) -> UIV
             font: .body(.medium),
             boldFont: .body(.mediumEmphasized),
             linkFont: .body(.mediumEmphasized),
-            textColor: .textPrimary
+            textColor: .textDefault
         )
         subtitleLabel.setText(subtitle)
         labelStackView.addArrangedSubview(subtitleLabel)

@@ -76,7 +76,7 @@ final class RoundedTextField: UIView {
     private(set) lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
         textField.font = FinancialConnectionsFont.label(.large).uiFont
-        textField.textColor = .textPrimary
+        textField.textColor = .textDefault
         textField.defaultPlaceholderColor = .textSubdued
         textField.floatingPlaceholderColor = .textSubdued
         textField.placeholderLabel.font = textField.font
@@ -171,7 +171,7 @@ final class RoundedTextField: UIView {
         } else if let footerText = footerText {
             let footerLabel = AttributedLabel(
                 font: .label(.large),
-                textColor: .textPrimary
+                textColor: .textDefault
             )
             footerLabel.text = footerText
             footerTextLabel = footerLabel
