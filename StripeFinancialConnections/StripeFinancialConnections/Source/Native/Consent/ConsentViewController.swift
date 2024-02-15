@@ -71,32 +71,35 @@ class ConsentViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
 
-        let paneLayoutView = PaneWithCustomHeaderLayoutView(
-            headerView: {
+        let paneLayoutView = PaneLayoutView(
+            contentView: {
+                let verticalStackView = HitTestStackView()
+                verticalStackView.axis = .vertical
+                verticalStackView.alignment = .center
+                verticalStackView.spacing = 24
+                verticalStackView.isLayoutMarginsRelativeArrangement = true
+                verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                    top: 24,
+                    leading: 24,
+                    bottom: 8,
+                    trailing: 24
+                )
                 if let merchantLogo = dataSource.merchantLogo {
                     let consentLogoView = ConsentLogoView(merchantLogo: merchantLogo)
                     self.consentLogoView = consentLogoView
-                    let stackView = UIStackView(
-                        arrangedSubviews: [
-                            consentLogoView,
-                            titleLabel,
-                        ]
+                    verticalStackView.addArrangedSubview(consentLogoView)
+                }
+                verticalStackView.addArrangedSubview(titleLabel)
+                verticalStackView.addArrangedSubview(
+                    ConsentBodyView(
+                        bulletItems: dataSource.consent.body.bullets,
+                        didSelectURL: { [weak self] url in
+                            self?.didSelectURLInTextFromBackend(url)
+                        }
                     )
-                    stackView.axis = .vertical
-                    stackView.spacing = 24
-                    stackView.alignment = .center
-                    return stackView
-                } else {
-                    return titleLabel
-                }
+                )
+                return verticalStackView
             }(),
-            contentView: ConsentBodyView(
-                bulletItems: dataSource.consent.body.bullets,
-                didSelectURL: { [weak self] url in
-                    self?.didSelectURLInTextFromBackend(url)
-                }
-            ),
-            headerAndContentSpacing: 24.0,
             footerView: footerView
         )
         paneLayoutView.addTo(view: view)

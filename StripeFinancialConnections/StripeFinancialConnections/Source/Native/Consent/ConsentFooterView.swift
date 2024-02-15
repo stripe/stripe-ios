@@ -59,6 +59,13 @@ class ConsentFooterView: HitTestView {
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 16,
+            leading: 24,
+            bottom: 16,
+            trailing: 24
+        )
 
         if let belowCtaText = belowCtaText {
             let manuallyVerifyLabel = AttributedTextView(
