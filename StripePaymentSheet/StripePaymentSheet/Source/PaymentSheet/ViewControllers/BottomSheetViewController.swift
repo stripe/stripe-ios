@@ -222,7 +222,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             contentContainerView.widthAnchor.constraint(
                 equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
-//            self.view.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: 1.0)
         ])
         let hideKeyboardGesture = UITapGestureRecognizer(
             target: self, action: #selector(didTapAnywhere))
@@ -242,44 +241,46 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     @objc
     private func keyboardDidShow(notification: Notification) {
-//        #if canImport(CompositorServices)
-//        let landscape = true
-//        #else
-//        // Hack to get orientation without using `UIApplication`
-//        let landscape = UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height
-//        #endif
-//        // Handle iPad landscape edge case where `scrollRectToVisible` isn't sufficient
-//        if UIDevice.current.userInterfaceIdiom == .pad && landscape {
-//            guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-//            scrollView.contentInset.bottom = view.convert(keyboardFrame.cgRectValue, from: nil).size.height
-//            return
-//        }
-//
-//        if let firstResponder = view.firstResponder() {
-//            let firstResponderFrame = scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
-//                dx: -Constants.keyboardAvoidanceEdgePadding,
-//                dy: -Constants.keyboardAvoidanceEdgePadding
-//            )
-//            scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
-//        }
-        adjustForKeyboard(notification: notification)
+        adjustForKeyboard(notification: notification) {
+            #if canImport(CompositorServices)
+            let landscape = true
+            #else
+            // Hack to get orientation without using `UIApplication`
+            let landscape = UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height
+            #endif
+            // Handle iPad landscape edge case where `scrollRectToVisible` isn't sufficient
+            if UIDevice.current.userInterfaceIdiom == .pad && landscape {
+                guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+                self.scrollView.contentInset.bottom = self.view.convert(keyboardFrame.cgRectValue, from: nil).size.height
+                return
+            }
+
+            if let firstResponder = self.view.firstResponder() {
+                let firstResponderFrame = self.scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
+                    dx: -Constants.keyboardAvoidanceEdgePadding,
+                    dy: -Constants.keyboardAvoidanceEdgePadding
+                )
+                self.scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
+            }
+        }
     }
 
     @objc
     private func keyboardDidHide(notification: Notification) {
-//        if let firstResponder = view.firstResponder() {
-//            let firstResponderFrame = scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
-//                dx: -Constants.keyboardAvoidanceEdgePadding,
-//                dy: -Constants.keyboardAvoidanceEdgePadding
-//            )
-//            scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
-//            scrollView.contentInset.bottom = .zero
-//        }
-        adjustForKeyboard(notification: notification)
+        adjustForKeyboard(notification: notification) {
+            if let firstResponder = self.view.firstResponder() {
+                let firstResponderFrame = self.scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
+                    dx: -Constants.keyboardAvoidanceEdgePadding,
+                    dy: -Constants.keyboardAvoidanceEdgePadding
+                )
+                self.scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
+                self.scrollView.contentInset.bottom = .zero
+            }
+        }
     }
-//
+
     @objc
-    private func adjustForKeyboard(notification: Notification) {
+    private func adjustForKeyboard(notification: Notification, animations: @escaping () -> Void) {
 
         self.view.superview?.setNeedsLayout()
         UIView.animateAlongsideKeyboard(notification) {
@@ -292,8 +293,8 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 return
             }
 
-            let keyboardViewEndFrame = self.scrollView.convert(keyboardScreenEndFrame, from: self.scrollView.window)
-            let keyboardInViewHeight = self.scrollView.bounds.intersection(keyboardViewEndFrame).height - self.scrollView.safeAreaInsets.bottom
+            let keyboardViewEndFrame = self.view.convert(keyboardScreenEndFrame, from: self.view.window)
+            let keyboardInViewHeight = self.view.bounds.intersection(keyboardViewEndFrame).height - self.view.safeAreaInsets.bottom
             if notification.name == UIResponder.keyboardWillHideNotification {
                 bottomAnchor.constant = 0
             } else {
@@ -301,6 +302,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             }
 
             self.view.superview?.layoutIfNeeded()
+            animations()
         }
     }
 

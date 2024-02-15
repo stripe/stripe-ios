@@ -134,9 +134,6 @@ class RotatingCardBrandsView: UIView {
         }
         animation.startAnimation(afterDelay: Self.RotationInterval)
         self.rotatingIndex = nextIndex
-//        TODO: LOOK AT THIS! THIS IS WHAT IS BREAKING THE OTHER ANIMATIONS
-        // Maybe it should use a shared property animator?
-//        self.stackView?.layoutIfNeeded()
     }
 
     func startAnimating() {
