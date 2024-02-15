@@ -158,20 +158,20 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
 
             rowView.invalidateIntrinsicContentSize()
             sectionView.stackView.invalidateIntrinsicContentSize()
-//            UIView.animate(withDuration: 0.2) {
-//                textField.alpha = isHidden ? 0 : 1
-//                if hideContainer == rowView.isHidden {
-//                    textField.isHidden = isHidden
-//                }
-//                rowView.isHidden = hideContainer
-//
-//                rowView.layoutIfNeeded()
-//                self.setNeedsLayout()
-//                self.layoutIfNeeded()
-//
-//            } completion: { (_) in
-//                textField.isHidden = isHidden
-//            }
+            UIView.animate(withDuration: 0.2) {
+                textField.alpha = isHidden ? 0 : 1
+                if hideContainer == rowView.isHidden {
+                    textField.isHidden = isHidden
+                }
+                rowView.isHidden = hideContainer
+
+                rowView.layoutIfNeeded()
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
+
+            } completion: { (_) in
+                textField.isHidden = isHidden
+            }
 
         } else {
             textField.isHidden = isHidden

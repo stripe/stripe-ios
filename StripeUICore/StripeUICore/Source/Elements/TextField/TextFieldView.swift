@@ -216,7 +216,7 @@ class TextFieldView: UIView {
             textField.accessibilityValue = viewModel.attributedText.string
         }
         if frame != .zero {
-//            textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties cause it to lay out from zero size.
+            textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties cause it to lay out from zero size.
         }
 
         // Update accessory view
@@ -225,7 +225,7 @@ class TextFieldView: UIView {
         accessibilityElements = [textFieldView, accessoryView].compactMap { $0 }
         // Manually call layoutIfNeeded to avoid unintentional animations
         // in next layout pass
-//        layoutIfNeeded()
+        layoutIfNeeded()
     }
 
 #if !canImport(CompositorServices)

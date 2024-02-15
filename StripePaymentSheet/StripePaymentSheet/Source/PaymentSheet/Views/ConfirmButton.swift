@@ -506,12 +506,12 @@ class ConfirmButton: UIView {
             spinnerCenteredToLockConstraint.isActive = false
             spinnerCenteredConstraint.isActive = true
             setNeedsLayout()
-//            UIView.animate(
-//                withDuration: spinnerMoveToCenterAnimationDuration, delay: 0, options: .curveEaseOut
-//            ) {
-//                self.layoutIfNeeded()
-//            } completion: { (_) in
-//            }
+            UIView.animate(
+                withDuration: spinnerMoveToCenterAnimationDuration, delay: 0, options: .curveEaseOut
+            ) {
+                self.layoutIfNeeded()
+            } completion: { (_) in
+            }
             // Complete the circle and draw a checkmark
             self.spinner.completeProgress()
 

@@ -163,12 +163,12 @@ class FloatingPlaceholderTextFieldView: UIView {
             return
         }
 
-//        animator.stopAnimation(true)
-//        animator.addAnimations {
-//            updatePlaceholderLocation()
-//            self.layoutIfNeeded()
-//        }
-//        animator.startAnimation()
+        animator.stopAnimation(true)
+        animator.addAnimations {
+            updatePlaceholderLocation()
+            self.layoutIfNeeded()
+        }
+        animator.startAnimation()
     }
 
 }

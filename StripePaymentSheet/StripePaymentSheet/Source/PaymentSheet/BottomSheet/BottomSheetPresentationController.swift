@@ -221,7 +221,7 @@ extension BottomSheetPresentationController {
 
         // We'll use this constraint to handle the keyboard
         let bottomAnchor = presentedView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-        bottomAnchor.priority = .defaultLow
+        bottomAnchor.priority = .required
         self.bottomAnchor = bottomAnchor
 
         // Add a view between the bottom of the VC and the bottom of the screen for 2 reasons

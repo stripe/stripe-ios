@@ -81,6 +81,18 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             guard self.contentViewController !== oldContentViewController else {
                 return
             }
+
+            // This is a hack to get the animation right.
+            // Instead of allowing the height change to implicitly occur within
+            // the animation block's layoutIfNeeded, we force a layout pass,
+            // calculate the old and new heights, and then only animate the height
+            // constraint change.
+            // Without this, the inner ScrollView tends to animate from the center
+            // instead of remaining pinned to the top.
+
+            // First, get the old height of the content + navigation bar + safe area.
+            manualHeightConstraint.constant = oldContentViewController.view.frame.size.height + navigationBarContainerView.bounds.size.height + view.safeAreaInsets.bottom
+
             // Remove the old VC
             oldContentViewController.view.removeFromSuperview()
             oldContentViewController.removeFromParent()
@@ -95,12 +107,28 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 presentationController.forceFullHeight =
                     contentViewController.requiresFullScreen
             }
-            self.contentContainerView.layoutIfNeeded()
 
-            animateHeightChange(forceAnimation: true)
-            // Add its navigation bar if necessary
+            scrollView.contentInsetAdjustmentBehavior = .never
+            self.contentContainerView.layoutIfNeeded()
+            self.scrollView.layoutIfNeeded()
+            self.scrollView.updateConstraintsIfNeeded()
             oldContentViewController.navigationBar.removeFromSuperview()
             navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
+            navigationBarContainerView.layoutIfNeeded()
+            // Layout is mostly completed at this point. The new height is the navigation bar + content + the unsafe area at the bottom.
+            let newHeight = self.contentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height + view.safeAreaInsets.bottom
+            // Force the old height, then force a layout pass
+            manualHeightConstraint.isActive = true
+            self.rootParent.presentationController?.containerView?.layoutIfNeeded()
+            self.contentViewController.view.alpha = 0
+            // Now animate to the correct height.
+            animateHeightChange(forceAnimation: true, {
+                self.contentViewController.view.alpha = 1
+                self.manualHeightConstraint.constant = newHeight
+            }, completion: {_ in
+                // We shouldn't need this constraint anymore.
+                self.manualHeightConstraint.isActive = false
+            })
         }
     }
 
@@ -141,6 +169,12 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     private var bottomAnchor: NSLayoutConstraint?
 
+    private lazy var manualHeightConstraint: NSLayoutConstraint = {
+        let manualHeightConstraint: NSLayoutConstraint = self.view.heightAnchor.constraint(equalToConstant: 0)
+        manualHeightConstraint.priority = .required
+        return manualHeightConstraint
+    }()
+
     /// :nodoc:
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -152,7 +186,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             $0.translatesAutoresizingMaskIntoConstraints = false
         })
         let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        bottomAnchor.priority = .defaultLow
         self.bottomAnchor = bottomAnchor
+
         NSLayoutConstraint.activate([
             navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor),  // For unknown reasons, safeAreaLayoutGuide can have incorrect padding; we'll rely on our superview instead
             navigationBarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -186,6 +222,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             contentContainerView.widthAnchor.constraint(
                 equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
+//            self.view.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: 1.0)
         ])
         let hideKeyboardGesture = UITapGestureRecognizer(
             target: self, action: #selector(didTapAnywhere))
@@ -291,6 +328,7 @@ extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
 extension BottomSheetViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > 0 {
+//            TODO: ANIMATE THIS?
             contentViewController.navigationBar.setShadowHidden(false)
         } else {
             contentViewController.navigationBar.setShadowHidden(true)

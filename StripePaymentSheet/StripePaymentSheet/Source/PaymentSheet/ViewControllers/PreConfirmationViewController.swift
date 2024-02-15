@@ -144,10 +144,10 @@ class PreConfirmationViewController: UIViewController {
         if confirmButton.isHidden {
             confirmButton.alpha = 0
             confirmButton.setHiddenIfNecessary(false)
-//            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-//                self.confirmButton.alpha = 1
-//                self.view.layoutIfNeeded()
-//            }
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                self.confirmButton.alpha = 1
+                self.view.layoutIfNeeded()
+            }
         }
         let confirmationButtonEnabled = cvcReconfirmationViewController.paymentOptionIntentConfirmParams != nil
 
