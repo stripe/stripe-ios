@@ -339,7 +339,7 @@ class SheetViewController: UIViewController {
         guard dampingFactor > 0, value >= 0 else {
             return value
         }
-        return (1 - exp(-dampingFactor * value)) / dampingFactor
+        return round((1 - exp(-dampingFactor * value)) / dampingFactor)
     }
 
     @objc private func didTapDarkArea() {
