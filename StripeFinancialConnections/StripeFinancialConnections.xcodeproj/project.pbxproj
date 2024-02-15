@@ -180,7 +180,6 @@
 		CBEAB081DD7353928F485071 /* APIPollingHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710183EE587F6FDA077FC150 /* APIPollingHelperTests.swift */; };
 		CBF7BE2271D309F2B1E794CC /* FinancialConnectionsDataAccessNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32ED8A7E94822F14AD94A698 /* FinancialConnectionsDataAccessNotice.swift */; };
 		CF47070B2A4CA27FEE9AE5FA /* generic_error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */; };
-		CF8152B40B6CA74FD15602BF /* warning_circle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 956668158B27ACD34A6B2657 /* warning_circle@3x.png */; };
 		D0C1EF46A418A8F8774B7418 /* FinancialConnectionsSession_both_accounts_la.json in Resources */ = {isa = PBXBuildFile; fileRef = F6CF7F1005B57D566E139DE3 /* FinancialConnectionsSession_both_accounts_la.json */; };
 		D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */; };
 		D10FB0DAC5E452D4569CEA14 /* back_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */; };
@@ -410,7 +409,6 @@
 		939D10B20D3ECA7BF7021BF8 /* InstitutionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionIconView.swift; sourceTree = "<group>"; };
 		93C4ECB724BD75320A999C42 /* HostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostController.swift; sourceTree = "<group>"; };
 		94869BACB486153419B30DE5 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		956668158B27ACD34A6B2657 /* warning_circle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning_circle@3x.png"; sourceTree = "<group>"; };
 		965814B0C5F3D13158E610E3 /* SessionFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFetcherTests.swift; sourceTree = "<group>"; };
 		97948A848C99ACD1A498F841 /* AttributedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedTextView.swift; sourceTree = "<group>"; };
 		97CE72E38D41E86E0A1FAE9F /* AccountPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerViewController.swift; sourceTree = "<group>"; };
@@ -552,7 +550,6 @@
 				EF0111A8932418631FFA1663 /* search@3x.png */,
 				57B289E803B7A53B000D7919 /* spinner@3x.png */,
 				B4F56BF50DBF4A353D2526A6 /* stripe_logo@3x.png */,
-				956668158B27ACD34A6B2657 /* warning_circle@3x.png */,
 				5D555DB0657A602274596428 /* warning_triangle@3x.png */,
 			);
 			path = Images;
@@ -1225,7 +1222,6 @@
 				3AE1C7A78FB5B220F5200F49 /* search@3x.png in Resources */,
 				BD3C87E03EB44F7D1C11664C /* spinner@3x.png in Resources */,
 				97032B101B54E6A98178FD73 /* stripe_logo@3x.png in Resources */,
-				CF8152B40B6CA74FD15602BF /* warning_circle@3x.png in Resources */,
 				87E22AF1E35FB63C20AEE9DF /* warning_triangle@3x.png in Resources */,
 				D949AE695F3288F84258BACD /* Localizable.strings in Resources */,
 			);

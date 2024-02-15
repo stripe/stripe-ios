@@ -12,7 +12,7 @@ import UIKit
 final class InstitutionTableViewCell: UITableViewCell {
 
     private lazy var institutionIconView: InstitutionIconView = {
-        return InstitutionIconView(size: .main)
+        return InstitutionIconView()
     }()
     private lazy var institutionCellView: InstitutionCellView = {
         return InstitutionCellView()
