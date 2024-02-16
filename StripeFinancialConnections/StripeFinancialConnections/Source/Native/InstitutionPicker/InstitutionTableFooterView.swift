@@ -103,7 +103,7 @@ struct InstitutionTableFooterView_Previews: PreviewProvider {
             InstitutionTableFooterViewUIViewRepresentable(
                 title: "No results",
                 subtitle: "Double check your spelling and search terms",
-                image: .bank
+                image: .cancel_circle
             )
             .frame(maxHeight: 100)
 
