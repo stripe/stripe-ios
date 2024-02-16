@@ -24,7 +24,7 @@ class ConsentBodyView: UIView {
         verticalStackView.spacing = 24
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 0,
+            top: 8,
             leading: 8,
             bottom: 0,
             trailing: 8

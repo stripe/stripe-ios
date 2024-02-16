@@ -99,7 +99,7 @@ struct RoundedIconView_Previews: PreviewProvider {
                 .frame(width: 56, height: 56)
 
                 RoundedIconViewUIViewRepresentable(
-                    image: .bank,
+                    image: .cancel_circle,
                     style: .circle
                 )
                 .frame(width: 56, height: 56)
