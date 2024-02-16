@@ -293,7 +293,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerFinishedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
                                                  completion: (() -> Void)? = nil) {
         self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
-            self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
+            completion?()
         }
     }
 
