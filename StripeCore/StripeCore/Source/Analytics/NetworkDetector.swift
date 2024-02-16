@@ -15,6 +15,7 @@ import SystemConfiguration
 class NetworkDetector {
 
     static func getConnectionType() -> String? {
+#if canImport(CoreTelephony)
         guard let reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "www.stripe.com") else {
             return nil
         }
@@ -32,7 +33,7 @@ class NetworkDetector {
         guard isWWAN else {
             return "Wi-Fi"
         }
-#if canImport(CoreTelephony)
+
         let networkInfo = CTTelephonyNetworkInfo()
         let carrierType = networkInfo.serviceCurrentRadioAccessTechnology
 
@@ -51,7 +52,7 @@ class NetworkDetector {
             return "5G"
         }
 #else
-        return "unknown"
+        return "Wi-Fi"
 #endif
     }
 
