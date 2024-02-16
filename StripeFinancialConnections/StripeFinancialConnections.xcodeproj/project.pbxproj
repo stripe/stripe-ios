@@ -151,7 +151,6 @@
 		B2970FE2753A4D79E428BA73 /* SuccessDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C15A30C40F34CE330F89C41 /* SuccessDataSource.swift */; };
 		B45B8DC3DAACDD5F04B1B1BE /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3F67BE6E46ED018EB8C3FD /* SuccessViewController.swift */; };
 		B5EEF34D158C08A1745FA150 /* ContinueStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA55452373FD735983F3690B /* ContinueStateView.swift */; };
-		B8F440921DB172F96F912CD0 /* PaneWithCustomHeaderLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */; };
 		B9A24A47454134F2B869C969 /* FinancialConnectionsConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD9739F1AA7CBA76DD3E1E2 /* FinancialConnectionsConsent.swift */; };
 		BCEA321423DF0E7674C2544C /* APIVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D95E5F34BDEE0237F52DA0A /* APIVersion.swift */; };
 		BD3C87E03EB44F7D1C11664C /* spinner@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 57B289E803B7A53B000D7919 /* spinner@3x.png */; };
@@ -161,7 +160,6 @@
 		C128C1681E46F0F12EB4EB9F /* NetworkingLinkStepUpVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6D662AB9854F3BDB90D8FD /* NetworkingLinkStepUpVerificationViewController.swift */; };
 		C19996D0AC7E046DA87B6B32 /* ManualEntryValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C7FDF59D906EA5C6B7A514 /* ManualEntryValidatorTests.swift */; };
 		C1A079E8E76A02EBCB2588DA /* AccountPickerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D715516C6703A780913E66EB /* AccountPickerDataSource.swift */; };
-		C23A55F7C98103222B159D73 /* bank@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA3F36F0BED21F607C546B6D /* bank@3x.png */; };
 		C258E0D849083BCC8A9B5068 /* HostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0863AF9E2F9BD7C026FE59E /* HostViewController.swift */; };
 		C3338FA5019EC8E99E2BA62F /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064D0E3A3AC71FAA60B54FC5 /* Helpers.swift */; };
 		C38BEDD99477C83C91B105DD /* AccountPickerAccountLoadErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463549CECD379484842033E3 /* AccountPickerAccountLoadErrorView.swift */; };
@@ -282,7 +280,6 @@
 		24D4A72B4CCA677F45C29A5C /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		252DA1FE0574822605438AB4 /* NetworkingLinkLoginWarmupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkLoginWarmupViewController.swift; sourceTree = "<group>"; };
 		25BDE722D8A827955C3182E8 /* PartnerAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerAuthViewController.swift; sourceTree = "<group>"; };
-		263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PaneWithCustomHeaderLayoutView.swift; path = ../PaneWithCustomHeaderLayoutView.swift; sourceTree = "<group>"; };
 		267B3586136203186882F5CE /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
 		283469CD0298E3AFCFDAF10F /* AccountPickerSelectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerSelectionListView.swift; sourceTree = "<group>"; };
 		2C0F907D5B0AC58BE7A454BA /* StripeFinancialConnectionsBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeFinancialConnectionsBundleLocator.swift; sourceTree = "<group>"; };
@@ -476,7 +473,6 @@
 		E813BE6B34901E4E050FFE13 /* TimeInterval+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+Extensions.swift"; sourceTree = "<group>"; };
 		E898E7D173685669E31FC58F /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E90CF6AD88E530CE63D57269 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
-		EA3F36F0BED21F607C546B6D /* bank@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank@3x.png"; sourceTree = "<group>"; };
 		EA55452373FD735983F3690B /* ContinueStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueStateView.swift; sourceTree = "<group>"; };
 		EAC8B933341AF86D9AFF5979 /* PartnerAuthDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerAuthDataSource.swift; sourceTree = "<group>"; };
 		EB3F67BE6E46ED018EB8C3FD /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
@@ -532,7 +528,6 @@
 			children = (
 				782A419DCF59BE6AB6439D04 /* add@3x.png */,
 				C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */,
-				EA3F36F0BED21F607C546B6D /* bank@3x.png */,
 				7413C9D80DF7190CA6FB82EE /* brandicon_default@3x.png */,
 				07BCA9D23511A3494C82B632 /* bullet@3x.png */,
 				A4CC00446B086B2987114099 /* cancel_circle@3x.png */,
@@ -752,7 +747,6 @@
 			children = (
 				34452D5FDC1ED566A13427FE /* PaneLayoutView.swift */,
 				6A7814172B361C5000168992 /* PaneLayoutView+Extensions.swift */,
-				263817C1DB5311A4E99C11CE /* PaneWithCustomHeaderLayoutView.swift */,
 			);
 			path = PaneLayoutView;
 			sourceTree = "<group>";
@@ -1194,7 +1188,6 @@
 			files = (
 				4DC8EB63806434ABF4C9CC43 /* add@3x.png in Resources */,
 				D10FB0DAC5E452D4569CEA14 /* back_arrow@3x.png in Resources */,
-				C23A55F7C98103222B159D73 /* bank@3x.png in Resources */,
 				F0397F4E1D6A91416897F45E /* brandicon_default@3x.png in Resources */,
 				645D6FF67167263F9A1C2BB0 /* bullet@3x.png in Resources */,
 				F10147CF75C2A09D66CB5C14 /* cancel_circle@3x.png in Resources */,
@@ -1361,7 +1354,6 @@
 				40FF444E6CF20E9DA7D90448 /* NetworkingOTPView.swift in Sources */,
 				444884F264D13FF654EA7471 /* PaneLayoutView.swift in Sources */,
 				6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */,
-				B8F440921DB172F96F912CD0 /* PaneWithCustomHeaderLayoutView.swift in Sources */,
 				99F41681B77ECB0090F34E31 /* SFSafariViewController+Extensions.swift in Sources */,
 				AA80602323C28AFAC391358D /* TimeInterval+Extensions.swift in Sources */,
 				E637387728FA1597B1B51E5D /* UIImage+Extensions.swift in Sources */,
