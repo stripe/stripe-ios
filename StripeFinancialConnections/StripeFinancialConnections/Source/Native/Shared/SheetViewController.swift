@@ -132,12 +132,13 @@ class SheetViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         if panePresentationStyle == .sheet {
+            let isLandscape = UIDevice.current.orientation.isLandscape
             var contentViewMinY = view.window?.safeAreaInsets.top ?? 0
             // estimated iOS value of how far default sheet
             // stretches beyond safeAreaInset.top
-            contentViewMinY += 10
+            contentViewMinY += isLandscape ? 0 : 10
             contentViewMinY += UINavigationController().navigationBar.bounds.height
-            contentViewMinY += 24 // typical Financial Connecitons padding
+            contentViewMinY += isLandscape ? 0 : 24
             let didChangeContentViewMinY = (self.contentViewMinY != contentViewMinY)
             self.contentViewMinY = contentViewMinY
 
