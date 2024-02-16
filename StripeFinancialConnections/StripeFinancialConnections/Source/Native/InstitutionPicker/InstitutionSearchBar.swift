@@ -153,15 +153,25 @@ final class InstitutionSearchBar: UIView {
     private func highlightBorder(_ shouldHighlightBorder: Bool) {
         let searchBarBorderColor: UIColor
         let searchBarBorderWidth: CGFloat
+        let shadowOpacity: Float
         if shouldHighlightBorder {
             searchBarBorderColor = .textActionPrimaryFocused
             searchBarBorderWidth = 2
+            shadowOpacity = 0.1
         } else {
             searchBarBorderColor = .borderDefault
             searchBarBorderWidth = 1
+            shadowOpacity = 0
         }
         layer.borderColor = searchBarBorderColor.cgColor
         layer.borderWidth = searchBarBorderWidth
+        layer.shadowOpacity = shadowOpacity
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowRadius = 2 / UIScreen.main.nativeScale
+        layer.shadowOffset = CGSize(
+            width: 0,
+            height: 1 / UIScreen.main.nativeScale
+        )
     }
 
     func updateSearchingIndicator(_ isSearching: Bool) {
