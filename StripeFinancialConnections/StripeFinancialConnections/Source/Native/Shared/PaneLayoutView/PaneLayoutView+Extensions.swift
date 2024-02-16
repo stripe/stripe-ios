@@ -75,11 +75,11 @@ extension PaneLayoutView {
         paddingStackView.isLayoutMarginsRelativeArrangement = true
         paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: isSheet ? 0 : 16, // the sheet handle adds some padding
-            leading: 24,
+            leading: Constants.Layout.defaultHorizontalMargin,
             // if there is a subtitle in the "body/content view,"
             // we will add extra "8" padding
             bottom: 16,
-            trailing: 24
+            trailing: Constants.Layout.defaultHorizontalMargin
         )
         return paddingStackView
     }
@@ -101,9 +101,9 @@ extension PaneLayoutView {
             // to create 24 spacing between "content" and "header"
             // where 16 spacing is already added in `createHeaderView`
             top: willShowDescriptionText ? 0 : 8,
-            leading: 24,
+            leading: Constants.Layout.defaultHorizontalMargin,
             bottom: 8,
-            trailing: 24
+            trailing: Constants.Layout.defaultHorizontalMargin
         )
 
         if let text = text {
@@ -219,9 +219,9 @@ extension PaneLayoutView {
         paddingStackView.isLayoutMarginsRelativeArrangement = true
         paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
-            leading: 24,
+            leading: Constants.Layout.defaultHorizontalMargin,
             bottom: 16,
-            trailing: 24
+            trailing: Constants.Layout.defaultHorizontalMargin
         )
         return (paddingStackView, primaryButtonReference, secondaryButtonReference)
     }
