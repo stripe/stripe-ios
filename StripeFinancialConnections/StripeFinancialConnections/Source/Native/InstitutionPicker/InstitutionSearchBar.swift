@@ -34,6 +34,7 @@ final class InstitutionSearchBar: UIView {
     private lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
         textField.textColor = .textDefault
+        textField.tintColor = textField.textColor // caret color
         textField.font = FinancialConnectionsFont.label(.large).uiFont
         // this removes the `searchTextField` background color.
         // for an unknown reason, setting the `backgroundColor` to
