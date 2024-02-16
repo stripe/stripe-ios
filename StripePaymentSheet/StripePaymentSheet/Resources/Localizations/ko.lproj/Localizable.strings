@@ -84,6 +84,8 @@
 
 "Pay another way" = "다른 방법으로 결제";
 
+"Pay faster at %@ and thousands of businesses." = "%@사를 비롯하여 수많은 비즈니스에서 더 빠르게 결제할 수 있습니다.";
+
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/>로 <installment_price/>의 <num_installments/>회 무이자 결제로 대금을 지급하십시오.";
 
 "Pay later with Klarna." = "Klarna로 나중에 결제";
