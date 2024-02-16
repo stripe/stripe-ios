@@ -71,7 +71,7 @@ final class InstitutionSearchBar: UIView {
         let imageView = UIImageView()
         let textFieldClearButton = TextFieldClearButton()
         let cancelImage = Image.cancel_circle.makeImage()
-            .withTintColor(.neutral200)
+            .withTintColor(.textSubdued)
         textFieldClearButton.setImage(cancelImage, for: .normal)
         textFieldClearButton.addTarget(
             self,
