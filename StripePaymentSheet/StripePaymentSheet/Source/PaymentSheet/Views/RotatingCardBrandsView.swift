@@ -180,7 +180,6 @@ class RotatingCardBrandsView: UIView {
                 imageView.contentMode = .scaleAspectFit
                 imageView.setContentHuggingPriority(.required, for: .horizontal)
                 imageView.image = STPImageLibrary.cardBrandImage(for: brand)
-//                imageView.translatesAutoresizingMaskIntoConstraints = false
                 return imageView
             }) + [rotatingCardBrandView]
             rotatingCardBrands = Array(cardBrands.suffix(from: min(cardBrands.count, Self.MaxStaticBrands)))
