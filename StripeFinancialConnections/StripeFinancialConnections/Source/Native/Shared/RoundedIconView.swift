@@ -42,14 +42,15 @@ final class RoundedIconView: UIView {
         ])
 
         let iconImageView = UIImageView()
+        iconImageView.tintColor = .iconActionPrimary
         switch image {
         case .image(let image):
-            iconImageView.image = image.makeImage()
-                .withTintColor(.iconActionPrimary)
+            iconImageView.image = image.makeImage(template: true)
         case .imageUrl(let imageUrl):
             iconImageView.setImage(
                 with: imageUrl,
-                placeholder: nil
+                placeholder: nil,
+                useAlwaysTemplateRenderingMode: true
             )
         }
         addSubview(iconImageView)
