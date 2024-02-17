@@ -34,6 +34,7 @@ final class InstitutionSearchBar: UIView {
     private lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
         textField.textColor = .textDefault
+        textField.tintColor = textField.textColor // caret color
         textField.font = FinancialConnectionsFont.label(.large).uiFont
         // this removes the `searchTextField` background color.
         // for an unknown reason, setting the `backgroundColor` to
@@ -71,7 +72,7 @@ final class InstitutionSearchBar: UIView {
         let imageView = UIImageView()
         let textFieldClearButton = TextFieldClearButton()
         let cancelImage = Image.cancel_circle.makeImage()
-            .withTintColor(.neutral200)
+            .withTintColor(.textSubdued)
         textFieldClearButton.setImage(cancelImage, for: .normal)
         textFieldClearButton.addTarget(
             self,
@@ -152,15 +153,25 @@ final class InstitutionSearchBar: UIView {
     private func highlightBorder(_ shouldHighlightBorder: Bool) {
         let searchBarBorderColor: UIColor
         let searchBarBorderWidth: CGFloat
+        let shadowOpacity: Float
         if shouldHighlightBorder {
             searchBarBorderColor = .textActionPrimaryFocused
             searchBarBorderWidth = 2
+            shadowOpacity = 0.1
         } else {
             searchBarBorderColor = .borderDefault
             searchBarBorderWidth = 1
+            shadowOpacity = 0
         }
         layer.borderColor = searchBarBorderColor.cgColor
         layer.borderWidth = searchBarBorderWidth
+        layer.shadowOpacity = shadowOpacity
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowRadius = 2 / UIScreen.main.nativeScale
+        layer.shadowOffset = CGSize(
+            width: 0,
+            height: 1 / UIScreen.main.nativeScale
+        )
     }
 
     func updateSearchingIndicator(_ isSearching: Bool) {
