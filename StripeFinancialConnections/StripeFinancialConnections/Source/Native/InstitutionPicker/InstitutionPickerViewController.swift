@@ -43,9 +43,11 @@ class InstitutionPickerViewController: UIViewController {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
                 CreateHeaderTitleLabel(),
-                searchBar,
             ]
         )
+        if !dataSource.manifest.institutionSearchDisabled {
+            verticalStackView.addArrangedSubview(searchBar)
+        }
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 24
         verticalStackView.isLayoutMarginsRelativeArrangement = true
