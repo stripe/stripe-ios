@@ -13,6 +13,7 @@ extension UIImageView {
     func setImage(
         with urlString: String?,
         placeholder: UIImage? = nil,
+        useAlwaysTemplateRenderingMode: Bool = false,
         completionHandler: ((_ didDownloadImage: Bool) -> Void)? = nil
     ) {
         if let placeholder = placeholder {
@@ -33,7 +34,13 @@ extension UIImageView {
             if let image = image {
                 DispatchQueue.main.async {
                     if self?.tag == urlString.hashValue {
-                        self?.image = image
+                        if useAlwaysTemplateRenderingMode {
+                            // this ensures that if `UIImageView.tintColor` is set,
+                            // the image will be re-colored according to `tintColor`
+                            self?.image = image.withRenderingMode(.alwaysTemplate)
+                        } else {
+                            self?.image = image
+                        }
                         completionHandler?(true)
                     }
                 }
