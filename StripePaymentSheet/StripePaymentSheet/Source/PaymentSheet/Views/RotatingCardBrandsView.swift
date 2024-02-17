@@ -23,6 +23,11 @@ class RotatingCardBrandsView: UIView {
     static let RotationInterval: TimeInterval = 3
     static let AnimationDuration: TimeInterval = 0.8
 
+    // Use a fixed size for the rotating display, it makes
+    // the constraints easier to reason about and helps if we
+    // add a brand with a different size
+    static let CardBrandSize: CGSize = .init(width: 26, height: 17)
+
     static let isUnitOrUITest: Bool = {
 #if targetEnvironment(simulator)
         return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
@@ -92,10 +97,10 @@ class RotatingCardBrandsView: UIView {
                 stopAnimating()
             } else {
                 rotatingCardBrandView.setHiddenIfNecessary(false)
-                rotatingCardBrandView.image = STPImageLibrary.cardBrandImage(
-                    for: rotatingCardBrands[0]
-                )
                 rotatingIndex = 0
+                self.rotatingCardBrandView.prepWithImages(
+                    imageA: STPImageLibrary.cardBrandImage(for: self.rotatingCardBrands[rotatingIndex]),
+                    imageB: STPImageLibrary.cardBrandImage(for: self.rotatingCardBrands[nextIndex]))
                 if window != nil {
                     startAnimating()
                 }
@@ -106,31 +111,38 @@ class RotatingCardBrandsView: UIView {
     var isAnimating: Bool = false
     var stopAfterNextTransition = false
 
-    func rotateCardBrand() {
-        isAnimating = true
+    var nextIndex: Int {
         var nextIndex = self.rotatingIndex + 1
         if nextIndex >= self.rotatingCardBrands.count {
             nextIndex = 0
         }
+        return nextIndex
+    }
+
+    func rotateCardBrand() {
+        isAnimating = true
         let animation = UIViewPropertyAnimator(duration: Self.AnimationDuration,
                                                controlPoint1: CGPoint(x: 0.19, y: 0.22),
                                                controlPoint2: CGPoint(x: 1, y: 1))
-        animation.addAnimations {
-            UIView.transition(with: self.rotatingCardBrandView,
-                              duration: Self.AnimationDuration,
-                              options: [.transitionCrossDissolve],
-                              animations: {
-                self.rotatingCardBrandView.image = STPImageLibrary.cardBrandImage(for: self.rotatingCardBrands[nextIndex])
-
-            })
+        animation.addAnimations { [weak self] in
+            self?.rotatingCardBrandView.swapToB()
         }
-        animation.addCompletion { _ in
+        animation.addCompletion { [weak self] _ in
+            guard let self else {
+                return
+            }
+            self.rotatingCardBrandView.prepWithImages(
+                imageA: STPImageLibrary.cardBrandImage(for: self.rotatingCardBrands[self.rotatingIndex]),
+                imageB: STPImageLibrary.cardBrandImage(for: self.rotatingCardBrands[nextIndex]))
             guard !self.stopAfterNextTransition else {
                 self.stopAfterNextTransition = false
                 self.isAnimating = false
                 return
             }
-            self.rotateCardBrand()
+            // After completion, kick off the animation again
+            DispatchQueue.main.async {
+                self.rotateCardBrand()
+            }
         }
         animation.startAnimation(afterDelay: Self.RotationInterval)
         self.rotatingIndex = nextIndex
@@ -150,11 +162,9 @@ class RotatingCardBrandsView: UIView {
         stopAfterNextTransition = true
     }
 
-    var rotatingCardBrandView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.setContentHuggingPriority(.required, for: .horizontal)
-        return imageView
+    fileprivate var rotatingCardBrandView: RotatingABBrandView = {
+        let rotatingCardBrandView = RotatingABBrandView()
+        return rotatingCardBrandView
     }()
 
     public var cardBrands: [STPCardBrand] = [] {
@@ -163,14 +173,14 @@ class RotatingCardBrandsView: UIView {
                 return
             }
 
-            rotatingCardBrandView = UIImageView()
             rotatingCardBrandView.contentMode = .scaleAspectFit
             rotatingCardBrandView.setContentHuggingPriority(.required, for: .horizontal)
-            let cardBrandViews: [UIImageView] = cardBrands.prefix(Self.MaxStaticBrands).map( { brand in
+            let cardBrandViews: [UIView] = cardBrands.prefix(Self.MaxStaticBrands).map( { brand in
                 let imageView = UIImageView()
                 imageView.contentMode = .scaleAspectFit
                 imageView.setContentHuggingPriority(.required, for: .horizontal)
                 imageView.image = STPImageLibrary.cardBrandImage(for: brand)
+//                imageView.translatesAutoresizingMaskIntoConstraints = false
                 return imageView
             }) + [rotatingCardBrandView]
             rotatingCardBrands = Array(cardBrands.suffix(from: min(cardBrands.count, Self.MaxStaticBrands)))
@@ -178,6 +188,7 @@ class RotatingCardBrandsView: UIView {
             let stackView = UIStackView(arrangedSubviews: cardBrandViews)
             stackView.spacing = Self.LogoSpacing
             stackView.alignment = .center
+            stackView.translatesAutoresizingMaskIntoConstraints = false
             self.stackView = stackView
         }
     }
@@ -198,5 +209,54 @@ class RotatingCardBrandsView: UIView {
         } else {
             stopAnimating()
         }
+    }
+}
+
+private class RotatingABBrandView: UIView {
+    override var intrinsicContentSize: CGSize {
+        return RotatingCardBrandsView.CardBrandSize
+    }
+
+    var viewA: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+
+    var viewB: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.addSubview(viewA)
+        self.addSubview(viewB)
+        viewA.translatesAutoresizingMaskIntoConstraints = false
+        viewB.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            viewA.leftAnchor.constraint(equalTo: viewB.leftAnchor),
+            viewA.rightAnchor.constraint(equalTo: viewB.rightAnchor),
+            viewA.bottomAnchor.constraint(equalTo: viewB.bottomAnchor),
+            viewA.topAnchor.constraint(equalTo: viewB.topAnchor),
+        ])
+        isUserInteractionEnabled = false
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func swapToB() {
+        viewA.alpha = 0.0
+        viewB.alpha = 1.0
+    }
+
+    func prepWithImages(imageA: UIImage, imageB: UIImage) {
+        viewA.image = imageA
+        viewB.image = imageB
+        viewA.alpha = 1.0
+        viewB.alpha = 0.0
     }
 }
