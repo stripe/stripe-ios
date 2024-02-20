@@ -75,7 +75,6 @@ class ConsentViewController: UIViewController {
             contentView: {
                 let verticalStackView = HitTestStackView()
                 verticalStackView.axis = .vertical
-                verticalStackView.alignment = .center
                 verticalStackView.spacing = 24
                 verticalStackView.isLayoutMarginsRelativeArrangement = true
                 verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
