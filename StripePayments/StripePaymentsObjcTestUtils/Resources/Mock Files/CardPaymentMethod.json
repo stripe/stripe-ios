@@ -20,6 +20,7 @@
     "checks": {
     },
     "country": "US",
+    "display_brand": "cartes_bancaires",
     "description": "Visa Classic",
     "exp_month": 8,
     "exp_year": 2020,

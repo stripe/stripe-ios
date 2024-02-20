@@ -22,6 +22,8 @@
 
 "Card number" = "Số thẻ";
 
+"Confirm your %@" = "Xác nhận %@ của bạn";
+
 "Invalid data." = "Dữ liệu không hợp lệ.";
 
 "MM / YY" = "Tháng /Năm";

@@ -17,7 +17,6 @@ protocol LinkInlineSignupViewModelDelegate: AnyObject {
 
 final class LinkInlineSignupViewModel {
     enum Action: Equatable {
-        case pay(account: PaymentSheetLinkAccount)
         case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber, legalName: String?)
         case continueWithoutLink
     }
@@ -191,7 +190,7 @@ final class LinkInlineSignupViewModel {
     var shouldShowLegalTerms: Bool {
         switch mode {
         case .checkbox:
-            return shouldShowPhoneField
+            return saveCheckboxChecked
         case .textFieldsOnlyPhoneFirst, .textFieldsOnlyEmailFirst:
             return true
         }
@@ -233,7 +232,9 @@ final class LinkInlineSignupViewModel {
                 legalName: requiresNameCollection ? legalName : nil
             )
         case .verified, .requiresVerification:
-            return .pay(account: linkAccount)
+            // This should never happen: The session should only be verified as part of the signup request,
+            // as inline verification is not enabled. Continue without Link.
+            return .continueWithoutLink
         }
     }
 

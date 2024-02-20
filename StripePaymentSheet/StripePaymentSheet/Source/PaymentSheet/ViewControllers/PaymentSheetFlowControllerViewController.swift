@@ -604,7 +604,7 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
     }
 
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard isLinkEnabled else {
+        guard isLinkEnabled && !intent.disableLinkSignup else {
             return false
         }
 

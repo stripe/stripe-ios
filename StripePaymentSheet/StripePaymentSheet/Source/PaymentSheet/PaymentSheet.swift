@@ -293,10 +293,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerFinishedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
                                                  completion: (() -> Void)? = nil) {
         self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
-            self.bottomSheetViewController.removeBlurEffect(animated: true)
-            if let completion {
-                completion()
-            }
+            completion?()
         }
     }
 
@@ -346,12 +343,12 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
         intent: Intent,
         with paymentOption: PaymentOption
     ) {
-        let backgroundColor = self.configuration.appearance.colors.background.withAlphaComponent(0.9)
+        let backgroundColor = self.configuration.appearance.colors.background.withAlphaComponent(0.85)
         self.bottomSheetViewController.addBlurEffect(animated: false, backgroundColor: backgroundColor) {
             self.bottomSheetViewController.startSpinner()
             let psvc = self.findPaymentSheetViewController()
             psvc?.clearTextFields()
-            psvc?.pay(with: paymentOption)
+            psvc?.pay(with: paymentOption, animateBuybutton: false)
         }
     }
 

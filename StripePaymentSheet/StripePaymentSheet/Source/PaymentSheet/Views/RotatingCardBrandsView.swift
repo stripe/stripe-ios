@@ -134,7 +134,6 @@ class RotatingCardBrandsView: UIView {
         }
         animation.startAnimation(afterDelay: Self.RotationInterval)
         self.rotatingIndex = nextIndex
-        self.stackView?.layoutIfNeeded()
     }
 
     func startAnimating() {

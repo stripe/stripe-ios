@@ -76,7 +76,7 @@
 
 "Or pay with a card" = "Oder mit Karte bezahlen";
 
-"Or use" = "Alternative Verwendung";
+"Or use" = "Weitere Zahlungsmöglichkeiten";
 
 "Or use a card" = "Alternativ Karte verwenden";
 
@@ -84,7 +84,7 @@
 
 "Pay another way" = "Andere Zahlungsmethode wählen";
 
-"Pay faster at %@ and thousands of merchants." = "Bei %@ und tausenden anderen Händlern schneller bezahlen.";
+"Pay faster at %@ and thousands of businesses." = "Beschleunigen Sie Ihre Bezahlvorgänge bei %@ und vielen anderen Unternehmen.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Zahlen Sie mit <img/> in <num_installments/> zinslosen Raten zu je <installment_price/>.";
 

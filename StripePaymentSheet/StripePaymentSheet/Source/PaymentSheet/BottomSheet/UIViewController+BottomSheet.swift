@@ -29,6 +29,8 @@ extension UIViewController {
 
         if presentAsFormSheet {
             viewControllerToPresent.modalPresentationStyle = .formSheet
+            // Don't allow the pull down to dismiss gesture, it's too easy to trigger accidentally while scrolling
+            viewControllerToPresent.isModalInPresentation = true
             if let vc = viewControllerToPresent as? BottomSheetViewController {
                 viewControllerToPresent.presentationController?.delegate = vc
             }

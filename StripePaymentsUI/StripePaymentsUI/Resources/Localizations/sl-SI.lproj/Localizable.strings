@@ -22,6 +22,8 @@
 
 "Card number" = "Številka kartice";
 
+"Confirm your %@" = "Potrdite svojo kodo %@";
+
 "Invalid data." = "Neveljavni podatki.";
 
 "MM / YY" = "MM/LL";

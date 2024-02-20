@@ -134,4 +134,15 @@ extension ConsumerSession {
             completion: completion)
     }
 
+    func logout(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+        apiClient.logout(
+            consumerSessionClientSecret: clientSecret,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
+    }
+
 }

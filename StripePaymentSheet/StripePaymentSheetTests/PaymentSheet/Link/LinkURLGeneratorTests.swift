@@ -24,7 +24,8 @@ class LinkURLGeneratorTests: XCTestCase {
                                    experiments: [:],
                                    flags: [:],
                                    loggerMetadata: [:],
-                                   locale: Locale.init(identifier: "en_US").toLanguageTag())
+                                   locale: Locale.init(identifier: "en_US").toLanguageTag()
+    )
 
     func testURLCreation() {
         let url = try! LinkURLGenerator.url(params: testParams)
@@ -56,6 +57,11 @@ class LinkURLGeneratorTests: XCTestCase {
         }
         config.apiClient.publishableKey = "pk_123"
         let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
+
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
+        let sessionID = AnalyticsHelper.shared.sessionID!
+
         let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent)
 
         let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
@@ -66,7 +72,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            paymentInfo: LinkURLParams.PaymentInfo(currency: "USD", amount: 100),
                                            experiments: [:],
                                            flags: [:],
-                                           loggerMetadata: [:],
+                                           loggerMetadata: ["mobile_session_id": sessionID],
                                            locale: Locale.init(identifier: "en_US").toLanguageTag())
 
         XCTAssertEqual(params, expectedParams)

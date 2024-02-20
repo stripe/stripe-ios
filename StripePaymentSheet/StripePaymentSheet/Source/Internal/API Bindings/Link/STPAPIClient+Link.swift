@@ -222,6 +222,28 @@ extension STPAPIClient {
             completion: completion
         )
     }
+
+    func logout(
+        consumerSessionClientSecret: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/sessions/log_out"
+
+        let parameters: [String: Any] = [
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret
+            ],
+            "request_surface": "ios_payment_element",
+        ]
+
+        makeConsumerSessionRequest(
+            endpoint: endpoint,
+            parameters: parameters,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion
+        )
+    }
 }
 
 // TODO(ramont): Remove this after switching to modern bindings.

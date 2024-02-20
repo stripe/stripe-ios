@@ -50,7 +50,6 @@ class CVCReconfirmationViewController: UIViewController {
     private let intent: Intent
     private let paymentMethod: STPPaymentMethod
     private let configuration: PaymentSheet.Configuration
-    var error: ElementValidationError?
     var paymentOptionIntentConfirmParams: IntentConfirmParams? {
         let params = IntentConfirmParams(type: .stripe(.card))
         if let updatedParams = cvcFormElement.updateParams(params: params) {
@@ -71,7 +70,6 @@ class CVCReconfirmationViewController: UIViewController {
         self.intent = intent
         self.paymentMethod = paymentMethod
         self.configuration = configuration
-        self.error = nil
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -127,13 +125,6 @@ extension CVCReconfirmationViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
-        self.error = nil
-        if let textField = element as? TextFieldElement,
-           case .invalid(let error, let shouldDisplay) = textField.validationState {
-            if shouldDisplay {
-                self.error = error
-            }
-        }
         delegate?.didUpdate(self)
         animateHeightChange()
     }

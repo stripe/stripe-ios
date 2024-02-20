@@ -200,6 +200,6 @@ extension String {
 
 extension STPPaymentMethodCard {
     var preferredDisplayBrand: STPCardBrand {
-        return networks?.preferred?.toCardBrand ?? displayBrand?.type?.toCardBrand ?? brand
+        return networks?.preferred?.toCardBrand ?? displayBrand?.toCardBrand ?? brand
     }
 }

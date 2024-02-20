@@ -89,6 +89,7 @@ class PaymentSheetViewController: UIViewController {
     private var mode: Mode
     private(set) var error: Error?
     private var isPaymentInFlight: Bool = false
+    private var shouldAnimateBuyButton: Bool = true
     private(set) var isDismissable: Bool = true
 
     // MARK: - Views
@@ -409,7 +410,7 @@ class PaymentSheetViewController: UIViewController {
         // Notice
         updateBottomNotice()
 
-        if isPaymentInFlight {
+        if isPaymentInFlight && shouldAnimateBuyButton {
             buyButtonStatus = .processing
         }
         self.buyButton.update(
@@ -476,12 +477,13 @@ class PaymentSheetViewController: UIViewController {
             paymentOption = selectedPaymentOption
         }
         STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: paymentOption.paymentMethodTypeAnalyticsValue)
-        pay(with: paymentOption)
+        pay(with: paymentOption, animateBuybutton: true)
     }
 
-    func pay(with paymentOption: PaymentOption) {
+    func pay(with paymentOption: PaymentOption, animateBuybutton: Bool) {
         view.endEditing(true)
         isPaymentInFlight = true
+        shouldAnimateBuyButton = animateBuybutton
         // Clear any errors
         error = nil
         updateUI()
@@ -538,8 +540,12 @@ class PaymentSheetViewController: UIViewController {
 #if !canImport(CompositorServices)
                             UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
-                            self.buyButton.update(state: .succeeded, animated: true) {
-                                // Wait a bit before closing the sheet
+                            if animateBuybutton {
+                                self.buyButton.update(state: .succeeded, animated: true) {
+                                    // Wait a bit before closing the sheet
+                                    self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
+                                }
+                            } else {
                                 self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                             }
                         }
@@ -559,7 +565,7 @@ extension PaymentSheetViewController: WalletHeaderViewDelegate {
 
     func walletHeaderViewApplePayButtonTapped(_ header: WalletHeaderView) {
         set(error: nil)
-        pay(with: .applePay)
+        pay(with: .applePay, animateBuybutton: true)
     }
 
     func walletHeaderViewPayWithLinkTapped(_ header: WalletHeaderView) {
@@ -693,7 +699,7 @@ extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
     }
 
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard isLinkEnabled else {
+        guard isLinkEnabled && !intent.disableLinkSignup else {
             return false
         }
 

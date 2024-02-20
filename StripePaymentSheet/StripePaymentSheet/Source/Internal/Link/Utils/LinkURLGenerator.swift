@@ -35,7 +35,7 @@ struct LinkURLParams: Encodable {
     var paymentInfo: PaymentInfo?
     var experiments: [String: Bool]
     var flags: [String: Bool]
-    var loggerMetadata: [String: Bool]
+    var loggerMetadata: [String: String]
     var locale: String
 }
 
@@ -68,6 +68,11 @@ class LinkURLGenerator {
             return nil
         }()
 
+        var loggerMetadata: [String: String] = [:]
+        if let sessionID = AnalyticsHelper.shared.sessionID {
+            loggerMetadata = ["mobile_session_id": sessionID]
+        }
+
         let paymentObjectType: LinkURLParams.PaymentObjectMode = intent.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
         return LinkURLParams(paymentObject: paymentObjectType,
@@ -78,7 +83,7 @@ class LinkURLGenerator {
                              paymentInfo: paymentInfo,
                              experiments: [:],
                              flags: intent.linkFlags,
-                             loggerMetadata: [:],
+                             loggerMetadata: loggerMetadata,
                              locale: Locale.current.toLanguageTag())
     }
 

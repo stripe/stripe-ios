@@ -22,6 +22,8 @@
 
 "Card number" = "カード番号";
 
+"Confirm your %@" = "%@ を確認してください";
+
 "Invalid data." = "データが無効です。";
 
 "MM / YY" = "月 / 年";

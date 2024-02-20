@@ -76,7 +76,7 @@
 
 "Or pay with a card" = "Ya da kartla ödeyin";
 
-"Or use" = "Veya kullan";
+"Or use" = "Veya şunu kullan:";
 
 "Or use a card" = "Veya kart kullan";
 
@@ -84,7 +84,7 @@
 
 "Pay another way" = "Başka bir ödeme şekli kullanın";
 
-"Pay faster at %@ and thousands of merchants." = "%@ dahil binlerce satıcı için daha hızlı ödeme yapın.";
+"Pay faster at %@ and thousands of businesses." = "%@ ve binlerce işletmede daha hızlı ödeme yapın.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/> ile <installment_price/> tutarında faizsiz <num_installments/> taksitle ödeyin";
 
