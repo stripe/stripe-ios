@@ -128,7 +128,10 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 )
             },
             didSelectURL: { [weak self] url in
-                self?.didSelectURLInTextFromBackend(url)
+                self?.didSelectURLInTextFromBackend(
+                    url,
+                    legalDetailsNotice: networkingLinkSignup.legalDetailsNotice
+                )
             }
         )
         self.footerView = footerView
@@ -141,7 +144,10 @@ final class NetworkingLinkSignupViewController: UIViewController {
                     bulletPoints: networkingLinkSignup.body.bullets,
                     formView: formView,
                     didSelectURL: { [weak self] url in
-                        self?.didSelectURLInTextFromBackend(url)
+                        self?.didSelectURLInTextFromBackend(
+                            url,
+                            legalDetailsNotice: networkingLinkSignup.legalDetailsNotice
+                        )
                     }
                 )
             ),
@@ -216,13 +222,27 @@ final class NetworkingLinkSignupViewController: UIViewController {
         }
     }
 
-    private func didSelectURLInTextFromBackend(_ url: URL) {
+    private func didSelectURLInTextFromBackend(
+        _ url: URL,
+        legalDetailsNotice: FinancialConnectionsLegalDetailsNotice?
+    ) {
         AuthFlowHelpers.handleURLInTextFromBackend(
             url: url,
             pane: .networkingLinkSignupPane,
             analyticsClient: dataSource.analyticsClient,
-            handleStripeScheme: { _ in
-                // no custom stripe scheme is handled
+            handleStripeScheme: { urlHost in
+                if urlHost == "legal-details-notice", let legalDetailsNotice {
+                    let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
+                        legalDetailsNotice: legalDetailsNotice,
+                        didSelectUrl: { [weak self] url in
+                            self?.didSelectURLInTextFromBackend(
+                                url,
+                                legalDetailsNotice: legalDetailsNotice
+                            )
+                        }
+                    )
+                    legalDetailsNoticeViewController.present(on: self)
+                }
             }
         )
     }
