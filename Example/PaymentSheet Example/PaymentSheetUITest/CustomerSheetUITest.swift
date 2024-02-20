@@ -946,18 +946,6 @@ class CustomerSheetUITest: XCTestCase {
         removeButton1.tap()
         dismissAlertView(alertBody: alertBody, alertTitle: "Remove card?", buttonToTap: "Remove")
     }
-    func waitForNumberOfItems() {
-//        let elementQuery = app.staticTexts["••••4444"]
-//        XCTAssertTrue(elementQuery.waitForExistence(timeout: 10))
-
-        let elementLabel = "••••4444"
-        let elementQuery = app.staticTexts.matching(NSPredicate(format: "label == %@", elementLabel))
-
-        let elementExistsPredicate = NSPredicate(format: "count == 1")
-        expectation(for: elementExistsPredicate, evaluatedWith: elementQuery, handler: nil)
-        waitForExpectations(timeout: 10, handler: nil)
-
-    }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {
         let alertText = app.staticTexts[alertBody]
