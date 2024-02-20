@@ -46,8 +46,11 @@ final class ConsentLogoView: UIView {
                 }
             }
         }
-
-        addAndPinSubview(horizontalStackView)
+        addAndPinSubview(
+            CreateCenteringView(
+                centeredView: horizontalStackView
+            )
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -118,6 +121,20 @@ private func CreateEllipsisView(
     backgroundView.mask = multipleDotView
 
     return (backgroundView, multipleDotView)
+}
+
+private func CreateCenteringView(centeredView: UIView) -> UIView {
+    let leftSpacerView = UIView()
+    leftSpacerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+    let rightSpacerView = UIView()
+    rightSpacerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+    let horizontalStackView = UIStackView(
+        arrangedSubviews: [leftSpacerView, centeredView, rightSpacerView]
+    )
+    horizontalStackView.axis = .horizontal
+    horizontalStackView.distribution = .equalCentering
+    horizontalStackView.alignment = .center
+    return horizontalStackView
 }
 
 /// A view that blurs two logos together.
@@ -328,12 +345,11 @@ private struct ConsentLogoViewUIViewRepresentable: UIViewRepresentable {
 
 struct ConsentLogoView_Previews: PreviewProvider {
     static var previews: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
             ConsentLogoViewUIViewRepresentable()
-                .frame(width: 176, height: 72)
-                .padding()
             Spacer()
         }
+        .padding()
     }
 }
 
