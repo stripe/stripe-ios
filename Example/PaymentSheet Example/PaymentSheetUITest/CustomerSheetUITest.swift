@@ -320,7 +320,12 @@ class CustomerSheetUITest: XCTestCase {
         editButton.tap()
 
         removeFirstPaymentMethodInList(alertBody: "Mastercard •••• 4444")
-        sleep(2)
+        // ••••4444 is rendered as the PM to remove, as well as the status on the playground
+        // Check that it is removed by waiting for there only be one instance
+        let elementLabel = "••••4444"
+        let elementQuery = app.staticTexts.matching(NSPredicate(format: "label == %@", elementLabel))
+        waitForNItemsExistence(elementQuery, count: 1)
+
         removeFirstPaymentMethodInList(alertBody: "Visa •••• 4242")
         let visa = app.staticTexts["••••4242"]
         waitToDisappear(visa)
@@ -356,7 +361,12 @@ class CustomerSheetUITest: XCTestCase {
         editButton.tap()
 
         removeFirstPaymentMethodInList(alertBody: "Mastercard •••• 4444")
-        sleep(2)
+        // ••••4444 is rendered as the PM to remove, as well as the status on the playground
+        // Check that it is removed by waiting for there only be one instance
+        let elementLabel = "••••4444"
+        let elementQuery = app.staticTexts.matching(NSPredicate(format: "label == %@", elementLabel))
+        waitForNItemsExistence(elementQuery, count: 1)
+
         removeFirstPaymentMethodInList(alertBody: "Visa •••• 4242")
         let visa = app.staticTexts["••••4242"]
         waitToDisappear(visa)
@@ -935,6 +945,18 @@ class CustomerSheetUITest: XCTestCase {
         let removeButton1 = app.buttons["Remove"].firstMatch
         removeButton1.tap()
         dismissAlertView(alertBody: alertBody, alertTitle: "Remove card?", buttonToTap: "Remove")
+    }
+    func waitForNumberOfItems() {
+//        let elementQuery = app.staticTexts["••••4444"]
+//        XCTAssertTrue(elementQuery.waitForExistence(timeout: 10))
+
+        let elementLabel = "••••4444"
+        let elementQuery = app.staticTexts.matching(NSPredicate(format: "label == %@", elementLabel))
+
+        let elementExistsPredicate = NSPredicate(format: "count == 1")
+        expectation(for: elementExistsPredicate, evaluatedWith: elementQuery, handler: nil)
+        waitForExpectations(timeout: 10, handler: nil)
+
     }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {
