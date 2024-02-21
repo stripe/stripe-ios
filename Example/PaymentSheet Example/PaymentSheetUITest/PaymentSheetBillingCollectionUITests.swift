@@ -452,7 +452,9 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         )
         checkoutButton.tap()
 
+        XCTAssertTrue(app.buttons["Pay ₹50.99"].waitForExistence(timeout: 5))
         let payButton = app.buttons["Pay ₹50.99"]
+
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI"))
         cell.tap()
 
@@ -495,7 +497,9 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         )
         checkoutButton.tap()
 
+        XCTAssertTrue(app.buttons["Pay ₹50.99"].waitForExistence(timeout: 5))
         let payButton = app.buttons["Pay ₹50.99"]
+
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI"))
         cell.tap()
 
