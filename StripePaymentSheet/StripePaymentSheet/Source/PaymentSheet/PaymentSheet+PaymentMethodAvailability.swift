@@ -34,6 +34,7 @@ extension PaymentSheet {
         .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
         .boleto,
         .swish,
+        .twint
     ]
 
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
