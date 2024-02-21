@@ -1128,7 +1128,7 @@ class STPPaymentIntentFunctionalTest: XCTestCase {
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
-    
+
     // MARK: - Amazon Pay
 
     func testConfirmPaymentIntentWithAmazonPay() {

@@ -205,7 +205,7 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         }
         waitForExpectations(timeout: 5, handler: nil)
     }
-    
+
     func testCreateAmazonPayPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let params = STPPaymentMethodParams(amazonPay: STPPaymentMethodAmazonPayParams(), billingDetails: nil, metadata: nil)

@@ -595,7 +595,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.billingDetails = billingDetails
         self.metadata = metadata
     }
-    
+
     /// Creates params for a AmazonPay PaymentMethod.
     /// - Parameters:
     ///   - amazonPay:           An object containing additional AmazonPay details.
