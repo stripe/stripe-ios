@@ -89,7 +89,8 @@ final class PaymentSheetLoader {
                     showApplePay: isFlowController ? isApplePayEnabled : PaymentSheetViewController.shouldShowApplePayAsSavedPaymentOption(hasSavedPaymentMethods: !filteredSavedPaymentMethods.isEmpty, isLinkEnabled: isLinkEnabled, isApplePayEnabled: isApplePayEnabled),
                     showLink: isFlowController ? isLinkEnabled : false
                 )
-                analyticsClient.logPaymentSheetLoadSucceeded(loadingStartDate: loadingStartDate, defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex))
+                analyticsClient.logPaymentSheetLoadSucceeded(loadingStartDate: loadingStartDate,
+                                                             linkEnabled: intent.supportsLink(allowV2Features: configuration.allowLinkV2Features), defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex))
                 if isFlowController {
                     AnalyticsHelper.shared.startTimeMeasurement(.checkout)
                 }
