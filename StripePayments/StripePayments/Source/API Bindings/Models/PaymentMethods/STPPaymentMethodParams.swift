@@ -654,7 +654,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             self.affirm = STPPaymentMethodAffirmParams()
         case .swish:
             self.swish = STPPaymentMethodSwishParams()
-        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay:
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .twint:
             // No parameters
             break
         // All reusable PaymentMethods go below:
@@ -1173,7 +1173,7 @@ extension STPPaymentMethodParams {
             swish = STPPaymentMethodSwishParams()
         case .mobilePay:
             mobilePay = STPPaymentMethodMobilePayParams()
-        case .cardPresent, .linkInstantDebit, .paynow, .zip, .amazonPay, .alma, .konbini, .promptPay:
+        case .cardPresent, .linkInstantDebit, .paynow, .zip, .amazonPay, .alma, .konbini, .promptPay, .twint:
             // These payment methods don't have any params
             break
         case .unknown:
@@ -1251,6 +1251,8 @@ extension STPPaymentMethodParams {
             return "Cash App Pay"
         case .revolutPay:
             return "Revolut Pay"
+        case.twint:
+            return "TWINT"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
         case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish:

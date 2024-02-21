@@ -1033,5 +1033,32 @@
         }
       ]
     }
-
+    {
+      "type": "twint",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint-c4b2d1779b4de14ab223d9bc20e31149.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint-eb936dc9fce62666f564bb8fccbe5958.svg"
+      },
+      "fields": [
+      ],
+      "next_action_spec": {
+        "confirm_response_status_specs": {
+          "requires_action": {
+            "type": "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs": {
+          "succeeded": {
+            "type": "finished"
+          },
+          "processing": {
+            "type": "finished"
+          },
+          "requires_action": {
+            "type": "canceled"
+          }
+        }
+      }
+    }
 ]
