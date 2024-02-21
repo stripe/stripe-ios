@@ -118,12 +118,21 @@ final class PrepaneViews {
 private func CreateContentView(
     prepaneBodyModel: FinancialConnectionsOAuthPrepane.OauthPrepaneBody,
     didSelectURL: @escaping (URL) -> Void
-) -> UIView {
+) -> UIView? {
+    guard
+        let entries = prepaneBodyModel.entries,
+        !entries.isEmpty
+    else {
+        // returning an empty `UIStackView` added unnecessary
+        // padding, so returning `nil` removes the extra padding
+        return nil
+    }
+
     let verticalStackView = UIStackView()
     verticalStackView.spacing = 22
     verticalStackView.axis = .vertical
 
-    prepaneBodyModel.entries?.forEach { entry in
+    entries.forEach { entry in
         switch entry.content {
         case .text(let text):
             let label = AttributedTextView(
