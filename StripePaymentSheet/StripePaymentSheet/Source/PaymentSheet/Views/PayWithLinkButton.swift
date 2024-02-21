@@ -22,7 +22,7 @@ final class PayWithLinkButton: UIControl {
         static let defaultSize: CGSize = .init(width: 200, height: 44)
         static let logoSize: CGSize = .init(width: 29, height: 13)
         static let cardBrandSize: CGSize = .init(width: 28, height: 18)
-        static let arrowSize: CGSize = .init(width: 18, height: 14)
+        static let arrowSize: CGSize = .init(width: 17, height: 13)
         static let separatorSize: CGSize = .init(width: 1, height: 22)
         static let margins: NSDirectionalEdgeInsets = .init(top: 7, leading: 16, bottom: 7, trailing: 10)
         static let cardBrandInsets: UIEdgeInsets = .init(top: 1, left: 0, bottom: 0, right: 0)
@@ -103,8 +103,8 @@ final class PayWithLinkButton: UIControl {
         linkView.lineBreakMode = .byTruncatingMiddle
         linkView.adjustsFontForContentSizeCategory = true
         linkView.translatesAutoresizingMaskIntoConstraints = false
-        linkView.font = UIFont.systemFont(ofSize: 15, weight: .medium)
-            .scaled(withTextStyle: .callout, maximumPointSize: 16)
+        linkView.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+            .scaled(withTextStyle: .callout, maximumPointSize: 22)
 
         let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link)
 
@@ -114,7 +114,7 @@ final class PayWithLinkButton: UIControl {
         let linkLogoRatio = linkImage.size.width / linkImage.size.height
 
         // Link logo should be a little taller than the height of a cap in SF Medium
-        let linkLogoHeight = linkView.font.capHeight + (linkView.font.pointSize * 0.15)
+        let linkLogoHeight = linkView.font.capHeight + (linkView.font.pointSize * 0.1)
         linkAttachment.bounds = CGRect(x: 0, y: 0, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
 
         // Add a spacer before the Link logo and after the Link logo
