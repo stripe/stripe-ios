@@ -1,3 +1,8 @@
+## x.x.x x-x-x
+
+### Payments
+* [Added] Support for Amazon Pay bindings.
+
 ## 23.22.0 2024-02-12
 ### PaymentSheet
 * [Changed] The separator text under the Apple Pay button from "Or pay with a card" to "Or use a card" when using a SetupIntent.
