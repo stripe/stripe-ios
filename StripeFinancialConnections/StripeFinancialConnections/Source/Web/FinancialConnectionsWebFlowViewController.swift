@@ -35,20 +35,21 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     // MARK: - Waiting state view
 
     private lazy var continueStateView: UIView = {
-        return PaneLayoutView(
-            contentView: ContinueStateViews.createContentView(
-                institutionImageUrl: nil
-            ),
-            footerView: ContinueStateViews.createFooterView(
-                didSelectContinue: { [weak self] in
-                    guard let self else { return }
-                    if let url = self.lastOpenedNativeURL {
-                        self.redirect(to: url)
-                    } else {
-                        self.startAuthenticationSession(manifest: manifest)
-                    }
+        let continueStateViews = ContinueStateViews(
+            institutionImageUrl: nil,
+            didSelectContinue: { [weak self] in
+                guard let self else { return }
+                if let url = self.lastOpenedNativeURL {
+                    self.redirect(to: url)
+                } else {
+                    self.startAuthenticationSession(manifest: manifest)
                 }
-            )
+            },
+            didSelectCancel: nil
+        )
+        return PaneLayoutView(
+            contentView: continueStateViews.contentView,
+            footerView: continueStateViews.footerView
         ).createView()
     }()
 
