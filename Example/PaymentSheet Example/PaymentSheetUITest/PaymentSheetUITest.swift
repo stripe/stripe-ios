@@ -874,7 +874,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Pay ₹50.99"].waitForExistence(timeout: 5))
-        
+
         let payButton = app.buttons["Pay ₹50.99"]
         guard let upi = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI") else {
             XCTFail()
