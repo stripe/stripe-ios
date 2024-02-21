@@ -843,7 +843,8 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
             settings
         )
 
-        app.buttons["Present PaymentSheet"].tap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay ₹50.99"].waitForExistence(timeout: 5))
 
         let payButton = app.buttons["Pay ₹50.99"]
         guard let upi = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI") else {
@@ -871,8 +872,9 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
             settings
         )
 
-        app.buttons["Present PaymentSheet"].tap()
-
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay ₹50.99"].waitForExistence(timeout: 5))
+        
         let payButton = app.buttons["Pay ₹50.99"]
         guard let upi = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI") else {
             XCTFail()
@@ -2821,6 +2823,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         app.buttons["Payment method"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["+ Add"].waitForExistenceAndTap())
         // Begin by saving a card for this new user who is not signed up for Link
+        XCTAssertTrue(app.buttons["Continue"].waitForExistence(timeout: 5))
         try! fillCardData(app)
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].waitForExistenceAndTap()
