@@ -132,13 +132,15 @@ class SheetViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         if panePresentationStyle == .sheet {
-            let isLandscape = UIDevice.current.orientation.isLandscape
+            // Note that using `UIDevice.current.orientation.isLandscape`
+            // performed worse (/ was buggy) when testing on device
+            let isLandscapePhone = UIDevice.current.userInterfaceIdiom == .phone && (UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height)
             var contentViewMinY = view.window?.safeAreaInsets.top ?? 0
             // estimated iOS value of how far default sheet
             // stretches beyond safeAreaInset.top
-            contentViewMinY += isLandscape ? 0 : 10
+            contentViewMinY += isLandscapePhone ? 0 : 10
             contentViewMinY += UINavigationController().navigationBar.bounds.height
-            contentViewMinY += isLandscape ? 0 : 24
+            contentViewMinY += isLandscapePhone ? 0 : 24
             let didChangeContentViewMinY = (self.contentViewMinY != contentViewMinY)
             self.contentViewMinY = contentViewMinY
 
