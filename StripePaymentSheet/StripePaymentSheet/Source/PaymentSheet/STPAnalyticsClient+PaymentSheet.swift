@@ -104,7 +104,9 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logPaymentSheetLoadSucceeded(loadingStartDate: Date, defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?) {
+    func logPaymentSheetLoadSucceeded(loadingStartDate: Date,
+                                      linkEnabled: Bool,
+                                      defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?) {
         let defaultPaymentMethodAnalyticsValue: String = {
             switch defaultPaymentMethod {
             case .applePay:
@@ -123,6 +125,7 @@ extension STPAnalyticsClient {
         logPaymentSheetEvent(
             event: .paymentSheetLoadSucceeded,
             duration: Date().timeIntervalSince(loadingStartDate),
+            linkEnabled: linkEnabled,
             params: ["selected_lpm": defaultPaymentMethodAnalyticsValue]
         )
     }
