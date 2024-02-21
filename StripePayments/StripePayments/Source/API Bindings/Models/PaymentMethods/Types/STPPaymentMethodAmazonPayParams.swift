@@ -14,7 +14,7 @@ public class STPPaymentMethodAmazonPayParams: NSObject, STPFormEncodable {
     // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
-        return "amazon-pay"
+        return "amazon_pay"
     }
 
     @objc

@@ -143,7 +143,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "cashapp = \(String(describing: cashApp))",
             "revolutPay = \(String(describing: revolutPay))",
             "swish = \(String(describing: swish))",
-            "amazon-pay = \(String(describing: amazonPay))",
+            "amazon_pay = \(String(describing: amazonPay))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -303,7 +303,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             fromAPIResponse: dict.stp_dictionary(forKey: "swish")
         )
         paymentMethod.amazonPay = STPPaymentMethodAmazonPay.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "amazon-pay")
+            fromAPIResponse: dict.stp_dictionary(forKey: "amazon_pay")
         )
 
         return paymentMethod

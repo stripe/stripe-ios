@@ -47,7 +47,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 28;
+    return 29;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -136,6 +136,9 @@
             break;
         case 27:
             cell.textLabel.text = @"Swish";
+            break;
+        case 28:
+            cell.textLabel.text = @"Amazon Pay";
             break;
     }
     return cell;
@@ -315,6 +318,12 @@
         }
         case 27: {
             SwishExampleViewController *exampleVC = [SwishExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 28: {
+            AmazonPayExampleViewController *exampleVC = [AmazonPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
