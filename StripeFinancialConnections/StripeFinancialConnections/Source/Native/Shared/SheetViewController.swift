@@ -409,8 +409,8 @@ private func CreateCustomSheetHandleView() -> UIView {
     ])
 
     let handleView = UIView()
-    handleView.backgroundColor = UIColor.textDisabled
-    handleView.layer.cornerRadius = 4
+    handleView.backgroundColor = UIColor.neutral200
+    handleView.layer.cornerRadius = 2
     containerView.addSubview(handleView)
     handleView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
