@@ -82,6 +82,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var revolutPay: STPPaymentMethodRevolutPay?
     /// If this is a Swish PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSwish`), this contains additional details.
     @objc private(set) public var swish: STPPaymentMethodSwish?
+    /// If this is a Amazon Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAmazonPay`), this contains additional details.
+    @objc private(set) public var amazonPay: STPPaymentMethodAmazonPay?
 
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
@@ -141,6 +143,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "cashapp = \(String(describing: cashApp))",
             "revolutPay = \(String(describing: revolutPay))",
             "swish = \(String(describing: swish))",
+            "amazon-pay = \(String(describing: amazonPay))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -298,6 +301,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.swish = STPPaymentMethodSwish.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "swish")
+        )
+        paymentMethod.amazonPay = STPPaymentMethodAmazonPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "amazon-pay")
         )
 
         return paymentMethod

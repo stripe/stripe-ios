@@ -94,6 +94,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var swish: STPPaymentMethodSwishParams?
     /// If this is a MobilePay PaymentMethod, this contains additional details.
     @objc public var mobilePay: STPPaymentMethodMobilePayParams?
+    /// If this is a AmazonPay PaymentMethod, this contains additional details.
+    @objc public var amazonPay: STPPaymentMethodAmazonPayParams?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
@@ -593,6 +595,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.billingDetails = billingDetails
         self.metadata = metadata
     }
+    
+    /// Creates params for a AmazonPay PaymentMethod.
+    /// - Parameters:
+    ///   - amazonPay:           An object containing additional AmazonPay details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        amazonPay: STPPaymentMethodAmazonPayParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .amazonPay
+        self.amazonPay = amazonPay
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
 
     /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
     /// with similar settings. It will return nil if used with a reusable PaymentMethod.
@@ -712,6 +732,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: revolutPay)): "revolut_pay",
             NSStringFromSelector(#selector(getter: swish)): "swish",
             NSStringFromSelector(#selector(getter: mobilePay)): "mobilepay",
+            NSStringFromSelector(#selector(getter: amazonPay)): "amazon-pay",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
         ]
@@ -1173,7 +1194,9 @@ extension STPPaymentMethodParams {
             swish = STPPaymentMethodSwishParams()
         case .mobilePay:
             mobilePay = STPPaymentMethodMobilePayParams()
-        case .cardPresent, .linkInstantDebit, .paynow, .zip, .amazonPay, .alma, .konbini, .promptPay:
+        case .amazonPay:
+            amazonPay = STPPaymentMethodAmazonPayParams()
+        case .cardPresent, .linkInstantDebit, .paynow, .zip, .alma, .konbini, .promptPay:
             // These payment methods don't have any params
             break
         case .unknown:
