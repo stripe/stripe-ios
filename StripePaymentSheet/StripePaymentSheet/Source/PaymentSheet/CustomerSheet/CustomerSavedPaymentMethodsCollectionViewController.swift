@@ -14,7 +14,13 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
     func didUpdateSelection(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection)
-    func didSelectRemove(
+
+    func attemptRemove(
+        viewController: CustomerSavedPaymentMethodsCollectionViewController,
+        paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
+        originalPaymentMethodSelection: CustomerPaymentOption?) async -> Bool
+
+    func didRemove(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         originalPaymentMethodSelection: CustomerPaymentOption?)
@@ -474,34 +480,46 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
     }
 
     private func removePaymentMethod(indexPath: IndexPath, paymentMethod: STPPaymentMethod) {
-        let viewModel = viewModels[indexPath.row]
-        self.viewModels.remove(at: indexPath.row)
-        // the deletion needs to be in a performBatchUpdates so we make sure it is completed
-        // before potentially leaving edit mode (which triggers a reload that may collide with
-        // this deletion)
-        self.collectionView.performBatchUpdates {
-            self.collectionView.deleteItems(at: [indexPath])
-        } completion: { _ in
-            self.savedPaymentMethods.removeAll(where: {
-                $0.stripeId == paymentMethod.stripeId
-            })
-            self.unsyncedSavedPaymentMethods.removeAll(where: {
-                $0.stripeId == paymentMethod.stripeId
-            })
-
-            if let index = self.selectedViewModelIndex {
-                if indexPath.row == index {
-                    self.selectedViewModelIndex = nil
-                } else if indexPath.row < index {
-                    self.selectedViewModelIndex = index - 1
-                }
+        Task {
+            guard let delegate = self.delegate else {
+                return
+            }
+            let viewModel = self.viewModels[indexPath.row]
+            let didRemove = await delegate.attemptRemove(viewController: self,
+                                                         paymentMethodSelection: viewModel,
+                                                         originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod)
+            guard didRemove else {
+                return
             }
 
-            self.delegate?.didSelectRemove(
-                viewController: self,
-                paymentMethodSelection: viewModel,
-                originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod
-            )
+            self.viewModels.remove(at: indexPath.row)
+            // the deletion needs to be in a performBatchUpdates so we make sure it is completed
+            // before potentially leaving edit mode (which triggers a reload that may collide with
+            // this deletion)
+            self.collectionView.performBatchUpdates {
+                self.collectionView.deleteItems(at: [indexPath])
+            } completion: { _ in
+                self.savedPaymentMethods.removeAll(where: {
+                    $0.stripeId == paymentMethod.stripeId
+                })
+                self.unsyncedSavedPaymentMethods.removeAll(where: {
+                    $0.stripeId == paymentMethod.stripeId
+                })
+
+                if let index = self.selectedViewModelIndex {
+                    if indexPath.row == index {
+                        self.selectedViewModelIndex = nil
+                    } else if indexPath.row < index {
+                        self.selectedViewModelIndex = index - 1
+                    }
+                }
+
+                self.delegate?.didRemove(
+                    viewController: self,
+                    paymentMethodSelection: viewModel,
+                    originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod
+                )
+            }
         }
     }
 }

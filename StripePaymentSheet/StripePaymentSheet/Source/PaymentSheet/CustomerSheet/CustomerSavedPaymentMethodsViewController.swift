@@ -787,23 +787,29 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
             }
         }
 
-    func didSelectRemove(
+    func attemptRemove(
+        viewController: CustomerSavedPaymentMethodsCollectionViewController,
+        paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
+        originalPaymentMethodSelection: CustomerPaymentOption?) async -> Bool {
+            guard case .saved(let paymentMethod) = paymentMethodSelection else {
+                return false
+            }
+            do {
+                try await customerAdapter.detachPaymentMethod(paymentMethodId: paymentMethod.stripeId)
+            } catch {
+                // Communicate error to consumer
+                self.set(error: error)
+                STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenRemovePMFailure()
+                return false
+            }
+            return true
+        }
+
+    func didRemove(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         originalPaymentMethodSelection: CustomerPaymentOption?) {
-            guard case .saved(let paymentMethod) = paymentMethodSelection else {
-                return
-            }
             Task {
-                do {
-                    try await customerAdapter.detachPaymentMethod(paymentMethodId: paymentMethod.stripeId)
-                } catch {
-                    // Communicate error to consumer
-                    self.set(error: error)
-                    STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenRemovePMFailure()
-                    return
-                }
-
                 if let originalPaymentMethodSelection, paymentMethodSelection == originalPaymentMethodSelection {
                     do {
                         try await self.customerAdapter.setSelectedPaymentOption(paymentOption: nil)

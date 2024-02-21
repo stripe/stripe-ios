@@ -204,6 +204,12 @@ extension XCTestCase {
         waitForExpectations(timeout: 60.0, handler: nil)
     }
 
+    func waitForNItemsExistence(_ target: Any?, count: Int) {
+        let elementExistsPredicate = NSPredicate(format: "count == %d", count)
+        expectation(for: elementExistsPredicate, evaluatedWith: target, handler: nil)
+        waitForExpectations(timeout: 10.0, handler: nil)
+    }
+
     func reload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
         app.buttons["Reload"].tap()
         waitForReload(app, settings: settings)
