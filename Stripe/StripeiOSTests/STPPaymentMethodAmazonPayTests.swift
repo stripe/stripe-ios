@@ -11,7 +11,7 @@ import XCTest
 
 class STPPaymentMethodAmazonPayTests: XCTestCase {
 
-    static let amazonPayPaymentIntentClientSecret = "pi_3OmK3NFY0qyl6XeW0LAuis7q_secret_6zOy1xALjenZ8ZmbW2UhnrRks"
+    static let amazonPayPaymentIntentClientSecret = "pi_3OmQQ0FY0qyl6XeW0H4X6eI0_secret_BerPIzUf8vFy1KXG53iYvX2Zb"
 
     func _retrieveAmazonPayJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)

@@ -105,7 +105,7 @@ extension AmazonPayExampleViewController {
                     }
                 }
             },
-            additionalParameters: "supported_payment_methods=amazon-pay"
+            additionalParameters: "supported_payment_methods=amazon_pay"
         )
     }
 }
