@@ -86,6 +86,7 @@ public class CustomerSheet {
     public func present(from presentingViewController: UIViewController,
                         completion csCompletion: @escaping (CustomerSheetResult) -> Void
     ) {
+        AnalyticsHelper.shared.generateSessionID()
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
         let completion: () -> Void = {
