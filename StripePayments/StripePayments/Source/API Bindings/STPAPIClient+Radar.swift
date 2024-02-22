@@ -16,7 +16,6 @@ extension STPAPIClient {
     /// Creates a Radar Session.
     ///
     /// - Note: See https://stripe.com/docs/radar/radar-session
-    /// - Note: This API and the guide linked above require special permissions to use. Contact support@stripe.com.
     /// - Note: `StripeAPI.advancedFraudSignalsEnabled` must be `true` to use this method.
     /// - Note: See `STPRadarSession`
     ///
