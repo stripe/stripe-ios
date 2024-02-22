@@ -48,6 +48,7 @@ class StubCustomerAdapter: CustomerAdapter {
     }
 
     var canCreateSetupIntents: Bool = true
+    var paymentMethodTypes: [String]? = nil
 }
 
 class CustomerSheetSnapshotTests: STPSnapshotTestCase {

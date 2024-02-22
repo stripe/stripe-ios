@@ -106,13 +106,16 @@ extension STPAPIClient {
         )
     }
 
-    func retrieveElementsSessionForCustomerSheet() async throws -> STPElementsSession {
+    func retrieveElementsSessionForCustomerSheet(paymentMethodTypes: [String]?) async throws -> STPElementsSession {
         var parameters: [String: Any] = [:]
         parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
 
         var deferredIntent = [String: Any]()
         deferredIntent["mode"] = "setup"
+        if let paymentMethodTypes {
+            deferredIntent["payment_method_types"] = paymentMethodTypes
+        }
         parameters["deferred_intent"] = deferredIntent
 
         return try await APIRequest<STPElementsSession>.getWith(

@@ -1,3 +1,7 @@
+## x.x.x y-y-y
+### CustomerSheet
+* [Added] API to control what payment methods are displayed
+
 ## 23.23.0 2024-02-26
 ### PaymentSheet
 * [Added] Added support for [payment method configurations](https://docs.stripe.com/payments/multiple-payment-method-configs) when using the deferred intent integration path.

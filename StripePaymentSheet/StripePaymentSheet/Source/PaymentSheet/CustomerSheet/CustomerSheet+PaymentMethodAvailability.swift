@@ -8,6 +8,10 @@ import Foundation
 
 extension CustomerSheet {
     static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
+    static func paymentMethodIsSupported(_ paymentMethod: STPPaymentMethodType,
+                                         supportedPaymentMethods: [STPPaymentMethodType]) -> Bool {
+        return supportedPaymentMethods.contains(where: {$0 == paymentMethod})
+    }
 }
 
 extension Array where Element == STPPaymentMethodType {
@@ -54,3 +58,30 @@ extension Array where Element == STPPaymentMethodType {
         return pmTypes
     }
 }
+
+extension Array where Element == String {
+    func customerSheetSupportedPaymentMethodTypes(_ supportedPaymentMethodTypes: [STPPaymentMethodType] = CustomerSheet.supportedPaymentMethods) -> Result<[STPPaymentMethodType]?, Error> {
+        guard !self.isEmpty else {
+            return .success(nil)
+        }
+        var unsupportedPMs: [String] = []
+        var validPMs: [STPPaymentMethodType] = []
+
+        for paymentMethodType in self {
+            let stpPaymentMethodType = STPPaymentMethod.type(from: paymentMethodType)
+            if !CustomerSheet.paymentMethodIsSupported(stpPaymentMethodType, supportedPaymentMethods: supportedPaymentMethodTypes){
+                unsupportedPMs.append(paymentMethodType)
+            } else {
+                validPMs.append(stpPaymentMethodType)
+            }
+        }
+        guard unsupportedPMs.isEmpty else {
+            return .failure(CustomerSheetError.unsupportedPaymentMethodType(paymentMethodTypes: unsupportedPMs))
+        }
+        if validPMs.isEmpty {
+            return .success(nil)
+        }
+        return .success(validPMs)
+    }
+}
+

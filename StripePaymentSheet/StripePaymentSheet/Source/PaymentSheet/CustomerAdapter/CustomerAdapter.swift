@@ -72,6 +72,11 @@ public protocol CustomerAdapter {
     /// - seealso: https://stripe.com/docs/api/payment_methods/update
     func updatePaymentMethod(paymentMethodId: String, paymentMethodUpdateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
 
+    /// A list of payment method types to display to the customers
+    /// Valid values include: "card", "us_bank_account", "sepa_debit"
+    /// If nil or empty, the SDK will dynamically determine the payment methods using your Stripe Dashboard settings.
+    var paymentMethodTypes: [String]? { get }
+
     /// Whether this CustomerAdapter is able to create Setup Intents.
     /// A Setup Intent is recommended when attaching a new card to a Customer, and required for non-card payment methods.
     /// If you are implementing your own <CustomerAdapter>:
@@ -102,6 +107,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
     let customerEphemeralKeyProvider: (() async throws -> CustomerEphemeralKey)
     let setupIntentClientSecretProvider: (() async throws -> String)?
     let apiClient: STPAPIClient
+    public let paymentMethodTypes: [String]?
 
     /// - Parameter customerEphemeralKeyProvider: A block that returns a CustomerEphemeralKey.
     ///             When called, create an ephemeral key for a customer on your backend, then return it.
@@ -112,11 +118,13 @@ open class StripeCustomerAdapter: CustomerAdapter {
     ///
     public init(customerEphemeralKeyProvider: @escaping () async throws -> CustomerEphemeralKey,
                 setupIntentClientSecretProvider: (() async throws -> String)? = nil,
+                paymentMethodTypes: [String]? = nil,
                 apiClient: STPAPIClient = .shared) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: StripeCustomerAdapter.self)
         self.customerEphemeralKeyProvider = customerEphemeralKeyProvider
         self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
         self.apiClient = apiClient
+        self.paymentMethodTypes = paymentMethodTypes
     }
 
     private struct CachedCustomerEphemeralKey {
@@ -144,8 +152,23 @@ open class StripeCustomerAdapter: CustomerAdapter {
     open func fetchPaymentMethods() async throws -> [STPPaymentMethod] {
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
-            // List the Customer's saved PaymentMethods
-            let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit] // hardcoded for now
+
+            // Note: Querying for payment specific types of payment methods is an optimization
+            // Eventually, when we query a single endpoint for all payment methods,
+            // paymentMethodTypes will be used as a client side filter
+            var savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit] // hardcoded for now
+            if let paymentMethodTypes = self.paymentMethodTypes {
+                switch paymentMethodTypes.customerSheetSupportedPaymentMethodTypes(CustomerSheet.supportedPaymentMethods) {
+                case .success(let types):
+                    if let types, !types.isEmpty {
+                        savedPaymentMethodTypes = types
+                    }
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                    return
+                }
+            }
+
             apiClient.listPaymentMethods(
                 forCustomer: customerEphemeralKey.id,
                 using: customerEphemeralKey.ephemeralKeySecret,
