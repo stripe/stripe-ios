@@ -40,14 +40,7 @@ end
 
 def commit_changes
   # Commit and push the changes
-  # Xcode project files are added to ensure compatibility with Carthage,
-  # -f is used because this files are included in .gitignore.
-  # Manually add the docs directory to pick up any new docs files generated as part of release
-  run_command("git add Stripe.xcworkspace -f &&
-    git add Stripe*/*.xcodeproj -f &&
-    git add Example/**/*.xcodeproj -f &&
-    git add Testers/**/*.xcodeproj -f &&
-    git add -u &&
+  run_command("git add -u &&
     git commit -m \"Update version to #{@version}\"")
 end
 

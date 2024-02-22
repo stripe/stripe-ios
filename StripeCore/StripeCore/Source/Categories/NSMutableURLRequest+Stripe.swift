@@ -10,13 +10,17 @@ import Foundation
 
 extension URLRequest {
     @_spi(STP) public mutating func stp_addParameters(toURL parameters: [String: Any]) {
-        guard let url = url else {
+        guard let url else {
             assertionFailure()
             return
         }
-        let urlString = url.absoluteString
         let query = URLEncoder.queryString(from: parameters)
-        self.url = URL(string: urlString + (url.query != nil ? "&\(query)" : "?\(query)"))
+        let urlString = url.absoluteString + (url.query != nil ? "&\(query)" : "?\(query)")
+        // On iOS 17, the `URL` class initializers parse the string using the stricter RFC 3986 and started returning nil for certain URL strings we create, like "https://foo.com?foo[bar]=baz".
+        // To preserve our old encoding behavior, we use CFURLCreateWithString instead.
+        // It's possible that we could instead change our encoding behavior to use RFC 3986.
+        // Seealso: https://jira.corp.stripe.com/browse/MOBILESDK-1335
+        self.url = CFURLCreateWithString(nil, urlString as CFString, nil) as URL?
     }
 
     @_spi(STP) public mutating func stp_setFormPayload(_ formPayload: [String: Any]) {
