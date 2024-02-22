@@ -72,6 +72,9 @@ public protocol CustomerAdapter {
     /// - seealso: https://stripe.com/docs/api/payment_methods/update
     func updatePaymentMethod(paymentMethodId: String, paymentMethodUpdateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
 
+    /// A list of payment method types to display to the customer. If nil, we dynamically determine the payment methods using your Stripe Dashboard settings.
+    func paymentMethodTypes() async throws -> [String]?
+
     /// Whether this CustomerAdapter is able to create Setup Intents.
     /// A Setup Intent is recommended when attaching a new card to a Customer, and required for non-card payment methods.
     /// If you are implementing your own <CustomerAdapter>:
@@ -218,6 +221,11 @@ open class StripeCustomerAdapter: CustomerAdapter {
                                                        paymentMethodUpdateParams: paymentMethodUpdateParams,
                                                        ephemeralKeySecret: customerEphemeralKey.ephemeralKeySecret)
     }
+
+    open func paymentMethodTypes() async throws -> [String]? {
+        return ["card", "sepa_debit"]
+    }
+
 }
 
 @_spi(STP) extension StripeCustomerAdapter: STPAnalyticsProtocol {

@@ -52,8 +52,13 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private var cachedClientSecret: String?
 
     var paymentMethodTypes: [PaymentSheet.PaymentMethodType] {
-        let paymentMethodTypes = merchantSupportedPaymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: customerAdapter)
-        return paymentMethodTypes.toPaymentSheetPaymentMethodTypes()
+        if let userConfigurationPaymentMethods {
+            let paymentMethodTypes = userConfigurationPaymentMethods.customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: customerAdapter)
+            return paymentMethodTypes.toPaymentSheetPaymentMethodTypes()
+        } else {
+            let paymentMethodTypes = merchantSupportedPaymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(customerAdapter: customerAdapter)
+            return paymentMethodTypes.toPaymentSheetPaymentMethodTypes()
+        }
     }
 
     var selectedPaymentOption: PaymentOption? {
@@ -68,6 +73,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
     }
     let merchantSupportedPaymentMethodTypes: [STPPaymentMethodType]
+    let userConfigurationPaymentMethods: [STPPaymentMethodType]?
 
     // MARK: - Views
     internal lazy var navigationBar: SheetNavigationBar = {
@@ -125,6 +131,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         savedPaymentMethods: [STPPaymentMethod],
         selectedPaymentMethodOption: CustomerPaymentOption?,
         merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
+        userConfigurationPaymentMethods: [STPPaymentMethodType]?,
         configuration: CustomerSheet.Configuration,
         customerAdapter: CustomerAdapter,
         isApplePayEnabled: Bool,
@@ -135,6 +142,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.savedPaymentMethods = savedPaymentMethods
         self.selectedPaymentMethodOption = selectedPaymentMethodOption
         self.merchantSupportedPaymentMethodTypes = merchantSupportedPaymentMethodTypes
+        self.userConfigurationPaymentMethods = userConfigurationPaymentMethods
         self.configuration = configuration
         self.customerAdapter = customerAdapter
         self.isApplePayEnabled = isApplePayEnabled

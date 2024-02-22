@@ -111,12 +111,13 @@ public class CustomerSheet {
         }
         loadPaymentMethodInfo { result in
             switch result {
-            case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
+            case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession, let userConfigurationPaymentMethods)):
                 let merchantSupportedPaymentMethodTypes = self.customerAdapter.canCreateSetupIntents ? elementsSession.orderedPaymentMethodTypes : [.card]
                 self.present(from: presentingViewController,
                              savedPaymentMethods: savedPaymentMethods,
                              selectedPaymentMethodOption: selectedPaymentMethodOption,
                              merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
+                             userConfigurationPaymentMethods: userConfigurationPaymentMethods,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
             case .failure(let error):
                 csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
@@ -133,6 +134,7 @@ public class CustomerSheet {
                  savedPaymentMethods: [STPPaymentMethod],
                  selectedPaymentMethodOption: CustomerPaymentOption?,
                  merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
+                 userConfigurationPaymentMethods: [STPPaymentMethodType]?,
                  cbcEligible: Bool) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -145,6 +147,7 @@ public class CustomerSheet {
                 let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
                                                                                     selectedPaymentMethodOption: selectedPaymentMethodOption,
                                                                                     merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
+                                                                                    userConfigurationPaymentMethods: userConfigurationPaymentMethods,
                                                                                     configuration: self.configuration,
                                                                                     customerAdapter: self.customerAdapter,
                                                                                     isApplePayEnabled: isApplePayEnabled,
@@ -161,22 +164,29 @@ public class CustomerSheet {
 }
 
 extension CustomerSheet {
-    func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
+    func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession, [STPPaymentMethodType]?), Error>) -> Void) {
         Task {
             do {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentOption()
                 async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet()
-
+                async let userConfigurationPaymentMethodsResult = try self.customerAdapter.paymentMethodTypes()
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
 
-                let (paymentMethods, selectedPaymentMethod, elementSession) = try await (paymentMethodsResult, selectedPaymentMethodResult, elementsSessionResult)
+                let (paymentMethods, selectedPaymentMethod, elementSession, userConfigurationPaymentMethods) = try await (paymentMethodsResult, selectedPaymentMethodResult, elementsSessionResult, userConfigurationPaymentMethodsResult)
+                
+                // Convert user supplied payment methods strings to STPPaymentMethodType
+                var userConfigurationPaymentMethodsTypes: [STPPaymentMethodType]? = nil
+                if let userConfigurationPaymentMethods {
+                    userConfigurationPaymentMethodsTypes = userConfigurationPaymentMethods
+                        .map({ STPPaymentMethod.type(from: $0) })
+                        .filter({$0 != .unknown})
+                }
 
-                // Override with specs from elementSession
                 _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)
 
-                completion(.success((paymentMethods, selectedPaymentMethod, elementSession)))
+                completion(.success((paymentMethods, selectedPaymentMethod, elementSession, userConfigurationPaymentMethodsTypes)))
             } catch {
                 completion(.failure(error))
             }
