@@ -67,15 +67,15 @@ def create_pr
   - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section.
   }
 
-  unless @is_dry_run
-    pr = @github_client.create_pull_request(
-      'stripe/stripe-ios',
-      'master',
-      @branchname,
-      "Release version #{@version}",
-      pr_body
-    )
-  end
+  return if @is_dry_run
+
+  pr = @github_client.create_pull_request(
+    'stripe/stripe-ios',
+    'master',
+    @branchname,
+    "Release version #{@version}",
+    pr_body
+  )
 end
 
 def check_for_missing_localizations
@@ -92,23 +92,23 @@ def check_for_missing_localizations
 end
 
 def propose_release
-  unless @is_dry_run
-    # Lookup PR
-    all_prs = @github_client.pull_requests('stripe/stripe-ios', state: 'open')
-    pr = all_prs.find { |pr| pr.head.ref == @branchname }
+  return if @is_dry_run
 
-    # Get list of new directories and save to a temp file
-    prev_release_tag = @github_client.latest_release('stripe/stripe-ios').tag_name
-    `git fetch origin --tags`
-    new_dirs = `ci_scripts/check_for_new_directories.sh HEAD #{prev_release_tag}`
-    temp_dir = `mktemp -d`.chomp("\n")
-    new_dir_file = File.join_if_safe(temp_dir, "new_directories_#{@version}.txt")
-    File.open(new_dir_file, 'w') { |file| file.puts new_dirs }
+  # Lookup PR
+  all_prs = @github_client.pull_requests('stripe/stripe-ios', state: 'open')
+  pr = all_prs.find { |pr| pr.head.ref == @branchname }
 
-    rputs "Complete the pull request checklist at #{pr.html_url}"
-    rputs "For a list of new directories since tag #{prev_release_tag}, `cat #{new_dir_file}`"
-    notify_user
-  end
+  # Get list of new directories and save to a temp file
+  prev_release_tag = @github_client.latest_release('stripe/stripe-ios').tag_name
+  `git fetch origin --tags`
+  new_dirs = `ci_scripts/check_for_new_directories.sh HEAD #{prev_release_tag}`
+  temp_dir = `mktemp -d`.chomp("\n")
+  new_dir_file = File.join_if_safe(temp_dir, "new_directories_#{@version}.txt")
+  File.open(new_dir_file, 'w') { |file| file.puts new_dirs }
+
+  rputs "Complete the pull request checklist at #{pr.html_url}"
+  rputs "For a list of new directories since tag #{prev_release_tag}, `cat #{new_dir_file}`"
+  notify_user
 end
 
 steps = [

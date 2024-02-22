@@ -8,6 +8,16 @@ require_relative 'vm_tools'
 # We sometimes bump this if an Xcode bug or deprecation forces us to upgrade early.
 MIN_SUPPORTED_XCODE_VERSION = '15.0'.freeze
 
+def verify_xcode_version
+  # Verify that xcode-select -p returns the correct version for building Stripe.xcframework.
+  return if `xcodebuild -version`.include?("Xcode #{MIN_SUPPORTED_XCODE_VERSION}")
+
+  rputs "Xcode #{MIN_SUPPORTED_XCODE_VERSION} is required to build Stripe.xcframework."
+  rputs 'Use `xcode-select -s` to select the correct version, or download it from https://developer.apple.com/download/more/.'
+  rputs "If you believe this is no longer the correct version, update `MIN_SUPPORTED_XCODE_VERSION` in `#{__FILE__}`."
+  abort
+end
+
 verify_xcode_version
 
 @version = version_from_file
@@ -33,66 +43,66 @@ def approve_pr
 end
 
 def create_docs_pr
-  unless @is_dry_run
-    pr = @github_client.create_pull_request(
-      'stripe/stripe-ios',
-      'docs',
-      "docs-publish/#{@version}",
-      "Publish docs for v#{@version}"
-    )
+  return if @is_dry_run
 
-    rputs "Docs PR created at #{pr.html_url}"
-    rputs 'Request review on the PR and merge it.'
-    notify_user
-  end
+  pr = @github_client.create_pull_request(
+    'stripe/stripe-ios',
+    'docs',
+    "docs-publish/#{@version}",
+    "Publish docs for v#{@version}"
+  )
+
+  rputs "Docs PR created at #{pr.html_url}"
+  rputs 'Request review on the PR and merge it.'
+  notify_user
 end
 
 def push_tag
-  unless @is_dry_run
-    # Create a signed git tag and push to GitHub: git tag -s X.Y.Z -m "Version X.Y.Z" && git push origin X.Y.Z
-    run_command("git tag -s #{@version} -m \"Version #{@version}\"")
-    run_command("git push origin #{@version}")
-  end
+  return if @is_dry_run
+
+  # Create a signed git tag and push to GitHub: git tag -s X.Y.Z -m "Version X.Y.Z" && git push origin X.Y.Z
+  run_command("git tag -s #{@version} -m \"Version #{@version}\"")
+  run_command("git push origin #{@version}")
 end
 
 def create_release
-  unless @is_dry_run
-    @release = @github_client.create_release(
-      'stripe/stripe-ios',
-      @version,
-      {
-        body: @changelog
-      }
-    )
-  end
+  return if @is_dry_run
+
+  @release = @github_client.create_release(
+    'stripe/stripe-ios',
+    @version,
+    {
+      body: @changelog
+    }
+  )
 end
 
 def upload_framework
-  unless @is_dry_run
-    # Use the reference to the release object from `create_release` if it exists,
-    # otherwise fetch it.
-    release = @release
-    release ||= @github_client.latest_release('stripe/stripe-ios')
-    @github_client.upload_asset(
-      release.url,
-      File.open('./build/Stripe.xcframework.zip')
-    )
-  end
+  return if @is_dry_run
+
+  # Use the reference to the release object from `create_release` if it exists,
+  # otherwise fetch it.
+  release = @release
+  release ||= @github_client.latest_release('stripe/stripe-ios')
+  @github_client.upload_asset(
+    release.url,
+    File.open('./build/Stripe.xcframework.zip')
+  )
 end
 
 def push_cocoapods
-  unless @is_dry_run
-    # Push the release to the CocoaPods trunk: ./ci_scripts/pod_tools.rb push
-    rputs 'Pushing the release to Cocoapods.'
-    run_command('ci_scripts/pod_tools.rb push')
-  end
+  return if @is_dry_run
+
+  # Push the release to the CocoaPods trunk: ./ci_scripts/pod_tools.rb push
+  rputs 'Pushing the release to Cocoapods.'
+  run_command('ci_scripts/pod_tools.rb push')
 end
 
 def push_spm_mirror
-  unless @is_dry_run
-    rputs 'Pushing the release to our SPM mirror.'
-    run_command("ci_scripts/push_spm_mirror.rb --version #{@version}")
-  end
+  return if @is_dry_run
+
+  rputs 'Pushing the release to our SPM mirror.'
+  run_command("ci_scripts/push_spm_mirror.rb --version #{@version}")
 end
 
 def sync_owner_list
