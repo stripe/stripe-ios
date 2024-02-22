@@ -60,6 +60,7 @@ public class CustomerSheet {
     /// Use a StripeCustomerAdapter, or build your own.
     public init(configuration: CustomerSheet.Configuration,
                 customer: CustomerAdapter) {
+        AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: CustomerSheet.self)
         self.configuration = configuration
         self.customerAdapter = customer
@@ -86,7 +87,6 @@ public class CustomerSheet {
     public func present(from presentingViewController: UIViewController,
                         completion csCompletion: @escaping (CustomerSheetResult) -> Void
     ) {
-        AnalyticsHelper.shared.generateSessionID()
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
         let completion: () -> Void = {
