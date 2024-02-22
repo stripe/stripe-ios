@@ -47,6 +47,7 @@ final class CloseConfirmationViewController: SheetViewController {
                         "Yes, exit",
                         "A button title. The user encounters it as part of a confirmation sheet when trying to exit a screen. Pressing it will exit the screen, and cancel the process of connecting the users bank account."
                     ),
+                    accessibilityIdentifier: "close_confirmation_ok",
                     action: { [weak self] in
                         guard let self = self else { return }
                         self.dismiss(

@@ -38,6 +38,7 @@ final class PhoneTextField: UIView {
                 trailing: 16
             )
         textField.delegate = self
+        textField.textField.accessibilityIdentifier = "phone_text_field"
         return textField
     }()
     private let countryCodeSelectorView: PhoneCountryCodeSelectorView

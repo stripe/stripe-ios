@@ -66,6 +66,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                         "Continue with Link",
                         "A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider)."
                     ),
+                    accessibilityIdentifier: "link_continue_button",
                     action: { [weak self] in
                         self?.didSelectContinue()
                     }
