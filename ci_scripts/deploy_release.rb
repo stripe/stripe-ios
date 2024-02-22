@@ -3,6 +3,13 @@
 require_relative 'release_common'
 require_relative 'vm_tools'
 
+# This should generally be the minimum Xcode version supported by the App Store, as the
+# compiled XCFrameworks won't be usable on older versions.
+# We sometimes bump this if an Xcode bug or deprecation forces us to upgrade early.
+MIN_SUPPORTED_XCODE_VERSION = '15.0'.freeze
+
+verify_xcode_version
+
 @version = version_from_file
 
 @changelog = changelog(@version)
@@ -13,18 +20,8 @@ def export_builds
   # Delete Stripe.xcframework.zip if one exists
   run_command('rm -f build/Stripe.xcframework.zip')
 
-  if @is_dry_run
-    # Run locally
-    run_command('ci_scripts/export_builds.rb')
-  else
-    # Run in VM
-    if need_to_build_vm?
-      build_vm
-    end
-    bring_up_vm_and_wait_for_boot
-    run_command_vm('source ~/.zprofile && sudo gem install bundler:2.1.2 && bundle install && bundle exec ./ci_scripts/export_builds.rb')
-    finish_vm
-  end
+  run_command('ci_scripts/export_builds.rb')
+
   raise 'build/Stripe.xcframework.zip not found. Did the build fail?' unless File.exist?('build/Stripe.xcframework.zip')
 end
 
