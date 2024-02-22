@@ -3,10 +3,10 @@
 require_relative 'common'
 require 'net/ssh'
 
-def run_command_vm(command, raise_on_failure = true)
+def run_command_vm(command, _raise_on_failure = true)
   puts "tart> #{command}".blue
 
-  Net::SSH.start(`tart ip builder-vm`.strip, 'admin', :password => "admin") do |ssh|
+  Net::SSH.start(`tart ip builder-vm`.strip, 'admin', password: 'admin', config: false) do |ssh|
     ssh.exec!('mkdir -p "/tmp/build/stripe-ios"')
     output = ssh.exec!("cd \"/tmp/build/stripe-ios\" && #{command}")
     puts output
@@ -26,15 +26,16 @@ def bring_up_vm_and_wait_for_boot
   booted = false
   until booted
     begin
-      run_command_vm('echo hello world')  
+      run_command_vm('echo hello world')
       booted = true
-    rescue => exception
+    rescue StandardError => e
+      puts e
       puts 'Not online yet, retrying...'
       sleep(10)
     end
   end
   # Copy files to VM
-  run_command_vm("mkdir -p /tmp/build/stripe-ios")
+  run_command_vm('mkdir -p /tmp/build/stripe-ios')
   run_command_vm("rsync -a --delete --exclude '.git' \"/Volumes/My Shared Files/stripe-ios\" /tmp/build/")
 end
 
@@ -47,7 +48,7 @@ end
 def finish_vm
   # Copy files from VM
   run_command_vm("rsync -aO --exclude '.git' /tmp/build/stripe-ios/ \"/Volumes/My Shared Files/stripe-ios/\"")
-  run_command("tart stop builder-vm")
+  run_command('tart stop builder-vm')
 end
 
 def need_to_build_vm?
@@ -58,7 +59,7 @@ def build_vm
   rputs 'Building VM images! This will take a while, grab some coffee and keep your Mac awake...'
   setup_vm_requirements
   Dir.chdir("#{Dir.home}/stripe/ios-deploy-vm") do
-    run_command('packer init')
+    run_command('packer init -var-file="variables.pkrvars.hcl" templates/vanilla-ventura.pkr.hcl')
     unless `tart list`.include? 'ventura-vanilla'
       run_command('packer build -var-file="variables.pkrvars.hcl" templates/vanilla-ventura.pkr.hcl')
     end

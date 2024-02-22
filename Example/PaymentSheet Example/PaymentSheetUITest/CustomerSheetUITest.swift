@@ -121,7 +121,7 @@ class CustomerSheetUITest: XCTestCase {
         removeFirstPaymentMethodInList()
 
         let cardPresence_afterRemoval = app.staticTexts["••••4242"]
-        XCTAssertFalse(cardPresence_afterRemoval.exists)
+        waitToDisappear(cardPresence_afterRemoval)
 
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
@@ -309,9 +309,9 @@ class CustomerSheetUITest: XCTestCase {
         )
 
         presentCSAndAddCardFrom(buttonLabel: "None")
-        presentCSAndAddCardFrom(buttonLabel: "••••4242")
+        presentCSAndAddCardFrom(buttonLabel: "••••4242", cardNumber: "5555555555554444")
 
-        let selectButton = app.staticTexts["••••4242"]
+        let selectButton = app.staticTexts["••••4444"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
@@ -319,8 +319,16 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
-        removeFirstPaymentMethodInList()
-        removeFirstPaymentMethodInList()
+        removeFirstPaymentMethodInList(alertBody: "Mastercard •••• 4444")
+        // ••••4444 is rendered as the PM to remove, as well as the status on the playground
+        // Check that it is removed by waiting for there only be one instance
+        let elementLabel = "••••4444"
+        let elementQuery = app.staticTexts.matching(NSPredicate(format: "label == %@", elementLabel))
+        waitForNItemsExistence(elementQuery, count: 1)
+
+        removeFirstPaymentMethodInList(alertBody: "Visa •••• 4242")
+        let visa = app.staticTexts["••••4242"]
+        waitToDisappear(visa)
 
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
@@ -342,9 +350,9 @@ class CustomerSheetUITest: XCTestCase {
         )
 
         presentCSAndAddCardFrom(buttonLabel: "None", tapAdd: false)
-        presentCSAndAddCardFrom(buttonLabel: "••••4242")
+        presentCSAndAddCardFrom(buttonLabel: "••••4242", cardNumber: "5555555555554444")
 
-        let selectButton = app.staticTexts["••••4242"]
+        let selectButton = app.staticTexts["••••4444"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
@@ -352,8 +360,16 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
-        removeFirstPaymentMethodInList()
-        removeFirstPaymentMethodInList()
+        removeFirstPaymentMethodInList(alertBody: "Mastercard •••• 4444")
+        // ••••4444 is rendered as the PM to remove, as well as the status on the playground
+        // Check that it is removed by waiting for there only be one instance
+        let elementLabel = "••••4444"
+        let elementQuery = app.staticTexts.matching(NSPredicate(format: "label == %@", elementLabel))
+        waitForNItemsExistence(elementQuery, count: 1)
+
+        removeFirstPaymentMethodInList(alertBody: "Visa •••• 4242")
+        let visa = app.staticTexts["••••4242"]
+        waitToDisappear(visa)
 
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
@@ -902,7 +918,7 @@ class CustomerSheetUITest: XCTestCase {
 
     // MARK: - Helpers
 
-    func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
+    func presentCSAndAddCardFrom(buttonLabel: String, cardNumber: String? = nil, tapAdd: Bool = true) {
         let selectButton = app.staticTexts[buttonLabel]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
@@ -911,20 +927,24 @@ class CustomerSheetUITest: XCTestCase {
             app.staticTexts["+ Add"].tap()
         }
 
-        try! fillCardData(app, postalEnabled: true)
+        try! fillCardData(app, cardNumber: cardNumber, postalEnabled: true)
         app.buttons["Save"].tap()
 
         let confirmButton = app.buttons["Confirm"]
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
         confirmButton.tap()
-
-        dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
+        if let cardNumber {
+            let last4 = String(cardNumber.suffix(4))
+            dismissAlertView(alertBody: "Success: ••••\(last4), selected", alertTitle: "Complete", buttonToTap: "OK")
+        } else {
+            dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
+        }
     }
 
-    func removeFirstPaymentMethodInList() {
+    func removeFirstPaymentMethodInList(alertBody: String = "Visa •••• 4242") {
         let removeButton1 = app.buttons["Remove"].firstMatch
         removeButton1.tap()
-        dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
+        dismissAlertView(alertBody: alertBody, alertTitle: "Remove card?", buttonToTap: "Remove")
     }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {
