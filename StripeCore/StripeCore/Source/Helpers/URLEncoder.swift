@@ -35,10 +35,56 @@ import Foundation
         return newString
     }
 
-    @objc(queryStringFromParameters:)
     public class func queryString(from parameters: [String: Any]) -> String {
         return query(parameters)
     }
+
+    public class func makeURL(withQueryParams params: [String: Any]) -> [URLQueryItem] {
+        return params.keys.sorted().flatMap {
+            urlQueryComponents(with: $0, value: params[$0] as Any)
+        }
+    }
+}
+
+/// Returns a
+/// - Parameter key:
+private func urlQueryComponents(with key: String, value: Any) -> [URLQueryItem] {
+    func unwrap<T>(_ any: T) -> Any {
+        let mirror = Mirror(reflecting: any)
+        guard mirror.displayStyle == .optional, let first = mirror.children.first else {
+            return any
+        }
+        return first.value
+    }
+
+    var components = [URLQueryItem]()
+    switch value {
+    case let dictionary as [String: Any]:
+        for nestedKey in dictionary.keys.sorted() {
+            let value = dictionary[nestedKey]!
+            components += urlQueryComponents(with: "\(key)[\(nestedKey)]", value: value)
+        }
+    case let array as [Any]:
+        for (index, value) in array.enumerated() {
+            components += urlQueryComponents(with: "\(key)[\(index)]", value: value)
+        }
+    case let number as NSNumber:
+        if number.isBool {
+            components.append(URLQueryItem(name: key, value: number.boolValue ? "true" : "false"))
+        } else {
+            components.append(URLQueryItem(name: key, value: "\(number)"))
+        }
+    case let bool as Bool:
+        components.append(URLQueryItem(name: key, value: bool ? "true" : "false"))
+    case let set as Set<AnyHashable>:
+        for value in Array(set) {
+            components += urlQueryComponents(with: "\(key)", value: value)
+        }
+    default:
+        let unwrappedValue = unwrap(value)
+        components.append(URLQueryItem(name: key, value: "\(unwrappedValue)"))
+    }
+    return components
 }
 
 // MARK: -
@@ -58,7 +104,7 @@ struct Key {
 ///   - value: Value of the query component.
 ///
 /// - Returns: The percent-escaped, URL encoded query string components.
-private func queryComponents(fromKey key: String, value: Any) -> [(String, String)] {
+private func urlQueryComponents(fromKey key: String, value: Any) -> [(String, String)] {
     func unwrap<T>(_ any: T) -> Any {
         let mirror = Mirror(reflecting: any)
         guard mirror.displayStyle == .optional, let first = mirror.children.first else {
@@ -73,11 +119,11 @@ private func queryComponents(fromKey key: String, value: Any) -> [(String, Strin
         for nestedKey in dictionary.keys.sorted() {
             let value = dictionary[nestedKey]!
             let escapedNestedKey = escape(nestedKey)
-            components += queryComponents(fromKey: "\(key)[\(escapedNestedKey)]", value: value)
+            components += urlQueryComponents(fromKey: "\(key)[\(escapedNestedKey)]", value: value)
         }
     case let array as [Any]:
         for (index, value) in array.enumerated() {
-            components += queryComponents(fromKey: "\(key)[\(index)]", value: value)
+            components += urlQueryComponents(fromKey: "\(key)[\(index)]", value: value)
         }
     case let number as NSNumber:
         if number.isBool {
@@ -89,7 +135,7 @@ private func queryComponents(fromKey key: String, value: Any) -> [(String, Strin
         components.append((key, escape(bool ? "true" : "false")))
     case let set as Set<AnyHashable>:
         for value in Array(set) {
-            components += queryComponents(fromKey: "\(key)", value: value)
+            components += urlQueryComponents(fromKey: "\(key)", value: value)
         }
     default:
         let unwrappedValue = unwrap(value)
@@ -112,7 +158,7 @@ private func query(_ parameters: [String: Any]) -> String {
 
     for key in parameters.keys.sorted(by: <) {
         let value = parameters[key]!
-        components += queryComponents(fromKey: escape(key), value: value)
+        components += urlQueryComponents(fromKey: escape(key), value: value)
     }
     return components.map { "\($0)=\($1)" }.joined(separator: "&")
 }
