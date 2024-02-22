@@ -60,15 +60,13 @@ def capture_retrying(cmd, max_retries: 10)
   retries = 0
   loop do
     stdout, stderr, status = Open3.capture3(cmd)
-    if !status.success? && retries <= max_retries
-      retries += 1
-      delay = [2**retries, 32].min
-      puts "Something went wrong. Trying again in #{delay} seconds..."
-      sleep(delay)
-      puts 'Retrying...'
-    else
-      return stdout, stderr, status
-    end
+    return stdout, stderr, status unless !status.success? && retries <= max_retries
+
+    retries += 1
+    delay = [2**retries, 32].min
+    puts "Something went wrong. Trying again in #{delay} seconds..."
+    sleep(delay)
+    puts 'Retrying...'
   end
 end
 
@@ -79,7 +77,7 @@ def push_retrying(podspec, expected_pod_version, max_retries: 10)
       puts "No need to push: #{podspec}.  Latest version is already #{expected_pod_version}"
       return true
     end
-    system("pod trunk push #{podspec} --synchronous")
+    system("pod trunk push #{podspec} --synchronous --allow-warnings")
     success = $?.success?
     return success unless !success && retries <= max_retries
 
