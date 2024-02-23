@@ -60,6 +60,12 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             return paymentMethodTypes.toPaymentSheetPaymentMethodTypes()
         }
     }
+    var savedPaymentMethodsVisible: [STPPaymentMethod] {
+        if let userConfigurationPaymentMethods, !userConfigurationPaymentMethods.isEmpty {
+            return savedPaymentMethods.filter({userConfigurationPaymentMethods.contains($0.type)})
+        }
+        return savedPaymentMethods
+    }
 
     var selectedPaymentOption: PaymentOption? {
         switch mode {
@@ -86,7 +92,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private lazy var savedPaymentOptionsViewController: CustomerSavedPaymentMethodsCollectionViewController = {
         let showApplePay = isApplePayEnabled
         return CustomerSavedPaymentMethodsCollectionViewController(
-            savedPaymentMethods: savedPaymentMethods,
+            savedPaymentMethods: savedPaymentMethodsVisible,
             selectedPaymentMethodOption: selectedPaymentMethodOption,
             savedPaymentMethodsConfiguration: self.configuration,
             customerAdapter: self.customerAdapter,
