@@ -16,7 +16,7 @@ final class LinkAccountPickerFooterView: UIView {
     private let didSelectConnectAccount: () -> Void
 
     private lazy var connectAccountButton: Button = {
-        let connectAccountButton = Button(configuration: .financialConnectionsPrimary)
+        let connectAccountButton = Button.primary()
         connectAccountButton.title = defaultCta
         connectAccountButton.isEnabled = false // disable by default
         connectAccountButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)

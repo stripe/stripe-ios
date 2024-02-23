@@ -26,8 +26,8 @@ final class AccountPickerRowView: UIView {
                     transform: nil
                 )
                 layer.shadowColor = UIColor.black.cgColor
-                layer.shadowRadius = 0.5
-                layer.shadowOpacity = 0.17
+                layer.shadowRadius = 1.5 / UIScreen.main.nativeScale
+                layer.shadowOpacity = 0.23
                 layer.shadowOffset = CGSize(
                     width: 0,
                     height: 1 / UIScreen.main.nativeScale
