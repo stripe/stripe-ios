@@ -66,6 +66,10 @@ final class InstitutionSearchBar: UIView {
             for: .editingChanged
         )
         textField.accessibilityIdentifier = "search_bar_text_field"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            textField.heightAnchor.constraint(greaterThanOrEqualToConstant: 24)
+        ])
         return textField
     }()
     private lazy var textFieldClearButton: UIButton = {
