@@ -2097,7 +2097,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
 
-        XCTAssertTrue(app.cells.count == 1)
+        // Should still show "+ Add" and Link
+        XCTAssertEqual(app.cells.count, 2)
     }
 
     // MARK: - External PayPal 
