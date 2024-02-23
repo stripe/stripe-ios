@@ -15,7 +15,7 @@ final class AccountPickerFooterView: UIView {
     private let didSelectLinkAccounts: () -> Void
 
     private lazy var linkAccountsButton: Button = {
-        let linkAccountsButton = Button(configuration: .financialConnectionsPrimary)
+        let linkAccountsButton = Button.primary()
         linkAccountsButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
         linkAccountsButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

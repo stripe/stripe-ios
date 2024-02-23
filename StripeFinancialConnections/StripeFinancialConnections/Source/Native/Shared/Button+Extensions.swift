@@ -7,12 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeUICore
-
-// Fixes a SwiftUI preview bug where previews will crash
-// if `.financialConnectionsPrimary` is directly referenced
-func FinancialConnectionsPrimaryButtonConfiguration() -> Button.Configuration {
-    return .financialConnectionsPrimary
-}
+import UIKit
 
 // Fixes a SwiftUI preview bug where previews will crash
 // if `.financialConnectionsPrimary` is directly referenced
@@ -20,8 +15,23 @@ func FinancialConnectionsSecondaryButtonConfiguration() -> Button.Configuration 
     return .financialConnectionsSecondary
 }
 
+extension Button {
+    static func primary() -> StripeUICore.Button {
+        let button = Button(configuration: .financialConnectionsPrimary)
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowRadius = 1.5 / UIScreen.main.nativeScale
+        button.layer.shadowOpacity = 0.23
+        button.layer.shadowOffset = CGSize(
+            width: 0,
+            height: 1 / UIScreen.main.nativeScale
+        )
+        return button
+    }
+}
+
 extension Button.Configuration {
-    static var financialConnectionsPrimary: Button.Configuration {
+
+    fileprivate static var financialConnectionsPrimary: Button.Configuration {
         var primaryButtonConfiguration = Button.Configuration.primary()
         primaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         primaryButtonConfiguration.cornerRadius = 12.0
