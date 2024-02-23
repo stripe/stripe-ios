@@ -54,11 +54,15 @@ final class PaymentSheetLoader {
                 // Overwrite the form specs that were already loaded from disk
                 switch intent {
                 case .paymentIntent(let elementsSession, _):
-                    _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                    if !elementsSession.isBackupInstance {
+                        _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                    }
                 case .setupIntent:
                     break // Not supported
                 case .deferredIntent(elementsSession: let elementsSession, intentConfig: _):
-                    _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                    if !elementsSession.isBackupInstance {
+                        _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                    }
                 }
 
                 // Load link account session. Continue without Link if it errors.
