@@ -16,7 +16,7 @@ class ConsentFooterView: HitTestView {
     private let didSelectAgree: () -> Void
 
     private lazy var agreeButton: StripeUICore.Button = {
-        let agreeButton = Button(configuration: .financialConnectionsPrimary)
+        let agreeButton = Button.primary()
         agreeButton.title = agreeButtonText
         agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
         agreeButton.translatesAutoresizingMaskIntoConstraints = false
