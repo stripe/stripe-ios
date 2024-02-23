@@ -31,7 +31,6 @@ struct PaymentSheetTestPlayground: View {
         }
         Group {
             SettingView(setting: $playgroundController.settings.linkEnabled)
-            SettingView(setting: $playgroundController.settings.linkV2Allowed)
             SettingView(setting: $playgroundController.settings.userOverrideCountry)
             SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
             SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)

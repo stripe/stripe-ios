@@ -2579,7 +2579,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -2592,7 +2591,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2613,7 +2611,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -2626,7 +2623,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2647,7 +2643,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -2674,7 +2669,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2707,7 +2701,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
@@ -2722,7 +2715,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.applePayEnabled = .off
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2747,7 +2739,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
@@ -2762,7 +2753,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.applePayEnabled = .off
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2787,7 +2777,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
@@ -2816,7 +2805,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.applePayEnabled = .on
 
         loadPlayground(app, settings)
@@ -2847,7 +2835,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.applePayEnabled = .off
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2877,7 +2864,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.applePayEnabled = .on
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2894,7 +2880,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkEnabled = .on
-        settings.linkV2Allowed = .on
         settings.userOverrideCountry = .GB
 
         loadPlayground(app, settings)

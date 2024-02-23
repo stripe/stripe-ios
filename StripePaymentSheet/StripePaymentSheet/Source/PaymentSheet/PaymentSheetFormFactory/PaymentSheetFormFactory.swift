@@ -44,7 +44,6 @@ class PaymentSheetFormFactory {
     var canSaveToLink: Bool {
         return (supportsLinkCard &&
                 paymentMethod == .stripe(.card) &&
-                (configuration.allowLinkV2Features || saveMode != .userSelectable) &&
                 !configuration.isUsingBillingAddressCollection)
     }
 
@@ -97,7 +96,7 @@ class PaymentSheetFormFactory {
                   offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
                   linkAccount: linkAccount,
                   cardBrandChoiceEligible: cardBrandChoiceEligible,
-                  supportsLinkCard: intent.supportsLinkCard(allowV2Features: configuration.allowLinkV2Features),
+                  supportsLinkCard: intent.supportsLinkCard,
                   isPaymentIntent: intent.isPaymentIntent,
                   currency: intent.currency,
                   amount: intent.amount,
