@@ -104,7 +104,6 @@ class PlaygroundController: ObservableObject {
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
         configuration.appearance = appearance
-        configuration.allowLinkV2Features = settings.linkV2Allowed == .on
         if settings.userOverrideCountry != .off {
             configuration.userOverrideCountry = settings.userOverrideCountry.rawValue
         }
