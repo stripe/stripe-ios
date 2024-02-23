@@ -15,7 +15,7 @@ final class SuccessFooterView: UIView {
     private let didSelectDone: (SuccessFooterView) -> Void
 
     private lazy var doneButton: Button = {
-        let doneButton = Button(configuration: .financialConnectionsPrimary)
+        let doneButton = Button.primary()
         doneButton.title = "Done"  // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
         doneButton.addTarget(self, action: #selector(didSelectDoneButton), for: .touchUpInside)
         doneButton.translatesAutoresizingMaskIntoConstraints = false

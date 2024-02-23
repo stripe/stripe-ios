@@ -177,7 +177,7 @@ extension PaneLayoutView {
 
         var primaryButtonReference: StripeUICore.Button?
         if let primaryButtonConfiguration = primaryButtonConfiguration {
-            let primaryButton = Button(configuration: FinancialConnectionsPrimaryButtonConfiguration())
+            let primaryButton = Button.primary()
             primaryButtonReference = primaryButton
             primaryButton.title = primaryButtonConfiguration.title
             primaryButton.accessibilityIdentifier = primaryButtonConfiguration.accessibilityIdentifier

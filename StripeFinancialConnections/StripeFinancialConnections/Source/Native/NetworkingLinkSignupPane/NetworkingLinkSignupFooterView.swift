@@ -60,7 +60,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
     }()
 
     private lazy var saveToLinkButton: StripeUICore.Button = {
-        let saveToLinkButton = Button(configuration: .financialConnectionsPrimary)
+        let saveToLinkButton = Button.primary()
         saveToLinkButton.title = saveToLinkButtonText
         saveToLinkButton.addTarget(self, action: #selector(didSelectSaveToLinkButton), for: .touchUpInside)
         saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false

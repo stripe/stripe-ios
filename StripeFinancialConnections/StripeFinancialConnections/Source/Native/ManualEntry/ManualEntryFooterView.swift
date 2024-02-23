@@ -14,7 +14,7 @@ final class ManualEntryFooterView: UIView {
     private let didSelectContinue: () -> Void
 
     private(set) lazy var continueButton: Button = {
-        let continueButton = Button(configuration: .financialConnectionsPrimary)
+        let continueButton = Button.primary()
         continueButton.title = "Submit"  // TODO(kgaidis): localize
         continueButton.addTarget(self, action: #selector(didSelectContinueButton), for: .touchUpInside)
         continueButton.translatesAutoresizingMaskIntoConstraints = false
