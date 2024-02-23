@@ -26,7 +26,6 @@ final class PrepaneViews {
     }()
     private let headerView: UIView
     private let bodyView: UIView
-    private var loadingView: UIView?
     private var primaryButton: StripeUICore.Button?
     private var secondaryButton: StripeUICore.Button?
     let footerView: UIView?

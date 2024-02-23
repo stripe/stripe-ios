@@ -11,10 +11,17 @@ import UIKit
 
 final class ContinueStateViews {
 
-    private init() {}
+    let contentView: UIView
+    private var primaryButton: StripeUICore.Button?
+    private var secondaryButton: StripeUICore.Button?
+    let footerView: UIView?
 
-    static func createContentView(institutionImageUrl: String?) -> UIView {
-        return PaneLayoutView.createContentView(
+    init(
+        institutionImageUrl: String?,
+        didSelectContinue: @escaping () -> Void,
+        didSelectCancel: (() -> Void)? = nil
+    ) {
+        self.contentView = PaneLayoutView.createContentView(
             iconView: {
                 if let institutionImageUrl {
                     let institutionIconView = InstitutionIconView()
@@ -34,13 +41,7 @@ final class ContinueStateViews {
             ),
             contentView: nil
         )
-    }
-
-    static func createFooterView(
-        didSelectContinue: @escaping () -> Void,
-        didSelectCancel: (() -> Void)? = nil
-    ) -> UIView? {
-        return PaneLayoutView.createFooterView(
+        let footerViewTuple = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
                 title: "Continue", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`,
                 action: didSelectContinue
@@ -55,6 +56,14 @@ final class ContinueStateViews {
                     return nil
                 }
             }()
-        ).footerView
+        )
+        self.footerView = footerViewTuple.footerView
+        self.primaryButton = footerViewTuple.primaryButton
+        self.secondaryButton = footerViewTuple.secondaryButton
+    }
+
+    func showLoadingView(_ show: Bool) {
+        primaryButton?.isLoading = show
+        secondaryButton?.isEnabled = !show
     }
 }

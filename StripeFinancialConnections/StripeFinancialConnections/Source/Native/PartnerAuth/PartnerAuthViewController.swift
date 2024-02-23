@@ -46,6 +46,7 @@ final class PartnerAuthViewController: SheetViewController {
     weak var delegate: PartnerAuthViewControllerDelegate?
 
     private var prepaneViews: PrepaneViews?
+    private var continueStateViews: ContinueStateViews?
     private var loadingView: UIView?
     private var legacyLoadingView: UIView?
     private var showLegacyBrowserOnViewDidAppear = false
@@ -296,24 +297,25 @@ final class PartnerAuthViewController: SheetViewController {
             )
             return
         }
+        let continueStateViews = ContinueStateViews(
+            institutionImageUrl: institution.icon?.default,
+            didSelectContinue: { [weak self] in
+                guard let self else { return }
+                dataSource.analyticsClient.log(
+                    eventName: "click.apptoapp.continue",
+                    pane: .partnerAuth
+                )
+                openInstitutionAuthenticationNativeRedirect(authSession: authSession)
+            },
+            didSelectCancel: { [weak self] in
+                guard let self else { return }
+                delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
+            }
+        )
+        self.continueStateViews = continueStateViews
         setup(
-            withContentView: ContinueStateViews.createContentView(
-                institutionImageUrl: institution.icon?.default
-            ),
-            footerView: ContinueStateViews.createFooterView(
-                didSelectContinue: { [weak self] in
-                    guard let self else { return }
-                    dataSource.analyticsClient.log(
-                        eventName: "click.apptoapp.continue",
-                        pane: .partnerAuth
-                    )
-                    openInstitutionAuthenticationNativeRedirect(authSession: authSession)
-                },
-                didSelectCancel: { [weak self] in
-                    guard let self else { return }
-                    delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
-                }
-            )
+            withContentView: continueStateViews.contentView,
+            footerView: continueStateViews.footerView
         )
 
         subscribeToURLAndAppActiveNotifications()
@@ -326,7 +328,7 @@ final class PartnerAuthViewController: SheetViewController {
                 return
             }
             // if we get here, it means the banking app is not installed
-            self.clearStateAndUnsubscribeFromNotifications()
+            self.clearStateAndUnsubscribeFromNotifications(removeContinueStateView: true)
 
             self.showLoadingView(true)
             self.dataSource
@@ -535,8 +537,9 @@ final class PartnerAuthViewController: SheetViewController {
         // there's a chance we don't have the data yet to display a
         // prepane-based loading view, so we have extra handling
         // to handle both states
-        if let prepaneViews {
-            prepaneViews.showLoadingView(show)
+        if prepaneViews != nil || continueStateViews != nil {
+            prepaneViews?.showLoadingView(show)
+            continueStateViews?.showLoadingView(show)
         } else {
             if show {
                 let loadingView = SpinnerView()
@@ -742,13 +745,18 @@ private extension PartnerAuthViewController {
         }
     }
 
-    private func clearStateAndUnsubscribeFromNotifications() {
+    private func clearStateAndUnsubscribeFromNotifications(
+        removeContinueStateView: Bool
+    ) {
         unprocessedReturnURL = nil
         unsubscribeFromNotifications()
 
-        if let authSession = dataSource.pendingAuthSession {
-            // re-create the views
-            createdAuthSession(authSession)
+        if removeContinueStateView {
+            continueStateViews = nil
+            if let authSession = dataSource.pendingAuthSession {
+                // re-create the views
+                createdAuthSession(authSession)
+            }
         }
     }
 
@@ -769,14 +777,19 @@ private extension PartnerAuthViewController {
                     authSessionId: authSession.id
                 )
             }
+            clearStateAndUnsubscribeFromNotifications(removeContinueStateView: false)
             handleAuthSessionCompletionFromNativeRedirect(url)
-            clearStateAndUnsubscribeFromNotifications()
         } else if let authSession = dataSource.pendingAuthSession {
             self.checkIfAuthSessionWasSuccessful(
                 authSession: authSession,
                 completionHandler: { [weak self] isSuccess in
                     if isSuccess {
-                        self?.clearStateAndUnsubscribeFromNotifications()
+                        self?.clearStateAndUnsubscribeFromNotifications(
+                            // on success, we will move away from
+                            // the screen, so there's no reason
+                            // to remove the continue state now
+                            removeContinueStateView: false
+                        )
                     } else {
                         // the default case is to not do anything
                         // user can press "Continue" to re-start
