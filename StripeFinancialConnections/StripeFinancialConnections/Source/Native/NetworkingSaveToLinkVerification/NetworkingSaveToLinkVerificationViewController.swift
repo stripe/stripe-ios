@@ -133,6 +133,7 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
     }
 
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
+        view.showLoadingView(true)
         dataSource.saveToLink()
             .observe { [weak self] result in
                 guard let self = self else { return }
@@ -167,6 +168,14 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
                         saveToLinkWithStripeSucceeded: false,
                         error: error
                     )
+                }
+
+                // only hide loading view after animation
+                // to next screen has completed
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + 1.0
+                ) { [weak view] in
+                    view?.showLoadingView(false)
                 }
             }
 
