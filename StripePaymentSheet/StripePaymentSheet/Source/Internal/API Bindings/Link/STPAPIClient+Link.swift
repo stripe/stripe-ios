@@ -112,6 +112,10 @@ extension STPAPIClient {
 
         var card = STPFormEncoder.dictionary(forObject: cardParams)["card"] as? [AnyHashable: Any]
         card?["cvc"] = nil // payment_details doesn't store cvc
+        // Consumer endpoint expects a 4-digit card year
+        if let exp_year = card?["exp_year"] as? Int {
+            card?["exp_year"] = CardExpiryDate.normalizeYear(exp_year)
+        }
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
