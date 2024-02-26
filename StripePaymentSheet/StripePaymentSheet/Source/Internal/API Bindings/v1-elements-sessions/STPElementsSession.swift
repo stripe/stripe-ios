@@ -43,6 +43,9 @@ final class STPElementsSession: NSObject {
     /// An ordered list of external payment methods to display
     let externalPaymentMethods: [ExternalPaymentMethod]
 
+    /// A flag that indicates that this instance was created as a best-effort
+    let isBackupInstance: Bool
+
     let allResponseFields: [AnyHashable: Any]
 
     private init(
@@ -56,7 +59,8 @@ final class STPElementsSession: NSObject {
         paymentMethodSpecs: [[AnyHashable: Any]]?,
         cardBrandChoice: STPCardBrandChoice?,
         isApplePayEnabled: Bool,
-        externalPaymentMethods: [ExternalPaymentMethod]
+        externalPaymentMethods: [ExternalPaymentMethod],
+        isBackupInstance: Bool = false
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -69,6 +73,7 @@ final class STPElementsSession: NSObject {
         self.cardBrandChoice = cardBrandChoice
         self.isApplePayEnabled = isApplePayEnabled
         self.externalPaymentMethods = externalPaymentMethods
+        self.isBackupInstance = isBackupInstance
         super.init()
     }
 
@@ -100,7 +105,8 @@ final class STPElementsSession: NSObject {
             paymentMethodSpecs: nil,
             cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
             isApplePayEnabled: true,
-            externalPaymentMethods: []
+            externalPaymentMethods: [],
+            isBackupInstance: true
         )
     }
 }
