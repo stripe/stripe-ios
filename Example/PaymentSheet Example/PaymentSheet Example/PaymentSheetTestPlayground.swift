@@ -102,6 +102,7 @@ struct PaymentSheetTestPlayground: View {
                         }
                         clientSettings
                         TextField("Custom CTA", text: customCTABinding)
+                        TextField("Payment Method Settings ID", text: paymentMethodSettingsBinding)
                     }
                     Divider()
                     Group {
@@ -130,6 +131,13 @@ struct PaymentSheetTestPlayground: View {
             return playgroundController.settings.customCtaLabel ?? ""
         } set: { newString in
             playgroundController.settings.customCtaLabel = (newString != "") ? newString : nil
+        }
+    }
+    var paymentMethodSettingsBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.paymentMethodConfigurationId ?? ""
+        } set: { newString in
+            playgroundController.settings.paymentMethodConfigurationId = (newString != "") ? newString : nil
         }
     }
     var customerModeBinding: Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
