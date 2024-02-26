@@ -296,6 +296,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             XCTAssertEqual(form.getAllSubElements().count, 1)
         }
     }
+    
+    func testTwintConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "CHF",
+                               paymentMethodType: .stripe(.paynow),
+                               merchantCountry: .GB) { form in
+            // Twint has no input fields
+            XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
 
     func testSavedSEPA() async throws {
         let customer = "cus_OaMPphpKbeixCz"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
