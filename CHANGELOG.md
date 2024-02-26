@@ -2,6 +2,9 @@
 ### PaymentSheet
 * [Added] Added support for [payment method configurations](https://docs.stripe.com/payments/multiple-payment-method-configs) when using the deferred intent integration path.
 
+### CustomerSheet
+* [Fixed] Fixed a bug where if an exception is thrown in detachPaymentMethod(), the payment method was removed in the UI [#3309](https://github.com/stripe/stripe-ios/pull/3309)
+
 ## 23.22.0 2024-02-12
 ### PaymentSheet
 * [Changed] The separator text under the Apple Pay button from "Or pay with a card" to "Or use a card" when using a SetupIntent.
