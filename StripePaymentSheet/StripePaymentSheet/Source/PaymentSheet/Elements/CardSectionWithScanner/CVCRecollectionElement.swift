@@ -55,7 +55,7 @@ final class CVCRecollectionElement: Element {
         self.mode = mode
     }
 
-    func didFinishPresenting() {
+    func beginEditing() {
         DispatchQueue.main.async {
             self.cvcRecollectionView.textFieldElement.beginEditing()
         }
