@@ -19,6 +19,7 @@ protocol NetworkingLinkSignupViewControllerDelegate: AnyObject {
         _ viewController: NetworkingLinkSignupViewController,
         // nil == we did not perform saveToLink
         saveToLinkWithStripeSucceeded: Bool?,
+        customSuccessPaneMessage: String?,
         withError error: Error?
     )
     func networkingLinkSignupViewController(
@@ -86,6 +87,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                         self.delegate?.networkingLinkSignupViewControllerDidFinish(
                             self,
                             saveToLinkWithStripeSucceeded: nil,
+                            customSuccessPaneMessage: nil,
                             withError: error
                         )
                     }
@@ -124,6 +126,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(
                     self,
                     saveToLinkWithStripeSucceeded: nil,
+                    customSuccessPaneMessage: nil,
                     withError: nil
                 )
             },
@@ -198,10 +201,11 @@ final class NetworkingLinkSignupViewController: UIViewController {
         .observe { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success:
+            case .success(let manifest):
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(
                     self,
                     saveToLinkWithStripeSucceeded: true,
+                    customSuccessPaneMessage: manifest.displayText?.successPane?.subCaption,
                     withError: nil
                 )
             case .failure(let error):
@@ -210,6 +214,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(
                     self,
                     saveToLinkWithStripeSucceeded: false,
+                    customSuccessPaneMessage: nil,
                     withError: error
                 )
                 self.dataSource.analyticsClient.logUnexpectedError(
@@ -287,6 +292,7 @@ extension NetworkingLinkSignupViewController: NetworkingLinkSignupBodyFormViewDe
                             self.delegate?.networkingLinkSignupViewControllerDidFinish(
                                 self,
                                 saveToLinkWithStripeSucceeded: nil,
+                                customSuccessPaneMessage: nil,
                                 withError: FinancialConnectionsSheetError.unknown(
                                     debugDescription: "No consumer session returned from lookupConsumerSession for emailAddress: \(emailAddress)"
                                 )
