@@ -162,13 +162,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum LinkV2Allowed: String, PickerEnum {
-        static var enumName: String { "Link v2 Allowed" }
-
-        case on
-        case off
-    }
-
     enum UserOverrideCountry: String, PickerEnum {
         static var enumName: String { "UserOverrideCountry (debug only)" }
 
@@ -266,7 +259,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var allowsDelayedPMs: AllowsDelayedPMs
     var defaultBillingAddress: DefaultBillingAddress
     var linkEnabled: LinkEnabled
-    var linkV2Allowed: LinkV2Allowed
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var checkoutEndpoint: String?
@@ -298,7 +290,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             allowsDelayedPMs: .off,
             defaultBillingAddress: .off,
             linkEnabled: .off,
-            linkV2Allowed: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,

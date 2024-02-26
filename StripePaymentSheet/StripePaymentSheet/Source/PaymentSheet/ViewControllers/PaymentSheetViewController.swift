@@ -275,7 +275,7 @@ class PaymentSheetViewController: UIViewController {
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(
             isCustom: false,
             paymentMethod: mode.analyticsValue,
-            linkEnabled: intent.supportsLink(allowV2Features: configuration.allowLinkV2Features),
+            linkEnabled: intent.supportsLink,
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
             currency: intent.currency,
             intentConfig: intent.intentConfig,
@@ -499,7 +499,7 @@ class PaymentSheetViewController: UIViewController {
                     isCustom: false,
                     paymentMethod: paymentOption.analyticsValue,
                     result: result,
-                    linkEnabled: self.intent.supportsLink(allowV2Features: self.configuration.allowLinkV2Features),
+                    linkEnabled: self.intent.supportsLink,
                     activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                     linkSessionType: self.intent.linkPopupWebviewOption,
                     currency: self.intent.currency,
