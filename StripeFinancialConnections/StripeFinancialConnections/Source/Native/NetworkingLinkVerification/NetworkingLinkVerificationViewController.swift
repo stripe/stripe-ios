@@ -163,6 +163,7 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
     }
 
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
+        view.showLoadingView(true)
         dataSource.markLinkVerified()
             .observe { [weak self] result in
                 guard let self = self else { return }
@@ -205,6 +206,14 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                                         pane: .networkingLinkVerification
                                     )
                                 self.requestNextPane(manifest.nextPane)
+                            }
+
+                            // only hide loading view after animation
+                            // to next screen has completed
+                            DispatchQueue.main.asyncAfter(
+                                deadline: .now() + 1.0
+                            ) { [weak view] in
+                                view?.showLoadingView(false)
                             }
                         }
                 case .failure(let error):

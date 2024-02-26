@@ -193,11 +193,7 @@ extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDeleg
     }
 
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
-        // we could call `showSmallLoadingView(false)` here but we do
-        // not because next step will be to transition to a different
-        // screen and its better to keep showing the loading to
-        // avoid the animation lag
-
+        showSmallLoadingView(true)
         dataSource.markLinkStepUpAuthenticationVerified()
             .observe { [weak self] result in
                 guard let self = self else { return }
@@ -230,6 +226,14 @@ extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDeleg
                                     // this shouldn't happen, but in case it does, we navigate to `institutionPicker` so user
                                     // could still have a chance at successfully connecting their account
                                     self.delegate?.networkingLinkStepUpVerificationViewControllerEncounteredSoftError(self)
+                                }
+
+                                // only hide loading view after animation
+                                // to next screen has completed
+                                DispatchQueue.main.asyncAfter(
+                                    deadline: .now() + 1.0
+                                ) { [weak self] in
+                                    self?.showSmallLoadingView(false)
                                 }
                             case .failure(let error):
                                 self.dataSource
