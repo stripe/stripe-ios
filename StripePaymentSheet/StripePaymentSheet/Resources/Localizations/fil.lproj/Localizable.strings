@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+Magdagdag";
 
 "Add a card" = "Magdagdag ng isang kard";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagsali sa Link, sumasang-ayon ka sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagbibigay ng iyong email, sumasang-ayon ka na gumawa ng Link account at i-save ang impormasyon ng iyong pagbabayad sa Link, alinsunod sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy> ng Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Sa pagbibigay ng iyong impormasyon ng pagbabayad at pagkukupirma sa bayad na ito, pinapayagan mo ang (A) %@ at ang Stripe, ang ating payment service provider, na magpadala ng mga tagubilin sa iyong bangko para i-debit ang iyong account at (B) ang iyong bangko na i-debit ang iyong account ayon sa mga naturang tuntunin. Bilang bahagi ng iyong mga karapatan, maaari kang makakuha ng refund mula sa iyong bangko sa ilalim ng mga takda at kundisyon ng iyong kasunduan sa iyong bangko. Ang refund ay dapat hingin sa loob ng 8 linggo mula sa petsa na na-debit ang iyong account. Ang iyong mga karapatan ay naipaliwanag sa isang pahayag na maari mong makuha sa iyong bangko. Pumapayag ka na makatanggap ng mga abiso ukol sa mga debit sa hinaharap ng hanggang 2 na araw bago sila maganap.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagbibigay ng iyong numero ng telepono, sumasang-ayon ka na gumawa ng Link account at i-save ang impormasyon ng iyong pagbabayad sa Link, alinsunod sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy> ng Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pag-save ng iyong account sa bangko para sa %@ sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
 
@@ -61,6 +67,8 @@
 "Enter address manually" = "Manwal na ilagay ang address";
 
 "FPX Bank" = "FPX Bank";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Nauunawaan ko na mangongolekta ang Stripe ng Direct Debits sa ngalan ng  %@ at kinukumpirma ko na ako ang may-ari ng account at tanging taong kinakailangan na magpahintulot sa mga debit mula sa account na ito..";
 
 "IBAN" = "IBAN";
 
@@ -106,6 +114,8 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+"Remove card?" = "Alisin ang kard?";
+
 "Save" = "I-save";
 
 "Save a new payment method" = "I-save ang bagong paraan ng pagbabayad";
@@ -119,6 +129,8 @@
 "Save this card for future %@ payments" = "I-save ang kard na ito para sa mga hinaharap na pagbabayad sa %@";
 
 "Save your bank account in just a few steps." = "I-save ang iyong account sa bangko sa ilang hakbang lamang.";
+
+"Save your info for secure 1-click checkout with Link" = "I-save ang iyong impormasyon para sa ligtas na 1-click na pag-checkout sa Link";
 
 "Select your payment method" = "Piliin ang iyong paraan ng pagbabayad";
 

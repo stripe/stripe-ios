@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Ekle";
 
 "Add a card" = "Kart ekle";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link'e katılarak <terms>Hükümleri</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "E-postanızı vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy> uyarınca bir Link hesabı oluşturmayı ve ödeme bilgilerinizi Link'e kaydetmeyi kabul edersiniz.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ödeme bilgilerinizi sağlayarak ve bu ödemeyi onaylayarak, (A) %@ ve ödeme hizmeti sağlayıcımız Stripe'a hesabınızdan ödeme tahsilatı yapması için bankanıza talimatlar göndermesi ve (B) bankanıza bu talimatlara uygun olarak hesabınızdan ödeme tahsilatı yapması için yetki verirsiniz. Haklarınızın bir parçası olarak, bankanızla yaptığınız sözleşmenin hüküm ve koşulları uyarınca bankanızdan geri ödeme alma hakkına sahipsiniz. Geri ödeme, hesabınızdan ödeme tahsilatı yapıldığı tarihten itibaren 8 hafta içinde talep edilmelidir. Haklarınız, bankanızdan alabileceğiniz bir hesap özetinde açıklanmaktadır. Tahakkuk etmeden 2 gün öncesine kadar gelecekteki ödeme tahsilatları için bildirim almayı da kabul edersiniz.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefon numaranızı vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy> uyarınca bir Link hesabı oluşturmayı ve ödeme bilgilerinizi Link'e kaydetmeyi kabul edersiniz.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ için banka hesabınızı kaydettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
@@ -61,6 +67,8 @@
 "Enter address manually" = "Adresi manuel olarak girin";
 
 "FPX Bank" = "FPX Bank";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Stripe'ın %@ adına Otomatik Ödeme alacağını anlıyorum. Hesap sahibi ve bu hesaptan ödemeleri yetkilendirmek için gereken tek kişi olduğumu onaylıyorum.";
 
 "IBAN" = "IBAN";
 
@@ -106,6 +114,8 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+"Remove card?" = "Kart kaldırılsın mı?";
+
 "Save" = "Kaydet";
 
 "Save a new payment method" = "Yeni bir ödeme yöntemi kaydedin";
@@ -119,6 +129,8 @@
 "Save this card for future %@ payments" = "Bu kartı gelecekteki %@ ödemeleri için kaydedin";
 
 "Save your bank account in just a few steps." = "Banka hesabınızı birkaç adımda kaydedin.";
+
+"Save your info for secure 1-click checkout with Link" = "Link ile tek tıklamayla güvenli ödeme yapmak için bilgilerinizi kaydedin";
 
 "Select your payment method" = "Ödeme yönteminizi seçin";
 

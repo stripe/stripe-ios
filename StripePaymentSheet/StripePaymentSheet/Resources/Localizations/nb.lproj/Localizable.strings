@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Legg til";
 
 "Add a card" = "Legg til et kort";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å bli med i Link, godtar du <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å oppgi e-postadressen din godtar du å opprette en Link-konto og lagre betalingsinformasjonen din hos Link i henhold til Links <terms>vilkår</terms> og <privacy>personvernerklæring</privacy>.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved å oppgi betalingsinformasjonen din og bekrefte denne betalingen gir du tillatelse til at (A) %@ og Stripe, vår leverandør for betalingstjenesten, sende anmodning til banken din om å belaste kontoen din og (B) banken din belaster kontoen din i samsvar med anmodningen. Som del av dine rettigheter kan du kreve å få beløpet tilbakeført i henhold til avtalen du har med banken. Tilbakeføringskrav må fremsettes innen 8 uker etter at kontoen ble belastet. Rettighetene dine blir forklart i en erklæring som du kan få fra banken. Du godtar å motta varsler om fremtidige belastninger opptil to dager før de skjer.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å oppgi telefonnummeret ditt godtar du å opprette en Link-konto og lagre betalingsinformasjonen din hos Link i henhold til Links <terms>vilkår</terms> og <privacy>personvernerklæring</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å lagre bankkontoen for %@ godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
 
@@ -61,6 +67,8 @@
 "Enter address manually" = "Skriv inn adresse manuelt";
 
 "FPX Bank" = "FPX Bank";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg forstår at Stripe vil direktedebitere på vegne av %@ og bekrefter at jeg er kontoinnehaver og den eneste personen som må godkjenne debiteringer fra denne kontoen.";
 
 "IBAN" = "IBAN";
 
@@ -106,6 +114,8 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+"Remove card?" = "Vil du fjerne kortet?";
+
 "Save" = "Lagre";
 
 "Save a new payment method" = "Lagre en ny betalingsmetode";
@@ -119,6 +129,8 @@
 "Save this card for future %@ payments" = "Lagre kortet til fremtidige betalinger hos %@";
 
 "Save your bank account in just a few steps." = "Lagre bankkontoen din med bare noen få trinn.";
+
+"Save your info for secure 1-click checkout with Link" = "Lagre informasjonen din for sikker 1-klikk-utsjekking med Link";
 
 "Select your payment method" = "Velg betalingsmetode";
 
