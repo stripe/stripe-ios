@@ -746,8 +746,12 @@ extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
     func networkingLinkSignupViewControllerDidFinish(
         _ viewController: NetworkingLinkSignupViewController,
         saveToLinkWithStripeSucceeded: Bool?,
+        customSuccessPaneMessage: String?,
         withError error: Error?
     ) {
+        if let customSuccessPaneMessage {
+            dataManager.customSuccessPaneMessage = customSuccessPaneMessage
+        }
         if saveToLinkWithStripeSucceeded != nil {
             dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
         }
