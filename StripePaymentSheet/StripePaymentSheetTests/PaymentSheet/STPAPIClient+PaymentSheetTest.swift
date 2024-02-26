@@ -22,6 +22,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                                                                            captureMethod: .automaticAsync),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
+                                                            paymentMethodConfigurationId: "pmc_234",
                                                             confirmHandler: { _, _, _ in })
         var config = PaymentSheet.Configuration()
         config.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_foo", "external_bar"], externalPaymentMethodConfirmHandler: { _, _, _ in })
@@ -39,6 +40,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(deferredIntent["currency"] as? String, "USD")
         XCTAssertEqual(deferredIntent["setup_future_usage"] as? String, "on_session")
         XCTAssertEqual(deferredIntent["capture_method"] as? String, "automatic_async")
+        XCTAssertEqual((deferredIntent["payment_method_configuration"] as? [String: Any])?["id"] as? String, "pmc_234")
     }
 
     func testElementsSessionParameters_DeferredSetup() throws {
@@ -52,6 +54,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(parameters["key"] as? String, "pk_test")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], [])
+        XCTAssertNil(parameters["payment_method_configurations"])
 
         let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as?  [String: Any])
         XCTAssertEqual(deferredIntent["payment_method_types"] as? [String], ["card", "cashapp"])

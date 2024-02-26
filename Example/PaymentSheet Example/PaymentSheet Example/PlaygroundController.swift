@@ -190,6 +190,7 @@ class PlaygroundController: ObservableObject {
             return PaymentSheet.IntentConfiguration(
                 mode: .payment(amount: amount!, currency: settings.currency.rawValue, setupFutureUsage: nil),
                 paymentMethodTypes: paymentMethodTypes,
+                paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                 confirmHandler: confirmHandler,
                 isCVCRecollectionEnabledCallback: isCVCRecollectionEnabledCallback
             )
@@ -197,6 +198,7 @@ class PlaygroundController: ObservableObject {
             return PaymentSheet.IntentConfiguration(
                 mode: .payment(amount: amount!, currency: settings.currency.rawValue, setupFutureUsage: .offSession),
                 paymentMethodTypes: paymentMethodTypes,
+                paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                 confirmHandler: confirmHandler,
                 isCVCRecollectionEnabledCallback: isCVCRecollectionEnabledCallback
             )
@@ -204,6 +206,7 @@ class PlaygroundController: ObservableObject {
             return PaymentSheet.IntentConfiguration(
                 mode: .setup(currency: settings.currency.rawValue, setupFutureUsage: .offSession),
                 paymentMethodTypes: paymentMethodTypes,
+                paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                 confirmHandler: confirmHandler
             )
         }
