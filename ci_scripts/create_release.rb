@@ -48,6 +48,12 @@ def push_changes
   run_command("git push origin #{@branchname}") unless @is_dry_run
 end
 
+def run_download_localized_strings
+  unless @is_dry_run
+    `sh ci_scripts/download_localized_strings_from_lokalise.sh`
+  end
+end
+
 def create_pr
   # Create a new pull request from the branch
   pr_body = %{
@@ -57,6 +63,7 @@ def create_pr
     - [ ] Version.xcconfig
     - [ ] All *.podspec files
     - [ ] StripeAPIConfiguration+Version.swift
+  - [ ] Verify any new localized strings.
   - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section.
   }
 
@@ -108,6 +115,7 @@ steps = [
   method(:create_branch),
   method(:update_version),
   method(:update_placeholders),
+  method(:run_download_localized_strings),
   method(:commit_changes),
   method(:push_changes),
   method(:create_pr),
