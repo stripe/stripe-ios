@@ -300,7 +300,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
     func testTwintConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "CHF",
-                               paymentMethodType: .stripe(.paynow),
+                               paymentMethodType: .stripe(.twint),
                                merchantCountry: .GB) { form in
             // Twint has no input fields
             XCTAssertEqual(form.getAllSubElements().count, 1)
