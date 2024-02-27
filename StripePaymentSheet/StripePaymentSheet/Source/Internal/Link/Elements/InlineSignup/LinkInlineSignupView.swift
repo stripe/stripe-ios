@@ -106,8 +106,8 @@ final class LinkInlineSignupView: UIView {
 
         let style: FormElement.Style = viewModel.showCheckbox ? .plain : .bordered
         let formElement = FormElement(elements: elements, style: style, theme: theme)
-
-        return FormElement(elements: [formElement, legalTermsElement], theme: theme)
+        let containerFormElement = FormElement(elements: [formElement, legalTermsElement], theme: theme, customSpacing: [(formElement, ElementsUI.formSpacing - 4.0)])
+        return containerFormElement
     }()
 
     init(viewModel: LinkInlineSignupViewModel) {

@@ -167,9 +167,6 @@ extension PaymentSheet {
         // MARK: Internal
         internal var linkPaymentMethodsOnly: Bool = false
 
-        /// If enabled, PaymentSheet will offer V2 Link features, such as passthrough mode
-        @_spi(STP) public var allowLinkV2Features: Bool = false
-
         /// Override country for test purposes
         @_spi(STP) public var userOverrideCountry: String?
 

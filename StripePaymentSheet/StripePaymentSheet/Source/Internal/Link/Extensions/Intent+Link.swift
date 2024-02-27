@@ -9,17 +9,17 @@
 @_spi(STP) import StripePayments
 
 extension Intent {
-    func supportsLink(allowV2Features: Bool) -> Bool {
+    var supportsLink: Bool {
         // Either Link is an allowed Payment Method in the elements/sessions response, or passthrough mode (Link as a Card PM) is allowed
-        return recommendedPaymentMethodTypes.contains(.link) || (linkPassthroughModeEnabled && allowV2Features)
+        return recommendedPaymentMethodTypes.contains(.link) || linkPassthroughModeEnabled
     }
 
-    func supportsLinkCard(allowV2Features: Bool) -> Bool {
-        return supportsLink(allowV2Features: allowV2Features) && (linkFundingSources?.contains(.card) ?? false) || (linkPassthroughModeEnabled && allowV2Features)
+    var supportsLinkCard: Bool {
+        return supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }
 
     var onlySupportsLinkBank: Bool {
-        return supportsLink(allowV2Features: false) && (linkFundingSources == [.bankAccount])
+        return supportsLink && (linkFundingSources == [.bankAccount])
     }
 
     var linkFlags: [String: Bool] {

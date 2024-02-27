@@ -40,19 +40,18 @@ end
 
 def commit_changes
   # Commit and push the changes
-  # Xcode project files are added to ensure compatibility with Carthage,
-  # -f is used because this files are included in .gitignore.
-  # Manually add the docs directory to pick up any new docs files generated as part of release
-  run_command("git add Stripe.xcworkspace -f &&
-    git add Stripe*/*.xcodeproj -f &&
-    git add Example/**/*.xcodeproj -f &&
-    git add Testers/**/*.xcodeproj -f &&
-    git add -u &&
+  run_command("git add -u &&
     git commit -m \"Update version to #{@version}\"")
 end
 
 def push_changes
   run_command("git push origin #{@branchname}") unless @is_dry_run
+end
+
+def run_download_localized_strings
+  unless @is_dry_run
+    `sh ci_scripts/download_localized_strings_from_lokalise.sh`
+  end
 end
 
 def create_pr
@@ -64,6 +63,7 @@ def create_pr
     - [ ] Version.xcconfig
     - [ ] All *.podspec files
     - [ ] StripeAPIConfiguration+Version.swift
+  - [ ] Verify any new localized strings.
   - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section.
   }
 
@@ -115,6 +115,7 @@ steps = [
   method(:create_branch),
   method(:update_version),
   method(:update_placeholders),
+  method(:run_download_localized_strings),
   method(:commit_changes),
   method(:push_changes),
   method(:create_pr),

@@ -13,7 +13,8 @@ import Foundation
 extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
 
-    func makeElementsSessionsParams(mode: PaymentSheet.InitializationMode, epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?) -> [String: Any] {
+    func makeElementsSessionsParams(mode: PaymentSheet.InitializationMode,
+                                    epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?) -> [String: Any] {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
@@ -26,6 +27,9 @@ extension STPAPIClient {
                 var deferredIntent = [String: Any]()
                 deferredIntent["payment_method_types"] = intentConfig.paymentMethodTypes
                 deferredIntent["on_behalf_of"] = intentConfig.onBehalfOf
+                if let paymentMethodConfigurationId = intentConfig.paymentMethodConfigurationId {
+                    deferredIntent["payment_method_configuration"] = ["id": paymentMethodConfigurationId]
+                }
                 switch intentConfig.mode {
                 case .payment(let amount, let currency, let setupFutureUsage, let captureMethod):
                     deferredIntent["mode"] = "payment"

@@ -54,11 +54,15 @@ final class PaymentSheetLoader {
                 // Overwrite the form specs that were already loaded from disk
                 switch intent {
                 case .paymentIntent(let elementsSession, _):
-                    _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                    if !elementsSession.isBackupInstance {
+                        _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                    }
                 case .setupIntent:
                     break // Not supported
                 case .deferredIntent(elementsSession: let elementsSession, intentConfig: _):
-                    _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                    if !elementsSession.isBackupInstance {
+                        _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                    }
                 }
 
                 // Load link account session. Continue without Link if it errors.
@@ -89,7 +93,8 @@ final class PaymentSheetLoader {
                     showApplePay: isFlowController ? isApplePayEnabled : PaymentSheetViewController.shouldShowApplePayAsSavedPaymentOption(hasSavedPaymentMethods: !filteredSavedPaymentMethods.isEmpty, isLinkEnabled: isLinkEnabled, isApplePayEnabled: isApplePayEnabled),
                     showLink: isFlowController ? isLinkEnabled : false
                 )
-                analyticsClient.logPaymentSheetLoadSucceeded(loadingStartDate: loadingStartDate, defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex))
+                analyticsClient.logPaymentSheetLoadSucceeded(loadingStartDate: loadingStartDate,
+                                                             linkEnabled: intent.supportsLink, defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex))
                 if isFlowController {
                     AnalyticsHelper.shared.startTimeMeasurement(.checkout)
                 }
@@ -115,7 +120,7 @@ final class PaymentSheetLoader {
     // MARK: - Helpers
 
     static func isLinkEnabled(intent: Intent, configuration: PaymentSheet.Configuration) -> Bool {
-        guard intent.supportsLink(allowV2Features: configuration.allowLinkV2Features) else {
+        guard intent.supportsLink else {
             return false
         }
         return !configuration.isUsingBillingAddressCollection()
@@ -142,7 +147,7 @@ final class PaymentSheetLoader {
 
     static func lookupLinkAccount(intent: Intent, configuration: PaymentSheet.Configuration) async throws -> PaymentSheetLinkAccount? {
         // Only lookup the consumer account if Link is supported
-        guard intent.supportsLink(allowV2Features: configuration.allowLinkV2Features) else {
+        guard intent.supportsLink else {
             return nil
         }
 

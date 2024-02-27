@@ -110,14 +110,13 @@ extension STPAPIClient {
 
         let billingParams = billingDetails.consumersAPIParams
 
-        var card = STPFormEncoder.dictionary(forObject: cardParams)["card"] as? [AnyHashable: Any]
-        card?["cvc"] = nil // payment_details doesn't store cvc
+        let card = cardParams.consumersAPIParams
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
             "type": "card",
-            "card": card as Any,
+            "card": card,
             "billing_email_address": billingEmailAddress,
             "billing_address": billingParams,
             "active": true, // card details are created with active true so they can be shared for passthrough mode
@@ -330,7 +329,29 @@ extension STPPaymentMethodBillingDetails {
 
 }
 
-// MARK: - /v1/consumers Support
+extension STPPaymentMethodCardParams {
+    var consumersAPIParams: [String: Any] {
+        // The consumer endpoint expects card details in a different format.
+        // It doesn't accept CVC, expiration dates must be 4 digits, and the CBC
+        // network choice is sent in the "preferred_network" field.
+        var card: [String: AnyHashable] = [:]
+        if let number {
+            card["number"] = number
+        }
+        if let expMonth {
+            card["exp_month"] = expMonth
+        }
+        if let expYear {
+            // Consumer endpoint expects a 4-digit card year
+            card["exp_year"] = CardExpiryDate.normalizeYear(expYear.intValue)
+        }
+        if let preferredNetwork = networks?.preferred {
+            card["preferred_network"] = preferredNetwork
+        }
+        return card
+    }
+}
+
 extension STPPaymentMethodAddress {
     // The param naming for consumers API is different so we need to map them.
     static let consumerKeyMap = [
