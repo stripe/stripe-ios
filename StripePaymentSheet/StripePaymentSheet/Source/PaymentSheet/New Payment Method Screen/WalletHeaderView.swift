@@ -131,10 +131,7 @@ extension PaymentSheetViewController {
 
         private func buildAndPinStackView() {
             stackView.removeFromSuperview()
-            // TODO(porter) Remove
-            let x = STPLocalizedString(
-                "This is a test key porter should delete", "Test key")
-            print(x)
+
             var buttons: [UIView] = []
 
             if supportsApplePay {
