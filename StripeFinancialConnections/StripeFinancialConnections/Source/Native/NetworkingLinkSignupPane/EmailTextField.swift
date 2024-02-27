@@ -31,6 +31,7 @@ final class EmailTextField: UIView {
             .containerHorizontalStackView
             .addArrangedSubview(activityIndicator)
         textField.delegate = self
+        textField.textField.accessibilityIdentifier = "email_text_field"
         return textField
     }()
     private let activityIndicator: ActivityIndicator = {
