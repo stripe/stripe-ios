@@ -237,13 +237,13 @@ is not supported by the merchant */
 /* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
 
+/* Test key */
+"This is a test key porter should delete" = "This is a test key porter should delete";
+
 /* Title for a button that when tapped, presents a screen for updating a card. Also
 the heading the screen itself. */
 "Update card" = "Update card";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
-
-/* A test key to be deleted. */
-"This is a test key porter should delete" = "This is a test key porter should delete";
 
