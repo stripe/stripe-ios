@@ -243,7 +243,3 @@ the heading the screen itself. */
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
-
-/* A test key to be deleted. */
-"This is a test key porter should delete" = "This is a test key porter should delete";
-
