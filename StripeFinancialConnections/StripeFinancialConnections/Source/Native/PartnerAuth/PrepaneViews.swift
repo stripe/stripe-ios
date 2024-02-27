@@ -85,6 +85,7 @@ final class PrepaneViews {
                                 return "Cancel" // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
                             }
                         }(),
+                        accessibilityIdentifier: "prepane_cancel_button",
                         action: didSelectCancel
                     )
                 }

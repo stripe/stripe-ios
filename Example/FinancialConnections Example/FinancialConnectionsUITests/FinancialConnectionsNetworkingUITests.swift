@@ -60,7 +60,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
 
-        let featuredLegacyTestInstitution = app.collectionViews.staticTexts["Test OAuth Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
@@ -72,12 +72,12 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativeAccountPickerLinkAccountsButton.tap()
 
-        let emailTextField = app.textFields["Email"]
+        let emailTextField = app.textFields["email_text_field"]
         XCTAssertTrue(emailTextField.waitForExistence(timeout: 120.0))  // wait for synchronize to complete
         emailTextField.tap()
         emailTextField.typeText(emailAddress)
 
-        let phoneTextField = app.textFields["Phone number"]
+        let phoneTextField = app.textFields["phone_text_field"]
         XCTAssertTrue(phoneTextField.waitForExistence(timeout: 120.0))  // wait for lookup to complete
         phoneTextField.tap()
         phoneTextField.typeText("4015006000")
@@ -134,9 +134,9 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
 
-        let continueWithEmailButton = app.scrollViews.otherElements.staticTexts[emailAddress]
-        XCTAssertTrue(continueWithEmailButton.waitForExistence(timeout: 60.0))
-        continueWithEmailButton.tap()
+        let linkContinueButton = app.buttons["link_continue_button"]
+        XCTAssertTrue(linkContinueButton.waitForExistence(timeout: 60.0))
+        linkContinueButton.tap()
 
         let verificationOTPTextView = app.scrollViews.otherElements.textViews["Code field"]
         XCTAssertTrue(verificationOTPTextView.waitForExistence(timeout: 60.0))
@@ -168,22 +168,5 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
             app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
                 .exists
         )
-    }
-}
-
-extension XCTestCase {
-
-    fileprivate func clear(textField: XCUIElement) {
-        wait(timeout: 1.5) // wait for keyboard to appear, otherwise `textField.coordinate` may select the wrong spot
-        while
-            let text = textField.value as? String,
-            !text.isEmpty,
-            text != textField.placeholderValue
-        {
-            let middleCoordinate = textField.coordinate(withNormalizedOffset: CGVector(dx: 0.50, dy: 0.50))
-            middleCoordinate.tap()
-            let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: text.count)
-            textField.typeText(deleteString)
-        }
     }
 }
