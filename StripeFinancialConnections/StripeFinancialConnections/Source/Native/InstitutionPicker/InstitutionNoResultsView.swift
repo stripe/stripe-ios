@@ -52,6 +52,7 @@ final class InstitutionNoResultsView: UIView {
             showLinkUnderline: false,
             alignCenter: true
         )
+        subtitleLabel.accessibilityIdentifier = "institution_search_no_results_subtitle"
         if let didSelectManuallyEnterDetails = didSelectManuallyEnterDetails {
             let subtitleText = STPLocalizedString(
                 "Try searching another bank or %@",
