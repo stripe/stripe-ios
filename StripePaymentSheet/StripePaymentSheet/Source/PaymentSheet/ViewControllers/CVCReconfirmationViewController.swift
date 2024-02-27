@@ -93,8 +93,9 @@ class CVCReconfirmationViewController: UIViewController {
         ])
         updateUI()
     }
-    func didFinishPresenting() {
-        self.cvcFormElement.didFinishPresenting()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.cvcFormElement.beginEditing()
     }
 
     private func updateUI() {

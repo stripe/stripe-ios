@@ -100,9 +100,7 @@ extension PaymentSheet {
                         paymentHandler.cancel3DS2ChallengeFlow()
                     }
                 )
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance) {
-                    preConfirmationViewController.didFinishPresenting()
-                }
+                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
             }
             presentPreConfirmationViewController()
 
