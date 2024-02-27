@@ -168,55 +168,22 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let manifest):
-                    self.dataSource.fetchNetworkedAccounts()
-                        .observe { [weak self] result in
-                            guard let self = self else { return }
-                            switch result {
-                            case .success(let networkedAccountsResponse):
-                                let networkedAccounts = networkedAccountsResponse.data
-                                if networkedAccounts.isEmpty {
-                                    self.dataSource.analyticsClient.log(
-                                        eventName: "networking.verification.success_no_accounts",
-                                        pane: .networkingLinkVerification
-                                    )
-                                    self.requestNextPane(manifest.nextPane)
-                                } else {
-                                    self.dataSource.analyticsClient.log(
-                                        eventName: "networking.verification.success",
-                                        pane: .networkingLinkVerification
-                                    )
-                                    self.requestNextPane(.linkAccountPicker)
-                                }
-                            case .failure(let error):
-                                self.dataSource
-                                    .analyticsClient
-                                    .logUnexpectedError(
-                                        error,
-                                        errorName: "FetchNetworkedAccountsError",
-                                        pane: .networkingLinkVerification
-                                    )
-                                self.dataSource
-                                    .analyticsClient
-                                    .log(
-                                        eventName: "networking.verification.error",
-                                        parameters: [
-                                            "error": "NetworkedAccountsRetrieveMethodError",
-                                        ],
-                                        pane: .networkingLinkVerification
-                                    )
-                                self.requestNextPane(manifest.nextPane)
-                            }
-
-                            // only hide loading view after animation
-                            // to next screen has completed
-                            DispatchQueue.main.asyncAfter(
-                                deadline: .now() + 1.0
-                            ) { [weak view] in
-                                view?.showLoadingView(false)
-                            }
-                        }
+                case .success:
+                    dataSource.analyticsClient.log(
+                        eventName: "networking.verification.success",
+                        pane: .networkingLinkVerification
+                    )
+                    requestNextPane(.linkAccountPicker)
                 case .failure(let error):
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "networking.verification.error",
+                            parameters: [
+                                "error": "MarkLinkVerifiedError",
+                            ],
+                            pane: .networkingLinkVerification
+                        )
                     self.dataSource
                         .analyticsClient
                         .logUnexpectedError(
@@ -224,7 +191,22 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                             errorName: "MarkLinkVerifiedError",
                             pane: .networkingLinkVerification
                         )
-                    self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+
+                    let nextPane: FinancialConnectionsSessionManifest.NextPane
+                    if dataSource.manifest.initialInstitution == nil {
+                        nextPane = .partnerAuth
+                    } else {
+                        nextPane = .institutionPicker
+                    }
+                    requestNextPane(nextPane)
+                }
+
+                // only hide loading view after animation
+                // to next screen has completed
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + 1.0
+                ) { [weak view] in
+                    view?.showLoadingView(false)
                 }
             }
     }
