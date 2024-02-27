@@ -262,3 +262,16 @@ import Foundation
 }
 
 extension STPPaymentMethodType: CaseIterable { }
+
+extension STPPaymentMethodType {
+    var requiresPolling: Bool {
+        switch self {
+        // Payment methods such as AmazonPay and CashApp implement app-to-app redirects that bypass the "redirect trampoline" too give a more seamless user experience for app-to-app.
+        // However, when returning to the merchant app in this scenario, the intent often isn't updated instantaneously, requiring polling for intent status updates.
+        case .amazonPay, .cashApp:
+            return true
+        default:
+            return false
+        }
+    }
+}

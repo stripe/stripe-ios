@@ -1494,7 +1494,7 @@ public class STPPaymentHandler: NSObject {
                                         // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
                                         // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                         let shouldRetryForCard = retrievedPaymentIntent?.paymentMethod?.type == .card && retrievedPaymentIntent?.nextAction?.type == .useStripeSDK
-                                        let shouldRetryForAppRedirect = [.cashApp, .swish].contains(retrievedPaymentIntent?.paymentMethod?.type)
+                                        let shouldRetryForAppRedirect = retrievedPaymentIntent?.paymentMethod?.type.requiresPolling ?? false
                                         if retryCount > 0
                                             && (shouldRetryForCard || shouldRetryForAppRedirect)
                                         {
@@ -1561,9 +1561,9 @@ public class STPPaymentHandler: NSObject {
                                 // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
                                 // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                 let shouldRetryForCard = retrievedSetupIntent?.paymentMethod?.type == .card && retrievedSetupIntent?.nextAction?.type == .useStripeSDK
-                                let shouldRetryForCashApp = retrievedSetupIntent?.paymentMethod?.type == .cashApp
+                                let shouldRetryForAppRedirect = retrievedSetupIntent?.paymentMethod?.type.requiresPolling ?? false
                                 if retryCount > 0
-                                    && (shouldRetryForCard || shouldRetryForCashApp) {
+                                    && (shouldRetryForCard || shouldRetryForAppRedirect) {
                                     self._retryAfterDelay(retryCount: retryCount) {
                                         self._retrieveAndCheckIntentForCurrentAction(
                                             retryCount: retryCount - 1
