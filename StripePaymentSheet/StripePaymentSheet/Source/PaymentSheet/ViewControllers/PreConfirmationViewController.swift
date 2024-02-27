@@ -117,10 +117,6 @@ class PreConfirmationViewController: UIViewController {
         updateUI()
     }
 
-    func didFinishPresenting() {
-        self.cvcReconfirmationViewController.didFinishPresenting()
-    }
-
     private func updateUI() {
 
         configureNavBar()

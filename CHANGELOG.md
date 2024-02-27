@@ -1,6 +1,9 @@
-## X.X.X
+## 23.23.0 2024-02-26
 ### PaymentSheet
 * [Added] Added support for [payment method configurations](https://docs.stripe.com/payments/multiple-payment-method-configs) when using the deferred intent integration path.
+
+### CustomerSheet
+* [Fixed] Fixed a bug where if an exception is thrown in detachPaymentMethod(), the payment method was removed in the UI [#3309](https://github.com/stripe/stripe-ios/pull/3309)
 
 ## 23.22.0 2024-02-12
 ### PaymentSheet
