@@ -1032,6 +1032,33 @@
           "for": "billing_address"
         }
       ]
+    },
+    {
+      "type": "twint",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint@3x-0d33d2bf7c7037878c2a42232362accb.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint-d86f6ccc22b739319ca4de7c83842de0.svg"
+      },
+      "fields": [
+      ],
+      "next_action_spec": {
+        "confirm_response_status_specs": {
+          "requires_action": {
+            "type": "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs": {
+          "succeeded": {
+            "type": "finished"
+          },
+          "processing": {
+            "type": "finished"
+          },
+          "requires_action": {
+            "type": "canceled"
+          }
+        }
+      }
     }
-
 ]
