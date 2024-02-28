@@ -33,7 +33,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
-            guard case .success((let paymentMethods, let selectedPaymentMethod, _, _)) = result else {
+            guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
                 XCTFail()
                 return
             }
@@ -61,7 +61,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
-            guard case .success((let paymentMethods, let selectedPaymentMethod, _, _)) = result else {
+            guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
                 XCTFail()
                 return
             }
@@ -90,7 +90,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
-            guard case .success((let paymentMethods, let selectedPaymentMethod, let elementsSession, let cssPMT)) = result else {
+            guard case .success((let paymentMethods, let selectedPaymentMethod, let elementsSession)) = result else {
                 XCTFail()
                 return
             }
@@ -98,7 +98,6 @@ class CustomerSheetTests: APIStubbedTestCase {
             XCTAssertEqual(paymentMethods[0].type, .USBankAccount)
             XCTAssert(selectedPaymentMethod == nil)
             XCTAssertEqual(elementsSession.orderedPaymentMethodTypes, [.USBankAccount])
-            XCTAssertNil(cssPMT)
             loadPaymentMethodInfo.fulfill()
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
@@ -122,7 +121,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
-            guard case .success((let paymentMethods, let selectedPaymentMethod, _, _)) = result else {
+            guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
                 XCTFail()
                 return
             }
@@ -152,7 +151,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
         customerSheet.loadPaymentMethodInfo { result in
-            guard case .success((let paymentMethods, let selectedPaymentMethod, _, _)) = result else {
+            guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
                 XCTFail()
                 return
             }
