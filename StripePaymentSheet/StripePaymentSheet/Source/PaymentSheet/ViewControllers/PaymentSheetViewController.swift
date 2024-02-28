@@ -554,9 +554,6 @@ class PaymentSheetViewController: UIViewController {
             }
         }
     }
-    func didFinishPresenting() {
-        self.savedPaymentOptionsViewController.didFinishPresenting()
-    }
 }
 
 // MARK: - Wallet Header Delegate
@@ -590,6 +587,9 @@ extension PaymentSheetViewController: BottomSheetContentViewController {
 
     var requiresFullScreen: Bool {
         return false
+    }
+    func didFinishAnimatingHeight() {
+        self.savedPaymentOptionsViewController.didFinishAnimatingHeight()
     }
 }
 

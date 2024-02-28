@@ -19,6 +19,7 @@ protocol BottomSheetContentViewController: UIViewController {
     var navigationBar: SheetNavigationBar { get }
     var requiresFullScreen: Bool { get }
     func didTapOrSwipeToDismiss()
+    func didFinishAnimatingHeight()
 }
 
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
@@ -127,6 +128,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             }, completion: {_ in
                 // We shouldn't need this constraint anymore.
                 self.manualHeightConstraint.isActive = false
+                self.contentViewController.didFinishAnimatingHeight()
             })
         }
     }
