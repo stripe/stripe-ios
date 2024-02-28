@@ -64,6 +64,9 @@ final class CVCRecollectionElement: Element {
     var validationState: ElementValidationState {
         return cvcRecollectionView.textFieldElement.validationState
     }
+    func clearTextFields() {
+        self.cvcRecollectionView.textFieldElement.setText("")
+    }
 }
 
 extension CVCRecollectionElement: ElementDelegate {
