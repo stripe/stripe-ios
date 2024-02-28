@@ -26,6 +26,8 @@ extension PaymentMethodElement {
         for element in getAllUnwrappedSubElements() {
             if let element = element as? TextFieldElement {
                 element.setText("")
+            } else if let element = element as? CVCRecollectionElement {
+                element.clearTextFields()
             }
         }
     }
