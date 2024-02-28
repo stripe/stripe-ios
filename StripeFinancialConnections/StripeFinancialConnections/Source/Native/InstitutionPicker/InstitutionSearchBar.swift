@@ -177,25 +177,6 @@ final class InstitutionSearchBar: UIView {
             height: 1 / UIScreen.main.nativeScale
         )
     }
-
-    func updateSearchingIndicator(_ isSearching: Bool) {
-        guard isSearching else {
-            searchIconView.layer.removeAnimation(forKey: "pulseAnimation")
-            return
-        }
-        guard searchIconView.layer.animation(forKey: "pulseAnimation") == nil else {
-            return
-        }
-
-        let opacityAnimation = CABasicAnimation(keyPath: "opacity")
-        opacityAnimation.fromValue = 0.6
-        opacityAnimation.toValue = 0.3
-        opacityAnimation.repeatCount = .infinity
-        opacityAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        opacityAnimation.duration = 0.3
-        opacityAnimation.autoreverses = true
-        searchIconView.layer.add(opacityAnimation, forKey: "pulseAnimation")
-    }
 }
 
 // MARK: - UITextFieldDelegate

@@ -243,7 +243,7 @@ extension InstitutionPickerViewController {
         institutionTableView.showError(false, isUserSearching: true)
 
         guard !searchQuery.isEmpty else {
-            searchBar.updateSearchingIndicator(false)
+            showLoadingView(false)
             // clear data because search query is empty
             institutionTableView.load(
                 institutions: dataSource.featuredInstitutions,
@@ -252,7 +252,7 @@ extension InstitutionPickerViewController {
             return
         }
 
-        searchBar.updateSearchingIndicator(true)
+        showLoadingView(true)
         let newFetchInstitutionsDispatchWorkItem = DispatchWorkItem(block: { [weak self] in
             guard let self = self else { return }
 
@@ -329,7 +329,7 @@ extension InstitutionPickerViewController {
                                 )
                         }
                     }
-                    self.searchBar.updateSearchingIndicator(false)
+                    showLoadingView(false)
                 }
         })
         self.fetchInstitutionsDispatchWorkItem = newFetchInstitutionsDispatchWorkItem
