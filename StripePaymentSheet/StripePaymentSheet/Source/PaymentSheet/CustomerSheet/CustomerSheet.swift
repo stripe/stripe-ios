@@ -165,7 +165,7 @@ extension CustomerSheet {
     func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
         Task {
             if let paymentMethodTypes = self.customerAdapter.paymentMethodTypes {
-                if case .failure(let error) = paymentMethodTypes.customerSheetSupportedPaymentMethodTypes(CustomerSheet.supportedPaymentMethods) {
+                if case .failure(let error) = paymentMethodTypes.customerSheetSupportedPaymentMethodTypes() {
                     completion(.failure(error))
                     return
                 }

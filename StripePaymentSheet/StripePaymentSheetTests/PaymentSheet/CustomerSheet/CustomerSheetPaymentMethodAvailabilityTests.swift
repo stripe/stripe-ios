@@ -84,6 +84,33 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
         }
         XCTAssertEqual(unsupported, ["llama_pay1", "llama_pay2"])
     }
+    func testCustomerSheetSupportedPaymentMethodTypes_duplicate1() {
+        let input = ["card", "card"]
+        guard case .success(let result) = input.customerSheetSupportedPaymentMethodTypes(),
+              let result else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(result, [.card])
+    }
+    func testCustomerSheetSupportedPaymentMethodTypes_removeDupeInOrder() {
+        let input = ["card", "us_bank_account", "card"]
+        guard case .success(let result) = input.customerSheetSupportedPaymentMethodTypes(),
+              let result else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(result, [.card, .USBankAccount])
+    }
+    func testCustomerSheetSupportedPaymentMethodTypes_duplicate_withInvalid() {
+        let input = ["card", "card", "llama_pay"]
+        guard case .failure(let err) = input.customerSheetSupportedPaymentMethodTypes(),
+              case CustomerSheetError.unsupportedPaymentMethodType(let unsupported) = err else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(unsupported, ["llama_pay"])
+    }
     func testCustomerSheetSupportedPaymentMethodTypes_empty() {
         let input: [String] = []
         guard case .success(let result) = input.customerSheetSupportedPaymentMethodTypes() else {
