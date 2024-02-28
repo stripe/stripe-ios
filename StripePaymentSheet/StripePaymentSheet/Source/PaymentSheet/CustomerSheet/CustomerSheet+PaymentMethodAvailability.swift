@@ -10,7 +10,7 @@ extension CustomerSheet {
     static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
     static func paymentMethodIsSupported(_ paymentMethod: STPPaymentMethodType,
                                          supportedPaymentMethods: [STPPaymentMethodType]) -> Bool {
-        return supportedPaymentMethods.contains(where: {$0 == paymentMethod})
+        return supportedPaymentMethods.contains(where: { $0 == paymentMethod })
     }
 }
 
@@ -84,4 +84,3 @@ extension Array where Element == String {
         return .success(validPMs)
     }
 }
-

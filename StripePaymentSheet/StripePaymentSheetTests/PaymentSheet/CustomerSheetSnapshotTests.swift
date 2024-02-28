@@ -48,7 +48,7 @@ class StubCustomerAdapter: CustomerAdapter {
     }
 
     var canCreateSetupIntents: Bool = true
-    var paymentMethodTypes: [String]? = nil
+    var paymentMethodTypes: [String]?
 }
 
 class CustomerSheetSnapshotTests: STPSnapshotTestCase {
@@ -63,10 +63,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
         window.isHidden = false
         return window
-    }
-
-    override func setUp() {
-        super.setUp()
     }
 
     public override func tearDown() {
