@@ -497,6 +497,10 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
     var requiresFullScreen: Bool {
         return false
     }
+
+    func didFinishAnimatingHeight() {
+        //No-op
+    }
 }
 
 // MARK: - SavedPaymentOptionsViewControllerDelegate

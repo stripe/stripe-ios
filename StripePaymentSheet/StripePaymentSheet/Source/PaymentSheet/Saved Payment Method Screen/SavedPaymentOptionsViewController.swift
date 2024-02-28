@@ -319,11 +319,11 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
     }
 
-    func didFinishPresenting() {
-        // Wait ~300ms after the view is presented to emphasize to users to enter their CVC
-        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(300))) {
+    func didFinishAnimatingHeight() {
+        // Wait 150ms after the view is presented to emphasize to users to enter their CVC
+        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(150))) {
             if self.isViewLoaded {
-                self.updateFormElement()
+                self.toggleCVCElement()
             }
         }
     }
@@ -364,12 +364,15 @@ class SavedPaymentOptionsViewController: UIViewController {
     private func updateFormElement() {
         cvcFormElement = makeElement()
         swapFormElementUIIfNeeded()
-
+        toggleCVCElement()
+    }
+    private func toggleCVCElement() {
         let shouldHideCVCRecollection = !selectedPaymentOptionIntentConfirmParamsRequired
         if cvcRecollectionContainerView.isHidden != shouldHideCVCRecollection {
             stackView.toggleArrangedSubview(cvcRecollectionContainerView, shouldShow: !shouldHideCVCRecollection, animated: isViewLoaded)
         }
     }
+
 
     private func swapFormElementUIIfNeeded() {
 

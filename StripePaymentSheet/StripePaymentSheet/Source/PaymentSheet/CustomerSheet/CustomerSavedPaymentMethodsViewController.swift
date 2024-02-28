@@ -730,6 +730,10 @@ extension CustomerSavedPaymentMethodsViewController: BottomSheetContentViewContr
     var requiresFullScreen: Bool {
         return false
     }
+
+    func didFinishAnimatingHeight() {
+        //No-op
+    }
 }
 
 // MARK: - SheetNavigationBarDelegate
