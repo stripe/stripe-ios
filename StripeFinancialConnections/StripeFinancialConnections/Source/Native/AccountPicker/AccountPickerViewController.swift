@@ -14,7 +14,8 @@ import UIKit
 protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
+        nextPane: FinancialConnectionsSessionManifest.NextPane
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
@@ -88,7 +89,7 @@ final class AccountPickerViewController: UIViewController {
                     self,
                     didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
                 )
-                self.didSelectLinkAccounts()
+                self.didSelectLinkAccounts(isSkipAccountSelection: false)
             },
             didSelectMerchantDataAccessLearnMore: { [weak self] url in
                 guard let self = self else { return }
@@ -149,26 +150,12 @@ final class AccountPickerViewController: UIViewController {
                 guard let self = self else { return }
                 switch result {
                 case .success(let accountsPayload):
-                    let accounts = accountsPayload.data
-                    let shouldSkipAccountSelection = accountsPayload.skipAccountSelection ?? self.dataSource.authSession.skipAccountSelection ?? false
-                    if !accounts.isEmpty {
-                        // the API is expected to never return 0 accounts
-                        self.dataSource
-                            .analyticsClient
-                            .log(
-                                eventName: "polling.accounts.success",
-                                parameters: [
-                                    "duration": Date().timeIntervalSince(pollingStartDate).milliseconds,
-                                    "authSessionId": self.dataSource.authSession.id,
-                                ],
-                                pane: .accountPicker
-                            )
-                    }
                     self.dataSource
                         .analyticsClient
                         .logPaneLoaded(pane: .accountPicker)
 
-                    if accounts.isEmpty {
+                    let accounts = accountsPayload.data
+                    guard !accounts.isEmpty else {
                         // if there were no accounts returned, API should have thrown an error
                         // ...handle it here since API did not throw error
                         self.showAccountLoadErrorView(
@@ -176,12 +163,30 @@ final class AccountPickerViewController: UIViewController {
                                 debugDescription: "API returned an empty list of accounts"
                             )
                         )
-                    } else if shouldSkipAccountSelection {
-                        self.delegate?.accountPickerViewController(
-                            self,
-                            didSelectAccounts: accounts
+                        return
+                    }
+
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "polling.accounts.success",
+                            parameters: [
+                                "duration": Date().timeIntervalSince(pollingStartDate).milliseconds,
+                                "authSessionId": self.dataSource.authSession.id,
+                            ],
+                            pane: .accountPicker
                         )
-                    } else if self.dataSource.manifest.singleAccount,
+
+                    // note that this uses ?? instead of ||, we do NOT want to skip account selection
+                    // if EITHER of these are true, we only want to skip account selection when
+                    //  `accountsPayload.skipAccountSelection` is true, OR `accountsPayload.skipAccountSelection` nil
+                    // AND `authSession.skipAccountSelection` is true
+                    let skipAccountSelection = (accountsPayload.skipAccountSelection ?? self.dataSource.authSession.skipAccountSelection ?? false)
+                    if skipAccountSelection {
+                        self.dataSource.updateSelectedAccounts(accounts)
+                        self.didSelectLinkAccounts(isSkipAccountSelection: true)
+                    } else if
+                        self.dataSource.manifest.singleAccount,
                         self.dataSource.authSession.institutionSkipAccountSelection ?? false,
                         accounts.count == 1
                     {
@@ -189,7 +194,7 @@ final class AccountPickerViewController: UIViewController {
                         // just one to send back in a single-account context. treat these as if
                         // we had done account selection, and submit.
                         self.dataSource.updateSelectedAccounts(accounts)
-                        self.didSelectLinkAccounts()
+                        self.didSelectLinkAccounts(isSkipAccountSelection: true)
                     } else {
                         let (enabledAccounts, disabledAccounts) =
                             accounts
@@ -306,6 +311,16 @@ final class AccountPickerViewController: UIViewController {
                 dataSource.updateSelectedAccounts([])
             }
         }
+        dataSource
+            .analyticsClient
+            .log(
+                eventName: "account_picker.accounts_auto_selected",
+                parameters: [
+                    "account_ids": dataSource.selectedAccounts.map({ $0.id }),
+                    "is_single_account": (selectionType == .single),
+                ],
+                pane: .accountPicker
+            )
     }
 
     private func showAccountLoadErrorView(error: Error) {
@@ -335,7 +350,7 @@ final class AccountPickerViewController: UIViewController {
         self.errorView = errorView
     }
 
-    private func didSelectLinkAccounts() {
+    private func didSelectLinkAccounts(isSkipAccountSelection: Bool) {
         footerView.startLoading()
         // the `footerView` only shows loading view on the button,
         // so we need to prevent interactions elsewhere on the
@@ -343,14 +358,39 @@ final class AccountPickerViewController: UIViewController {
         view.isUserInteractionEnabled = false
 
         dataSource
+            .analyticsClient
+            .log(
+                eventName: "account_picker.accounts_submitted",
+                parameters: [
+                    "account_ids": dataSource.selectedAccounts.map({ $0.id }),
+                    "is_skip_account_selection": isSkipAccountSelection,
+                ],
+                pane: .accountPicker
+            )
+
+        dataSource
             .selectAuthSessionAccounts()
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let linkedAccounts):
+                    // the response from the API is the list of accounts that were selected, 
+                    // with the `linked_account_id` populated.
+                    //
+                    // in cases of skip-account-selection in multi-account flows,
+                    // the API returns no accounts since no "new" accounts were linked,
+                    // so we need to fall back to the list of selected accounts
+                    let selectedAccounts: [FinancialConnectionsPartnerAccount]
+                    if linkedAccounts.data.count >= 1 {
+                        selectedAccounts = linkedAccounts.data
+                    } else {
+                        selectedAccounts = dataSource.selectedAccounts
+                    }
+
                     self.delegate?.accountPickerViewController(
                         self,
-                        didSelectAccounts: linkedAccounts.data
+                        didSelectAccounts: selectedAccounts,
+                        nextPane: linkedAccounts.nextPane
                     )
                 case .failure(let error):
                     self.dataSource
