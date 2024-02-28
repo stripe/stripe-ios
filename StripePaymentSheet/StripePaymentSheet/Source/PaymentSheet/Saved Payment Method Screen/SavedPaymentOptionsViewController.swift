@@ -373,7 +373,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
     }
 
-
     private func swapFormElementUIIfNeeded() {
 
         if cvcFormElement.view !== cvcFormElementView {
