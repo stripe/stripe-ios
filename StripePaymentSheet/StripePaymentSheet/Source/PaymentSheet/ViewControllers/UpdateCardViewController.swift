@@ -252,7 +252,7 @@ extension UpdateCardViewController: BottomSheetContentViewController {
         return false
     }
     func didFinishAnimatingHeight() {
-        //No-op
+        // no-op
     }
 }
 

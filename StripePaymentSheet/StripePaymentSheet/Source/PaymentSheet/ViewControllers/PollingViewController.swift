@@ -329,7 +329,7 @@ extension PollingViewController: BottomSheetContentViewController {
     }
 
     func didFinishAnimatingHeight() {
-        //No-op
+        // no-op
     }
 }
 

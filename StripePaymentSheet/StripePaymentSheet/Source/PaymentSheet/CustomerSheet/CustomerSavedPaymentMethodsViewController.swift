@@ -732,7 +732,7 @@ extension CustomerSavedPaymentMethodsViewController: BottomSheetContentViewContr
     }
 
     func didFinishAnimatingHeight() {
-        //No-op
+        // no-op
     }
 }
 

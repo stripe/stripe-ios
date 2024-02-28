@@ -181,7 +181,7 @@ extension PreConfirmationViewController: BottomSheetContentViewController {
         // Therefore, do not dismiss sheet if customer taps the scrim
     }
     func didFinishAnimatingHeight() {
-        //No-op
+        // no-op
     }
 }
 

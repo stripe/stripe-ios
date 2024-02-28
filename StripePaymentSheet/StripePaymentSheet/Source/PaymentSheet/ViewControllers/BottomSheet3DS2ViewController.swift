@@ -89,7 +89,7 @@ extension BottomSheet3DS2ViewController: BottomSheetContentViewController {
     }
 
     func didFinishAnimatingHeight() {
-        //No-op
+        // no-op
     }
 }
 

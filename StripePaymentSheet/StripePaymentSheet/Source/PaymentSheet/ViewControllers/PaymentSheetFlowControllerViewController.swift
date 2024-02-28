@@ -499,7 +499,7 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
     }
 
     func didFinishAnimatingHeight() {
-        //No-op
+        // no-op
     }
 }
 

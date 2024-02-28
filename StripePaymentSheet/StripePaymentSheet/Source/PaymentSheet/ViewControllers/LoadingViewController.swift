@@ -32,7 +32,7 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
         return false
     }
     func didFinishAnimatingHeight() {
-        //No-op
+        // no-op
     }
     func didTapOrSwipeToDismiss() {
         delegate?.shouldDismiss(self)

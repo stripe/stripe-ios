@@ -19,7 +19,7 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
         return navBar
     }()
     func didFinishAnimatingHeight() {
-        //No-op
+        // no-op
     }
     private lazy var sepaMandateView: SimpleMandateTextView = {
         let mandateText = String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName)
