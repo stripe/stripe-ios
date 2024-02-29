@@ -71,6 +71,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case new
         case returning
     }
+    enum CustomerKeyType: String, PickerEnum {
+        static var enumName: String { "CustomerKeyType" }
+
+        case legacy
+        case customerSession = "customer_session"
+    }
 
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
@@ -247,6 +253,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var uiStyle: UIStyle
     var mode: Mode
     var customerId: String?
+    var customerKeyType: CustomerKeyType
     var integrationType: IntegrationType
     var customerMode: CustomerMode
     var currency: Currency
@@ -280,6 +287,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             uiStyle: .paymentSheet,
             mode: .payment,
             customerId: nil,
+            customerKeyType: .legacy,
             integrationType: .normal,
             customerMode: .guest,
             currency: .usd,
@@ -309,7 +317,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"
 
-    static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
+//    static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
+    static let baseEndpoint = "http://127.0.0.1:8081"
     static var endpointSelectorEndpoint: String {
         return "\(baseEndpoint)/endpoints"
     }

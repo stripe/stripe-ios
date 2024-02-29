@@ -80,6 +80,7 @@ struct PaymentSheetTestPlayground: View {
                         }
                         SettingView(setting: $playgroundController.settings.mode)
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
+                        SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
                         TextField("CustomerId", text: customerIdBinding)
                             .disabled(true)

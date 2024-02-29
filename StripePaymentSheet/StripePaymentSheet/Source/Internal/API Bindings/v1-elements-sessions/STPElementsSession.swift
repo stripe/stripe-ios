@@ -43,6 +43,8 @@ final class STPElementsSession: NSObject {
     /// An ordered list of external payment methods to display
     let externalPaymentMethods: [ExternalPaymentMethod]
 
+    let customer: ElementsCustomer?
+
     /// A flag that indicates that this instance was created as a best-effort
     let isBackupInstance: Bool
 
@@ -60,6 +62,7 @@ final class STPElementsSession: NSObject {
         cardBrandChoice: STPCardBrandChoice?,
         isApplePayEnabled: Bool,
         externalPaymentMethods: [ExternalPaymentMethod],
+        customer: ElementsCustomer?,
         isBackupInstance: Bool = false
     ) {
         self.allResponseFields = allResponseFields
@@ -73,6 +76,7 @@ final class STPElementsSession: NSObject {
         self.cardBrandChoice = cardBrandChoice
         self.isApplePayEnabled = isApplePayEnabled
         self.externalPaymentMethods = externalPaymentMethods
+        self.customer = customer
         self.isBackupInstance = isBackupInstance
         super.init()
     }
@@ -106,6 +110,7 @@ final class STPElementsSession: NSObject {
             cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
             isApplePayEnabled: true,
             externalPaymentMethods: [],
+            customer: nil,
             isBackupInstance: true
         )
     }
@@ -128,6 +133,19 @@ extension STPElementsSession: STPAPIResponseDecodable {
         let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: response["card_brand_choice"] as? [AnyHashable: Any])
         let applePayPreference = response["apple_pay_preference"] as? String
         let isApplePayEnabled = applePayPreference != "disabled"
+        let customer: ElementsCustomer? = {
+            let customerDataKey = "customer"
+            guard response[customerDataKey] != nil, !(response[customerDataKey] is NSNull) else {
+                return nil
+            }
+            guard let customerJSON = response[customerDataKey] as? [AnyHashable: Any],
+                  let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON) else {
+                // TODO: Log error ?
+                return nil
+            }
+            return decoded
+        }()
+
         let externalPaymentMethods: [ExternalPaymentMethod] = {
             let externalPaymentMethodDataKey = "external_payment_method_data"
             guard response[externalPaymentMethodDataKey] != nil, !(response[externalPaymentMethodDataKey] is NSNull) else {
@@ -158,7 +176,8 @@ extension STPElementsSession: STPAPIResponseDecodable {
             paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
-            externalPaymentMethods: externalPaymentMethods
+            externalPaymentMethods: externalPaymentMethods,
+            customer: customer
         )
     }
 }

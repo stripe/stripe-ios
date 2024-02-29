@@ -87,11 +87,19 @@ class PlaygroundController: ObservableObject {
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
-        if let customerID = self.settings.customerId,
-           let ephemeralKey = ephemeralKey,
-           settings.customerMode != .guest {
-            return PaymentSheet.CustomerConfiguration(
-                id: customerID, ephemeralKeySecret: ephemeralKey)
+        guard settings.customerMode != .guest,
+              let customerID = self.settings.customerId else {
+            return nil
+        }
+        switch self.settings.customerKeyType {
+        case .legacy:
+            if let ephemeralKey {
+                return PaymentSheet.CustomerConfiguration(id: customerID, ephemeralKeySecret: ephemeralKey)
+            }
+        case .customerSession:
+            if let customerSessionClientSecret {
+                return PaymentSheet.CustomerConfiguration(id: customerID, customerAccessProvider: .customerSession(customerSessionClientSecret))
+            }
         }
         return nil
     }
@@ -257,6 +265,7 @@ class PlaygroundController: ObservableObject {
 
     var clientSecret: String?
     var ephemeralKey: String?
+    var customerSessionClientSecret: String?
     var paymentMethodTypes: [String]?
     var amount: Int?
     var checkoutEndpoint: String = PaymentSheetTestPlaygroundSettings.defaultCheckoutEndpoint
@@ -413,6 +422,7 @@ extension PlaygroundController {
 
         let body = [
             "customer": customerIdOrType,
+            "customer_key_type": settings.customerKeyType.rawValue,
             "currency": settings.currency.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
@@ -461,6 +471,7 @@ extension PlaygroundController {
                 self.lastPaymentResult = nil
                 self.clientSecret = json["intentClientSecret"]
                 self.ephemeralKey = json["customerEphemeralKeySecret"]
+                self.customerSessionClientSecret = json["customerSessionClientSecret"]
                 if self.settings.customerId != json["customerId"] {
                     self.settings.customerId = json["customerId"]
                 }

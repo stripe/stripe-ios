@@ -65,12 +65,15 @@ final class PaymentSheetLoader {
                     }
                 }
 
+                let resultingSavedPaymentMethods = extractSavedPaymentMethods(intent: intent,
+                                                                              savedPaymentMethods: try await savedPaymentMethods)
+
                 // Load link account session. Continue without Link if it errors.
                 let linkAccount = try? await lookupLinkAccount(intent: intent, configuration: configuration)
                 LinkAccountContext.shared.account = linkAccount
 
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
-                let filteredSavedPaymentMethods = try await savedPaymentMethods
+                let filteredSavedPaymentMethods = resultingSavedPaymentMethods //try await savedPaymentMethods
                     .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
                     .filter {
                         $0.supportsSavedPaymentMethod(
@@ -244,7 +247,8 @@ final class PaymentSheetLoader {
 
     static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
     static func fetchSavedPaymentMethods(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
-        guard let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret else {
+        guard let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret,
+              case .legacyCustomerEphemeralKey = configuration.customer?.customerAccessProvider else {
             return []
         }
         return try await withCheckedThrowingContinuation { continuation in
@@ -266,5 +270,19 @@ final class PaymentSheetLoader {
                 continuation.resume(returning: paymentMethods)
             }
         }
+    }
+    static func extractSavedPaymentMethods(intent: Intent, savedPaymentMethods: [STPPaymentMethod]) -> [STPPaymentMethod] {
+        switch intent {
+        case .deferredIntent(let elementsSession, _):
+            print(elementsSession)
+        case .paymentIntent(let elementsSession, _):
+            if let paymentMethods = elementsSession.customer?.paymentMethods {
+                return paymentMethods
+            }
+            return savedPaymentMethods
+        case .setupIntent(let elementsSession, _):
+            print(elementsSession)
+        }
+        return savedPaymentMethods
     }
 }
