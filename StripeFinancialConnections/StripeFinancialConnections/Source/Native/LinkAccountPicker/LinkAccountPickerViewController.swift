@@ -252,6 +252,16 @@ final class LinkAccountPickerViewController: UIViewController {
             didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
         )
 
+        dataSource
+            .analyticsClient
+            .log(
+                eventName: "account_picker.accounts_submitted",
+                parameters: [
+                    "account_ids": [selectedAccountTuple.partnerAccount.id]
+                ],
+                pane: .linkAccountPicker
+            )
+
         if nextPane == .success {
             footerView?.showLoadingView(true)
             // prevent user from accidentally pressing
