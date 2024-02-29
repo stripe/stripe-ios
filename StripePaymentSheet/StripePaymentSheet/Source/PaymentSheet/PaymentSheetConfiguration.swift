@@ -206,7 +206,7 @@ extension PaymentSheet {
         public let id: String
 
         /// A short-lived token that allows the SDK to access a Customer's payment methods
-        public var ephemeralKeySecret: String
+        public let ephemeralKeySecret: String
 
         public let customerAccessProvider: CustomerAccessProvider
 
