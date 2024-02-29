@@ -180,7 +180,9 @@ extension PreConfirmationViewController: BottomSheetContentViewController {
         // Users may be attempting to double tap "done", and may actually dismiss the sheet.
         // Therefore, do not dismiss sheet if customer taps the scrim
     }
-
+    func didFinishAnimatingHeight() {
+        // no-op
+    }
 }
 
 extension PreConfirmationViewController: SheetNavigationBarDelegate {

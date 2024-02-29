@@ -251,6 +251,9 @@ extension UpdateCardViewController: BottomSheetContentViewController {
     var requiresFullScreen: Bool {
         return false
     }
+    func didFinishAnimatingHeight() {
+        // no-op
+    }
 }
 
 // MARK: SheetNavigationBarDelegate

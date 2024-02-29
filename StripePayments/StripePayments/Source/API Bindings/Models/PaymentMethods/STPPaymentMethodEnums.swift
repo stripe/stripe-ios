@@ -86,6 +86,8 @@ import Foundation
     case promptPay
     /// A Swish payment method
     case swish
+    /// A TWINT payment method
+    case twint
     /// An unknown type.
     case unknown
 
@@ -170,6 +172,8 @@ import Foundation
             return "PromptPay"
         case .swish:
             return STPLocalizedString("Swish", "Payment Method type brand name")
+        case .twint:
+            return "TWINT"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -257,6 +261,8 @@ import Foundation
             return "promptpay"
         case .swish:
             return "swish"
+        case .twint:
+            return "twint"
         }
     }
 }

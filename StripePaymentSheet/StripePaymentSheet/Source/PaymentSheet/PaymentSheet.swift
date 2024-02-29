@@ -170,7 +170,6 @@ public class PaymentSheet {
 
                     let updateBottomSheet: () -> Void = {
                         self.bottomSheetViewController.contentStack = [paymentSheetVC]
-                        paymentSheetVC.didFinishPresenting()
                     }
                     updateBottomSheet()
                 }
