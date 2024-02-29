@@ -36,7 +36,7 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
 
     func disableNetworking() -> Future<FinancialConnectionsSessionManifest> {
         return apiClient.disableNetworking(
-            disabledReason: nil,
+            disabledReason: "returning_consumer_opt_out",
             clientSecret: clientSecret
         )
     }
