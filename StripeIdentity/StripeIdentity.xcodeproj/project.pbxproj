@@ -250,6 +250,7 @@
 		D4715C1E2B0E8F43008D07CC /* icon_warning_92@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4715C092B0E8F43008D07CC /* icon_warning_92@3x.png */; };
 		D4715C1F2B0E8F43008D07CC /* icon_wallet@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4715C0A2B0E8F43008D07CC /* icon_wallet@3x.png */; };
 		D4715C202B0E8F43008D07CC /* icon_camera@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4715C0B2B0E8F43008D07CC /* icon_camera@3x.png */; };
+		D482711C2B8E6DEA008EE208 /* VerificationPageStaticContentDocumentCaptureMBSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D482711B2B8E6DEA008EE208 /* VerificationPageStaticContentDocumentCaptureMBSettings.swift */; };
 		D55B24D4D03E43A9438BCFE5 /* IdNumberElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB73F630CCAFE6AAB9727C62 /* IdNumberElement.swift */; };
 		DB6005016F47D09559DA0C98 /* DocumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAC1FACF9A36AAFC19BF2F /* DocumentType.swift */; };
 		DCFBA69CC4437E2E6061F50B /* IdentityMLModelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546F9D432ACFF45E9CE1368 /* IdentityMLModelLoader.swift */; };
@@ -572,6 +573,7 @@
 		D4715C092B0E8F43008D07CC /* icon_warning_92@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_warning_92@3x.png"; sourceTree = "<group>"; };
 		D4715C0A2B0E8F43008D07CC /* icon_wallet@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_wallet@3x.png"; sourceTree = "<group>"; };
 		D4715C0B2B0E8F43008D07CC /* icon_camera@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_camera@3x.png"; sourceTree = "<group>"; };
+		D482711B2B8E6DEA008EE208 /* VerificationPageStaticContentDocumentCaptureMBSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentDocumentCaptureMBSettings.swift; sourceTree = "<group>"; };
 		D5C7698331B899B80AF4F730 /* VerificationPage_no_selfie.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPage_no_selfie.json; sourceTree = "<group>"; };
 		D604F6AABE4D6D5CCF802685 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6918DC6A9681E769D44BC78 /* TruncatedDecimalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TruncatedDecimalTest.swift; sourceTree = "<group>"; };
@@ -797,6 +799,7 @@
 				D4715B8D2B0E8E1F008D07CC /* VerificationPageStaticContentSelfieModels.swift */,
 				D4715B912B0E8E1F008D07CC /* VerificationPageStaticContentSelfiePage.swift */,
 				D4715B942B0E8E1F008D07CC /* VerificationPageStaticContentTextPage.swift */,
+				D482711B2B8E6DEA008EE208 /* VerificationPageStaticContentDocumentCaptureMBSettings.swift */,
 			);
 			path = VerificationPage;
 			sourceTree = "<group>";
@@ -1628,6 +1631,7 @@
 				36F0967E814234FE61EF3A0B /* VerificationPageDataDob.swift in Sources */,
 				4E44D8C9967E301DB34EB6F0 /* VerificationPageDataDocumentFileData.swift in Sources */,
 				D4715BA72B0E8E20008D07CC /* VerificationPage.swift in Sources */,
+				D482711C2B8E6DEA008EE208 /* VerificationPageStaticContentDocumentCaptureMBSettings.swift in Sources */,
 				D4715BE62B0E8E96008D07CC /* SuccessViewController.swift in Sources */,
 				47E285A86960CDE275E5EA53 /* VerificationPageDataFace.swift in Sources */,
 				D2309DFF2EDABB6C1A139513 /* VerificationPageDataIdNumber.swift in Sources */,
