@@ -403,6 +403,10 @@ extension InstitutionPickerViewController: InstitutionTableViewDelegate {
     }
 
     func institutionTableViewDidSelectSearchForMoreBanks(_ tableView: InstitutionTableView) {
+        tableView.tableView.scrollRectToVisible(
+            searchBar.frame,
+            animated: true
+        )
         searchBar.becomeFirstResponder()
     }
 
