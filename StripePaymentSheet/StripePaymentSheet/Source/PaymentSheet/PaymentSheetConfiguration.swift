@@ -206,21 +206,21 @@ extension PaymentSheet {
         public let id: String
 
         /// A short-lived token that allows the SDK to access a Customer's payment methods
-        public var ephemeralKeySecret: String
+        public var legacyEphemeralKeySecret: String?
 
         public let customerAccessProvider: CustomerAccessProvider
 
         public init(id: String, ephemeralKeySecret: String) {
             self.id = id
             self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
-            self.ephemeralKeySecret = ephemeralKeySecret
+            self.legacyEphemeralKeySecret = ephemeralKeySecret
         }
 
         /// Initializes a CustomerConfiguration
         public init(id: String, customerAccessProvider: CustomerAccessProvider) {
             self.id = id
             self.customerAccessProvider = customerAccessProvider
-            self.ephemeralKeySecret = ""
+            self.legacyEphemeralKeySecret = nil
         }
     }
 
@@ -485,5 +485,15 @@ extension STPPaymentMethodBillingDetails {
                                            email: self.email,
                                            name: self.name,
                                            phone: self.phone)
+    }
+}
+extension PaymentSheet.CustomerConfiguration {
+    func ephemeralKeySecretBasedOn(intent: Intent?) -> String? {
+        switch customerAccessProvider {
+        case .legacyCustomerEphemeralKey(let legacy):
+            return legacy
+        case .customerSession:
+            return intent?.elementsSession.customer?.customerSession.apiKey
+        }
     }
 }

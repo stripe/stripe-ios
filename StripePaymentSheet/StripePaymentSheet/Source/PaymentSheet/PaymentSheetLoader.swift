@@ -171,7 +171,8 @@ final class PaymentSheetLoader {
         if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email)
         } else if let customerID = configuration.customer?.id,
-            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+                  //let ephemeralKey = configuration.customer?.ephemeralKeySecret
+                  let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         {
             let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
             // If there's an error in this call we can just ignore it
@@ -247,7 +248,7 @@ final class PaymentSheetLoader {
 
     static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
     static func fetchSavedPaymentMethods(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
-        guard let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret,
+        guard let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.legacyEphemeralKeySecret,
               case .legacyCustomerEphemeralKey = configuration.customer?.customerAccessProvider else {
             return []
         }
@@ -271,18 +272,12 @@ final class PaymentSheetLoader {
             }
         }
     }
+
     static func extractSavedPaymentMethods(intent: Intent, savedPaymentMethods: [STPPaymentMethod]) -> [STPPaymentMethod] {
-        switch intent {
-        case .deferredIntent(let elementsSession, _):
-            print(elementsSession)
-        case .paymentIntent(let elementsSession, _):
-            if let paymentMethods = elementsSession.customer?.paymentMethods {
-                return paymentMethods
-            }
+        if let elementsSessionPaymentMethods = intent.elementsSession.customer?.paymentMethods {
+            return elementsSessionPaymentMethods
+        } else {
             return savedPaymentMethods
-        case .setupIntent(let elementsSession, _):
-            print(elementsSession)
         }
-        return savedPaymentMethods
     }
 }
