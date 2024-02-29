@@ -41,6 +41,8 @@ class SheetViewController: UIViewController {
         contentStackView.axis = .vertical
         contentStackView.spacing = 0
         contentStackView.layer.cornerRadius = Self.cornerRadius
+        // only round the corners of top left and top right corners
+        contentStackView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         contentStackView.clipsToBounds = true
         if panePresentationStyle == .sheet {
             contentStackView.addArrangedSubview(handleView)
@@ -359,13 +361,22 @@ class SheetViewController: UIViewController {
         view.insertSubview(extensionBottomView, at: 0)
         extensionBottomView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            extensionBottomView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Self.cornerRadius),
+            extensionBottomView.topAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                // if we put this at "0" there will be a "glitchy gap"
+                // while moving the drawer, so we set it to a higher
+                // value to fix this gap
+                //
+                // it needs to be smaller than the bottom padding of
+                // the footer view
+                constant: -4
+            ),
             extensionBottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             extensionBottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            // the value is estimated...ideally it should cover corner radius,
-            // bottom safe area insets, and some extra to account for "pulling"
-            // the sheet up beyond the size of it on screen
-            extensionBottomView.heightAnchor.constraint(equalToConstant: Self.cornerRadius + 100),
+            // the value is estimated...ideally it should cover bottom safe area insets,
+            // and some extra to account for "pulling" the sheet up beyond the size
+            // of it on screen
+            extensionBottomView.heightAnchor.constraint(equalToConstant: 100),
         ])
     }
 
