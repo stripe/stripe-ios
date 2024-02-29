@@ -171,7 +171,6 @@ final class PaymentSheetLoader {
         if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email)
         } else if let customerID = configuration.customer?.id,
-                  //let ephemeralKey = configuration.customer?.ephemeralKeySecret
                   let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         {
             let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
@@ -248,8 +247,9 @@ final class PaymentSheetLoader {
 
     static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
     static func fetchSavedPaymentMethods(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
-        guard let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.legacyEphemeralKeySecret,
-              case .legacyCustomerEphemeralKey = configuration.customer?.customerAccessProvider else {
+        guard let customerID = configuration.customer?.id,
+              let ephemeralKey = configuration.customer?.ephemeralKeySecret,
+              !ephemeralKey.isEmpty else {
             return []
         }
         return try await withCheckedThrowingContinuation { continuation in

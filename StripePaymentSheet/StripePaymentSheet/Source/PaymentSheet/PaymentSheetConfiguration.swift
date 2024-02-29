@@ -206,21 +206,21 @@ extension PaymentSheet {
         public let id: String
 
         /// A short-lived token that allows the SDK to access a Customer's payment methods
-        public var legacyEphemeralKeySecret: String?
+        public var ephemeralKeySecret: String
 
         public let customerAccessProvider: CustomerAccessProvider
 
         public init(id: String, ephemeralKeySecret: String) {
             self.id = id
             self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
-            self.legacyEphemeralKeySecret = ephemeralKeySecret
+            self.ephemeralKeySecret = ephemeralKeySecret
         }
 
         /// Initializes a CustomerConfiguration
         public init(id: String, customerAccessProvider: CustomerAccessProvider) {
             self.id = id
             self.customerAccessProvider = customerAccessProvider
-            self.legacyEphemeralKeySecret = nil
+            self.ephemeralKeySecret = ""
         }
     }
 
