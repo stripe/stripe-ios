@@ -11,10 +11,11 @@ import UIKit
 
 final class SpinnerView: UIView {
 
-    init() {
-        super.init(frame: .zero)
+    private let imageView = UIImageView(image: Image.spinner.makeImage())
+    private let animationKey = "animation_key"
 
-        let imageView = UIImageView(image: Image.spinner.makeImage())
+    init(shouldStartAnimating: Bool = true) {
+        super.init(frame: .zero)
         addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -22,12 +23,22 @@ final class SpinnerView: UIView {
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
+        if shouldStartAnimating {
+            startAnimating()
+        }
+    }
+
+    func startAnimating() {
         let rotatingAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
         rotatingAnimation.byValue = 2 * Float.pi
         rotatingAnimation.duration = 0.7
         rotatingAnimation.isAdditive = true
         rotatingAnimation.repeatCount = .infinity
-        imageView.layer.add(rotatingAnimation, forKey: "animation_key")
+        imageView.layer.add(rotatingAnimation, forKey: animationKey)
+    }
+
+    func stopAnimating() {
+        imageView.layer.removeAnimation(forKey: animationKey)
     }
 
     required init?(coder: NSCoder) {
