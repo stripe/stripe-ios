@@ -19,11 +19,11 @@ extension Button {
     static func primary() -> StripeUICore.Button {
         let button = Button(configuration: .financialConnectionsPrimary)
         button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowRadius = 1.5 / UIScreen.main.nativeScale
-        button.layer.shadowOpacity = 0.23
+        button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
+        button.layer.shadowOpacity = 0.25
         button.layer.shadowOffset = CGSize(
             width: 0,
-            height: 1 / UIScreen.main.nativeScale
+            height: 2 / UIScreen.main.nativeScale
         )
         return button
     }

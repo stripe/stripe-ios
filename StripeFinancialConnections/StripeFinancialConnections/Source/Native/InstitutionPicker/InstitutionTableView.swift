@@ -85,9 +85,7 @@ final class InstitutionTableView: UIView {
         )
         return manualEntryTableFooterView
     }()
-    private lazy var loadingView: UIView = {
-        return InstitutionTableLoadingView()
-    }()
+    private var loadingView: UIView?
 
     init(frame: CGRect, allowManualEntry: Bool) {
         self.allowManualEntry = allowManualEntry
@@ -124,7 +122,6 @@ final class InstitutionTableView: UIView {
         tableView.register(InstitutionTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)
-        addAndPinSubviewToSafeArea(loadingView)
         showLoadingView(false)
     }
 
@@ -166,7 +163,7 @@ final class InstitutionTableView: UIView {
 
         // resize loading view to always be below header view
         let headerViewHeight = tableView.tableHeaderView?.frame.height ?? 0
-        loadingView.frame = CGRect(
+        loadingView?.frame = CGRect(
             x: 0,
             y: headerViewHeight,
             width: bounds.width,
@@ -186,7 +183,7 @@ final class InstitutionTableView: UIView {
         var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
         snapshot.appendSections([Section.main])
         snapshot.appendItems(institutions, toSection: Section.main)
-        dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
+        dataSource.apply(snapshot, animatingDifferences: false, completion: nil)
 
         // clear state (some of this is defensive programming)
         showError(false, isUserSearching: isUserSearching)
@@ -218,8 +215,16 @@ final class InstitutionTableView: UIView {
     }
 
     func showLoadingView(_ show: Bool) {
-        loadingView.isHidden = !show
-        bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
+        if show {
+            if loadingView?.superview == nil {
+                let loadingView = InstitutionTableLoadingView()
+                addAndPinSubviewToSafeArea(loadingView)
+                self.loadingView = loadingView
+            }
+        } else {
+            loadingView?.removeFromSuperview()
+            loadingView = nil
+        }
 
         // ensure the loading view is resized to account for header view
         setNeedsLayout()
