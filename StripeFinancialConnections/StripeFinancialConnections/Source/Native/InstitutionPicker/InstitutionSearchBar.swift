@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 
 protocol InstitutionSearchBarDelegate: AnyObject {
+//    func institutionSearchBarDidBeginEditing(
+//        _ searchBar: InstitutionSearchBar
+//    )
     func institutionSearchBar(
         _ searchBar: InstitutionSearchBar,
         didChangeText text: String
@@ -185,6 +188,7 @@ extension InstitutionSearchBar: UITextFieldDelegate {
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
         highlightBorder(true)
+//        delegate?.institutionSearchBarDidBeginEditing(self)
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {

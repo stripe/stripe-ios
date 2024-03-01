@@ -45,18 +45,43 @@ class InstitutionPickerViewController: UIViewController {
                 CreateHeaderTitleLabel(),
             ]
         )
-        if !dataSource.manifest.institutionSearchDisabled {
-            verticalStackView.addArrangedSubview(searchBar)
-        }
+//        if !dataSource.manifest.institutionSearchDisabled {
+//            verticalStackView.addArrangedSubview(searchBar)
+//        }
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 24
+//        verticalStackView.spacing = 24
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
-            leading: 24,
-            bottom: 16,
-            trailing: 24
+            leading: Constants.Layout.defaultHorizontalMargin,
+            bottom: 24, // this acts as spacing between header and search bar
+            trailing: Constants.Layout.defaultHorizontalMargin
         )
+        verticalStackView.backgroundColor = .customBackgroundColor
+        return verticalStackView
+    }()
+    private lazy var searchBarContainerView: UIView = {
+        let verticalStackView = UIStackView(
+            arrangedSubviews: [
+                searchBar,
+            ]
+        )
+        verticalStackView.axis = .vertical
+//        if !dataSource.manifest.institutionSearchDisabled {
+//            verticalStackView.addArrangedSubview(searchBar)
+//        }
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 0, // the `headerView` has bottom padding
+            leading: Constants.Layout.defaultHorizontalMargin,
+            bottom: 16,
+            trailing: Constants.Layout.defaultHorizontalMargin
+        )
+        verticalStackView.backgroundColor = .customBackgroundColor
+        verticalStackView.layer.shadowOpacity = 1.0
+        verticalStackView.layer.shadowColor = verticalStackView.backgroundColor?.cgColor
+        verticalStackView.layer.shadowRadius = 0
+        verticalStackView.layer.shadowOffset = CGSize(width: 0, height: -24)
         return verticalStackView
     }()
     private lazy var searchBar: InstitutionSearchBar = {
@@ -109,6 +134,9 @@ class InstitutionPickerViewController: UIViewController {
 
         view.addAndPinSubview(institutionTableView)
         institutionTableView.setTableHeaderView(headerView)
+        if !dataSource.manifest.institutionSearchDisabled {
+            institutionTableView.searchBar = searchBarContainerView
+        }
 
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(
             target: self,
@@ -191,6 +219,19 @@ class InstitutionPickerViewController: UIViewController {
     private func hideOverlayView() {
         institutionTableView.showOverlayView(false)
     }
+    
+    private func scrollToTopOfSearchBar() {
+        let searchBarContainerFrame = CGRect(
+            x: 0,
+            y: headerView.frame.maxY,
+            width: institutionTableView.tableView.bounds.width,
+            height: searchBarContainerView.frame.height
+        )
+        institutionTableView.tableView.scrollRectToVisible(
+            searchBarContainerFrame,
+            animated: true
+        )
+    }
 }
 
 // MARK: - Data
@@ -253,6 +294,7 @@ extension InstitutionPickerViewController {
         }
 
         showLoadingView(true)
+        scrollToTopOfSearchBar()
         let newFetchInstitutionsDispatchWorkItem = DispatchWorkItem(block: { [weak self] in
             guard let self = self else { return }
 
@@ -334,7 +376,7 @@ extension InstitutionPickerViewController {
         })
         self.fetchInstitutionsDispatchWorkItem = newFetchInstitutionsDispatchWorkItem
         DispatchQueue.main.asyncAfter(
-            deadline: .now() + Constants.queryDelay,
+            deadline: .now() + TimeInterval(0.2),
             execute: newFetchInstitutionsDispatchWorkItem
         )
     }
@@ -344,6 +386,10 @@ extension InstitutionPickerViewController {
 
 extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
 
+//    func institutionSearchBarDidBeginEditing(_ searchBar: InstitutionSearchBar) {
+//        
+//    }
+    
     func institutionSearchBar(_ searchBar: InstitutionSearchBar, didChangeText text: String) {
         fetchInstitutions(searchQuery: text)
     }
@@ -403,10 +449,7 @@ extension InstitutionPickerViewController: InstitutionTableViewDelegate {
     }
 
     func institutionTableViewDidSelectSearchForMoreBanks(_ tableView: InstitutionTableView) {
-        tableView.tableView.scrollRectToVisible(
-            searchBar.frame,
-            animated: true
-        )
+        scrollToTopOfSearchBar()
         searchBar.becomeFirstResponder()
     }
 
@@ -441,14 +484,6 @@ extension InstitutionPickerViewController: InstitutionTableViewDelegate {
                     pane: .institutionPicker
                 )
         }
-    }
-}
-
-// MARK: - Constants
-
-extension InstitutionPickerViewController {
-    enum Constants {
-        static let queryDelay = TimeInterval(0.2)
     }
 }
 

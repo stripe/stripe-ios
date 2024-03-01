@@ -70,6 +70,7 @@ final class InstitutionTableView: UIView {
         )
         return manualEntryTableFooterView
     }()
+    // TODO: do NOT show search for more banks if there's no search bar...!
     private lazy var searchMoreBanksTableFooterView: InstitutionTableFooterView = {
         let manualEntryTableFooterView = InstitutionTableFooterView(
             title: STPLocalizedString(
@@ -86,6 +87,7 @@ final class InstitutionTableView: UIView {
         return manualEntryTableFooterView
     }()
     private var loadingView: UIView?
+    weak var searchBar: UIView?
 
     init(frame: CGRect, allowManualEntry: Bool) {
         self.allowManualEntry = allowManualEntry
@@ -119,6 +121,9 @@ final class InstitutionTableView: UIView {
             right: 0
         )
         tableView.keyboardDismissMode = .onDrag
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
         tableView.register(InstitutionTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)
@@ -162,12 +167,36 @@ final class InstitutionTableView: UIView {
         }
 
         // resize loading view to always be below header view
-        let headerViewHeight = tableView.tableHeaderView?.frame.height ?? 0
+//        let headerViewHeight = tableView.tableHeaderView?.frame.height ?? 0
+//        let searchBarHeight = searchBar?.frame.height ?? 0
+//        let totalHeaderHeight = headerViewHeight + searchBarHeight
+//        print(totalHeaderHeight)
+//        let testing = searchBar?.frame.maxY ?? 0
+        var loadingViewY: CGFloat
+        if let searchBar = searchBar {
+            let searchBarFrame = searchBar.convert(searchBar.bounds, to: self)
+            loadingViewY = searchBarFrame.maxY
+        } else if let tableHeaderView = tableView.tableHeaderView {
+            let headerFrame = tableHeaderView.convert(tableHeaderView.bounds, to: self)
+            loadingViewY = headerFrame.maxY
+        } else {
+            loadingViewY = 0
+        }
+        
+//        if tableView.numberOfSections > 0 {
+//            loadingViewY = tableView.rect(forSection: 0).minY  + tableView.rectForHeader(inSection: 0).height - tableView.contentOffset.y
+//            print(loadingViewY)
+//        } else {
+//            loadingViewY = 0
+//        }
+        
+        
+//        searchBar?.convert(searchBar!.bounds, to: self)
         loadingView?.frame = CGRect(
             x: 0,
-            y: headerViewHeight,
+            y: loadingViewY,
             width: bounds.width,
-            height: bounds.height - headerViewHeight
+            height: bounds.height - loadingViewY
         )
     }
 
@@ -331,5 +360,26 @@ extension InstitutionTableView: UITableViewDelegate {
                 didScrollInstitutions: institutions
             )
         }
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return searchBar
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        guard let searchBar = searchBar else {
+            return 0
+        }
+        let width = tableView.bounds.width
+        searchBar.frame = CGRect(origin: .zero, size: CGSize(width: width, height: 100))
+        searchBar.layoutSubviews()
+        searchBar.layoutIfNeeded()
+        let size = searchBar.sizeThatFits(CGSize(
+            width: width,
+            height: .greatestFiniteMagnitude
+        ))
+        print(size)
+        let size2 = searchBar.systemLayoutSizeFitting(CGSize(width: width, height: .greatestFiniteMagnitude))
+        return size2.height
     }
 }
