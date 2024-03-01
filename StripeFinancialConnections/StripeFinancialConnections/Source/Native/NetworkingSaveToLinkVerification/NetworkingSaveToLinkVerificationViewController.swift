@@ -13,8 +13,7 @@ import UIKit
 protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
-        saveToLinkWithStripeSucceeded: Bool?,
-        error: Error?
+        saveToLinkWithStripeSucceeded: Bool?
     )
     func networkingSaveToLinkVerificationViewController(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
@@ -77,8 +76,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                             .log(eventName: "click.not_now", pane: .networkingSaveToLinkVerification)
                         self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
                             self,
-                            saveToLinkWithStripeSucceeded: nil,
-                            error: nil
+                            saveToLinkWithStripeSucceeded: nil
                         )
                     }
                 )
@@ -95,6 +93,35 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
 
         loadingView.isHidden = !show
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
+    }
+
+    private func markLinkVerified(
+        saveToLinkSucceeded: Bool
+    ) {
+        dataSource.markLinkVerified()
+            .observe { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success:
+                    delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
+                        self,
+                        saveToLinkWithStripeSucceeded: saveToLinkSucceeded
+                    )
+                case .failure(let error):
+                    delegate?.networkingSaveToLinkVerificationViewController(
+                        self,
+                        didReceiveTerminalError: error
+                    )
+                }
+
+                // only hide loading view after animation
+                // to next screen has completed
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + 1.0
+                ) { [weak otpView] in
+                    otpView?.showLoadingView(false)
+                }
+            }
     }
 }
 
@@ -136,52 +163,35 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
         view.showLoadingView(true)
         dataSource.saveToLink()
             .observe { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
+                let saveToLinkSucceeded: Bool
                 switch result {
                 case .success:
-                    self.dataSource
+                    dataSource
                         .analyticsClient
                         .log(
                             eventName: "networking.verification.success",
                             pane: .networkingSaveToLinkVerification
                         )
-                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
-                        self,
-                        saveToLinkWithStripeSucceeded: true,
-                        error: nil
-                    )
+                    saveToLinkSucceeded = true
                 case .failure(let error):
-                    self.dataSource
+                    dataSource
                         .analyticsClient
                         .log(
                             eventName: "networking.verification.error",
                             pane: .networkingSaveToLinkVerification
                         )
-                    self.dataSource
+                    dataSource
                         .analyticsClient
                         .logUnexpectedError(
-                            error, errorName: "SaveToLinkError",
+                            error,
+                            errorName: "SaveToLinkError",
                             pane: .networkingSaveToLinkVerification
                         )
-                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
-                        self,
-                        saveToLinkWithStripeSucceeded: false,
-                        error: error
-                    )
+                    saveToLinkSucceeded = false
                 }
 
-                // only hide loading view after animation
-                // to next screen has completed
-                DispatchQueue.main.asyncAfter(
-                    deadline: .now() + 1.0
-                ) { [weak view] in
-                    view?.showLoadingView(false)
-                }
-            }
-
-        dataSource.markLinkVerified()
-            .observe { _ in
-                // we ignore result
+                markLinkVerified(saveToLinkSucceeded: saveToLinkSucceeded)
             }
     }
 
