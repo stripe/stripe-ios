@@ -235,24 +235,14 @@ final class PartnerAuthViewController: SheetViewController {
                 completionHandler: { [weak self] isSuccess in
                     guard let self = self else { return }
                     if !isSuccess {
-                        self.dataSource.recordAuthSessionEvent(
-                            eventName: "cancel",
-                            authSessionId: authSession.id
-                        )
-
-                        // cancel current auth session
-                        self.dataSource.cancelPendingAuthSessionIfNeeded()
-
-                        // whether legacy or OAuth, we always go back
-                        // if we got an explicit cancel from backend
-                        self.navigateBack()
+                        handleAuthSessionCancel(authSession, nil)
                     }
                 }
             )
         }
     }
 
-    private func handleAuthSessionCompletionWithNoStatus(
+    private func handleAuthSessionCancel(
         _ authSession: FinancialConnectionsAuthSession,
         _ error: Error?
     ) {
@@ -428,7 +418,7 @@ final class PartnerAuthViewController: SheetViewController {
                         completionHandler: { [weak self] isSuccess in
                             guard let self = self else { return }
                             if !isSuccess {
-                                self.handleAuthSessionCompletionWithNoStatus(authSession, error)
+                                self.handleAuthSessionCancel(authSession, error)
                             }
                         }
                     )
@@ -677,7 +667,7 @@ extension PartnerAuthViewController: STPURLCallbackListener {
             handleAuthSessionCompletionWithStatus(status, authSession)
         } else {
             logUrlReceived(url, status: nil, authSessionId: authSession.id)
-            handleAuthSessionCompletionWithNoStatus(authSession, nil)
+            handleAuthSessionCancel(authSession, nil)
         }
     }
 
