@@ -925,8 +925,7 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDelegate {
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
-        saveToLinkWithStripeSucceeded: Bool?,
-        error: Error?
+        saveToLinkWithStripeSucceeded: Bool?
     ) {
         if saveToLinkWithStripeSucceeded != nil {
             dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
