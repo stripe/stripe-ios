@@ -1,4 +1,8 @@
-## x.x.x y-y-y
+## x.x.x x-x-x
+
+### Payments
+* [Added] Support for Amazon Pay bindings.
+
 ### CustomerSheet
 * [Added] API to control what payment methods are displayed
 

@@ -186,7 +186,9 @@ struct FormSpec: Decodable {
 }
 extension FormSpec {
     static func nextActionSpec(paymentIntent: STPPaymentIntent, formSpecProvider: FormSpecProvider) -> FormSpec.NextActionSpec? {
-        guard let paymentMethod = paymentIntent.paymentMethod else {
+        // Don't use LUXE to handle Amazon Pay's next action b/c it requires polling
+        // TODO(porter) Figure out a better way to handle FormSpecPaymentHandler vs STPPaymentHandler
+        guard let paymentMethod = paymentIntent.paymentMethod, paymentMethod.type != .amazonPay else {
             return nil
         }
         return formSpecProvider.nextActionSpec(for: paymentMethod.type.identifier)

@@ -206,4 +206,17 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
 
+    func testCreateAmazonPayPaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let params = STPPaymentMethodParams(amazonPay: STPPaymentMethodAmazonPayParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .amazonPay)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
 }
