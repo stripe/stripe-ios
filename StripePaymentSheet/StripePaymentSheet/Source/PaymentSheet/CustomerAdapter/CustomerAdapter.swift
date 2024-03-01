@@ -158,7 +158,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
             // paymentMethodTypes will be used as a client side filter
             var savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit] // hardcoded for now
             if let paymentMethodTypes = self.paymentMethodTypes {
-                switch paymentMethodTypes.customerSheetSupportedPaymentMethodTypes() {
+                switch CustomerSheet.customerSheetSupportedPaymentMethodTypes(paymentMethodTypes) {
                 case .success(let types):
                     if let types, !types.isEmpty {
                         savedPaymentMethodTypes = types

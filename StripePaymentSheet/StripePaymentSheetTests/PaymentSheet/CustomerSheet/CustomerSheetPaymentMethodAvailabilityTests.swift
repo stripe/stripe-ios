@@ -50,7 +50,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
     }
     func testCustomerSheetSupportedPaymentMethodTypes_card() {
         let input = ["card"]
-        guard case .success(let result) = input.customerSheetSupportedPaymentMethodTypes(),
+        guard case .success(let result) = CustomerSheet.customerSheetSupportedPaymentMethodTypes(input),
               let result else {
             XCTFail()
             return
@@ -59,7 +59,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
     }
     func testCustomerSheetSupportedPaymentMethodTypes_AllValid() {
         let input = ["card", "us_bank_account", "sepa_debit"]
-        guard case .success(let result) = input.customerSheetSupportedPaymentMethodTypes(),
+        guard case .success(let result) = CustomerSheet.customerSheetSupportedPaymentMethodTypes(input),
               let result else {
             XCTFail()
             return
@@ -68,7 +68,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
     }
     func testCustomerSheetSupportedPaymentMethodTypes_partialInvalid() {
         let input = ["card", "us_bank_account", "llama_pay"]
-        guard case .failure(let err) = input.customerSheetSupportedPaymentMethodTypes(),
+        guard case .failure(let err) = CustomerSheet.customerSheetSupportedPaymentMethodTypes(input),
               case CustomerSheetError.unsupportedPaymentMethodType(let unsupported) = err else {
             XCTFail()
             return
@@ -77,7 +77,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
     }
     func testCustomerSheetSupportedPaymentMethodTypes_allInvalid() {
         let input = ["llama_pay1", "llama_pay2"]
-        guard case .failure(let err) = input.customerSheetSupportedPaymentMethodTypes(),
+        guard case .failure(let err) = CustomerSheet.customerSheetSupportedPaymentMethodTypes(input),
               case CustomerSheetError.unsupportedPaymentMethodType(let unsupported) = err else {
             XCTFail()
             return
@@ -86,7 +86,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
     }
     func testCustomerSheetSupportedPaymentMethodTypes_duplicate1() {
         let input = ["card", "card"]
-        guard case .success(let result) = input.customerSheetSupportedPaymentMethodTypes(),
+        guard case .success(let result) = CustomerSheet.customerSheetSupportedPaymentMethodTypes(input),
               let result else {
             XCTFail()
             return
@@ -95,7 +95,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
     }
     func testCustomerSheetSupportedPaymentMethodTypes_removeDupeInOrder() {
         let input = ["card", "us_bank_account", "card"]
-        guard case .success(let result) = input.customerSheetSupportedPaymentMethodTypes(),
+        guard case .success(let result) = CustomerSheet.customerSheetSupportedPaymentMethodTypes(input),
               let result else {
             XCTFail()
             return
@@ -104,7 +104,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
     }
     func testCustomerSheetSupportedPaymentMethodTypes_duplicate_withInvalid() {
         let input = ["card", "card", "llama_pay"]
-        guard case .failure(let err) = input.customerSheetSupportedPaymentMethodTypes(),
+        guard case .failure(let err) = CustomerSheet.customerSheetSupportedPaymentMethodTypes(input),
               case CustomerSheetError.unsupportedPaymentMethodType(let unsupported) = err else {
             XCTFail()
             return
@@ -113,7 +113,7 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
     }
     func testCustomerSheetSupportedPaymentMethodTypes_empty() {
         let input: [String] = []
-        guard case .success(let result) = input.customerSheetSupportedPaymentMethodTypes() else {
+        guard case .success(let result) = CustomerSheet.customerSheetSupportedPaymentMethodTypes(input) else {
             XCTFail()
             return
         }

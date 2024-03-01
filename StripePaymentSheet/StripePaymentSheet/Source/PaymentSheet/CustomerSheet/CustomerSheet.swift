@@ -164,13 +164,6 @@ public class CustomerSheet {
 extension CustomerSheet {
     func loadPaymentMethodInfo(completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
         Task {
-            if let paymentMethodTypes = self.customerAdapter.paymentMethodTypes {
-                if case .failure(let error) = paymentMethodTypes.customerSheetSupportedPaymentMethodTypes() {
-                    completion(.failure(error))
-                    return
-                }
-            }
-
             do {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentOption()
