@@ -4,7 +4,7 @@
 * [Added] Support for Amazon Pay bindings.
 
 ### CustomerSheet
-* [Added] API to control what payment methods are displayed
+* [Added] Added `paymentMethodTypes` in `CustomerAdapter` to control what payment methods are displayed.
 
 ## 23.23.0 2024-02-26
 ### PaymentSheet
