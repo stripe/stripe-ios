@@ -153,7 +153,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
 
-            // Note: Querying for payment specific types of payment methods is an optimization
+            // Note: Querying for specific types of payment methods is an optimization
             // Eventually, when we query a single endpoint for all payment methods,
             // paymentMethodTypes will be used as a client side filter
             var savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit] // hardcoded for now
