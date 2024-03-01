@@ -132,6 +132,7 @@ private final class GIFImageView: UIView, WKNavigationDelegate {
         webView.scrollView.isScrollEnabled = false
         webView.isUserInteractionEnabled = false
         webView.loadHTMLString(htmlString, baseURL: nil)
+        webView.backgroundColor = .customBackgroundColor
         addAndPinSubview(webView)
     }
 

@@ -13,6 +13,7 @@ final class InstitutionTableLoadingView: UIView {
 
     init() {
         super.init(frame: UIScreen.main.bounds)
+        backgroundColor = .customBackgroundColor
         let verticalStackView = UIStackView(
             arrangedSubviews: (0..<10).map({ _ in
                 ShimmeringInstitutionRowView()

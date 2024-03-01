@@ -50,7 +50,7 @@ final class NetworkingOTPView: UIView {
                 enableDigitGrouping: false,
                 font: UIFont.systemFont(ofSize: 28, weight: .regular),
                 itemCornerRadius: 12,
-                itemHeight: 56
+                itemHeight: 58
             ),
             theme: theme
         )

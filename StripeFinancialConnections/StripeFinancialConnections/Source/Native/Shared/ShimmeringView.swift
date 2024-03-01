@@ -20,14 +20,14 @@ class ShimmeringView: UIView {
     }
 
     private func startShimmering() {
-        self.alpha = 0.30
+        self.alpha = 1.0
 
         UIView.animate(
             withDuration: 1.0,
             delay: 1.0,
             options: [.autoreverse, .repeat, .allowUserInteraction],
             animations: {
-                self.alpha = 1.0
+                self.alpha = 0.3
             },
             completion: nil
         )
