@@ -19,26 +19,26 @@ extension StripeAPI {
 
     /// Policy used to detect tilted documents.
     enum MBTiltPolicyType: String, Codable, Equatable, CaseIterable {
-        case disabled = "disabled"
-        case normal = "normal"
-        case relaxed = "relaxed"
-        case strict = "strict"
+        case disabled
+        case normal
+        case relaxed
+        case strict
     }
 
     /// Policy used to discard frames with blurred documents.
     enum MBBlurPolicyType: String, Codable, Equatable, CaseIterable {
-        case disabled = "disabled"
-        case normal = "normal"
-        case relaxed = "relaxed"
-        case strict = "strict"
+        case disabled
+        case normal
+        case relaxed
+        case strict
     }
 
     /// Policy used to discard frames with glare detected on the document.
     enum MBGlarePolicyType: String, Codable, Equatable, CaseIterable {
-        case disabled = "disabled"
-        case normal = "normal"
-        case relaxed = "relaxed"
-        case strict = "strict"
+        case disabled
+        case normal
+        case relaxed
+        case strict
     }
 
     struct VerificationPageStaticContentDocumentCaptureMBSettings: Decodable, Equatable {
@@ -60,10 +60,15 @@ extension StripeAPI {
         /// Allowed values are from 0 to 1.
         let handOcclusionThreshold: CGFloat
 
+        /// Policy to configure capture strategy used to select the best frame.
         let captureStrategy: MBCaptureStrategyType
 
+        /// Defines the threshold to determine if the captured image is too bright
+        /// Allowed values are from 0 to 1.
         let tooBrightThreshold: CGFloat
 
+        /// Defines the threshold to determine if the captured image is too dark
+        /// Allowed values are from 0 to 1.
         let tooDarkThreshold: CGFloat
 
         /// Required minimum DPI of the captured document on transformed image.
@@ -76,10 +81,13 @@ extension StripeAPI {
         /// to enable capture of all document groups.
         let adjustMinimumDocumentDpi: Bool
 
+        /// Policy used to detect tilted documents.
         let tiltPolicy: MBTiltPolicyType
 
+        /// Policy used to discard frames with blurred documents.
         let blurPolicy: MBBlurPolicyType
 
+        /// Policy used to discard frames with glare detected on the document.
         let glarePolicy: MBGlarePolicyType
 
     }
