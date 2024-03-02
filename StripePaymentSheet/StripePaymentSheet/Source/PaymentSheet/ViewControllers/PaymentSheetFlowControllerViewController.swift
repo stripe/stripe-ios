@@ -560,8 +560,17 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         else {
             return
         }
+        var shouldRemoveDuplicates = false
+        if let customerAccessProvider = configuration.customer?.customerAccessProvider,
+           case .customerSession = customerAccessProvider,
+           paymentMethod.type == .card {
+            shouldRemoveDuplicates = true
+        }
         configuration.apiClient.detachPaymentMethod(
-            paymentMethod.stripeId, fromCustomerUsing: ephemeralKey
+            paymentMethod.stripeId,
+            customerId: configuration.customer?.id,
+            fromCustomerUsing: ephemeralKey,
+            shouldRemoveDuplicates: shouldRemoveDuplicates
         ) { (_) in
             // no-op
         }
