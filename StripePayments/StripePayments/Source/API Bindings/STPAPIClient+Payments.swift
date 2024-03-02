@@ -1161,7 +1161,7 @@ extension STPAPIClient {
                     }
                 }
                 for await error in group {
-                    if let error = error {
+                    if let error {
                         errors.append(error)
                     }
                 }
