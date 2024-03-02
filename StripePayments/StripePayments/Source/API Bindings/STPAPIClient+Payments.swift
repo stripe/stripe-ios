@@ -1113,20 +1113,40 @@ extension STPAPIClient {
                 }
             }
         }
+        let detachPaymentMethod: (String) async throws -> Void = { paymentMethodID in
+            try await withCheckedThrowingContinuation { continuation in
 
-        let detachPaymentMethod: (String, Bool) async throws -> Void = { paymentMethodID, shouldCallCompletionBlock in
-            let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
-            APIRequest<STPPaymentMethod>.post(
-                with: self,
-                endpoint: endpoint,
-                additionalHeaders: self.authorizationHeader(using: ephemeralKeySecret),
-                parameters: [:]
-            ) { _, _, error in
-                if shouldCallCompletionBlock {
-                    completion(error)
+                let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
+                APIRequest<STPPaymentMethod>.post(
+                    with: self,
+                    endpoint: endpoint,
+                    additionalHeaders: self.authorizationHeader(using: ephemeralKeySecret),
+                    parameters: [:]
+                ) { _, _, error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                        return
+                    }
+                    continuation.resume()
                 }
+                /*
+                //Awesome test code
+                if STPAPIClient.counter % 2 == 0 {
+                    STPAPIClient.counter += 1
+                    print("wooj: sleeping for 10")
+                    sleep(10)
+                    print("wooj: throwing")
+                    continuation.resume(throwing: NSError.stp_genericFailedToParseResponseError())
+                } else {
+                    STPAPIClient.counter += 1
+                    print("wooj: sleeping for 5")
+                    sleep(5)
+                    print("wooj: everything okay")
+                    continuation.resume()
+                }*/
             }
         }
+//        let detachMulitplePaymentMethods: [STPPaymentMethod] async throws -> Void { paymentMethods}
 
         Task {
             do {
@@ -1142,12 +1162,38 @@ extension STPAPIClient {
                         .filter({$0.type == .card})
                         .filter({$0.card?.fingerprint == requestedPMToDelete.card?.fingerprint})
 
-                    for singleCard in allPaymentMethodsToDelete {
-                        try await detachPaymentMethod(singleCard.stripeId, false)
+                    
+                    var errors: [Error] = []
+                    await withTaskGroup(of: (Error?).self) { group in
+                        for paymentMethod in allPaymentMethodsToDelete {
+                            group.addTask {
+                                do {
+                                    try await detachPaymentMethod(paymentMethod.stripeId)
+                                } catch {
+                                    return error
+                                }
+                                return nil
+                            }
+                        }
+                        for await error in group {
+                            if let error = error {
+                                errors.append(error)
+                            }
+                        }
                     }
-                    completion(nil)
+                    if errors.isEmpty {
+                        completion(nil)
+                    } else {
+                        // TODO: Throw only the first? maybe all of them? hm.
+                        completion(errors.first)
+                    }
+
                 } else {
-                    try await detachPaymentMethod(paymentMethodID, true)
+                    do {
+                        try await detachPaymentMethod(paymentMethodID)
+                    } catch {
+                        completion(error)
+                    }
                 }
             } catch {
                 completion(error)
