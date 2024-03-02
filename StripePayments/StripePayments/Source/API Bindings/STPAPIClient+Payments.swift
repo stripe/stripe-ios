@@ -1091,7 +1091,7 @@ extension STPAPIClient {
             completion(shared_allPaymentMethods, shared_lastError)
         }
     }
-
+//    static var counter: Int = 0
     @_spi(STP) public func detachPaymentMethod(
         _ paymentMethodID: String,
         customerId: String?,
@@ -1129,7 +1129,7 @@ extension STPAPIClient {
                     }
                     continuation.resume()
                 }
-                /*
+/*
                 //Awesome test code
                 if STPAPIClient.counter % 2 == 0 {
                     STPAPIClient.counter += 1
@@ -1143,10 +1143,36 @@ extension STPAPIClient {
                     sleep(5)
                     print("wooj: everything okay")
                     continuation.resume()
-                }*/
+                }
+ */
             }
         }
-//        let detachMulitplePaymentMethods: [STPPaymentMethod] async throws -> Void { paymentMethods}
+        let detachMulitplePaymentMethods: ([STPPaymentMethod]) async -> Error? = { allPaymentMethodsToDelete in
+            var errors: [Error] = []
+            await withTaskGroup(of: (Error?).self) { group in
+                for paymentMethod in allPaymentMethodsToDelete {
+                    group.addTask {
+                        do {
+                            try await detachPaymentMethod(paymentMethod.stripeId)
+                        } catch {
+                            return error
+                        }
+                        return nil
+                    }
+                }
+                for await error in group {
+                    if let error = error {
+                        errors.append(error)
+                    }
+                }
+            }
+            if errors.isEmpty {
+                return nil
+            } else {
+                // TODO: Throw only the first? maybe all of them?
+                return errors.first
+            }
+        }
 
         Task {
             do {
@@ -1155,42 +1181,19 @@ extension STPAPIClient {
                     let requestedPMToDelete = allCardPaymentMethods.filter({ $0.stripeId == paymentMethodID}).first
                     guard let requestedPMToDelete else {
                         // Payment method doesnt exist anymore, nothing to do
+                        completion(nil)
                         return
                     }
 
                     let allPaymentMethodsToDelete: [STPPaymentMethod] = allCardPaymentMethods
                         .filter({$0.type == .card})
                         .filter({$0.card?.fingerprint == requestedPMToDelete.card?.fingerprint})
-
-                    
-                    var errors: [Error] = []
-                    await withTaskGroup(of: (Error?).self) { group in
-                        for paymentMethod in allPaymentMethodsToDelete {
-                            group.addTask {
-                                do {
-                                    try await detachPaymentMethod(paymentMethod.stripeId)
-                                } catch {
-                                    return error
-                                }
-                                return nil
-                            }
-                        }
-                        for await error in group {
-                            if let error = error {
-                                errors.append(error)
-                            }
-                        }
-                    }
-                    if errors.isEmpty {
-                        completion(nil)
-                    } else {
-                        // TODO: Throw only the first? maybe all of them? hm.
-                        completion(errors.first)
-                    }
-
+                    let error = await detachMulitplePaymentMethods(allPaymentMethodsToDelete)
+                    completion(error)
                 } else {
                     do {
                         try await detachPaymentMethod(paymentMethodID)
+                        completion(nil)
                     } catch {
                         completion(error)
                     }
