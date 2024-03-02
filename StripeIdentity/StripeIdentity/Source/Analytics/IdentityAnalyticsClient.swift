@@ -59,6 +59,9 @@ final class IdentityAnalyticsClient {
         case timeToScreen = "time_to_screen"
         // MARK: Errors
         case genericError = "generic_error"
+        // MARK: Microblink
+        case mbStatus = "mb_status"
+        case mbError = "mb_error"
     }
 
     enum ScreenName: String {
@@ -475,6 +478,47 @@ final class IdentityAnalyticsClient {
     ) {
         logAnalytic(
             .genericError,
+            metadata: [
+                "error_details": AnalyticsClientV2.serialize(
+                    error: error,
+                    filePath: filePath,
+                    line: line
+                ),
+            ]
+        )
+    }
+
+    // MARK: - Microblink Events
+    func logMbStatus(
+        required: Bool,
+        init_success: Bool? = nil,
+        init_failed_reason: String? = nil
+    ) {
+        var metadata: [String: Any] = [
+            "required": required
+        ]
+
+        if let init_success = init_success {
+            metadata["init_success"] = init_success
+        }
+
+        if let reason = init_failed_reason {
+            metadata["init_failed_reason"] = reason
+        }
+
+        logAnalytic(
+            .mbStatus,
+            metadata: metadata
+        )
+    }
+
+    func logMbError(
+        error: MBDetector.MBDetectorError,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        logAnalytic(
+            .mbError,
             metadata: [
                 "error_details": AnalyticsClientV2.serialize(
                     error: error,

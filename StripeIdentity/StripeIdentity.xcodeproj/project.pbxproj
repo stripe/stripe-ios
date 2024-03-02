@@ -172,6 +172,10 @@
 		CFA141490408B4644A4F0375 /* IdentityMockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738A5EB6B7F1C5621F190A72 /* IdentityMockData.swift */; };
 		D19E35C5D5263F212071AE75 /* IDDetectorConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14ED7B7A9CC6DE447C14B5CB /* IDDetectorConstants.swift */; };
 		D2309DFF2EDABB6C1A139513 /* VerificationPageDataIdNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A49996D90714452E6A533A /* VerificationPageDataIdNumber.swift */; };
+		D41B6EBE2B8EC4BC00459BFB /* MBDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41B6EBD2B8EC4BC00459BFB /* MBDetector.swift */; };
+		D41B6EC32B8EC65100459BFB /* MBCCFrameAnalysisStatus+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41B6EC22B8EC65100459BFB /* MBCCFrameAnalysisStatus+Extensions.swift */; };
+		D41B6EC52B8EC65600459BFB /* MBCCFrameAnalysisResult+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41B6EC42B8EC65600459BFB /* MBCCFrameAnalysisResult+Extensions.swift */; };
+		D41B6ECE2B8ECCEB00459BFB /* CaptureCore in Frameworks */ = {isa = PBXBuildFile; productRef = D41B6ECD2B8ECCEB00459BFB /* CaptureCore */; };
 		D4715B972B0E8E20008D07CC /* VerificationPageStaticContentBottomSheetLineContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4715B852B0E8E1F008D07CC /* VerificationPageStaticContentBottomSheetLineContent.swift */; };
 		D4715B982B0E8E20008D07CC /* VerificationPageStaticContentIndividualPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4715B862B0E8E1F008D07CC /* VerificationPageStaticContentIndividualPage.swift */; };
 		D4715B992B0E8E20008D07CC /* VerificationPageStaticContentPhoneOtpPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4715B872B0E8E1F008D07CC /* VerificationPageStaticContentPhoneOtpPage.swift */; };
@@ -251,6 +255,7 @@
 		D4715C1F2B0E8F43008D07CC /* icon_wallet@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4715C0A2B0E8F43008D07CC /* icon_wallet@3x.png */; };
 		D4715C202B0E8F43008D07CC /* icon_camera@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4715C0B2B0E8F43008D07CC /* icon_camera@3x.png */; };
 		D482711C2B8E6DEA008EE208 /* VerificationPageStaticContentDocumentCaptureMBSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D482711B2B8E6DEA008EE208 /* VerificationPageStaticContentDocumentCaptureMBSettings.swift */; };
+		D4888BF82B8FEF3C00B69C89 /* UIImage+utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4888BF72B8FEF3C00B69C89 /* UIImage+utils.swift */; };
 		D55B24D4D03E43A9438BCFE5 /* IdNumberElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB73F630CCAFE6AAB9727C62 /* IdNumberElement.swift */; };
 		DB6005016F47D09559DA0C98 /* DocumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAC1FACF9A36AAFC19BF2F /* DocumentType.swift */; };
 		DCFBA69CC4437E2E6061F50B /* IdentityMLModelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546F9D432ACFF45E9CE1368 /* IdentityMLModelLoader.swift */; };
@@ -495,6 +500,9 @@
 		CEE8340912F2A489BB80D39B /* StripeIdentityBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeIdentityBundleLocator.swift; sourceTree = "<group>"; };
 		CF2EEA927FA9ACE159A67063 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D105F7A265B60FE9AD82B0DF /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		D41B6EBD2B8EC4BC00459BFB /* MBDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBDetector.swift; sourceTree = "<group>"; };
+		D41B6EC22B8EC65100459BFB /* MBCCFrameAnalysisStatus+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MBCCFrameAnalysisStatus+Extensions.swift"; sourceTree = "<group>"; };
+		D41B6EC42B8EC65600459BFB /* MBCCFrameAnalysisResult+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MBCCFrameAnalysisResult+Extensions.swift"; sourceTree = "<group>"; };
 		D4715B852B0E8E1F008D07CC /* VerificationPageStaticContentBottomSheetLineContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentBottomSheetLineContent.swift; sourceTree = "<group>"; };
 		D4715B862B0E8E1F008D07CC /* VerificationPageStaticContentIndividualPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentIndividualPage.swift; sourceTree = "<group>"; };
 		D4715B872B0E8E1F008D07CC /* VerificationPageStaticContentPhoneOtpPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentPhoneOtpPage.swift; sourceTree = "<group>"; };
@@ -574,6 +582,7 @@
 		D4715C0A2B0E8F43008D07CC /* icon_wallet@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_wallet@3x.png"; sourceTree = "<group>"; };
 		D4715C0B2B0E8F43008D07CC /* icon_camera@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_camera@3x.png"; sourceTree = "<group>"; };
 		D482711B2B8E6DEA008EE208 /* VerificationPageStaticContentDocumentCaptureMBSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentDocumentCaptureMBSettings.swift; sourceTree = "<group>"; };
+		D4888BF72B8FEF3C00B69C89 /* UIImage+utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+utils.swift"; sourceTree = "<group>"; };
 		D5C7698331B899B80AF4F730 /* VerificationPage_no_selfie.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPage_no_selfie.json; sourceTree = "<group>"; };
 		D604F6AABE4D6D5CCF802685 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6918DC6A9681E769D44BC78 /* TruncatedDecimalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TruncatedDecimalTest.swift; sourceTree = "<group>"; };
@@ -628,6 +637,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D41B6ECE2B8ECCEB00459BFB /* CaptureCore in Frameworks */,
 				695E12945F47ED3060B8AE19 /* StripeCameraCore.framework in Frameworks */,
 				10B606812179D64E67BFFFCF /* StripeCore.framework in Frameworks */,
 				A7AC2D0D9FDCF8AC5298708D /* StripeUICore.framework in Frameworks */,
@@ -734,6 +744,7 @@
 		2EBA502F418D648EEF72EDB9 /* Detectors */ = {
 			isa = PBXGroup;
 			children = (
+				D41B6EBF2B8EC5EA00459BFB /* MBDetector */,
 				71CAD90E0B821CC823D976E9 /* FaceDetector */,
 				E32A0AA1EF4E64B83646D59C /* IDDetector */,
 				63826305A96644687BF980CC /* BarcodeDetector.swift */,
@@ -1008,6 +1019,7 @@
 				E94605BCADE912561ED6F710 /* STPLocalizedString.swift */,
 				F1559E966A487EE3867DD7B8 /* String+Localized.swift */,
 				CEE8340912F2A489BB80D39B /* StripeIdentityBundleLocator.swift */,
+				D4888BF72B8FEF3C00B69C89 /* UIImage+utils.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1200,6 +1212,16 @@
 				9BB8E3DF263505065E8545AB /* SelfieUploader.swift */,
 			);
 			path = ImageUploaders;
+			sourceTree = "<group>";
+		};
+		D41B6EBF2B8EC5EA00459BFB /* MBDetector */ = {
+			isa = PBXGroup;
+			children = (
+				D41B6EC42B8EC65600459BFB /* MBCCFrameAnalysisResult+Extensions.swift */,
+				D41B6EC22B8EC65100459BFB /* MBCCFrameAnalysisStatus+Extensions.swift */,
+				D41B6EBD2B8EC4BC00459BFB /* MBDetector.swift */,
+			);
+			path = MBDetector;
 			sourceTree = "<group>";
 		};
 		D9B3846C593CC86E22146C09 /* Coordinators */ = {
@@ -1399,6 +1421,9 @@
 			dependencies = (
 			);
 			name = StripeIdentity;
+			packageProductDependencies = (
+				D41B6ECD2B8ECCEB00459BFB /* CaptureCore */,
+			);
 			productName = StripeIdentity;
 			productReference = D604F6AABE4D6D5CCF802685 /* StripeIdentity.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1462,6 +1487,7 @@
 			packageReferences = (
 				98906E4295D5EDD251F81145 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */,
 				1034C700B96E0B79C2107621 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+				D41B6ECC2B8ECCEB00459BFB /* XCRemoteSwiftPackageReference "capture-core-sp" */,
 			);
 			productRefGroup = DA1A05D0BE4F60655BC0E2CD /* Products */;
 			projectDirPath = "";
@@ -1623,6 +1649,7 @@
 				D4715BE02B0E8E96008D07CC /* IdentityFlowViewController.swift in Sources */,
 				D4715BBE2B0E8E80008D07CC /* ShadowConfiguration.swift in Sources */,
 				D4715BA12B0E8E20008D07CC /* VerificationPageFieldType.swift in Sources */,
+				D41B6EC32B8EC65100459BFB /* MBCCFrameAnalysisStatus+Extensions.swift in Sources */,
 				F1DAE15C305F9733A7C40673 /* VerificationPageDataRequirements.swift in Sources */,
 				C83DD219624645AACB2F29A9 /* RequiredInternationalAddress.swift in Sources */,
 				D4715BEB2B0E8E96008D07CC /* LoadingViewController.swift in Sources */,
@@ -1637,6 +1664,7 @@
 				D2309DFF2EDABB6C1A139513 /* VerificationPageDataIdNumber.swift in Sources */,
 				D4715BBF2B0E8E80008D07CC /* DebugView.swift in Sources */,
 				D4715BBD2B0E8E80008D07CC /* InstructionListView.swift in Sources */,
+				D4888BF82B8FEF3C00B69C89 /* UIImage+utils.swift in Sources */,
 				4B46A1DC7BAE3ED249C4EF05 /* VerificationPageDataName.swift in Sources */,
 				50B7C62A3845596BB256BC3E /* VerificationPageDataPhone.swift in Sources */,
 				D4715BBA2B0E8E80008D07CC /* IdentityFlowView.swift in Sources */,
@@ -1658,6 +1686,7 @@
 				882C201AF4C8F48816DB740F /* IdentityElementsFactory.swift in Sources */,
 				D4715BDE2B0E8E96008D07CC /* DocumentFileUploadViewController+Strings.swift in Sources */,
 				49FE192DE8D8DA9342A5AE60 /* IdentityTextButtonElement.swift in Sources */,
+				D41B6EBE2B8EC4BC00459BFB /* MBDetector.swift in Sources */,
 				692A9E2ADC11AB3D26A92780 /* IndividualFormElement.swift in Sources */,
 				28D0DEBE960D92E18CEB4D71 /* Enums+CustomStringConvertible.swift in Sources */,
 				2522A0773650573501106F4D /* Image.swift in Sources */,
@@ -1753,6 +1782,7 @@
 				AB6B3BDF7D8F3F84EEA7208A /* StripeCore+Import.swift in Sources */,
 				CBA4B3CAFDFF232B72393842 /* VerificationClientSecret.swift in Sources */,
 				1D4D9CDF6B1D335963849940 /* VerificationSheetAnalytics.swift in Sources */,
+				D41B6EC52B8EC65600459BFB /* MBCCFrameAnalysisResult+Extensions.swift in Sources */,
 				D4715BC52B0E8E80008D07CC /* ContentCenteringScrollView.swift in Sources */,
 				4A6D49DED2555FBDACF13B3F /* VerificationFlowWebView.swift in Sources */,
 				5E00E8AC4088548403B3E630 /* VerificationFlowWebViewController.swift in Sources */,
@@ -1938,6 +1968,14 @@
 				kind = branch;
 			};
 		};
+		D41B6ECC2B8ECCEB00459BFB /* XCRemoteSwiftPackageReference "capture-core-sp" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/BlinkID/capture-core-sp";
+			requirement = {
+				kind = exactVersion;
+				version = 1.2.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1952,6 +1990,11 @@
 		960247DC321CBDB422FE713D /* iOSSnapshotTestCase */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = iOSSnapshotTestCase;
+		};
+		D41B6ECD2B8ECCEB00459BFB /* CaptureCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D41B6ECC2B8ECCEB00459BFB /* XCRemoteSwiftPackageReference "capture-core-sp" */;
+			productName = CaptureCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
