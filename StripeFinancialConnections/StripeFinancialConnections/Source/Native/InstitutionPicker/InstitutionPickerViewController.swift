@@ -45,11 +45,7 @@ class InstitutionPickerViewController: UIViewController {
                 CreateHeaderTitleLabel(),
             ]
         )
-//        if !dataSource.manifest.institutionSearchDisabled {
-//            verticalStackView.addArrangedSubview(searchBar)
-//        }
         verticalStackView.axis = .vertical
-//        verticalStackView.spacing = 24
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
@@ -67,9 +63,6 @@ class InstitutionPickerViewController: UIViewController {
             ]
         )
         verticalStackView.axis = .vertical
-//        if !dataSource.manifest.institutionSearchDisabled {
-//            verticalStackView.addArrangedSubview(searchBar)
-//        }
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 0, // the `headerView` has bottom padding
@@ -92,7 +85,8 @@ class InstitutionPickerViewController: UIViewController {
     private lazy var institutionTableView: InstitutionTableView = {
         let institutionTableView = InstitutionTableView(
             frame: view.bounds,
-            allowManualEntry: dataSource.manifest.allowManualEntry
+            allowManualEntry: dataSource.manifest.allowManualEntry,
+            institutionSearchDisabled: dataSource.manifest.institutionSearchDisabled
         )
         institutionTableView.delegate = self
         return institutionTableView
@@ -135,7 +129,7 @@ class InstitutionPickerViewController: UIViewController {
         view.addAndPinSubview(institutionTableView)
         institutionTableView.setTableHeaderView(headerView)
         if !dataSource.manifest.institutionSearchDisabled {
-            institutionTableView.searchBar = searchBarContainerView
+            institutionTableView.searchBarContainerView = searchBarContainerView
         }
 
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(

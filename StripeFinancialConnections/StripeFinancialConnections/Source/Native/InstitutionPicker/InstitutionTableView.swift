@@ -33,6 +33,7 @@ protocol InstitutionTableViewDelegate: AnyObject {
 final class InstitutionTableView: UIView {
 
     private let allowManualEntry: Bool
+    private let institutionSearchDisabled: Bool
     let tableView: UITableView
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     private lazy var didSelectManualEntry: (() -> Void)? = {
@@ -70,24 +71,27 @@ final class InstitutionTableView: UIView {
         )
         return manualEntryTableFooterView
     }()
-    // TODO: do NOT show search for more banks if there's no search bar...!
-    private lazy var searchMoreBanksTableFooterView: InstitutionTableFooterView = {
-        let manualEntryTableFooterView = InstitutionTableFooterView(
-            title: STPLocalizedString(
-                "Search for more banks",
-                "The title of a button that appears at the bottom of a list of banks. The purpose of the button is to give users the option to search for more banks than we feature in the initial list of banks (where only the most popular ones will appear)."
-            ),
-            subtitle: nil,
-            image: .search,
-            didSelect: { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.institutionTableViewDidSelectSearchForMoreBanks(self)
-            }
-        )
-        return manualEntryTableFooterView
+    private lazy var searchMoreBanksTableFooterView: InstitutionTableFooterView? = {
+        if institutionSearchDisabled {
+            return nil
+        } else {
+            let manualEntryTableFooterView = InstitutionTableFooterView(
+                title: STPLocalizedString(
+                    "Search for more banks",
+                    "The title of a button that appears at the bottom of a list of banks. The purpose of the button is to give users the option to search for more banks than we feature in the initial list of banks (where only the most popular ones will appear)."
+                ),
+                subtitle: nil,
+                image: .search,
+                didSelect: { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.institutionTableViewDidSelectSearchForMoreBanks(self)
+                }
+            )
+            return manualEntryTableFooterView
+        }
     }()
     private var loadingView: UIView?
-    weak var searchBar: UIView? {
+    weak var searchBarContainerView: UIView? {
         didSet {
             // as soon as the search bar is set, we want to
             // force-layout the UITableView so it lays out
@@ -100,8 +104,13 @@ final class InstitutionTableView: UIView {
     }
     private var lastTableViewWidthForSearchBarSizing: CGFloat?
 
-    init(frame: CGRect, allowManualEntry: Bool) {
+    init(
+        frame: CGRect,
+        allowManualEntry: Bool,
+        institutionSearchDisabled: Bool
+    ) {
         self.allowManualEntry = allowManualEntry
+        self.institutionSearchDisabled = institutionSearchDisabled
         let cellIdentifier = "\(InstitutionTableViewCell.self)"
         tableView = UITableView(frame: frame)
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, _, institution in
@@ -117,7 +126,6 @@ final class InstitutionTableView: UIView {
             return cell
         }
         dataSource.defaultRowAnimation = .fade
-
         super.init(frame: frame)
         tableView.backgroundColor = .customBackgroundColor
         tableView.separatorInset = .zero
@@ -183,9 +191,12 @@ final class InstitutionTableView: UIView {
 
         // resize loading view to always be below header view
         let loadingViewY: CGFloat
-        if let searchBar = searchBar {
-            let searchBarFrame = searchBar.convert(searchBar.bounds, to: self)
-            loadingViewY = searchBarFrame.maxY
+        if let searchBarContainerView = searchBarContainerView {
+            let searchBarContainerViewFrame = searchBarContainerView.convert(
+                searchBarContainerView.bounds,
+                to: self
+            )
+            loadingViewY = searchBarContainerViewFrame.maxY
         } else if let tableHeaderView = tableView.tableHeaderView {
             let headerFrame = tableHeaderView.convert(tableHeaderView.bounds, to: self)
             loadingViewY = headerFrame.maxY
@@ -363,11 +374,11 @@ extension InstitutionTableView: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return searchBar
+        return searchBarContainerView
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        guard let searchBar = searchBar else {
+        guard let searchBarContainerView = searchBarContainerView else {
             return 0
         }
         let width = tableView.bounds.width
@@ -377,17 +388,17 @@ extension InstitutionTableView: UITableViewDelegate {
         // this logic ensures that we resize search bar only
         // when needed
         guard lastTableViewWidthForSearchBarSizing != width else {
-            return searchBar.bounds.height
+            return searchBarContainerView.bounds.height
         }
         lastTableViewWidthForSearchBarSizing = width
 
-        searchBar.frame = CGRect(
-            origin: searchBar.frame.origin,
+        searchBarContainerView.frame = CGRect(
+            origin: searchBarContainerView.frame.origin,
             size: CGSize(width: width, height: 100)
         )
-        searchBar.layoutSubviews()
-        searchBar.layoutIfNeeded()
-        let size = searchBar.systemLayoutSizeFitting(
+        searchBarContainerView.layoutSubviews()
+        searchBarContainerView.layoutIfNeeded()
+        let size = searchBarContainerView.systemLayoutSizeFitting(
             CGSize(width: width, height: .greatestFiniteMagnitude)
         )
         return size.height
