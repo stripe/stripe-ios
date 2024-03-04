@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@••••%2$@";
+
 "+ Add" = "+ Добавяне";
 
 "Add a card" = "Добавяне на карта";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С присъединяването към Link Вие се съгласявате с <terms>Условията</terms> и с <privacy>Правилата за защита на личните данни</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С предоставяне на имейла си, Вие давате съгласието си за създаване на акаунт в Link и запазване на разплащателната Ви информация в Link съгласно <terms>Условията</terms> и <privacy>Правилата за защита на личните данни</privacy>на Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "С предоставянето на информация за плащания и с потвърждаването на това плащане Вие упълномощавате (A) %@ и Stripe, нашия доставчик на платежни услуги, да изпращат инструкции до Вашата банка за дебитиране на сметката Ви и (B) Вашата банка да дебитира сметката Ви в съответствие с тези инструкции. Като част от Вашите права имате право на възстановяване на суми от Вашата банка при условията и реда на споразумението с Вашата банка. Възстановяването на сума трябва да бъде поискано в рамките на 8 седмици, считано от датата, на която сметката Ви е била дебитирана. Вашите права са обяснени в извлечение, което можете да получите от Вашата банка. Вие давате своето съгласие да получавате известия за бъдещи дебитирания до 2 дни преди изпълнението им.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С предоставяне на телефонния си номер, Вие давате съгласието си за създаване на акаунт в Link и запазване на разплащателната Ви информация в Link съгласно <terms>Условията</terms> и <privacy>Правила за защита на личните данни</privacy>на Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Като запазвате банковата си сметка за %@, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
 
@@ -61,6 +67,8 @@
 "Enter address manually" = "Ръчно въвеждане на адрес";
 
 "FPX Bank" = "Банка FPX";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Разбирам, че Stripe ще взима директен дебит от името на %@ и потвърждавам, че съм титуляр на сметката и единственото лице, необходимо за оправомощаване на дебитиране от тази сметка.";
 
 "IBAN" = "IBAN";
 
@@ -106,6 +114,8 @@
 
 "Przelewy24 Bank" = "Банка Przelewy24";
 
+"Remove card?" = "Премахване на банковата карта?";
+
 "Save" = "Запазване";
 
 "Save a new payment method" = "Запазете нов метод на плащане";
@@ -119,6 +129,8 @@
 "Save this card for future %@ payments" = "Запазете тази карта за следващи %@ плащания";
 
 "Save your bank account in just a few steps." = "Запазете банковата си сметка само с няколко стъпки.";
+
+"Save your info for secure 1-click checkout with Link" = "Запазете Вашата информация за сигурно плащане с едно щракване с Link";
 
 "Select your payment method" = "Изберете метод на плащане";
 

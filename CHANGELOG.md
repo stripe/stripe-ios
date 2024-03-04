@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 23.24.0 2024-03-04
 
 ### Payments
 * [Added] Support for Amazon Pay bindings.
