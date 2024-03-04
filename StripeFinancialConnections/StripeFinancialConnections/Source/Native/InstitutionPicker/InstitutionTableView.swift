@@ -368,10 +368,16 @@ extension InstitutionTableView: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard section == 0 else {
+            return nil
+        }
         return searchBarContainerView
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        guard section == 0 else {
+            return 0
+        }
         guard let searchBarContainerView = searchBarContainerView else {
             return 0
         }
