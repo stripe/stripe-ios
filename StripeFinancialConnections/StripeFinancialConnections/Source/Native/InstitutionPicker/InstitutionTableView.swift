@@ -87,7 +87,18 @@ final class InstitutionTableView: UIView {
         return manualEntryTableFooterView
     }()
     private var loadingView: UIView?
-    weak var searchBar: UIView?
+    weak var searchBar: UIView? {
+        didSet {
+            // as soon as the search bar is set, we want to
+            // force-layout the UITableView so it lays out
+            // the header that contains the search bar;
+            //
+            // correct search bar layout is important to
+            // position the loading view
+            tableView.reloadData()
+        }
+    }
+    private var lastTableViewWidthForSearchBarSizing: CGFloat?
 
     init(frame: CGRect, allowManualEntry: Bool) {
         self.allowManualEntry = allowManualEntry
@@ -127,6 +138,10 @@ final class InstitutionTableView: UIView {
         tableView.register(InstitutionTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)
+        // calling `load` activates the `UITableView` data source
+        // by appening a section, which in turn will display
+        // the section header (which contains the search bar)
+        load(institutions: [], isUserSearching: false)
         showLoadingView(false)
     }
 
@@ -167,12 +182,7 @@ final class InstitutionTableView: UIView {
         }
 
         // resize loading view to always be below header view
-//        let headerViewHeight = tableView.tableHeaderView?.frame.height ?? 0
-//        let searchBarHeight = searchBar?.frame.height ?? 0
-//        let totalHeaderHeight = headerViewHeight + searchBarHeight
-//        print(totalHeaderHeight)
-//        let testing = searchBar?.frame.maxY ?? 0
-        var loadingViewY: CGFloat
+        let loadingViewY: CGFloat
         if let searchBar = searchBar {
             let searchBarFrame = searchBar.convert(searchBar.bounds, to: self)
             loadingViewY = searchBarFrame.maxY
@@ -182,16 +192,6 @@ final class InstitutionTableView: UIView {
         } else {
             loadingViewY = 0
         }
-        
-//        if tableView.numberOfSections > 0 {
-//            loadingViewY = tableView.rect(forSection: 0).minY  + tableView.rectForHeader(inSection: 0).height - tableView.contentOffset.y
-//            print(loadingViewY)
-//        } else {
-//            loadingViewY = 0
-//        }
-        
-        
-//        searchBar?.convert(searchBar!.bounds, to: self)
         loadingView?.frame = CGRect(
             x: 0,
             y: loadingViewY,
@@ -371,15 +371,25 @@ extension InstitutionTableView: UITableViewDelegate {
             return 0
         }
         let width = tableView.bounds.width
-        searchBar.frame = CGRect(origin: .zero, size: CGSize(width: width, height: 100))
+        // `lastTableViewWidthForSearchBarSizing` fixes an issue
+        // where resizing the searchBar sometimes caused a layout
+        // glitch each time a search character was inputted
+        // this logic ensures that we resize search bar only
+        // when needed
+        guard lastTableViewWidthForSearchBarSizing != width else {
+            return searchBar.bounds.height
+        }
+        lastTableViewWidthForSearchBarSizing = width
+
+        searchBar.frame = CGRect(
+            origin: searchBar.frame.origin,
+            size: CGSize(width: width, height: 100)
+        )
         searchBar.layoutSubviews()
         searchBar.layoutIfNeeded()
-        let size = searchBar.sizeThatFits(CGSize(
-            width: width,
-            height: .greatestFiniteMagnitude
-        ))
-        print(size)
-        let size2 = searchBar.systemLayoutSizeFitting(CGSize(width: width, height: .greatestFiniteMagnitude))
-        return size2.height
+        let size = searchBar.systemLayoutSizeFitting(
+            CGSize(width: width, height: .greatestFiniteMagnitude)
+        )
+        return size.height
     }
 }

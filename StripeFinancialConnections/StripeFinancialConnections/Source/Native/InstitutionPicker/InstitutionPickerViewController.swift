@@ -219,7 +219,7 @@ class InstitutionPickerViewController: UIViewController {
     private func hideOverlayView() {
         institutionTableView.showOverlayView(false)
     }
-    
+
     private func scrollToTopOfSearchBar() {
         let searchBarContainerFrame = CGRect(
             x: 0,
@@ -386,10 +386,6 @@ extension InstitutionPickerViewController {
 
 extension InstitutionPickerViewController: InstitutionSearchBarDelegate {
 
-//    func institutionSearchBarDidBeginEditing(_ searchBar: InstitutionSearchBar) {
-//        
-//    }
-    
     func institutionSearchBar(_ searchBar: InstitutionSearchBar, didChangeText text: String) {
         fetchInstitutions(searchQuery: text)
     }
