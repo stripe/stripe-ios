@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Προσθήκη";
 
 "Add a card" = "Προσθήκη μιας κάρτας";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την εγγραφή σας στο Link, συμφωνείτε με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Αν παράσχετε το email σας, συμφωνείτε να δημιουργηθεί ένας λογαριασμός στο Link και να αποθηκευτούν τα στοιχεία πληρωμής σας στο Link, σύμφωνα με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy> του Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Με την παροχή των στοιχείων πληρωμής σας και επιβεβαιώνοντας αυτήν την πληρωμή, εξουσιοδοτείτε (A) την %@ και την Stripe, τον πάροχο υπηρεσιών πληρωμών μας, να στείλουν οδηγίες στην τράπεζά σας προκειμένου να χρεώσει τον λογαριασμό σας και (B) την τράπεζά σας προκειμένου να χρεώσει τον λογαριασμό σας, σύμφωνα με τις οδηγίες αυτές. Στο πλαίσιο των δικαιωμάτων σας, δικαιούστε επιστροφή από την τράπεζά σας με βάση τους όρους και τις προϋποθέσεις που διατυπώνονται στη σύμβαση με την τράπεζά σας. Η αξίωση για επιστροφή πρέπει να υποβληθεί εντός 8 εβδομάδων από την ημερομηνία χρέωσης του λογαριασμού σας. Τα δικαιώματά σας επεξηγούνται σε αναλυτική κατάσταση, την οποία μπορείτε να εξασφαλίσετε από την τράπεζά σας. Συμφωνείτε να λαμβάνετε ειδοποιήσεις για μελλοντικές χρεώσεις έως και 2 ημέρες προτού προκύψουν.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Αν παράσχετε τον αριθμό τηλεφώνου σας, συμφωνείτε να δημιουργηθεί ένας λογαριασμός στο Link και να αποθηκευτούν τα στοιχεία πληρωμής σας στο Link, σύμφωνα με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy> του Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Αποθηκεύοντας τον τραπεζικό λογαριασμό σας για την %@, συμφωνείτε να εξουσιοδοτείτε πληρωμές σύμφωνα με <terms>αυτούς τους όρους</terms>.";
 
@@ -61,6 +67,8 @@
 "Enter address manually" = "Πληκτρολογήστε τη διεύθυνση";
 
 "FPX Bank" = "FPX Bank";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Κατανοώ ότι η Stripe θα εισπράττει άμεσες χρεώσεις εκ μέρους της %@ και επιβεβαιώνω ότι είμαι ο δικαιούχος του λογαριασμού και το μόνο άτομο που απαιτείται για την έγκριση των χρεώσεων από αυτόν τον λογαριασμό.";
 
 "IBAN" = "IBAN";
 
@@ -106,6 +114,8 @@
 
 "Przelewy24 Bank" = "Τράπεζα Przelewy24";
 
+"Remove card?" = "Αφαίρεση κάρτας;";
+
 "Save" = "Αποθήκευση";
 
 "Save a new payment method" = "Αποθήκευση νέας μεθόδου πληρωμής";
@@ -119,6 +129,8 @@
 "Save this card for future %@ payments" = "Αποθηκεύστε αυτή την κάρτα για μελλοντικές %@ πληρωμές";
 
 "Save your bank account in just a few steps." = "Αποθηκεύστε τον τραπεζικό λογαριασμό σας με λίγα μόνο βήματα.";
+
+"Save your info for secure 1-click checkout with Link" = "Αποθήκευση των στοιχείων σας για ασφαλή ολοκλήρωση αγοράς με 1 κλικ μέσω Link";
 
 "Select your payment method" = "Επιλέξτε τη μέθοδο πληρωμής σας";
 

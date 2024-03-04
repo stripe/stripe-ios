@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ 추가";
 
 "Add a card" = "카드 추가";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link에 참여하면 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link의 <terms>약관</terms> 및 <privacy>개인정보처리방침</privacy>에 따라, 이메일을 제공하면 Link 계정을 생성하고 Link에 결제 정보를 저장하게 됩니다.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "결제 정보를 제공하고 이 결제를 확인하면 (A) %@ 및 결제 서비스 공급업체 Stripe가 은행에 계좌 출금에 관련한 지침을 전송하고 (B) 은행이 해당 지침에 따라 출금하도록 승인하는 것입니다. 귀하의 권리 중 일부로, 은행에 대한 이용 약관 동의 하에 은행에서 환불을 받을 자격을 부여받게 됩니다. 환불은 계좌에서 출금이 이루어진 날짜로부터 8주 이내에 요청해야 합니다. 귀하의 권리는 은행에서 받으시는 명세서에 설명되어 있습니다. 귀하는 향후 출금 시 최대 2일 전에 알림을 받겠다고 동의하는 것입니다.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link의 <terms>약관</terms> 및 <privacy>개인정보처리방침</privacy>에 따라, 전화번호를 제공하면 Link 계정을 생성하고 Link에 결제 정보를 저장하게 됩니다.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 대해 귀하의 은행 계좌를 저장하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
@@ -61,6 +67,8 @@
 "Enter address manually" = "주소 직접 입력";
 
 "FPX Bank" = "FPX 은행";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "%@ 님을 대신하여 Stripe에서 자동 이체를 받는 데 동의하며, 본인이 계좌의 소유자이자 이 계좌에서 인출을 승인해야 하는 유일한 사람임을 확인합니다.";
 
 "IBAN" = "IBAN";
 
@@ -106,6 +114,8 @@
 
 "Przelewy24 Bank" = "Przelewy24 은행";
 
+"Remove card?" = "카드를 삭제하시겠습니까?";
+
 "Save" = "저장";
 
 "Save a new payment method" = "새 결제 방식 저장";
@@ -119,6 +129,8 @@
 "Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
 
 "Save your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌를 저장하십시오.";
+
+"Save your info for secure 1-click checkout with Link" = "Link로 안전한 원클릭 결제를 위해 사용자 정보 저장";
 
 "Select your payment method" = "결제 수단을 선택하세요.";
 

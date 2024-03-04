@@ -1,4 +1,8 @@
-## x.x.x x-x-x
+## 23.24.0 2024-03-04
+
+### PaymentSheet
+* [Added] Added support for [Link](https://docs.stripe.com/payments/link/mobile-payment-element-link) in PaymentSheet. Enabling Link in your [payment method settings](https://dashboard.stripe.com/settings/payment_methods) will enable Link in PaymentSheet. To choose different Link availability settings on web and mobile, use a custom [payment method configuration](https://docs.stripe.com/payments/multiple-payment-method-configs).
+* [Fixed] Fixed an issue where some 3DS2 payments may fail to complete successfully.
 
 ### Payments
 * [Added] Support for Amazon Pay bindings.
