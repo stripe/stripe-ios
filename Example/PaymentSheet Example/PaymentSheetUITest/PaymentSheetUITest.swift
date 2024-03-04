@@ -390,6 +390,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].tap()
 
         let payButton = app.buttons["Pay ₹50.99"]
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10))
         guard let upi = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI") else {
             XCTFail()
             return
