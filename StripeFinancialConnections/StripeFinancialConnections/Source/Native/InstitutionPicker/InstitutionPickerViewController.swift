@@ -50,7 +50,7 @@ class InstitutionPickerViewController: UIViewController {
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
             leading: Constants.Layout.defaultHorizontalMargin,
-            bottom: 24, // this acts as spacing between header and search bar
+            bottom: 0,
             trailing: Constants.Layout.defaultHorizontalMargin
         )
         verticalStackView.backgroundColor = .customBackgroundColor
@@ -71,10 +71,21 @@ class InstitutionPickerViewController: UIViewController {
             trailing: Constants.Layout.defaultHorizontalMargin
         )
         verticalStackView.backgroundColor = .customBackgroundColor
+        // the "shadow" fixes an issue where the "search bar sticky header"
+        // has a visible 1 pixel gap. the shadow is not actually a shadow,
+        // but rather a "top border"
         verticalStackView.layer.shadowOpacity = 1.0
         verticalStackView.layer.shadowColor = verticalStackView.backgroundColor?.cgColor
         verticalStackView.layer.shadowRadius = 0
-        verticalStackView.layer.shadowOffset = CGSize(width: 0, height: -24)
+        verticalStackView.layer.shadowOffset = CGSize(
+            width: 0,
+            // the `height` is greater than 1 px because this also fixes
+            // an issue where the sticky header animates to final position
+            // (this is default iOS/UITableView behavior), and the animation
+            // is slow, which can cause the institution cells to temporarily
+            // appear IF the user scrolls up very quickly
+            height: -institutionTableView.sectionHeaderTopPadding
+        )
         return verticalStackView
     }()
     private lazy var searchBar: InstitutionSearchBar = {

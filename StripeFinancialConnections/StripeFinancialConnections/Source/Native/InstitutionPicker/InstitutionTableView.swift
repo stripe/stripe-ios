@@ -36,17 +36,21 @@ final class InstitutionTableView: UIView {
     private let institutionSearchDisabled: Bool
     let tableView: UITableView
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
-    private lazy var didSelectManualEntry: (() -> Void)? = {
-        return allowManualEntry
-            ? { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.institutionTableView(
-                    self,
-                    didSelectManuallyAddYourAccountWithInstitutions: self.institutions
-                )
-            } : nil
-    }()
     weak var delegate: InstitutionTableViewDelegate?
+    weak var searchBarContainerView: UIView? {
+        didSet {
+            // as soon as the search bar is set, we want to
+            // force-layout the UITableView so it lays out
+            // the header that contains the search bar;
+            //
+            // correct search bar layout is important to
+            // position the loading view
+            tableView.reloadData()
+        }
+    }
+    var sectionHeaderTopPadding: CGFloat {
+        return 24
+    }
     private var institutions: [FinancialConnectionsInstitution] = []
     private var shouldLogScroll = true
 
@@ -91,17 +95,6 @@ final class InstitutionTableView: UIView {
         }
     }()
     private var loadingView: UIView?
-    weak var searchBarContainerView: UIView? {
-        didSet {
-            // as soon as the search bar is set, we want to
-            // force-layout the UITableView so it lays out
-            // the header that contains the search bar;
-            //
-            // correct search bar layout is important to
-            // position the loading view
-            tableView.reloadData()
-        }
-    }
     private var lastTableViewWidthForSearchBarSizing: CGFloat?
 
     init(
@@ -141,7 +134,8 @@ final class InstitutionTableView: UIView {
         )
         tableView.keyboardDismissMode = .onDrag
         if #available(iOS 15.0, *) {
-            tableView.sectionHeaderTopPadding = 0
+            // this acts as spacing between the header and search bar
+            tableView.sectionHeaderTopPadding = sectionHeaderTopPadding
         }
         tableView.register(InstitutionTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
