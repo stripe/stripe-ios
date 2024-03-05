@@ -156,7 +156,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
             // Note: Querying for specific types of payment methods is an optimization
             // Eventually, when we query a single endpoint for all payment methods,
             // paymentMethodTypes will be used as a client side filter
-            var savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit] // hardcoded for now
+            var savedPaymentMethodTypes = CustomerSheet.supportedPaymentMethods
             if let paymentMethodTypes = self.paymentMethodTypes {
                 switch CustomerSheet.customerSheetSupportedPaymentMethodTypes(paymentMethodTypes) {
                 case .success(let types):
