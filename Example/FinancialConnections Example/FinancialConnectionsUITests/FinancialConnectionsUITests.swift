@@ -337,7 +337,10 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundShowAuthFlowButton.tap()
         app.fc_nativeConsentAgreeButton.tap()
 
-        let searchBarTextField = app.textFields["search_bar_text_field"]
+        let searchBarTextField = app
+            .tables
+            .otherElements
+            .textFields["search_bar_text_field"]
         XCTAssertTrue(searchBarTextField.waitForExistence(timeout: 120.0))
         searchBarTextField.tap()
         searchBarTextField.typeText("Bank of America")
