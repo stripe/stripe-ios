@@ -34,6 +34,8 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
 
 class InstitutionPickerViewController: UIViewController {
 
+    private static let headerAndSearchBarSpacing: CGFloat = 24
+
     // MARK: - Properties
 
     private let dataSource: InstitutionDataSource
@@ -50,7 +52,7 @@ class InstitutionPickerViewController: UIViewController {
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
             leading: Constants.Layout.defaultHorizontalMargin,
-            bottom: 0,
+            bottom: Self.headerAndSearchBarSpacing,
             trailing: Constants.Layout.defaultHorizontalMargin
         )
         verticalStackView.backgroundColor = .customBackgroundColor
@@ -84,7 +86,7 @@ class InstitutionPickerViewController: UIViewController {
             // (this is default iOS/UITableView behavior), and the animation
             // is slow, which can cause the institution cells to temporarily
             // appear IF the user scrolls up very quickly
-            height: -institutionTableView.sectionHeaderTopPadding
+            height: -Self.headerAndSearchBarSpacing
         )
         return verticalStackView
     }()

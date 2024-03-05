@@ -48,9 +48,6 @@ final class InstitutionTableView: UIView {
             tableView.reloadData()
         }
     }
-    var sectionHeaderTopPadding: CGFloat {
-        return 24
-    }
     private var institutions: [FinancialConnectionsInstitution] = []
     private var shouldLogScroll = true
 
@@ -134,8 +131,9 @@ final class InstitutionTableView: UIView {
         )
         tableView.keyboardDismissMode = .onDrag
         if #available(iOS 15.0, *) {
-            // this acts as spacing between the header and search bar
-            tableView.sectionHeaderTopPadding = sectionHeaderTopPadding
+            // do not set this because it can cause unexpected
+            // scrolling behavior
+            tableView.sectionHeaderTopPadding = 0
         }
         tableView.register(InstitutionTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
