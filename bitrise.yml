@@ -48,6 +48,7 @@ stages:
     - ui-tests-2: {}
     - integration-all: {}
     - deploy-dry-run: {}
+    - lokalise-upload: {}
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
@@ -528,6 +529,20 @@ workflows:
         title: Send notification if failed
         is_always_run: true
         run_if: .IsBuildFailed
+  lokalise-upload:
+    steps:
+    - script@1:
+        inputs:
+        - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
+        title: Upload strings to lokalise
+    before_run:
+    - prep_all
+    envs:
+      - LOKALISE_API_KEY: $LOKALISE_API_KEY
+    meta:
+      bitrise.io:
+        stack: osx-xcode-14.3.x-ventura
+        machine_type_id: g2-m1.8core   
   pod-lint-tests:
     steps:
     - script@1:
