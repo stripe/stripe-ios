@@ -98,7 +98,8 @@ class PlaygroundController: ObservableObject {
             }
         case .customerSession:
             if let customerSessionClientSecret {
-                return PaymentSheet.CustomerConfiguration(id: customerID, customerAccessProvider: .customerSession(customerSessionClientSecret))
+                return PaymentSheet.CustomerConfiguration(id: customerID, customerSessionClientSecret: customerSessionClientSecret)
+                                                          //customerAccessProvider: .customerSession(customerSessionClientSecret))
             }
         }
         return nil

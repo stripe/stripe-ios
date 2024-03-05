@@ -195,10 +195,11 @@ extension PaymentSheet {
         @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
     }
 
-    public enum CustomerAccessProvider {
+    enum CustomerAccessProvider {
         case legacyCustomerEphemeralKey(String)
         case customerSession(String)
     }
+
     /// Configuration related to the Stripe Customer
     public struct CustomerConfiguration {
         /// The identifier of the Stripe Customer object.
@@ -206,10 +207,11 @@ extension PaymentSheet {
         public let id: String
 
         /// A short-lived token that allows the SDK to access a Customer's payment methods
-        public let ephemeralKeySecret: String
+        public let ephemeralKeySecret: String?
 
-        public let customerAccessProvider: CustomerAccessProvider
+        let customerAccessProvider: CustomerAccessProvider
 
+        @available(*, deprecated, message:"message")
         public init(id: String, ephemeralKeySecret: String) {
             self.id = id
             self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
@@ -217,10 +219,10 @@ extension PaymentSheet {
         }
 
         /// Initializes a CustomerConfiguration
-        public init(id: String, customerAccessProvider: CustomerAccessProvider) {
+        public init(id: String, customerSessionClientSecret: String) {
             self.id = id
-            self.customerAccessProvider = customerAccessProvider
-            self.ephemeralKeySecret = ""
+            self.customerAccessProvider = .customerSession(customerSessionClientSecret)
+            self.ephemeralKeySecret = nil
         }
     }
 

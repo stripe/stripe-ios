@@ -13,6 +13,12 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case returning
         case id
     }
+    enum CustomerKeyType: String, PickerEnum {
+        static var enumName: String { "CustomerKeyType" }
+
+        case legacy
+        case customerSession = "customer_session"
+    }
     enum PaymentMethodMode: String, PickerEnum {
         static var enumName: String { "PaymentMethodMode" }
 
@@ -101,6 +107,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
 
     var customerMode: CustomerMode
     var customerId: String?
+    var customerKeyType: CustomerKeyType
     var paymentMethodMode: PaymentMethodMode
     var applePay: ApplePay
     var headerTextForSelectionScreen: String?
@@ -119,6 +126,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
                                                    customerId: nil,
+                                                   customerKeyType: .legacy,
                                                    paymentMethodMode: .setupIntent,
                                                    applePay: .on,
                                                    headerTextForSelectionScreen: nil,

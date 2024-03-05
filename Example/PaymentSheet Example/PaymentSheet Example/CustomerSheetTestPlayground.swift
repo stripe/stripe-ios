@@ -38,6 +38,7 @@ struct CustomerSheetTestPlayground: View {
                             }.buttonStyle(.bordered)
                         }
                         SettingView(setting: $playgroundController.settings.customerMode)
+                        SettingView(setting: $playgroundController.settings.customerKeyType)
                         TextField("CustomerId", text: customerIdBinding)
                     }
                     Group {

@@ -116,10 +116,14 @@ extension STPAPIClient {
         )
     }
 
-    func retrieveElementsSessionForCustomerSheet() async throws -> STPElementsSession {
+    func retrieveElementsSessionForCustomerSheet(customerAccessProvider: CustomerEphemeralKey.CustomerAccessProvider?) async throws -> STPElementsSession {
         var parameters: [String: Any] = [:]
         parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
+
+        if case .customerSession(let clientSecret) = customerAccessProvider {
+            parameters["customer_session_client_secret"] = clientSecret
+        }
 
         var deferredIntent = [String: Any]()
         deferredIntent["mode"] = "setup"

@@ -85,12 +85,27 @@ public struct CustomerEphemeralKey {
     /// See https://stripe.com/docs/api/customers/object#customer_object-id
     public let id: String
     /// A short-lived token that allows the SDK to access a Customer's payment methods
-    public let ephemeralKeySecret: String
+    public let ephemeralKeySecret: String?
+
+    let customerAccessProvider: CustomerAccessProvider
 
     /// Initializes a CustomerConfiguration
     public init(customerId: String, ephemeralKeySecret: String) {
         self.id = customerId
         self.ephemeralKeySecret = ephemeralKeySecret
+        self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
+    }
+    public init(customerId: String, customerSessionClientSecret: String) {
+        self.id = customerId
+        self.ephemeralKeySecret = nil
+        self.customerAccessProvider = .customerSession(customerSessionClientSecret)
+    }
+}
+
+extension CustomerEphemeralKey {
+    enum CustomerAccessProvider {
+        case legacyCustomerEphemeralKey(String)
+        case customerSession(String)
     }
 }
 
@@ -120,20 +135,40 @@ open class StripeCustomerAdapter: CustomerAdapter {
     }
 
     private struct CachedCustomerEphemeralKey {
-        let customerEphemeralKey: CustomerEphemeralKey
+        let underlyingCustomerEphemeralKey: CustomerEphemeralKey
+        let ephemeralKeySecret: String
+        let customerId: String
         let cacheDate = Date()
     }
 
     private var _cachedEphemeralKey: CachedCustomerEphemeralKey?
-    var customerEphemeralKey: CustomerEphemeralKey {
+    private var customerEphemeralKey: CachedCustomerEphemeralKey {
         get async throws {
             if let cachedKey = _cachedEphemeralKey,
-               cachedKey.cacheDate + CachedCustomerMaxAge > Date() {
-                return cachedKey.customerEphemeralKey
+                cachedKey.cacheDate + CachedCustomerMaxAge > Date() {
+                return cachedKey
             }
+
             let newKey = try await self.customerEphemeralKeyProvider()
-            _cachedEphemeralKey = CachedCustomerEphemeralKey(customerEphemeralKey: newKey)
-            return newKey
+            switch newKey.customerAccessProvider {
+            case .legacyCustomerEphemeralKey(let ephemeralKeySecret):
+                let tempCachedCustomerEphemeralkey = CachedCustomerEphemeralKey(underlyingCustomerEphemeralKey: newKey,
+                                                     ephemeralKeySecret: ephemeralKeySecret,
+                                                     customerId: newKey.id)
+                _cachedEphemeralKey = tempCachedCustomerEphemeralkey
+                return tempCachedCustomerEphemeralkey
+            case .customerSession:
+                let elementsSessionResponse = try await self.apiClient.retrieveElementsSessionForCustomerSheet(customerAccessProvider: newKey.customerAccessProvider)
+                guard let ephemeralKeySecret = elementsSessionResponse.customer?.customerSession.apiKey,
+                      let customerId = elementsSessionResponse.customer?.customerSession.customer else {
+                    throw CustomerSheetError.unknown(debugDescription: "failed to fetch")
+                }
+                let tempCachedCustomerEphemeralkey = CachedCustomerEphemeralKey(underlyingCustomerEphemeralKey: newKey,
+                                                                                ephemeralKeySecret: ephemeralKeySecret,
+                                                                                customerId: customerId)
+                _cachedEphemeralKey = tempCachedCustomerEphemeralkey
+                return tempCachedCustomerEphemeralkey
+            }
         }
     }
 
@@ -143,33 +178,44 @@ open class StripeCustomerAdapter: CustomerAdapter {
 
     open func fetchPaymentMethods() async throws -> [STPPaymentMethod] {
         let customerEphemeralKey = try await customerEphemeralKey
-        return try await withCheckedThrowingContinuation({ continuation in
-            // List the Customer's saved PaymentMethods
-            let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit] // hardcoded for now
-            apiClient.listPaymentMethods(
-                forCustomer: customerEphemeralKey.id,
-                using: customerEphemeralKey.ephemeralKeySecret,
-                types: savedPaymentMethodTypes
-            ) { paymentMethods, error in
-                guard var paymentMethods, error == nil else {
-                    let error = error ?? PaymentSheetError.unexpectedResponseFromStripeAPI // TODO: make a better default error
-                    continuation.resume(throwing: error)
-                    return
+            switch customerEphemeralKey.underlyingCustomerEphemeralKey.customerAccessProvider {
+            case .legacyCustomerEphemeralKey:
+                return try await withCheckedThrowingContinuation({ continuation in
+                    // List the Customer's saved PaymentMethods
+                    let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit] // hardcoded for now
+                    apiClient.listPaymentMethods(
+                        forCustomer: customerEphemeralKey.customerId,
+                        using: customerEphemeralKey.ephemeralKeySecret,
+                        types: savedPaymentMethodTypes
+                    ) { paymentMethods, error in
+                        guard var paymentMethods, error == nil else {
+                            let error = error ?? PaymentSheetError.unexpectedResponseFromStripeAPI // TODO: make a better default error
+                            continuation.resume(throwing: error)
+                            return
+                        }
+                        // Remove cards that originated from Apple or Google Pay
+                        paymentMethods = paymentMethods.filter { paymentMethod in
+                            let isAppleOrGooglePay = paymentMethod.type == .card && [.applePay, .googlePay].contains(paymentMethod.card?.wallet?.type)
+                            return !isAppleOrGooglePay
+                        }
+                        continuation.resume(with: .success(paymentMethods))
+                    }
+                })
+            case .customerSession:
+                let elementsSessionResponse = try await self.apiClient.retrieveElementsSessionForCustomerSheet(customerAccessProvider: customerEphemeralKey.underlyingCustomerEphemeralKey.customerAccessProvider)
+                guard let customer = elementsSessionResponse.customer else {
+                    throw PaymentSheetError.unexpectedResponseFromStripeAPI // TODO: make a better default error
                 }
-                // Remove cards that originated from Apple or Google Pay
-                paymentMethods = paymentMethods.filter { paymentMethod in
-                    let isAppleOrGooglePay = paymentMethod.type == .card && [.applePay, .googlePay].contains(paymentMethod.card?.wallet?.type)
-                    return !isAppleOrGooglePay
-                }
-                continuation.resume(with: .success(paymentMethods))
+                return customer.paymentMethods
             }
-        })
     }
 
     open func attachPaymentMethod(_ paymentMethodId: String) async throws {
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
-            apiClient.attachPaymentMethod(paymentMethodId, customerID: customerEphemeralKey.id, ephemeralKeySecret: customerEphemeralKey.ephemeralKeySecret) { error in
+            apiClient.attachPaymentMethod(paymentMethodId,
+                                          customerID: customerEphemeralKey.customerId,
+                                          ephemeralKeySecret: customerEphemeralKey.ephemeralKeySecret) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                     return
@@ -183,7 +229,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
             apiClient.detachPaymentMethod(paymentMethodId,
-                                          customerId: customerEphemeralKey.id,
+                                          customerId: customerEphemeralKey.customerId,
                                           fromCustomerUsing: customerEphemeralKey.ephemeralKeySecret,
                                           // TODO: Add support for CustomerSession
                                           shouldRemoveDuplicates: false) { error in
@@ -199,13 +245,13 @@ open class StripeCustomerAdapter: CustomerAdapter {
     open func setSelectedPaymentOption(paymentOption: CustomerPaymentOption?) async throws {
         let customerEphemeralKey = try await customerEphemeralKey
 
-        CustomerPaymentOption.setDefaultPaymentMethod(paymentOption, forCustomer: customerEphemeralKey.id)
+        CustomerPaymentOption.setDefaultPaymentMethod(paymentOption, forCustomer: customerEphemeralKey.customerId)
     }
 
     open func fetchSelectedPaymentOption() async throws -> CustomerPaymentOption? {
         let customerEphemeralKey = try await customerEphemeralKey
 
-        return CustomerPaymentOption.defaultPaymentMethod(for: customerEphemeralKey.id)
+        return CustomerPaymentOption.defaultPaymentMethod(for: customerEphemeralKey.customerId)
     }
 
     open func setupIntentClientSecretForCustomerAttach() async throws -> String {
