@@ -43,6 +43,12 @@ final class CloseConfirmationViewController: SheetViewController {
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                    title: "Cancel", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
+                    action: { [weak self] in
+                        self?.dismiss(animated: true)
+                    }
+                ),
+                secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
                     title: STPLocalizedString(
                         "Yes, exit",
                         "A button title. The user encounters it as part of a confirmation sheet when trying to exit a screen. Pressing it will exit the screen, and cancel the process of connecting the users bank account."
@@ -60,12 +66,6 @@ final class CloseConfirmationViewController: SheetViewController {
                                 didSelectClose()
                             }
                         )
-                    }
-                ),
-                secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                    title: "Cancel", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
-                    action: { [weak self] in
-                        self?.dismiss(animated: true)
                     }
                 )
             ).footerView
