@@ -56,7 +56,7 @@ extension Array where Element == STPPaymentMethodType {
 }
 
 extension CustomerSheet {
-    /// Given a list of paymentMethodTypes, return an array of corresponding list of STPPaymentMethodType that are supported
+    /// Given a list of paymentMethodTypes, return an array of corresponding deduped list of STPPaymentMethodType that are supported
     /// within payment sheet.  If any unsupported payment method types are passed in, return an error.
     static func customerSheetSupportedPaymentMethodTypes(_ paymentMethodTypes: [String]) -> Result<[STPPaymentMethodType]?, Error> {
         guard !paymentMethodTypes.isEmpty else {
