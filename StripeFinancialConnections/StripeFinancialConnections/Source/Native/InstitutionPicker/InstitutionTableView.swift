@@ -37,6 +37,7 @@ final class InstitutionTableView: UIView {
     let tableView: UITableView
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     weak var delegate: InstitutionTableViewDelegate?
+    // the sticky header view for section 0 of the table view
     weak var searchBarContainerView: UIView? {
         didSet {
             // as soon as the search bar is set, we want to
