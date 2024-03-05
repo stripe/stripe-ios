@@ -198,9 +198,9 @@ private class PrepanePreviewView: UIView {
             dataAccessNotice: FinancialConnectionsDataAccessNotice(
                 icon: nil,
                 title: "",
+                connectedAccountNotice: nil,
                 subtitle: nil,
                 body: FinancialConnectionsDataAccessNotice.Body(bullets: []),
-                connectedAccountNotice: nil,
                 disclaimer: nil,
                 cta: "OK"
             )
