@@ -34,6 +34,8 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
 
 class InstitutionPickerViewController: UIViewController {
 
+    private static let headerAndSearchBarSpacing: CGFloat = 24
+
     // MARK: - Properties
 
     private let dataSource: InstitutionDataSource
@@ -45,17 +47,46 @@ class InstitutionPickerViewController: UIViewController {
                 CreateHeaderTitleLabel(),
             ]
         )
-        if !dataSource.manifest.institutionSearchDisabled {
-            verticalStackView.addArrangedSubview(searchBar)
-        }
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 24
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
-            leading: 24,
+            leading: Constants.Layout.defaultHorizontalMargin,
+            bottom: Self.headerAndSearchBarSpacing,
+            trailing: Constants.Layout.defaultHorizontalMargin
+        )
+        verticalStackView.backgroundColor = .customBackgroundColor
+        return verticalStackView
+    }()
+    private lazy var searchBarContainerView: UIView = {
+        let verticalStackView = UIStackView(
+            arrangedSubviews: [
+                searchBar,
+            ]
+        )
+        verticalStackView.axis = .vertical
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 0, // the `headerView` has bottom padding
+            leading: Constants.Layout.defaultHorizontalMargin,
             bottom: 16,
-            trailing: 24
+            trailing: Constants.Layout.defaultHorizontalMargin
+        )
+        verticalStackView.backgroundColor = .customBackgroundColor
+        // the "shadow" fixes an issue where the "search bar sticky header"
+        // has a visible 1 pixel gap. the shadow is not actually a shadow,
+        // but rather a "top border"
+        verticalStackView.layer.shadowOpacity = 1.0
+        verticalStackView.layer.shadowColor = verticalStackView.backgroundColor?.cgColor
+        verticalStackView.layer.shadowRadius = 0
+        verticalStackView.layer.shadowOffset = CGSize(
+            width: 0,
+            // the `height` is greater than 1 px because this also fixes
+            // an issue where the sticky header animates to final position
+            // (this is default iOS/UITableView behavior), and the animation
+            // is slow, which can cause the institution cells to temporarily
+            // appear IF the user scrolls up very quickly
+            height: -Self.headerAndSearchBarSpacing
         )
         return verticalStackView
     }()
@@ -67,7 +98,8 @@ class InstitutionPickerViewController: UIViewController {
     private lazy var institutionTableView: InstitutionTableView = {
         let institutionTableView = InstitutionTableView(
             frame: view.bounds,
-            allowManualEntry: dataSource.manifest.allowManualEntry
+            allowManualEntry: dataSource.manifest.allowManualEntry,
+            institutionSearchDisabled: dataSource.manifest.institutionSearchDisabled
         )
         institutionTableView.delegate = self
         return institutionTableView
@@ -109,6 +141,9 @@ class InstitutionPickerViewController: UIViewController {
 
         view.addAndPinSubview(institutionTableView)
         institutionTableView.setTableHeaderView(headerView)
+        if !dataSource.manifest.institutionSearchDisabled {
+            institutionTableView.searchBarContainerView = searchBarContainerView
+        }
 
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(
             target: self,
@@ -191,6 +226,19 @@ class InstitutionPickerViewController: UIViewController {
     private func hideOverlayView() {
         institutionTableView.showOverlayView(false)
     }
+
+    private func scrollToTopOfSearchBar() {
+        let searchBarContainerFrame = CGRect(
+            x: 0,
+            y: headerView.frame.maxY,
+            width: institutionTableView.tableView.bounds.width,
+            height: searchBarContainerView.frame.height
+        )
+        institutionTableView.tableView.scrollRectToVisible(
+            searchBarContainerFrame,
+            animated: true
+        )
+    }
 }
 
 // MARK: - Data
@@ -253,6 +301,7 @@ extension InstitutionPickerViewController {
         }
 
         showLoadingView(true)
+        scrollToTopOfSearchBar()
         let newFetchInstitutionsDispatchWorkItem = DispatchWorkItem(block: { [weak self] in
             guard let self = self else { return }
 
@@ -334,7 +383,7 @@ extension InstitutionPickerViewController {
         })
         self.fetchInstitutionsDispatchWorkItem = newFetchInstitutionsDispatchWorkItem
         DispatchQueue.main.asyncAfter(
-            deadline: .now() + Constants.queryDelay,
+            deadline: .now() + TimeInterval(0.2),
             execute: newFetchInstitutionsDispatchWorkItem
         )
     }
@@ -403,10 +452,7 @@ extension InstitutionPickerViewController: InstitutionTableViewDelegate {
     }
 
     func institutionTableViewDidSelectSearchForMoreBanks(_ tableView: InstitutionTableView) {
-        tableView.tableView.scrollRectToVisible(
-            searchBar.frame,
-            animated: true
-        )
+        scrollToTopOfSearchBar()
         searchBar.becomeFirstResponder()
     }
 
@@ -441,14 +487,6 @@ extension InstitutionPickerViewController: InstitutionTableViewDelegate {
                     pane: .institutionPicker
                 )
         }
-    }
-}
-
-// MARK: - Constants
-
-extension InstitutionPickerViewController {
-    enum Constants {
-        static let queryDelay = TimeInterval(0.2)
     }
 }
 
