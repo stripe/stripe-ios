@@ -81,8 +81,6 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.mode)
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
                         SettingView(setting: customerModeBinding)
-                        TextField("CustomerId", text: customerIdBinding)
-                            .disabled(true)
                         SettingPickerView(setting: $playgroundController.settings.currency)
                         SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
@@ -144,22 +142,7 @@ struct PaymentSheetTestPlayground: View {
         Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
             return playgroundController.settings.customerMode
         } set: { newMode in
-            playgroundController.settings.customerId = nil
             playgroundController.settings.customerMode = newMode
-        }
-    }
-    var customerIdBinding: Binding<String> {
-        Binding<String> {
-            switch playgroundController.settings.customerMode {
-            case .guest:
-                return ""
-            case .new:
-                return playgroundController.settings.customerId ?? ""
-            case .returning:
-                return playgroundController.settings.customerId ?? ""
-            }
-        } set: { newString in
-            playgroundController.settings.customerId = (newString != "") ? newString : nil
         }
     }
     var merchantCountryBinding: Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {

@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Añadir más datos";
 
 "Add a card" = "Añadir una tarjeta";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Al unirte a Link, aceptas las <terms>Condiciones de servicio</terms> y la <privacy>Política de privacidad</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Al proporcionar tu correo electrónico, aceptas crear una cuenta de Link y guardar tus datos de pago en Link, conforme a las <terms>Condiciones</terms> y a la <privacy>Política de privacidad</privacy> de Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Al facilitarnos la información del pago y al confirmar este pago, autorizas a (A) %@ y a Stripe, nuestro proveedor de servicios de pago, a enviar instrucciones a tu banco para adeudar tu cuenta y (B) a tu banco para efectuar los adeudos en tu cuenta siguiendo dichas instrucciones. Como parte de tus derechos, estás legitimado al rembolso por parte de tu banco en los términos y condiciones del contrato suscrito con este. La solicitud del reembolso deberá efectuarse dentro de las ocho semanas posteriores a la fecha de adeudo en cuenta. Tus derechos se explican en una declaración que puedes obtener en tu banco. Aceptas recibir notificaciones sobre próximos adeudos con hasta dos días de antelación a que estos ocurran.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Al proporcionar tu número de teléfono, aceptas crear una cuenta de Link y guardar tus datos de pago en Link, conforme a las <terms>Condiciones</terms> y la <privacy>Política de privacidad</privacy> de Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al guardar tu cuenta bancaria para %@, aceptas autorizar pagos con arreglo a <terms> estas condiciones</terms>.";
 
@@ -61,6 +67,8 @@
 "Enter address manually" = "Introduce la dirección manualmente";
 
 "FPX Bank" = "Banco para FPX";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entiendo que Stripe cobrará adeudos directos en nombre de %@ y confirmo que soy el titular de la cuenta y la única persona que se requiere que autorice los adeudos a esta cuenta.";
 
 "IBAN" = "IBAN";
 
@@ -106,6 +114,8 @@
 
 "Przelewy24 Bank" = "Banco que opera con Przelewy24";
 
+"Remove card?" = "¿Deseas eliminar la tarjeta?";
+
 "Save" = "Guardar";
 
 "Save a new payment method" = "Guardar un nuevo método de pago";
@@ -119,6 +129,8 @@
 "Save this card for future %@ payments" = "Guardar esta tarjeta para realizar compras futuras en %@";
 
 "Save your bank account in just a few steps." = "Guarda tu cuenta bancaria en unos pocos pasos.";
+
+"Save your info for secure 1-click checkout with Link" = "Guardar tus datos para un proceso de compra seguro en un clic con Link";
 
 "Select your payment method" = "Selecciona tu método de pago";
 

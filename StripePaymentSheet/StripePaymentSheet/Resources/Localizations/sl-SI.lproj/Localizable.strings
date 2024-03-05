@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Dodaj";
 
 "Add a card" = "Dodajte kartico";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če se pridružite storitvi Link, se strinjate s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če navedete svoj e-poštni naslov, se strinjate z ustvarjanjem računa Link in shranjevanjem podatkov o plačilu v storitev Link v skladu s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy> storitve Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Z navedbo podatkov o plačilu in potrditvijo tega plačila pooblaščate (A) podjetje %@ in družbo Stripe, našega ponudnika plačilnih storitev, da posreduje navodila vaši banki za bremenitev vašega računa, in (B) vašo banko, da bremeni vaš račun v skladu s temi navodili. Vaše pravice vključujejo tudi pravico do povračila denarnih sredstev s strani vaše banke v skladu s pogoji in določili vaše pogodbe z banko. Povračilo denarnih sredstev morate zahtevati v 8 tednih od dneva bremenitve vašega računa. Vaše pravice so podrobno opisane na izpisku, ki ga lahko pridobite v banki. Strinjate se s prejemom obvestil za prihodnje bremenitve največ 2 dni pred njihovo izvedbo.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če navedete svojo telefonsko številko, se strinjate z ustvarjanjem računa Link in shranjevanjem podatkov o plačilu v storitev Link v skladu s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy> storitve Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če shranite bančni račun za %@, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
 
@@ -61,6 +67,8 @@
 "Enter address manually" = "Naslov vnesite ročno";
 
 "FPX Bank" = "Banka FPX";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Potrjujem, da bo družba Stripe zbirala direktne obremenitve v imenu podjetja %@ ter da sem lastnik računa in edina oseba, ki lahko odobri bremenitve s tega računa.";
 
 "IBAN" = "IBAN";
 
@@ -106,6 +114,8 @@
 
 "Przelewy24 Bank" = "Banka Przelewy24";
 
+"Remove card?" = "Ali želite odstranit kartico?";
+
 "Save" = "Shrani";
 
 "Save a new payment method" = "Shranite nov način plačila";
@@ -119,6 +129,8 @@
 "Save this card for future %@ payments" = "Shrani to kartico za prihodnja plačila trgovcu %@";
 
 "Save your bank account in just a few steps." = "Shranite svoj bančni v le nekaj korakih.";
+
+"Save your info for secure 1-click checkout with Link" = "Shranite svoje podatke za varno izvedbo plačila z enim klikom s storitvijo Link";
 
 "Select your payment method" = "Izberite način plačila";
 

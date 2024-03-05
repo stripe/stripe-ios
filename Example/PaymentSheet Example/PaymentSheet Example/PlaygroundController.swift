@@ -13,7 +13,7 @@ import Combine
 import Contacts
 import PassKit
 @_spi(STP) import StripeCore
-import StripePayments
+@_spi(STP) import StripePayments
 @_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
 @_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
@@ -87,7 +87,7 @@ class PlaygroundController: ObservableObject {
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
-        if let customerID = self.settings.customerId,
+        if let customerID = customerId,
            let ephemeralKey = ephemeralKey,
            settings.customerMode != .guest {
             return PaymentSheet.CustomerConfiguration(
@@ -217,7 +217,7 @@ class PlaygroundController: ObservableObject {
         case .guest:
             return "guest"
         case .new:
-            return settings.customerId ?? "new"
+            return customerId ?? "new"
         case .returning:
             return "returning"
         }
@@ -256,6 +256,7 @@ class PlaygroundController: ObservableObject {
     }
 
     var clientSecret: String?
+    var customerId: String?
     var ephemeralKey: String?
     var paymentMethodTypes: [String]?
     var amount: Int?
@@ -461,9 +462,7 @@ extension PlaygroundController {
                 self.lastPaymentResult = nil
                 self.clientSecret = json["intentClientSecret"]
                 self.ephemeralKey = json["customerEphemeralKeySecret"]
-                if self.settings.customerId != json["customerId"] {
-                    self.settings.customerId = json["customerId"]
-                }
+                self.customerId = json["customerId"]
                 self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
                 self.amount = Int(json["amount"] ?? "")
                 STPAPIClient.shared.publishableKey = json["publishableKey"]
@@ -472,6 +471,8 @@ extension PlaygroundController {
                 self.addressDetails = nil
                 // Persist customerId / customerMode
                 self.serializeSettingsToNSUserDefaults()
+                let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") // Avoid logging client secrets as a matter of best practice even though this is testmode
+                print("✅ Test playground finished loading with intent id: \(intentID ?? "")) and customer id: \(self.customerId ?? "") ")
 
                 if self.settings.uiStyle == .paymentSheet {
                     self.buildPaymentSheet()

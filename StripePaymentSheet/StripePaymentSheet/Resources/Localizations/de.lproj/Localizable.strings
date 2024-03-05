@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Hinzufügen";
 
 "Add a card" = "Karte hinzufügen";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Indem Sie Link beitreten, stimmen Sie den <terms>Nutzungsbedingungen</terms> und der <privacy>Datenschutzerklärung</privacy> zu.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Durch die Angabe Ihrer E-Mail-Adresse erklären Sie sich damit einverstanden, ein Link-Konto einzurichten und Ihre Zahlungsinformationen bei Link gemäß den <terms>AGB</terms> und der <privacy>Datenschutzerklärung</privacy> von Link zu speichern.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Durch Angabe der Zahlungsinformationen und Bestätigung der Zahlung ermächtigen Sie (A) %@ und Stripe, unseren Zahlungsdienstleister, Zahlungen von Ihrem Konto mittels Lastschrift einzuziehen. Zugleich (B) weisen Sie Ihr Kreditinstitut gemäß diesen Anweisungen an, Ihr Konto entsprechend zu belasten. Sie haben im Rahmen Ihrer Rechte Anspruch auf Erstattung von Ihrem Kreditinstitut gemäß den vereinbarten Bedingungen mit Ihrem Kreditinstitut. Sie können innerhalb von 8 Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit Ihrem Kreditinstitut vereinbarten Bedingungen. Weiterhin erklären Sie sich damit einverstanden, die Vorabankündigung bis spätestens 2 Tage vor Zahlungseinzug zu erhalten.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Durch die Angabe Ihrer Telefonnummer erklären Sie sich damit einverstanden, ein Link-Konto einzurichten und Ihre Zahlungsinformationen bei Link gemäß den <terms>AGB</terms> und der <privacy>Datenschutzerklärung</privacy> zu speichern.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Indem Sie Ihr Bankkonto für %@ speichern, akzeptieren Sie die Autorisierung von Zahlungen gemäß <terms>diesen Bedingungen</terms>.";
 
@@ -61,6 +67,8 @@
 "Enter address manually" = "Adresse manuell eingeben";
 
 "FPX Bank" = "FPX Bank";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ich verstehe, dass Stripe im Namen von %@ Lastschriften einzieht und bestätige, dass ich der Kontoinhaber/die Kontoinhaberin und die einzige Person bin, die zur Autorisierung von Lastschriften von diesem Konto erforderlich ist.";
 
 "IBAN" = "IBAN";
 
@@ -106,6 +114,8 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+"Remove card?" = "Karte entfernen?";
+
 "Save" = "Speichern";
 
 "Save a new payment method" = "Neue Zahlungsmethode speichern";
@@ -119,6 +129,8 @@
 "Save this card for future %@ payments" = "Karte für zukünftige Zahlungen von %@ speichern";
 
 "Save your bank account in just a few steps." = "Speichern Sie Ihr Bankkonto in nur wenigen Schritten.";
+
+"Save your info for secure 1-click checkout with Link" = "Meine Daten speichern für sichere Zahlungsvorgänge mit einem Klick mit Link";
 
 "Select your payment method" = "Zahlungsmethode auswählen";
 
