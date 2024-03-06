@@ -29,6 +29,25 @@ final class DataAccessNoticeViewController: SheetViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let firstSubtitle: String?
+        let contentView: UIView
+        if let connectedAccountNotice = dataAccessNotice.connectedAccountNotice {
+            firstSubtitle = connectedAccountNotice.subtitle
+            contentView = CreateConnectedAccountContentView(
+                connectedAccountBulletItems: connectedAccountNotice.body.bullets,
+                secondSubtitle: dataAccessNotice.subtitle,
+                merchantBulletItems: dataAccessNotice.body.bullets,
+                didSelectURL: didSelectUrl
+            )
+        } else {
+            firstSubtitle = dataAccessNotice.subtitle
+            contentView = CreateMultiBulletinView(
+                bulletItems: dataAccessNotice.body.bullets,
+                didSelectURL: didSelectUrl
+            )
+        }
+
         setup(
             withContentView: PaneLayoutView.createContentView(
                 iconView: RoundedIconView(
@@ -36,11 +55,8 @@ final class DataAccessNoticeViewController: SheetViewController {
                     style: .circle
                 ),
                 title: dataAccessNotice.title,
-                subtitle: dataAccessNotice.subtitle,
-                contentView: CreateMultiBulletinView(
-                    bulletItems: dataAccessNotice.body.bullets,
-                    didSelectURL: didSelectUrl
-                ),
+                subtitle: firstSubtitle,
+                contentView: contentView,
                 isSheet: true
             ),
             footerView: PaneLayoutView.createFooterView(
@@ -57,6 +73,40 @@ final class DataAccessNoticeViewController: SheetViewController {
             ).footerView
         )
     }
+}
+
+private func CreateConnectedAccountContentView(
+    connectedAccountBulletItems: [FinancialConnectionsBulletPoint],
+    secondSubtitle: String?,
+    merchantBulletItems: [FinancialConnectionsBulletPoint],
+    didSelectURL: @escaping (URL) -> Void
+) -> UIView {
+    let verticalStackView = HitTestStackView()
+    verticalStackView.axis = .vertical
+    verticalStackView.spacing = 24
+    verticalStackView.addArrangedSubview(
+        CreateMultiBulletinView(
+            bulletItems: connectedAccountBulletItems,
+            didSelectURL: didSelectURL
+        )
+    )
+    if let secondSubtitle = secondSubtitle {
+        let secondSubtitleLabel = AttributedTextView(
+            font: .body(.medium),
+            boldFont: .body(.mediumEmphasized),
+            linkFont: .body(.mediumEmphasized),
+            textColor: .textDefault
+        )
+        secondSubtitleLabel.setText(secondSubtitle)
+        verticalStackView.addArrangedSubview(secondSubtitleLabel)
+    }
+    verticalStackView.addArrangedSubview(
+        CreateMultiBulletinView(
+            bulletItems: merchantBulletItems,
+            didSelectURL: didSelectURL
+        )
+    )
+    return verticalStackView
 }
 
 private func CreateMultiBulletinView(
@@ -133,3 +183,104 @@ private func CreateSingleBulletinView(
     horizontalStackView.alignment = .top
     return horizontalStackView
 }
+
+#if DEBUG
+
+import SwiftUI
+
+private struct DataAccessNoticeViewControllerRepresentable: UIViewControllerRepresentable {
+    let dataAccessNotice: FinancialConnectionsDataAccessNotice
+
+    func makeUIViewController(context: Context) -> DataAccessNoticeViewController {
+        DataAccessNoticeViewController(
+            dataAccessNotice: dataAccessNotice,
+            didSelectUrl: { _  in })
+    }
+
+    func updateUIViewController(
+        _ viewController: DataAccessNoticeViewController,
+        context: Context
+    ) {}
+}
+
+struct DataAccessNoticeViewController_Previews: PreviewProvider {
+    static var previews: some View {
+        DataAccessNoticeViewControllerRepresentable(
+            dataAccessNotice: FinancialConnectionsDataAccessNotice(
+                icon: FinancialConnectionsImage(
+                    default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--platform-stripeBrand-3x.png"
+                ),
+                title: "Data sharing",
+                connectedAccountNotice: nil,
+                subtitle: "[Merchant] will have access to the following data and related insights:",
+                body: FinancialConnectionsDataAccessNotice.Body(
+                    bullets: [
+                        FinancialConnectionsBulletPoint(
+                            icon: FinancialConnectionsImage(
+                                default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--bank-primary-3x.png"
+                            ),
+                            title: "Account details"
+                        ),
+                        FinancialConnectionsBulletPoint(
+                            icon: FinancialConnectionsImage(
+                                default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--balance-primary-3x.png"
+                            ),
+                            title: "Balances"
+                        ),
+                    ]
+                ),
+                disclaimer: "Learn about [data shared with Stripe](https://test.com) and [how to disconnect](https://test.com)",
+                cta: "OK"
+            )
+        )
+
+        DataAccessNoticeViewControllerRepresentable(
+            dataAccessNotice: FinancialConnectionsDataAccessNotice(
+                icon: FinancialConnectionsImage(
+                    default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--platform-stripeBrand-3x.png"
+                ),
+                title: "Data sharing",
+                connectedAccountNotice: FinancialConnectionsDataAccessNotice.ConnectedAccountNotice(
+                    subtitle: "[Connected account] will have access to the following data and related insights:",
+                    body: FinancialConnectionsDataAccessNotice.Body(
+                        bullets: [
+                            FinancialConnectionsBulletPoint(
+                                icon: FinancialConnectionsImage(
+                                    default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--bank-primary-3x.png"
+                                ),
+                                title: "[C] Account details"
+                            ),
+                            FinancialConnectionsBulletPoint(
+                                icon: FinancialConnectionsImage(
+                                    default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--balance-primary-3x.png"
+                                ),
+                                title: "[C] Balances"
+                            ),
+                        ]
+                    )
+                ),
+                subtitle: "[Merchant] will have access to the following data and related insights:",
+                body: FinancialConnectionsDataAccessNotice.Body(
+                    bullets: [
+                        FinancialConnectionsBulletPoint(
+                            icon: FinancialConnectionsImage(
+                                default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--bank-primary-3x.png"
+                            ),
+                            title: "Account details"
+                        ),
+                        FinancialConnectionsBulletPoint(
+                            icon: FinancialConnectionsImage(
+                                default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--balance-primary-3x.png"
+                            ),
+                            title: "Balances"
+                        ),
+                    ]
+                ),
+                disclaimer: "Learn about [data shared with Stripe](https://test.com) and [how to disconnect](https://test.com)",
+                cta: "OK"
+            )
+        )
+    }
+}
+
+#endif
