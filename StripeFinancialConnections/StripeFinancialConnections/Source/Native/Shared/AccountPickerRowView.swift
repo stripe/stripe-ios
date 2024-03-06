@@ -126,6 +126,10 @@ final class AccountPickerRowView: UIView {
             subtitle: subtitle,
             balanceString: balanceString
         )
+        set(isSelected: isSelected)
+    }
+
+    func set(isSelected: Bool) {
         self.isSelected = isSelected
     }
 
