@@ -166,6 +166,7 @@ extension AttributedTextView: UITextViewDelegate {
         interaction: UITextItemInteraction
     ) -> Bool {
         if let linkAction = linkURLStringToAction[URL.absoluteString] {
+            FeedbackGeneratorAdapter.buttonTapped()
             linkAction(URL)
             return false
         } else {

@@ -76,6 +76,7 @@
 		6A1D43052B17AD76005A1EB0 /* InstitutionTableFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43042B17AD76005A1EB0 /* InstitutionTableFooterView.swift */; };
 		6A1D43072B17AE37005A1EB0 /* RoundedIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43062B17AE37005A1EB0 /* RoundedIconView.swift */; };
 		6A1D43092B17CB04005A1EB0 /* InstitutionNoResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1D43082B17CB04005A1EB0 /* InstitutionNoResultsView.swift */; };
+		6A26A3AB2B991A4D00215510 /* FeedbackGeneratorAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A26A3AA2B991A4D00215510 /* FeedbackGeneratorAdapter.swift */; };
 		6A43202A2B7E8C5400A67A70 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4320292B7E8C5400A67A70 /* Constants.swift */; };
 		6A732C9A2B61C51C00828CB1 /* ShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732C992B61C51C00828CB1 /* ShimmeringView.swift */; };
 		6A732C9C2B61C56A00828CB1 /* InstitutionTableLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A732C9B2B61C56A00828CB1 /* InstitutionTableLoadingView.swift */; };
@@ -346,6 +347,7 @@
 		6A1D43042B17AD76005A1EB0 /* InstitutionTableFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionTableFooterView.swift; sourceTree = "<group>"; };
 		6A1D43062B17AE37005A1EB0 /* RoundedIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedIconView.swift; sourceTree = "<group>"; };
 		6A1D43082B17CB04005A1EB0 /* InstitutionNoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionNoResultsView.swift; sourceTree = "<group>"; };
+		6A26A3AA2B991A4D00215510 /* FeedbackGeneratorAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGeneratorAdapter.swift; sourceTree = "<group>"; };
 		6A4320292B7E8C5400A67A70 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		6A732C992B61C51C00828CB1 /* ShimmeringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmeringView.swift; sourceTree = "<group>"; };
 		6A732C9B2B61C56A00828CB1 /* InstitutionTableLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionTableLoadingView.swift; sourceTree = "<group>"; };
@@ -941,6 +943,7 @@
 				591E8073D2AD30115ABDB60F /* BulletPointLabelView.swift */,
 				4E4A84F0646AD673029CB6FC /* Button+Extensions.swift */,
 				6A7814102B32462100168992 /* CloseConfirmationViewController.swift */,
+				6A26A3AA2B991A4D00215510 /* FeedbackGeneratorAdapter.swift */,
 				A00D518C15FF3FAED7C193C2 /* HitTestStackView.swift */,
 				F669BB8F3DA862C425897705 /* HitTestView.swift */,
 				939D10B20D3ECA7BF7021BF8 /* InstitutionIconView.swift */,
@@ -1285,6 +1288,7 @@
 				E4D00DB842047E595DD85BEF /* CheckboxView.swift in Sources */,
 				6A1D43032B16B3DC005A1EB0 /* InstitutionCellView.swift in Sources */,
 				6A1D43072B17AE37005A1EB0 /* RoundedIconView.swift in Sources */,
+				6A26A3AB2B991A4D00215510 /* FeedbackGeneratorAdapter.swift in Sources */,
 				716E12A9AC0B790F14FB72C6 /* AccountNumberRetrievalErrorView.swift in Sources */,
 				3446145FCA3278D51A9D4B80 /* AttachLinkedPaymentAccountDataSource.swift in Sources */,
 				E3F62D2F9C344A1178030E8E /* AttachLinkedPaymentAccountViewController.swift in Sources */,

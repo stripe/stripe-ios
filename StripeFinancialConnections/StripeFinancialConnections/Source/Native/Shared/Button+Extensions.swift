@@ -9,12 +9,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-// Fixes a SwiftUI preview bug where previews will crash
-// if `.financialConnectionsPrimary` is directly referenced
-func FinancialConnectionsSecondaryButtonConfiguration() -> Button.Configuration {
-    return .financialConnectionsSecondary
-}
-
 extension Button {
     static func primary() -> StripeUICore.Button {
         let button = Button(configuration: .financialConnectionsPrimary)
@@ -25,6 +19,13 @@ extension Button {
             width: 0,
             height: 2 / UIScreen.main.nativeScale
         )
+        ButtonFeedbackGeneratorHandler.attach(toButton: button)
+        return button
+    }
+
+    static func secondary() -> StripeUICore.Button {
+        let button = Button(configuration: .financialConnectionsSecondary)
+        ButtonFeedbackGeneratorHandler.attach(toButton: button)
         return button
     }
 }
@@ -47,7 +48,7 @@ extension Button.Configuration {
         return primaryButtonConfiguration
     }
 
-    static var financialConnectionsSecondary: Button.Configuration {
+    fileprivate static var financialConnectionsSecondary: Button.Configuration {
         var secondaryButtonConfiguration = Button.Configuration.secondary()
         secondaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         secondaryButtonConfiguration.cornerRadius = 12.0
@@ -61,5 +62,29 @@ extension Button.Configuration {
         secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04)  // this tries to simulate `neutral100`
         secondaryButtonConfiguration.colorTransforms.highlightedForeground = nil
         return secondaryButtonConfiguration
+    }
+}
+
+// attaches haptic feedback to a button press
+private final class ButtonFeedbackGeneratorHandler: NSObject {
+
+    @objc private func didTouchUpInside() {
+        FeedbackGeneratorAdapter.buttonTapped()
+    }
+
+    private static var associatedObjectKey: UInt8 = 0
+    static func attach(toButton button: UIControl) {
+        let buttonFeedbackGeneratorHandler = ButtonFeedbackGeneratorHandler()
+        objc_setAssociatedObject(
+            button,
+            &associatedObjectKey,
+            buttonFeedbackGeneratorHandler,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        button.addTarget(
+            buttonFeedbackGeneratorHandler,
+            action: #selector(didTouchUpInside),
+            for: .touchUpInside
+        )
     }
 }

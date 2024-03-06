@@ -71,7 +71,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
     }()
 
     private lazy var notNowButton: StripeUICore.Button = {
-        let saveToLinkButton = Button(configuration: .financialConnectionsSecondary)
+        let saveToLinkButton = Button.secondary()
         saveToLinkButton.title = notNowButtonText
         saveToLinkButton.addTarget(self, action: #selector(didSelectNotNowButton), for: .touchUpInside)
         saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false

@@ -195,7 +195,7 @@ extension PaneLayoutView {
 
         var secondaryButtonReference: StripeUICore.Button?
         if let secondaryButtonConfiguration = secondaryButtonConfiguration {
-            let secondaryButton = Button(configuration: FinancialConnectionsSecondaryButtonConfiguration())
+            let secondaryButton = Button.secondary()
             secondaryButtonReference = secondaryButton
             secondaryButton.title = secondaryButtonConfiguration.title
             secondaryButton.accessibilityIdentifier = secondaryButtonConfiguration.accessibilityIdentifier
