@@ -1,3 +1,7 @@
+## x.x.x xxxx-xx-xx
+### CustomerSheet
+* [Added] Added `paymentMethodTypes` in `CustomerAdapter` to control what payment methods are displayed.
+
 ## 23.24.1 2024-03-05
 ### PaymentSheet
 * [Fixed] Fixed an assertionFailure that happens when using FlowController and switching between saved payment methods

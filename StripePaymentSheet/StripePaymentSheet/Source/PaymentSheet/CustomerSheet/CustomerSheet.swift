@@ -167,7 +167,7 @@ extension CustomerSheet {
             do {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try self.customerAdapter.fetchSelectedPaymentOption()
-                async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet()
+                async let elementsSessionResult = try self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(paymentMethodTypes: self.customerAdapter.paymentMethodTypes)
 
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
