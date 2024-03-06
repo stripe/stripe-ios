@@ -508,8 +508,6 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
 extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewControllerDelegate {
     func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
         // no-op
-        assertionFailure("Used to bubble up CVC Input. This should never happen for FlowController")
-
     }
     func didSelectUpdate(viewController: SavedPaymentOptionsViewController,
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
