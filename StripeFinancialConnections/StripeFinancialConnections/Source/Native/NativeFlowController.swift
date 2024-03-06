@@ -1150,6 +1150,7 @@ private func CreatePaneViewController(
             let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first
         {
             let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
+                manifest: dataManager.manifest,
                 consumerSession: consumerSession,
                 selectedAccountId: selectedAccountId,
                 apiClient: dataManager.apiClient,

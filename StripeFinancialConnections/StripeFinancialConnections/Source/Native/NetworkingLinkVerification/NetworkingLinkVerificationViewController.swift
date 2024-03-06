@@ -56,7 +56,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
             contentView: PaneLayoutView.createContentView(
                 iconView: nil,
                 title: STPLocalizedString(
-                    "Verify it's you",
+                    "Confirm it's you",
                     "The title of a screen where users are informed that they can sign-in-to Link."
                 ),
                 subtitle: String(format: STPLocalizedString(
