@@ -34,8 +34,8 @@ final class DataAccessNoticeViewController: SheetViewController {
         let contentView: UIView
         if let connectedAccountNotice = dataAccessNotice.connectedAccountNotice {
             firstSubtitle = connectedAccountNotice.subtitle
-            contentView = CreateConnectedAccountsContentView(
-                connectedAccountsBulletItems: connectedAccountNotice.body.bullets,
+            contentView = CreateConnectedAccountContentView(
+                connectedAccountBulletItems: connectedAccountNotice.body.bullets,
                 secondSubtitle: dataAccessNotice.subtitle,
                 merchantBulletItems: dataAccessNotice.body.bullets,
                 didSelectURL: didSelectUrl
@@ -75,8 +75,8 @@ final class DataAccessNoticeViewController: SheetViewController {
     }
 }
 
-private func CreateConnectedAccountsContentView(
-    connectedAccountsBulletItems: [FinancialConnectionsBulletPoint],
+private func CreateConnectedAccountContentView(
+    connectedAccountBulletItems: [FinancialConnectionsBulletPoint],
     secondSubtitle: String?,
     merchantBulletItems: [FinancialConnectionsBulletPoint],
     didSelectURL: @escaping (URL) -> Void
@@ -86,7 +86,7 @@ private func CreateConnectedAccountsContentView(
     verticalStackView.spacing = 24
     verticalStackView.addArrangedSubview(
         CreateMultiBulletinView(
-            bulletItems: connectedAccountsBulletItems,
+            bulletItems: connectedAccountBulletItems,
             didSelectURL: didSelectURL
         )
     )
