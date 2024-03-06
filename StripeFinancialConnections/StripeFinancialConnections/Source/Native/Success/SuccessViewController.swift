@@ -141,6 +141,19 @@ private func CreateBodyView(subtitle: String?) -> UIView {
     bodyVerticalStackView.axis = .vertical
     bodyVerticalStackView.spacing = 16
     bodyVerticalStackView.alignment = .center
+
+    // animate the whole view body to move down-to-up, and appear
+    bodyVerticalStackView.alpha = 0.0
+    bodyVerticalStackView.transform = CGAffineTransform(translationX: 0, y: 37)
+    UIView.animate(
+        withDuration: 0.35,
+        delay: 0.0,
+        options: [.curveEaseOut],
+        animations: {
+            bodyVerticalStackView.alpha = 1.0
+            bodyVerticalStackView.transform = .identity
+        }
+    )
     return bodyVerticalStackView
 }
 
@@ -166,6 +179,19 @@ private func CreateIconView() -> UIView {
         iconImageView.centerYAnchor.constraint(equalTo: iconContainerView.centerYAnchor),
     ])
 
+    // animate the checkmark icon to bounce/appear
+    iconImageView.alpha = 0
+    iconImageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+    UIView.animate(
+        withDuration: 0.35,
+        delay: 0.35,
+        usingSpringWithDamping: 0.45,
+        initialSpringVelocity: 0.1,
+        animations: {
+            iconImageView.alpha = 1.0
+            iconImageView.transform = .identity
+        }
+    )
     return iconContainerView
 }
 
