@@ -52,11 +52,14 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
     }
 
     private func showContent(redactedPhoneNumber: String) {
+        // if we automatically moved to this pane due to
+        // prefilled email, we shot the "not now" button
+        let showNotNowButton = (dataSource.manifest.accountholderCustomerEmailAddress != nil)
         let paneLayoutView = PaneLayoutView(
             contentView: PaneLayoutView.createContentView(
                 iconView: nil,
                 title: STPLocalizedString(
-                    "Verify it's you",
+                    "Confirm it's you",
                     "The title of a screen where users are informed that they can sign-in-to Link."
                 ),
                 subtitle: String(format: STPLocalizedString(
@@ -67,7 +70,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: nil,
-                secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                secondaryButtonConfiguration: showNotNowButton ? PaneLayoutView.ButtonConfiguration(
                     title: STPLocalizedString("Not now", "Title of a button that allows users to skip the current screen."),
                     action: { [weak self] in
                         guard let self = self else { return }
@@ -79,7 +82,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                             saveToLinkWithStripeSucceeded: nil
                         )
                     }
-                )
+                ) : nil
             ).footerView
         )
         paneLayoutView.addTo(view: view)
