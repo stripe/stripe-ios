@@ -48,7 +48,7 @@ import UIKit
     @_spi(LinkOnly) public var paymentOption: PaymentOptionDisplayData? {
         if paymentMethodId == nil { return nil }
 
-        return PaymentOptionDisplayData(image: Image.pm_type_link.makeImage(), label: STPPaymentMethodType.link.displayName)
+        return PaymentOptionDisplayData(image: Image.link_logo.makeImage(), label: STPPaymentMethodType.link.displayName)
     }
 
     /// The parent view controller to present

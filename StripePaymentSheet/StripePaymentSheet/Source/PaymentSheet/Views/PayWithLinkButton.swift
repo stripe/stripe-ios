@@ -109,7 +109,7 @@ final class PayWithLinkButton: UIControl {
         let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link)
 
         // Create the Link logo attachment
-        let linkImage = Image.link_logo.makeImage(template: true)
+        let linkImage = Image.link_logo_bw.makeImage(template: false)
         let linkAttachment = NSTextAttachment(image: linkImage)
         let linkLogoRatio = linkImage.size.width / linkImage.size.height
 
@@ -134,7 +134,6 @@ final class PayWithLinkButton: UIControl {
     private lazy var payWithStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             payWithLinkView,
-            Self.makeArrowView(),
         ])
         stackView.spacing = 6
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -149,7 +148,6 @@ final class PayWithLinkButton: UIControl {
             Self.makeLogoView(),
             emailSeparatorView,
             emailLabel,
-            Self.makeArrowView(),
         ])
         stackView.spacing = 10
         stackView.setCustomSpacing(8, after: emailLabel)
@@ -180,7 +178,6 @@ final class PayWithLinkButton: UIControl {
             cardBrandSeparatorView,
             cardBrandView,
             last4Label,
-            Self.makeArrowView(),
         ])
         stackView.spacing = 10
         stackView.setCustomSpacing(5, after: cardBrandView)
@@ -256,7 +253,7 @@ private extension PayWithLinkButton {
     }
 
     static func makeLogoView() -> UIImageView {
-        let logoView = UIImageView(image: Image.link_logo.makeImage(template: true))
+        let logoView = UIImageView(image: Image.link_logo_bw.makeImage(template: false))
         logoView.translatesAutoresizingMaskIntoConstraints = false
         logoView.contentMode = .scaleAspectFill
 
@@ -266,21 +263,6 @@ private extension PayWithLinkButton {
         ])
 
         return logoView
-    }
-
-    static func makeArrowView() -> UIImageView {
-        let arrowView = UIImageView(image: Image.link_arrow.makeImage(template: true)
-            .withAlignmentRectInsets(Constants.cardBrandInsets)
-        )
-        arrowView.translatesAutoresizingMaskIntoConstraints = false
-        arrowView.contentMode = .scaleAspectFill
-
-        NSLayoutConstraint.activate([
-            arrowView.widthAnchor.constraint(equalToConstant: Constants.arrowSize.width),
-            arrowView.heightAnchor.constraint(equalToConstant: Constants.arrowSize.height),
-        ])
-
-        return arrowView
     }
 
     static func makeSeparatorView() -> UIView {
@@ -416,11 +398,11 @@ private extension PayWithLinkButton {
     func separatorColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
-            return UIColor.linkBrand600.darken(by: 0.2)
+            return UIColor.linkBrand400.darken(by: 0.2)
         case .disabled:
-            return UIColor.linkBrand600.withAlphaComponent(0.5)
+            return UIColor.linkBrand400.withAlphaComponent(0.5)
         default:
-            return UIColor.linkBrand600
+            return UIColor.linkBrand400
         }
     }
 
