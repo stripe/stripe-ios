@@ -202,7 +202,7 @@ extension NativeFlowController {
                     ),
                     shouldLeftAlignStripeLogo: false  // if we `push`, this is not the first VC
                 )
-                navigationController.pushViewController(viewController, animated: animated)
+                self.navigationController.pushViewController(viewController, animated: animated)
             } else {
                 // when we can't find a view controller to present,
                 // show a terminal error

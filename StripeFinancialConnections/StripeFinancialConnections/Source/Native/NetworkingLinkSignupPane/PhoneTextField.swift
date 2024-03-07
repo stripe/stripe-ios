@@ -47,12 +47,12 @@ final class PhoneTextField: UIView {
     fileprivate var didEndEditingOnce = false
 
     var text: String {
+        get {
+            textField.text
+        }
         set {
             textField.text = newValue
             phoneNumberDidChange()
-        }
-        get {
-            textField.text
         }
     }
     var phoneNumber: PhoneNumber? {

@@ -166,8 +166,8 @@ class InstitutionPickerViewController: UIViewController {
 
         let showLoadingView: (Bool) -> Void = { [weak self] show in
             guard let self else { return }
-            view.isUserInteractionEnabled = !show // prevent accidental taps
-            institutionTableView.showLoadingView(show, forInstitution: institution)
+            self.view.isUserInteractionEnabled = !show // prevent accidental taps
+            self.institutionTableView.showLoadingView(show, forInstitution: institution)
         }
 
         showLoadingView(true)
@@ -219,8 +219,8 @@ class InstitutionPickerViewController: UIViewController {
             guard notification.object is PartnerAuthViewController else {
                 return
             }
-            hideOverlayView()
-            partnerAuthDismissObserver = nil
+            self.hideOverlayView()
+            self.partnerAuthDismissObserver = nil
         }
     }
 

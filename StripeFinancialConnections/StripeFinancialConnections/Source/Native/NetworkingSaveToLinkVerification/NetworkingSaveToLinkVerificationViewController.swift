@@ -194,7 +194,7 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
                     saveToLinkSucceeded = false
                 }
 
-                markLinkVerified(saveToLinkSucceeded: saveToLinkSucceeded)
+                self.markLinkVerified(saveToLinkSucceeded: saveToLinkSucceeded)
             }
     }
 
