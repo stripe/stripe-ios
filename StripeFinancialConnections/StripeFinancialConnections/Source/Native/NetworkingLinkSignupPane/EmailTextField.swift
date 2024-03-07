@@ -43,12 +43,12 @@ final class EmailTextField: UIView {
     fileprivate var didEndEditingOnce = false
 
     var text: String {
+        get {
+            textField.text
+        }
         set {
             textField.text = newValue
             textDidChange()
-        }
-        get {
-            textField.text
         }
     }
     var isEmailValid: Bool {

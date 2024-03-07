@@ -295,7 +295,7 @@ final class PartnerAuthViewController: SheetViewController {
                     eventName: "click.apptoapp.continue",
                     pane: .partnerAuth
                 )
-                openInstitutionAuthenticationNativeRedirect(authSession: authSession)
+                self.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
             },
             didSelectCancel: { [weak self] in
                 guard let self else { return }
