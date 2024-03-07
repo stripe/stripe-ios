@@ -197,11 +197,11 @@ final class ErrorViewController: UIViewController {
                 allowManualEntry: dataSource.manifest.allowManualEntry,
                 didSelectManualEntry: { [weak self] in
                     guard let self else { return }
-                    delegate?.errorViewControllerDidSelectManualEntry(self)
+                    self.delegate?.errorViewControllerDidSelectManualEntry(self)
                 },
                 didSelectClose: { [weak self] in
                     guard let self else { return }
-                    delegate?.errorViewController(self, didSelectCloseWithError: error)
+                    self.delegate?.errorViewController(self, didSelectCloseWithError: error)
                 }
             )
         }
