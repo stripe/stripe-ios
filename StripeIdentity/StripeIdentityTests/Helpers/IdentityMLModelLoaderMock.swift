@@ -32,7 +32,8 @@ final class IdentityMLModelLoaderMock: IdentityMLModelLoaderProtocol {
     }
 
     func startLoadingDocumentModels(
-        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
+        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
+        with analyticsClient: StripeIdentity.IdentityAnalyticsClient
     ) {
         didStartLoadingDocumentModels = true
     }

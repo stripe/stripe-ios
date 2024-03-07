@@ -134,7 +134,6 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         self.brandLogo = brandLogo
         self.consentContent = consentContent
         super.init(sheetController: sheetController, analyticsScreenName: .biometricConsent)
-
         // If HTML fails to render, throw error since it's unacceptable to not
         // display consent copy
         try multilineContent.configure(

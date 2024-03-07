@@ -216,7 +216,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     func startLoadingMLModels(from verificationPage: StripeAPI.VerificationPage) {
         mlModelLoader.startLoadingDocumentModels(
-            from: verificationPage.documentCapture
+            from: verificationPage.documentCapture,
+            with: analyticsClient
         )
         if let selfiePageConfig = verificationPage.selfie {
             mlModelLoader.startLoadingFaceModels(from: selfiePageConfig)
