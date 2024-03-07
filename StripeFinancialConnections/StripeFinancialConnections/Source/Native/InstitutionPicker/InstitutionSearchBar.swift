@@ -147,6 +147,7 @@ final class InstitutionSearchBar: UIView {
     }
 
     @objc private func didSelectClearButton() {
+        FeedbackGeneratorAdapter.buttonTapped()
         text = ""
     }
 

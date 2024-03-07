@@ -474,6 +474,7 @@ extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
         _ view: AccountPickerSelectionView,
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     ) {
+        FeedbackGeneratorAdapter.selectionChanged()
         logAccountSelectOrDeselect(selectedAccounts: selectedAccounts)
         dataSource.updateSelectedAccounts(selectedAccounts)
     }

@@ -100,6 +100,15 @@ final class SuccessViewController: UIViewController {
                 )
         }
     }
+
+    private var didFireFeedbackGenerator = false
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !didFireFeedbackGenerator {
+            didFireFeedbackGenerator = true
+            FeedbackGeneratorAdapter.successOccurred()
+        }
+    }
 }
 
 private func CreateBodyView(subtitle: String?) -> UIView {
