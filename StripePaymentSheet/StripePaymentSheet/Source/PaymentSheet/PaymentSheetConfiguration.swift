@@ -195,7 +195,7 @@ extension PaymentSheet {
         @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
     }
 
-    enum CustomerAccessProvider {
+    internal enum CustomerAccessProvider {
         case legacyCustomerEphemeralKey(String)
         case customerSession(String)
     }
@@ -209,7 +209,7 @@ extension PaymentSheet {
         /// A short-lived token that allows the SDK to access a Customer's payment methods
         public let ephemeralKeySecret: String?
 
-        let customerAccessProvider: CustomerAccessProvider
+        internal let customerAccessProvider: CustomerAccessProvider
 
         @available(*, deprecated, message:"message")
         public init(id: String, ephemeralKeySecret: String) {

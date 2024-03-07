@@ -134,26 +134,22 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         let customerAdapter: StripeCustomerAdapter
         switch settings.paymentMethodMode {
         case .setupIntent:
-            customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
-                if let customerSessionClientSecret {
-                    return .init(customerId: customerId, customerSessionClientSecret: customerSessionClientSecret)
-                } else if let ephemeralKey {
-                    return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
-                }
-                assertionFailure("Server didn't respond with either CustomerSession or EphemeralKey")
-                return .init(customerId: customerId, ephemeralKeySecret: "")
-            }, setupIntentClientSecretProvider: {
-                return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
-            })
+            if let customerSessionClientSecret {
+                customerAdapter = StripeCustomerAdapter(customerSessionAccessProvider: {
+                    return .init(customerId: customerId, clientSecret: customerSessionClientSecret)
+                }, setupIntentClientSecretProvider: {
+                    return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
+                })
+            } else {
+                customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+                    return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey!)
+                }, setupIntentClientSecretProvider: {
+                    return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
+                })
+            }
         case .createAndAttach:
             customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
-                if let customerSessionClientSecret {
-                    return .init(customerId: customerId, customerSessionClientSecret: customerSessionClientSecret)
-                } else if let ephemeralKey {
-                    return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
-                }
-                assertionFailure("Server didn't respond with either CustomerSession or EphemeralKey")
-                return .init(customerId: customerId, ephemeralKeySecret: "")
+                return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey!)
             }, setupIntentClientSecretProvider: nil)
         }
         return customerAdapter
