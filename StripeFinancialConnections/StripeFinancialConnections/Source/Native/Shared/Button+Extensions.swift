@@ -72,6 +72,10 @@ private final class ButtonFeedbackGeneratorHandler: NSObject {
         FeedbackGeneratorAdapter.buttonTapped()
     }
 
+    // `associatedObjectKey` is a unique address when accessed
+    // via `&`, so we just map a key ("random address") to
+    // a value (or "instance variable") `buttonFeedbackGeneratorHandler`
+    // so we can retain it to fire `didTouchUpInside` func
     private static var associatedObjectKey: UInt8 = 0
     static func attach(toButton button: UIControl) {
         let buttonFeedbackGeneratorHandler = ButtonFeedbackGeneratorHandler()
