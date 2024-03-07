@@ -139,7 +139,7 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.customCtaLabel = (newString != "") ? newString : nil
         }
     }
-    
+
     var customEmailBinding: Binding<String> {
         Binding<String> {
             return playgroundController.settings.customEmail ?? ""
@@ -147,7 +147,7 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.customEmail = (newString != "") ? newString : nil
         }
     }
-    
+
     var paymentMethodSettingsBinding: Binding<String> {
         Binding<String> {
             return playgroundController.settings.paymentMethodConfigurationId ?? ""
