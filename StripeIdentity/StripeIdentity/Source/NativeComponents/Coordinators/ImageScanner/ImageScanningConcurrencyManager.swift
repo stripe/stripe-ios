@@ -18,6 +18,7 @@ protocol ImageScanningConcurrencyManagerProtocol {
     func scanImage<ScannerOutput>(
         with scanner: AnyImageScanner<ScannerOutput>,
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraSession: CameraSessionProtocol,
         completeOn completionQueue: DispatchQueue,
         completion: @escaping (ScannerOutput) -> Void
@@ -90,6 +91,7 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     func scanImage<ScannerOutput>(
         with scanner: AnyImageScanner<ScannerOutput>,
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraSession: CameraSessionProtocol,
         completeOn completionQueue: DispatchQueue,
         completion: @escaping (ScannerOutput) -> Void
@@ -112,16 +114,16 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         }
 
         semaphore.wait()
-        concurrentQueue.async { [weak self] in
-            guard let self = self else { return }
 
-            do {
-                let output = try scanner.scanImage(
-                    pixelBuffer: pixelBuffer,
-                    cameraProperties: cameraProperties
-                )
-                wrappedCompletion(output)
-            } catch {
+        scanner.scanImage(
+            pixelBuffer: pixelBuffer,
+            sampleBuffer: sampleBuffer,
+            cameraProperties: cameraProperties
+        ).observe(on: concurrentQueue) { result in
+            switch result {
+            case .success(let scannerOutput):
+                wrappedCompletion(scannerOutput)
+            case .failure(let error):
                 self.analyticsClient.logGenericError(error: error)
             }
 

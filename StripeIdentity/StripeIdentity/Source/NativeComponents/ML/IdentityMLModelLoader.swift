@@ -37,7 +37,8 @@ protocol IdentityMLModelLoaderProtocol {
     var faceModelsFuture: Future<AnyFaceScanner> { get }
 
     func startLoadingDocumentModels(
-        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
+        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
+        with analyticsClient: IdentityAnalyticsClient
     )
 
     func startLoadingFaceModels(
@@ -120,7 +121,8 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
     /// - Parameters:
     ///   - documentModelURLs: The URLs of all the ML models required to scan documents
     func startLoadingDocumentModels(
-        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
+        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
+        with analyticsClient: IdentityAnalyticsClient
     ) {
         guard let idDetectorURL = URL(string: capturePageConfig.models.idDetectorUrl) else {
             documentMLModelsPromise.reject(
@@ -138,7 +140,8 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
                 value: .init(
                     DocumentScanner(
                         idDetectorModel: idDetectorModel,
-                        configuration: .init(from: capturePageConfig)
+                        configuration: .init(from: capturePageConfig),
+                        analyticsClient: analyticsClient
                     )
                 )
             )
