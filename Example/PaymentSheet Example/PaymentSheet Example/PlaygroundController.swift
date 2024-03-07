@@ -128,6 +128,8 @@ class PlaygroundController: ObservableObject {
             configuration.defaultBillingDetails.phone = "+13105551234"
         case .randomEmailNoPhone:
             configuration.defaultBillingDetails.email = "test-\(UUID().uuidString)@stripe.com"
+        case .customEmail:
+            configuration.defaultBillingDetails.email = settings.customEmail
         case .off:
             break
         }

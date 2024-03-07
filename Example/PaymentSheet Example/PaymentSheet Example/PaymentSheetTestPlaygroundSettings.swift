@@ -152,6 +152,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case randomEmail
         case randomEmailNoPhone
+        case customEmail
         case off
     }
 
@@ -258,6 +259,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
     var defaultBillingAddress: DefaultBillingAddress
+    var customEmail: String?
     var linkEnabled: LinkEnabled
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
@@ -290,6 +292,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayButtonType: .buy,
             allowsDelayedPMs: .off,
             defaultBillingAddress: .off,
+            customEmail: nil,
             linkEnabled: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
