@@ -358,6 +358,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
         _ view: LinkAccountPickerBodyView,
         didSelectAccount selectedAccountTuple: FinancialConnectionsAccountTuple
     ) {
+        FeedbackGeneratorAdapter.selectionChanged()
         dataSource
             .analyticsClient
             .log(
@@ -372,6 +373,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
     }
 
     func linkAccountPickerBodyViewSelectedNewBankAccount(_ view: LinkAccountPickerBodyView) {
+        FeedbackGeneratorAdapter.buttonTapped()
         dataSource
             .analyticsClient
             .log(

@@ -65,6 +65,7 @@ final class InstitutionTableView: UIView {
             image: .add,
             didSelect: { [weak self] in
                 guard let self = self else { return }
+                FeedbackGeneratorAdapter.buttonTapped()
                 self.delegate?.institutionTableView(
                     self,
                     didSelectManuallyAddYourAccountWithInstitutions: self.institutions
@@ -86,6 +87,7 @@ final class InstitutionTableView: UIView {
                 image: .search,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
+                    FeedbackGeneratorAdapter.buttonTapped()
                     self.delegate?.institutionTableViewDidSelectSearchForMoreBanks(self)
                 }
             )

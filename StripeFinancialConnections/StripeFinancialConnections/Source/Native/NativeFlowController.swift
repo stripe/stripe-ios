@@ -87,6 +87,7 @@ class NativeFlowController {
     }
 
     @objc private func didSelectNavigationBarCloseButton() {
+        FeedbackGeneratorAdapter.buttonTapped()
         dataManager.analyticsClient.log(
             eventName: "click.nav_bar.close",
             pane: FinancialConnectionsAnalyticsClient

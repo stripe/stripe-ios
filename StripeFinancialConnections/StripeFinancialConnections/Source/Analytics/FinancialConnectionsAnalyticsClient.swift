@@ -118,6 +118,7 @@ extension FinancialConnectionsAnalyticsClient {
         eventName: String,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) {
+        FeedbackGeneratorAdapter.errorOccurred()
         FinancialConnectionsEvent
             .events(fromError: error)
             .forEach { event in

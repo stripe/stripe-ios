@@ -159,6 +159,7 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private func didSelectInstitution(_ institution: FinancialConnectionsInstitution) {
+        FeedbackGeneratorAdapter.selectionChanged()
         delegate?.institutionPickerViewController(self, didSelect: institution)
 
         searchBar.resignFirstResponder()
