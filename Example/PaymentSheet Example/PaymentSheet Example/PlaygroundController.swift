@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 import StripePayments
-@_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
 @_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import SwiftUI

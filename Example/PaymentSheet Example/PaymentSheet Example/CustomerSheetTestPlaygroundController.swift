@@ -4,7 +4,7 @@
 //
 
 import Combine
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -135,7 +135,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         switch settings.paymentMethodMode {
         case .setupIntent:
             if let customerSessionClientSecret {
-                customerAdapter = StripeCustomerAdapter(customerSessionAccessProvider: {
+                customerAdapter = StripeCustomerAdapter(customerSessionClientSecretProvider: {
                     return .init(customerId: customerId, clientSecret: customerSessionClientSecret)
                 }, setupIntentClientSecretProvider: {
                     return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)

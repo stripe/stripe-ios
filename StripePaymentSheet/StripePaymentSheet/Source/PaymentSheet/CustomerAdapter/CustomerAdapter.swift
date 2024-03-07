@@ -94,17 +94,18 @@ public struct CustomerEphemeralKey {
     }
 }
 
-public struct CustomerSessionClientSecretProvider {
+@_spi(CustomerSessionBetaAccess)
+public struct CustomerSessionClientSecret {
     /// The identifier of the Stripe Customer object.
     /// See https://stripe.com/docs/api/customers/object#customer_object-id
-    public let id: String
+    public let customerId: String
 
     /// Customer session client secret
     /// See: https://docs.corp.stripe.com/api/customer_sessions/object
     public let clientSecret: String
 
     public init(customerId: String, clientSecret: String) {
-        self.id = customerId
+        self.customerId = customerId
         self.clientSecret = clientSecret
     }
 }
@@ -114,12 +115,12 @@ public struct CustomerSessionClientSecretProvider {
 extension StripeCustomerAdapter {
     internal enum CustomerAccessProvider {
         case legacyCustomerEphemeralKey(CustomerEphemeralKey)
-        case customerSession(CustomerSessionClientSecretProvider)
+        case customerSession(CustomerSessionClientSecret)
     }
 
     internal enum ResolvedCustomerAccess {
         case legacyCustomerEphemeralKey(CustomerEphemeralKey)
-        case customerSession(CustomerSessionClientSecretProvider, STPElementsSession)
+        case customerSession(CustomerSessionClientSecret, STPElementsSession)
     }
 }
 extension StripeCustomerAdapter {
@@ -135,7 +136,7 @@ extension StripeCustomerAdapter {
 /// be sure to create a new instance of `StripeCustomerAdapter`.
 open class StripeCustomerAdapter: CustomerAdapter {
     let customerEphemeralKeyProvider: (() async throws -> CustomerEphemeralKey)?
-    let customerSessionAccessProvider: (() async throws -> CustomerSessionClientSecretProvider)?
+    let customerSessionClientSecretProvider: (() async throws -> CustomerSessionClientSecret)?
     let setupIntentClientSecretProvider: (() async throws -> String)?
     let apiClient: STPAPIClient
 
@@ -151,23 +152,24 @@ open class StripeCustomerAdapter: CustomerAdapter {
                 apiClient: STPAPIClient = .shared) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: StripeCustomerAdapter.self)
         self.customerEphemeralKeyProvider = customerEphemeralKeyProvider
-        self.customerSessionAccessProvider = nil
+        self.customerSessionClientSecretProvider = nil
         self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
         self.apiClient = apiClient
     }
 
-    public init(customerSessionAccessProvider: @escaping () async throws -> CustomerSessionClientSecretProvider,
+    @_spi(CustomerSessionBetaAccess)
+    public init(customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret,
                 setupIntentClientSecretProvider: (() async throws -> String)? = nil,
                 apiClient: STPAPIClient = .shared) {
-        self.customerSessionAccessProvider = customerSessionAccessProvider
+        self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
         self.customerEphemeralKeyProvider = nil
         self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
         self.apiClient = apiClient
     }
 
     func customerInformationAccessor() async throws -> CustomerAccessProvider {
-        if let customerSessionAccessProvider {
-            let response = try await customerSessionAccessProvider()
+        if let customerSessionClientSecretProvider {
+            let response = try await customerSessionClientSecretProvider()
             return .customerSession(response)
         } else if let customerEphemeralKeyProvider {
             let response = try await customerEphemeralKeyProvider()
@@ -191,7 +193,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
                 guard let apiKey = elementsSession.customer?.customerSession.apiKey else {
                     throw CustomerSheetError.unknown(debugDescription: "Unable to resolve customerSession")
                 }
-                return StripeCustomerAdapterConfiguration(customerId: customerSession.id, ephemeralKey: apiKey, shouldRemoveDuplicates: true)
+                return StripeCustomerAdapterConfiguration(customerId: customerSession.customerId, ephemeralKey: apiKey, shouldRemoveDuplicates: true)
             case .legacyCustomerEphemeralKey(let ephemeralKey):
                 return StripeCustomerAdapterConfiguration(customerId: ephemeralKey.id, ephemeralKey: ephemeralKey.ephemeralKeySecret, shouldRemoveDuplicates: false)
             }
@@ -207,13 +209,13 @@ open class StripeCustomerAdapter: CustomerAdapter {
             }
             let newAccessor = try await self.customerInformationAccessor()
             switch newAccessor {
-            case .customerSession(let customerSessionProvider):
-                let elementsSessionResponse = try await self.apiClient.retrieveElementsSessionForCustomerSheet(customerSessionClientSecretProvider: customerSessionProvider)
+            case .customerSession(let customerSessionClientSecret):
+                let elementsSessionResponse = try await self.apiClient.retrieveElementsSessionForCustomerSheet(customerSessionClientSecret: customerSessionClientSecret)
                 guard let apiKey = elementsSessionResponse.customer?.customerSession.apiKey,
                       !apiKey.isEmpty else {
                     throw CustomerSheetError.unknown(debugDescription: "failed to fetch")
                 }
-                let tempCachedCustomerEphemeralkey = CachedCustomerEphemeralKey(resolvedCustomerAccess: .customerSession(customerSessionProvider, elementsSessionResponse))
+                let tempCachedCustomerEphemeralkey = CachedCustomerEphemeralKey(resolvedCustomerAccess: .customerSession(customerSessionClientSecret, elementsSessionResponse))
                 _cachedEphemeralKey = tempCachedCustomerEphemeralkey
                 return tempCachedCustomerEphemeralkey
 
@@ -254,8 +256,8 @@ open class StripeCustomerAdapter: CustomerAdapter {
                     continuation.resume(with: .success(paymentMethods))
                 }
             })
-        case .customerSession(let customerSessionClientSecretProvider, _):
-            let elementsSessionResponse = try await self.apiClient.retrieveElementsSessionForCustomerSheet(customerSessionClientSecretProvider: customerSessionClientSecretProvider)
+        case .customerSession(let customerSessionClientSecret, _):
+            let elementsSessionResponse = try await self.apiClient.retrieveElementsSessionForCustomerSheet(customerSessionClientSecret: customerSessionClientSecret)
             let paymentMethods = elementsSessionResponse.customer?.paymentMethods ?? []
             return paymentMethods
         }

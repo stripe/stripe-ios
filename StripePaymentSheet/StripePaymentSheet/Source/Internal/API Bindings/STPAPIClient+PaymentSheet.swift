@@ -8,7 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(CustomerSessionBetaAccess) @_spi(STP) import StripePayments
 
 extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
@@ -116,13 +116,13 @@ extension STPAPIClient {
         )
     }
 
-    func retrieveElementsSessionForCustomerSheet(customerSessionClientSecretProvider: CustomerSessionClientSecretProvider?) async throws -> STPElementsSession {
+    func retrieveElementsSessionForCustomerSheet(customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
         var parameters: [String: Any] = [:]
         parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
 
-        if let customerSessionClientSecretProvider {
-            parameters["customer_session_client_secret"] = customerSessionClientSecretProvider.clientSecret
+        if let customerSessionClientSecret {
+            parameters["customer_session_client_secret"] = customerSessionClientSecret.clientSecret
         }
 
         var deferredIntent = [String: Any]()

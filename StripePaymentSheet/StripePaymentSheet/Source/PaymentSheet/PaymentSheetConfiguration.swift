@@ -211,7 +211,6 @@ extension PaymentSheet {
 
         internal let customerAccessProvider: CustomerAccessProvider
 
-        @available(*, deprecated, message:"message")
         public init(id: String, ephemeralKeySecret: String) {
             self.id = id
             self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
@@ -219,6 +218,7 @@ extension PaymentSheet {
         }
 
         /// Initializes a CustomerConfiguration
+        @_spi(CustomerSessionBetaAccess)
         public init(id: String, customerSessionClientSecret: String) {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
