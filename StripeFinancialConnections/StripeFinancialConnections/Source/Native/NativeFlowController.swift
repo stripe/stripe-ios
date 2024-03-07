@@ -709,7 +709,20 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
         assert(navigationController.topViewController is ResetFlowViewController)
         if navigationController.topViewController is ResetFlowViewController {
             // remove ResetFlowViewController from the navigation stack
-            navigationController.popViewController(animated: false)
+            if navigationController.viewControllers.count == 1 {
+                // there's a chance that `ResetFlowViewController`
+                // is the only VC on the stack and `popViewController`
+                // will not work
+                //
+                // scenario:
+                // 1. be returning Link consumer
+                // 2. press "Not Now" from warm up pane
+                // 3. go through reset flow
+                //    (ex. select down bank scheduled > select another bank)
+                navigationController.setViewControllers([], animated: false)
+            } else {
+                navigationController.popViewController(animated: false)
+            }
         }
 
         // reset all the state because we are starting
