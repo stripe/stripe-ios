@@ -42,7 +42,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
                 if let url = self.lastOpenedNativeURL {
                     self.redirect(to: url)
                 } else {
-                    self.startAuthenticationSession(manifest: manifest)
+                    self.startAuthenticationSession(manifest: self.manifest)
                 }
             },
             didSelectCancel: nil
