@@ -291,7 +291,7 @@ final class PartnerAuthViewController: SheetViewController {
             institutionImageUrl: institution.icon?.default,
             didSelectContinue: { [weak self] in
                 guard let self else { return }
-                dataSource.analyticsClient.log(
+                self.dataSource.analyticsClient.log(
                     eventName: "click.apptoapp.continue",
                     pane: .partnerAuth
                 )
@@ -299,7 +299,7 @@ final class PartnerAuthViewController: SheetViewController {
             },
             didSelectCancel: { [weak self] in
                 guard let self else { return }
-                delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
+                self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
             }
         )
         self.continueStateViews = continueStateViews

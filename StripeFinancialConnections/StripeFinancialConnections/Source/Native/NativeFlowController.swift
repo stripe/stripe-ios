@@ -157,7 +157,7 @@ extension NativeFlowController {
                         && viewController is ConsentViewController
                 )
             }
-            navigationController.setViewControllers(viewControllers, animated: animated)
+            self.navigationController.setViewControllers(viewControllers, animated: animated)
         }
     }
 
@@ -194,11 +194,11 @@ extension NativeFlowController {
             if let viewController = viewController {
                 FinancialConnectionsNavigationController.configureNavigationItemForNative(
                     viewController.navigationItem,
-                    closeItem: navigationBarCloseBarButtonItem,
+                    closeItem: self.navigationBarCloseBarButtonItem,
                     shouldHideStripeLogo: ShouldHideStripeLogoInNavigationBar(
                         forViewController: viewController,
-                        reducedBranding: dataManager.reducedBranding,
-                        merchantLogo: dataManager.merchantLogo
+                        reducedBranding: self.dataManager.reducedBranding,
+                        merchantLogo: self.dataManager.merchantLogo
                     ),
                     shouldLeftAlignStripeLogo: false  // if we `push`, this is not the first VC
                 )
@@ -206,7 +206,7 @@ extension NativeFlowController {
             } else {
                 // when we can't find a view controller to present,
                 // show a terminal error
-                showTerminalError()
+                self.showTerminalError()
             }
         }
     }

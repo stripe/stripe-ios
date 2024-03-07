@@ -106,12 +106,12 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                 guard let self else { return }
                 switch result {
                 case .success:
-                    delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
+                    self.delegate?.networkingSaveToLinkVerificationViewControllerDidFinish(
                         self,
                         saveToLinkWithStripeSucceeded: saveToLinkSucceeded
                     )
                 case .failure(let error):
-                    delegate?.networkingSaveToLinkVerificationViewController(
+                    self.delegate?.networkingSaveToLinkVerificationViewController(
                         self,
                         didReceiveTerminalError: error
                     )
@@ -170,7 +170,7 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
                 let saveToLinkSucceeded: Bool
                 switch result {
                 case .success:
-                    dataSource
+                    self.dataSource
                         .analyticsClient
                         .log(
                             eventName: "networking.verification.success",
@@ -178,13 +178,13 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
                         )
                     saveToLinkSucceeded = true
                 case .failure(let error):
-                    dataSource
+                    self.dataSource
                         .analyticsClient
                         .log(
                             eventName: "networking.verification.error",
                             pane: .networkingSaveToLinkVerification
                         )
-                    dataSource
+                    self.dataSource
                         .analyticsClient
                         .logUnexpectedError(
                             error,
