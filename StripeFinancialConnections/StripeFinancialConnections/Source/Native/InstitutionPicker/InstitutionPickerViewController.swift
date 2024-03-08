@@ -190,12 +190,12 @@ class InstitutionPickerViewController: UIViewController {
                     if authSession.isOauthNonOptional {
                         // oauth presents a sheet where we do not hide
                         // the overlay until the sheet is dismissed
-                        observePartnerAuthDismissToHideOverlay()
+                        self.observePartnerAuthDismissToHideOverlay()
                     } else {
-                        hideOverlayView()
+                        self.hideOverlayView()
                     }
                 case .failure(let error):
-                    delegate?.institutionPickerViewController(
+                    self.delegate?.institutionPickerViewController(
                         self,
                         didReceiveError: error
                     )
@@ -379,7 +379,7 @@ extension InstitutionPickerViewController {
                                 )
                         }
                     }
-                    showLoadingView(false)
+                    self.showLoadingView(false)
                 }
         })
         self.fetchInstitutionsDispatchWorkItem = newFetchInstitutionsDispatchWorkItem

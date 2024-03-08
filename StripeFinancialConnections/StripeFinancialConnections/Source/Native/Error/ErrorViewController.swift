@@ -62,7 +62,7 @@ final class ErrorViewController: UIViewController {
                 title: String.Localized.select_another_bank,
                 action: { [weak self] in
                     guard let self else { return }
-                    delegate?.errorViewControllerDidSelectAnotherBank(self)
+                    self.delegate?.errorViewControllerDidSelectAnotherBank(self)
                 }
             )
             if let expectedToBeAvailableAt = extraFields["expected_to_be_available_at"] as? TimeInterval {
@@ -130,7 +130,7 @@ final class ErrorViewController: UIViewController {
                             title: String.Localized.enter_bank_details_manually,
                             action: { [weak self] in
                                 guard let self = self else { return }
-                                delegate?.errorViewControllerDidSelectManualEntry(self)
+                                self.delegate?.errorViewControllerDidSelectManualEntry(self)
                             }
                         ) : nil
                     ).footerView
@@ -173,7 +173,7 @@ final class ErrorViewController: UIViewController {
                             title: String.Localized.enter_bank_details_manually,
                             action: { [weak self] in
                                 guard let self else { return }
-                                delegate?.errorViewControllerDidSelectManualEntry(self)
+                                self.delegate?.errorViewControllerDidSelectManualEntry(self)
                             }
                         ) : nil
                     ).footerView
