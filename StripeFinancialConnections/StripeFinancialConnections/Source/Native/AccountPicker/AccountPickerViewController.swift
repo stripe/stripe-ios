@@ -384,7 +384,7 @@ final class AccountPickerViewController: UIViewController {
                     if linkedAccounts.data.count >= 1 {
                         selectedAccounts = linkedAccounts.data
                     } else {
-                        selectedAccounts = dataSource.selectedAccounts
+                        selectedAccounts = self.dataSource.selectedAccounts
                     }
 
                     self.delegate?.accountPickerViewController(

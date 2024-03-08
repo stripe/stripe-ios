@@ -121,8 +121,8 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                 // to next screen has completed
                 DispatchQueue.main.asyncAfter(
                     deadline: .now() + 1.0
-                ) { [weak otpView] in
-                    otpView?.showLoadingView(false)
+                ) { [weak self] in
+                    self?.otpView.showLoadingView(false)
                 }
             }
     }
