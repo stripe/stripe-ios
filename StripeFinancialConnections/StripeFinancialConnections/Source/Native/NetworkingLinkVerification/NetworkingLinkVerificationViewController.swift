@@ -193,7 +193,7 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                         )
 
                     let nextPane: FinancialConnectionsSessionManifest.NextPane
-                    if self.dataSource.manifest.initialInstitution == nil {
+                    if self.dataSource.manifest.initialInstitution != nil {
                         nextPane = .partnerAuth
                     } else {
                         nextPane = .institutionPicker
