@@ -169,11 +169,11 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                 guard let self = self else { return }
                 switch result {
                 case .success:
-                    dataSource.analyticsClient.log(
+                    self.dataSource.analyticsClient.log(
                         eventName: "networking.verification.success",
                         pane: .networkingLinkVerification
                     )
-                    requestNextPane(.linkAccountPicker)
+                    self.requestNextPane(.linkAccountPicker)
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient
@@ -193,12 +193,12 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                         )
 
                     let nextPane: FinancialConnectionsSessionManifest.NextPane
-                    if dataSource.manifest.initialInstitution == nil {
+                    if self.dataSource.manifest.initialInstitution == nil {
                         nextPane = .partnerAuth
                     } else {
                         nextPane = .institutionPicker
                     }
-                    requestNextPane(nextPane)
+                    self.requestNextPane(nextPane)
                 }
 
                 // only hide loading view after animation

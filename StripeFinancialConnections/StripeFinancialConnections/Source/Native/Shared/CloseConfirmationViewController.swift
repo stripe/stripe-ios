@@ -56,9 +56,10 @@ final class CloseConfirmationViewController: SheetViewController {
                     accessibilityIdentifier: "close_confirmation_ok",
                     action: { [weak self] in
                         guard let self = self else { return }
+                        let didSelectClose = self.didSelectClose
                         self.dismiss(
                             animated: true,
-                            completion: { [didSelectClose] in
+                            completion: {
                                 // call `didSelectClose` AFTER we dismiss the
                                 // sheet to ensure we don't have bugs where
                                 // a view controller is in process of dismissing
