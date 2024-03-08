@@ -11,7 +11,7 @@ import XCTest
 class StringExtensionsTests: XCTestCase {
 
     private let nonBreakingSpace = "\u{00a0}"
-    
+
     func testExtractingLinksFromString() throws {
         XCTAssert("Not Equal Test".extractLinks() != ("Wrong Word", []))
         XCTAssert("No Link".extractLinks() == ("No Link", []))
