@@ -235,7 +235,7 @@ final class PartnerAuthViewController: SheetViewController {
                 completionHandler: { [weak self] isSuccess in
                     guard let self = self else { return }
                     if !isSuccess {
-                        handleAuthSessionCancel(authSession, nil)
+                        self.handleAuthSessionCancel(authSession, nil)
                     }
                 }
             )
