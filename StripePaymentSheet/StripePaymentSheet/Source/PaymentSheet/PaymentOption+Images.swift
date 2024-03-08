@@ -92,6 +92,8 @@ extension STPPaymentMethod {
             return Image.carousel_sepa.makeImage().withRenderingMode(.alwaysOriginal)
         case .link:
             return Image.carousel_link.makeImage().withRenderingMode(.alwaysOriginal)
+        case .klarna:
+            return Image.pm_type_klarna.makeImage().withRenderingMode(.alwaysOriginal)
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()

@@ -665,14 +665,12 @@ extension PaymentSheetFormFactory {
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
-        guard let currency = currency else {
-            assertionFailure("Klarna requires a non-nil currency")
-            return nil
+        var countryCodes: [String] = addressSpecProvider.countries
+        if let currency = currency {
+            countryCodes = Locale.current.sortedByTheirLocalizedNames(
+                KlarnaHelper.availableCountries(currency: currency)
+            )
         }
-
-        let countryCodes = Locale.current.sortedByTheirLocalizedNames(
-            KlarnaHelper.availableCountries(currency: currency)
-        )
         let defaultValue = getPreviousCustomerInput(for: apiPath) ?? defaultBillingDetails(countryAPIPath: apiPath).address.country
         let country = PaymentMethodElementWrapper(
             DropdownFieldElement.Address.makeCountry(

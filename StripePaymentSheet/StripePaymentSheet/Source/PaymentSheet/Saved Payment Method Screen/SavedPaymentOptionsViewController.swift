@@ -652,6 +652,11 @@ extension STPPaymentMethod {
                 title: String.Localized.removeBankAccount,
                 message: String(format: formattedMessage, last4)
             )
+        case .klarna:
+            return (
+                title: "Klarna",
+                message: klarna?.allResponseFields.keys.description ?? ""
+            )
         default:
             assertionFailure()
             return (title: "", message: "")
