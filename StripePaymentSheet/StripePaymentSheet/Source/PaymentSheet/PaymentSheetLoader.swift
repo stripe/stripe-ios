@@ -65,12 +65,15 @@ final class PaymentSheetLoader {
                     }
                 }
 
+                let resultingSavedPaymentMethods = extractSavedPaymentMethods(intent: intent,
+                                                                              savedPaymentMethods: try await savedPaymentMethods)
+
                 // Load link account session. Continue without Link if it errors.
                 let linkAccount = try? await lookupLinkAccount(intent: intent, configuration: configuration)
                 LinkAccountContext.shared.account = linkAccount
 
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
-                let filteredSavedPaymentMethods = try await savedPaymentMethods
+                let filteredSavedPaymentMethods = resultingSavedPaymentMethods
                     .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
                     .filter {
                         $0.supportsSavedPaymentMethod(
@@ -168,7 +171,7 @@ final class PaymentSheetLoader {
         if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email)
         } else if let customerID = configuration.customer?.id,
-            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+                  let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         {
             let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
             // If there's an error in this call we can just ignore it
@@ -244,7 +247,9 @@ final class PaymentSheetLoader {
 
     static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
     static func fetchSavedPaymentMethods(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
-        guard let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret else {
+        guard let customerID = configuration.customer?.id,
+              let ephemeralKey = configuration.customer?.ephemeralKeySecret,
+              !ephemeralKey.isEmpty else {
             return []
         }
         return try await withCheckedThrowingContinuation { continuation in
@@ -265,6 +270,14 @@ final class PaymentSheetLoader {
                 }
                 continuation.resume(returning: paymentMethods)
             }
+        }
+    }
+
+    static func extractSavedPaymentMethods(intent: Intent, savedPaymentMethods: [STPPaymentMethod]) -> [STPPaymentMethod] {
+        if let elementsSessionPaymentMethods = intent.elementsSession.customer?.paymentMethods {
+            return elementsSessionPaymentMethods
+        } else {
+            return savedPaymentMethods
         }
     }
 }

@@ -71,6 +71,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case new
         case returning
     }
+    enum CustomerKeyType: String, PickerEnum {
+        static var enumName: String { "CustomerKeyType" }
+
+        case legacy
+        case customerSession = "customer_session"
+    }
 
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
@@ -246,6 +252,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     var uiStyle: UIStyle
     var mode: Mode
+    var customerKeyType: CustomerKeyType
     var integrationType: IntegrationType
     var customerMode: CustomerMode
     var currency: Currency
@@ -278,6 +285,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
             mode: .payment,
+            customerKeyType: .legacy,
             integrationType: .normal,
             customerMode: .guest,
             currency: .usd,

@@ -117,8 +117,10 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
 
         // Clean up, detach the payment method as a customer can only have 400 payment methods saved
         try await client.detachPaymentMethod(paymentMethod.stripeId,
-                                             fromCustomerUsing: customerAndEphemeralKey.ephemeralKeySecret)
+                                             fromCustomerUsing: customerAndEphemeralKey.ephemeralKeySecret,
+                                             shouldRemoveDuplicates: false)
      }
+    // TODO: Add Function to test w/ customerSession
 
     func testCreateBacsPaymentMethod() {
         let client = STPAPIClient(publishableKey: "pk_test_z6Ct4bpx0NUjHii0rsi4XZBf00jmM8qA28")

@@ -606,7 +606,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
                          updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         guard case .saved(let paymentMethod) = paymentMethodSelection,
-            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key secret")
         }
@@ -638,13 +638,21 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
         guard case .saved(let paymentMethod) = paymentMethodSelection,
-            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         else {
             return
         }
+        var shouldRemoveDuplicates = false
+        if let customerAccessProvider = configuration.customer?.customerAccessProvider,
+           case .customerSession = customerAccessProvider,
+           paymentMethod.type == .card {
+            shouldRemoveDuplicates = true
+        }
         configuration.apiClient.detachPaymentMethod(
             paymentMethod.stripeId,
-            fromCustomerUsing: ephemeralKey
+            customerId: configuration.customer?.id,
+            fromCustomerUsing: ephemeralKey,
+            shouldRemoveDuplicates: shouldRemoveDuplicates
         ) { (_) in
             // no-op
         }

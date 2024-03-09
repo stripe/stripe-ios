@@ -27,7 +27,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         var config = PaymentSheet.Configuration()
         config.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_foo", "external_bar"], externalPaymentMethodConfirmHandler: { _, _, _ in })
 
-        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: config.externalPaymentMethodConfiguration)
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: config.externalPaymentMethodConfiguration, customerAccessProvider: nil)
         XCTAssertEqual(parameters["key"] as? String, "pk_test")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], ["external_foo", "external_bar"])
@@ -50,7 +50,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                                                             onBehalfOf: "acct_connect",
                                                             confirmHandler: { _, _, _ in })
 
-        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: nil)
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: nil, customerAccessProvider: nil)
         XCTAssertEqual(parameters["key"] as? String, "pk_test")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], [])
