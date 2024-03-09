@@ -45,7 +45,11 @@ final class IdentityAnalyticsClientTest: XCTestCase {
         // assert log
         XCTAssertEqual(mockAnalyticsClient.loggedAnalyticsPayloads.count, 2)
         XCTAssertTrue(mockAnalyticsClient.loggedAnalyticsPayloads.contains(where: { $0["event_name"] as? String == IdentityAnalyticsClient.EventName.screenAppeared.rawValue }))
-        XCTAssertTrue(mockAnalyticsClient.loggedAnalyticsPayloads.contains(where: { $0["event_name"] as? String == IdentityAnalyticsClient.EventName.experimentExposure.rawValue }))
+        XCTAssertTrue(mockAnalyticsClient.loggedAnalyticsPayloads.contains(where: {
+            $0["event_name"] as? String == IdentityAnalyticsClient.EventName.experimentExposure.rawValue &&
+            $0["arb_id"] as? String == "testUserSession" &&
+            $0["experiment_retrieved"] as? String == "experiment1"
+        }))
     }
 
     func testExperimentWithoutEventMatchedNotLogged() throws {
