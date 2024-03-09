@@ -205,7 +205,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
     open func detachPaymentMethod(paymentMethodId: String) async throws {
         let customerEphemeralKey = try await customerEphemeralKey
         return try await withCheckedThrowingContinuation({ continuation in
-            apiClient.detachPaymentMethod(paymentMethodId, fromCustomerUsing: customerEphemeralKey.ephemeralKeySecret) { error in
+            apiClient.detachPaymentMethod(paymentMethodId, customerId: customerEphemeralKey.id, fromCustomerUsing: customerEphemeralKey.ephemeralKeySecret, shouldRemoveDuplicates: false) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                     return
