@@ -174,11 +174,14 @@ extension ErrorViewController {
         guard case .error(let error) = model else {
             return
         }
-        sheetController?.analyticsClient.logGenericError(
-            error: error,
-            filePath: filePath,
-            line: line
-        )
+        if let sheetController = sheetController {
+            sheetController.analyticsClient.logGenericError(
+                error: error,
+                filePath: filePath,
+                line: line,
+                sheetController: sheetController
+            )
+        }
     }
 }
 

@@ -58,12 +58,14 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     private let semaphore: DispatchSemaphore
 
     private let analyticsClient: IdentityAnalyticsClient
+    private let sheetController: VerificationSheetControllerProtocol
 
     init(
-        analyticsClient: IdentityAnalyticsClient,
+        sheetController: VerificationSheetControllerProtocol,
         maxConcurrentScans: Int = kConcurrentImageScannerDefaultMaxConcurrentScans
     ) {
-        self.analyticsClient = analyticsClient
+        self.analyticsClient = sheetController.analyticsClient
+        self.sheetController = sheetController
         self.semaphore = DispatchSemaphore(value: maxConcurrentScans)
     }
 
@@ -124,7 +126,7 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
             case .success(let scannerOutput):
                 wrappedCompletion(scannerOutput)
             case .failure(let error):
-                self.analyticsClient.logGenericError(error: error)
+                self.analyticsClient.logGenericError(error: error, sheetController: self.sheetController)
             }
 
             // Track when the scan ended
