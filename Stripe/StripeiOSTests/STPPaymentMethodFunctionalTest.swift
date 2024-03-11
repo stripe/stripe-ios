@@ -113,6 +113,7 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
 
         // Clean up, detach the payment method as a customer can only have 400 payment methods saved
         try await client.detachPaymentMethod(paymentMethod.stripeId,
+                                             customerId: nil,
                                              fromCustomerUsing: customerAndEphemeralKey.ephemeralKeySecret,
                                              shouldRemoveDuplicates: false)
      }
