@@ -1,3 +1,8 @@
+## x.x.x x-x-x
+
+### PaymentSheet
+* [Added] Support for Klarna with SetupIntents and PaymentIntents with `setup_future_usage`.
+
 ## 23.25.0 2024-03-11
 ### CustomerSheet
 * [Added] Added `paymentMethodTypes` in `CustomerAdapter` to control what payment methods are displayed.
