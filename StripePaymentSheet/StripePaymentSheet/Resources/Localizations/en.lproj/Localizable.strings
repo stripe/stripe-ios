@@ -157,9 +157,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Pay in templated string for afterpay/clearpay */
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";
 
-/* Klarna pay later copy */
-"Pay later with Klarna." = "Pay later with Klarna.";
-
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
 
