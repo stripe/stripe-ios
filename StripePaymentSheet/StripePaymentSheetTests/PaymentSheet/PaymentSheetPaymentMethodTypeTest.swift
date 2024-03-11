@@ -361,8 +361,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testSetupIntentFilteredPaymentMethodTypes() {
-        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.card, .cashApp, .amazonPay])
-        let intent = Intent.setupIntent(elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp", "amazon_pay"]), setupIntent: setupIntent)
+        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.card, .cashApp, .amazonPay, .klarna])
+        let intent = Intent.setupIntent(elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp", "amazon_pay", "klarna"]), setupIntent: setupIntent)
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
         let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
