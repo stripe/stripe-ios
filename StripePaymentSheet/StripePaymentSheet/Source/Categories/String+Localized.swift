@@ -225,6 +225,12 @@ extension String.Localized {
         STPLocalizedString(
             "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms.",
             "Klarna mandate text"
+    }
+    
+    static var amazon_pay_mandate_text: String {
+        STPLocalizedString(
+            "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.",
+            "Amazon Pay mandate text"
         )
     }
 }

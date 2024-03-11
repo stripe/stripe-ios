@@ -348,7 +348,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testPaymentIntentFilteredPaymentMethodTypes_withSetupFutureUsage() {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .mobilePay, .klarna], setupFutureUsage: .onSession)
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .mobilePay, .amazonPay, .klarna], setupFutureUsage: .onSession)
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
         configuration.allowsDelayedPaymentMethods = true
@@ -357,12 +357,12 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp), .stripe(.klarna)])
+        XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp), .stripe(.amazonPay), .stripe(.klarna)])
     }
 
     func testSetupIntentFilteredPaymentMethodTypes() {
-        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.card, .cashApp, .klarna])
-        let intent = Intent.setupIntent(elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp", "klarna"]), setupIntent: setupIntent)
+        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.card, .cashApp, .amazonPay])
+        let intent = Intent.setupIntent(elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp", "amazon_pay"]), setupIntent: setupIntent)
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
         let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
@@ -370,7 +370,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp), .stripe(.klarna)])
+        XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp), .stripe(.amazonPay), .stripe(.klarna)])
     }
 
     func testSetupIntentFilteredPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {

@@ -167,6 +167,9 @@ class PaymentSheetFormFactory {
         } else if paymentMethod == .klarna && saveMode == .merchantRequired {
             // special case, display mandate for Klarna when setting up or pi+sfu
             additionalElements = [makeKlarnaMandate()]
+        } else if paymentMethod == .amazonPay && saveMode == .merchantRequired {
+            // special case, display mandate for Amazon Pay when setting up or pi+sfu
+            additionalElements = [makeAmazonPayMandate()]
         } else if paymentMethod == .bancontact {
             return makeBancontact()
         } else if paymentMethod == .bacsDebit {
@@ -357,6 +360,11 @@ extension PaymentSheetFormFactory {
 
     func makeKlarnaMandate() -> PaymentMethodElement {
         let mandateText = String(format: String.Localized.klarna_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+    
+    func makeAmazonPayMandate() -> PaymentMethodElement {
+        let mandateText = String(format: String.Localized.amazon_pay_mandate_text, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
     }
 

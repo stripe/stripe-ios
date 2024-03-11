@@ -40,6 +40,9 @@
 /* Klarna mandate text */
 "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms." = "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms.";
 
+/* Amazon Pay mandate text */
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
+
 /* Paypal mandate text */
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 

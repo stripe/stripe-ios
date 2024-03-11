@@ -557,8 +557,8 @@ extension PaymentSheet {
                 paymentMethodType = paymentMethodParams.type
             }
 
-            let requiresMandate: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .klarna]
-            if  requiresMandate.contains(paymentMethodType) && paymentIntent.setupFutureUsage == .offSession
+            let requiresMandateData: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna]
+            if requiresMandateData.contains(paymentMethodType) && paymentIntent.setupFutureUsage == .offSession
             {
                 params.mandateData = .makeWithInferredValues()
             }
