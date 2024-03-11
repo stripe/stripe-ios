@@ -1,5 +1,15 @@
-## 23.24.0 2024-03-04
+## x.x.x xxxx-xx-xx
+### CustomerSheet
+* [Added] Added `paymentMethodTypes` in `CustomerAdapter` to control what payment methods are displayed.
 
+### PaymentSheet
+* [Fixed] The rotating [card brand view](https://docs.stripe.com/co-badged-cards-compliance) is now shown when card brand choice is enabled if the card number is empty.
+
+## 23.24.1 2024-03-05
+### PaymentSheet
+* [Fixed] Fixed an assertionFailure that happens when using FlowController and switching between saved payment methods
+
+## 23.24.0 2024-03-04
 ### PaymentSheet
 * [Added] Added support for [Link](https://docs.stripe.com/payments/link/mobile-payment-element-link) in PaymentSheet. Enabling Link in your [payment method settings](https://dashboard.stripe.com/settings/payment_methods) will enable Link in PaymentSheet. To choose different Link availability settings on web and mobile, use a custom [payment method configuration](https://docs.stripe.com/payments/multiple-payment-method-configs).
 * [Fixed] Fixed an issue where some 3DS2 payments may fail to complete successfully.
