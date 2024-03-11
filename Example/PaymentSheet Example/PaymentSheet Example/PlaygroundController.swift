@@ -686,6 +686,9 @@ extension PlaygroundController {
             }
         }
     }
+    static func resetCustomer() {
+        UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey)
+    }
 }
 
 extension AddressViewController.AddressDetails {
