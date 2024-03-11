@@ -242,7 +242,7 @@ final class PaymentSheetLoader {
         return intent
     }
 
-    static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit, .klarna]
+    static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
     static func fetchSavedPaymentMethods(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
         guard let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret else {
             return []

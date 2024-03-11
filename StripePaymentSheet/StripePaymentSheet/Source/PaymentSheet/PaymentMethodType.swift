@@ -366,8 +366,6 @@ extension STPPaymentMethod {
                 return []
             case .USBankAccount, .SEPADebit:
                 return [.userSupportsDelayedPaymentMethods]
-            case .klarna:
-                return [.returnURL]
             default:
                 return [.unsupportedForReuse]
             }
