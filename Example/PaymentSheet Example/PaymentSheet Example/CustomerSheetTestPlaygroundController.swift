@@ -162,7 +162,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             return "returning"
         case .new:
             return "new"
-        case .id:
+        case .customID:
             return self.settings.customerId ?? ""
         }
     }
@@ -221,7 +221,7 @@ extension CustomerSheetTestPlaygroundController {
                     DispatchQueue.main.async {
                         self.paymentOptionSelection = selection
                         self.settings.customerId = customerId
-                        self.settings.customerMode = .id
+                        self.settings.customerMode = .customID
                         self.currentlyRenderedSettings = self.settings
                         self.serializeSettingsToNSUserDefaults()
                         self.isLoading = false
@@ -229,7 +229,7 @@ extension CustomerSheetTestPlaygroundController {
                 } catch {
                     DispatchQueue.main.async {
                         self.settings.customerId = customerId
-                        self.settings.customerMode = .id
+                        self.settings.customerMode = .customID
                         self.currentlyRenderedSettings = self.settings
                         self.serializeSettingsToNSUserDefaults()
                         self.isLoading = false

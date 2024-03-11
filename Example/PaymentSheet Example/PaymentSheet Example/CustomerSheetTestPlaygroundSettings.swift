@@ -11,7 +11,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
 
         case new
         case returning
-        case id
+        case customID
     }
     enum PaymentMethodMode: String, PickerEnum {
         static var enumName: String { "PaymentMethodMode" }
