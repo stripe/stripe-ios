@@ -220,4 +220,11 @@ extension String.Localized {
     static var cpf_cpnj: String {
         STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
     }
+
+    static var klarna_mandate_text: String {
+        STPLocalizedString(
+            "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms.",
+            "Klarna mandate text"
+        )
+    }
 }

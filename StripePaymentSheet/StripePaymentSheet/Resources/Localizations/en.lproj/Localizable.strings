@@ -37,6 +37,9 @@
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
+/* Klarna mandate text */
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms." = "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms.";
+
 /* Paypal mandate text */
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 

@@ -164,6 +164,9 @@ class PaymentSheetFormFactory {
         } else if paymentMethod == .revolutPay && saveMode == .merchantRequired {
             // special case, display mandate for revolutPay when setting up or pi+sfu
             additionalElements = [makeRevolutPayMandate()]
+        } else if paymentMethod == .klarna && saveMode == .merchantRequired {
+            // special case, display mandate for Klarna when setting up or pi+sfu
+            additionalElements = [makeKlarnaMandate()]
         } else if paymentMethod == .bancontact {
             return makeBancontact()
         } else if paymentMethod == .bacsDebit {
@@ -349,6 +352,11 @@ extension PaymentSheetFormFactory {
 
     func makeRevolutPayMandate() -> PaymentMethodElement {
         let mandateText = String(format: String.Localized.revolut_pay_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+
+    func makeKlarnaMandate() -> PaymentMethodElement {
+        let mandateText = String(format: String.Localized.klarna_mandate_text, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
     }
 
@@ -665,12 +673,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
-        var countryCodes: [String] = addressSpecProvider.countries
-        if let currency = currency {
-            countryCodes = Locale.current.sortedByTheirLocalizedNames(
-                KlarnaHelper.availableCountries(currency: currency)
-            )
-        }
+        let countryCodes = Locale.current.sortedByTheirLocalizedNames(addressSpecProvider.countries)
         let defaultValue = getPreviousCustomerInput(for: apiPath) ?? defaultBillingDetails(countryAPIPath: apiPath).address.country
         let country = PaymentMethodElementWrapper(
             DropdownFieldElement.Address.makeCountry(
