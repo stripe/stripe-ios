@@ -206,7 +206,7 @@ final class IdentityImageUploader {
                         fileId: file.id,
                         fileName: fileName,
                         fileSizeBytes: metrics.fileSizeBytes,
-                        sheetController: sheetController
+                        sheetController: self.sheetController
                     )
                 }
             }
