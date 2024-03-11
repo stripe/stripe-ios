@@ -28,14 +28,18 @@ class IdentityFlowView: UIView {
         )
         static let buttonSpacing: CGFloat = 10
         static let buttonInsets = NSDirectionalEdgeInsets(
-            top: 8,
+            top: 4,
             leading: 16,
             bottom: 8,
             trailing: 16
         )
+        static let buttontopInsets = NSDirectionalEdgeInsets(
+            top: 8,
+            leading: 0,
+            bottom: -8,
+            trailing: 0
+        )
         static let stackViewSpacing: CGFloat = 8
-
-        static let buttonTopBottomPadding: CGFloat = 16
 
         static func buttonConfiguration(isPrimary: Bool) -> Button.Configuration {
             return isPrimary ? .identityPrimary() : .identitySecondary()
@@ -110,8 +114,16 @@ class IdentityFlowView: UIView {
 
     private let buttonBackgroundView: UIView = {
         let buttonBackgroundView = UIView()
+        // systemBackground might be different in dark/light mode
         buttonBackgroundView.backgroundColor = .systemBackground
         return buttonBackgroundView
+    }()
+
+    private let buttonTopBackgroundView: UIView = {
+        let buttonTopBackgroundView = UIView()
+        // systemBackground might be different in dark/light mode
+        buttonTopBackgroundView.backgroundColor = .systemBackground
+        return buttonTopBackgroundView
     }()
 
     private let buttonTopContentView = HTMLTextView()
@@ -175,7 +187,8 @@ class IdentityFlowView: UIView {
         // Update the scrollView's inset based on the height of the button
         // container so that the content displays above the container plus
         // buttonSpacing when scrolled all the way to the bottom
-        let bottomInset = buttonBackgroundView.frame.height + Style.buttonSpacing
+        let bottomInset = buttonBackgroundView.frame.height + Style.buttonSpacing + buttonTopBackgroundView.frame.height
+
         scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
         scrollView.contentInset.bottom = bottomInset
 
@@ -221,7 +234,9 @@ extension IdentityFlowView {
 
         // Arrange container stack view: scroll + button
         addAndPinSubview(scrollView)
-        addSubview(buttonTopContentView)
+        addSubview(buttonTopBackgroundView)
+        buttonTopBackgroundView.addSubview(buttonTopContentView)
+
         addSubview(buttonBackgroundView)
         buttonBackgroundView.addAndPinSubviewToSafeArea(
             buttonStackView,
@@ -231,12 +246,17 @@ extension IdentityFlowView {
 
     fileprivate func installConstraints() {
         buttonBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        buttonTopBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         buttonTopContentView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // Constrain buttonTop top of buttons
-            buttonTopContentView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            buttonTopContentView.bottomAnchor.constraint(equalTo: buttonBackgroundView.topAnchor, constant: -Style.buttonTopBottomPadding),
+            buttonTopBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            buttonTopBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            buttonTopBackgroundView.bottomAnchor.constraint(equalTo: buttonBackgroundView.topAnchor),
+            buttonTopContentView.centerXAnchor.constraint(equalTo: buttonTopBackgroundView.centerXAnchor),
+            buttonTopContentView.topAnchor.constraint(equalTo: buttonTopBackgroundView.topAnchor, constant: Style.buttontopInsets.top),
+            buttonTopContentView.bottomAnchor.constraint(equalTo: buttonTopBackgroundView.bottomAnchor, constant: Style.buttontopInsets.bottom),
             // Constrain buttons to bottom
             buttonBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
             buttonBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
