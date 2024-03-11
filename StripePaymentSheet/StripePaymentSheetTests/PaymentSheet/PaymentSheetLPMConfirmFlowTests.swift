@@ -350,6 +350,15 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
             }
         }
     }
+
+    func testKlarnaConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "USD",
+                               paymentMethodType: .stripe(.klarna),
+                               merchantCountry: .US) { form in
+            form.getTextFieldElement("Email")?.setText("foo@bar.com")
+        }
+    }
 }
 
 // MARK: - Helper methods
