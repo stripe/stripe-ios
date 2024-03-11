@@ -13,9 +13,6 @@ struct CustomerSession: Decodable, Equatable, Hashable {
     let apiKey: String
     let apiKeyExpiry: Int
     let customer: String
-//may need this later
-    //   let components: https://livegrep.corp.stripe.com/view/stripe-internal/pay-server/api/lib/customer_session/resource/components_client_resource.rb#L8
-
 
     /// Helper method to decode the `v1/elements/sessions` response's `external_payment_methods_data` hash.
     /// - Parameter response: The value of the `external_payment_methods_data` key in the `v1/elements/sessions` response.
