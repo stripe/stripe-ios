@@ -164,6 +164,9 @@ class PaymentSheetFormFactory {
         } else if paymentMethod == .revolutPay && saveMode == .merchantRequired {
             // special case, display mandate for revolutPay when setting up or pi+sfu
             additionalElements = [makeRevolutPayMandate()]
+        } else if paymentMethod == .amazonPay && saveMode == .merchantRequired {
+            // special case, display mandate for Amazon Pay when setting up or pi+sfu
+            additionalElements = [makeAmazonPayMandate()]
         } else if paymentMethod == .bancontact {
             return makeBancontact()
         } else if paymentMethod == .bacsDebit {
@@ -349,6 +352,11 @@ extension PaymentSheetFormFactory {
 
     func makeRevolutPayMandate() -> PaymentMethodElement {
         let mandateText = String(format: String.Localized.revolut_pay_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+
+    func makeAmazonPayMandate() -> PaymentMethodElement {
+        let mandateText = String(format: String.Localized.amazon_pay_mandate_text, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
     }
 
