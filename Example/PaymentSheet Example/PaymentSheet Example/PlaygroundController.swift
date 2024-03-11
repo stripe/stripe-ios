@@ -684,6 +684,8 @@ extension PlaygroundController {
                 print("Unable to deserialize customerId")
                 UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey)
             }
+        } else {
+            self.customerId = nil
         }
     }
     static func resetCustomer() {
