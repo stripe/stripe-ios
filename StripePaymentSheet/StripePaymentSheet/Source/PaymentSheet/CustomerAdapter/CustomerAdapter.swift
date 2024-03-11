@@ -103,11 +103,11 @@ public struct CustomerEphemeralKey {
 public struct CustomerSessionClientSecret {
     /// The identifier of the Stripe Customer object.
     /// See https://stripe.com/docs/api/customers/object#customer_object-id
-    public let customerId: String
+    internal let customerId: String
 
     /// Customer session client secret
     /// See: https://docs.corp.stripe.com/api/customer_sessions/object
-    public let clientSecret: String
+    internal let clientSecret: String
 
     public init(customerId: String, clientSecret: String) {
         self.customerId = customerId
