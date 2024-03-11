@@ -1,5 +1,4 @@
 ## x.x.x x-x-x
-
 ### PaymentSheet
 * [Added] Support for Klarna with SetupIntents and PaymentIntents with `setup_future_usage`.
 
@@ -9,7 +8,6 @@
 
 ### PaymentSheet
 * [Fixed] The rotating [card brand view](https://docs.stripe.com/co-badged-cards-compliance) is now shown when card brand choice is enabled if the card number is empty.
-* [Added] Support for Klarna with SetupIntents and PaymentIntents with `setup_future_usage`.
 
 ## 23.24.1 2024-03-05
 ### PaymentSheet
