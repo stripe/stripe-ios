@@ -1161,7 +1161,7 @@ extension STPAPIClient {
             do {
                 if let customerId, shouldRemoveDuplicates {
                     let allCardPaymentMethods = try await fetchPaymentMethods(customerId)
-                    let requestedPMToDelete = allCardPaymentMethods.filter({ $0.stripeId == paymentMethodID}).first
+                    let requestedPMToDelete = allCardPaymentMethods.filter({ $0.stripeId == paymentMethodID }).first
                     guard let requestedPMToDelete else {
                         // Payment method doesnt exist anymore, nothing to do
                         completion(nil)
@@ -1169,8 +1169,8 @@ extension STPAPIClient {
                     }
 
                     let allPaymentMethodsToDelete: [STPPaymentMethod] = allCardPaymentMethods
-                        .filter({$0.type == .card})
-                        .filter({$0.card?.fingerprint == requestedPMToDelete.card?.fingerprint})
+                        .filter({ $0.type == .card })
+                        .filter({ $0.card?.fingerprint == requestedPMToDelete.card?.fingerprint })
                     let error = await detachMulitplePaymentMethods(allPaymentMethodsToDelete)
                     completion(error)
                 } else {
