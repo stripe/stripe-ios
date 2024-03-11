@@ -2,6 +2,9 @@
 ### CustomerSheet
 * [Added] Added `paymentMethodTypes` in `CustomerAdapter` to control what payment methods are displayed.
 
+### PaymentSheet
+* [Fixed] The rotating [card brand view](https://docs.stripe.com/co-badged-cards-compliance)) is now shown when card brand choice is enabled if the card number is empty.
+
 ## 23.24.1 2024-03-05
 ### PaymentSheet
 * [Fixed] Fixed an assertionFailure that happens when using FlowController and switching between saved payment methods
