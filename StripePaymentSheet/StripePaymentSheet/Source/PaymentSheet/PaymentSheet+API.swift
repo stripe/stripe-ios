@@ -557,9 +557,8 @@ extension PaymentSheet {
                 paymentMethodType = paymentMethodParams.type
             }
 
-            // Paypal and Cash App Pay require mandate_data if setting up
-            if (params.paymentMethodType == .payPal || params.paymentMethodType == .cashApp || params.paymentMethodType == .revolutPay)
-                && paymentIntent.setupFutureUsage == .offSession
+            let requiresMandateData: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .amazonPay]
+            if requiresMandateData.contains(paymentMethodType) && paymentIntent.setupFutureUsage == .offSession
             {
                 params.mandateData = .makeWithInferredValues()
             }
