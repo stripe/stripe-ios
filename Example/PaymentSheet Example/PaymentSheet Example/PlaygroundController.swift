@@ -381,6 +381,7 @@ class PlaygroundController: ObservableObject {
 extension PlaygroundController {
     @objc
     func load() {
+        loadLastSavedCustomer()
         serializeSettingsToNSUserDefaults()
         loadBackend()
     }
@@ -654,6 +655,13 @@ extension PlaygroundController {
     func serializeSettingsToNSUserDefaults() {
         let data = try! JSONEncoder().encode(settings)
         UserDefaults.standard.set(data, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
+
+        if let customerId {
+            let customerIdData = try! JSONEncoder().encode(customerId)
+            UserDefaults.standard.set(customerIdData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey)
+        } else {
+            UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey)
+        }
     }
 
     static func settingsFromDefaults() -> PaymentSheetTestPlaygroundSettings? {
@@ -666,6 +674,17 @@ extension PlaygroundController {
             }
         }
         return nil
+    }
+
+    func loadLastSavedCustomer() {
+        if let customerIdData = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey) as? Data {
+            do {
+                self.customerId = try JSONDecoder().decode(String.self, from: customerIdData)
+            } catch {
+                print("Unable to deserialize customerId")
+                UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey)
+            }
+        }
     }
 }
 
