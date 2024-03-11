@@ -893,7 +893,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     // MARK: Card brand choice
-/* Temporarily disable CBC tests
+
     func testCardBrandChoice() throws {
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -1096,7 +1096,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         // Card should be removed
         XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
     }
-*/
+
     // This only tests the PaymentSheet + PaymentIntent flow.
     // Other confirmation flows are tested in PaymentSheet+LPMTests.swift
     func testSEPADebitPaymentMethod_PaymentSheet() {
