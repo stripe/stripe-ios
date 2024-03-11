@@ -114,12 +114,14 @@ class IdentityFlowView: UIView {
 
     private let buttonBackgroundView: UIView = {
         let buttonBackgroundView = UIView()
+        // systemBackground might be different in dark/light mode
         buttonBackgroundView.backgroundColor = .systemBackground
         return buttonBackgroundView
     }()
 
     private let buttonTopBackgroundView: UIView = {
         let buttonTopBackgroundView = UIView()
+        // systemBackground might be different in dark/light mode
         buttonTopBackgroundView.backgroundColor = .systemBackground
         return buttonTopBackgroundView
     }()
