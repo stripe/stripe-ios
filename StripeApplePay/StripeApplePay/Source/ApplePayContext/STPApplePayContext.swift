@@ -145,17 +145,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @available(macCatalystApplicationExtension, unavailable)
     @objc(presentApplePayWithCompletion:)
     public func presentApplePay(completion: STPVoidBlock? = nil) {
-        // A note on `canImport(CompositorServices)`, found here and elsewhere
-        // in the codebase: This is a terrible, terrible hack.
-        // We should use #if os(visionOS), but that will fail to compile
-        // on Xcode 14. Because we need to continue supporting both Xcode 14
-        // *and* building on visionOS, we instead check `canImport(CompositerServices)`, as CompositerServices currently
-        // only exists on visionOS. I'm sure it will exist on iOS someday,
-        // but we only need this in place until we drop Xcode 14.
-        //
-        // Future engineers in May 2024: Please delete this! Find every mention
-        // of canImport(CompositorServices) and replace it with os(visionOS).
-        #if canImport(CompositorServices)
+        #if os(visionOS)
         // This isn't great: We should encourage the use of presentApplePay(from window:) instead.
         let windows = UIApplication.shared.connectedScenes
             .compactMap { ($0 as? UIWindowScene)?.windows }
@@ -265,26 +255,14 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
     // MARK: - Private Helper
     func _delegateToAppleDelegateMapping() -> [Selector: Selector] {
-        // We need this type to disambiguate from the other PKACDelegate.didSelect:handler: method
-        // HACK: This signature changed in Xcode 14, we need to check the compiler version to choose the right signature.
-        #if compiler(>=5.7)
-            typealias pkDidSelectShippingMethodSignature =
-                (any PKPaymentAuthorizationControllerDelegate) -> (
-                    (
-                        PKPaymentAuthorizationController,
-                        PKShippingMethod,
-                        @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
-                    ) -> Void
-                )?
-        #else
-            typealias pkDidSelectShippingMethodSignature = (
-                (PKPaymentAuthorizationControllerDelegate) -> (
-                    PKPaymentAuthorizationController, PKShippingMethod,
+        typealias pkDidSelectShippingMethodSignature =
+            (any PKPaymentAuthorizationControllerDelegate) -> (
+                (
+                    PKPaymentAuthorizationController,
+                    PKShippingMethod,
                     @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
                 ) -> Void
             )?
-        #endif
-
         let pk_didSelectShippingMethod = #selector(
             (PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
                 _:
