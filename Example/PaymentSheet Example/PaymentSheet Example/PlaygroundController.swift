@@ -88,7 +88,7 @@ class PlaygroundController: ObservableObject {
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
         guard settings.customerMode != .guest,
-              let customerId = self.settings.customerId else {
+              let customerId = self.customerId else {
             return nil
         }
         switch self.settings.customerKeyType {
