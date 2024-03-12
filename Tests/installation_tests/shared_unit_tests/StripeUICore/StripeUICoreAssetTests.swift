@@ -12,9 +12,8 @@ class StripeUICoreAssetTests: XCTestCase {
     func testImages() {
         let emptyImage = UIImage()
         for image in StripeUICore.Image.allCases {
-            print("test image name \(image)")
-            let _ = image.makeImage()
-//            XCTAssert(!safeImage.isEqual(emptyImage))
+            let safeImage = image.makeImage()
+            XCTAssert(!safeImage.isEqual(emptyImage))
         }
     }
 }
