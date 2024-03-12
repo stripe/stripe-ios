@@ -176,9 +176,9 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         }
         do {
             let result = try LinkPopupURLParser.result(with: returnURL)
-            switch result.link_status {
-            case .complete:
-                let paymentOption = PaymentOption.link(option: PaymentSheet.LinkConfirmOption.withPaymentMethod(paymentMethod: result.pm))
+            switch result {
+            case .complete(let pm):
+                let paymentOption = PaymentOption.link(option: PaymentSheet.LinkConfirmOption.withPaymentMethod(paymentMethod: pm))
 
                 STPAnalyticsClient.sharedClient.logLinkPopupSuccess(sessionType: self.context.intent.linkPopupWebviewOption)
                 UserDefaults.standard.markLinkAsUsed()
