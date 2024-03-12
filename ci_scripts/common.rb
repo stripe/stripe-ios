@@ -7,7 +7,7 @@ require 'English'
 # This should generally be the minimum Xcode version supported by the App Store, as the
 # compiled XCFrameworks won't be usable on older versions.
 # We sometimes bump this if an Xcode bug or deprecation forces us to upgrade early.
-VM_NAME = 'ventura-xcode:15.0'.freeze
+VM_NAME = 'sonoma-xcode:15.0'.freeze
 
 def rputs(string)
   puts string.red
