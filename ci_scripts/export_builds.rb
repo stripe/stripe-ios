@@ -76,8 +76,6 @@ Dir.chdir(root_dir) do
     -configuration "Release" \
     -archivePath "#{build_dir}/StripeFrameworks-sim.xcarchive" \
     -sdk iphonesimulator \
-    SYMROOT="#{build_dir}/StripeFrameworks-framework-sim" \
-    OBJROOT="#{build_dir}/StripeFrameworks-framework-sim" \
     SUPPORTS_MACCATALYST=NO \
     BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
     SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
@@ -97,8 +95,6 @@ Dir.chdir(root_dir) do
       -archivePath "#{build_dir}/StripeFrameworks-mac.xcarchive" \
       -sdk macosx \
       -destination 'generic/platform=macOS,variant=Mac Catalyst' \
-      SYMROOT="#{build_dir}/StripeFrameworks-framework-mac" \
-      OBJROOT="#{build_dir}/StripeFrameworks-framework-mac" \
       SUPPORTS_MACCATALYST=YES \
       BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
       SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
