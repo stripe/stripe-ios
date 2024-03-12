@@ -50,19 +50,17 @@ Dir.chdir(root_dir) do
 
   # Build for iOS
   puts `xcodebuild clean archive \
-    -quiet \
-    -workspace "Stripe.xcworkspace" \
-    -scheme "AllStripeFrameworks" \
-    -configuration "Release" \
-    -archivePath "#{build_dir}/StripeFrameworks-iOS.xcarchive" \
-    -sdk iphoneos \
-    -destination 'generic/platform=iOS' \
-    SYMROOT="#{build_dir}/StripeFrameworks-framework-ios" \
-    OBJROOT="#{build_dir}/StripeFrameworks-framework-ios" \
-    SUPPORTS_MACCATALYST=NO \
-    BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-    SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
-    SKIP_INSTALL=NO`
+      -quiet \
+      -workspace "Stripe.xcworkspace" \
+      -scheme "AllStripeFrameworks" \
+      -configuration "Release" \
+      -archivePath "#{build_dir}/StripeFrameworks-iOS.xcarchive" \
+      -sdk iphoneos \
+      -destination 'generic/platform=iOS' \
+      SUPPORTS_MACCATALYST=NO \
+      BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
+      SKIP_INSTALL=NO`
 
   exit_code = $?.exitstatus
   die "xcodebuild exited with non-zero status code: #{exit_code}" if exit_code != 0
