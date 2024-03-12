@@ -30,7 +30,7 @@ class ConsentViewController: UIViewController {
             boldFont: .heading(.extraLarge),
             linkFont: .heading(.extraLarge),
             textColor: .textDefault,
-            alignCenter: dataSource.merchantLogo != nil // TODO(kgaidis): is this necessary
+            alignCenter: true
         )
         titleLabel.setText(
             dataSource.consent.title,
