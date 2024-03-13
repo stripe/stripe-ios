@@ -207,7 +207,7 @@ class SheetViewController: UIViewController {
                 withDuration: sheetAnimationDuration,
                 delay: 0,
                 usingSpringWithDamping: 1.0,
-                initialSpringVelocity: abs(dismissAnimationInitialSpringVelocityY)/max(1,view.bounds.height),
+                initialSpringVelocity: abs(dismissAnimationInitialSpringVelocityY)/max(1, view.bounds.height),
                 options: [.curveEaseOut]
             ) {
                 self.contentView.frame = CGRect(
@@ -290,7 +290,7 @@ class SheetViewController: UIViewController {
                         usingSpringWithDamping: 0.9,
                         // the abs on velocity is important as
                         // velocity when going up is negative
-                        initialSpringVelocity: abs(velocity.y)/max(1,view.bounds.height),
+                        initialSpringVelocity: abs(velocity.y)/max(1, view.bounds.height),
                         options: [.curveEaseOut]
                     ) {
                         self.contentView.frame = CGRect(
