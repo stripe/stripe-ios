@@ -139,20 +139,17 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
                                    customerID: customerAndEphemeralKey.customer,
                                    ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
-
-
         // Element/Sessions endpoint should de-dupe payment methods with CustomerSesssion
         let cscs = try await STPTestingAPIClient().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
                                                                                                merchantCountry: nil)
         var configuration = PaymentSheet.Configuration()
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
-        let elementSession = try await client.retrieveElementsSession(withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic), confirmHandler: { paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+        let elementSession = try await client.retrieveElementsSession(withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic), confirmHandler: { _, _, _ in
             // no-op
         }), configuration: configuration)
 
         // Requires FF: elements_enable_read_allow_redisplay, to return "1", otherwise 0
         XCTAssertEqual(elementSession.customer?.paymentMethods.count, 1)
-
 
         // Official endpoint should have two payment methods
         let fetchedPaymentMethods = try await fetchPaymentMethods(client: client, customerAndEphemeralKey: customerAndEphemeralKey)
@@ -166,22 +163,6 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         let reFetchedPaymentMethods = try await fetchPaymentMethods(client: client, customerAndEphemeralKey: customerAndEphemeralKey)
         XCTAssertEqual(reFetchedPaymentMethods.count, 0)
     }
-
-    func fetchPaymentMethods(client: STPAPIClient,
-                             customerAndEphemeralKey: STPTestingAPIClient.CreateEphemeralKeyResponse) async throws -> [STPPaymentMethod] {
-        try await withCheckedThrowingContinuation { continuation in
-            client.listPaymentMethods(forCustomer: customerAndEphemeralKey.customer,
-                                      using: customerAndEphemeralKey.ephemeralKeySecret,
-                                      types: [.card]) { paymentMethods, error in
-                guard let paymentMethods, error == nil else {
-                    continuation.resume(throwing: error!)
-                    return
-                }
-                continuation.resume(returning: paymentMethods)
-            }
-        }
-    }
-
 
     func testCreateBacsPaymentMethod() {
         let client = STPAPIClient(publishableKey: "pk_test_z6Ct4bpx0NUjHii0rsi4XZBf00jmM8qA28")
@@ -282,4 +263,18 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
 
+    func fetchPaymentMethods(client: STPAPIClient,
+                             customerAndEphemeralKey: STPTestingAPIClient.CreateEphemeralKeyResponse) async throws -> [STPPaymentMethod] {
+        try await withCheckedThrowingContinuation { continuation in
+            client.listPaymentMethods(forCustomer: customerAndEphemeralKey.customer,
+                                      using: customerAndEphemeralKey.ephemeralKeySecret,
+                                      types: [.card]) { paymentMethods, error in
+                guard let paymentMethods, error == nil else {
+                    continuation.resume(throwing: error!)
+                    return
+                }
+                continuation.resume(returning: paymentMethods)
+            }
+        }
+    }
 }
