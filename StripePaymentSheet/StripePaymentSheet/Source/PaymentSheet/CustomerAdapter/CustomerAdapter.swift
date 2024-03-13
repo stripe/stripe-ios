@@ -167,7 +167,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
 
     @_spi(CustomerSessionBetaAccess)
     public init(customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret,
-                setupIntentClientSecretProvider: (() async throws -> String)? = nil,
+                setupIntentClientSecretProvider: @escaping (() async throws -> String),
                 paymentMethodTypes: [String]? = nil,
                 apiClient: STPAPIClient = .shared) {
         self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
