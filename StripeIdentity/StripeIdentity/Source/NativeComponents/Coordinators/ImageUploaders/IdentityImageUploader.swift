@@ -34,18 +34,19 @@ final class IdentityImageUploader {
 
     let apiClient: IdentityAPIClient
     let analyticsClient: IdentityAnalyticsClient
+    let sheetController: VerificationSheetControllerProtocol
 
     /// Worker queue to encode the image to jpeg
     let imageEncodingQueue = DispatchQueue(label: "com.stripe.identity.image-encoding")
 
     init(
         configuration: Configuration,
-        apiClient: IdentityAPIClient,
-        analyticsClient: IdentityAnalyticsClient
+        sheetController: VerificationSheetControllerProtocol
     ) {
         self.configuration = configuration
-        self.apiClient = apiClient
-        self.analyticsClient = analyticsClient
+        self.apiClient = sheetController.apiClient
+        self.analyticsClient = sheetController.analyticsClient
+        self.sheetController = sheetController
     }
 
     func uploadLowAndHighResImagesNoCropping(
@@ -204,7 +205,8 @@ final class IdentityImageUploader {
                         compressionQuality: jpegCompressionQuality,
                         fileId: file.id,
                         fileName: fileName,
-                        fileSizeBytes: metrics.fileSizeBytes
+                        fileSizeBytes: metrics.fileSizeBytes,
+                        sheetController: self.sheetController
                     )
                 }
             }

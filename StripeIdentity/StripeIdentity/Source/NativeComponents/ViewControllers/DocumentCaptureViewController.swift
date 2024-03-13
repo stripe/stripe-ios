@@ -283,7 +283,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 scanner: anyDocumentScanner,
                 concurrencyManager: concurrencyManager
                     ?? ImageScanningConcurrencyManager(
-                        analyticsClient: sheetController.analyticsClient
+                        sheetController: sheetController
                     ),
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper
@@ -472,9 +472,12 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         _ scanningSession: DocumentImageScanningSession,
         didTimeoutForClassification documentSide: DocumentSide
     ) {
-        sheetController?.analyticsClient.logDocumentCaptureTimeout(
-            documentSide: documentSide
-        )
+        if let sheetController = sheetController {
+            sheetController.analyticsClient.logDocumentCaptureTimeout(
+                documentSide: documentSide,
+                sheetController: sheetController
+            )
+        }
     }
 
     func imageScanningSession(
@@ -496,15 +499,21 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         scanningSession.concurrencyManager.getPerformanceMetrics(completeOn: .main) {
             [weak sheetController] averageFPS, numFramesScanned in
             guard let averageFPS = averageFPS else { return }
-            sheetController?.analyticsClient.logAverageFramesPerSecond(
-                averageFPS: averageFPS,
-                numFrames: numFramesScanned,
-                scannerName: .document
+            if let sheetController = sheetController {
+                sheetController.analyticsClient.logAverageFramesPerSecond(
+                    averageFPS: averageFPS,
+                    numFrames: numFramesScanned,
+                    scannerName: .document,
+                    sheetController: sheetController
+                )
+            }
+        }
+        if let sheetController = sheetController {
+            sheetController.analyticsClient.logModelPerformance(
+                mlModelMetricsTrackers: scanningSession.scanner.mlModelMetricsTrackers,
+                sheetController: sheetController
             )
         }
-        sheetController?.analyticsClient.logModelPerformance(
-            mlModelMetricsTrackers: scanningSession.scanner.mlModelMetricsTrackers
-        )
     }
 
     func imageScanningSessionDidStopScanning(_ scanningSession: DocumentImageScanningSession) {

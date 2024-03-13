@@ -27,6 +27,7 @@ final class DocumentScanner {
     private let mbDetector: MBDetector?
     private let analyticsClient: IdentityAnalyticsClient
     private var hasSeenMBRunnerError: Bool = false
+    private let sheetController: VerificationSheetControllerProtocol
 
     /// Initializes a DocumentScanner with detectors.
     ///
@@ -41,7 +42,7 @@ final class DocumentScanner {
         blurDetector: LaplacianBlurDetector,
         mbDetector: MBDetector?,
         highResImageCropPadding: CGFloat,
-        analyticsClient: IdentityAnalyticsClient
+        sheetController: VerificationSheetControllerProtocol
     ) {
         self.idDetector = idDetector
         self.motionBlurDetector = motionBlurDetector
@@ -49,13 +50,14 @@ final class DocumentScanner {
         self.blurDetector = blurDetector
         self.mbDetector = mbDetector
         self.highResImageCropPadding = highResImageCropPadding
-        self.analyticsClient = analyticsClient
+        self.analyticsClient = sheetController.analyticsClient
+        self.sheetController = sheetController
     }
 
     convenience init(
         idDetectorModel: VNCoreMLModel,
         configuration: Configuration,
-        analyticsClient: IdentityAnalyticsClient
+        sheetController: VerificationSheetControllerProtocol
     ) {
         self.init(
             idDetector: IDDetector(
@@ -82,23 +84,23 @@ final class DocumentScanner {
                 if let mbSettings = configuration.mbSettings {
                     do {
                         let ret = try MBDetector(mbSettings: mbSettings)
-                        analyticsClient.logMbStatus(required: true, init_success: true)
+                        sheetController.analyticsClient.logMbStatus(required: true, init_success: true, sheetController: sheetController)
                         return ret
                     } catch {
                         if case MBDetector.MBDetectorError.incorrectLicense(let reason) = error {
-                            analyticsClient.logMbStatus(required: true, init_success: false, init_failed_reason: reason)
+                            sheetController.analyticsClient.logMbStatus(required: true, init_success: false, init_failed_reason: reason, sheetController: sheetController)
                         } else {
-                            analyticsClient.logMbStatus(required: true, init_success: false, init_failed_reason: error.localizedDescription)
+                            sheetController.analyticsClient.logMbStatus(required: true, init_success: false, init_failed_reason: error.localizedDescription, sheetController: sheetController)
                         }
                         return nil
                     }
                 } else {
-                    analyticsClient.logMbStatus(required: false)
+                    sheetController.analyticsClient.logMbStatus(required: false, sheetController: sheetController)
                     return nil
                 }
             }(),
             highResImageCropPadding: configuration.highResImageCorpPadding,
-            analyticsClient: analyticsClient
+            sheetController: sheetController
         )
     }
 }
@@ -127,7 +129,7 @@ extension DocumentScanner: ImageScanner {
                 if let mbDetector = mbDetector { // MBDetector available, use modern
                     return mbDetector.analyze(sampleBuffer: sampleBuffer).chained { mbResult in
                         if case .error(let mbError) = mbResult {
-                            self.analyticsClient.logMbError(error: mbError)
+                            self.analyticsClient.logMbError(error: mbError, sheetController: self.sheetController)
                             if case .runnerError = mbError {
                                 self.hasSeenMBRunnerError = true
                             }

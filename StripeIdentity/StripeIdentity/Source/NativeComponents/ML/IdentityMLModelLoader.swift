@@ -38,7 +38,7 @@ protocol IdentityMLModelLoaderProtocol {
 
     func startLoadingDocumentModels(
         from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
-        with analyticsClient: IdentityAnalyticsClient
+        with sheetController: VerificationSheetControllerProtocol
     )
 
     func startLoadingFaceModels(
@@ -122,7 +122,7 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
     ///   - documentModelURLs: The URLs of all the ML models required to scan documents
     func startLoadingDocumentModels(
         from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
-        with analyticsClient: IdentityAnalyticsClient
+        with sheetController: VerificationSheetControllerProtocol
     ) {
         guard let idDetectorURL = URL(string: capturePageConfig.models.idDetectorUrl) else {
             documentMLModelsPromise.reject(
@@ -141,7 +141,7 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
                     DocumentScanner(
                         idDetectorModel: idDetectorModel,
                         configuration: .init(from: capturePageConfig),
-                        analyticsClient: analyticsClient
+                        sheetController: sheetController
                     )
                 )
             )
