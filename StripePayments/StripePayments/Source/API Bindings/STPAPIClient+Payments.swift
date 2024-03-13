@@ -1217,8 +1217,7 @@ extension STPAPIClient {
         fromCustomerUsing ephemeralKeySecret: String
     ) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
-            detachPaymentMethod(paymentMethodID,
-                                fromCustomerUsing: ephemeralKeySecret) { error in
+            detachPaymentMethod(paymentMethodID, fromCustomerUsing: ephemeralKeySecret) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
