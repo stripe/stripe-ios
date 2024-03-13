@@ -708,7 +708,6 @@ class CustomerSheetUITest: XCTestCase {
     }
 
     // MARK: - Card Brand Choice tests
-/* Temporarily disable CBC tests
     func testCardBrandChoiceSavedCard() {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -852,9 +851,8 @@ class CustomerSheetUITest: XCTestCase {
         let successText = app.staticTexts["Complete"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-*/
+
     // MARK: - allowsRemovalOfLastSavedPaymentMethod
-/*
     func testRemoveLastSavedPaymentMethod() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.merchantCountryCode = .FR
@@ -915,7 +913,7 @@ class CustomerSheetUITest: XCTestCase {
         // ...but should not be able to remove it.
         XCTAssertFalse(app.buttons["Remove card"].exists)
     }
-*/
+
     // MARK: - Helpers
 
     func presentCSAndAddCardFrom(buttonLabel: String, cardNumber: String? = nil, tapAdd: Bool = true) {

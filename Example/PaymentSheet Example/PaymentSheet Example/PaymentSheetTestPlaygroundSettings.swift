@@ -246,7 +246,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     var uiStyle: UIStyle
     var mode: Mode
-    var customerId: String?
     var integrationType: IntegrationType
     var customerMode: CustomerMode
     var currency: Currency
@@ -279,7 +278,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
             mode: .payment,
-            customerId: nil,
             integrationType: .normal,
             customerMode: .guest,
             currency: .usd,
@@ -308,6 +306,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"
+    static let nsUserDefaultsCustomerIDKey = "PaymentSheetTestPlaygroundCustomerId"
 
     static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
     static var endpointSelectorEndpoint: String {
