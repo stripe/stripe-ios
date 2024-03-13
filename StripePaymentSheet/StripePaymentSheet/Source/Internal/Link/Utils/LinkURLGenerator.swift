@@ -24,6 +24,10 @@ struct LinkURLParams: Encodable {
         case link_payment_method
         case card_payment_method
     }
+    enum CTAType: String, Encodable {
+        case pay
+        case setup
+    }
     var path = "mobile_pay"
     var integrationType = "mobile"
     var paymentObject: PaymentObjectMode
@@ -37,6 +41,7 @@ struct LinkURLParams: Encodable {
     var flags: [String: Bool]
     var loggerMetadata: [String: String]
     var locale: String
+    var ctaType: CTAType
 }
 
 class LinkURLGenerator {
@@ -75,6 +80,8 @@ class LinkURLGenerator {
 
         let paymentObjectType: LinkURLParams.PaymentObjectMode = intent.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
+        let ctaType: LinkURLParams.CTAType = intent.isPaymentIntent ? .pay : .setup
+        
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
                              paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
@@ -84,7 +91,8 @@ class LinkURLGenerator {
                              experiments: [:],
                              flags: intent.linkFlags,
                              loggerMetadata: loggerMetadata,
-                             locale: Locale.current.toLanguageTag())
+                             locale: Locale.current.toLanguageTag(),
+                             ctaType: ctaType)
     }
 
     static func url(params: LinkURLParams) throws -> URL {
@@ -104,7 +112,10 @@ class LinkURLGenerator {
 
 extension LinkURLParams {
     func toURLEncodedBase64() throws -> String {
-        let encodedData = try JSONEncoder().encode(self)
+        let encoder = JSONEncoder()
+        // Sorting makes this a little easier to debug
+        encoder.outputFormatting = .sortedKeys
+        let encodedData = try encoder.encode(self)
         return encodedData.base64EncodedString()
     }
 }
