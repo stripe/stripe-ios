@@ -2223,7 +2223,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Pay $50.99"].isEnabled)
 
         // Assert there are two payment methods using legacy customer ephemeral key
-        XCTAssertEqual(app.staticTexts.matching(identifier:"••••4242").count, 2)
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 2)
 
         // Close sheet
         app.buttons["Close"].waitForExistenceAndTap()
@@ -2233,10 +2233,9 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
-
         XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
         // Assert there is only a single payment method using CustomerSession
-        XCTAssertEqual(app.staticTexts.matching(identifier:"••••4242").count, 1)
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
         app.buttons["Close"].waitForExistenceAndTap()
     }
 
@@ -2283,7 +2282,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         app.staticTexts["••••4242"].waitForExistenceAndTap()
 
         // Assert there are two payment methods using legacy customer ephemeral key
-        XCTAssertEqual(app.staticTexts.matching(identifier:"••••4242").count, 3)
+        // value == 2, 1 value on playground + 2 payment method
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 3)
 
         // Close sheet
         app.buttons["Close"].waitForExistenceAndTap()
@@ -2295,7 +2295,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 5))
 
         // Assert there is only a single payment method using CustomerSession
-        XCTAssertEqual(app.staticTexts.matching(identifier:"••••4242").count, 2)
+        // value == 2, 1 value on playground + 1 payment method
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 2)
         app.buttons["Close"].waitForExistenceAndTap()
     }
     // MARK: - Remove last saved PM
