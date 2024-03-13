@@ -642,19 +642,25 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         else {
             return
         }
-        var shouldRemoveDuplicates = false
+
         if let customerAccessProvider = configuration.customer?.customerAccessProvider,
            case .customerSession = customerAccessProvider,
-           paymentMethod.type == .card {
-            shouldRemoveDuplicates = true
-        }
-        configuration.apiClient.detachPaymentMethod(
-            paymentMethod.stripeId,
-            customerId: configuration.customer?.id,
-            fromCustomerUsing: ephemeralKey,
-            shouldRemoveDuplicates: shouldRemoveDuplicates
-        ) { (_) in
-            // no-op
+           paymentMethod.type == .card,
+           let customerId = configuration.customer?.id {
+            configuration.apiClient.detachPaymentMethodRemoveDuplicates(
+                paymentMethod.stripeId,
+                customerId: customerId,
+                fromCustomerUsing: ephemeralKey
+            ) { (_) in
+                // no-op
+            }
+        } else {
+            configuration.apiClient.detachPaymentMethod(
+                paymentMethod.stripeId,
+                fromCustomerUsing: ephemeralKey
+            ) { (_) in
+                // no-op
+            }
         }
 
         if !savedPaymentOptionsViewController.canEditPaymentMethods {

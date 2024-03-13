@@ -9,7 +9,8 @@ import Foundation
 @_exported import StripePaymentsObjcTestUtils
 
 extension STPTestingAPIClient {
-    static let STPTestingBackendURL = "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/"
+    //static let STPTestingBackendURL = "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/"
+    static let STPTestingBackendURL = "http://127.0.0.1:4567/"
     public static var shared: STPTestingAPIClient {
         return .shared()
     }
@@ -115,6 +116,11 @@ extension STPTestingAPIClient {
         let customer: String
     }
 
+    struct CreateCustomerSessionResponse: Decodable {
+        let customerSessionClientSecret: String
+        let customer: String
+    }
+
     func fetchCustomerAndEphemeralKey(
         customerID: String? = nil,
         merchantCountry: String? = "us"
@@ -126,6 +132,16 @@ extension STPTestingAPIClient {
         return try await makeRequest(endpoint: "create_ephemeral_key", params: params)
     }
 
+    func fetchCustomerAndCustomerSessionClientSecret(
+        customerID: String? = nil,
+        merchantCountry: String? = "us"
+    ) async throws -> CreateCustomerSessionResponse {
+        let params = [
+            "customer_id": customerID,
+            "account": merchantCountry,
+        ]
+        return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
+    }
     // MARK: - Helpers
 
     fileprivate func makeRequest<ResponseType: Decodable>(

@@ -211,13 +211,14 @@ extension PaymentSheet {
 
         internal let customerAccessProvider: CustomerAccessProvider
 
+        /// Initializes a CustomerConfiguration with an ephemeralKeySecret
         public init(id: String, ephemeralKeySecret: String) {
             self.id = id
             self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
             self.ephemeralKeySecret = ephemeralKeySecret
         }
 
-        /// Initializes a CustomerConfiguration
+        /// Initializes a CustomerConfiguration with a customerSessionClientSecret
         @_spi(CustomerSessionBetaAccess)
         public init(id: String, customerSessionClientSecret: String) {
             self.id = id
