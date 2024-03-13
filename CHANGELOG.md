@@ -2,6 +2,9 @@
 ### All
 * Xcode 14 is [no longer supported by Apple](https://developer.apple.com/news/upcoming-requirements/). Please upgrade to Xcode 15 or later.
 
+### PaymentSheet
+* [Fixed] When confirming a SetupIntent with Link, "Set up" will be shown as the confirm button text instead of "Pay".
+
 ## 23.25.0 2024-03-11
 ### CustomerSheet
 * [Added] Added `paymentMethodTypes` in `CustomerAdapter` to control what payment methods are displayed.
