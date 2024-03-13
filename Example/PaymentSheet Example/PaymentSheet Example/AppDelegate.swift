@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             // Delete cookies before running UI tests
             PaymentSheet.resetCustomer()
+            PlaygroundController.resetCustomer()
         }
         #endif
 

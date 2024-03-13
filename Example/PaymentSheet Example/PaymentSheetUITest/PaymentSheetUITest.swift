@@ -2248,6 +2248,12 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // Shouldn't be able to edit only one saved PM when allowsRemovalOfLastSavedPaymentMethod = .off
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
 
+        // Ensure we can tap another payment method, which will dismiss Flow Controller
+        app.buttons["Apple Pay"].waitForExistenceAndTap()
+
+        // Re-present the sheet
+        app.staticTexts["apple_pay"].waitForExistenceAndTap()  // The Apple Pay is now the default because we tapped it
+
         // Add another PM
         app.buttons["+ Add"].waitForExistenceAndTap()
         try! fillCardData(app)

@@ -142,6 +142,7 @@ struct PaymentSheetTestPlayground: View {
         Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
             return playgroundController.settings.customerMode
         } set: { newMode in
+            PlaygroundController.resetCustomer()
             playgroundController.settings.customerMode = newMode
         }
     }

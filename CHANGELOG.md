@@ -1,4 +1,4 @@
-## x.x.x xxxx-xx-xx
+## 23.25.0 2024-03-11
 ### CustomerSheet
 * [Added] Added `paymentMethodTypes` in `CustomerAdapter` to control what payment methods are displayed.
 
