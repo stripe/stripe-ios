@@ -2177,7 +2177,127 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         app.alerts.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
     }
+    // MARK: - Customer Session
+    func testDedupedPaymentMethods_paymentSheet() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .paymentSheet
+        settings.integrationType = .deferred_csc
+        settings.customerKeyType = .legacy
+        settings.customerMode = .new
+        settings.applePayEnabled = .on
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .on
+        settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        loadPlayground(
+            app,
+            settings
+        )
 
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+
+        // Complete payment
+        app.buttons["Pay $50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Pay $50.99"].isEnabled)
+        // Shouldn't be able to edit only one saved PM when allowsRemovalOfLastSavedPaymentMethod = .off
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+
+        // Add another PM
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app)
+        app.buttons["Pay $50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Pay $50.99"].isEnabled)
+
+        // Assert there are two payment methods using legacy customer ephemeral key
+        XCTAssertEqual(app.staticTexts.matching(identifier:"••••4242").count, 2)
+
+        // Close sheet
+        app.buttons["Close"].waitForExistenceAndTap()
+
+        // Change to CustomerSessions
+        app.buttons["customer_session"].waitForExistenceAndTap()
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+
+        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
+        // Assert there is only a single payment method using CustomerSession
+        XCTAssertEqual(app.staticTexts.matching(identifier:"••••4242").count, 1)
+        app.buttons["Close"].waitForExistenceAndTap()
+    }
+
+    func testDedupedPaymentMethods_FlowController() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .flowController
+        settings.integrationType = .deferred_csc
+        settings.customerKeyType = .legacy
+        settings.customerMode = .new
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkEnabled = .on
+        settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.buttons["None"].waitForExistenceAndTap(timeout: 30) // Should default to None
+        app.buttons["+ Add"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+
+        // Complete payment
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+        app.staticTexts["••••4242"].waitForExistenceAndTap()  // The card should be saved now and selected as default instead of Apple Pay
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 5))
+
+        // Add another PM
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app)
+        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+
+        // Should be able to edit two saved PMs
+        reload(app, settings: settings)
+        app.staticTexts["••••4242"].waitForExistenceAndTap()
+
+        // Assert there are two payment methods using legacy customer ephemeral key
+        XCTAssertEqual(app.staticTexts.matching(identifier:"••••4242").count, 3)
+
+        // Close sheet
+        app.buttons["Close"].waitForExistenceAndTap()
+
+        // Change to CustomerSessions
+        app.buttons["customer_session"].waitForExistenceAndTap()
+        reload(app, settings: settings)
+        app.staticTexts["••••4242"].waitForExistenceAndTap()
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 5))
+
+        // Assert there is only a single payment method using CustomerSession
+        XCTAssertEqual(app.staticTexts.matching(identifier:"••••4242").count, 2)
+        app.buttons["Close"].waitForExistenceAndTap()
+    }
     // MARK: - Remove last saved PM
 
     func testRemoveLastSavedPaymentMethodPaymentSheet() throws {
