@@ -35,6 +35,7 @@ import UIKit
     private(set) var urlSession: URLSession = URLSession(
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
+    let url = URL(string: "https://q.stripe.com")!
 
     @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
@@ -72,8 +73,6 @@ import UIKit
             return NSClassFromString("XCTest") != nil
         #endif
     }
-
-    // MARK: - Card Scanning
 
     @objc public class func shouldCollectAnalytics() -> Bool {
         return !isSimulatorOrTest
@@ -121,9 +120,7 @@ import UIKit
         delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
 
-        guard type(of: self).shouldCollectAnalytics(),
-              let url = URL(string: "https://q.stripe.com")
-        else {
+        guard type(of: self).shouldCollectAnalytics() else {
             // Don't send the analytic, but add it to `_testLogHistory` if we're in a test.
             if NSClassFromString("XCTest") != nil {
                 _testLogHistory.append(payload)
