@@ -11,7 +11,7 @@ import Foundation
 /// :nodoc:
 @_spi(STP) public final class StripePaymentsBundleLocator: BundleLocatorProtocol {
     public static let internalClass: AnyClass = StripePaymentsBundleLocator.self
-    public static let bundleName = "StripePayments"
+    public static let bundleName = "StripePaymentsBundle"
     #if SWIFT_PACKAGE
         public static let spmResourcesBundle = Bundle.module
     #endif

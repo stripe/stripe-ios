@@ -17,5 +17,5 @@ Pod::Spec.new do |s|
   s.ios.deployment_target          = '13.0'
   s.swift_version		               = '5.0'
   s.source_files                   = 'StripeCore/StripeCore/**/*.swift'
-  s.ios.resource_bundle            = { 'StripeCore' => 'StripeCore/StripeCore/Resources/**/*.lproj' }
+  s.ios.resource_bundle            = { 'StripeCoreBundle' => 'StripeCore/StripeCore/Resources/**/*.lproj' }
 end
