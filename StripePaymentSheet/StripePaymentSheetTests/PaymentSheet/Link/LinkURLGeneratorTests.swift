@@ -95,12 +95,14 @@ extension STPElementsSession {
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
                                           "apple_pay_preference": "enabled",
-                                          "customer": ["payment_methods": [["id": "pm_1234"],["id": "pm_4567"]],
+                                          "customer": ["payment_methods": [["id": "pm_1234"], ["id": "pm_4567"], ],
                                                        "customer_session": ["id": "cuss_123",
                                                                             "livemode": false,
                                                                             "api_key": apiKey,
                                                                             "api_key_expiry": 123456678,
-                                                                            "customer": "cus_456"]]
+                                                                            "customer": "cus_456",
+                                                                           ],
+                                                      ],
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }

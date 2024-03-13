@@ -86,23 +86,26 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssertEqual(psBillingDetails.address.country, "US")
     }
     func testReturnsEphemeralKey() {
-        let deferredIntent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, 
+        let deferredIntent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession,
                                                    intentConfig: .init(mode: .payment(amount: 500,
                                                                                       currency: "usd",
                                                                                       setupFutureUsage: .offSession,
                                                                                       captureMethod: .automatic),
-                                                                       confirmHandler: {_,_,_ in }))
+                                                                       confirmHandler: {_, _, _ in
+        }))
         let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", ephemeralKeySecret: "ek_12345")
         let key = customerConfig.ephemeralKeySecretBasedOn(intent: deferredIntent)
         XCTAssertEqual(key, "ek_12345")
     }
+
     func testReturnsEphemeralKeyFromElements() {
         let deferredIntent = Intent.deferredIntent(elementsSession: STPElementsSession.elementsSessionWithCustomerSession(apiKey: "ek_11223344"),
                                                    intentConfig: .init(mode: .payment(amount: 500,
                                                                                       currency: "usd",
                                                                                       setupFutureUsage: .offSession,
                                                                                       captureMethod: .automatic),
-                                                                       confirmHandler: {_,_,_ in }))
+                                                                       confirmHandler: {_, _, _ in
+        }))
         let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", customerSessionClientSecret: "cuss_12345")
         let key = customerConfig.ephemeralKeySecretBasedOn(intent: deferredIntent)
         XCTAssertEqual(key, "ek_11223344")
