@@ -11,7 +11,7 @@ import Foundation
 
 @_spi(STP) public final class StripeIdentityBundleLocator: BundleLocatorProtocol {
     @_spi(STP) public static let internalClass: AnyClass = StripeIdentityBundleLocator.self
-    @_spi(STP) public static let bundleName = "StripeIdentity"
+    @_spi(STP) public static let bundleName = "StripeIdentityBundle"
     #if SWIFT_PACKAGE
     @_spi(STP) public static let spmResourcesBundle = Bundle.module
     #endif
