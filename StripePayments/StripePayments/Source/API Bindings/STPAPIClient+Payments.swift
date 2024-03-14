@@ -1130,7 +1130,7 @@ extension STPAPIClient {
                 }
             }
         }
-        let detachMulitplePaymentMethods: ([STPPaymentMethod]) async -> Error? = { allPaymentMethodsToDelete in
+        let detachMultiplePaymentMethods: ([STPPaymentMethod]) async -> Error? = { allPaymentMethodsToDelete in
             var errors: [Error] = []
             await withTaskGroup(of: (Error?).self) { group in
                 for paymentMethod in allPaymentMethodsToDelete {
@@ -1152,7 +1152,7 @@ extension STPAPIClient {
             if errors.isEmpty {
                 return nil
             } else {
-                // TODO: Throw only the first? maybe all of them?
+                // There could be more than on errors. For simplicity, throw the first one encoutered
                 return errors.first
             }
         }
@@ -1169,7 +1169,7 @@ extension STPAPIClient {
                 let allPaymentMethodsToDelete: [STPPaymentMethod] = allCardPaymentMethods
                     .filter({ $0.type == .card })
                     .filter({ $0.card?.fingerprint == requestedPMToDelete.card?.fingerprint })
-                let error = await detachMulitplePaymentMethods(allPaymentMethodsToDelete)
+                let error = await detachMultiplePaymentMethods(allPaymentMethodsToDelete)
                 completion(error)
             } catch {
                 completion(error)

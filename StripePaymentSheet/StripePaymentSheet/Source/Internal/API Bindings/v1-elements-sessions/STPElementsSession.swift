@@ -140,7 +140,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             }
             guard let customerJSON = response[customerDataKey] as? [AnyHashable: Any],
                   let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON) else {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionCustomerLoadFailed)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionCustomerDeserializeFailed)
                 return nil
             }
             return decoded

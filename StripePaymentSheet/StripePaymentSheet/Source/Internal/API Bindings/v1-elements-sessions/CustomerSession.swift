@@ -7,7 +7,7 @@ import Foundation
 
 /// CustomerSession information, delivered in the `v1/elements/sessions` response.
 /// - Seealso: https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/api/lib/customer_session/resource/customer_session_client_resource.rb
-struct CustomerSession: Decodable, Equatable, Hashable {
+struct CustomerSession: Equatable, Hashable {
     let id: String
     let liveMode: Bool
     let apiKey: String

@@ -111,3 +111,22 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssertEqual(key, "ek_11223344")
     }
 }
+
+extension STPElementsSession {
+    static func elementsSessionWithCustomerSession(apiKey: String) -> STPElementsSession {
+        let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
+                                                                        "country_code": "US", ] as [String: Any],
+                                          "session_id": "123",
+                                          "apple_pay_preference": "enabled",
+                                          "customer": ["payment_methods": [["id": "pm_1234"], ["id": "pm_4567"], ],
+                                                       "customer_session": ["id": "cuss_123",
+                                                                            "livemode": false,
+                                                                            "api_key": apiKey,
+                                                                            "api_key_expiry": 123456678,
+                                                                            "customer": "cus_456",
+                                                                           ],
+                                                      ],
+        ]
+        return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
+    }
+}
