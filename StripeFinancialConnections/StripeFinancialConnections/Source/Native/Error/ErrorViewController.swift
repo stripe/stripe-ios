@@ -25,6 +25,7 @@ protocol ErrorViewControllerDelegate: AnyObject {
 final class ErrorViewController: UIViewController {
 
     private let dataSource: ErrorDataSource
+    private(set) var isTerminal = false
 
     weak var delegate: ErrorViewControllerDelegate?
 
@@ -185,6 +186,8 @@ final class ErrorViewController: UIViewController {
                 )
             }
         } else {
+            isTerminal = true
+
             dataSource.analyticsClient.logUnexpectedError(
                 error,
                 errorName: "UnexpectedErrorPaneError",
