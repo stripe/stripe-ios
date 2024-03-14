@@ -7,6 +7,7 @@
 
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
+@_spi(STP) @testable import StripeUICore
 @_spi(STP) @_spi(EarlyAccessCVCRecollectionFeature) @testable import StripePaymentSheet
 
 import XCTest
@@ -83,4 +84,46 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
+    
+    func testSavedScreen_customCTA() {
+        let paymentMethods = [
+            STPPaymentMethod._testSEPA(),
+        ]
+        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+        configuration.primaryButtonLabel = "Submit"
+        let sut = PaymentSheetFlowControllerViewController(
+            intent: ._testValue(),
+            savedPaymentMethods: paymentMethods,
+            configuration: configuration,
+            isApplePayEnabled: false,
+            isLinkEnabled: false,
+            isCVCRecollectionEnabled: false
+        )
+        sut.view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(sut.view)
+    }
+    
+    func testNewScreen_customCTA() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+        
+        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+        configuration.primaryButtonLabel = "Submit"
+        let sut = PaymentSheetFlowControllerViewController(
+            intent: ._testValue(),
+            savedPaymentMethods: [],
+            configuration: configuration,
+            isApplePayEnabled: false,
+            isLinkEnabled: false,
+            isCVCRecollectionEnabled: false
+        )
+        sut.view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(sut.view)
+    }
+
 }
