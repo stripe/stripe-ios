@@ -46,7 +46,7 @@ class ExampleCheckoutViewController: UIViewController {
                 var configuration = PaymentSheet.Configuration()
                 configuration.merchantDisplayName = "Example, Inc."
                 configuration.applePay = .init(
-                    merchantId: "merchant.com.stripe.apple-pay-qualifications", // Be sure to use your own merchant ID here!
+                    merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
                     merchantCountryCode: "US"
                 )
                 configuration.customer = .init(

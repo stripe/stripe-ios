@@ -71,7 +71,7 @@ class PlaygroundController: ObservableObject {
                 }
             )
             return PaymentSheet.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.apple-pay-qualifications",
+                merchantId: "merchant.com.stripe.umbrella.test",
                 merchantCountryCode: "US",
                 buttonType: buttonType,
                 customHandlers: customHandlers)
@@ -79,7 +79,7 @@ class PlaygroundController: ObservableObject {
 #endif
         if settings.applePayEnabled == .on  {
             return PaymentSheet.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.apple-pay-qualifications",
+                merchantId: "merchant.com.stripe.umbrella.test",
                 merchantCountryCode: "US",
                 buttonType: buttonType)
         } else {
