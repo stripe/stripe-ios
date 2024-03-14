@@ -27,10 +27,11 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         var config = PaymentSheet.Configuration()
         config.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_foo", "external_bar"], externalPaymentMethodConfirmHandler: { _, _, _ in })
 
-        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: config.externalPaymentMethodConfiguration)
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: config.externalPaymentMethodConfiguration, customerAccessProvider: .customerSession("cs_12345"))
         XCTAssertEqual(parameters["key"] as? String, "pk_test")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], ["external_foo", "external_bar"])
+        XCTAssertEqual(parameters["customer_session_client_secret"] as? String, "cs_12345")
 
         let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as?  [String: Any])
         XCTAssertEqual(deferredIntent["payment_method_types"] as? [String], ["card", "cashapp"])
@@ -50,11 +51,12 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                                                             onBehalfOf: "acct_connect",
                                                             confirmHandler: { _, _, _ in })
 
-        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: nil)
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: nil, customerAccessProvider: .legacyCustomerEphemeralKey("ek_12345"))
         XCTAssertEqual(parameters["key"] as? String, "pk_test")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], [])
         XCTAssertNil(parameters["payment_method_configurations"])
+        XCTAssertNil(parameters["customer_session_client_secret"])
 
         let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as?  [String: Any])
         XCTAssertEqual(deferredIntent["payment_method_types"] as? [String], ["card", "cashapp"])
