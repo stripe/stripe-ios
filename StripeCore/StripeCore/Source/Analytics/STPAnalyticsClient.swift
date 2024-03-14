@@ -101,7 +101,12 @@ import UIKit
             payload["error_dictionary"] = errorAnalytic.error.serializeForLogging()
         }
 
-        payload.merge(analytic.params) { (_, new) in new }
+        payload.merge(analytic.params) { (commonPayloadValue, analyticPayloadValue) in
+            #if DEBUG
+            assertionFailure("\(analytic.event) is overwriting the common payload value: \(commonPayloadValue)!")
+            #endif
+            return analyticPayloadValue
+        }
         return payload
     }
 
