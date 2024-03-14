@@ -27,7 +27,15 @@ struct PaymentSheetTestPlayground: View {
             SettingView(setting: $playgroundController.settings.applePayEnabled)
             SettingView(setting: $playgroundController.settings.applePayButtonType)
             SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
+        }
+        Group {
             SettingPickerView(setting: $playgroundController.settings.defaultBillingAddress)
+            if playgroundController.settings.defaultBillingAddress == .customEmail {
+                TextField("Default email", text: customEmailBinding)
+                    .keyboardType(.emailAddress)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+            }
         }
         Group {
             SettingView(setting: $playgroundController.settings.linkEnabled)
@@ -132,6 +140,15 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.customCtaLabel = (newString != "") ? newString : nil
         }
     }
+
+    var customEmailBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customEmail ?? ""
+        } set: { newString in
+            playgroundController.settings.customEmail = (newString != "") ? newString : nil
+        }
+    }
+
     var paymentMethodSettingsBinding: Binding<String> {
         Binding<String> {
             return playgroundController.settings.paymentMethodConfigurationId ?? ""
