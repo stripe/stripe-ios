@@ -122,7 +122,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         )
         return button
     }()
-    
+
     private var callToAction: ConfirmButton.CallToActionType {
         if let customCtaLabel = configuration.primaryButtonLabel {
             switch mode {
@@ -132,7 +132,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 return .custom(title: customCtaLabel)
             }
         }
-        
+
         switch mode {
         case .selectingSaved:
             return .customWithLock(title: String.Localized.continue)
