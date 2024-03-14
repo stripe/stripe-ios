@@ -69,6 +69,7 @@
 		315713352C770DA3ED9CBDCD /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7E3CE2105E4A39032CD919 /* Enums+CustomStringConvertible.swift */; };
 		3172C789DF2CE133ECA359D7 /* STPPushProvisioningDetailsFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A6B88797870BC71CCB3AF /* STPPushProvisioningDetailsFunctionalTest.swift */; };
 		319899DEC91B3F88D380DB47 /* STPPaymentMethodGrabPayParamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8FF64CA314F909D7EC82FE /* STPPaymentMethodGrabPayParamsTest.swift */; };
+		31CDFC2E2BA3708000B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC2D2BA3708000B3DD91 /* PrivacyInfo.xcprivacy */; };
 		325694E4284BEAE787A5ECB6 /* NSLocale+STPSwizzling.swift in Sources */ = {isa = PBXBuildFile; fileRef = C641A744CCEA67C07E9BFE05 /* NSLocale+STPSwizzling.swift */; };
 		32874C6147344A9CB2EF4DAD /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33FDC634FD5D79E824240DDC /* Stripe3DS2.framework */; };
 		331924F0801287BAD413FDCB /* STPMandateCustomerAcceptanceParamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C713F58BC61A962C720AE0AE /* STPMandateCustomerAcceptanceParamsTest.swift */; };
@@ -533,6 +534,7 @@
 		30B694A39D54886392AA5DE3 /* STPPaymentOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentOption.swift; sourceTree = "<group>"; };
 		313263D9DC0629C5EE279FEB /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		313F5F782B0BE59000BD98A9 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
+		31CDFC2D2BA3708000B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		336CC555B845DED30208D39D /* STPPinManagementServiceFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPinManagementServiceFunctionalTest.swift; sourceTree = "<group>"; };
 		33B9D01D037909D1C9C0B617 /* STPIntentActionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionTest.swift; sourceTree = "<group>"; };
 		33FDC634FD5D79E824240DDC /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1374,6 +1376,7 @@
 			children = (
 				AF41AE099441C2A09DECC1AC /* Localizations */,
 				77E846CD56018D8417A3AB95 /* StripeiOS.xcassets */,
+				31CDFC2D2BA3708000B3DD91 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1558,6 +1561,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31CDFC2E2BA3708000B3DD91 /* PrivacyInfo.xcprivacy in Resources */,
 				22BE2ABB29F77362FF16D945 /* Localizable.strings in Resources */,
 				76BC927BC7A591601C1DAB18 /* StripeiOS.xcassets in Resources */,
 			);

@@ -16,6 +16,7 @@
 		27233E85B0B6E1114E9AF6E8 /* ExampleSwiftUICustomerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0156812DC170AFC05C102465 /* ExampleSwiftUICustomerSheet.swift */; };
 		2CB72F11E36DB65E8BA9205A /* PlaygroundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0C0324B4075DED17688123 /* PlaygroundController.swift */; };
 		2CD71F097C7CD0D9BFC7499D /* PaymentSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD340D0C93E93B9E9DB7691F /* PaymentSheetTestPlaygroundSettings.swift */; };
+		31CDFC2C2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */; };
 		3266C6EB6B045F613228C895 /* ExampleCustomDeferredCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179D026BA4F5F12EA9EB6F6F /* ExampleCustomDeferredCheckoutViewController.swift */; };
 		37CDE2E21F00571F147FCFF7 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		424BBBEBF25E5F020FF40F36 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2655A8B1DF0649CD996E045 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -158,6 +159,7 @@
 		2C720CA9AA1AECA0BB248B49 /* PaymentSheetUITest-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetUITest-Debug.xcconfig"; sourceTree = "<group>"; };
 		2D423EEB2C6C8BB05D632BBD /* ExampleLinkPaymentCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLinkPaymentCheckoutViewController.swift; sourceTree = "<group>"; };
 		31A510FDEA3F1AAED0507251 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
+		31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		34CCC286E48ADD9F586832D9 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Main.strings"; sourceTree = "<group>"; };
 		36BB679CF53EEF943F0BAAC9 /* XCUITest+Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUITest+Utilities.swift"; sourceTree = "<group>"; };
 		3C2A8BAE3842A0E892D06BB9 /* CustomerSheetTestPlaygroundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetTestPlaygroundSettings.swift; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 				7CDBD593EFEAD2EDA4D33D5D /* LaunchScreen.storyboard */,
 				F4B26C754925F8D2A5183B2E /* Main.storyboard */,
 				59EF54A49D2FCC743E9EBC5F /* Assets.xcassets */,
+				31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -603,6 +606,7 @@
 			files = (
 				7F005A0179023A25918D9014 /* Assets.xcassets in Resources */,
 				8A6DBB641294F9AE6A9C61B1 /* LaunchScreen.storyboard in Resources */,
+				31CDFC2C2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy in Resources */,
 				B36A24145C97D73C981DDBAC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
