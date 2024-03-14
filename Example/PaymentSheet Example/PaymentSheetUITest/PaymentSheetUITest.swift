@@ -2246,7 +2246,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.integrationType = .deferred_csc
         settings.customerKeyType = .legacy
         settings.customerMode = .new
-        settings.applePayEnabled = .off
+        settings.applePayEnabled = .on
         settings.apmsEnabled = .off
         settings.linkEnabled = .on
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
@@ -2255,7 +2255,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
             settings
         )
 
-        app.buttons["None"].waitForExistenceAndTap(timeout: 30) // Should default to None
+        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to None
         app.buttons["+ Add"].waitForExistenceAndTap()
 
         try! fillCardData(app)
@@ -2281,6 +2281,12 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
         app.staticTexts["••••4242"].waitForExistenceAndTap()
 
+        // Wait for the sheet to appear
+        XCTAssertTrue(app.buttons["+ Add"].waitForExistence(timeout: 3))
+
+        // Scroll all the way over
+        XCTAssertNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove"))
+
         // Assert there are two payment methods using legacy customer ephemeral key
         // value == 2, 1 value on playground + 2 payment method
         XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 3)
@@ -2291,12 +2297,13 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         // Change to CustomerSessions
         app.buttons["customer_session"].waitForExistenceAndTap()
         reload(app, settings: settings)
-        app.staticTexts["••••4242"].waitForExistenceAndTap()
-        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 5))
+
+        // TODO: Use default payment method from elements/sessions payload
+        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 10)
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 3))
 
         // Assert there is only a single payment method using CustomerSession
-        // value == 2, 1 value on playground + 1 payment method
-        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 2)
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
         app.buttons["Close"].waitForExistenceAndTap()
     }
     // MARK: - Remove last saved PM
