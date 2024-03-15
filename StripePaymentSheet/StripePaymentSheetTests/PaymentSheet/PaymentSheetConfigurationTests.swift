@@ -5,7 +5,7 @@
 
 import XCTest
 
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 
 class PaymentSheetConfigurationTests: XCTestCase {
     func testIsUsingBillingAddressCollection_Default() {
@@ -84,5 +84,49 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssertEqual(psBillingDetails.address.city, "San Francisco")
         XCTAssertEqual(psBillingDetails.address.state, "California")
         XCTAssertEqual(psBillingDetails.address.country, "US")
+    }
+    func testReturnsEphemeralKey() {
+        let deferredIntent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession,
+                                                   intentConfig: .init(mode: .payment(amount: 500,
+                                                                                      currency: "usd",
+                                                                                      setupFutureUsage: .offSession,
+                                                                                      captureMethod: .automatic),
+                                                                       confirmHandler: {_, _, _ in
+        }))
+        let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", ephemeralKeySecret: "ek_12345")
+        let key = customerConfig.ephemeralKeySecretBasedOn(intent: deferredIntent)
+        XCTAssertEqual(key, "ek_12345")
+    }
+
+    func testReturnsEphemeralKeyFromElements() {
+        let deferredIntent = Intent.deferredIntent(elementsSession: STPElementsSession.elementsSessionWithCustomerSession(apiKey: "ek_11223344"),
+                                                   intentConfig: .init(mode: .payment(amount: 500,
+                                                                                      currency: "usd",
+                                                                                      setupFutureUsage: .offSession,
+                                                                                      captureMethod: .automatic),
+                                                                       confirmHandler: {_, _, _ in
+        }))
+        let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", customerSessionClientSecret: "cuss_12345")
+        let key = customerConfig.ephemeralKeySecretBasedOn(intent: deferredIntent)
+        XCTAssertEqual(key, "ek_11223344")
+    }
+}
+
+extension STPElementsSession {
+    static func elementsSessionWithCustomerSession(apiKey: String) -> STPElementsSession {
+        let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
+                                                                        "country_code": "US", ] as [String: Any],
+                                          "session_id": "123",
+                                          "apple_pay_preference": "enabled",
+                                          "customer": ["payment_methods": [["id": "pm_1234"], ["id": "pm_4567"], ],
+                                                       "customer_session": ["id": "cuss_123",
+                                                                            "livemode": false,
+                                                                            "api_key": apiKey,
+                                                                            "api_key_expiry": 123456678,
+                                                                            "customer": "cus_456",
+                                                                           ],
+                                                      ],
+        ]
+        return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
 }
