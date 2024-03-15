@@ -142,7 +142,6 @@ class CustomerAdapterTests: APIStubbedTestCase {
 
     func testGetOrCreateCustomerSessionErrorForwardedToFetchPMs() async throws {
         let exp = expectation(description: "fetchPMs")
-        let expectedError = NSError(domain: "test", code: 123, userInfo: nil)
 
         let sut = StripeCustomerAdapter(customerSessionClientSecretProvider: {
             throw NSError(domain: "test", code: 123, userInfo: nil)
