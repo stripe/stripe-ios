@@ -185,9 +185,11 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     // MARK: - STPAPIResponseDecodable
     /// :nodoc:
     @objc @_spi(STP) public required init(
-        stripeId: String
+        stripeId: String,
+        type: STPPaymentMethodType
     ) {
         self.stripeId = stripeId
+        self.type = type
         super.init()
     }
 
@@ -203,7 +205,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             return nil
         }
 
-        let paymentMethod = self.init(stripeId: stripeId)
+        let paymentMethod = self.init(stripeId: stripeId, 
+                                      type: self.type(from: dict.stp_string(forKey: "type") ?? ""))
         paymentMethod.allResponseFields = response
         paymentMethod.stripeId = stripeId
         paymentMethod.created = dict.stp_date(forKey: "created")
@@ -214,7 +217,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.card = STPPaymentMethodCard.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "card")
         )
-        paymentMethod.type = self.type(from: dict.stp_string(forKey: "type") ?? "")
         paymentMethod.iDEAL = STPPaymentMethodiDEAL.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "ideal")
         )
