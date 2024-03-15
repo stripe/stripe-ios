@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Toevoegen";
 
 "Add a card" = "Een kaart toevoegen";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door Link te gebruiken ga je akkoord met de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je e-mailadres te verstrekken, ga je ermee akkoord dat er een Link-account wordt gemaakt en dat je betaalgegevens worden opgeslagen naar Link, volgens de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Door je betaalgegevens op te geven en deze betaling te bevestigen geef je toestemming aan (A) %@ en Stripe, onze betaaldienstverlener, een opdracht te sturen aan je bank om je rekening te debiteren en aan (B) je bank om je rekening te debiteren conform deze opdracht. Je hebt het recht op terugbetaling door je bank conform de met je bank overeengekomen voorwaarden. Een verzoek tot terugbetaling moet worden ingediend binnen 8 weken vanaf de datum waarop je rekening is gedebiteerd. Je rechten worden uitgelegd in een verklaring die je kunt opvragen bij je bank. Je stemt ermee in dat je minstens 2 dagen voor de uitvoering van toekomstige debiteringen hierover op de hoogte wordt gesteld.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je telefoonnummer te verstrekken, ga je ermee akkoord dat er een Link-account wordt gemaakt en dat je betaalgegevens worden opgeslagen naar Link, volgens de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je je bankrekening voor %@ opslaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
@@ -62,6 +68,8 @@
 
 "FPX Bank" = "FPX Bank";
 
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ik begrijp dat Stripe namens %@ bedragen via automatische incasso gaat afschrijven en ik bevestig dat ik als rekeninghouder de enige vereiste persoon ben om afschrijvingen van deze rekening te autoriseren.";
+
 "IBAN" = "IBAN";
 
 "Manage your payment methods" = "Uw betaalmethoden beheren";
@@ -76,11 +84,15 @@
 
 "Or pay with a card" = "Of met een kaart betalen";
 
+"Or use" = "Of gebruik";
+
+"Or use a card" = "Of gebruik een betaalkaart";
+
 "Pay %@" = "%@ betalen";
 
 "Pay another way" = "Betalen op een andere manier";
 
-"Pay faster at %@ and thousands of merchants." = "Reken sneller af bij %@ en duizenden andere handelaren.";
+"Pay faster at %@ and thousands of businesses." = "Reken sneller af bij %@ en duizenden andere bedrijven.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betaal in <num_installments/> rentevrije termijnen van <installment_price/> met <img/>";
 
@@ -102,9 +114,7 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "%1$@ eindigend op %2$@ verwijderen";
-
-"Remove Card" = "Kaart verwijderen";
+"Remove card?" = "Betaalkaart verwijderen?";
 
 "Save" = "Opslaan";
 
@@ -114,13 +124,13 @@
 
 "Save for future payments" = "Opslaan voor toekomstige betalingen";
 
-"Save my info for secure 1-click checkout" = "Bewaar mijn gegevens om veilig in één klik te kunnen afrekenen";
-
 "Save this account for future %@ payments" = "Dit account opslaan voor toekomstige betalingen bij %@";
 
 "Save this card for future %@ payments" = "Deze kaart opslaan voor toekomstige aankopen bij %@";
 
 "Save your bank account in just a few steps." = "Sla je bankrekening in een paar stappen op.";
+
+"Save your info for secure 1-click checkout with Link" = "Bewaar je gegevens zodat je veilig met één klik kunt afrekenen met Link";
 
 "Select your payment method" = "Betaalmethode selecteren";
 

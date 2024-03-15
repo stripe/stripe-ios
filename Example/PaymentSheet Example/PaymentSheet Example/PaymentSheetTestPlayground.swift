@@ -22,37 +22,33 @@ struct PaymentSheetTestPlayground: View {
         // Note: Use group to work around XCode 14: "Extra Argument in Call" issue
         //  (each view can hold 10 direct subviews)
         Group {
-            SettingView(setting: uiStyle)
+            SettingView(setting: $playgroundController.settings.uiStyle)
             SettingView(setting: $playgroundController.settings.shippingInfo)
             SettingView(setting: $playgroundController.settings.applePayEnabled)
             SettingView(setting: $playgroundController.settings.applePayButtonType)
             SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
-            SettingView(setting: $playgroundController.settings.defaultBillingAddress)
-            SettingView(setting: $playgroundController.settings.linkEnabled)
-            SettingView(setting: $playgroundController.settings.linkV2Allowed)
-            SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
-            SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
         }
         Group {
-            if playgroundController.settings.uiStyle == .flowController {
-                if playgroundController.settings.integrationType == .deferred_csc {
-                    SettingView(setting: $playgroundController.settings.requireCVCRecollection)
-                }
+            SettingPickerView(setting: $playgroundController.settings.defaultBillingAddress)
+            if playgroundController.settings.defaultBillingAddress == .customEmail {
+                TextField("Default email", text: customEmailBinding)
+                    .keyboardType(.emailAddress)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
             }
+        }
+        Group {
+            SettingView(setting: $playgroundController.settings.linkEnabled)
+            SettingView(setting: $playgroundController.settings.userOverrideCountry)
+            SettingView(setting: $playgroundController.settings.externalPayPalEnabled)
+            SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
+            SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
+        }
+        Group {
+            SettingView(setting: $playgroundController.settings.requireCVCRecollection)
         }
         Group {
             SettingView(setting: $playgroundController.settings.autoreload)
-        }
-    }
-
-    var uiStyle: Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
-        Binding<PaymentSheetTestPlaygroundSettings.UIStyle> {
-            return playgroundController.settings.uiStyle
-        } set: { newValue in
-            if newValue != .flowController {
-                playgroundController.settings.requireCVCRecollection = .off
-            }
-            playgroundController.settings.uiStyle = newValue
         }
     }
 
@@ -62,6 +58,9 @@ struct PaymentSheetTestPlayground: View {
                 VStack {
                     Group {
                         HStack {
+                            if ProcessInfo.processInfo.environment["UITesting"] != nil {
+                                AnalyticsLogForTesting(analyticsLog: $playgroundController.analyticsLog)
+                            }
                             Text("Backend")
                                 .font(.headline)
                             Spacer()
@@ -88,10 +87,9 @@ struct PaymentSheetTestPlayground: View {
                                 })
                         }
                         SettingView(setting: $playgroundController.settings.mode)
-                        SettingPickerView(setting: integrationType)
+                        SettingPickerView(setting: $playgroundController.settings.integrationType)
+                        SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
-                        TextField("CustomerId", text: customerIdBinding)
-                            .disabled(true)
                         SettingPickerView(setting: $playgroundController.settings.currency)
                         SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
@@ -111,6 +109,7 @@ struct PaymentSheetTestPlayground: View {
                         }
                         clientSettings
                         TextField("Custom CTA", text: customCTABinding)
+                        TextField("Payment Method Settings ID", text: paymentMethodSettingsBinding)
                     }
                     Divider()
                     Group {
@@ -134,17 +133,6 @@ struct PaymentSheetTestPlayground: View {
         }
     }
 
-    var integrationType: Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
-        Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
-            return playgroundController.settings.integrationType
-        } set: { newValue in
-            if newValue != .deferred_csc {
-                playgroundController.settings.requireCVCRecollection = .off
-            }
-            playgroundController.settings.integrationType = newValue
-        }
-    }
-
     var customCTABinding: Binding<String> {
         Binding<String> {
             return playgroundController.settings.customCtaLabel ?? ""
@@ -152,26 +140,28 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.customCtaLabel = (newString != "") ? newString : nil
         }
     }
+
+    var customEmailBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customEmail ?? ""
+        } set: { newString in
+            playgroundController.settings.customEmail = (newString != "") ? newString : nil
+        }
+    }
+
+    var paymentMethodSettingsBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.paymentMethodConfigurationId ?? ""
+        } set: { newString in
+            playgroundController.settings.paymentMethodConfigurationId = (newString != "") ? newString : nil
+        }
+    }
     var customerModeBinding: Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
         Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
             return playgroundController.settings.customerMode
         } set: { newMode in
-            playgroundController.settings.customerId = nil
+            PlaygroundController.resetCustomer()
             playgroundController.settings.customerMode = newMode
-        }
-    }
-    var customerIdBinding: Binding<String> {
-        Binding<String> {
-            switch playgroundController.settings.customerMode {
-            case .guest:
-                return ""
-            case .new:
-                return playgroundController.settings.customerId ?? ""
-            case .returning:
-                return playgroundController.settings.customerId ?? ""
-            }
-        } set: { newString in
-            playgroundController.settings.customerId = (newString != "") ? newString : nil
         }
     }
     var merchantCountryBinding: Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
@@ -306,6 +296,20 @@ struct PaymentSheetButtons: View {
                 }
             }
         }
+    }
+}
+
+/// A zero-sized view whose only purpose is to let XCUITests access the analytics sent by the SDK.
+struct AnalyticsLogForTesting: View {
+    @Binding var analyticsLog: [[String: Any]]
+    var analyticsLogString: String {
+        return try! JSONSerialization.data(withJSONObject: analyticsLog).base64EncodedString()
+    }
+    var body: some View {
+        Text(analyticsLogString)
+            .frame(width: 0, height: 0)
+            .accessibility(identifier: "_testAnalyticsLog")
+            .accessibility(label: Text(analyticsLogString))
     }
 }
 

@@ -84,6 +84,8 @@
 
 "Phone" = "Telèfon";
 
+"Phone number" = "Número de telèfon";
+
 "Postal code" = "Codi postal";
 
 "Prefecture" = "Prefectura";
@@ -101,6 +103,8 @@
 "Search" = "Cerca";
 
 "Select card brand (optional)" = "Seleccioneu la marca de la targeta (opcional)";
+
+"Sort code" = "Codi de classificació";
 
 "State" = "País";
 

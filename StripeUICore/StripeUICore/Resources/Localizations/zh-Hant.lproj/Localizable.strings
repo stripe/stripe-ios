@@ -84,6 +84,8 @@
 
 "Phone" = "電話";
 
+"Phone number" = "手機號碼";
+
 "Postal code" = "郵遞區號";
 
 "Prefecture" = "轄區";
@@ -101,6 +103,8 @@
 "Search" = "搜尋";
 
 "Select card brand (optional)" = "選擇金融卡品牌（可選）";
+
+"Sort code" = "分類代碼";
 
 "State" = "州";
 

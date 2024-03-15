@@ -27,7 +27,7 @@ protocol LinkLegalTermsViewDelegate: AnyObject {
 @objc(STP_Internal_LinkLegalTermsView)
 final class LinkLegalTermsView: UIView {
     struct Constants {
-        static let lineHeight: CGFloat = 1.5
+        static let lineHeight: CGFloat = 1.0
     }
 
     private let links: [String: URL] = [
@@ -37,6 +37,7 @@ final class LinkLegalTermsView: UIView {
 
     weak var delegate: LinkLegalTermsViewDelegate?
     private let mode: LinkInlineSignupViewModel.Mode
+    private let emailWasPrefilled: Bool
 
     var textColor: UIColor? {
         get {
@@ -73,9 +74,11 @@ final class LinkLegalTermsView: UIView {
     }()
 
     init(textAlignment: NSTextAlignment = .left,
-         mode: LinkInlineSignupViewModel.Mode = .normal,
+         mode: LinkInlineSignupViewModel.Mode = .checkbox,
+         emailWasPrefilled: Bool = false,
          delegate: LinkLegalTermsViewDelegate? = nil) {
         self.mode = mode
+        self.emailWasPrefilled = emailWasPrefilled
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment
         self.delegate = delegate
@@ -89,14 +92,19 @@ final class LinkLegalTermsView: UIView {
     private func formattedLegalText() -> NSAttributedString {
         let string: String = {
             switch mode {
-            case .normal:
+            case .checkbox:
                 return STPLocalizedString(
                     "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
                     "Legal text shown when creating a Link account."
                 )
-            case .textFieldsOnly:
+            case .textFieldsOnlyEmailFirst:
                 return STPLocalizedString(
                     "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "Legal text shown when creating a Link account."
+                )
+            case .textFieldsOnlyPhoneFirst:
+                return STPLocalizedString(
+                    "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
                     "Legal text shown when creating a Link account."
                 )
             }

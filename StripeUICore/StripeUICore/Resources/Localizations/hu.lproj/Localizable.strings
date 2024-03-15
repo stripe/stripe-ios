@@ -84,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "Telefonszám";
+
 "Postal code" = "Irányítószám";
 
 "Prefecture" = "Prefektúra";
@@ -101,6 +103,8 @@
 "Search" = "Keresés";
 
 "Select card brand (optional)" = "Válassza ki a kártya márkáját (nem kötelező)";
+
+"Sort code" = "Bankazonosító";
 
 "State" = "Állam";
 

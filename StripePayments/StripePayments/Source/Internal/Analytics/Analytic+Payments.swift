@@ -15,7 +15,6 @@ import Foundation
 struct GenericPaymentAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
     let paymentConfiguration: NSObject?
-    let productUsage: Set<String>
     let additionalParams: [String: Any]
 }
 
@@ -23,7 +22,6 @@ struct GenericPaymentAnalytic: PaymentAnalytic {
 struct GenericPaymentErrorAnalytic: PaymentAnalytic, ErrorAnalytic {
     let event: STPAnalyticEvent
     let paymentConfiguration: NSObject?
-    let productUsage: Set<String>
     let additionalParams: [String: Any]
     let error: Error
 }

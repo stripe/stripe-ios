@@ -47,7 +47,7 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
         configuration: PaymentSheet.Configuration,
         linkAccount: PaymentSheetLinkAccount?,
         country: String?,
-        mode: LinkInlineSignupViewModel.Mode
+        showCheckbox: Bool
     ) {
         self.paymentMethodType = type
         self.paymentMethodElement = paymentMethodElement
@@ -55,7 +55,7 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
             configuration: configuration,
             linkAccount: linkAccount,
             country: country,
-            mode: mode
+            showCheckbox: showCheckbox
         )
 
         paymentMethodElement.delegate = self
@@ -68,18 +68,12 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
         }
 
         switch inlineSignupElement.action {
-        case .pay(let account):
-            return .link(
-                option: .withPaymentMethodParams(
-                    account: account,
-                    paymentMethodParams: params.paymentMethodParams
-                )
-            )
         case .signupAndPay(let account, let phoneNumber, let legalName):
             return .link(
                 option: .signUp(
                     account: account,
                     phoneNumber: phoneNumber,
+                    consentAction: inlineSignupElement.viewModel.consentAction,
                     legalName: legalName,
                     paymentMethodParams: params.paymentMethodParams
                 )
@@ -88,7 +82,7 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
             return .new(confirmParams: params)
         case .none:
             // Link is optional when in textFieldOnly mode
-            if inlineSignupElement.viewModel.mode == .textFieldsOnly {
+            if inlineSignupElement.viewModel.mode != .checkbox {
                 return .new(confirmParams: params)
             }
             return nil

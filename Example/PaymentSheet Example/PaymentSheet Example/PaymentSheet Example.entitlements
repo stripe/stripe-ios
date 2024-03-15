@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.in-app-payments</key>
 	<array>
-		<string>merchant.com.stripe.apple-pay-qualifications</string>
+		<string>merchant.com.stripe.umbrella.test</string>
 	</array>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>

@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Добавить";
 
 "Add a card" = "Добавьте карту";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой электронный адрес, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Указав свои платежные данные и подтвердив платеж, вы уполномочиваете (A) %@ и Stripe, нашего поставщика платежных услуг, на отправку вашему банку инструкций на списание средств с вашего счета и (B) ваш банк на списание средств с вашего счета согласно данным инструкциям. Вы имеете право на возврат средств от вашего банка согласно положениям и условиям Вашего соглашения с банком. Подать заявку на возврат средств следует в течение 8 недель с даты списания средств с вашего счета. Ваши права объясняются в выписке, которую вы можете получить в своем банке. Вы даете согласие на получение уведомлений о будущих дебетованиях в срок до 2 дней до их поступления.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой номер телефона, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Сохраняя реквизиты своего банковского счета у %@, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
@@ -62,6 +68,8 @@
 
 "FPX Bank" = "Банк FPX";
 
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Я понимаю, что Stripe будет принимать прямые дебетования от имени %@, и подтверждаю, что являюсь владельцем счета и единственным лицом, согласие которого требуется для проведения дебетований с этого счета.";
+
 "IBAN" = "IBAN";
 
 "Manage your payment methods" = "Управление способами оплаты";
@@ -76,11 +84,15 @@
 
 "Or pay with a card" = "Или оплатить картой";
 
+"Or use" = "Или используйте";
+
+"Or use a card" = "Или используйте карту";
+
 "Pay %@" = "Оплатить %@";
 
 "Pay another way" = "Оплатить другим способом";
 
-"Pay faster at %@ and thousands of merchants." = "Ускоренная оплата на сайте %@ и тысячах других вебсайтов";
+"Pay faster at %@ and thousands of businesses." = "Ускоренная оплата продавцу %@ и тысячам других предприятий.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Оплатить в беспроцентную рассрочку <num_installments/> выплатами по <installment_price/> через <img/>";
 
@@ -102,9 +114,7 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Удалить карту %1$@, оканчивающуюся на %2$@";
-
-"Remove Card" = "Удалить карту";
+"Remove card?" = "Удалить карту?";
 
 "Save" = "Сохранить";
 
@@ -114,13 +124,13 @@
 
 "Save for future payments" = "Сохранить данные для будущих платежей";
 
-"Save my info for secure 1-click checkout" = "Сохранить мои данные для безопасного оформления покупок одним щелчком";
-
 "Save this account for future %@ payments" = "Сохранить этот счет для будущих платежей %@";
 
 "Save this card for future %@ payments" = "Сохранить данные этой карты для будущих платежей %@";
 
 "Save your bank account in just a few steps." = "Сохраните реквизиты своего банковского счета всего за несколько шагов.";
+
+"Save your info for secure 1-click checkout with Link" = "Сохраните свои данные в Link для безопасного оформления покупок нажатием одной кнопки";
 
 "Select your payment method" = "Выберите способ оплаты";
 

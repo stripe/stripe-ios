@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Dodaj";
 
 "Add a card" = "Dodavanje kartice";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prisupanjem u Link, prihvaćate <terms>Uvjete</terms> i <privacy>Pravila privatnosti</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Navođenjem svoje adrese e-pošte pristajete na izradu Link računa i spremanje podataka o plaćanju na Link, u skladu s <terms>Uvjetima</terms> i <privacy>Pravilima o privatnosti</privacy> Linka.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Unošenjem vaših podataka o plaćanju, ovlašćujete (A) %@ i Stripe, našeg davatelja usluga platnog prometa, da vašoj banci pošalje upute za terećenje vašeg računa, i (B) vašu banku za terećenje vašeg računa u skladu s tim uputama. U sklopu vaših prava, imate pravo na povrat novca od svoje banke prema uvjetima i odredbama ugovora s bankom. Povrat novca mora se zatražiti u roku od 8 tjedana počevši od datuma terećenja vašeg računa. Vaša prava objašnjena su u izjavi koju možete dobiti od svoje banke. Slažete se s primanjem obavijesti o budućim terećenjima do 2 dana prije njihova izvršenja.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Navođenjem svog telefonskog broja pristajete na izradu Link računa i spremanje podataka o plaćanju na Link, u skladu s <terms>Uvjetima</terms> i <privacy>Pravilima o privatnosti</privacy> Linka.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Spremanjem bankovnog računa za %@ pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
 
@@ -62,6 +68,8 @@
 
 "FPX Bank" = "FPX Bank";
 
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Razumijem da će Stripe naplaćivati izravna terećenja u ime %@ i potvrđujem da sam vlasnik računa i jedina osoba koja mora autorizirati terećenja s ovog računa.";
+
 "IBAN" = "IBAN";
 
 "Manage your payment methods" = "Upravljajte svojim metodama plaćanja";
@@ -76,11 +84,15 @@
 
 "Or pay with a card" = "Ili plati karticom";
 
+"Or use" = "Ili upotrijebite";
+
+"Or use a card" = "Ili upotrijebite karticu";
+
 "Pay %@" = "Plati %@";
 
 "Pay another way" = "Platite na drugi način";
 
-"Pay faster at %@ and thousands of merchants." = "Platite brže kod %@ i tisuća drugih trgovaca.";
+"Pay faster at %@ and thousands of businesses." = "Platite brže na %@ i tisućama drugih stranica.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Platite u <num_installments/> beskamatnih obroka po <installment_price/> koristeći <img/>";
 
@@ -102,9 +114,7 @@
 
 "Przelewy24 Bank" = "Banka Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Uklonite %1$@ koji završava s %2$@";
-
-"Remove Card" = "Uklonite karticu";
+"Remove card?" = "Ukloniti karticu?";
 
 "Save" = "Spremi";
 
@@ -114,13 +124,13 @@
 
 "Save for future payments" = "Spremi za buduća plaćanja";
 
-"Save my info for secure 1-click checkout" = "Sačuvaj moje podatke za sigurno plaćanje pomoću 1 klika";
-
 "Save this account for future %@ payments" = "Spremi ovaj račun za buduća %@ plaćanja";
 
 "Save this card for future %@ payments" = "Spremi ovu karticu za buduća plaćanja %@";
 
 "Save your bank account in just a few steps." = "Spremite svoj bankovni račun u samo par koraka.";
+
+"Save your info for secure 1-click checkout with Link" = "Spremite svoje podatke za sigurno plaćanje jednim klikom putem Linka";
 
 "Select your payment method" = "Odaberite način plaćanja";
 

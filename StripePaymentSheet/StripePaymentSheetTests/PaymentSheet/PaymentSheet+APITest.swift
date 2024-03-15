@@ -64,9 +64,6 @@ class PaymentSheetAPITest: XCTestCase {
 
     override class func setUp() {
         super.setUp()
-        // `PaymentSheetLoader.load()` uses the `LinkAccountService` to lookup the Link user account.
-        // Override the default cookie store since Keychain is not available in this test case.
-        LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()
     }
 
     // MARK: - load and confirm tests
@@ -84,10 +81,11 @@ class PaymentSheetAPITest: XCTestCase {
                 // 1. Load the PI
                 PaymentSheetLoader.load(
                     mode: .paymentIntentClientSecret(clientSecret),
-                    configuration: self.configuration
+                    configuration: self.configuration,
+                    isFlowController: false
                 ) { result in
                     switch result {
-                    case .success(let paymentIntent, let paymentMethods, _):
+                    case .success(let paymentIntent, let paymentMethods, _, _):
                         XCTAssertEqual(
                             Set(paymentIntent.recommendedPaymentMethodTypes),
                             Set(expected)
@@ -165,10 +163,11 @@ class PaymentSheetAPITest: XCTestCase {
                                                             confirmHandler: confirmHandler)
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
-            configuration: self.configuration
+            configuration: self.configuration,
+            isFlowController: false
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _):
+            case .success(let intent, let paymentMethods, _, _):
                 XCTAssertEqual(
                     Set(intent.recommendedPaymentMethodTypes),
                     Set(expected)
@@ -230,10 +229,11 @@ class PaymentSheetAPITest: XCTestCase {
                                                             confirmHandler: serverSideConfirmHandler)
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
-            configuration: self.configuration
+            configuration: self.configuration,
+            isFlowController: false
         ) { result in
             switch result {
-            case .success(let intent, let paymentMethods, _):
+            case .success(let intent, let paymentMethods, _, _):
                 XCTAssertEqual(
                     Set(intent.recommendedPaymentMethodTypes),
                     Set(expected)
@@ -286,9 +286,10 @@ class PaymentSheetAPITest: XCTestCase {
             // 1. Load the PI
             PaymentSheetLoader.load(
                 mode: .paymentIntentClientSecret(clientSecret),
-                configuration: self.configuration
+                configuration: self.configuration,
+                isFlowController: false
             ) { result in
-                guard case .success(let paymentIntent, _, _) = result else {
+                guard case .success(let paymentIntent, _, _, _) = result else {
                     XCTFail()
                     return
                 }
@@ -297,7 +298,7 @@ class PaymentSheetAPITest: XCTestCase {
                     configuration: self.configuration,
                     authenticationContext: self,
                     intent: paymentIntent,
-                    paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa")),
+                    paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa"), confirmParams: nil),
                     paymentHandler: self.paymentHandler
                 ) { result, _ in
                     switch result {
@@ -407,28 +408,28 @@ class PaymentSheetAPITest: XCTestCase {
 
     func testDeferredConfirm_valid_saved_card() {
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod()),
+            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod(), confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .completed,
             isPaymentIntent: true, // PaymentIntent
             isServerSideConfirm: false // Client-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod()),
+            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod(), confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .completed,
             isPaymentIntent: true, // PaymentIntent
             isServerSideConfirm: true // Server-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod()),
+            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod(), confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .completed,
             isPaymentIntent: false, // SetupIntent
             isServerSideConfirm: false // Client-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod()),
+            inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod(), confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .completed,
             isPaymentIntent: false, // SetupIntent
@@ -505,28 +506,28 @@ class PaymentSheetAPITest: XCTestCase {
     func testDeferredConfirm_saved_insufficient_funds_card() {
         let insufficient_funds_saved_PM = STPPaymentMethod(stripeId: "pm_card_visa_chargeDeclinedInsufficientFunds")
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM),
+            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM, confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .failed(error: ExpectedError(errorDescription: "Your card has insufficient funds.")),
             isPaymentIntent: true, // PaymentIntent
             isServerSideConfirm: false // Client-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM),
+            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM, confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .failed(error: ExpectedError(errorDescription: "Your card has insufficient funds.")),
             isPaymentIntent: true, // PaymentIntent
             isServerSideConfirm: true // Server-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM),
+            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM, confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .failed(error: ExpectedError(errorDescription: "Your card has insufficient funds.")),
             isPaymentIntent: false, // SetupIntent
             isServerSideConfirm: false // Client-side confirmation
         )
         _testDeferredConfirm(
-            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM),
+            inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM, confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
             expectedResult: .failed(error: ExpectedError(errorDescription: "Your card has insufficient funds.")),
             isPaymentIntent: false, // SetupIntent
@@ -752,6 +753,7 @@ class PaymentSheetAPITest: XCTestCase {
     // MARK: - update tests
 
     func testUpdate() {
+        STPAnalyticsClient.sharedClient._testLogHistory = []
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in
             // These tests don't confirm, so this is unused
         }
@@ -780,6 +782,20 @@ class PaymentSheetAPITest: XCTestCase {
                         XCTAssertNil(sut.paymentOption)
                         XCTAssertFalse(sut.viewController.intent.isSettingUp)
                         XCTAssertTrue(sut.viewController.intent.isPaymentIntent)
+
+                        // Sanity check that the analytics...
+                        let analytics = STPAnalyticsClient.sharedClient._testLogHistory
+                        let loadStartedEvents = analytics.filter { $0["event"] as? String == "mc_load_started" }
+                        let loadSucceededEvents = analytics.filter { $0["event"] as? String == "mc_load_succeeded" }
+                        // ...have the expected # of start and succeeded events...
+                        XCTAssertEqual(loadStartedEvents.count, 3)
+                        XCTAssertEqual(loadSucceededEvents.count, 3)
+                        // ..and all have the same session id...
+                        let sessionID = analytics.first?["session_id"] as? String
+                        (loadStartedEvents + loadSucceededEvents).map { $0["session_id"] as? String }.forEach {
+                            XCTAssertEqual($0, sessionID)
+                        }
+
                         secondUpdateExpectation.fulfill()
                     }
                 }

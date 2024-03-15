@@ -6,25 +6,49 @@
 import Foundation
 import StripePayments
 
-struct LinkResult {
-    enum LinkStatus: String {
-        case complete
-        case logout
-    }
-    let link_status: LinkStatus
-    let pm: STPPaymentMethod
+enum LinkResult {
+    case complete(STPPaymentMethod)
+    case logout
 }
 
 class LinkPopupURLParser {
     static func result(with resultURL: URL) throws -> LinkResult {
         let components = URLComponents(url: resultURL, resolvingAgainstBaseURL: false)
-        guard let statusItem = components?.queryItems?.first(where: { $0.name == "link_status" })?.value,
-              let status = LinkResult.LinkStatus(rawValue: statusItem),
-              let pmItem = components?.queryItems?.first(where: { $0.name == "pm" })?.value else {
+        guard let status = components?.queryItems?.first(where: { $0.name == "link_status" })?.value else {
             throw LinkPopupURLParserError.invalidURLParams
         }
-        let pm = try STPPaymentMethod.decodedObject(base64: pmItem)
-        return LinkResult(link_status: status, pm: pm)
+        switch status {
+        case "complete":
+            guard let pmItem = components?.queryItems?.first(where: { $0.name == "pm" })?.value else {
+                throw LinkPopupURLParserError.invalidURLParams
+            }
+            let pm = try STPPaymentMethod.decodedObject(base64: pmItem)
+            return .complete(pm)
+        case "logout":
+            return .logout
+        default:
+            throw LinkPopupURLParserError.invalidURLParams
+        }
+    }
+
+    static func redactedURLForLogging(url: URL?) -> URL? {
+        guard let url = url,
+              var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return nil
+        }
+        let originalQueryItems = components.queryItems
+
+        var updatedQueryItems: [URLQueryItem] = []
+        originalQueryItems?.forEach { item in
+            if item.name == "pm" {
+                let updatedItem = URLQueryItem(name: item.name, value: "<redacted>")
+                updatedQueryItems.append(updatedItem)
+            } else {
+                updatedQueryItems.append(item)
+            }
+        }
+        components.queryItems = updatedQueryItems
+        return components.url
     }
 }
 

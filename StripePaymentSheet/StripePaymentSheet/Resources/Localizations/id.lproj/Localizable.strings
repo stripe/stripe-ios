@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Tambahkan";
 
 "Add a card" = "Tambahkan sebuah kartu";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan bergabung ke Link, Anda berarti menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan email, berarti Anda menyetujui pembuatan akun Link serta penyimpanan informasi pembayaran pada Link, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> Link.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Dengan memberikan informasi pembayaran dan mengonfirmasi pembayaran ini, berarti Anda mengotorisasi (A) %@ dan Stripe, penyedia layanan pembayaran kami, untuk mengirim instruksi kepada bank untuk mendebit rekening Anda dan (B) kepada bank untuk mendebit rekening Anda sesuai instruksi itu. Sebagai bagian dari hak Anda, Anda berhak mendapat pengembalian dana dari bank berdasarkan ketentuan dan persyaratan perjanjian Anda dengan bank. Pengembalian dana harus diklaim dalam waktu 8 minggu sejak tanggal pendebitan rekening Anda. Hak Anda dijelaskan dalam pernyataan yang dapat Anda peroleh dari bank Anda. Anda setuju untuk menerima notifikasi pendebitan di masa mendatang hingga 2 hari sebelum dilakukan.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon, berarti Anda menyetujui pembuatan akun Link serta penyimpanan informasi pembayaran pada Link, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan rekening bank Anda untuk %@, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
 
@@ -62,6 +68,8 @@
 
 "FPX Bank" = "FPX Bank";
 
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya memahami bahwa Stripe akan menagih Debit Langsung atas nama %@ serta mengonfirmasikan bahwa sayalah pemilik akun dan satu-satunya orang yang diperlukan untuk mengotorisasi debit dari akun ini.";
+
 "IBAN" = "IBAN";
 
 "Manage your payment methods" = "Kelola metode pembayaran Anda";
@@ -76,11 +84,15 @@
 
 "Or pay with a card" = "Atau bayar dengan kartu";
 
+"Or use" = "Atau gunakan";
+
+"Or use a card" = "Atau gunakan kartu";
+
 "Pay %@" = "Bayar %@";
 
 "Pay another way" = "Bayar dengan cara lain";
 
-"Pay faster at %@ and thousands of merchants." = "Bayar lebih cepat di %@ dan ribuan merchant lainnya.";
+"Pay faster at %@ and thousands of businesses." = "Bayar lebih cepat di %@ dan ribuan bisnis.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Bayar dalam <num_installments/> angsuran bebas bunga sebesar <installment_price/> dengan <img/>";
 
@@ -102,9 +114,7 @@
 
 "Przelewy24 Bank" = "Bank Przelewy24";
 
-"Remove %1$@ ending in %2$@" = "Hapus %1$@ yang berakhiran %2$@";
-
-"Remove Card" = "Hapus Kartu";
+"Remove card?" = "Hapus kartu?";
 
 "Save" = "Simpan";
 
@@ -114,13 +124,13 @@
 
 "Save for future payments" = "Simpan untuk pembayaran mendatang";
 
-"Save my info for secure 1-click checkout" = "Simpan info saya untuk checkout aman dengan 1-klik";
-
 "Save this account for future %@ payments" = "Simpan rekening ini untuk pembayaran %@ mendatang";
 
 "Save this card for future %@ payments" = "Simpan kartu ini untuk pembayaran %@ mendatang";
 
 "Save your bank account in just a few steps." = "Simpan rekening bank Anda hanya dalam beberapa langkah.";
+
+"Save your info for secure 1-click checkout with Link" = "Simpan info Anda untuk checkout aman dengan 1 klik dengan Link";
 
 "Select your payment method" = "Pilih metode pembayaran Anda";
 

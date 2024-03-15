@@ -28,31 +28,16 @@ protocol LinkAccountServiceProtocol {
         withEmail email: String?,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
-
-    /// Checks if we have seen this email log out before
-    /// - Parameter email: true if this email has logged out before, false otherwise
-    func hasEmailLoggedOut(email: String) -> Bool
 }
 
 final class LinkAccountService: LinkAccountServiceProtocol {
 
     let apiClient: STPAPIClient
-    let cookieStore: LinkCookieStore
-
-    /// The default cookie store used by new instances of the service.
-    static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
 
     init(
-        apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = defaultCookieStore
+        apiClient: STPAPIClient = .shared
     ) {
         self.apiClient = apiClient
-        self.cookieStore = cookieStore
-    }
-
-    /// Returns true if we have a session cookie stored on device
-    var hasSessionCookie: Bool {
-        return cookieStore.formattedSessionCookies() != nil
     }
 
     func lookupAccount(
@@ -61,11 +46,11 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     ) {
         ConsumerSession.lookupSession(
             for: email,
-            with: apiClient,
-            cookieStore: cookieStore
-        ) { [apiClient, cookieStore] result in
+            with: apiClient
+        ) { [apiClient] result in
             switch result {
             case .success(let lookupResponse):
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
                 switch lookupResponse.responseType {
                 case .found(let session):
                     completion(.success(
@@ -73,8 +58,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             email: session.consumerSession.emailAddress,
                             session: session.consumerSession,
                             publishableKey: session.publishableKey,
-                            apiClient: apiClient,
-                            cookieStore: cookieStore
+                            apiClient: apiClient
                         )
                     ))
                 case .notFound:
@@ -84,8 +68,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                                 email: email,
                                 session: nil,
                                 publishableKey: nil,
-                                apiClient: self.apiClient,
-                                cookieStore: self.cookieStore
+                                apiClient: self.apiClient
                             )
                         ))
                     } else {
@@ -95,61 +78,9 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                     completion(.success(nil))
                 }
             case .failure(let error):
-                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure()
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
                 completion(.failure(error))
             }
         }
     }
-
-    func hasEmailLoggedOut(email: String) -> Bool {
-        guard let hashedEmail = email.lowercased().sha256 else {
-            return false
-        }
-
-        return cookieStore.read(key: .lastLogoutEmail) == hashedEmail
-    }
-
-    func getLastPMDetails() -> LinkPMDisplayDetails? {
-        if let lastBrandString = cookieStore.read(key: .lastPMBrand),
-           let last4 = cookieStore.read(key: .lastPMLast4) {
-            let brand = STPCard.brand(from: lastBrandString)
-            return LinkPMDisplayDetails(last4: last4, brand: brand)
-        }
-        return nil
-    }
-
-    func setLastPMDetails(newDetails: LinkPMDisplayDetails?) {
-        if let newDetails = newDetails,
-            let brandString = STPCardBrandUtilities.stringFrom(newDetails.brand) {
-            cookieStore.write(key: .lastPMBrand, value: brandString, allowSync: false)
-            cookieStore.write(key: .lastPMLast4, value: newDetails.last4, allowSync: false)
-        } else {
-            cookieStore.delete(key: .lastPMBrand)
-            cookieStore.delete(key: .lastPMLast4)
-        }
-    }
-
-    func setLastPMDetails(params: STPPaymentMethodParams) {
-        if let last4 = params.card?.last4,
-           let number = params.card?.number
-        {
-            let brand = STPCardValidator.brand(forNumber: number)
-            let pmDetails = LinkPMDisplayDetails(last4: last4, brand: brand)
-            self.setLastPMDetails(newDetails: pmDetails)
-        } else {
-            self.setLastPMDetails(newDetails: nil)
-        }
-    }
-
-    func setLastPMDetails(pm: STPPaymentMethod) {
-        if let last4 = pm.card?.last4,
-           let brand = pm.card?.brand
-        {
-            let pmDetails = LinkPMDisplayDetails(last4: last4, brand: brand)
-            self.setLastPMDetails(newDetails: pmDetails)
-        } else {
-            self.setLastPMDetails(newDetails: nil)
-        }
-    }
-
 }

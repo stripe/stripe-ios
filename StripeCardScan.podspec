@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '23.21.0'
+  s.version                        = '23.25.0'
 
   s.summary                        = 'Scan credit and debit cards to verify that they\'re genuine'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
@@ -17,6 +17,6 @@ Pod::Spec.new do |s|
   s.swift_version		   = '5.0'
   s.weak_framework                 = 'AVKit', 'CoreML', 'VideoToolbox', 'Vision', 'AVFoundation'
   s.source_files                   = 'StripeCardScan/StripeCardScan/**/*.swift'
-  s.ios.resource_bundle            = { 'StripeCardScan' => 'StripeCardScan/StripeCardScan/Resources/**/*.{lproj,mlmodelc}' }
+  s.ios.resource_bundle            = { 'StripeCardScanBundle' => 'StripeCardScan/StripeCardScan/Resources/**/*.{lproj,mlmodelc}' }
   s.dependency                       'StripeCore', "#{s.version}"
 end

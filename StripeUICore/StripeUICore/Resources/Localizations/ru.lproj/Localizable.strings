@@ -84,6 +84,8 @@
 
 "Phone" = "Телефон";
 
+"Phone number" = "Номер телефона";
+
 "Postal code" = "Почтовый индекс";
 
 "Prefecture" = "Префектура";
@@ -101,6 +103,8 @@
 "Search" = "Поиск";
 
 "Select card brand (optional)" = "Выберите бренд карты (необязательно)";
+
+"Sort code" = "Код банка";
 
 "State" = "Штат";
 

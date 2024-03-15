@@ -26,6 +26,7 @@ final class UpdateCardViewController: UIViewController {
     private let removeSavedPaymentMethodMessage: String?
     private let isTestMode: Bool
     private let hostedSurface: HostedSurface
+    private let canRemoveCard: Bool
 
     private var latestError: Error? {
         didSet {
@@ -80,8 +81,8 @@ final class UpdateCardViewController: UIViewController {
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
         button.titleLabel?.adjustsFontForContentSizeCategory = true
-
         button.addTarget(self, action: #selector(removeCard), for: .touchUpInside)
+        button.isHidden = !canRemoveCard
         return button
     }()
 
@@ -138,6 +139,7 @@ final class UpdateCardViewController: UIViewController {
          removeSavedPaymentMethodMessage: String?,
          appearance: PaymentSheet.Appearance,
          hostedSurface: HostedSurface,
+         canRemoveCard: Bool,
          isTestMode: Bool) {
         self.paymentOptionCell = paymentOptionCell
         self.paymentMethod = paymentMethod
@@ -145,6 +147,7 @@ final class UpdateCardViewController: UIViewController {
         self.appearance = appearance
         self.hostedSurface = hostedSurface
         self.isTestMode = isTestMode
+        self.canRemoveCard = canRemoveCard
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -247,6 +250,9 @@ extension UpdateCardViewController: BottomSheetContentViewController {
 
     var requiresFullScreen: Bool {
         return false
+    }
+    func didFinishAnimatingHeight() {
+        // no-op
     }
 }
 

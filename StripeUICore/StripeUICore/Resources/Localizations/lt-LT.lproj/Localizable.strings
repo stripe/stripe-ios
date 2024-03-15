@@ -84,6 +84,8 @@
 
 "Phone" = "Telefonas";
 
+"Phone number" = "Telefono numeris";
+
 "Postal code" = "Pašto kodas";
 
 "Prefecture" = "Prefektūra";
@@ -101,6 +103,8 @@
 "Search" = "Paieška";
 
 "Select card brand (optional)" = "Pasirinkite kortelės prekės ženklą (neprivaloma)";
+
+"Sort code" = "Identifikacinis kodas";
 
 "State" = "Valstija";
 

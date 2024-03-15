@@ -84,6 +84,8 @@
 
 "Phone" = "Telefoon";
 
+"Phone number" = "Telefoonnummer";
+
 "Postal code" = "Postcode";
 
 "Prefecture" = "Prefectuur";
@@ -101,6 +103,8 @@
 "Search" = "Zoeken";
 
 "Select card brand (optional)" = "Merk van betaalkaart selecteren (optioneel)";
+
+"Sort code" = "Bankcode";
 
 "State" = "Staat";
 

@@ -16,7 +16,7 @@ class ConsentFooterView: HitTestView {
     private let didSelectAgree: () -> Void
 
     private lazy var agreeButton: StripeUICore.Button = {
-        let agreeButton = Button(configuration: .financialConnectionsPrimary)
+        let agreeButton = Button.primary()
         agreeButton.title = agreeButtonText
         agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
         agreeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -40,10 +40,10 @@ class ConsentFooterView: HitTestView {
         backgroundColor = .customBackgroundColor
 
         let termsAndPrivacyPolicyLabel = AttributedTextView(
-            font: .body(.small),
-            boldFont: .body(.smallEmphasized),
-            linkFont: .body(.smallEmphasized),
-            textColor: .textSecondary,
+            font: .label(.small),
+            boldFont: .label(.smallEmphasized),
+            linkFont: .label(.small),
+            textColor: .textDefault,
             alignCenter: true
         )
         termsAndPrivacyPolicyLabel.setText(
@@ -58,14 +58,21 @@ class ConsentFooterView: HitTestView {
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 24
+        verticalStackView.spacing = 16
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 16,
+            leading: 24,
+            bottom: 16,
+            trailing: 24
+        )
 
         if let belowCtaText = belowCtaText {
             let manuallyVerifyLabel = AttributedTextView(
-                font: .body(.small),
-                boldFont: .body(.smallEmphasized),
-                linkFont: .body(.smallEmphasized),
-                textColor: .textSecondary,
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
+                linkFont: .label(.small),
+                textColor: .textDefault,
                 alignCenter: true
             )
             manuallyVerifyLabel.setText(

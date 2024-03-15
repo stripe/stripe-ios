@@ -84,6 +84,8 @@
 
 "Phone" = "Puhelin";
 
+"Phone number" = "Puhelinnumero";
+
 "Postal code" = "Postinumero";
 
 "Prefecture" = "Prefektuuri";
@@ -101,6 +103,8 @@
 "Search" = "Etsi";
 
 "Select card brand (optional)" = "Valitse korttimerkki (valinnainen)";
+
+"Sort code" = "Pankin tunnusnumero";
 
 "State" = "Osavaltio";
 

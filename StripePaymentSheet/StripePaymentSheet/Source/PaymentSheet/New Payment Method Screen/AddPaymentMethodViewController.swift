@@ -227,6 +227,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        STPAnalyticsClient.sharedClient.logPaymentSheetFormShown(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier, apiClient: configuration.apiClient)
         sendEventToSubviews(.viewDidAppear, from: view)
         delegate?.didUpdate(self)
     }
@@ -251,6 +252,7 @@ class AddPaymentMethodViewController: UIViewController {
     private func updateUI() {
         // Swap out the input view if necessary
         if paymentMethodFormElement.view !== paymentMethodDetailsView {
+            STPAnalyticsClient.sharedClient.logPaymentSheetFormShown(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier, apiClient: configuration.apiClient)
             let oldView = paymentMethodDetailsView
             let newView = paymentMethodFormElement.view
             self.paymentMethodDetailsView = newView
@@ -395,6 +397,10 @@ class AddPaymentMethodViewController: UIViewController {
             )
         }
     }
+
+    func clearTextFields() {
+        paymentMethodFormElement.clearTextFields()
+    }
 }
 
 // MARK: - PaymentMethodTypeCollectionViewDelegate
@@ -414,6 +420,7 @@ extension AddPaymentMethodViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
+        STPAnalyticsClient.sharedClient.logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier)
         delegate?.didUpdate(self)
         animateHeightChange()
     }

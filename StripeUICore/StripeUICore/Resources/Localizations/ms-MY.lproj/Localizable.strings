@@ -84,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "Nombor telefon";
+
 "Postal code" = "Poskod";
 
 "Prefecture" = "Wilayah";
@@ -101,6 +103,8 @@
 "Search" = "Cari";
 
 "Select card brand (optional)" = "Pilih jenama kad (opsyenal)";
+
+"Sort code" = "Kod isihan";
 
 "State" = "Negeri";
 

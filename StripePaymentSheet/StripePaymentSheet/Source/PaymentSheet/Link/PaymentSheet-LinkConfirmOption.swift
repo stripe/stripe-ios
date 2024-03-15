@@ -20,19 +20,8 @@ extension PaymentSheet {
         case signUp(
             account: PaymentSheetLinkAccount,
             phoneNumber: PhoneNumber,
+            consentAction: PaymentSheetLinkAccount.ConsentAction,
             legalName: String?,
-            paymentMethodParams: STPPaymentMethodParams
-        )
-
-        /// Confirm intent with paymentDetails.
-        case withPaymentDetails(
-            account: PaymentSheetLinkAccount,
-            paymentDetails: ConsumerPaymentDetails
-        )
-
-        /// Confirm with Payment Method Params.
-        case withPaymentMethodParams(
-            account: PaymentSheetLinkAccount,
             paymentMethodParams: STPPaymentMethodParams
         )
 
@@ -52,11 +41,7 @@ extension PaymentSheet.LinkConfirmOption {
         switch self {
         case .wallet:
             return nil
-        case .signUp(let account, _, _, _):
-            return account
-        case .withPaymentDetails(let account, _):
-            return account
-        case .withPaymentMethodParams(let account, _):
+        case .signUp(let account, _, _, _, _):
             return account
         case .withPaymentMethod:
             return nil
@@ -65,11 +50,9 @@ extension PaymentSheet.LinkConfirmOption {
 
     var paymentSheetLabel: String {
         switch self {
-        case .wallet, .withPaymentDetails:
+        case .wallet:
             return STPPaymentMethodType.link.displayName
-        case .signUp(_, _, _, let paymentMethodParams):
-            return paymentMethodParams.paymentSheetLabel
-        case .withPaymentMethodParams(_, let paymentMethodParams):
+        case .signUp(_, _, _, _, let paymentMethodParams):
             return paymentMethodParams.paymentSheetLabel
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.paymentSheetLabel
@@ -80,11 +63,7 @@ extension PaymentSheet.LinkConfirmOption {
         switch self {
         case .wallet:
             return nil
-        case .signUp(_, _, _, let paymentMethodParams):
-            return paymentMethodParams.billingDetails
-        case .withPaymentDetails:
-            return nil
-        case .withPaymentMethodParams(_, let paymentMethodParams):
+        case .signUp(_, _, _, _, let paymentMethodParams):
             return paymentMethodParams.billingDetails
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.billingDetails

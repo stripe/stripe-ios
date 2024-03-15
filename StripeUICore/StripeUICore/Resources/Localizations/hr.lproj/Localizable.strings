@@ -84,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "Telefonski broj";
+
 "Postal code" = "Poštanski broj";
 
 "Prefecture" = "Prefektura";
@@ -101,6 +103,8 @@
 "Search" = "Pretraži";
 
 "Select card brand (optional)" = "Odaberite marku kartice (nije obavezno)";
+
+"Sort code" = "Bankovni kod za razvrstavanje (UK)";
 
 "State" = "Država";
 

@@ -84,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "Numer telefonu";
+
 "Postal code" = "Kod pocztowy";
 
 "Prefecture" = "Prefektura";
@@ -101,6 +103,8 @@
 "Search" = "Wyszukaj";
 
 "Select card brand (optional)" = "Wybierz markę karty (opcjonalne)";
+
+"Sort code" = "Kod sortowania";
 
 "State" = "Stan";
 

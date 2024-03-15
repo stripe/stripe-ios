@@ -1,3 +1,55 @@
+## X.X.X
+### All
+* Xcode 14 is [no longer supported by Apple](https://developer.apple.com/news/upcoming-requirements/). Please upgrade to Xcode 15 or later.
+
+### PaymentSheet
+* [Fixed] A bug where `PaymentSheet.FlowController` was not respecting `PaymentSheet.Configuration.primaryButtonLabel`.
+
+### Financial Connections
+* [Changed] Updated the design of Financial Connections authentication flow.
+
+## 23.25.0 2024-03-11
+### CustomerSheet
+* [Added] Added `paymentMethodTypes` in `CustomerAdapter` to control what payment methods are displayed.
+
+### PaymentSheet
+* [Fixed] The rotating [card brand view](https://docs.stripe.com/co-badged-cards-compliance) is now shown when card brand choice is enabled if the card number is empty.
+
+## 23.24.1 2024-03-05
+### PaymentSheet
+* [Fixed] Fixed an assertionFailure that happens when using FlowController and switching between saved payment methods
+
+## 23.24.0 2024-03-04
+### PaymentSheet
+* [Added] Added support for [Link](https://docs.stripe.com/payments/link/mobile-payment-element-link) in PaymentSheet. Enabling Link in your [payment method settings](https://dashboard.stripe.com/settings/payment_methods) will enable Link in PaymentSheet. To choose different Link availability settings on web and mobile, use a custom [payment method configuration](https://docs.stripe.com/payments/multiple-payment-method-configs).
+* [Fixed] Fixed an issue where some 3DS2 payments may fail to complete successfully.
+
+### Payments
+* [Added] Support for Amazon Pay bindings.
+
+## 23.23.0 2024-02-26
+### PaymentSheet
+* [Added] Added support for [payment method configurations](https://docs.stripe.com/payments/multiple-payment-method-configs) when using the deferred intent integration path.
+
+### CustomerSheet
+* [Fixed] Fixed a bug where if an exception is thrown in detachPaymentMethod(), the payment method was removed in the UI [#3309](https://github.com/stripe/stripe-ios/pull/3309)
+
+## 23.22.0 2024-02-12
+### PaymentSheet
+* [Changed] The separator text under the Apple Pay button from "Or pay with a card" to "Or use a card" when using a SetupIntent.
+* [Fixed] Fixed a bug where deleting the last saved payment method in PaymentSheet wouldn't automatically transition to the "Add a payment method" screen.
+* [Added] Support for CVC recollection in PaymentSheet and PaymentSheet.FlowController (client-side confirmation)
+
+* [Changed] Make STPPinManagementService still usable from Swift.
+
+## 23.21.2 2024-02-05
+### Payments
+* [Changed] We now auto append `mandate_data` when using Klarna with a SetupIntent. If you are interested in using Klarna with SetupIntents you sign up for the beta [here](https://stripe.com/docs/payments/klarna/accept-a-payment). 
+
+## 23.21.1 2024-01-22
+### Payments
+* [Changed] Increased the maximum number of status update retries when waiting for an intent to update to a terminal state. This impacts Cash App Pay and 3DS2.
+
 ## 23.21.0 2024-01-16
 ### PaymentSheet
 * [Fixed] Fixed a few design issues on visionOS.

@@ -29,11 +29,11 @@ extension String.Localized {
     static func pay_faster_at_$merchant_and_thousands_of_merchants(merchantDisplayName: String) -> String {
         String(
             format: STPLocalizedString(
-                "Pay faster at %@ and thousands of merchants.",
+                "Pay faster at %@ and thousands of businesses.",
                 """
                 Label describing the benefit of signing up for Link.
-                Pay faster at {Merchant Name} and thousands of merchants
-                e.g, 'Pay faster at Example, Inc. and thousands of merchants.'
+                Pay faster at {Merchant Name} and thousands of businesses
+                e.g, 'Pay faster at Example, Inc. and thousands of businesses.'
                 """
             ),
             merchantDisplayName
@@ -219,5 +219,12 @@ extension String.Localized {
 
     static var cpf_cpnj: String {
         STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
+    }
+
+    static var amazon_pay_mandate_text: String {
+        STPLocalizedString(
+            "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.",
+            "Amazon Pay mandate text"
+        )
     }
 }

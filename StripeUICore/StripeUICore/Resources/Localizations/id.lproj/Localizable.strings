@@ -84,6 +84,8 @@
 
 "Phone" = "Telepon";
 
+"Phone number" = "Nomor telepon";
+
 "Postal code" = "Kode pos";
 
 "Prefecture" = "Prefektur";
@@ -101,6 +103,8 @@
 "Search" = "Cari";
 
 "Select card brand (optional)" = "Pilih brand kartu (opsional)";
+
+"Sort code" = "Kode sort";
 
 "State" = "Negara Bagian";
 

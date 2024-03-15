@@ -84,6 +84,8 @@
 
 "Phone" = "Număr de telefon";
 
+"Phone number" = "Număr de telefon";
+
 "Postal code" = "Cod poștal";
 
 "Prefecture" = "Prefectură";
@@ -101,6 +103,8 @@
 "Search" = "Căutare";
 
 "Select card brand (optional)" = "Selectare marcă card (opțional)";
+
+"Sort code" = "Cod de sortare";
 
 "State" = "Stat";
 

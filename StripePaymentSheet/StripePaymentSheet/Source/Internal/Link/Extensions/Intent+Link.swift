@@ -9,17 +9,28 @@
 @_spi(STP) import StripePayments
 
 extension Intent {
-    func supportsLink(allowV2Features: Bool) -> Bool {
+    var supportsLink: Bool {
         // Either Link is an allowed Payment Method in the elements/sessions response, or passthrough mode (Link as a Card PM) is allowed
-        return recommendedPaymentMethodTypes.contains(.link) || (linkPassthroughModeEnabled && allowV2Features)
+        return recommendedPaymentMethodTypes.contains(.link) || linkPassthroughModeEnabled
     }
 
-    func supportsLinkCard(allowV2Features: Bool) -> Bool {
-        return supportsLink(allowV2Features: allowV2Features) && (linkFundingSources?.contains(.card) ?? false) || (linkPassthroughModeEnabled && allowV2Features)
+    var supportsLinkCard: Bool {
+        return supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }
 
     var onlySupportsLinkBank: Bool {
-        return supportsLink(allowV2Features: false) && (linkFundingSources == [.bankAccount])
+        return supportsLink && (linkFundingSources == [.bankAccount])
+    }
+
+    var linkFlags: [String: Bool] {
+        switch self {
+        case .paymentIntent(let paymentIntent, _):
+            return paymentIntent.linkSettings?.linkFlags ?? [:]
+        case .setupIntent(let setupIntent, _):
+            return setupIntent.linkSettings?.linkFlags ?? [:]
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.linkSettings?.linkFlags ?? [:]
+        }
     }
 
     var callToAction: ConfirmButton.CallToActionType {
@@ -49,6 +60,17 @@ extension Intent {
         }
     }
 
+    var disableLinkSignup: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent, _):
+            return paymentIntent.linkSettings?.disableSignup ?? false
+        case .setupIntent(let setupIntent, _):
+            return setupIntent.linkSettings?.disableSignup ?? false
+        case .deferredIntent(let elementsSession, _):
+            return elementsSession.linkSettings?.disableSignup ?? false
+        }
+    }
+
     var linkFundingSources: Set<LinkSettings.FundingSource>? {
         return elementsSession.linkSettings?.fundingSources
     }
@@ -57,7 +79,12 @@ extension Intent {
         return elementsSession.linkSettings?.popupWebviewOption ?? .shared
     }
 
-    var countryCode: String? {
+    func countryCode(overrideCountry: String?) -> String? {
+#if DEBUG
+        if let overrideCountry {
+            return overrideCountry
+        }
+#endif
         return elementsSession.countryCode
     }
 

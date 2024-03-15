@@ -41,6 +41,11 @@ import UIKit
         return string(as: .national).count >= metadata.pattern.count
     }
 
+    /// Whether the phone number is empty (it may have a country code, but it has no other digits)
+    public var isEmpty: Bool {
+        return number.isEmpty
+    }
+
     /// The phone number without the country prefix and containing only digits
     public let number: String
     private let metadata: Metadata

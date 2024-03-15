@@ -84,6 +84,8 @@
 
 "Phone" = "Telefonnummer";
 
+"Phone number" = "Telefonnummer";
+
 "Postal code" = "Postnummer";
 
 "Prefecture" = "Prefektur";
@@ -101,6 +103,8 @@
 "Search" = "Sök";
 
 "Select card brand (optional)" = "Välj korttyp (valfritt)";
+
+"Sort code" = "Clearingnummer";
 
 "State" = "Delstat";
 

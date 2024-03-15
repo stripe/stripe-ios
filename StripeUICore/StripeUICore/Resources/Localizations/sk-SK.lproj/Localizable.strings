@@ -84,6 +84,8 @@
 
 "Phone" = "Telefón";
 
+"Phone number" = "Telefónne číslo";
+
 "Postal code" = "PSČ";
 
 "Prefecture" = "Prefektúra";
@@ -101,6 +103,8 @@
 "Search" = "Vyhľadať";
 
 "Select card brand (optional)" = "Vybrať značku karty (voliteľne)";
+
+"Sort code" = "Triediaci kód";
 
 "State" = "Štát";
 

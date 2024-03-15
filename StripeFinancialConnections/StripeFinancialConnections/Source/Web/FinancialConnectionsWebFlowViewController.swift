@@ -35,15 +35,22 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     // MARK: - Waiting state view
 
     private lazy var continueStateView: UIView = {
-        let view = ContinueStateView(institutionImageUrl: nil) { [weak self] in
-            guard let self = self else { return }
-            if let url = self.lastOpenedNativeURL {
-                self.redirect(to: url)
-            } else {
-                self.startAuthenticationSession(manifest: self.manifest)
-            }
-        }
-        return view
+        let continueStateViews = ContinueStateViews(
+            institutionImageUrl: nil,
+            didSelectContinue: { [weak self] in
+                guard let self else { return }
+                if let url = self.lastOpenedNativeURL {
+                    self.redirect(to: url)
+                } else {
+                    self.startAuthenticationSession(manifest: self.manifest)
+                }
+            },
+            didSelectCancel: nil
+        )
+        return PaneLayoutView(
+            contentView: continueStateViews.contentView,
+            footerView: continueStateViews.footerView
+        ).createView()
     }()
 
     /**
@@ -71,7 +78,8 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
             target: self,
             action: #selector(didTapClose)
         )
-        item.tintColor = .textDisabled
+        item.tintColor = .iconDefault
+        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         return item
     }()
 
@@ -138,13 +146,13 @@ extension FinancialConnectionsWebFlowViewController {
         additionalQueryParameters: String? = nil
     ) {
         guard authSessionManager == nil else { return }
-        loadingView.activityIndicatorView.stp_startAnimatingAndShow()
+        loadingView.showLoading(true)
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
         authSessionManager?
             .start(additionalQueryParameters: additionalQueryParameters)
             .observe(using: { [weak self] (result) in
                 guard let self = self else { return }
-                self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
+                self.loadingView.showLoading(false)
                 switch result {
                 case .success(.success):
                     self.fetchSession()
@@ -171,13 +179,13 @@ extension FinancialConnectionsWebFlowViewController {
     }
 
     private func fetchSession(userDidCancelInNative: Bool = false, webCancelled: Bool = false) {
-        loadingView.activityIndicatorView.stp_startAnimatingAndShow()
+        loadingView.showLoading(true)
         loadingView.errorView.isHidden = true
         sessionFetcher
             .fetchSession()
             .observe { [weak self] (result) in
                 guard let self = self else { return }
-                self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
+                self.loadingView.showLoading(false)
                 switch result {
                 case .success(let session):
                     if userDidCancelInNative {

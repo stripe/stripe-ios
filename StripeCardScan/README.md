@@ -13,7 +13,7 @@ This library can be used entirely outside of a Stripe integration and with other
 ## Requirements
 
 - iOS 13.0 or higher
-- XCode 14.1 or higher
+- Xcode 15 or higher
 
 ## Example
 

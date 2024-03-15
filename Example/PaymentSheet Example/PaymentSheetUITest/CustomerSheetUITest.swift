@@ -120,12 +120,8 @@ class CustomerSheetUITest: XCTestCase {
 
         removeFirstPaymentMethodInList()
 
-        let doneButton = app.staticTexts["Done"]
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
-        doneButton.tap()
-
         let cardPresence_afterRemoval = app.staticTexts["••••4242"]
-        XCTAssertFalse(cardPresence_afterRemoval.exists)
+        waitToDisappear(cardPresence_afterRemoval)
 
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
@@ -313,9 +309,9 @@ class CustomerSheetUITest: XCTestCase {
         )
 
         presentCSAndAddCardFrom(buttonLabel: "None")
-        presentCSAndAddCardFrom(buttonLabel: "••••4242")
+        presentCSAndAddCardFrom(buttonLabel: "••••4242", cardNumber: "5555555555554444")
 
-        let selectButton = app.staticTexts["••••4242"]
+        let selectButton = app.staticTexts["••••4444"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
@@ -323,12 +319,16 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
-        removeFirstPaymentMethodInList()
-        removeFirstPaymentMethodInList()
+        removeFirstPaymentMethodInList(alertBody: "Mastercard •••• 4444")
+        // ••••4444 is rendered as the PM to remove, as well as the status on the playground
+        // Check that it is removed by waiting for there only be one instance
+        let elementLabel = "••••4444"
+        let elementQuery = app.staticTexts.matching(NSPredicate(format: "label == %@", elementLabel))
+        waitForNItemsExistence(elementQuery, count: 1)
 
-        let doneButton = app.staticTexts["Done"]
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
-        doneButton.tap()
+        removeFirstPaymentMethodInList(alertBody: "Visa •••• 4242")
+        let visa = app.staticTexts["••••4242"]
+        waitToDisappear(visa)
 
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
@@ -350,9 +350,9 @@ class CustomerSheetUITest: XCTestCase {
         )
 
         presentCSAndAddCardFrom(buttonLabel: "None", tapAdd: false)
-        presentCSAndAddCardFrom(buttonLabel: "••••4242")
+        presentCSAndAddCardFrom(buttonLabel: "••••4242", cardNumber: "5555555555554444")
 
-        let selectButton = app.staticTexts["••••4242"]
+        let selectButton = app.staticTexts["••••4444"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
@@ -360,12 +360,16 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
-        removeFirstPaymentMethodInList()
-        removeFirstPaymentMethodInList()
+        removeFirstPaymentMethodInList(alertBody: "Mastercard •••• 4444")
+        // ••••4444 is rendered as the PM to remove, as well as the status on the playground
+        // Check that it is removed by waiting for there only be one instance
+        let elementLabel = "••••4444"
+        let elementQuery = app.staticTexts.matching(NSPredicate(format: "label == %@", elementLabel))
+        waitForNItemsExistence(elementQuery, count: 1)
 
-        let doneButton = app.staticTexts["Done"]
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 60.0))
-        doneButton.tap()
+        removeFirstPaymentMethodInList(alertBody: "Visa •••• 4242")
+        let visa = app.staticTexts["••••4242"]
+        waitToDisappear(visa)
 
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
@@ -520,10 +524,16 @@ class CustomerSheetUITest: XCTestCase {
         continueButton.tap()
 
         // Go through connections flow
-        app.buttons["Agree and continue"].tap()
+        app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
-        app.buttons["Link account"].tap()
+        app.buttons["account_picker_link_accounts_button"].tap()
+
+        let notNowButton = app.buttons["Not now"]
+        if notNowButton.waitForExistence(timeout: 10.0) {
+            notNowButton.tap()
+        }
+
         XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
@@ -538,7 +548,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
         confirmButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
     func testCustomerSheetStandard_applePayOff_addSepa() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
@@ -598,10 +608,16 @@ class CustomerSheetUITest: XCTestCase {
         continueButton.tap()
 
         // Go through connections flow
-        app.buttons["Agree and continue"].tap()
+        app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
-        app.buttons["Link account"].tap()
+        app.buttons["account_picker_link_accounts_button"].tap()
+
+        let notNowButton = app.buttons["Not now"]
+        if notNowButton.waitForExistence(timeout: 10.0) {
+            notNowButton.tap()
+        }
+
         XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
@@ -616,7 +632,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
         confirmButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
     func testCustomerSheetStandard_applePayOff_addUSBankAccount_MicroDeposit() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
@@ -643,14 +659,14 @@ class CustomerSheetUITest: XCTestCase {
         continueButton.tap()
 
         // Go through connections flow
-        app.links["Manually verify instead"].tap()
+        app.otherElements["consent_manually_verify_label"].links.firstMatch.tap()
         try! fillUSBankData_microdeposits(app)
 
         let continueManualEntry = app.buttons["manual_entry_continue_button"]
         XCTAssertTrue(continueManualEntry.waitForExistence(timeout: 60.0))
         continueManualEntry.tap()
 
-        let doneManualEntry = app.buttons["manual_entry_success_done_button"]
+        let doneManualEntry = app.buttons["success_done_button"]
         XCTAssertTrue(doneManualEntry.waitForExistence(timeout: 60.0))
         doneManualEntry.tap()
 
@@ -692,7 +708,6 @@ class CustomerSheetUITest: XCTestCase {
     }
 
     // MARK: - Card Brand Choice tests
-
     func testCardBrandChoiceSavedCard() {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -837,9 +852,71 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
 
+    // MARK: - allowsRemovalOfLastSavedPaymentMethod
+    func testRemoveLastSavedPaymentMethod() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.merchantCountryCode = .FR
+        settings.customerMode = .new
+        settings.applePay = .on
+        settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        loadPlayground(
+            app,
+            settings
+        )
+
+        // Save a card
+        app.staticTexts["None"].waitForExistenceAndTap()
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: 10))
+
+        // Shouldn't be able to edit only one saved PM when allowsRemovalOfLastSavedPaymentMethod = .off
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+
+        // Add another PM
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: 10))
+
+        // Should be able to edit two saved PMs
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+
+        // Remove one saved PM
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Should be kicked out of edit mode now that we have one saved PM
+        XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
+
+        // Add a CBC enabled PM
+        app.buttons["+ Add"].waitForExistenceAndTap()
+        try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: 10))
+
+        // Should be able to edit two saved PMs
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+
+        // Remove the 4242 saved PM
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Should be able to edit CBC enabled PM even though it's the only one
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.buttons["Update card"].waitForExistence(timeout: 5))
+
+        // ...but should not be able to remove it.
+        XCTAssertFalse(app.buttons["Remove card"].exists)
+    }
+
     // MARK: - Helpers
 
-    func presentCSAndAddCardFrom(buttonLabel: String, tapAdd: Bool = true) {
+    func presentCSAndAddCardFrom(buttonLabel: String, cardNumber: String? = nil, tapAdd: Bool = true) {
         let selectButton = app.staticTexts[buttonLabel]
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
@@ -848,20 +925,24 @@ class CustomerSheetUITest: XCTestCase {
             app.staticTexts["+ Add"].tap()
         }
 
-        try! fillCardData(app, postalEnabled: true)
+        try! fillCardData(app, cardNumber: cardNumber, postalEnabled: true)
         app.buttons["Save"].tap()
 
         let confirmButton = app.buttons["Confirm"]
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
         confirmButton.tap()
-
-        dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
+        if let cardNumber {
+            let last4 = String(cardNumber.suffix(4))
+            dismissAlertView(alertBody: "Success: ••••\(last4), selected", alertTitle: "Complete", buttonToTap: "OK")
+        } else {
+            dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
+        }
     }
 
-    func removeFirstPaymentMethodInList() {
+    func removeFirstPaymentMethodInList(alertBody: String = "Visa •••• 4242") {
         let removeButton1 = app.buttons["Remove"].firstMatch
         removeButton1.tap()
-        dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
+        dismissAlertView(alertBody: alertBody, alertTitle: "Remove card?", buttonToTap: "Remove")
     }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {

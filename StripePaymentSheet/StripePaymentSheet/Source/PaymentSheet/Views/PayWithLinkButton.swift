@@ -22,7 +22,7 @@ final class PayWithLinkButton: UIControl {
         static let defaultSize: CGSize = .init(width: 200, height: 44)
         static let logoSize: CGSize = .init(width: 29, height: 13)
         static let cardBrandSize: CGSize = .init(width: 28, height: 18)
-        static let arrowSize: CGSize = .init(width: 18, height: 14)
+        static let arrowSize: CGSize = .init(width: 17, height: 13)
         static let separatorSize: CGSize = .init(width: 1, height: 22)
         static let margins: NSDirectionalEdgeInsets = .init(top: 7, leading: 16, bottom: 7, trailing: 10)
         static let cardBrandInsets: UIEdgeInsets = .init(top: 1, left: 0, bottom: 0, right: 0)
@@ -31,14 +31,11 @@ final class PayWithLinkButton: UIControl {
 
     fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
-        let redactedPhoneNumber: String?
-        let lastPM: LinkPMDisplayDetails?
         let isRegistered: Bool
-        let isLoggedIn: Bool
     }
 
     /// Link account of the current user.
-    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountStub(email: "", redactedPhoneNumber: nil, lastPM: nil, isRegistered: false, isLoggedIn: false) {
+    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountStub(email: "", isRegistered: false) {
         didSet {
             updateUI()
         }
@@ -106,8 +103,8 @@ final class PayWithLinkButton: UIControl {
         linkView.lineBreakMode = .byTruncatingMiddle
         linkView.adjustsFontForContentSizeCategory = true
         linkView.translatesAutoresizingMaskIntoConstraints = false
-        linkView.font = UIFont.systemFont(ofSize: 15, weight: .medium)
-            .scaled(withTextStyle: .callout, maximumPointSize: 16)
+        linkView.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+            .scaled(withTextStyle: .callout, maximumPointSize: 22)
 
         let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link)
 
@@ -117,7 +114,7 @@ final class PayWithLinkButton: UIControl {
         let linkLogoRatio = linkImage.size.width / linkImage.size.height
 
         // Link logo should be a little taller than the height of a cap in SF Medium
-        let linkLogoHeight = linkView.font.capHeight + (linkView.font.pointSize * 0.15)
+        let linkLogoHeight = linkView.font.capHeight + (linkView.font.pointSize * 0.1)
         linkAttachment.bounds = CGRect(x: 0, y: 0, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
 
         // Add a spacer before the Link logo and after the Link logo
@@ -205,10 +202,6 @@ final class PayWithLinkButton: UIControl {
             return .noValidAccount
         }
 
-        if let lastPM = linkAccount?.lastPM {
-            return .hasCard(last4: lastPM.last4, brand: lastPM.brand)
-        }
-
         if let email = linkAccount?.email {
             return .hasEmail(email: email)
         }
@@ -219,25 +212,23 @@ final class PayWithLinkButton: UIControl {
     init() {
         super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true
+        self.linkAccount = LinkAccountContext.shared.account
         setupUI()
         applyStyle()
         updateUI()
-        // TODO: Re-enable this once we work out the Link button last4/email details
-        // For now, don't show any information in the button.
-        //        // Listen for account changes
-        //        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+        // Listen for account changes
+        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
     }
-    // TODO: Re-enable this once we work out the Link button last4/email details
-    //    @objc
-    //    func onAccountChange(_ notification: Notification) {
-    //        DispatchQueue.main.async { [weak self] in
-    //            self?.linkAccount = notification.object as? PaymentSheetLinkAccount
-    //        }
-    //    }
-    //    deinit {
-    //        // Stop listening for account changes
-    //        LinkAccountContext.shared.removeObserver(self)
-    //    }
+    @objc
+    func onAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            self?.linkAccount = notification.object as? PaymentSheetLinkAccount
+        }
+    }
+    deinit {
+        // Stop listening for account changes
+        LinkAccountContext.shared.removeObserver(self)
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -486,10 +477,7 @@ struct UIViewPreview<View: UIView>: UIViewRepresentable {
 private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> PayWithLinkButton.LinkAccountStub {
     return PayWithLinkButton.LinkAccountStub(
         email: email,
-        redactedPhoneNumber: "+1********55",
-        lastPM: lastPM,
-        isRegistered: isRegistered,
-        isLoggedIn: false
+        isRegistered: isRegistered
     )
 }
 

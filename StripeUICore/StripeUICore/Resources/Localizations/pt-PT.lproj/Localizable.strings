@@ -84,6 +84,8 @@
 
 "Phone" = "Telefone";
 
+"Phone number" = "Número de telefone";
+
 "Postal code" = "Código postal";
 
 "Prefecture" = "Câmara municipal";
@@ -101,6 +103,8 @@
 "Search" = "Pesquisar";
 
 "Select card brand (optional)" = "Selecione a marca do cartão (opcional)";
+
+"Sort code" = "Código da agência bancária";
 
 "State" = "Estado";
 

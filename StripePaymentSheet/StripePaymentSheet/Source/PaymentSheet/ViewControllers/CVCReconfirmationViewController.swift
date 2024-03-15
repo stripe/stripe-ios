@@ -27,6 +27,7 @@ class CVCReconfirmationViewController: UIViewController {
             previousCustomerInput: nil)
         let cvcCollectionElement = formElement.makeCardCVCCollection(
             paymentMethod: paymentMethod,
+            mode: .detailedWithInput,
             appearance: configuration.appearance)
         cvcCollectionElement.delegate = self
         return cvcCollectionElement
@@ -49,7 +50,6 @@ class CVCReconfirmationViewController: UIViewController {
     private let intent: Intent
     private let paymentMethod: STPPaymentMethod
     private let configuration: PaymentSheet.Configuration
-    var error: ElementValidationError?
     var paymentOptionIntentConfirmParams: IntentConfirmParams? {
         let params = IntentConfirmParams(type: .stripe(.card))
         if let updatedParams = cvcFormElement.updateParams(params: params) {
@@ -70,7 +70,6 @@ class CVCReconfirmationViewController: UIViewController {
         self.intent = intent
         self.paymentMethod = paymentMethod
         self.configuration = configuration
-        self.error = nil
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -94,8 +93,9 @@ class CVCReconfirmationViewController: UIViewController {
         ])
         updateUI()
     }
-    func didFinishPresenting() {
-        self.cvcFormElement.didFinishPresenting()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.cvcFormElement.beginEditing()
     }
 
     private func updateUI() {
@@ -126,13 +126,6 @@ extension CVCReconfirmationViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
-        self.error = nil
-        if let textField = element as? TextFieldElement,
-           case .invalid(let error, let shouldDisplay) = textField.validationState {
-            if shouldDisplay {
-                self.error = error
-            }
-        }
         delegate?.didUpdate(self)
         animateHeightChange()
     }

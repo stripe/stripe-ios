@@ -2,83 +2,164 @@
 //  STPAnalyticsClient+BasicUI.swift
 //  StripeiOS
 //
-//  Created by David Estes on 6/30/22.
-//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//  Created by Yuki Tokuhiro on 1/24/24.
 //
 
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-@objc(STPBasicUIAnalyticsSerializer)
-class STPBasicUIAnalyticsSerializer: NSObject, STPAnalyticsSerializer {
-    static func serializeConfiguration(
-        _ configuration: NSObject
-    ) -> [String:
-        String]
-    {
-        var dictionary: [String: String] = [:]
-        dictionary["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
+extension STPPaymentContext {
+    final class AnalyticsLogger {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let sessionID: String = UUID().uuidString.lowercased()
+        var apiClient: STPAPIClient = .shared
+        var product: String
+        lazy var commonParameters: [String: Any] = {
+            [
+                "session_id": sessionID,
+                "product": product,
+            ]
+        }()
 
-        guard let configuration = configuration as? STPPaymentConfiguration else {
-            return dictionary
+        init<T: STPAnalyticsProtocol>(product: T.Type) {
+            self.product = product.stp_analyticsIdentifier
         }
 
-        if configuration.applePayEnabled && !configuration.fpxEnabled {
-            dictionary["additional_payment_methods"] = "default"
-        } else if !configuration.applePayEnabled && !configuration.fpxEnabled {
-            dictionary["additional_payment_methods"] = "none"
-        } else if !configuration.applePayEnabled && configuration.fpxEnabled {
-            dictionary["additional_payment_methods"] = "fpx"
-        } else if configuration.applePayEnabled && configuration.fpxEnabled {
-            dictionary["additional_payment_methods"] = "applepay,fpx"
+        // MARK: - Loading
+
+        func logLoadStarted() {
+            log(event: .biLoadStarted, params: [:])
         }
 
-        switch configuration.requiredBillingAddressFields {
-        case .none:
-            dictionary["required_billing_address_fields"] = "none"
-        case .postalCode:
-            dictionary["required_billing_address_fields"] = "zip"
-        case .full:
-            dictionary["required_billing_address_fields"] = "full"
-        case .name:
-            dictionary["required_billing_address_fields"] = "name"
-        default:
-            fatalError()
+        func logLoadSucceeded(loadStartDate: Date, defaultPaymentOption: STPPaymentOption?) {
+            let event: STPAnalyticEvent = .biLoadSucceeded
+            let duration = Date().timeIntervalSince(loadStartDate)
+            let defaultPaymentMethod: String = {
+                guard let defaultPaymentOption else {
+                    return "none"
+                }
+                switch defaultPaymentOption {
+                case is STPApplePayPaymentOption:
+                    return "apple_pay"
+                case let defaultPaymentMethod as STPPaymentMethod:
+                    return defaultPaymentMethod.type.identifier
+                default:
+                    assertionFailure()
+                    return "unknown"
+                }
+            }()
+            let params: [String: Any] = [
+                "duration": duration,
+                "selected_lpm": defaultPaymentMethod,
+            ]
+            log(event: event, params: params)
         }
 
-        var shippingFields: [String] = []
-        if let shippingAddressFields = configuration.requiredShippingAddressFields {
-            if shippingAddressFields.contains(.name) {
-                shippingFields.append("name")
+        func logLoadFailed(loadStartDate: Date, error: Error) {
+            let event: STPAnalyticEvent = .biLoadFailed
+            let duration = Date().timeIntervalSince(loadStartDate)
+            let params: [String: Any] = [
+                "duration": duration,
+                "error_message": error.makeSafeLoggingString(),
+            ]
+            log(event: event, params: params)
+        }
+
+        // MARK: - Payment
+
+        func logPayment(status: STPPaymentStatus, loadStartDate: Date?, paymentOption: STPPaymentOption, error: Error?) {
+            let didSucceed: Bool
+            switch status {
+            case .userCancellation:
+                // Don't send analytic for cancels
+                return
+            case .success:
+                didSucceed = true
+            case .error:
+                didSucceed = false
+            @unknown default:
+                return
             }
-            if shippingAddressFields.contains(.emailAddress) {
-                shippingFields.append("email")
+
+            let event: STPAnalyticEvent
+            let paymentMethodType: String
+            switch paymentOption {
+            case let paymentMethod as STPPaymentMethod:
+                paymentMethodType = paymentMethod.type.identifier
+                event = didSucceed ? .biPaymentCompleteSavedPMSuccess : .biPaymentCompleteSavedPMFailure
+            case let params as STPPaymentMethodParams:
+                paymentMethodType = params.type.identifier
+                event = didSucceed ? .biPaymentCompleteNewPMSuccess : .biPaymentCompleteNewPMFailure
+            case is STPApplePayPaymentOption:
+                paymentMethodType = "apple_pay"
+                event = didSucceed ? .biPaymentCompleteApplePaySuccess : .biPaymentCompleteApplePayFailure
+            default:
+                assertionFailure("Unknown payment option!")
+                return
             }
-            if shippingAddressFields.contains(.postalAddress) {
-                shippingFields.append("address")
+
+            var params: [String: Any] = ["selected_lpm": paymentMethodType]
+            if STPAnalyticsClient.isSimulatorOrTest {
+                params["is_development"] = true
             }
-            if shippingAddressFields.contains(.phoneNumber) {
-                shippingFields.append("phone")
+            if let error {
+                params["error_message"] = error.makeSafeLoggingString()
             }
+            if let loadStartDate {
+                params["duration"] = Date().timeIntervalSince(loadStartDate)
+            }
+
+            log(event: event, params: params)
         }
 
-        if shippingFields.isEmpty {
-            shippingFields.append("none")
-        }
-        dictionary["required_shipping_address_fields"] = shippingFields.joined(separator: "_")
+        // MARK: - UI
 
-        switch configuration.shippingType {
-        case .shipping:
-            dictionary["shipping_type"] = "shipping"
-        case .delivery:
-            dictionary["shipping_type"] = "delivery"
-        @unknown default:
-            break
+        func logPaymentOptionsScreenAppeared() {
+            log(event: .biOptionsShown, params: [:])
         }
 
-        dictionary["company_name"] = configuration.companyName
-        dictionary["apple_merchant_identifier"] = configuration.appleMerchantIdentifier ?? "unknown"
-        return dictionary
+        func logFormShown(paymentMethodType: STPPaymentMethodType) {
+            let event = STPAnalyticEvent.biFormShown
+            let params = ["selected_lpm": paymentMethodType]
+            log(event: event, params: params)
+        }
+
+        /// - Parameter shownStartDate: The date when the form was first shown. This should never be nil.
+        func logDoneButtonTapped(paymentMethodType: STPPaymentMethodType, shownStartDate: Date?) {
+            let event = STPAnalyticEvent.biDoneButtonTapped
+
+            var params: [String: Any] = [
+                "selected_lpm": paymentMethodType,
+            ]
+            if let shownStartDate {
+                let duration = Date().timeIntervalSince(shownStartDate)
+                params["duration"] = duration
+            } else if NSClassFromString("XCTest") == nil {
+                assertionFailure("Shown start date should never be nil!")
+            }
+
+            log(event: event, params: params)
+        }
+
+        func logFormInteracted(paymentMethodType: STPPaymentMethodType) {
+            log(event: .biFormInteracted, params: [
+                "selected_lpm": paymentMethodType,
+            ])
+        }
+
+        func logCardNumberCompleted() {
+            log(event: .biCardNumberCompleted, params: [:])
+        }
+
+        // MARK: - Helpers
+
+        private func log(event: STPAnalyticEvent, params: [String: Any]) {
+            let analytic = GenericAnalytic(event: event, params: params.merging(commonParameters, uniquingKeysWith: { new, _ in
+                assertionFailure("Constructing analytics parameters with duplicate keys")
+                return new
+            }))
+            analyticsClient.log(analytic: analytic, apiClient: apiClient)
+        }
     }
 }

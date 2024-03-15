@@ -645,7 +645,8 @@ public class STPPaymentHandler: NSObject {
             .alma,
             .konbini,
             .promptPay,
-            .swish:
+            .swish,
+            .twint:
             return false
 
         case .unknown:
@@ -1410,11 +1411,9 @@ public class STPPaymentHandler: NSObject {
         return resultingUrl
     }
 
-    func _retryWithExponentialDelay(retryCount: Int, block: @escaping STPVoidBlock) {
+    func _retryAfterDelay(retryCount: Int, block: @escaping STPVoidBlock) {
         // Add some backoff time:
-        let delayTime = TimeInterval(
-            pow(Double(1 + Self.maxChallengeRetries - retryCount), Double(2))
-        )
+        let delayTime = TimeInterval(3)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
             block()
@@ -1469,7 +1468,7 @@ public class STPPaymentHandler: NSObject {
                                 !STPPaymentHandler._isProcessingIntentSuccess(for: type),
                                 retrievedPaymentIntent?.status == .processing && retryCount > 0
                             {
-                                self._retryWithExponentialDelay(retryCount: retryCount) {
+                                self._retryAfterDelay(retryCount: retryCount) {
                                     self._retrieveAndCheckIntentForCurrentAction(
                                         retryCount: retryCount - 1
                                     )
@@ -1496,11 +1495,11 @@ public class STPPaymentHandler: NSObject {
                                         // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
                                         // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                         let shouldRetryForCard = retrievedPaymentIntent?.paymentMethod?.type == .card && retrievedPaymentIntent?.nextAction?.type == .useStripeSDK
-                                        let shouldRetryForAppRedirect = [.cashApp, .swish].contains(retrievedPaymentIntent?.paymentMethod?.type)
+                                        let shouldRetryForAppRedirect = retrievedPaymentIntent?.paymentMethod?.type.requiresPolling ?? false
                                         if retryCount > 0
                                             && (shouldRetryForCard || shouldRetryForAppRedirect)
                                         {
-                                            self._retryWithExponentialDelay(retryCount: retryCount) {
+                                            self._retryAfterDelay(retryCount: retryCount) {
                                                 self._retrieveAndCheckIntentForCurrentAction(
                                                     retryCount: retryCount - 1
                                                 )
@@ -1544,7 +1543,7 @@ public class STPPaymentHandler: NSObject {
                         !STPPaymentHandler._isProcessingIntentSuccess(for: type),
                         retrievedSetupIntent?.status == .processing && retryCount > 0
                     {
-                        self._retryWithExponentialDelay(retryCount: retryCount) {
+                        self._retryAfterDelay(retryCount: retryCount) {
                             self._retrieveAndCheckIntentForCurrentAction(retryCount: retryCount - 1)
                         }
                     } else {
@@ -1563,10 +1562,10 @@ public class STPPaymentHandler: NSObject {
                                 // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
                                 // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                 let shouldRetryForCard = retrievedSetupIntent?.paymentMethod?.type == .card && retrievedSetupIntent?.nextAction?.type == .useStripeSDK
-                                let shouldRetryForCashApp = retrievedSetupIntent?.paymentMethod?.type == .cashApp
+                                let shouldRetryForAppRedirect = retrievedSetupIntent?.paymentMethod?.type.requiresPolling ?? false
                                 if retryCount > 0
-                                    && (shouldRetryForCard || shouldRetryForCashApp) {
-                                    self._retryWithExponentialDelay(retryCount: retryCount) {
+                                    && (shouldRetryForCard || shouldRetryForAppRedirect) {
+                                    self._retryAfterDelay(retryCount: retryCount) {
                                         self._retrieveAndCheckIntentForCurrentAction(
                                             retryCount: retryCount - 1
                                         )
@@ -1938,7 +1937,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    static let maxChallengeRetries = 2
+    static let maxChallengeRetries = 5
     func _markChallengeCompleted(
         withCompletion completion: @escaping STPBooleanSuccessBlock,
         retryCount: Int = maxChallengeRetries
@@ -1990,7 +1989,7 @@ public class STPPaymentHandler: NSObject {
                 if retryCount > 0
                     && (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue
                 {
-                    self._retryWithExponentialDelay(
+                    self._retryAfterDelay(
                         retryCount: retryCount,
                         block: {
                             self._markChallengeCompleted(

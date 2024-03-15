@@ -84,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "Telefonní číslo";
+
 "Postal code" = "Poštovní směrovací číslo";
 
 "Prefecture" = "Prefektura";
@@ -101,6 +103,8 @@
 "Search" = "Hledat";
 
 "Select card brand (optional)" = "Vyberte značku karty (volitelné)";
+
+"Sort code" = "Kód řazení";
 
 "State" = "Stát";
 

@@ -24,7 +24,7 @@ class PaymentSheetBillingCollectionUITestCase: XCTestCase {
     var fullNameField: XCUIElement { app.textFields["Full name"] }
     var nameOnCardField: XCUIElement { app.textFields["Name on card"] }
     var emailField: XCUIElement { app.textFields["Email"] }
-    var phoneField: XCUIElement { app.textFields["Phone"] }
+    var phoneField: XCUIElement { app.textFields["Phone number"] }
     var billingAddressField: XCUIElement { app.staticTexts["Billing address"] }
     var countryField: XCUIElement { app.textFields["Country or region"] }
     var line1Field: XCUIElement { app.textFields["Address line 1"] }
@@ -453,6 +453,8 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         checkoutButton.tap()
 
         let payButton = app.buttons["Pay ₹50.99"]
+        XCTAssertTrue(app.buttons["Pay ₹50.99"].waitForExistence(timeout: 10))
+
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI"))
         cell.tap()
 
@@ -496,6 +498,8 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         checkoutButton.tap()
 
         let payButton = app.buttons["Pay ₹50.99"]
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10))
+
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI"))
         cell.tap()
 
@@ -574,6 +578,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         checkoutButton.tap()
 
         let payButton = app.buttons["Pay ₹50.99"]
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10))
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI"))
         cell.tap()
 
@@ -619,6 +624,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         checkoutButton.tap()
 
         let payButton = app.buttons["Pay ₹50.99"]
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10))
         let cell = try XCTUnwrap(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI"))
         cell.tap()
 

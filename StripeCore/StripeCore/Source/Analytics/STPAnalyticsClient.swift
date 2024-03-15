@@ -18,11 +18,17 @@ import UIKit
     func log(analytic: Analytic, apiClient: STPAPIClient)
 }
 
+/// This exists so our example/test apps can hook into when STPAnalyticsClient.sharedClient sends events.
+@_spi(STP) public protocol STPAnalyticsClientDelegate: AnyObject {
+    func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any])
+}
+
 @_spi(STP) public class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
     @objc public static let sharedClient = STPAnalyticsClient()
     /// When this class logs a payload in an XCTestCase, it's added to `_testLogHistory` instead of being sent over the network.
     /// This is a hack - ideally, we inject a different analytics client in our tests. This is an escape hatch until we can make that (significant) refactor
     public var _testLogHistory: [[String: Any]] = []
+    public weak var delegate: STPAnalyticsClientDelegate?
 
     @objc public var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()
@@ -59,14 +65,18 @@ import UIKit
         additionalInfoSet.removeAll()
     }
 
+    public static var isSimulatorOrTest: Bool {
+        #if targetEnvironment(simulator)
+            return true
+        #else
+            return NSClassFromString("XCTest") != nil
+        #endif
+    }
+
     // MARK: - Card Scanning
 
-    @objc class func shouldCollectAnalytics() -> Bool {
-        #if targetEnvironment(simulator)
-            return false
-        #else
-            return NSClassFromString("XCTest") == nil
-        #endif
+    @objc public class func shouldCollectAnalytics() -> Bool {
+        return !isSimulatorOrTest
     }
 
     public func additionalInfo() -> [String] {
@@ -107,7 +117,8 @@ import UIKit
         let payload = payload(from: analytic, apiClient: apiClient)
 
         #if DEBUG
-            NSLog("LOG ANALYTICS: \(payload)")
+        NSLog("LOG ANALYTICS: \(analytic.event.rawValue) - \(analytic.params.sorted { $0.0 > $1.0 })")
+        delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
 
         guard type(of: self).shouldCollectAnalytics(),

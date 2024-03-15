@@ -28,59 +28,18 @@ extension LinkStubs {
     }
 
     static func paymentMethods() -> [ConsumerPaymentDetails] {
-        let calendar = Calendar(identifier: .gregorian)
-        let nextYear = calendar.component(.year, from: Date()) + 1
-
         return [
             ConsumerPaymentDetails(
-                stripeID: "1",
-                details: .card(
-                    card: .init(
-                        expiryYear: nextYear,
-                        expiryMonth: 1,
-                        brand: "visa",
-                        last4: "4242",
-                        checks: .init(cvcCheck: .pass)
-                    )
-                ),
-                isDefault: true
+                stripeID: "1"
             ),
             ConsumerPaymentDetails(
-                stripeID: "2",
-                details: .card(
-                    card: .init(
-                        expiryYear: nextYear,
-                        expiryMonth: 1,
-                        brand: "mastercard",
-                        last4: "4444",
-                        checks: .init(cvcCheck: .fail)
-                    )
-                ),
-                isDefault: false
+                stripeID: "2"
             ),
             ConsumerPaymentDetails(
-                stripeID: "3",
-                details: .bankAccount(
-                    bankAccount: .init(
-                        iconCode: "capitalone",
-                        name: "Capital One",
-                        last4: "4242"
-                    )
-                ),
-                isDefault: false
+                stripeID: "3"
             ),
             ConsumerPaymentDetails(
-                stripeID: "4",
-                details: .card(
-                    card: .init(
-                        expiryYear: 2020,
-                        expiryMonth: 1,
-                        brand: "american_express",
-                        last4: "0005",
-                        checks: .init(cvcCheck: .fail)
-                    )
-                ),
-                isDefault: false
+                stripeID: "4"
             ),
         ]
     }
@@ -89,9 +48,7 @@ extension LinkStubs {
         return ConsumerSession(
             clientSecret: "client_secret",
             emailAddress: "user@example.com",
-            redactedPhoneNumber: "1********55",
-            verificationSessions: [],
-            supportedPaymentDetailsTypes: [.card, .bankAccount]
+            verificationSessions: []
         )
     }
 

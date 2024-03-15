@@ -35,7 +35,7 @@ struct LinkURLParams: Encodable {
     var paymentInfo: PaymentInfo?
     var experiments: [String: Bool]
     var flags: [String: Bool]
-    var loggerMetadata: [String: Bool]
+    var loggerMetadata: [String: String]
     var locale: String
 }
 
@@ -46,11 +46,11 @@ class LinkURLGenerator {
         }
 
         // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
-        let customerCountryCode = intent.countryCode ?? configuration.defaultBillingDetails.address.country ?? Locale.current.stp_regionCode ?? "US"
+        let customerCountryCode = intent.countryCode(overrideCountry: configuration.userOverrideCountry) ?? configuration.defaultBillingDetails.address.country ?? Locale.current.stp_regionCode ?? "US"
 
         let merchantCountryCode = intent.merchantCountryCode ?? customerCountryCode
 
-        // Get email from the previously fetched account in the Link button, or the billing details, or the Customer object
+        // Get email from the previously fetched account in the Link button, or the billing details
         var customerEmail = LinkAccountContext.shared.account?.email
 
         if customerEmail == nil,
@@ -68,6 +68,11 @@ class LinkURLGenerator {
             return nil
         }()
 
+        var loggerMetadata: [String: String] = [:]
+        if let sessionID = AnalyticsHelper.shared.sessionID {
+            loggerMetadata = ["mobile_session_id": sessionID]
+        }
+
         let paymentObjectType: LinkURLParams.PaymentObjectMode = intent.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
         return LinkURLParams(paymentObject: paymentObjectType,
@@ -76,7 +81,9 @@ class LinkURLGenerator {
                              merchantInfo: merchantInfo,
                              customerInfo: customerInfo,
                              paymentInfo: paymentInfo,
-                             experiments: [:], flags: [:], loggerMetadata: [:],
+                             experiments: [:],
+                             flags: intent.linkFlags,
+                             loggerMetadata: loggerMetadata,
                              locale: Locale.current.toLanguageTag())
     }
 

@@ -147,22 +147,22 @@ public class PaymentSheet {
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
         PaymentSheetLoader.load(
             mode: mode,
-            configuration: configuration
+            configuration: configuration,
+            isFlowController: false
         ) { result in
             switch result {
-            case .success(let intent, let savedPaymentMethods, let isLinkEnabled):
-                // Set the PaymentSheetViewController as the content of our bottom sheet
-                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay()
-                    && self.configuration.applePay != nil
-                    && intent.isApplePayEnabled
+            case .success(let intent, let savedPaymentMethods, let isLinkEnabled, let isApplePayEnabled):
+                let isCVCRecollectionEnabled = intent.cvcRecollectionEnabled
 
-                let presentPaymentSheetVC = { (justVerifiedLinkOTP: Bool) in
+                // Set the PaymentSheetViewController as the content of our bottom sheet
+                let presentPaymentSheetVC = {
                     let paymentSheetVC = PaymentSheetViewController(
                         intent: intent,
                         savedPaymentMethods: savedPaymentMethods,
                         configuration: self.configuration,
                         isApplePayEnabled: isApplePayEnabled,
                         isLinkEnabled: isLinkEnabled,
+                        isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                         delegate: self
                     )
 
@@ -171,25 +171,9 @@ public class PaymentSheet {
                     let updateBottomSheet: () -> Void = {
                         self.bottomSheetViewController.contentStack = [paymentSheetVC]
                     }
-
-                    if LinkAccountContext.shared.account?.sessionState == .verified {
-                        self.presentPayWithLinkController(
-                            from: self.bottomSheetViewController,
-                            intent: intent,
-                            shouldOfferApplePay: justVerifiedLinkOTP,
-                            shouldFinishOnClose: true,
-                            completion: {
-                                // Update the bottom sheet after presenting the Link controller
-                                // to avoid briefly flashing the PaymentSheet in the middle of
-                                // the View Controller transition.
-                                updateBottomSheet()
-                            }
-                        )
-                    } else {
-                        updateBottomSheet()
-                    }
+                    updateBottomSheet()
                 }
-                presentPaymentSheetVC(false)
+                presentPaymentSheetVC()
             case .failure(let error):
                 completion(.failed(error: error))
             }
@@ -216,7 +200,7 @@ public class PaymentSheet {
     /// This will ensure that any persisted authentication state in PaymentSheet,
     /// such as authentication cookies, is also cleared during logout.
     public static func resetCustomer() {
-        LinkAccountService.defaultCookieStore.clear()
+        UserDefaults.standard.clearLinkDefaults()
     }
 
     // MARK: - Internal Properties
@@ -305,6 +289,22 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
             self.completion?(result)
         }
     }
+    func paymentSheetViewControllerFinishedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
+                                                 completion: (() -> Void)? = nil) {
+        self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
+            completion?()
+        }
+    }
+
+    func paymentSheetViewControllerCanceledOnPay(_ paymentSheetViewController: PaymentSheetViewController,
+                                                 completion: (() -> Void)? = nil) {
+        self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
+    }
+    func paymentSheetViewControllerFailedOnPay(_ paymentSheetViewController: PaymentSheetViewController,
+                                               result: PaymentSheetResult,
+                                               completion: (() -> Void)? = nil) {
+        self.bottomSheetViewController.removeBlurEffect(animated: true, completion: completion)
+    }
 
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewController) {
         paymentSheetViewController.dismiss(animated: true) {
@@ -315,7 +315,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerDidSelectPayWithLink(
         _ paymentSheetViewController: PaymentSheetViewController
     ) {
-        presentPayWithLinkController(
+        self.presentPayWithLinkController(
             from: paymentSheetViewController,
             intent: paymentSheetViewController.intent
         )
@@ -342,8 +342,13 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
         intent: Intent,
         with paymentOption: PaymentOption
     ) {
-        let psvc = self.findPaymentSheetViewController()
-        psvc?.pay(with: paymentOption)
+        let backgroundColor = self.configuration.appearance.colors.background.withAlphaComponent(0.85)
+        self.bottomSheetViewController.addBlurEffect(animated: false, backgroundColor: backgroundColor) {
+            self.bottomSheetViewController.startSpinner()
+            let psvc = self.findPaymentSheetViewController()
+            psvc?.clearTextFields()
+            psvc?.pay(with: paymentOption, animateBuybutton: false)
+        }
     }
 
     func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
@@ -367,15 +372,11 @@ private extension PaymentSheet {
     func presentPayWithLinkController(
         from presentingController: UIViewController,
         intent: Intent,
-        shouldOfferApplePay: Bool = false,
-        shouldFinishOnClose: Bool = false,
         completion: (() -> Void)? = nil
     ) {
         let payWithLinkVC = PayWithLinkWebController(
             intent: intent,
-            configuration: configuration,
-            shouldOfferApplePay: shouldOfferApplePay,
-            shouldFinishOnClose: shouldFinishOnClose
+            configuration: configuration
         )
 
         payWithLinkVC.payWithLinkDelegate = self

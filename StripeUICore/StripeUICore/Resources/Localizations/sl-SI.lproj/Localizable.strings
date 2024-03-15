@@ -84,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "Telefonska številka";
+
 "Postal code" = "Poštna številka";
 
 "Prefecture" = "Prefektura";
@@ -101,6 +103,8 @@
 "Search" = "Išči";
 
 "Select card brand (optional)" = "Izberite blagovno znamko kartice (neobvezno)";
+
+"Sort code" = "Številka banke";
 
 "State" = "Zvezna država";
 

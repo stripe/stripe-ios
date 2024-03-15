@@ -170,8 +170,8 @@ extension PaymentSheet {
         // MARK: Internal
         internal var linkPaymentMethodsOnly: Bool = false
 
-        /// If enabled, PaymentSheet will offer V2 Link features, such as passthrough mode
-        @_spi(STP) public var allowLinkV2Features: Bool = false
+        /// Override country for test purposes
+        @_spi(STP) public var userOverrideCountry: String?
 
         /// Describes how billing details should be collected.
         /// All values default to `automatic`.
@@ -191,6 +191,16 @@ extension PaymentSheet {
         /// - Example: ["card", "external_paypal", "klarna"]
         /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
         public var paymentMethodOrder: [String]?
+
+        /// This is an experimental feature that may be removed at any time.
+        /// If true (the default), the customer can delete all saved payment methods.
+        /// If false, the customer can't delete if they only have one saved payment method remaining.
+        @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
+    }
+
+    internal enum CustomerAccessProvider {
+        case legacyCustomerEphemeralKey(String)
+        case customerSession(String)
     }
 
     /// Configuration related to the Stripe Customer
@@ -202,10 +212,21 @@ extension PaymentSheet {
         /// A short-lived token that allows the SDK to access a Customer's payment methods
         public let ephemeralKeySecret: String
 
-        /// Initializes a CustomerConfiguration
+        internal let customerAccessProvider: CustomerAccessProvider
+
+        /// Initializes a CustomerConfiguration with an ephemeralKeySecret
         public init(id: String, ephemeralKeySecret: String) {
             self.id = id
+            self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
             self.ephemeralKeySecret = ephemeralKeySecret
+        }
+
+        /// Initializes a CustomerConfiguration with a customerSessionClientSecret
+        @_spi(CustomerSessionBetaAccess)
+        public init(id: String, customerSessionClientSecret: String) {
+            self.id = id
+            self.customerAccessProvider = .customerSession(customerSessionClientSecret)
+            self.ephemeralKeySecret = ""
         }
     }
 
@@ -470,5 +491,15 @@ extension STPPaymentMethodBillingDetails {
                                            email: self.email,
                                            name: self.name,
                                            phone: self.phone)
+    }
+}
+extension PaymentSheet.CustomerConfiguration {
+    func ephemeralKeySecretBasedOn(intent: Intent?) -> String? {
+        switch customerAccessProvider {
+        case .legacyCustomerEphemeralKey(let legacy):
+            return legacy
+        case .customerSession:
+            return intent?.elementsSession.customer?.customerSession.apiKey
+        }
     }
 }

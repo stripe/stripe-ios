@@ -24,7 +24,7 @@ public struct ScannedCard: Equatable {
         self.pan = pan
         self.expiryMonth = expiryMonth
         self.expiryYear = expiryYear
-        self.name = expiryYear
+        self.name = name
     }
 }
 

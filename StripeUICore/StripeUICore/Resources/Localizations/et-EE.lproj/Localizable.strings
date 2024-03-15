@@ -84,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "Telefoninumber";
+
 "Postal code" = "Sihtnumber";
 
 "Prefecture" = "Prefektuur";
@@ -101,6 +103,8 @@
 "Search" = "Otsing";
 
 "Select card brand (optional)" = "Valige kaardi kaubamärk (valikuline)";
+
+"Sort code" = "Sorteerimiskood";
 
 "State" = "Osariik";
 

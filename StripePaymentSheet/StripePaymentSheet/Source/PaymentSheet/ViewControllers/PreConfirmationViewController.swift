@@ -30,9 +30,6 @@ class PreConfirmationViewController: UIViewController {
     private lazy var paymentContainerView: DynamicHeightContainerView = {
         return DynamicHeightContainerView()
     }()
-    private lazy var errorLabel: UILabel = {
-        return ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
-    }()
     private lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(
             callToAction: .custom(title: confirmButtonCTA),
@@ -87,7 +84,6 @@ class PreConfirmationViewController: UIViewController {
         let stackView = UIStackView(arrangedSubviews: [
             headerLabel,
             paymentContainerView,
-            errorLabel,
             confirmButton,
         ])
         stackView.bringSubviewToFront(headerLabel)
@@ -96,7 +92,7 @@ class PreConfirmationViewController: UIViewController {
         stackView.spacing = 10
         stackView.axis = .vertical
         stackView.setCustomSpacing(16, after: headerLabel)
-        stackView.setCustomSpacing(14, after: paymentContainerView)
+        stackView.setCustomSpacing(32, after: paymentContainerView)
         [stackView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
@@ -115,14 +111,10 @@ class PreConfirmationViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(
-                equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
+                equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom - 15),
         ])
 
         updateUI()
-    }
-
-    func didFinishPresenting() {
-        self.cvcReconfirmationViewController.didFinishPresenting()
     }
 
     private func updateUI() {
@@ -134,15 +126,6 @@ class PreConfirmationViewController: UIViewController {
             to: targetViewController,
             containerView: paymentContainerView
         )
-
-        if let error = self.cvcReconfirmationViewController.error {
-            self.errorLabel.text = error.localizedDescription
-        } else {
-            self.errorLabel.text = nil
-        }
-        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-            self.errorLabel.setHiddenIfNecessary(self.errorLabel.text == nil)
-        }
         updateButton()
 
         let headerLabelText = self.cardBrand == .amex
@@ -194,9 +177,12 @@ extension PreConfirmationViewController: BottomSheetContentViewController {
     }
 
     func didTapOrSwipeToDismiss() {
-        onCancel(self)
+        // Users may be attempting to double tap "done", and may actually dismiss the sheet.
+        // Therefore, do not dismiss sheet if customer taps the scrim
     }
-
+    func didFinishAnimatingHeight() {
+        // no-op
+    }
 }
 
 extension PreConfirmationViewController: SheetNavigationBarDelegate {

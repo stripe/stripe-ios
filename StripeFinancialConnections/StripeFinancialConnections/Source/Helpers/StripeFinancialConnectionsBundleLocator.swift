@@ -10,7 +10,7 @@ import Foundation
 
 final class StripeFinancialConnectionsBundleLocator: BundleLocatorProtocol {
     static let internalClass: AnyClass = StripeFinancialConnectionsBundleLocator.self
-    static let bundleName = "StripeFinancialConnections"
+    static let bundleName = "StripeFinancialConnectionsBundle"
     #if SWIFT_PACKAGE
     static let spmResourcesBundle = Bundle.module
     #endif

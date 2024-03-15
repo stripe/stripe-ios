@@ -261,6 +261,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             )
             let paymentMethodOptions = STPPaymentMethodOptions(
                 usBankAccount: usBankOptions,
+                card: nil,
                 allResponseFields: [:]
             )
             let pi = STPFixtures.makePaymentIntent(
@@ -347,7 +348,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testPaymentIntentFilteredPaymentMethodTypes_withSetupFutureUsage() {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .mobilePay], setupFutureUsage: .onSession)
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .mobilePay, .amazonPay], setupFutureUsage: .onSession)
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
         configuration.allowsDelayedPaymentMethods = true
@@ -356,12 +357,12 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp)])
+        XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp), .stripe(.amazonPay)])
     }
 
     func testSetupIntentFilteredPaymentMethodTypes() {
-        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.card, .cashApp])
-        let intent = Intent.setupIntent(elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"]), setupIntent: setupIntent)
+        let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: [.card, .cashApp, .amazonPay])
+        let intent = Intent.setupIntent(elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp", "amazon_pay"]), setupIntent: setupIntent)
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "http://return-to-url"
         let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
@@ -369,7 +370,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp)])
+        XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp), .stripe(.amazonPay)])
     }
 
     func testSetupIntentFilteredPaymentMethodTypes_withoutOrderedPaymentMethodTypes() {

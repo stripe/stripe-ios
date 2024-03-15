@@ -114,6 +114,10 @@ import Foundation
     case linkSignupStart = "link.signup.start"
     case linkSignupComplete = "link.signup.complete"
     case linkSignupFailure = "link.signup.failure"
+    case linkCreatePaymentDetailsFailure = "link.payment.failure.create"
+    case linkSharePaymentDetailsFailure = "link.payment.failure.share"
+    case linkSignupFailureInvalidSessionState = "link.signup.failure.invalidSessionState"
+    case linkSignupFailureAccountExists = "link.signup.failure.account_exists"
 
     // MARK: - Link Popup
     case linkPopupShow = "link.popup.show"
@@ -124,6 +128,7 @@ import Foundation
     case linkPopupLogout = "link.popup.logout"
 
     // MARK: - Link Misc
+    case linkAccountLookupComplete = "link.account_lookup.complete"
     case linkAccountLookupFailure = "link.account_lookup.failure"
 
     // MARK: - LUXE
@@ -178,9 +183,13 @@ import Foundation
     // MARK: - PaymentSheet checkout
     case paymentSheetCarouselPaymentMethodTapped = "mc_carousel_payment_method_tapped"
     case paymentSheetConfirmButtonTapped = "mc_confirm_button_tapped"
+    case paymentSheetFormShown = "mc_form_shown"
+    case paymentSheetFormInteracted = "mc_form_interacted"
+    case paymentSheetCardNumberCompleted = "mc_card_number_completed"
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
+    case paymentSheetElementsSessionCustomerDeserializeFailed = "mc_elements_session_customer_deserialize_failed"
     case paymentSheetElementsSessionEPMLoadFailed = "mc_elements_session_epms_load_failed"
 
     // MARK: - PaymentSheet card brand choice
@@ -201,4 +210,24 @@ import Foundation
     case customerSheetUpdateCardBrandFailed = "cs_update_card_failed"
     case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
 
+    // MARK: - Basic Integration
+    // Loading
+    case biLoadStarted = "bi_load_started"
+    case biLoadSucceeded = "bi_load_succeeded"
+    case biLoadFailed = "bi_load_failed"
+
+    // Confirmation
+    case biPaymentCompleteNewPMSuccess = "bi_complete_payment_newpm_success"
+    case biPaymentCompleteSavedPMSuccess = "bi_complete_payment_savedpm_success"
+    case biPaymentCompleteApplePaySuccess = "bi_complete_payment_applepay_success"
+    case biPaymentCompleteNewPMFailure = "bi_complete_payment_newpm_failure"
+    case biPaymentCompleteSavedPMFailure = "bi_complete_payment_savedpm_failure"
+    case biPaymentCompleteApplePayFailure = "bi_complete_payment_applepay_failure"
+
+    // UI events
+    case biOptionsShown = "bi_options_shown"
+    case biFormShown = "bi_form_shown"
+    case biFormInteracted = "bi_form_interacted"
+    case biCardNumberCompleted = "bi_card_number_completed"
+    case biDoneButtonTapped = "bi_done_button_tapped"
 }

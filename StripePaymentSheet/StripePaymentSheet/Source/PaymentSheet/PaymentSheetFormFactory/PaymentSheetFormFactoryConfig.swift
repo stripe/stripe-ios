@@ -35,12 +35,12 @@ enum PaymentSheetFormFactoryConfig {
             return false
         }
     }
-    var allowLinkV2Features: Bool {
+    var overrideCountry: String? {
         switch self {
         case .paymentSheet(let config):
-            return config.allowLinkV2Features
+            return config.userOverrideCountry
         case .customerSheet:
-            return false
+            return nil
         }
     }
     var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {

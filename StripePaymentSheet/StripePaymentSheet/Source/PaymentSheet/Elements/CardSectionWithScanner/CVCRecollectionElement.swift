@@ -11,18 +11,25 @@ import Foundation
 import UIKit
 
 final class CVCRecollectionElement: Element {
-
+    enum Mode {
+        case inputOnly
+        case detailedWithInput
+    }
     weak var delegate: ElementDelegate?
-
+    var mode: Mode
     lazy var view: UIView = {
         return cvcRecollectionView
     }()
 
+    var isViewInitialized: Bool = false
     lazy var cvcRecollectionView: CVCRecollectionView = {
+        isViewInitialized = true
         return CVCRecollectionView(defaultValues: defaultValues,
                                    paymentMethod: paymentMethod,
+                                   mode: mode,
                                    appearance: appearance,
                                    elementDelegate: self)
+
     }()
 
     let defaultValues: DefaultValues
@@ -39,22 +46,35 @@ final class CVCRecollectionElement: Element {
     init(
         defaultValues: DefaultValues = .init(),
         paymentMethod: STPPaymentMethod,
+        mode: Mode,
         appearance: PaymentSheet.Appearance
     ) {
         self.defaultValues = defaultValues
         self.paymentMethod = paymentMethod
         self.appearance = appearance
+        self.mode = mode
     }
 
-    func didFinishPresenting() {
+    func beginEditing() {
         DispatchQueue.main.async {
             self.cvcRecollectionView.textFieldElement.beginEditing()
         }
+    }
+
+    var validationState: ElementValidationState {
+        return cvcRecollectionView.textFieldElement.validationState
+    }
+    func clearTextFields() {
+        self.cvcRecollectionView.textFieldElement.setText("")
     }
 }
 
 extension CVCRecollectionElement: ElementDelegate {
     func didUpdate(element: Element) {
+        if isViewInitialized {
+            cvcRecollectionView.update()
+        }
+
         delegate?.didUpdate(element: cvcRecollectionView.textFieldElement)
     }
     func continueToNextField(element: Element) {

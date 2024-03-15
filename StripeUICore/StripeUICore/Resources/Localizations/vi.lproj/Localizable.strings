@@ -84,6 +84,8 @@
 
 "Phone" = "Điện thoại";
 
+"Phone number" = "Số điện thoại";
+
 "Postal code" = "Mã bưu điện";
 
 "Prefecture" = "Tỉnh";
@@ -101,6 +103,8 @@
 "Search" = "Tìm kiếm";
 
 "Select card brand (optional)" = "Chọn thương hiệu thẻ (tùy chọn)";
+
+"Sort code" = "Mã sắp xếp";
 
 "State" = "Tiểu bang";
 

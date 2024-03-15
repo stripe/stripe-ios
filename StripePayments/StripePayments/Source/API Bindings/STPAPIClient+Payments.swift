@@ -1092,6 +1092,110 @@ extension STPAPIClient {
         }
     }
 
+    // TODO: Remove this logic when we stand up an endpoint to do this
+    @_spi(STP) public func detachPaymentMethodRemoveDuplicates(
+        _ paymentMethodID: String,
+        customerId: String,
+        fromCustomerUsing ephemeralKeySecret: String,
+        completion: @escaping STPErrorBlock
+    ) {
+        let fetchPaymentMethods: (String) async throws -> [STPPaymentMethod] = { customerId in
+            try await withCheckedThrowingContinuation { continuation in
+                self.listPaymentMethods(forCustomer: customerId,
+                                        using: ephemeralKeySecret,
+                                        types: [.card]) { paymentMethods, error in
+                    guard let paymentMethods, error == nil else {
+                        let error = error ?? NSError.stp_genericFailedToParseResponseError()
+                        continuation.resume(throwing: error)
+                        return
+                    }
+                    continuation.resume(returning: paymentMethods)
+                }
+            }
+        }
+        let detachPaymentMethod: (String) async throws -> Void = { paymentMethodID in
+            try await withCheckedThrowingContinuation { continuation in
+                let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
+                APIRequest<STPPaymentMethod>.post(
+                    with: self,
+                    endpoint: endpoint,
+                    additionalHeaders: self.authorizationHeader(using: ephemeralKeySecret),
+                    parameters: [:]
+                ) { _, _, error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                        return
+                    }
+                    continuation.resume()
+                }
+            }
+        }
+        let detachMultiplePaymentMethods: ([STPPaymentMethod]) async -> Error? = { allPaymentMethodsToDelete in
+            var errors: [Error] = []
+            await withTaskGroup(of: (Error?).self) { group in
+                for paymentMethod in allPaymentMethodsToDelete {
+                    group.addTask {
+                        do {
+                            try await detachPaymentMethod(paymentMethod.stripeId)
+                        } catch {
+                            return error
+                        }
+                        return nil
+                    }
+                }
+                for await error in group {
+                    if let error {
+                        errors.append(error)
+                    }
+                }
+            }
+            if errors.isEmpty {
+                return nil
+            } else {
+                // There could be more than on errors. For simplicity, throw the first one encoutered
+                return errors.first
+            }
+        }
+
+        Task {
+            do {
+                let allCardPaymentMethods = try await fetchPaymentMethods(customerId)
+                let requestedPMToDelete = allCardPaymentMethods.filter({ $0.stripeId == paymentMethodID }).first
+                guard let requestedPMToDelete else {
+                    // Payment method doesnt exist anymore, nothing to do
+                    completion(nil)
+                    return
+                }
+                let allPaymentMethodsToDelete: [STPPaymentMethod] = allCardPaymentMethods
+                    .filter({ $0.type == .card })
+                    .filter({ $0.card?.fingerprint == requestedPMToDelete.card?.fingerprint })
+                let error = await detachMultiplePaymentMethods(allPaymentMethodsToDelete)
+                completion(error)
+            } catch {
+                completion(error)
+            }
+        }
+    }
+
+    // TODO: Remove this logic when we stand up an endpoint to do this
+    @_spi(STP) public func detachPaymentMethodRemoveDuplicates(
+        _ paymentMethodID: String,
+        customerId: String,
+        fromCustomerUsing ephemeralKeySecret: String
+    ) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+            detachPaymentMethodRemoveDuplicates(paymentMethodID,
+                                                customerId: customerId,
+                                                fromCustomerUsing: ephemeralKeySecret) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
     @_spi(STP) public func detachPaymentMethod(
         _ paymentMethodID: String,
         fromCustomerUsing ephemeralKeySecret: String,
@@ -1105,6 +1209,21 @@ extension STPAPIClient {
             parameters: [:]
         ) { _, _, error in
             completion(error)
+        }
+    }
+
+    @_spi(STP) public func detachPaymentMethod(
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String
+    ) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+            detachPaymentMethod(paymentMethodID, fromCustomerUsing: ephemeralKeySecret) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
         }
     }
 

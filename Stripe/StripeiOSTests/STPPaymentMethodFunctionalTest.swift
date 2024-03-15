@@ -10,13 +10,10 @@
 import Stripe
 import StripeCoreTestUtils
 @_spi(STP) import StripePayments
+@testable @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 
 class STPPaymentMethodFunctionalTest: XCTestCase {
-    override func setUp() {
-        super.setUp()
-    }
-
     func testCreateCardPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let card = STPPaymentMethodCardParams()
@@ -86,34 +83,85 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
     }
 
     func testUpdateCardPaymentMethod() async throws {
-        let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
+         let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
 
-        // A hardcoded test Customer
-        let testCustomerID = "cus_LvNOzX6BFQtXb5"
+         // A hardcoded test Customer
+         let testCustomerID = "cus_PTf9mhkFv9ZGXl"
 
-        // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "fr")
+         // Create a new EK for the Customer
+         let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "fr")
 
-        // Create a new payment method
-        let paymentMethod = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
+         // Create a new payment method
+         let paymentMethod = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
 
-        // Attach the payment method to the customer
-        try await client.attachPaymentMethod(paymentMethod.stripeId,
+         // Attach the payment method to the customer
+         try await client.attachPaymentMethod(paymentMethod.stripeId,
+                                    customerID: customerAndEphemeralKey.customer,
+                                    ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+
+         // Update the expiry year for the card by 1 year
+         let card = STPPaymentMethodCardParams()
+         card.expYear = (paymentMethod.card!.expYear + 1) as NSNumber
+
+         let params = STPPaymentMethodUpdateParams(card: card, billingDetails: nil)
+
+         let updatedPaymentMethod = try await client.updatePaymentMethod(with: paymentMethod.stripeId,
+                                                                         paymentMethodUpdateParams: params,
+                                                                         ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+
+         // Verify
+         XCTAssertEqual(updatedPaymentMethod.card!.expYear, (paymentMethod.card!.expYear + 1))
+
+        // Clean up, detach the payment method as a customer can only have 400 payment methods saved
+        try await client.detachPaymentMethod(paymentMethod.stripeId,
+                                             fromCustomerUsing: customerAndEphemeralKey.ephemeralKeySecret)
+     }
+
+    func testMulitpleCardCreationWithCustomerSessionAndMultiDelete() async throws {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        // Create a new customer and new key
+        let customerAndEphemeralKey = try await STPTestingAPIClient().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
+
+        // Create a new payment method 1
+        let paymentMethod1 = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
+
+        // Attach the payment method 1 to the customer
+        try await client.attachPaymentMethod(paymentMethod1.stripeId,
                                    customerID: customerAndEphemeralKey.customer,
                                    ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
-        // Update the expiry year for the card by 1 year
-        let card = STPPaymentMethodCardParams()
-        card.expYear = (paymentMethod.card!.expYear + 1) as NSNumber
+        // Create a new payment method 2
+        let paymentMethod2 = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
 
-        let params = STPPaymentMethodUpdateParams(card: card, billingDetails: nil)
+        // Attach the payment method 2 to the customer
+        try await client.attachPaymentMethod(paymentMethod2.stripeId,
+                                   customerID: customerAndEphemeralKey.customer,
+                                   ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
-        let updatedPaymentMethod = try await client.updatePaymentMethod(with: paymentMethod.stripeId,
-                                                                        paymentMethodUpdateParams: params,
-                                                                        ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+        // Element/Sessions endpoint should de-dupe payment methods with CustomerSesssion
+        let cscs = try await STPTestingAPIClient().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
+                                                                                               merchantCountry: nil)
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
+        let elementSession = try await client.retrieveElementsSession(withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic), confirmHandler: { _, _, _ in
+            // no-op
+        }), configuration: configuration)
 
-        // Verify
-        XCTAssertEqual(updatedPaymentMethod.card!.expYear, (paymentMethod.card!.expYear + 1))
+        // Requires FF: elements_enable_read_allow_redisplay, to return "1", otherwise 0
+        XCTAssertEqual(elementSession.customer?.paymentMethods.count, 1)
+
+        // Official endpoint should have two payment methods
+        let fetchedPaymentMethods = try await fetchPaymentMethods(client: client, customerAndEphemeralKey: customerAndEphemeralKey)
+        XCTAssertEqual(fetchedPaymentMethods.count, 2)
+
+        // Clean up, detach both payment methods
+        try await client.detachPaymentMethodRemoveDuplicates(paymentMethod1.stripeId,
+                                             customerId: customerAndEphemeralKey.customer,
+                                             fromCustomerUsing: customerAndEphemeralKey.ephemeralKeySecret)
+
+        let reFetchedPaymentMethods = try await fetchPaymentMethods(client: client, customerAndEphemeralKey: customerAndEphemeralKey)
+        XCTAssertEqual(reFetchedPaymentMethods.count, 0)
     }
 
     func testCreateBacsPaymentMethod() {
@@ -202,4 +250,31 @@ class STPPaymentMethodFunctionalTest: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
 
+    func testCreateAmazonPayPaymentMethod() {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let params = STPPaymentMethodParams(amazonPay: STPPaymentMethodAmazonPayParams(), billingDetails: nil, metadata: nil)
+        let expectation = self.expectation(description: "Payment Method create")
+        client.createPaymentMethod(with: params) { paymentMethod, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentMethod)
+            XCTAssertEqual(paymentMethod?.type, .amazonPay)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func fetchPaymentMethods(client: STPAPIClient,
+                             customerAndEphemeralKey: STPTestingAPIClient.CreateEphemeralKeyResponse) async throws -> [STPPaymentMethod] {
+        try await withCheckedThrowingContinuation { continuation in
+            client.listPaymentMethods(forCustomer: customerAndEphemeralKey.customer,
+                                      using: customerAndEphemeralKey.ephemeralKeySecret,
+                                      types: [.card]) { paymentMethods, error in
+                guard let paymentMethods, error == nil else {
+                    continuation.resume(throwing: error!)
+                    return
+                }
+                continuation.resume(returning: paymentMethods)
+            }
+        }
+    }
 }

@@ -17,14 +17,14 @@ protocol LinkInlineSignupViewModelDelegate: AnyObject {
 
 final class LinkInlineSignupViewModel {
     enum Action: Equatable {
-        case pay(account: PaymentSheetLinkAccount)
         case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber, legalName: String?)
         case continueWithoutLink
     }
 
     enum Mode {
-        case normal // shows the Link inline signup with the checkbox and nested form fields
-        case textFieldsOnly // shows the Link inline signup without the checkbox
+        case checkbox // shows the Link inline signup with the checkbox and nested form fields
+        case textFieldsOnlyEmailFirst // shows the Link inline signup without the checkbox, email field first
+        case textFieldsOnlyPhoneFirst // shows the Link inline signup without the checkbox, phone number field first
     }
 
     weak var delegate: LinkInlineSignupViewModelDelegate?
@@ -44,7 +44,7 @@ final class LinkInlineSignupViewModel {
             if saveCheckboxChecked != oldValue {
                 notifyUpdate()
 
-                if saveCheckboxChecked, mode != .textFieldsOnly {
+                if saveCheckboxChecked, mode == .checkbox {
                     STPAnalyticsClient.sharedClient.logLinkSignupCheckboxChecked()
                 }
             }
@@ -74,6 +74,25 @@ final class LinkInlineSignupViewModel {
             }
         }
     }
+    var phoneNumberWasPrefilled: Bool = false
+    var emailWasPrefilled: Bool = false
+
+    var consentAction: PaymentSheetLinkAccount.ConsentAction {
+        switch mode {
+        case .checkbox:
+            if phoneNumberWasPrefilled && emailWasPrefilled {
+                return .checkbox_v0_1
+            } else if emailWasPrefilled {
+                return .checkbox_v0_0
+            } else {
+                return .checkbox_v0
+            }
+        case .textFieldsOnlyEmailFirst:
+            return .implied_v0
+        case .textFieldsOnlyPhoneFirst:
+            return .implied_v0_0
+        }
+    }
 
     private(set) var linkAccount: PaymentSheetLinkAccount? {
         didSet {
@@ -82,7 +101,7 @@ final class LinkInlineSignupViewModel {
 
                 if let linkAccount = linkAccount,
                    !linkAccount.isRegistered {
-                    STPAnalyticsClient.sharedClient.logLinkSignupStart()
+                        STPAnalyticsClient.sharedClient.logLinkSignupStart()
                 }
             }
         }
@@ -129,33 +148,50 @@ final class LinkInlineSignupViewModel {
     }
 
     var shouldShowEmailField: Bool {
-        return saveCheckboxChecked
+        switch mode {
+        case .checkbox:
+            return saveCheckboxChecked
+        case .textFieldsOnlyEmailFirst:
+            return true
+        case .textFieldsOnlyPhoneFirst:
+            // Only show email if the phone number field has contents
+            return (phoneNumber?.isComplete ?? false)
+        }
     }
 
     var shouldShowNameField: Bool {
-        guard saveCheckboxChecked,
-              let linkAccount = linkAccount else {
-            return false
+        switch mode {
+        case .checkbox, .textFieldsOnlyEmailFirst:
+            guard saveCheckboxChecked,
+                  let linkAccount = linkAccount else {
+                return false
+            }
+            return !linkAccount.isRegistered && requiresNameCollection
+        case .textFieldsOnlyPhoneFirst:
+            return requiresNameCollection && phoneNumber?.isComplete ?? false
         }
-
-        return !linkAccount.isRegistered && requiresNameCollection
     }
 
     var shouldShowPhoneField: Bool {
-        guard saveCheckboxChecked,
-              let linkAccount = linkAccount
-        else {
-            return false
-        }
+        switch mode {
+        case .checkbox, .textFieldsOnlyEmailFirst:
+            guard saveCheckboxChecked,
+                  let linkAccount = linkAccount
+            else {
+                return false
+            }
 
-        return !linkAccount.isRegistered
+            return !linkAccount.isRegistered
+        case .textFieldsOnlyPhoneFirst:
+            return true
+        }
     }
 
     var shouldShowLegalTerms: Bool {
         switch mode {
-        case .normal:
-            return shouldShowPhoneField
-        case .textFieldsOnly:
+        case .checkbox:
+            return saveCheckboxChecked
+        case .textFieldsOnlyPhoneFirst, .textFieldsOnlyEmailFirst:
             return true
         }
     }
@@ -164,6 +200,14 @@ final class LinkInlineSignupViewModel {
         guard saveCheckboxChecked,
               !lookupFailed
         else {
+            return .continueWithoutLink
+        }
+
+        if linkAccount?.isRegistered ?? false {
+            // User already has a Link account, they can't sign up
+            STPAnalyticsClient.sharedClient.logLinkSignupFailureAccountExists()
+            // Don't bother them again
+            UserDefaults.standard.markLinkAsUsed()
             return .continueWithoutLink
         }
 
@@ -188,58 +232,82 @@ final class LinkInlineSignupViewModel {
                 legalName: requiresNameCollection ? legalName : nil
             )
         case .verified, .requiresVerification:
-            return .pay(account: linkAccount)
+            // This should never happen: The session should only be verified as part of the signup request,
+            // as inline verification is not enabled. Continue without Link.
+            return .continueWithoutLink
         }
     }
 
     var layoutInsets: CGFloat {
         switch mode {
-        case .normal:
+        case .checkbox:
             return 16
-        case .textFieldsOnly:
+        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
             return 0
         }
     }
 
     var showCheckbox: Bool {
         switch mode {
-        case .normal:
+        case .checkbox:
             return true
-        case .textFieldsOnly:
+        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
             return false
         }
     }
 
     var bordered: Bool {
         switch mode {
-        case .normal:
+        case .checkbox:
             return true
-        case .textFieldsOnly:
+        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
             return false
         }
     }
 
     var isEmailOptional: Bool {
         switch mode {
-        case .normal:
+        case .checkbox:
             return false
-        case .textFieldsOnly:
+        case .textFieldsOnlyEmailFirst:
+            return true
+        case .textFieldsOnlyPhoneFirst:
+            return false
+        }
+    }
+
+    var isPhoneNumberOptional: Bool {
+        switch mode {
+        case .checkbox:
+            return false
+        case .textFieldsOnlyEmailFirst:
+            return false
+        case .textFieldsOnlyPhoneFirst:
             return true
         }
     }
 
     init(
         configuration: PaymentSheet.Configuration,
-        mode: Mode,
+        showCheckbox: Bool,
         accountService: LinkAccountServiceProtocol,
         linkAccount: PaymentSheetLinkAccount? = nil,
         country: String? = nil
     ) {
         self.configuration = configuration
-        self.mode = mode
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
+        if let email = self.emailAddress,
+           !email.isEmpty {
+            emailWasPrefilled = true
+        }
+        if showCheckbox {
+            self.mode = .checkbox
+        } else {
+            // If we don't show a checkbox *and* we have a prefilled email, show the phone field first.
+            self.mode = (self.emailAddress == nil) ? .textFieldsOnlyEmailFirst : .textFieldsOnlyPhoneFirst
+        }
         self.legalName = configuration.defaultBillingDetails.name
         self.country = country
     }

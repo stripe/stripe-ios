@@ -20,7 +20,7 @@ extension PaymentSheetFormFactory {
                 merchantDisplayName: configuration.merchantDisplayName
             )
         )
-        let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && (configuration.allowLinkV2Features || !canSaveToLink)
+        let shouldDisplaySPMSaveCheckbox: Bool = saveMode == .userSelectable
 
         // Make section titled "Contact Information" w/ phone and email if merchant requires it.
         let optionalPhoneAndEmailInformationSection: SectionElement? = {
@@ -87,7 +87,7 @@ extension PaymentSheetFormFactory {
                 optionalPhoneAndEmailInformationSection,
                 cardSection,
                 billingAddressSection,
-                shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+                shouldDisplaySPMSaveCheckbox ? saveCheckbox : nil,
             ],
             theme: theme)
 
@@ -98,14 +98,15 @@ extension PaymentSheetFormFactory {
                 configuration: configuration,
                 linkAccount: linkAccount,
                 country: countryCode,
-                mode: (shouldDisplaySaveCheckbox && configuration.allowLinkV2Features) ? .textFieldsOnly : .normal
+                showCheckbox: !shouldDisplaySPMSaveCheckbox
             )
         } else {
             return cardFormElement
         }
     }
     func makeCardCVCCollection(paymentMethod: STPPaymentMethod,
+                               mode: CVCRecollectionElement.Mode,
                                appearance: PaymentSheet.Appearance) -> CVCRecollectionElement {
-        return CVCRecollectionElement(paymentMethod: paymentMethod, appearance: appearance)
+        return CVCRecollectionElement(paymentMethod: paymentMethod, mode: mode, appearance: appearance)
     }
 }

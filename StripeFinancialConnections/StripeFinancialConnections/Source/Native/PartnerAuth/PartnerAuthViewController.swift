@@ -12,10 +12,7 @@ import Foundation
 import UIKit
 
 protocol PartnerAuthViewControllerDelegate: AnyObject {
-    func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController)
-    func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController)
-    func partnerAuthViewController(_ viewController: PartnerAuthViewController, didReceiveTerminalError error: Error)
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
         didCompleteWithAuthSession authSession: FinancialConnectionsAuthSession
@@ -24,9 +21,13 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
         _ viewController: PartnerAuthViewController,
         didReceiveEvent event: FinancialConnectionsEvent
     )
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didReceiveError error: Error
+    )
 }
 
-final class PartnerAuthViewController: UIViewController {
+final class PartnerAuthViewController: SheetViewController {
 
     /**
      Unfortunately there is a need for this state-full parameter. When we get url callback the app might not be in foreground state.
@@ -35,7 +36,6 @@ final class PartnerAuthViewController: UIViewController {
     private var unprocessedReturnURL: URL?
     private var subscribedToURLNotifications = false
     private var subscribedToAppActiveNotifications = false
-    private var continueStateView: ContinueStateView?
 
     private let dataSource: PartnerAuthDataSource
     private var institution: FinancialConnectionsInstitution {
@@ -45,29 +45,18 @@ final class PartnerAuthViewController: UIViewController {
     private var lastHandledAuthenticationSessionReturnUrl: URL?
     weak var delegate: PartnerAuthViewControllerDelegate?
 
-    private lazy var establishingConnectionLoadingView: UIView = {
-        let establishingConnectionLoadingView = ReusableInformationView(
-            iconType: .loading,
-            title: STPLocalizedString(
-                "Establishing connection",
-                "The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank."
-            ),
-            subtitle: STPLocalizedString(
-                "Please wait while we connect to your bank.",
-                "The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank."
-            )
-        )
-        establishingConnectionLoadingView.isHidden = true
-        return establishingConnectionLoadingView
-    }()
+    private var prepaneViews: PrepaneViews?
+    private var continueStateViews: ContinueStateViews?
+    private var loadingView: UIView?
+    private var legacyLoadingView: UIView?
+    private var showLegacyBrowserOnViewDidAppear = false
 
-    private lazy var retrievingAccountsView: UIView = {
-        return buildRetrievingAccountsView()
-    }()
-
-    init(dataSource: PartnerAuthDataSource) {
+    init(
+        dataSource: PartnerAuthDataSource,
+        panePresentationStyle: PanePresentationStyle
+    ) {
         self.dataSource = dataSource
-        super.init(nibName: nil, bundle: nil)
+        super.init(panePresentationStyle: panePresentationStyle)
     }
 
     required init?(coder: NSCoder) {
@@ -76,23 +65,55 @@ final class PartnerAuthViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
         dataSource
             .analyticsClient
             .logPaneLoaded(pane: .partnerAuth)
-        createAuthSession()
+
+        if let authSession = dataSource.pendingAuthSession {
+            if authSession.isOauthNonOptional {
+                createdAuthSession(authSession)
+            } else {
+                // for legacy (non-oauth), start showing the loading indicator,
+                // and wait until `viewDidAppear` gets called
+                insertLegacyLoadingView()
+                showLegacyBrowserOnViewDidAppear = true
+            }
+        } else {
+            assert(
+                panePresentationStyle == .fullscreen,
+                "partner auth initialized without an auth session is expected to be full screen"
+            )
+            createAuthSession()
+        }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if showLegacyBrowserOnViewDidAppear {
+            showLegacyBrowserOnViewDidAppear = false
+            // wait until `viewDidAppear` gets called for legacy (non-oauth) because
+            // calling `createdAuthSession` WHILE the VC is animating causes an
+            // animation glitch due to ASWebAuthenticationSession browser animation
+            // happening simultaneously
+            if
+                let authSession = dataSource.pendingAuthSession,
+                !authSession.isOauthNonOptional
+            {
+                createdAuthSession(authSession)
+            }
+        }
     }
 
     private func createAuthSession() {
         assertMainQueue()
 
-        showEstablishingConnectionLoadingView(true)
+        showLoadingView(true)
         dataSource
             .createAuthSession()
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 // order is important so be careful of moving
-                self.showEstablishingConnectionLoadingView(false)
+                self.showLoadingView(false)
                 switch result {
                 case .success(let authSession):
                     self.createdAuthSession(authSession)
@@ -109,8 +130,11 @@ final class PartnerAuthViewController: UIViewController {
         )
 
         if authSession.isOauthNonOptional, let prepaneModel = authSession.display?.text?.oauthPrepane {
-            let prepaneView = PrepaneView(
+            prepaneViews = nil // the `deinit` of prepane views will remove views
+            let prepaneViews = PrepaneViews(
                 prepaneModel: prepaneModel,
+                isRepairSession: false, // TODO(kgaidis): change this for repair sessions
+                panePresentationStyle: panePresentationStyle,
                 didSelectURL: { [weak self] url in
                     self?.didSelectURLInTextFromBackend(url)
                 },
@@ -129,180 +153,48 @@ final class PartnerAuthViewController: UIViewController {
                     } else {
                         self.openInstitutionAuthenticationWebView(authSession: authSession)
                     }
+                },
+                didSelectCancel: { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
                 }
             )
-            view.addAndPinSubview(prepaneView)
+            self.prepaneViews = prepaneViews
+
+            setup(
+                withContentView: prepaneViews.contentStackView,
+                footerView: prepaneViews.footerView
+            )
 
             dataSource.recordAuthSessionEvent(
                 eventName: "loaded",
                 authSessionId: authSession.id
             )
         } else {
-            // a legacy (non-oauth) institution will have a blank background
-            // during presenting + dismissing of the Web View, so
-            // add a loading spinner to fill some of the blank space
-            let activityIndicator = ActivityIndicator(size: .large)
-            activityIndicator.color = .textDisabled
-            activityIndicator.backgroundColor = .customBackgroundColor
-            activityIndicator.startAnimating()
-            view.addAndPinSubview(activityIndicator)
+            insertLegacyLoadingView()
 
             openInstitutionAuthenticationWebView(authSession: authSession)
         }
     }
 
+    private func insertLegacyLoadingView() {
+        legacyLoadingView?.removeFromSuperview()
+        legacyLoadingView = nil
+
+        // a legacy (non-oauth) institution will have a blank background
+        // during presenting + dismissing of the Web View, so
+        // add a loading spinner to fill some of the blank space
+        //
+        // note that this is purposefully separate from `showLoadingView`
+        // function because it avoids animation glitches where
+        // `showLoadingView(false)` can remove the loading view
+        let loadingView = SpinnerView()
+        self.legacyLoadingView = loadingView
+        view.addAndPinSubviewToSafeArea(loadingView)
+    }
+
     private func showErrorView(_ error: Error) {
-        // all Partner Auth errors hide the back button
-        // and all errors end up in user having to exit
-        // PartnerAuth to try again
-        navigationItem.hidesBackButton = true
-
-        let allowManualEntryInErrors = (dataSource.manifest.allowManualEntry && !dataSource.reduceManualEntryProminenceInErrors)
-        let errorView: UIView?
-        if let error = error as? StripeError,
-            case .apiError(let apiError) = error,
-            let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
-            let institutionUnavailable = extraFields["institution_unavailable"] as? Bool,
-            institutionUnavailable
-        {
-            let institutionIconView = InstitutionIconView(size: .large, showWarning: true)
-            institutionIconView.setImageUrl(institution.icon?.default)
-            let primaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
-                title: String.Localized.select_another_bank,
-                action: { [weak self] in
-                    guard let self = self else { return }
-                    self.delegate?.partnerAuthViewControllerUserDidSelectAnotherBank(self)
-                }
-            )
-            if let expectedToBeAvailableAt = extraFields["expected_to_be_available_at"] as? TimeInterval {
-                let expectedToBeAvailableDate = Date(timeIntervalSince1970: expectedToBeAvailableAt)
-                let dateFormatter = DateFormatter()
-                dateFormatter.timeStyle = .short
-                let expectedToBeAvailableTimeString = dateFormatter.string(from: expectedToBeAvailableDate)
-                errorView = ReusableInformationView(
-                    iconType: .view(institutionIconView),
-                    title: String(
-                        format: STPLocalizedString(
-                            "%@ is undergoing maintenance",
-                            "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                        ),
-                        institution.name
-                    ),
-                    subtitle: {
-                        let beginningOfSubtitle: String = {
-                            if isToday(expectedToBeAvailableDate) {
-                                return String(
-                                    format: STPLocalizedString(
-                                        "Maintenance is scheduled to end at %@.",
-                                        "The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                    ),
-                                    expectedToBeAvailableTimeString
-                                )
-                            } else {
-                                let dateFormatter = DateFormatter()
-                                dateFormatter.dateStyle = .short
-                                let expectedToBeAvailableDateString = dateFormatter.string(
-                                    from: expectedToBeAvailableDate
-                                )
-                                return String(
-                                    format: STPLocalizedString(
-                                        "Maintenance is scheduled to end on %@ at %@.",
-                                        "The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                    ),
-                                    expectedToBeAvailableDateString,
-                                    expectedToBeAvailableTimeString
-                                )
-                            }
-                        }()
-                        let endOfSubtitle: String = {
-                            if allowManualEntryInErrors {
-                                return STPLocalizedString(
-                                    "Please enter your bank details manually or select another bank.",
-                                    "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                )
-                            } else {
-                                return STPLocalizedString(
-                                    "Please select another bank or try again later.",
-                                    "The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                                )
-                            }
-                        }()
-                        return beginningOfSubtitle + " " + endOfSubtitle
-                    }(),
-                    primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: allowManualEntryInErrors
-                        ? ReusableInformationView.ButtonConfiguration(
-                            title: String.Localized.enter_bank_details_manually,
-                            action: { [weak self] in
-                                guard let self = self else { return }
-                                self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
-                            }
-                        ) : nil
-                )
-                dataSource.analyticsClient.logExpectedError(
-                    error,
-                    errorName: "InstitutionPlannedDowntimeError",
-                    pane: .partnerAuth
-                )
-            } else {
-                errorView = ReusableInformationView(
-                    iconType: .view(institutionIconView),
-                    title: String(
-                        format: STPLocalizedString(
-                            "%@ is currently unavailable",
-                            "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                        ),
-                        institution.name
-                    ),
-                    subtitle: {
-                        if allowManualEntryInErrors {
-                            return STPLocalizedString(
-                                "Please enter your bank details manually or select another bank.",
-                                "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                            )
-                        } else {
-                            return STPLocalizedString(
-                                "Please select another bank or try again later.",
-                                "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."
-                            )
-                        }
-                    }(),
-                    primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: allowManualEntryInErrors
-                        ? ReusableInformationView.ButtonConfiguration(
-                            title: String.Localized.enter_bank_details_manually,
-                            action: { [weak self] in
-                                guard let self = self else { return }
-                                self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
-                            }
-                        ) : nil
-                )
-                dataSource.analyticsClient.logExpectedError(
-                    error,
-                    errorName: "InstitutionUnplannedDowntimeError",
-                    pane: .partnerAuth
-                )
-            }
-        } else {
-            dataSource.analyticsClient.logUnexpectedError(
-                error,
-                errorName: "PartnerAuthError",
-                pane: .partnerAuth
-            )
-
-            // if we didn't get specific errors back, we don't know
-            // what's wrong, so show a generic error
-            delegate?.partnerAuthViewController(self, didReceiveTerminalError: error)
-            errorView = nil
-
-            // keep showing the loading view while we transition to
-            // terminal error
-            showEstablishingConnectionLoadingView(true)
-        }
-
-        if let errorView = errorView {
-            view.addAndPinSubviewToSafeArea(errorView)
-        }
+        delegate?.partnerAuthViewController(self, didReceiveError: error)
     }
 
     private func handleAuthSessionCompletionWithStatus(
@@ -343,24 +235,14 @@ final class PartnerAuthViewController: UIViewController {
                 completionHandler: { [weak self] isSuccess in
                     guard let self = self else { return }
                     if !isSuccess {
-                        self.dataSource.recordAuthSessionEvent(
-                            eventName: "cancel",
-                            authSessionId: authSession.id
-                        )
-
-                        // cancel current auth session
-                        self.dataSource.cancelPendingAuthSessionIfNeeded()
-
-                        // whether legacy or OAuth, we always go back
-                        // if we got an explicit cancel from backend
-                        self.navigateBack()
+                        self.handleAuthSessionCancel(authSession, nil)
                     }
                 }
             )
         }
     }
 
-    private func handleAuthSessionCompletionWithNoStatus(
+    private func handleAuthSessionCancel(
         _ authSession: FinancialConnectionsAuthSession,
         _ error: Error?
     ) {
@@ -391,7 +273,9 @@ final class PartnerAuthViewController: UIViewController {
         }
     }
 
-    private func openInstitutionAuthenticationNativeRedirect(authSession: FinancialConnectionsAuthSession) {
+    private func openInstitutionAuthenticationNativeRedirect(
+        authSession: FinancialConnectionsAuthSession
+    ) {
         guard
             let urlString = authSession.url?.droppingNativeRedirectPrefix(),
             let url = URL(string: urlString)
@@ -403,34 +287,46 @@ final class PartnerAuthViewController: UIViewController {
             )
             return
         }
-        self.continueStateView = ContinueStateView(
-            institutionImageUrl: self.institution.icon?.default,
+        let continueStateViews = ContinueStateViews(
+            institutionImageUrl: institution.icon?.default,
             didSelectContinue: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.dataSource.analyticsClient.log(
                     eventName: "click.apptoapp.continue",
                     pane: .partnerAuth
                 )
-                self.continueStateView?.removeFromSuperview()
-                self.continueStateView = nil
                 self.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
+            },
+            didSelectCancel: { [weak self] in
+                guard let self else { return }
+                self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
             }
         )
-        self.view.addAndPinSubview(self.continueStateView!)
+        self.continueStateViews = continueStateViews
+        setup(
+            withContentView: continueStateViews.contentView,
+            footerView: continueStateViews.footerView
+        )
 
-        self.subscribeToURLAndAppActiveNotifications()
-        UIApplication.shared.open(url, options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: true]) { (success) in
-            if success { return }
-            // This means banking app is not installed
-            self.clearStateAndUnsubscribeFromNotifications()
+        subscribeToURLAndAppActiveNotifications()
+        UIApplication.shared.open(
+            url,
+            options: [.universalLinksOnly: true]
+        ) { (didOpenBankingApp) in
+            guard !didOpenBankingApp else {
+                // we pass control to the bank app
+                return
+            }
+            // if we get here, it means the banking app is not installed
+            self.clearStateAndUnsubscribeFromNotifications(removeContinueStateView: true)
 
-            self.showEstablishingConnectionLoadingView(true)
+            self.showLoadingView(true)
             self.dataSource
                 .clearReturnURL(authSession: authSession, authURL: urlString)
                 .observe(on: .main) { [weak self] result in
                     guard let self = self else { return }
                     // order is important so be careful of moving
-                    self.showEstablishingConnectionLoadingView(false)
+                    self.showLoadingView(false)
                     switch result {
                     case .success(let authSession):
                         self.openInstitutionAuthenticationWebView(authSession: authSession)
@@ -522,7 +418,7 @@ final class PartnerAuthViewController: UIViewController {
                         completionHandler: { [weak self] isSuccess in
                             guard let self = self else { return }
                             if !isSuccess {
-                                self.handleAuthSessionCompletionWithNoStatus(authSession, error)
+                                self.handleAuthSessionCancel(authSession, error)
                             }
                         }
                     )
@@ -592,7 +488,7 @@ final class PartnerAuthViewController: UIViewController {
     }
 
     private func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) {
-        showRetrievingAccountsView(true)
+        showLoadingView(true)
         dataSource
             .authorizeAuthSession(authSession)
             .observe(on: .main) { [weak self] result in
@@ -610,10 +506,10 @@ final class PartnerAuthViewController: UIViewController {
                     // calling `showEstablishingConnectionLoadingView(false)` is
                     // defensive programming anyway
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-                        self?.showRetrievingAccountsView(false)
+                        self?.showLoadingView(false)
                     }
                 case .failure(let error):
-                    self.showRetrievingAccountsView(false)  // important to come BEFORE showing error view so we avoid showing back button
+                    self.showLoadingView(false)  // important to come BEFORE showing error view so we avoid showing back button
                     self.showErrorView(error)
                     assert(self.navigationItem.hidesBackButton)
                 }
@@ -624,22 +520,24 @@ final class PartnerAuthViewController: UIViewController {
         delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
     }
 
-    private func showEstablishingConnectionLoadingView(_ show: Bool) {
-        showView(loadingView: establishingConnectionLoadingView, show: show)
-    }
+    private func showLoadingView(_ show: Bool) {
+        loadingView?.removeFromSuperview()
+        loadingView = nil
 
-    private func showRetrievingAccountsView(_ show: Bool) {
-        showView(loadingView: retrievingAccountsView, show: show)
-    }
-
-    private func showView(loadingView: UIView, show: Bool) {
-        if loadingView.superview == nil {
-            view.addAndPinSubviewToSafeArea(loadingView)
+        // there's a chance we don't have the data yet to display a
+        // prepane-based loading view, so we have extra handling
+        // to handle both states
+        if prepaneViews != nil || continueStateViews != nil {
+            prepaneViews?.showLoadingView(show)
+            continueStateViews?.showLoadingView(show)
+        } else {
+            if show {
+                let loadingView = SpinnerView()
+                self.loadingView = loadingView
+                view.addAndPinSubviewToSafeArea(loadingView)
+            }
         }
-        view.bringSubviewToFront(loadingView)  // bring to front in-case something else is covering it
-
         navigationItem.hidesBackButton = show
-        loadingView.isHidden = !show
     }
 
     private func didSelectURLInTextFromBackend(_ url: URL) {
@@ -649,25 +547,14 @@ final class PartnerAuthViewController: UIViewController {
             analyticsClient: dataSource.analyticsClient,
             handleStripeScheme: { urlHost in
                 if urlHost == "data-access-notice" {
-                    if let dataAccessNoticeModel = dataSource.pendingAuthSession?.display?.text?.oauthPrepane?
-                        .dataAccessNotice
-                    {
-                        let consentBottomSheetModel = ConsentBottomSheetModel(
-                            title: dataAccessNoticeModel.title,
-                            subtitle: dataAccessNoticeModel.subtitle,
-                            body: ConsentBottomSheetModel.Body(
-                                bullets: dataAccessNoticeModel.body.bullets
-                            ),
-                            extraNotice: dataAccessNoticeModel.connectedAccountNotice,
-                            learnMore: dataAccessNoticeModel.learnMore,
-                            cta: dataAccessNoticeModel.cta
-                        )
-                        ConsentBottomSheetViewController.present(
-                            withModel: consentBottomSheetModel,
+                    if let dataAccessNoticeModel = dataSource.pendingAuthSession?.display?.text?.oauthPrepane?.dataAccessNotice {
+                        let dataAccessNoticeViewController = DataAccessNoticeViewController(
+                            dataAccessNotice: dataAccessNoticeModel,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }
                         )
+                        dataAccessNoticeViewController.present(on: self)
                     }
                 }
             }
@@ -686,12 +573,12 @@ final class PartnerAuthViewController: UIViewController {
             return
         }
 
-        showEstablishingConnectionLoadingView(true)
+        showLoadingView(true)
         dataSource
             .retrieveAuthSession(authSession)
             .observe { [weak self] result in
                 guard let self = self else { return }
-                self.showEstablishingConnectionLoadingView(false)
+                self.showLoadingView(false)
 
                 self.dataSource
                     .analyticsClient
@@ -780,7 +667,7 @@ extension PartnerAuthViewController: STPURLCallbackListener {
             handleAuthSessionCompletionWithStatus(status, authSession)
         } else {
             logUrlReceived(url, status: nil, authSessionId: authSession.id)
-            handleAuthSessionCompletionWithNoStatus(authSession, nil)
+            handleAuthSessionCancel(authSession, nil)
         }
     }
 
@@ -848,11 +735,19 @@ private extension PartnerAuthViewController {
         }
     }
 
-    private func clearStateAndUnsubscribeFromNotifications() {
+    private func clearStateAndUnsubscribeFromNotifications(
+        removeContinueStateView: Bool
+    ) {
         unprocessedReturnURL = nil
-        continueStateView?.removeFromSuperview()
-        continueStateView = nil
         unsubscribeFromNotifications()
+
+        if removeContinueStateView {
+            continueStateViews = nil
+            if let authSession = dataSource.pendingAuthSession {
+                // re-create the views
+                createdAuthSession(authSession)
+            }
+        }
     }
 
     private func handleAuthSessionCompletionFromNativeRedirectIfNeeded() {
@@ -872,14 +767,19 @@ private extension PartnerAuthViewController {
                     authSessionId: authSession.id
                 )
             }
+            clearStateAndUnsubscribeFromNotifications(removeContinueStateView: false)
             handleAuthSessionCompletionFromNativeRedirect(url)
-            clearStateAndUnsubscribeFromNotifications()
         } else if let authSession = dataSource.pendingAuthSession {
             self.checkIfAuthSessionWasSuccessful(
                 authSession: authSession,
                 completionHandler: { [weak self] isSuccess in
                     if isSuccess {
-                        self?.clearStateAndUnsubscribeFromNotifications()
+                        self?.clearStateAndUnsubscribeFromNotifications(
+                            // on success, we will move away from
+                            // the screen, so there's no reason
+                            // to remove the continue state now
+                            removeContinueStateView: false
+                        )
                     } else {
                         // the default case is to not do anything
                         // user can press "Continue" to re-start
@@ -899,8 +799,4 @@ extension PartnerAuthViewController: ASWebAuthenticationPresentationContextProvi
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return self.view.window ?? ASPresentationAnchor()
     }
-}
-
-private func isToday(_ comparisonDate: Date) -> Bool {
-    return Calendar.current.startOfDay(for: comparisonDate) == Calendar.current.startOfDay(for: Date())
 }

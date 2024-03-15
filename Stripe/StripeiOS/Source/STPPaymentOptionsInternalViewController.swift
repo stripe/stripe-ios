@@ -26,6 +26,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     init(
         configuration: STPPaymentConfiguration,
         customerContext: STPCustomerContext?,
+        analyticsLogger: STPPaymentContext.AnalyticsLogger,
         apiClient: STPAPIClient,
         theme: STPTheme,
         prefilledInformation: STPUserInformation?,
@@ -33,6 +34,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         paymentOptionTuple tuple: STPPaymentOptionTuple,
         delegate: STPPaymentOptionsInternalViewControllerDelegate?
     ) {
+        self.analyticsLogger = analyticsLogger
         super.init(theme: theme)
         self.configuration = configuration
         // This parameter may be a custom API adapter, and not a CustomerContext.
@@ -63,6 +65,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     }
 
     private var _customFooterView: UIView?
+    internal let analyticsLogger: STPPaymentContext.AnalyticsLogger
     var customFooterView: UIView? {
         get {
             _customFooterView
@@ -139,6 +142,11 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
             "PaymentOptionsViewControllerCancelButtonIdentifier"
         // re-set the custom footer view if it was added before we loaded
         _didSetCustomFooterView()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsLogger.logPaymentOptionsScreenAppeared()
     }
 
     override func viewDidLayoutSubviews() {
@@ -440,6 +448,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
                     theme: theme
                 )
             }
+            paymentCardViewController?.analyticsLogger = analyticsLogger
             paymentCardViewController?.apiClient = apiClient
             paymentCardViewController?.delegate = self
             paymentCardViewController?.prefilledInformation = prefilledInformation
@@ -561,7 +570,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     required init?(
         coder aDecoder: NSCoder
     ) {
-        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
     }
 
     required init(

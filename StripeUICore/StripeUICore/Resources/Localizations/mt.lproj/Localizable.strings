@@ -84,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "In-numru tal-mowbajl";
+
 "Postal code" = "Kodiċi postali";
 
 "Prefecture" = "Prefettura";
@@ -101,6 +103,8 @@
 "Search" = "Fittex";
 
 "Select card brand (optional)" = "Agħżel id-ditta tal-karta (mhux obbligatorja)";
+
+"Sort code" = "Il-kodiċi Sort";
 
 "State" = "Stat";
 

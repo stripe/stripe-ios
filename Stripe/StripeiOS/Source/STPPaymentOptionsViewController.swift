@@ -42,6 +42,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
             configuration: paymentContext.configuration,
             apiAdapter: paymentContext.apiAdapter,
             apiClient: paymentContext.apiClient,
+            analyticsLogger: paymentContext.analyticsLogger,
             loadingPromise: paymentContext.currentValuePromise,
             theme: paymentContext.theme,
             shippingAddress: paymentContext.shippingAddress,
@@ -53,12 +54,14 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         configuration: STPPaymentConfiguration?,
         apiAdapter: STPBackendAPIAdapter,
         apiClient: STPAPIClient?,
+        analyticsLogger: STPPaymentContext.AnalyticsLogger,
         loadingPromise: STPPromise<STPPaymentOptionTuple>?,
         theme: STPTheme?,
         shippingAddress: STPAddress?,
         delegate: STPPaymentOptionsViewControllerDelegate
     ) {
         self.apiAdapter = apiAdapter
+        self.analyticsLogger = analyticsLogger
         super.init(theme: theme)
         commonInit(
             configuration: configuration,
@@ -108,6 +111,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                     payMethodsInternal = STPPaymentOptionsInternalViewController(
                         configuration: configuration1,
                         customerContext: customerContext,
+                        analyticsLogger: strongSelf.analyticsLogger,
                         apiClient: strongSelf.apiClient,
                         theme: strongSelf.theme,
                         prefilledInformation: strongSelf.prefilledInformation,
@@ -133,6 +137,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
                         theme: strongSelf.theme
                     )
                 }
+                addCardViewController?.analyticsLogger = strongSelf.analyticsLogger
                 addCardViewController?.apiClient = strongSelf.apiClient
                 addCardViewController?.delegate = strongSelf
                 addCardViewController?.prefilledInformation = strongSelf.prefilledInformation
@@ -354,6 +359,8 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     var loadingPromise: STPPromise<STPPaymentOptionTuple>?
     private var activityIndicator: STPPaymentActivityIndicatorView?
     internal var internalViewController: UIViewController?
+    // Should be overwritten if this class is used by STPPaymentContext
+    internal var analyticsLogger: STPPaymentContext.AnalyticsLogger = .init(product: STPPaymentOptionsViewController.self)
 
     func retrievePaymentMethods(
         with configuration: STPPaymentConfiguration,

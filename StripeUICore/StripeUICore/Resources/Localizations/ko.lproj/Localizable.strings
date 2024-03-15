@@ -84,6 +84,8 @@
 
 "Phone" = "전화번호";
 
+"Phone number" = "전화번호";
+
 "Postal code" = "우편번호";
 
 "Prefecture" = "도/현";
@@ -101,6 +103,8 @@
 "Search" = "검색";
 
 "Select card brand (optional)" = "카드 브랜드 선택(선택 사항)";
+
+"Sort code" = "코드 정렬";
 
 "State" = "주";
 

@@ -297,6 +297,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
         }
     }
 
+    func testTwintConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "CHF",
+                               paymentMethodType: .stripe(.twint),
+                               merchantCountry: .GB) { form in
+            // Twint has no input fields
+            XCTAssertEqual(form.getAllSubElements().count, 1)
+        }
+    }
+
     func testSavedSEPA() async throws {
         let customer = "cus_OaMPphpKbeixCz"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
         let savedSepaPM = STPPaymentMethod.decodedObject(fromAPIResponse: [
@@ -323,7 +333,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: XCTestCase {
                     configuration: configuration,
                     authenticationContext: self,
                     intent: intent,
-                    paymentOption: .saved(paymentMethod: savedSepaPM),
+                    paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
                     paymentHandler: STPPaymentHandler(apiClient: apiClient)
                 ) { result, _  in
                     e.fulfill()
@@ -436,7 +446,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 }
                 e.fulfill()
             }
-            await fulfillment(of: [e], timeout: 10)
+            await fulfillment(of: [e], timeout: 25)
         }
     }
 

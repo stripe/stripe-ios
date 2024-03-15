@@ -11,9 +11,8 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripePaymentsTestUtils
-
+@testable@_spi(STP) import StripePaymentsUI
 
 final class PaymentSheetLinkAccountTests: XCTestCase {
 
@@ -21,7 +20,7 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
         let sut = makeSUT()
 
         let paymentDetails = makePaymentDetailsStub()
-        let result = sut.makePaymentMethodParams(from: paymentDetails)
+        let result = sut.makePaymentMethodParams(from: paymentDetails, cvc: nil)
 
         XCTAssertEqual(result?.type, .link)
         XCTAssertEqual(result?.link?.paymentDetailsID, "1")
@@ -37,13 +36,13 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
     func testMakePaymentMethodParams_withCVC() {
         let sut = makeSUT()
 
-        let paymentDetails = makePaymentDetailsStub(withCVC: "12345")
-        let result = sut.makePaymentMethodParams(from: paymentDetails)
+        let paymentDetails = makePaymentDetailsStub()
+        let result = sut.makePaymentMethodParams(from: paymentDetails, cvc: "1234")
 
         XCTAssertEqual(
             result?.link?.additionalAPIParameters["card"] as? [String: String],
             [
-                "cvc": "12345"
+                "cvc": "1234"
             ]
         )
     }
@@ -52,21 +51,9 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
 
 extension PaymentSheetLinkAccountTests {
 
-    func makePaymentDetailsStub(withCVC cvc: String? = nil) -> ConsumerPaymentDetails {
-        let card = ConsumerPaymentDetails.Details.Card(
-            expiryYear: 2030,
-            expiryMonth: 1,
-            brand: "visa",
-            last4: "4242",
-            checks: nil
-        )
-
-        card.cvc = cvc
-
+    func makePaymentDetailsStub() -> ConsumerPaymentDetails {
         return ConsumerPaymentDetails(
-            stripeID: "1",
-            details: .card(card: card),
-            isDefault: true
+            stripeID: "1"
         )
     }
 
@@ -75,8 +62,7 @@ extension PaymentSheetLinkAccountTests {
             email: "user@example.com",
             session: LinkStubs.consumerSession(),
             publishableKey: nil,
-            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-            cookieStore: LinkInMemoryCookieStore()
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         )
     }
 

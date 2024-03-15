@@ -21,6 +21,18 @@ protocol PaymentMethodElement: Element {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams?
 }
 
+extension PaymentMethodElement {
+    func clearTextFields() {
+        for element in getAllUnwrappedSubElements() {
+            if let element = element as? TextFieldElement {
+                element.setText("")
+            } else if let element = element as? CVCRecollectionElement {
+                element.clearTextFields()
+            }
+        }
+    }
+}
+
 // MARK: - Default implementations
 extension ContainerElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {

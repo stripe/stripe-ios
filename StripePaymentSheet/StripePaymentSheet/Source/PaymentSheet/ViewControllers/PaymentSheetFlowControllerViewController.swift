@@ -37,6 +37,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             } else if let paymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
                 // If no valid payment option from adding, fallback on any saved payment method
                 return paymentOption
+            } else if isHackyLinkButtonSelected {
+                return .link(option: .wallet)
             } else if isApplePayEnabled {
                 return .applePay
             }
@@ -52,7 +54,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             guard let selectedPaymentOption = selectedPaymentOption else {
                 return .stripe(.unknown)
             }
-            if case let .saved(paymentMethod) = selectedPaymentOption {
+            if case let .saved(paymentMethod, _) = selectedPaymentOption {
                 return .stripe(paymentMethod.type)
             } else if case .applePay = selectedPaymentOption {
                 return .stripe(.card)
@@ -72,7 +74,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     }()
     /// Returns true if Apple Pay is not enabled and Link is enabled and there are no saved payment methods
     private var linkOnlyMode: Bool {
-        return !isApplePayEnabled && isLinkEnabled && !savedPaymentOptionsViewController.hasOptionsExcludingLink
+        return !isApplePayEnabled && isLinkEnabled && !savedPaymentOptionsViewController.hasOptionsExcludingAdd
     }
     // Only show the wallet header when Link is the only available PM
     private var shouldShowWalletHeader: Bool {
@@ -96,6 +98,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     private var isVerificationInProgress: Bool = false
     private let isApplePayEnabled: Bool
     private let isLinkEnabled: Bool
+    private var isHackyLinkButtonSelected: Bool = false
 
     // MARK: - Views
     private let addPaymentMethodViewController: AddPaymentMethodViewController
@@ -111,7 +114,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     }()
     private lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(
-            callToAction: .add(paymentMethodType: selectedPaymentMethodType),
+            callToAction: callToAction,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapAddButton()
@@ -119,6 +122,24 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         )
         return button
     }()
+
+    private var callToAction: ConfirmButton.CallToActionType {
+        if let customCtaLabel = configuration.primaryButtonLabel {
+            switch mode {
+            case .selectingSaved:
+                return .customWithLock(title: customCtaLabel)
+            case .addingNew:
+                return .custom(title: customCtaLabel)
+            }
+        }
+
+        switch mode {
+        case .selectingSaved:
+            return .customWithLock(title: String.Localized.continue)
+        case .addingNew:
+            return .add(paymentMethodType: selectedPaymentMethodType)
+        }
+    }
 
     private lazy var bottomNoticeTextField: UITextView = {
         return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
@@ -136,6 +157,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             options: walletOptions,
             appearance: configuration.appearance,
             applePayButtonType: configuration.applePay?.buttonType ?? .plain,
+            isPaymentIntent: intent.isPaymentIntent,
             delegate: self
         )
         return header
@@ -153,7 +175,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         configuration: PaymentSheet.Configuration,
         previousPaymentOption: PaymentOption? = nil,
         isApplePayEnabled: Bool,
-        isLinkEnabled: Bool
+        isLinkEnabled: Bool,
+        isCVCRecollectionEnabled: Bool
     ) {
         self.intent = intent
         self.isApplePayEnabled = isApplePayEnabled
@@ -196,8 +219,12 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 showLink: isLinkEnabled,
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
-                isTestMode: configuration.apiClient.isTestmode
+                isCVCRecollectionEnabled: isCVCRecollectionEnabled,
+                isTestMode: configuration.apiClient.isTestmode,
+                allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod
             ),
+            paymentSheetConfiguration: configuration,
+            intent: intent,
             appearance: configuration.appearance,
             cbcEligible: intent.cardBrandChoiceEligible
         )
@@ -209,10 +236,6 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         self.savedPaymentOptionsViewController.delegate = self
         self.addPaymentMethodViewController.delegate = self
-    }
-
-    func selectLink() {
-        savedPaymentOptionsViewController.selectLink()
     }
 
     // MARK: - UIViewController Methods
@@ -268,7 +291,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(
             isCustom: true,
             paymentMethod: mode.analyticsValue,
-            linkEnabled: intent.supportsLink(allowV2Features: configuration.allowLinkV2Features),
+            linkEnabled: intent.supportsLink,
             activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
             currency: intent.currency,
             intentConfig: intent.intentConfig,
@@ -283,7 +306,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
             {
                 switch mode {
                 case .selectingSaved:
-                    if self.savedPaymentOptionsViewController.hasRemovablePaymentMethods {
+                    if self.savedPaymentOptionsViewController.canEditPaymentMethods {
                         self.configureEditSavedPaymentMethodsButton()
                         return .close(showAdditionalButton: true)
                     } else {
@@ -383,7 +406,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                     }
                 }
                 confirmButton.update(state: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled,
-                                     callToAction: .customWithLock(title: String.Localized.continue), animated: true)
+                                     callToAction: callToAction, animated: true)
             } else {
                 if !confirmButton.isHidden {
                     UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
@@ -417,7 +440,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 }
             }()
 
-            var callToAction: ConfirmButton.CallToActionType = .add(paymentMethodType: selectedPaymentMethodType)
+            var callToAction: ConfirmButton.CallToActionType = callToAction
             if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
                 callToAction = overrideCallToAction
                 confirmButtonState = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
@@ -449,7 +472,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
 
     @objc
     private func didTapAddButton() {
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetConfirmButtonTapped)
+        STPAnalyticsClient.sharedClient.logPaymentSheetConfirmButtonTapped(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier)
         switch mode {
         case .selectingSaved:
             self.delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: false)
@@ -464,6 +487,8 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     }
 
     func didDismiss(didCancel: Bool) {
+        // When we close the window, unset the hacky Link button. This will reset the PaymentOption to nil, if needed.
+        isHackyLinkButtonSelected = false
         // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen
         delegate?.paymentSheetFlowControllerViewControllerShouldClose(self, didCancel: didCancel)
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
@@ -490,16 +515,23 @@ extension PaymentSheetFlowControllerViewController: BottomSheetContentViewContro
     var requiresFullScreen: Bool {
         return false
     }
+
+    func didFinishAnimatingHeight() {
+        // no-op
+    }
 }
 
 // MARK: - SavedPaymentOptionsViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewControllerDelegate {
+    func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
+        // no-op
+    }
     func didSelectUpdate(viewController: SavedPaymentOptionsViewController,
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
                          updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         guard case .saved(let paymentMethod) = paymentMethodSelection,
-            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key secret")
         }
@@ -540,17 +572,30 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
         guard case .saved(let paymentMethod) = paymentMethodSelection,
-            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+              let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         else {
             return
         }
-        configuration.apiClient.detachPaymentMethod(
-            paymentMethod.stripeId, fromCustomerUsing: ephemeralKey
-        ) { (_) in
-            // no-op
+        if let customerAccessProvider = configuration.customer?.customerAccessProvider,
+           case .customerSession = customerAccessProvider,
+           paymentMethod.type == .card,
+           let customerId = configuration.customer?.id {
+            configuration.apiClient.detachPaymentMethodRemoveDuplicates(
+                paymentMethod.stripeId,
+                customerId: customerId,
+                fromCustomerUsing: ephemeralKey
+            ) { (_) in
+                // no-op
+            }
+        } else {
+            configuration.apiClient.detachPaymentMethod(
+                paymentMethod.stripeId, fromCustomerUsing: ephemeralKey
+            ) { (_) in
+                // no-op
+            }
         }
 
-        if !savedPaymentOptionsViewController.hasRemovablePaymentMethods {
+        if !savedPaymentOptionsViewController.canEditPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
             // calling updateUI() at this point causes an issue with the height of the add card vc
             // if you do a subsequent presentation. Since bottom sheet height stuff is complicated,
@@ -592,11 +637,12 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
     }
 
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard isLinkEnabled else {
+        guard isLinkEnabled && !intent.disableLinkSignup else {
             return false
         }
 
-        return LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
+        let isAccountNotRegisteredOrMissing = LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
+        return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
     }
 
     func updateErrorLabel(for error: Error?) {
@@ -636,9 +682,10 @@ extension PaymentSheetFlowControllerViewController: WalletHeaderViewDelegate {
     }
 
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
-        // Link should be the selected payment option as the Link header button is only available in `linkOnlyMode`
-        mode = .selectingSaved
+        // Link should be the selected payment option, as the Link header button is only available in `linkOnlyMode`
+        mode = .addingNew
         didDismiss(didCancel: false)
+        isHackyLinkButtonSelected = true
         updateUI()
     }
 }

@@ -84,6 +84,8 @@
 
 "Phone" = "Telepono";
 
+"Phone number" = "Numero ng telepono";
+
 "Postal code" = "Postal code";
 
 "Prefecture" = "Prefecture";
@@ -101,6 +103,8 @@
 "Search" = "Maghanap";
 
 "Select card brand (optional)" = "Pumili ng brand ng kard (opsyonal)";
+
+"Sort code" = "Sort code";
 
 "State" = "State";
 

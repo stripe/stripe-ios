@@ -84,6 +84,8 @@
 
 "Phone" = "Telefon";
 
+"Phone number" = "Telefon numarası";
+
 "Postal code" = "Posta kodu";
 
 "Prefecture" = "İdari bölge";
@@ -101,6 +103,8 @@
 "Search" = "Ara";
 
 "Select card brand (optional)" = "Kart markasını seçin (isteğe bağlı)";
+
+"Sort code" = "Şube kodu";
 
 "State" = "Eyalet";
 

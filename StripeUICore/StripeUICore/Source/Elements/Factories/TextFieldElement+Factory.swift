@@ -163,7 +163,7 @@ import UIKit
 
     /// An optional 10 to 11 digit numeric-only string determining the confirmation code at applicable convenience stores. This is typically a phone number, so we label it as such.
     struct KonbiniPhoneNumberConfiguration: TextFieldElementConfiguration {
-        public let label = String.Localized.phone
+        public let label = String.Localized.phoneNumber
         public let disallowedCharacters: CharacterSet = .decimalDigits.inverted
         public let isOptional: Bool = true
         let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)
@@ -195,7 +195,7 @@ import UIKit
     struct PhoneNumberConfiguration: TextFieldElementConfiguration {
         static let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)
         static let invalidError = Error.invalid(localizedDescription: .Localized.invalid_phone_number)
-        public let label: String = .Localized.phone
+        public let label: String = .Localized.phoneNumber
         /// - Note: Country code helps us format the phone number
         public let countryCodeProvider: () -> String
         public let defaultValue: String?

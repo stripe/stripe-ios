@@ -11,6 +11,9 @@ import Foundation
 
 /// The response returned by v1/elements/sessions
 final class STPElementsSession: NSObject {
+    #if DEBUG && targetEnvironment(simulator)
+    public static let countryCodeOverride: String? = nil
+    #endif
     /// Elements Session ID for analytics purposes, looks like "elements_session_1234"
     let sessionID: String
 
@@ -40,6 +43,11 @@ final class STPElementsSession: NSObject {
     /// An ordered list of external payment methods to display
     let externalPaymentMethods: [ExternalPaymentMethod]
 
+    let customer: ElementsCustomer?
+
+    /// A flag that indicates that this instance was created as a best-effort
+    let isBackupInstance: Bool
+
     let allResponseFields: [AnyHashable: Any]
 
     private init(
@@ -53,7 +61,9 @@ final class STPElementsSession: NSObject {
         paymentMethodSpecs: [[AnyHashable: Any]]?,
         cardBrandChoice: STPCardBrandChoice?,
         isApplePayEnabled: Bool,
-        externalPaymentMethods: [ExternalPaymentMethod]
+        externalPaymentMethods: [ExternalPaymentMethod],
+        customer: ElementsCustomer?,
+        isBackupInstance: Bool = false
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -66,6 +76,8 @@ final class STPElementsSession: NSObject {
         self.cardBrandChoice = cardBrandChoice
         self.isApplePayEnabled = isApplePayEnabled
         self.externalPaymentMethods = externalPaymentMethods
+        self.customer = customer
+        self.isBackupInstance = isBackupInstance
         super.init()
     }
 
@@ -97,7 +109,9 @@ final class STPElementsSession: NSObject {
             paymentMethodSpecs: nil,
             cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
             isApplePayEnabled: true,
-            externalPaymentMethods: []
+            externalPaymentMethods: [],
+            customer: nil,
+            isBackupInstance: true
         )
     }
 }
@@ -119,9 +133,26 @@ extension STPElementsSession: STPAPIResponseDecodable {
         let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: response["card_brand_choice"] as? [AnyHashable: Any])
         let applePayPreference = response["apple_pay_preference"] as? String
         let isApplePayEnabled = applePayPreference != "disabled"
+        let customer: ElementsCustomer? = {
+            let customerDataKey = "customer"
+            guard response[customerDataKey] != nil, !(response[customerDataKey] is NSNull) else {
+                return nil
+            }
+            guard let customerJSON = response[customerDataKey] as? [AnyHashable: Any],
+                  let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON) else {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionCustomerDeserializeFailed)
+                return nil
+            }
+            return decoded
+        }()
+
         let externalPaymentMethods: [ExternalPaymentMethod] = {
+            let externalPaymentMethodDataKey = "external_payment_method_data"
+            guard response[externalPaymentMethodDataKey] != nil, !(response[externalPaymentMethodDataKey] is NSNull) else {
+                return []
+            }
             guard
-                let epmsJSON = response["external_payment_method_data"] as? [[AnyHashable: Any]],
+                let epmsJSON = response[externalPaymentMethodDataKey] as? [[AnyHashable: Any]],
                 let epms = ExternalPaymentMethod.decoded(fromAPIResponse: epmsJSON)
             else {
                 // We don't want to fail the entire v1/elements/sessions request if we fail to parse external_payment_methods_data
@@ -145,7 +176,8 @@ extension STPElementsSession: STPAPIResponseDecodable {
             paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
-            externalPaymentMethods: externalPaymentMethods
+            externalPaymentMethods: externalPaymentMethods,
+            customer: customer
         )
     }
 }

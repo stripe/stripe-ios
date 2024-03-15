@@ -71,6 +71,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case new
         case returning
     }
+    enum CustomerKeyType: String, PickerEnum {
+        static var enumName: String { "CustomerKeyType" }
+
+        case legacy
+        case customerSession = "customer_session"
+    }
 
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
@@ -88,6 +94,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case brl
         case thb
         case sek
+        case chf
     }
 
     enum MerchantCountry: String, PickerEnum {
@@ -149,6 +156,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "Default billing address" }
 
         case on
+        case randomEmail
+        case randomEmailNoPhone
+        case customEmail
         case off
     }
 
@@ -159,11 +169,11 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum LinkV2Allowed: String, PickerEnum {
-        static var enumName: String { "Link v2 Allowed" }
+    enum UserOverrideCountry: String, PickerEnum {
+        static var enumName: String { "UserOverrideCountry (debug only)" }
 
-        case on
         case off
+        case GB
     }
 
     enum BillingDetailsAttachDefaults: String, PickerEnum {
@@ -235,9 +245,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum AllowsRemovalOfLastSavedPaymentMethodEnabled: String, PickerEnum {
+        static let enumName: String = "allowsRemovalOfLastSavedPaymentMethod"
+        case on
+        case off
+    }
+
     var uiStyle: UIStyle
     var mode: Mode
-    var customerId: String?
+    var customerKeyType: CustomerKeyType
     var integrationType: IntegrationType
     var customerMode: CustomerMode
     var currency: Currency
@@ -249,14 +265,17 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
     var defaultBillingAddress: DefaultBillingAddress
+    var customEmail: String?
     var linkEnabled: LinkEnabled
-    var linkV2Allowed: LinkV2Allowed
+    var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
+    var paymentMethodConfigurationId: String?
     var checkoutEndpoint: String?
     var autoreload: Autoreload
     var externalPayPalEnabled: ExternalPayPalEnabled
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
+    var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
 
     var attachDefaults: BillingDetailsAttachDefaults
     var collectName: BillingDetailsName
@@ -268,7 +287,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
             mode: .payment,
-            customerId: nil,
+            customerKeyType: .legacy,
             integrationType: .normal,
             customerMode: .guest,
             currency: .usd,
@@ -279,14 +298,17 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayButtonType: .buy,
             allowsDelayedPMs: .off,
             defaultBillingAddress: .off,
+            customEmail: nil,
             linkEnabled: .off,
-            linkV2Allowed: .off,
+            userOverrideCountry: .off,
             customCtaLabel: nil,
+            paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
             externalPayPalEnabled: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
+            allowsRemovalOfLastSavedPaymentMethod: .on,
             attachDefaults: .off,
             collectName: .automatic,
             collectEmail: .automatic,
@@ -295,6 +317,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"
+    static let nsUserDefaultsCustomerIDKey = "PaymentSheetTestPlaygroundCustomerId"
 
     static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
     static var endpointSelectorEndpoint: String {

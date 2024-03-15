@@ -69,7 +69,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             }
             switch paymentMethodType {
             case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount,
-                    .cashApp, .payPal, .revolutPay:
+                    .cashApp, .payPal, .revolutPay, .klarna, .amazonPay:
                 return .makeWithInferredValues()
             default: break
             }

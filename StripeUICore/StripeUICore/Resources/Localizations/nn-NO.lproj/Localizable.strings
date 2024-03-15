@@ -84,6 +84,8 @@
 
 "Phone" = "Telefonnr.";
 
+"Phone number" = "Telefonnummer";
+
 "Postal code" = "Postnummer";
 
 "Prefecture" = "Prefektur";
@@ -101,6 +103,8 @@
 "Search" = "Søk";
 
 "Select card brand (optional)" = "Vel kortmerkje (valfritt)";
+
+"Sort code" = "Sorteringskode";
 
 "State" = "Stat";
 

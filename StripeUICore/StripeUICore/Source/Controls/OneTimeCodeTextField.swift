@@ -12,13 +12,48 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_OneTimeCodeTextField)
 @_spi(STP) public final class OneTimeCodeTextField: UIControl {
-    private struct Constants {
-        static let itemSpacing: CGFloat = 6
-        static let groupSpacing: CGFloat = 20
+
+    public struct Configuration {
+        /// Total number of digits of the one-time code.
+        let numberOfDigits: Int
+
+        /// Spacing between each digit.
+        let itemSpacing: CGFloat
+
+        /// Decides whether to group several digits with extra
+        /// spacing beyond `itemSpacing`.
+        let enableDigitGrouping: Bool
+
+        /// Spacing between digit groups.
+        let groupSpacing: CGFloat = 20
+
+        /// The font of each digit.
+        let font: UIFont
+
+        /// The corner radius of each digit item.
+        let itemCornerRadius: CGFloat
+
+        /// The height of each digit item.
+        let itemHeight: CGFloat
+
+        public init(
+            numberOfDigits: Int = 6,
+            itemSpacing: CGFloat = 6,
+            enableDigitGrouping: Bool = true,
+            font: UIFont = .systemFont(ofSize: 20),
+            itemCornerRadius: CGFloat = 8,
+            itemHeight: CGFloat = 60
+        ) {
+            self.numberOfDigits = numberOfDigits
+            self.itemSpacing = itemSpacing
+            self.enableDigitGrouping = enableDigitGrouping
+            self.font = font
+            self.itemCornerRadius = itemCornerRadius
+            self.itemHeight = itemHeight
+        }
     }
 
-    /// Total number of digits of the one-time code.
-    public let numberOfDigits: Int
+    let configuration: Configuration
 
     /// The one-time code value without formatting.
     public var value: String {
@@ -47,11 +82,21 @@ import UIKit
     private let textStorage: TextStorage
 
     private var shouldGroupDigits: Bool {
-        return numberOfDigits > 4 && numberOfDigits.isMultiple(of: 2)
+        guard configuration.enableDigitGrouping else {
+            return false
+        }
+        return configuration.numberOfDigits > 4 && configuration.numberOfDigits.isMultiple(of: 2)
     }
 
-    private lazy var digitViews: [DigitView] = (0..<numberOfDigits).map { _ in
-        return DigitView(theme: theme)
+    private lazy var digitViews: [DigitView] = (0..<configuration.numberOfDigits).map { _ in
+        return DigitView(
+            configuration: DigitView.Configuration(
+                cornerRadius: configuration.itemCornerRadius,
+                font: configuration.font,
+                itemHeight: configuration.itemHeight
+            ),
+            theme: theme
+        )
     }
 
 #if !canImport(CompositorServices)
@@ -88,9 +133,12 @@ import UIKit
     public lazy var tokenizer: UITextInputTokenizer = UITextInputStringTokenizer(textInput: self)
 
     // MARK: -
-    public init(numberOfDigits: Int = 6, theme: ElementsUITheme = .default) {
-        self.numberOfDigits = numberOfDigits
-        self.textStorage = TextStorage(capacity: numberOfDigits)
+    public init(
+        configuration: Configuration = Configuration(),
+        theme: ElementsUITheme = .default
+    ) {
+        self.configuration = configuration
+        self.textStorage = TextStorage(capacity: configuration.numberOfDigits)
         self.theme = theme
         super.init(frame: .zero)
 
@@ -173,7 +221,7 @@ private extension OneTimeCodeTextField {
 
     func setupUI() {
         let stackView = UIStackView(arrangedSubviews: arrangedDigitViews())
-        stackView.spacing = shouldGroupDigits ? Constants.groupSpacing : Constants.itemSpacing
+        stackView.spacing = shouldGroupDigits ? configuration.groupSpacing : configuration.itemSpacing
         stackView.alignment = .center
         stackView.distribution = .fillEqually
         stackView.semanticContentAttribute = .forceLeftToRight
@@ -187,7 +235,7 @@ private extension OneTimeCodeTextField {
         }
 
         // Split the digit views into two groups.
-        let groupSize = numberOfDigits / 2
+        let groupSize = configuration.numberOfDigits / 2
 
         let groups = stride(from: 0, to: digitViews.count, by: groupSize).map {
             Array(digitViews[$0..<min($0 + groupSize, digitViews.count)])
@@ -195,7 +243,7 @@ private extension OneTimeCodeTextField {
 
         return groups.map {
             let groupView = UIStackView(arrangedSubviews: $0)
-            groupView.spacing = Constants.itemSpacing
+            groupView.spacing = configuration.itemSpacing
             groupView.distribution = .fillEqually
             groupView.semanticContentAttribute = .forceLeftToRight
             return groupView
@@ -383,7 +431,7 @@ extension OneTimeCodeTextField: UIKeyInput {
 extension OneTimeCodeTextField {
 
     private func clampIndex(_ index: Int) -> Int {
-        return max(min(index, numberOfDigits - 1), 0)
+        return max(min(index, configuration.numberOfDigits - 1), 0)
     }
 
 }
@@ -616,17 +664,23 @@ extension OneTimeCodeTextField: UITextInput {
 private extension OneTimeCodeTextField {
 
     final class DigitView: UIView {
-        struct Constants {
-            static let dotSize: CGFloat = 8
-            static let borderWidth: CGFloat = 1
-            static let cornerRadius: CGFloat = 8
-            static let focusRingThickness: CGFloat = 2
-            // Color is hardcoded for now, as it's not semantically supported by ElementsUI
-            // TODO(bmelts): Should this be a theme color with a low alpha component?
-            static let dotColor: UIColor = .dynamic(
-                light: UIColor(red: 0.922, green: 0.933, blue: 0.945, alpha: 1.0),
-                dark: UIColor(red: 0.471, green: 0.471, blue: 0.502, alpha: 0.36)
-            )
+
+        struct Configuration {
+            let borderWidth: CGFloat = 1
+            let cornerRadius: CGFloat
+            let focusRingThickness: CGFloat = 2
+            let font: UIFont
+            let itemHeight: CGFloat
+
+            init(
+                cornerRadius: CGFloat,
+                font: UIFont,
+                itemHeight: CGFloat
+            ) {
+                self.cornerRadius = cornerRadius
+                self.font = font
+                self.itemHeight = itemHeight
+            }
         }
 
         var isActive: Bool = false {
@@ -648,30 +702,22 @@ private extension OneTimeCodeTextField {
             }
         }
 
-        private let font: UIFont = .systemFont(ofSize: 20)
+        private let configuration: Configuration
 
         private let theme: ElementsUITheme
 
         private(set) lazy var borderLayer: CALayer = {
             let borderLayer = CALayer()
-            borderLayer.borderWidth = Constants.borderWidth
-            borderLayer.cornerRadius = Constants.cornerRadius
+            borderLayer.borderWidth = configuration.borderWidth
+            borderLayer.cornerRadius = configuration.cornerRadius
             return borderLayer
         }()
 
         private lazy var focusRing: CALayer = {
             let focusRing = CALayer()
-            focusRing.borderWidth = Constants.focusRingThickness
-            focusRing.cornerRadius = Constants.cornerRadius + (Constants.focusRingThickness / 2)
+            focusRing.borderWidth = configuration.focusRingThickness
+            focusRing.cornerRadius = configuration.cornerRadius + (configuration.focusRingThickness / 2)
             return focusRing
-        }()
-
-        private lazy var dot: CALayer = {
-            let dot = CALayer()
-            dot.frame = CGRect(x: 0, y: 0, width: Constants.dotSize, height: Constants.dotSize)
-            dot.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-            dot.cornerRadius = Constants.dotSize / 2
-            return dot
         }()
 
         private lazy var caret: CALayer = .init()
@@ -681,12 +727,12 @@ private extension OneTimeCodeTextField {
             label.textAlignment = .center
             label.isAccessibilityElement = false
             label.textColor = theme.colors.textFieldText
-            label.font = font
+            label.font = configuration.font
             return label
         }()
 
         var caretRect: CGRect {
-            let caretSize = CGSize(width: 2, height: font.ascender - font.descender)
+            let caretSize = CGSize(width: 2, height: configuration.font.ascender)
 
             return CGRect(
                 x: (bounds.width - caretSize.width) / 2,
@@ -697,15 +743,15 @@ private extension OneTimeCodeTextField {
         }
 
         override var intrinsicContentSize: CGSize {
-            return CGSize(width: UIView.noIntrinsicMetric, height: 60)
+            return CGSize(width: UIView.noIntrinsicMetric, height: configuration.itemHeight)
         }
 
-        init(theme: ElementsUITheme) {
+        init(configuration: Configuration, theme: ElementsUITheme) {
+            self.configuration = configuration
             self.theme = theme
             super.init(frame: .zero)
 
             layer.addSublayer(borderLayer)
-            layer.addSublayer(dot)
             layer.addSublayer(caret)
             layer.addSublayer(focusRing)
 
@@ -724,16 +770,13 @@ private extension OneTimeCodeTextField {
             label.frame = bounds
             borderLayer.frame = bounds
 
-            // Center dot
-            dot.position = CGPoint(x: bounds.midX, y: bounds.midY)
-
             // Update caret
             caret.frame = caretRect
             caret.cornerRadius = caret.frame.width / 2
 
             focusRing.frame = bounds.insetBy(
-                dx: Constants.focusRingThickness / 2 * -1,
-                dy: Constants.focusRingThickness / 2 * -1
+                dx: configuration.focusRingThickness / 2 * -1,
+                dy: configuration.focusRingThickness / 2 * -1
             )
         }
 
@@ -744,10 +787,7 @@ private extension OneTimeCodeTextField {
             focusRing.isHidden = !isActive
 
             let isEmpty = character == nil
-            let shouldShowDot = !isActive && isEmpty
             let shouldShowCaret = isActive && isEmpty
-
-            dot.isHidden = !shouldShowDot
 
             if shouldShowCaret {
                 showCaret()
@@ -761,8 +801,7 @@ private extension OneTimeCodeTextField {
         private func updateColors() {
             borderLayer.backgroundColor = isEnabled ? theme.colors.background.cgColor : theme.colors.disabledBackground.cgColor
             borderLayer.borderColor = theme.colors.border.cgColor
-            dot.backgroundColor = Constants.dotColor.cgColor
-            caret.backgroundColor = tintColor.cgColor
+            caret.backgroundColor = label.textColor.cgColor
             focusRing.borderColor = tintColor.cgColor
         }
 

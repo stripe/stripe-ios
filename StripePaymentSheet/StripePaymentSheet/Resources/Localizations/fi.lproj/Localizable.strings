@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "+ Add" = "+ Lisää";
 
 "Add a card" = "Lisää kortti";
@@ -32,7 +34,11 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Liittymällä Linkiin hyväksyt <terms>ehdot</terms> ja <privacy>tietosuojaselosteen</privacy>.";
 
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Antamalla sähköpostisi hyväksyt Link-tilin luomisen ja tallennat maksutietosi Link-palveluun Link-<terms>ehtojen</terms> ja <privacy>tietosuojaselosteen</privacy> mukaisesti.";
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Antamalla maksutiedot ja vahvistamalla tämän maksun, valtuutat (A) %@ ja Stripen, maksupalvelun tarjoajamme, lähettämään ohjeita pankillesi tilisi veloittamiseksi ja (B) pankkisi veloittamaan tiliäsi annettujen ohjeiden mukaisesti. Oikeuksiesi mukaisesti olet oikeutettu maksun palautukseen pankiltasi heidän kanssaan tekemäsi sopimuksen mukaisesti. Maksun palautus on lunastettava kahdeksan viikon kuluessa tilisi veloituksesta. Oikeutesi kerrotaan lausunnossa, jonka voit hankkia pankiltasi. Hyväksyt vastaanottamaan ilmoituksia tulevista veloituksista kaksi päivää ennen niiden tapahtumista.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Antamalla puhelinnumerosi hyväksyt Link-tilin luomisen ja tallennat maksutietosi Link-palveluun Link-<terms>ehtojen</terms> ja <privacy>tietosuojaselosteen</privacy> mukaisesti.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tallentamalla pankkitilisi yritykselle %@, hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
 
@@ -62,6 +68,8 @@
 
 "FPX Bank" = "FPX-pankki";
 
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ymmärrän, että Stripe kerää suoraveloituksia yrityksen %@ puolesta sekä vahvistan, että olen tilinhaltija ja ainoa henkilö, jota tarvitaan tämän tilin veloitusten varmentamiseen.";
+
 "IBAN" = "IBAN";
 
 "Manage your payment methods" = "Hallitse maksutapojasi";
@@ -76,11 +84,15 @@
 
 "Or pay with a card" = "Tai maksa kortilla";
 
+"Or use" = "Tai käytä";
+
+"Or use a card" = "Tai käytä korttia";
+
 "Pay %@" = "Maksa %@";
 
 "Pay another way" = "Maksa toisella tavalla";
 
-"Pay faster at %@ and thousands of merchants." = "Maksa nopeammin palvelussa %@ ja tuhansilla muilla kauppiailla.";
+"Pay faster at %@ and thousands of businesses." = "Maksa nopeammin kohteessa %@ ja tuhansissa muissa paikoissa.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Maksu <num_installments/> korottomassa <installment_price/> osassa maksutavalla <img/>";
 
@@ -102,9 +114,7 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-"Remove %1$@ ending in %2$@" = "Poista %1$@, joka päättyy numeroihin %2$@";
-
-"Remove Card" = "Poista kortti";
+"Remove card?" = "Poista kortti?";
 
 "Save" = "Tallenna";
 
@@ -114,13 +124,13 @@
 
 "Save for future payments" = "Tallenna tulevia maksuja varten";
 
-"Save my info for secure 1-click checkout" = "Tallenna tietoni turvalliselle yhden napsautuksen maksamiselle";
-
 "Save this account for future %@ payments" = "Tallenna tämä tili tulevia maksuja %@ varten";
 
 "Save this card for future %@ payments" = "Tallenna tämä kortti tulevia maksuja (%@) varten";
 
 "Save your bank account in just a few steps." = "Tallenna pankkitilisi vain muutamassa vaiheessa.";
+
+"Save your info for secure 1-click checkout with Link" = "Tallenna tiedot turvalliselle yhden napsautuksen maksamiselle Link-palvelulla";
 
 "Select your payment method" = "Valitse maksutapa";
 

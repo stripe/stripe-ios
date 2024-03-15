@@ -105,6 +105,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
         configuration.headerTextForSelectionScreen = settings.headerTextForSelectionScreen
+        configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
 
         if settings.defaultBillingAddress == .on {
             configuration.defaultBillingDetails.name = "Jane Doe"
@@ -161,7 +162,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             return "returning"
         case .new:
             return "new"
-        case .id:
+        case .customID:
             return self.settings.customerId ?? ""
         }
     }
@@ -220,7 +221,7 @@ extension CustomerSheetTestPlaygroundController {
                     DispatchQueue.main.async {
                         self.paymentOptionSelection = selection
                         self.settings.customerId = customerId
-                        self.settings.customerMode = .id
+                        self.settings.customerMode = .customID
                         self.currentlyRenderedSettings = self.settings
                         self.serializeSettingsToNSUserDefaults()
                         self.isLoading = false
@@ -228,7 +229,7 @@ extension CustomerSheetTestPlaygroundController {
                 } catch {
                     DispatchQueue.main.async {
                         self.settings.customerId = customerId
-                        self.settings.customerMode = .id
+                        self.settings.customerMode = .customID
                         self.currentlyRenderedSettings = self.settings
                         self.serializeSettingsToNSUserDefaults()
                         self.isLoading = false

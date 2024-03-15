@@ -21,7 +21,7 @@ extension PaymentOption {
         switch self {
         case .applePay:
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
-        case .saved(let paymentMethod):
+        case .saved(let paymentMethod, _):
             return paymentMethod.makeIcon()
         case .new(let confirmParams):
             return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
@@ -40,7 +40,7 @@ extension PaymentOption {
         switch self {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false)
-        case .saved(let paymentMethod):
+        case .saved(let paymentMethod, _):
             return paymentMethod.makeSavedPaymentMethodCellImage()
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
@@ -118,19 +118,6 @@ extension STPPaymentMethodParams {
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
             return PaymentSheet.PaymentMethodType.stripe(type).makeImage(updateHandler: updateHandler)
-        }
-    }
-}
-
-extension ConsumerPaymentDetails {
-    func makeIcon() -> UIImage {
-        switch details {
-        case .card(let card):
-            return STPImageLibrary.cardBrandImage(for: card.stpBrand)
-        case .bankAccount(let bankAccount):
-            return PaymentSheetImageLibrary.bankIcon(for: bankAccount.iconCode)
-        case .unparsable:
-            return UIImage()
         }
     }
 }
@@ -213,6 +200,6 @@ extension String {
 
 extension STPPaymentMethodCard {
     var preferredDisplayBrand: STPCardBrand {
-        return networks?.preferred?.toCardBrand ?? displayBrand?.type?.toCardBrand ?? brand
+        return networks?.preferred?.toCardBrand ?? displayBrand?.toCardBrand ?? brand
     }
 }

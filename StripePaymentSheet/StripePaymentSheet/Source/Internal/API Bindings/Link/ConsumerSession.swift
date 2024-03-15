@@ -15,39 +15,29 @@ import UIKit
 final class ConsumerSession: Decodable {
     let clientSecret: String
     let emailAddress: String
-    let redactedPhoneNumber: String
     let verificationSessions: [VerificationSession]
-    let supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
 
     init(
         clientSecret: String,
         emailAddress: String,
-        redactedPhoneNumber: String,
-        verificationSessions: [VerificationSession],
-        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
+        verificationSessions: [VerificationSession]
     ) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
-        self.redactedPhoneNumber = redactedPhoneNumber
         self.verificationSessions = verificationSessions
-        self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
     }
 
     private enum CodingKeys: String, CodingKey {
         case clientSecret
         case emailAddress
-        case redactedPhoneNumber
         case verificationSessions
-        case supportedPaymentDetailsTypes = "supportPaymentDetailsTypes"
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.clientSecret = try container.decode(String.self, forKey: .clientSecret)
         self.emailAddress = try container.decode(String.self, forKey: .emailAddress)
-        self.redactedPhoneNumber = try container.decode(String.self, forKey: .redactedPhoneNumber)
         self.verificationSessions = try container.decodeIfPresent([ConsumerSession.VerificationSession].self, forKey: .verificationSessions) ?? []
-        self.supportedPaymentDetailsTypes = try container.decodeIfPresent(Set<ConsumerPaymentDetails.DetailsType>.self, forKey: .supportedPaymentDetailsTypes) ?? []
     }
 
 }
@@ -79,10 +69,9 @@ extension ConsumerSession {
     class func lookupSession(
         for email: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
-        apiClient.lookupConsumerSession(for: email, cookieStore: cookieStore, completion: completion)
+        apiClient.lookupConsumerSession(for: email, completion: completion)
     }
 
     class func signUp(
@@ -93,7 +82,6 @@ extension ConsumerSession {
         countryCode: String?,
         consentAction: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         completion: @escaping (Result<SessionWithPublishableKey, Error>) -> Void
     ) {
         apiClient.createConsumer(
@@ -103,7 +91,6 @@ extension ConsumerSession {
             legalName: legalName,
             countryCode: countryCode,
             consentAction: consentAction,
-            cookieStore: cookieStore,
             completion: completion
         )
     }
@@ -118,7 +105,6 @@ extension ConsumerSession {
               let billingDetails = paymentMethodParams.billingDetails,
               let cardParams = paymentMethodParams.card else {
             DispatchQueue.main.async {
-                assertionFailure()
                 completion(.failure(NSError.stp_genericConnectionError()))
             }
             return
@@ -133,44 +119,10 @@ extension ConsumerSession {
             completion: completion)
     }
 
-    func createPaymentDetails(
-        linkedAccountId: String,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        apiClient.createPaymentDetails(
-            for: clientSecret,
-            linkedAccountId: linkedAccountId,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-
-    func createLinkAccountSession(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<LinkAccountSession, Error>) -> Void
-    ) {
-        apiClient.createLinkAccountSession(
-            for: clientSecret,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-
-    func listPaymentDetails(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
-    ) {
-        apiClient.listPaymentDetails(
-            for: clientSecret,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-
     func sharePaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,
+        cvc: String?,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
@@ -178,46 +130,17 @@ extension ConsumerSession {
             for: clientSecret,
             id: id,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-
-    func deletePaymentDetails(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        id: String,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        apiClient.deletePaymentDetails(
-            for: clientSecret,
-            id: id,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
-            completion: completion)
-    }
-
-    func updatePaymentDetails(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
-        id: String,
-        updateParams: UpdatePaymentDetailsParams,
-        consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
-    ) {
-        apiClient.updatePaymentDetails(
-            for: clientSecret, id: id,
-            updateParams: updateParams,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            cvc: cvc,
             completion: completion)
     }
 
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
-        // Logout from server.
         apiClient.logout(
             consumerSessionClientSecret: clientSecret,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }

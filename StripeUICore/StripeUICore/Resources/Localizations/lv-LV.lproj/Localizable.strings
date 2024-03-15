@@ -84,6 +84,8 @@
 
 "Phone" = "Tālrunis";
 
+"Phone number" = "Tālruņa numurs";
+
 "Postal code" = "Pasta indekss";
 
 "Prefecture" = "Prefektūra";
@@ -101,6 +103,8 @@
 "Search" = "Meklēšana";
 
 "Select card brand (optional)" = "Atlasīt kartes zīmolu (pēc izvēles)";
+
+"Sort code" = "Bankas filiāles kods";
 
 "State" = "Novads/štats";
 

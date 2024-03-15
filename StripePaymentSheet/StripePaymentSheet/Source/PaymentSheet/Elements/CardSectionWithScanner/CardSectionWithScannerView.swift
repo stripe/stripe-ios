@@ -60,6 +60,7 @@ final class CardSectionWithScannerView: UIView {
     }
 
     @objc func didTapCardScanButton() {
+        STPAnalyticsClient.sharedClient.logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: "card")
         setCardScanVisible(true)
         cardScanningView.start()
         becomeFirstResponder()
@@ -68,7 +69,7 @@ final class CardSectionWithScannerView: UIView {
     private func setCardScanVisible(_ isCardScanVisible: Bool) {
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.cardScanButton.alpha = isCardScanVisible ? 0 : 1
-            self.cardScanningView.isHidden = !isCardScanVisible
+            self.cardScanningView.setHiddenIfNecessary(!isCardScanVisible)
             self.cardScanningView.alpha = isCardScanVisible ? 1 : 0
         }
     }
