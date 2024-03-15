@@ -140,7 +140,7 @@ extension FinancialConnectionsNavigationController {
         navigationBar.compactAppearance = appearance
 
         // change the back button color
-        navigationBar.tintColor = UIColor.textDisabled
+        navigationBar.tintColor = UIColor.iconDefault
         navigationBar.isTranslucent = false
     }
 
@@ -166,7 +166,7 @@ extension FinancialConnectionsNavigationController {
                         }
                     }()
                 )
-                stripeLogoImageView.tintColor = UIColor.textBrand
+                stripeLogoImageView.tintColor = UIColor.textActionPrimary
                 stripeLogoImageView.contentMode = .scaleAspectFit
                 stripeLogoImageView.sizeToFit()
                 stripeLogoImageView.frame = CGRect(

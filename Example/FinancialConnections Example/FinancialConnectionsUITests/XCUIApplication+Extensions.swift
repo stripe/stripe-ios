@@ -80,6 +80,12 @@ extension XCUIApplication {
         return prepaneContinueButton
     }
 
+    var fc_nativePrepaneCancelButton: XCUIElement {
+        let prepaneCancelButton = buttons["prepane_cancel_button"]
+        XCTAssertTrue(prepaneCancelButton.waitForExistence(timeout: 5), "Failed to press/open Partner Auth Prepane cancel button - \(#function) waiting failed")
+        return prepaneCancelButton
+    }
+
     var fc_nativeAccountPickerLinkAccountsButton: XCUIElement {
         let accountPickerLinkAccountsButton = buttons["account_picker_link_accounts_button"]
         XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "Failed to open Account Picker pane - \(#function) waiting failed")  // wait for accounts to fetch
@@ -90,6 +96,12 @@ extension XCUIApplication {
         let successDoneButton = buttons["success_done_button"]
         XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link
         return successDoneButton
+    }
+
+    var fc_secureWebViewCancelButton: XCUIElement {
+        let secureWebViewCancelButton = otherElements["TopBrowserBar"].buttons["Cancel"]
+        XCTAssertTrue(secureWebViewCancelButton.waitForExistence(timeout: 5.0), "Failed to close secure browser - \(#function) waiting failed")  // wait for accounts to link
+        return secureWebViewCancelButton
     }
 
     func dismissKeyboard() {

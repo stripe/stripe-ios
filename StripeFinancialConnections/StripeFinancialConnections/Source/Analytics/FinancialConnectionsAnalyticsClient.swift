@@ -118,6 +118,7 @@ extension FinancialConnectionsAnalyticsClient {
         eventName: String,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) {
+        FeedbackGeneratorAdapter.errorOccurred()
         FinancialConnectionsEvent
             .events(fromError: error)
             .forEach { event in
@@ -193,8 +194,6 @@ extension FinancialConnectionsAnalyticsClient {
             return .success
         case is ManualEntryViewController:
             return .manualEntry
-        case is ManualEntrySuccessViewController:
-            return .manualEntrySuccess
         case is ResetFlowViewController:
             return .resetFlow
         case is TerminalErrorViewController:
@@ -211,6 +210,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .networkingSaveToLinkVerification
         case is LinkAccountPickerViewController:
             return .linkAccountPicker
+        case is ErrorViewController:
+            return .unexpectedError
         default:
             return .unparsable
         }
