@@ -18,12 +18,6 @@ puts "Proposing version: #{@version}".red
 # Create a new branch for the release, e.g. bg/release-9.0.0
 @branchname = "releases/#{@version}"
 
-def run_download_localized_strings
-  unless @is_dry_run
-    `sh ci_scripts/download_localized_strings_from_lokalise.sh`
-  end
-end
-
 def create_branch
   run_command("git checkout -b #{@branchname}")
 end
