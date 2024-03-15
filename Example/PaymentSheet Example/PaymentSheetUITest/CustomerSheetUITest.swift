@@ -216,7 +216,7 @@ class CustomerSheetUITest: XCTestCase {
         let selectButtonFinal = app.staticTexts["••••4444"]
         XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: 60.0))
     }
-    func testAddPaymentMethod_createAndAttach_reInitAdddViewController() throws {
+    func testAddPaymentMethod_createAndAttach_reInitAddViewController() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePay = .on
@@ -380,7 +380,58 @@ class CustomerSheetUITest: XCTestCase {
         let selectButtonFinal = app.staticTexts["None"]
         XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: 60.0))
     }
+    func testAddTwoPaymentMethods_thenUseCustomerSessionOnePM() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .on
+        loadPlayground(
+            app,
+            settings
+        )
 
+        presentCSAndAddCardFrom(buttonLabel: "None")
+        presentCSAndAddCardFrom(buttonLabel: "••••4242")
+
+        // Reload
+        app.buttons["Reload"].tap()
+
+        // Present Sheet
+        let selectButton = app.staticTexts["••••4242"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        selectButton.tap()
+
+        let editButton = app.staticTexts["Edit"]
+        XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
+
+        // Assert there are two payment methods using legacy customer ephemeral key
+        // value == 2, 1 value on playground + 2 payment method
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 3)
+        app.buttons["Close"].tap()
+        dismissAlertView(alertBody: "Success: ••••4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
+
+        // Switch to use customer session
+        app.buttons["customer_session"].tap()
+
+        // TODO: Use default payment method from elements/sessions payload
+        let selectButton2 = app.staticTexts["None"]
+        XCTAssertTrue(selectButton2.waitForExistence(timeout: 60.0))
+        selectButton2.tap()
+
+        // Wait for sheet to present
+        XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
+
+        // Requires FF: elements_enable_read_allow_redisplay, to return "1", otherwise 0
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
+
+        let closeButton = app.buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
+        closeButton.tap()
+
+        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
+
+        let selectButtonFinal = app.staticTexts["None"]
+        XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: 60.0))
+    }
     func testNoPrevPM_AddPM_noApplePay_closeInsteadOfConfirming() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
