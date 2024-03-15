@@ -10,7 +10,7 @@ import XCTest
 
 extension XCUIElement {
 
-    fileprivate func wait(
+    func wait(
         until expression: @escaping (XCUIElement) -> Bool,
         timeout: TimeInterval
     ) -> Bool {
