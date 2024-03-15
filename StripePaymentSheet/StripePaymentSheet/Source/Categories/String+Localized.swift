@@ -227,11 +227,4 @@ extension String.Localized {
             "Amazon Pay mandate text"
         )
     }
-    
-    static var test_not_in_lokalise: String {
-        STPLocalizedString(
-            "This is not in lokalise translated",
-            "Test string don't translate"
-        )
-    }
 }
