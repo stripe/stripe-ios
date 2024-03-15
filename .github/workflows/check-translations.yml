@@ -50,9 +50,10 @@ jobs:
       - uses: peter-evans/create-or-update-comment@v4
         with:
           body: |
-            Missing Translations
+            ⚠️ Missing Translations
              
-            The following translations are missing:
+            The following translations are missing in Lokalise. While they don't need to be downloaded into the codebase as part of this PR, they do need to exist in Lokalise so that they can be downloaded as part of the release process.
+            
             ${{ steps.missing.outputs.translations }}
             
             By adding the label `ship without translations` to this PR, I acknowledge that there are missing translations.
