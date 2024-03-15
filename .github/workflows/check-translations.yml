@@ -2,6 +2,11 @@ name: Check Missing Translations
 on:
   pull_request:
     types: [opened, labeled, unlabeled, synchronize]
+    paths:
+      - '**/Localizable.strings' # Only run this check if localized string files have changed, exclude non-payments projects.
+      - '!StripeFinancialConnections/**'
+      - '!StripeIdentity/**'
+      - '!StripeConnections/**'
 
 jobs:
   check-translations:
