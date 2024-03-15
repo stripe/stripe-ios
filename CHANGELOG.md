@@ -5,6 +5,9 @@
 ### PaymentSheet
 * [Fixed] A bug where `PaymentSheet.FlowController` was not respecting `PaymentSheet.Configuration.primaryButtonLabel`.
 
+### Financial Connections
+* [Changed] Updated the design of Financial Connections authentication flow.
+
 ## 23.25.0 2024-03-11
 ### CustomerSheet
 * [Added] Added `paymentMethodTypes` in `CustomerAdapter` to control what payment methods are displayed.
