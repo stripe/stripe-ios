@@ -94,9 +94,12 @@ class NativeFlowController {
                 .paneFromViewController(navigationController.topViewController)
         )
 
-        let showConfirmationAlert =
-            !(navigationController.topViewController is ConsentViewController
-                || navigationController.topViewController is SuccessViewController)
+        let showConfirmationAlert = !(
+            navigationController.topViewController is ConsentViewController
+            || navigationController.topViewController is SuccessViewController
+            || navigationController.topViewController is TerminalErrorViewController
+            || ((navigationController.topViewController as? ErrorViewController)?.isTerminal == true)
+        )
 
         let finishClosingAuthFlow = { [weak self] in
             self?.closeAuthFlow()
