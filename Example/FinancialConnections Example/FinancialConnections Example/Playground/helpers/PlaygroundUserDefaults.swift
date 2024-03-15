@@ -29,6 +29,12 @@ final class PlaygroundUserDefaults {
     static var enableAppToApp: Bool
 
     @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_DATA_MODE",
+        defaultValue: false
+    )
+    static var enableDataMode: Bool
+
+    @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_TEST_MODE",
         defaultValue: false
     )

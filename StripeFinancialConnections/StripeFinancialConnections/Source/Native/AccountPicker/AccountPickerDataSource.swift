@@ -24,10 +24,12 @@ protocol AccountPickerDataSource: AnyObject {
     var selectedAccounts: [FinancialConnectionsPartnerAccount] { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var reduceManualEntryProminenceInErrors: Bool { get }
+    var consumerSessionClientSecret: String? { get }
 
     func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts>
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount])
     func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthSessionAccounts>
+    func saveToLink(consumerSessionClientSecret: String) -> Future<Void>
 }
 
 final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
@@ -39,6 +41,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     let institution: FinancialConnectionsInstitution
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let reduceManualEntryProminenceInErrors: Bool
+    let consumerSessionClientSecret: String?
 
     private(set) var selectedAccounts: [FinancialConnectionsPartnerAccount] = [] {
         didSet {
@@ -54,7 +57,8 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         manifest: FinancialConnectionsSessionManifest,
         institution: FinancialConnectionsInstitution,
         analyticsClient: FinancialConnectionsAnalyticsClient,
-        reduceManualEntryProminenceInErrors: Bool
+        reduceManualEntryProminenceInErrors: Bool,
+        consumerSessionClientSecret: String?
     ) {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
@@ -63,6 +67,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         self.institution = institution
         self.analyticsClient = analyticsClient
         self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors
+        self.consumerSessionClientSecret = consumerSessionClientSecret
     }
 
     func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts> {
@@ -83,6 +88,20 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
             authSessionId: authSession.id,
             selectedAccountIds: selectedAccounts.map({ $0.id })
         )
+    }
+
+    func saveToLink(consumerSessionClientSecret: String) -> Future<Void> {
+        return apiClient.saveAccountsToLink(
+            emailAddress: nil,
+            phoneNumber: nil,
+            country: nil,
+            selectedAccountIds: selectedAccounts.map({ $0.id }),
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            clientSecret: clientSecret
+        )
+        .chained { _ in
+            return Promise(value: ())
+        }
     }
 }
 

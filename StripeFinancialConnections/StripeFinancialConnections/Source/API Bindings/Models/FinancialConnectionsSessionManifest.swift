@@ -92,4 +92,8 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let accountholderCustomerEmailAddress: String?
     let accountholderPhoneNumber: String?
     let stepUpAuthenticationRequired: Bool?
+
+    var shouldAttachLinkedPaymentMethod: Bool {
+        return (paymentMethodType != nil)
+    }
 }

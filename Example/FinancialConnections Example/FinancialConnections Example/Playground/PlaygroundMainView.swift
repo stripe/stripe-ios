@@ -56,6 +56,8 @@ struct PlaygroundMainView: View {
                                     .italic()
                             }
 
+                            Toggle("Enable Data Mode", isOn: $viewModel.enableDataMode)
+
                             Toggle("Enable Test Mode", isOn: $viewModel.enableTestMode)
                             // test mode color
                                 .toggleStyle(

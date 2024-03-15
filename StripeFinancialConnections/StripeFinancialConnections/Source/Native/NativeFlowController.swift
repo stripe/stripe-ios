@@ -524,12 +524,16 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
 
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
+        nextPane: FinancialConnectionsSessionManifest.NextPane?
     ) {
         dataManager.linkedAccounts = selectedAccounts
+        
+//        if let nextPane = nextPane {
+//            
+//        }
 
-        let shouldAttachLinkedPaymentAccount = (dataManager.manifest.paymentMethodType != nil)
-        if shouldAttachLinkedPaymentAccount {
+        if dataManager.manifest.shouldAttachLinkedPaymentMethod {
             // this prevents an unnecessary push transition when presenting `attachLinkedPaymentAccount`
             //
             // `attachLinkedPaymentAccount` looks the same as the last step of `accountPicker`
@@ -886,7 +890,8 @@ private func CreatePaneViewController(
                 manifest: dataManager.manifest,
                 institution: institution,
                 analyticsClient: dataManager.analyticsClient,
-                reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors
+                reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors,
+                consumerSessionClientSecret: dataManager.consumerSession?.clientSecret
             )
             let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
             accountPickerViewController.delegate = nativeFlowController
