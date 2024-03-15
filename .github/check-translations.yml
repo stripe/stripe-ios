@@ -41,7 +41,7 @@ jobs:
         id: find_comment
         with:
 #          issue-number: ${{ github.event.pull_request.number }}
-          issue-number: 3241 #hardcode for now https://github.com/peter-evans/find-comment/issues/172
+          issue-number: 3418 #hardcode for now https://github.com/peter-evans/find-comment/issues/172
           body-includes: Missing Translations
       - uses: peter-evans/create-or-update-comment@v4
         with:
@@ -55,7 +55,7 @@ jobs:
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
 #          issue-number: ${{ github.event.pull_request.number }}
-          issue-number: 3241 #hardcode for now https://github.com/peter-evans/find-comment/issues/172
+          issue-number: 3418 #hardcode for now https://github.com/peter-evans/find-comment/issues/172
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Fail if not accepted
         if: "steps.missing.outputs.translations && !contains(github.event.pull_request.labels.*.name, 'ship without translations')"
