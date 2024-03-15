@@ -45,10 +45,11 @@ final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerVi
     init(defaultCountryCode: String?) {
         let locale = Locale.current
         let rowItems = CreateCountryCodeRowItems(locale: locale)
-        let defaultCountryCode = defaultCountryCode ?? locale.stp_regionCode ?? ""
+        let defaultCountryCode = defaultCountryCode ?? locale.stp_regionCode ?? "US"
         self.rowItems = rowItems
-        self.selectedRow = rowItems.firstIndex(
-            where: { $0.countryCode == defaultCountryCode }
+        self.selectedRow = IndexInCountryCodeRowItems(
+            rowItems,
+            forCountryCode: defaultCountryCode
         ) ?? 0
         super.init(frame: .zero)
         clipsToBounds = true
@@ -69,7 +70,7 @@ final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerVi
         // adjusted pickerview to selected row
         if pickerView.selectedRow(inComponent: 0) != selectedRow {
             pickerView.reloadComponent(0)
-            pickerView.selectRow(selectedRow, inComponent: 0, animated: false)
+            selectRow(selectedRow)
         }
     }
 
@@ -83,6 +84,21 @@ final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerVi
         var intrinsicContentSize = super.intrinsicContentSize
         intrinsicContentSize.height = height
         return intrinsicContentSize
+    }
+
+    func selectCountryCode(_ countryCode: String) {
+        guard let row = IndexInCountryCodeRowItems(
+            rowItems,
+            forCountryCode: countryCode
+        ) else {
+            return
+        }
+        selectRow(row)
+        selectedRow = row
+    }
+
+    private func selectRow(_ row: Int) {
+        pickerView.selectRow(row, inComponent: 0, animated: false)
     }
 
     // MARK: - UIPickerViewDataSource
@@ -116,6 +132,15 @@ final class PhoneCountryCodePickerView: UIView, UIPickerViewDelegate, UIPickerVi
     ) {
         selectedRow = row
     }
+}
+
+private func IndexInCountryCodeRowItems(
+    _ countryCodeRowItems: [CountryCodeRowItem],
+    forCountryCode countryCode: String
+) -> Int? {
+    return countryCodeRowItems.firstIndex(
+        where: { $0.countryCode == countryCode }
+    )
 }
 
 private struct CountryCodeRowItem {

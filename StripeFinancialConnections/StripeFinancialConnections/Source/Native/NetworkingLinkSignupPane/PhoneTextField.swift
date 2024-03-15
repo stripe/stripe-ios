@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -102,6 +103,46 @@ final class PhoneTextField: UIView {
     }
 
     private func phoneNumberDidChange() {
+        // if we notice that `text` starts with a prefix
+        // (ex. due to autofill, or copy-paste), then we will extract
+        // the prefix
+        if
+            // we noticed that user started input with a prefix
+            text.hasPrefix("+"),
+            let e164PhoneNumber = PhoneNumber.fromE164(
+                // `fromE164` only accepts a format like "+14005006000"
+                // so remove everything except digits and "+"
+                text.stp_stringByRemovingCharacters(
+                    from: CharacterSet.stp_asciiDigit.union(
+                        CharacterSet(charactersIn: "+")
+                    ).inverted
+                )
+            )
+        {
+            // (IMPORTANT!) this will call `phoneNumberDidChange` again
+            text = e164PhoneNumber
+                .number
+                // the "+" should already be removed at this point but
+                // we add this extra code as defensive programming
+                //
+                // it ensures that we will not enter a infinite
+                // loop because to enter this code the text needs
+                // to start with a "+" (`text.hasPrefix("+")`)
+                .stp_stringByRemovingCharacters(
+                    from: CharacterSet(charactersIn: "+")
+                )
+
+            // (IMPORTANT!) this will call `phoneNumberDidChange` again
+            //
+            // its important that it comes after setting `text`
+            // because otherwise there will be an infinite loop
+            countryCodeSelectorView.selectCountryCode(e164PhoneNumber.countryCode)
+
+            // Setting `text` will cause this function to be
+            // called again so its safe to return
+            return
+        }
+
         // format the text (ex. "401500" -> "(401) 500")
         textField.text = phoneNumber?.string(as: .national) ?? text
 

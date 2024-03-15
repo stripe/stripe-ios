@@ -106,6 +106,11 @@ final class PhoneCountryCodeSelectorView: UIView {
         return invisbleTextField.endEditing(force)
     }
 
+    func selectCountryCode(_ countryCode: String) {
+        // this will fire `PhoneCountryCodePickerViewDelegate`
+        pickerView.selectCountryCode(countryCode)
+    }
+
     private func updateLabelsBasedOffSelectedCountryCode() {
         flagLabel.setText(String.countryFlagEmoji(for: selectedCountryCode) ?? "🇺🇸")
         countryCodeLabel.setText(PhoneNumber.Metadata.metadata(for: selectedCountryCode)?.prefix ?? "")
