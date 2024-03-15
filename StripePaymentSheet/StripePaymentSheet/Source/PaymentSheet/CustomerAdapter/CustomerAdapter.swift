@@ -115,8 +115,6 @@ public struct CustomerSessionClientSecret {
     }
 }
 
-
-
 extension StripeCustomerAdapter {
     internal enum CustomerAccessProvider {
         case legacyCustomerEphemeralKey(CustomerEphemeralKey)
@@ -128,6 +126,7 @@ extension StripeCustomerAdapter {
         case customerSession(CustomerSessionClientSecret, STPElementsSession)
     }
 }
+
 extension StripeCustomerAdapter {
     struct ClaimedCustomerSession {
         public let id: String
@@ -312,9 +311,8 @@ open class StripeCustomerAdapter: CustomerAdapter {
         let config = try customerEphemeralKey.customerAdapterConfiguration()
         return try await withCheckedThrowingContinuation({ continuation in
             if config.shouldRemoveDuplicates {
-                apiClient.detachPaymentMethodRemoveDuplicates(paymentMethodId,
-                                              customerId: config.customerId,
-                                              fromCustomerUsing: config.ephemeralKey) { error in
+                // TODO: Call detachPaymentMethodRemoveDuplicates after removing unsynced payment methods
+                apiClient.detachPaymentMethod(paymentMethodId, fromCustomerUsing: config.ephemeralKey) { error in
                     if let error = error {
                         continuation.resume(throwing: error)
                         return
