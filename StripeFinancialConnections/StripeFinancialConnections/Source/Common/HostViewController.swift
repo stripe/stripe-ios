@@ -38,7 +38,8 @@ final class HostViewController: UIViewController {
             target: self,
             action: #selector(didTapClose)
         )
-        item.tintColor = .textDisabled
+        item.tintColor = .iconDefault
+        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         return item
     }()
 
@@ -97,7 +98,7 @@ final class HostViewController: UIViewController {
 extension HostViewController {
     private func getManifest() {
         loadingView.errorView.isHidden = true
-        loadingView.activityIndicatorView.stp_startAnimatingAndShow()
+        loadingView.showLoading(true)
         apiClient
             .synchronize(
                 clientSecret: clientSecret,
@@ -116,7 +117,7 @@ extension HostViewController {
                             self.delegate?.hostViewController(self, didReceiveEvent: event)
                         }
 
-                    self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
+                    self.loadingView.showLoading(false)
                     self.loadingView.errorView.isHidden = false
                     self.lastError = error
                 }

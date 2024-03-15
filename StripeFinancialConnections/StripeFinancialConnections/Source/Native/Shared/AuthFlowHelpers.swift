@@ -85,4 +85,8 @@ final class AuthFlowHelpers {
             return nil
         }
     }
+
+    static func formatRedactedPhoneNumber(_ redactedPhoneNumber: String) -> String {
+        return redactedPhoneNumber.replacingOccurrences(of: "*", with: "•")
+    }
 }
