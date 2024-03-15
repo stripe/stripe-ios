@@ -21,9 +21,35 @@ import Foundation
     var threeDSCustomizationSettings: STPThreeDSCustomizationSettings { get }
     var returnURLString: String? { get }
     var intentStripeID: String? { get }
+    var paymentMethodType: STPPaymentMethodType? { get }
     /// Returns the payment or setup intent's next action
     func nextAction() -> STPIntentAction?
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?)
+    func refreshIntent(completion: @escaping () -> Void)
+    func pingMarlin(completion: @escaping () -> Void)
+}
+
+extension STPPaymentHandlerActionParams {
+    // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
+    @_spi(STP) public func pingMarlin(completion: @escaping () -> Void) {
+        if  paymentMethodType == .alipay,
+            let alipayHandleRedirect = nextAction()?.alipayHandleRedirect,
+            let alipayReturnURL = alipayHandleRedirect.marlinReturnURL
+        {
+
+            // Make a request to the return URL
+            let request: URLRequest = URLRequest(url: alipayReturnURL)
+            let task: URLSessionDataTask = URLSession.shared.dataTask(
+                with: request,
+                completionHandler: { _, _, _ in
+                    completion()
+                }
+            )
+            task.resume()
+        } else {
+            completion()
+        }
+    }
 }
 
 @_spi(STP)
@@ -42,6 +68,10 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
 
     @_spi(STP) public var intentStripeID: String? {
         return paymentIntent?.stripeId
+    }
+
+    @_spi(STP) public var paymentMethodType: STPPaymentMethodType? {
+        return paymentIntent?.paymentMethod?.type
     }
 
     private var _threeDS2Service: STDSThreeDS2Service?
@@ -102,6 +132,26 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         paymentIntentCompletion(status, paymentIntent, error)
     }
+
+    @_spi(STP) public func refreshIntent(completion: @escaping () -> Void) {
+        switch paymentIntent?.paymentMethod?.type {
+        case .alipay:
+            pingMarlin(completion: {
+                completion()
+            })
+        case .cashApp:
+            guard let clientSecret = paymentIntent?.clientSecret else {
+                completion()
+                return
+            }
+            apiClient.refreshPaymentIntent(withClientSecret: clientSecret) { [weak self] pi, _ in
+                self?.paymentIntent = pi
+                completion()
+            }
+        default:
+            completion()
+        }
+    }
 }
 
 internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHandlerActionParams {
@@ -117,6 +167,10 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
 
     var intentStripeID: String? {
         return setupIntent?.stripeID
+    }
+
+    var paymentMethodType: STPPaymentMethodType? {
+        return setupIntent?.paymentMethod?.type
     }
 
     private var _threeDS2Service: STDSThreeDS2Service?
@@ -176,5 +230,25 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
 
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         setupIntentCompletion(status, setupIntent, error)
+    }
+
+    @_spi(STP) public func refreshIntent(completion: @escaping () -> Void) {
+        switch setupIntent?.paymentMethod?.type {
+        case .alipay:
+            pingMarlin(completion: {
+                completion()
+            })
+        case .cashApp:
+            guard let clientSecret = setupIntent?.clientSecret else {
+                completion()
+                return
+            }
+            apiClient.refreshSetupIntent(withClientSecret: clientSecret) { [weak self] si, _ in
+                self?.setupIntent = si
+                completion()
+            }
+        default:
+            completion()
+        }
     }
 }
