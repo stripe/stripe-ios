@@ -23,7 +23,7 @@ jobs:
         run: gem install net-http net-uri json
       - name: Run translation check script
         env:
-          LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
+          LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY_READONLY }}
         run: ruby ci_scripts/check_for_untranslated_strings.rb
       - name: Read missing translations
         id: missing
