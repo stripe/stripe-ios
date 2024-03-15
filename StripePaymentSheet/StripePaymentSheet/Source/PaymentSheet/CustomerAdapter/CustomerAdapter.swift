@@ -127,13 +127,6 @@ extension StripeCustomerAdapter {
     }
 }
 
-extension StripeCustomerAdapter {
-    struct ClaimedCustomerSession {
-        public let id: String
-        public let ephemeralKeySecret: String
-    }
-}
-
 /// A `StripeCustomerAdapter` retrieves and updates a Stripe customer and their attached
 /// payment methods using an ephemeral key, a short-lived API key scoped to a specific
 /// customer object. If your current user logs out of your app and a new user logs in,
@@ -176,7 +169,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
         self.paymentMethodTypes = paymentMethodTypes
     }
 
-    func customerInformationAccessor() async throws -> CustomerAccessProvider {
+    func customerAccessProvider() async throws -> CustomerAccessProvider {
         if let customerSessionClientSecretProvider {
             let response = try await customerSessionClientSecretProvider()
             return .customerSession(response)
@@ -216,8 +209,8 @@ open class StripeCustomerAdapter: CustomerAdapter {
                 cachedKey.cacheDate + CachedCustomerMaxAge > Date() {
                 return cachedKey
             }
-            let newAccessor = try await self.customerInformationAccessor()
-            switch newAccessor {
+
+            switch try await self.customerAccessProvider() {
             case .customerSession(let customerSessionClientSecret):
                 let elementsSessionResponse = try await self.apiClient.retrieveElementsSessionForCustomerSheet(paymentMethodTypes: nil,
                                                                                                                customerSessionClientSecret: customerSessionClientSecret)

@@ -135,12 +135,14 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         case .setupIntent:
             if let customerSessionClientSecret {
                 customerAdapter = StripeCustomerAdapter(customerSessionClientSecretProvider: {
+                    // This should be a block that fetches this from your server
                     return .init(customerId: customerId, clientSecret: customerSessionClientSecret)
                 }, setupIntentClientSecretProvider: {
                     return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
                 })
             } else {
                 customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+                    // This should be a block that fetches this from your server
                     return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey!)
                 }, setupIntentClientSecretProvider: {
                     return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
@@ -148,6 +150,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             }
         case .createAndAttach:
             customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+                // This should be a block that fetches this from your server
                 return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey!)
             }, setupIntentClientSecretProvider: nil)
         }
@@ -217,6 +220,7 @@ extension CustomerSheetTestPlaygroundController {
                 DispatchQueue.main.async {
                     self.isLoading = false
                     self.currentlyRenderedSettings = self.settings
+                    print("Error: Backend did not return a customerSessionClientSecret or customerEphemeralKeySecret")
                 }
                 return
             }
