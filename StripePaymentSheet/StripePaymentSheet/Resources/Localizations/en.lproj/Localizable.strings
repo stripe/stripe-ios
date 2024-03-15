@@ -243,9 +243,6 @@ is not supported by the merchant */
 /* Test string don't translate */
 "This is not in lokalise translated" = "This is not in lokalise translated";
 
-/* Test string don't translate2 */
-"This is not in lokalise translated2" = "This is not in lokalise translated2";
-
 /* Title for a button that when tapped, presents a screen for updating a card. Also
 the heading the screen itself. */
 "Update card" = "Update card";
