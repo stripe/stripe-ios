@@ -234,4 +234,11 @@ extension String.Localized {
             "Test string don't translate"
         )
     }
+    
+    static var test_not_in_lokalise2: String {
+        STPLocalizedString(
+            "This is not in lokalise translated2",
+            "Test string don't translate2"
+        )
+    }
 }
