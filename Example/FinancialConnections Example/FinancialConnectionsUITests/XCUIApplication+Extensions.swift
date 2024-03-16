@@ -80,8 +80,11 @@ extension XCUIApplication {
         // sometimes the prepane cancel button could be
         // in a loading state
         XCTAssertTrue(prepaneContinueButton.wait(
-            until: { $0.isHittable == true },
-            timeout: 10
+            until: {
+                $0.isHittable == true
+                && $0.isEnabled == true
+            },
+            timeout: 60
         ), "Prepane continue button failed to be hittable")
         return prepaneContinueButton
     }
@@ -92,8 +95,11 @@ extension XCUIApplication {
         // sometimes the prepane cancel button could be
         // in a loading state
         XCTAssertTrue(prepaneCancelButton.wait(
-            until: { $0.isHittable == true },
-            timeout: 10
+            until: {
+                $0.isHittable == true
+                && $0.isEnabled == true
+            },
+            timeout: 60
         ), "Prepane cancel button failed to be hittable")
         return prepaneCancelButton
     }
