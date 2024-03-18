@@ -45,8 +45,6 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
         enableTestModeSwitch.turnSwitch(on: true)
 
-        app.swipeUp() // scroll to see email field
-
         let playgroundEmailTextField = app.textFields["playground-email"]
         XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))
         playgroundEmailTextField.tap()
@@ -117,8 +115,6 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         let enableTestModeSwitch = app.fc_playgroundEnableTestModeSwitch
         enableTestModeSwitch.turnSwitch(on: true)
-
-        app.swipeUp() // scroll to see email field
 
         let playgroundEmailTextField = app.textFields["playground-email"]
         XCTAssertTrue(playgroundEmailTextField.waitForExistence(timeout: 60.0))

@@ -77,12 +77,30 @@ extension XCUIApplication {
     var fc_nativePrepaneContinueButton: XCUIElement {
         let prepaneContinueButton = fc_nativePrepaneContinueButton_noWait
         XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0), "Failed to open Partner Auth Prepane - \(#function) waiting failed")
+        // sometimes the prepane cancel button could be
+        // in a loading state
+        XCTAssertTrue(prepaneContinueButton.wait(
+            until: {
+                $0.isHittable == true
+                && $0.isEnabled == true
+            },
+            timeout: 60
+        ), "Prepane continue button failed to be hittable")
         return prepaneContinueButton
     }
 
     var fc_nativePrepaneCancelButton: XCUIElement {
         let prepaneCancelButton = buttons["prepane_cancel_button"]
         XCTAssertTrue(prepaneCancelButton.waitForExistence(timeout: 5), "Failed to press/open Partner Auth Prepane cancel button - \(#function) waiting failed")
+        // sometimes the prepane cancel button could be
+        // in a loading state
+        XCTAssertTrue(prepaneCancelButton.wait(
+            until: {
+                $0.isHittable == true
+                && $0.isEnabled == true
+            },
+            timeout: 60
+        ), "Prepane cancel button failed to be hittable")
         return prepaneCancelButton
     }
 
