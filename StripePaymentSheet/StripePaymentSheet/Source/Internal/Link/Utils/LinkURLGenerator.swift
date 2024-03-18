@@ -24,8 +24,8 @@ struct LinkURLParams: Encodable {
         case link_payment_method
         case card_payment_method
     }
-    enum CTAType: String, Encodable {
-        case pay
+    enum IntentMode: String, Encodable {
+        case payment
         case setup
     }
     var path = "mobile_pay"
@@ -41,7 +41,8 @@ struct LinkURLParams: Encodable {
     var flags: [String: Bool]
     var loggerMetadata: [String: String]
     var locale: String
-    var ctaType: CTAType
+    var intentMode: IntentMode
+    var setupFutureUsage: Bool
 }
 
 class LinkURLGenerator {
@@ -80,8 +81,8 @@ class LinkURLGenerator {
 
         let paymentObjectType: LinkURLParams.PaymentObjectMode = intent.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
-        let ctaType: LinkURLParams.CTAType = intent.isPaymentIntent ? .pay : .setup
-        
+        let intentMode: LinkURLParams.IntentMode = intent.isPaymentIntent ? .payment : .setup
+
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
                              paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
@@ -92,7 +93,8 @@ class LinkURLGenerator {
                              flags: intent.linkFlags,
                              loggerMetadata: loggerMetadata,
                              locale: Locale.current.toLanguageTag(),
-                             ctaType: ctaType)
+                             intentMode: intentMode,
+                             setupFutureUsage: intent.isSettingUp)
     }
 
     static func url(params: LinkURLParams) throws -> URL {

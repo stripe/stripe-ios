@@ -62,10 +62,6 @@ class PaymentSheetAPITest: XCTestCase {
         return newCardPaymentOption
     }()
 
-    override class func setUp() {
-        super.setUp()
-    }
-
     // MARK: - load and confirm tests
 
     func testPaymentSheetLoadAndConfirmWithPaymentIntent() {

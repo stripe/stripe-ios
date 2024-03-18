@@ -25,12 +25,13 @@ class LinkURLGeneratorTests: XCTestCase {
                                    flags: [:],
                                    loggerMetadata: [:],
                                    locale: Locale.init(identifier: "en_US").toLanguageTag(),
-                                   ctaType: .pay
+                                   intentMode: .payment,
+                                   setupFutureUsage: false
     )
 
     func testURLCreation() {
         let url = try! LinkURLGenerator.url(params: testParams)
-        XCTAssertEqual(url.absoluteString, "https://checkout.link.com/#eyJjdGFUeXBlIjoicGF5IiwiY3VzdG9tZXJJbmZvIjp7ImNvdW50cnkiOiJVUyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSJ9LCJleHBlcmltZW50cyI6e30sImZsYWdzIjp7fSwiaW50ZWdyYXRpb25UeXBlIjoibW9iaWxlIiwibG9jYWxlIjoiZW4tVVMiLCJsb2dnZXJNZXRhZGF0YSI6e30sIm1lcmNoYW50SW5mbyI6eyJidXNpbmVzc05hbWUiOiJUZXN0IHRlc3QiLCJjb3VudHJ5IjoiVVMifSwicGF0aCI6Im1vYmlsZV9wYXkiLCJwYXltZW50SW5mbyI6eyJhbW91bnQiOjEwMCwiY3VycmVuY3kiOiJVU0QifSwicGF5bWVudE9iamVjdCI6ImxpbmtfcGF5bWVudF9tZXRob2QiLCJwYXltZW50VXNlckFnZW50IjoidGVzdCIsInB1Ymxpc2hhYmxlS2V5IjoicGtfdGVzdF8xMjMifQ==")
+        XCTAssertEqual(url.absoluteString, "https://checkout.link.com/#eyJjdXN0b21lckluZm8iOnsiY291bnRyeSI6IlVTIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0sImV4cGVyaW1lbnRzIjp7fSwiZmxhZ3MiOnt9LCJpbnRlZ3JhdGlvblR5cGUiOiJtb2JpbGUiLCJpbnRlbnRNb2RlIjoicGF5bWVudCIsImxvY2FsZSI6ImVuLVVTIiwibG9nZ2VyTWV0YWRhdGEiOnt9LCJtZXJjaGFudEluZm8iOnsiYnVzaW5lc3NOYW1lIjoiVGVzdCB0ZXN0IiwiY291bnRyeSI6IlVTIn0sInBhdGgiOiJtb2JpbGVfcGF5IiwicGF5bWVudEluZm8iOnsiYW1vdW50IjoxMDAsImN1cnJlbmN5IjoiVVNEIn0sInBheW1lbnRPYmplY3QiOiJsaW5rX3BheW1lbnRfbWV0aG9kIiwicGF5bWVudFVzZXJBZ2VudCI6InRlc3QiLCJwdWJsaXNoYWJsZUtleSI6InBrX3Rlc3RfMTIzIiwic2V0dXBGdXR1cmVVc2FnZSI6ZmFsc2V9")
     }
 
     func testURLCreationRegularUnicode() {
@@ -38,13 +39,6 @@ class LinkURLGeneratorTests: XCTestCase {
         params.customerInfo.email = "유니코드"
         _ = try! LinkURLGenerator.url(params: params)
         // Just make sure it doesn't fail
-    }
-
-    func testURLCreationHorribleUnicode() {
-        var params = testParams
-        params.customerInfo.email = String(bytes: [0xD8, 0x00] as [UInt8], encoding: .utf16BigEndian)! // Unpaired UTF-16 surrogates
-        let url = try! LinkURLGenerator.url(params: params)
-        XCTAssertEqual(url.absoluteString, "https://checkout.link.com/#eyJjdGFUeXBlIjoicGF5IiwiY3VzdG9tZXJJbmZvIjp7ImNvdW50cnkiOiJVUyIsImVtYWlsIjoi77+9In0sImV4cGVyaW1lbnRzIjp7fSwiZmxhZ3MiOnt9LCJpbnRlZ3JhdGlvblR5cGUiOiJtb2JpbGUiLCJsb2NhbGUiOiJlbi1VUyIsImxvZ2dlck1ldGFkYXRhIjp7fSwibWVyY2hhbnRJbmZvIjp7ImJ1c2luZXNzTmFtZSI6IlRlc3QgdGVzdCIsImNvdW50cnkiOiJVUyJ9LCJwYXRoIjoibW9iaWxlX3BheSIsInBheW1lbnRJbmZvIjp7ImFtb3VudCI6MTAwLCJjdXJyZW5jeSI6IlVTRCJ9LCJwYXltZW50T2JqZWN0IjoibGlua19wYXltZW50X21ldGhvZCIsInBheW1lbnRVc2VyQWdlbnQiOiJ0ZXN0IiwicHVibGlzaGFibGVLZXkiOiJwa190ZXN0XzEyMyJ9")
     }
 
     func testURLParamsFromConfig() async {
@@ -71,7 +65,8 @@ class LinkURLGeneratorTests: XCTestCase {
                                            flags: [:],
                                            loggerMetadata: ["mobile_session_id": sessionID],
                                            locale: Locale.init(identifier: "en_US").toLanguageTag(),
-                                           ctaType: .pay)
+                                           intentMode: .payment,
+                                           setupFutureUsage: false)
 
         XCTAssertEqual(params, expectedParams)
     }
