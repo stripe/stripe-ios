@@ -1059,6 +1059,7 @@
 		B035E857851EAF160C88DC2B /* StripeiOS */ = {
 			isa = PBXGroup;
 			children = (
+				31CDFC2D2BA3708000B3DD91 /* PrivacyInfo.xcprivacy */,
 				313F5F782B0BE59000BD98A9 /* Docs.docc */,
 				FBC7A77342A98B1DE8E416B7 /* Resources */,
 				7EA3633D452F7A9C017F4D52 /* Source */,
@@ -1376,7 +1377,6 @@
 			children = (
 				AF41AE099441C2A09DECC1AC /* Localizations */,
 				77E846CD56018D8417A3AB95 /* StripeiOS.xcassets */,
-				31CDFC2D2BA3708000B3DD91 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
