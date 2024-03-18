@@ -5,6 +5,8 @@
 ## 23.25.1 2024-03-18
 ### All
 * Xcode 14 is [no longer supported by Apple](https://developer.apple.com/news/upcoming-requirements/). Please upgrade to Xcode 15 or later.
+
+### PaymentSheet
 * [Fixed] A bug where `PaymentSheet.FlowController` was not respecting `PaymentSheet.Configuration.primaryButtonLabel`.
 
 ### Financial Connections
