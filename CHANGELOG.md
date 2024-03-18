@@ -1,6 +1,6 @@
-## 23.25.1 2024-03-18
+## X.X.X
 ### All
-* Added a [Privacy manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files).
+* Added a [Privacy Manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files).
 
 ## 23.25.1 2024-03-18
 ### All
