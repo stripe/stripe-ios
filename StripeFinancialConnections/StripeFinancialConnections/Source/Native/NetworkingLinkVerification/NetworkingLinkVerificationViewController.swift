@@ -27,18 +27,8 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     private let dataSource: NetworkingLinkVerificationDataSource
     weak var delegate: NetworkingLinkVerificationViewControllerDelegate?
 
-    private lazy var loadingView: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.color = .textDisabled
-        activityIndicator.backgroundColor = .customBackgroundColor
-        return activityIndicator
-    }()
-    private lazy var bodyView: NetworkingLinkVerificationBodyView = {
-        let bodyView = NetworkingLinkVerificationBodyView(
-            email: dataSource.accountholderCustomerEmailAddress,
-            otpView: otpView
-        )
-        return bodyView
+    private lazy var loadingView: UIView = {
+        return SpinnerView()
     }()
     private lazy var otpView: NetworkingOTPView = {
         let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
@@ -62,33 +52,31 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     }
 
     private func showContent(redactedPhoneNumber: String) {
-        let pane = PaneWithHeaderLayoutView(
-            title: STPLocalizedString(
-                "Sign in to Link",
-                "The title of a screen where users are informed that they can sign-in-to Link."
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: nil,
+                title: STPLocalizedString(
+                    "Confirm it's you",
+                    "The title of a screen where users are informed that they can sign-in-to Link."
+                ),
+                subtitle: String(format: STPLocalizedString(
+                    "Enter the code sent to %@.",
+                    "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
+                ), AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
+                contentView: otpView
             ),
-            subtitle: String(format: STPLocalizedString(
-                "Enter the code sent to %@.",
-                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
-            ), redactedPhoneNumber),
-            contentView: bodyView,
             footerView: nil
         )
-        pane.addTo(view: view)
+        paneLayoutView.addTo(view: view)
     }
 
     private func showLoadingView(_ show: Bool) {
         if show && loadingView.superview == nil {
             // first-time we are showing this, so add the view to hierarchy
-            view.addAndPinSubview(loadingView)
+            view.addAndPinSubviewToSafeArea(loadingView)
         }
 
         loadingView.isHidden = !show
-        if show {
-            loadingView.startAnimating()
-        } else {
-            loadingView.stopAnimating()
-        }
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
 
@@ -149,7 +137,7 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
 
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
         showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
-        showContent(redactedPhoneNumber: consumerSession.redactedPhoneNumber)
+        showContent(redactedPhoneNumber: consumerSession.redactedFormattedPhoneNumber)
     }
 
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {
@@ -170,52 +158,32 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
         delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
     }
 
+    func networkingOTPViewWillConfirmVerification(_ view: NetworkingOTPView) {
+        // no-op
+    }
+
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
+        view.showLoadingView(true)
         dataSource.markLinkVerified()
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let manifest):
-                    self.dataSource.fetchNetworkedAccounts()
-                        .observe { [weak self] result in
-                            guard let self = self else { return }
-                            switch result {
-                            case .success(let networkedAccountsResponse):
-                                let networkedAccounts = networkedAccountsResponse.data
-                                if networkedAccounts.isEmpty {
-                                    self.dataSource.analyticsClient.log(
-                                        eventName: "networking.verification.success_no_accounts",
-                                        pane: .networkingLinkVerification
-                                    )
-                                    self.requestNextPane(manifest.nextPane)
-                                } else {
-                                    self.dataSource.analyticsClient.log(
-                                        eventName: "networking.verification.success",
-                                        pane: .networkingLinkVerification
-                                    )
-                                    self.requestNextPane(.linkAccountPicker)
-                                }
-                            case .failure(let error):
-                                self.dataSource
-                                    .analyticsClient
-                                    .logUnexpectedError(
-                                        error,
-                                        errorName: "FetchNetworkedAccountsError",
-                                        pane: .networkingLinkVerification
-                                    )
-                                self.dataSource
-                                    .analyticsClient
-                                    .log(
-                                        eventName: "networking.verification.error",
-                                        parameters: [
-                                            "error": "NetworkedAccountsRetrieveMethodError",
-                                        ],
-                                        pane: .networkingLinkVerification
-                                    )
-                                self.requestNextPane(manifest.nextPane)
-                            }
-                        }
+                case .success:
+                    self.dataSource.analyticsClient.log(
+                        eventName: "networking.verification.success",
+                        pane: .networkingLinkVerification
+                    )
+                    self.requestNextPane(.linkAccountPicker)
                 case .failure(let error):
+                    self.dataSource
+                        .analyticsClient
+                        .log(
+                            eventName: "networking.verification.error",
+                            parameters: [
+                                "error": "MarkLinkVerifiedError",
+                            ],
+                            pane: .networkingLinkVerification
+                        )
                     self.dataSource
                         .analyticsClient
                         .logUnexpectedError(
@@ -223,12 +191,36 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                             errorName: "MarkLinkVerifiedError",
                             pane: .networkingLinkVerification
                         )
-                    self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+
+                    let nextPane: FinancialConnectionsSessionManifest.NextPane
+                    if self.dataSource.manifest.initialInstitution != nil {
+                        nextPane = .partnerAuth
+                    } else {
+                        nextPane = .institutionPicker
+                    }
+                    self.requestNextPane(nextPane)
+                }
+
+                // only hide loading view after animation
+                // to next screen has completed
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + 1.0
+                ) { [weak view] in
+                    view?.showLoadingView(false)
                 }
             }
     }
 
-    func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error) {
-        delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+    func networkingOTPView(
+        _ view: NetworkingOTPView,
+        didFailToConfirmVerification error: Error,
+        isTerminal: Bool
+    ) {
+        if isTerminal {
+            delegate?.networkingLinkVerificationViewController(
+                self,
+                didReceiveTerminalError: error
+            )
+        }
     }
 }

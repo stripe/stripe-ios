@@ -191,7 +191,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.4core
+        machine_type_id: g2-m1.8core
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   deploy-example-apps:
@@ -341,7 +341,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.4core
+        machine_type_id: g2-m1.8core
   test-builds-xcode-15:
     steps:
     - xcode-build-for-test@2:
@@ -356,7 +356,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.4core
+        machine_type_id: g2-m1.8core
   test-builds-xcode-15-release:
     steps:
     - script@1:
@@ -368,7 +368,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.4core
+        machine_type_id: g2-m1.8core
   test-builds-vision:
     steps:
     - xcode-build-for-test@2:
@@ -381,7 +381,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.2.x-edge
-        machine_type_id: g2-m1.4core
+        machine_type_id: g2-m1.8core
   install-tests-non-carthage:
     steps:
     - fastlane@3:
@@ -433,11 +433,11 @@ workflows:
         - lane: legacy_tests_15
         title: fastlane legacy_tests_15
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.4
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.5
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.4core
+        machine_type_id: g2-m1.8core
     before_run:
     - prep_all
     after_run:
@@ -459,7 +459,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.4core     
+        machine_type_id: g2-m1.8core     
   lint-tests:
     steps:
     - script@1:
@@ -487,7 +487,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.4core
+        machine_type_id: g2-m1.8core
   notify_ci:
     steps:
     - script@1:
@@ -509,7 +509,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.4core   
+        machine_type_id: g2-m1.8core   
   pod-lint-tests:
     steps:
     - script@1:
@@ -595,7 +595,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.4core
+        machine_type_id: g2-m1.8core
   ui-tests-2:
     steps:
     - xcode-test@4:
@@ -613,7 +613,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1.4core
+        machine_type_id: g2-m1.8core
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
@@ -626,4 +626,4 @@ workflows:
 meta:
   bitrise.io:
     stack: osx-xcode-15.0.x
-    machine_type_id: g2-m1.4core
+    machine_type_id: g2-m1.8core

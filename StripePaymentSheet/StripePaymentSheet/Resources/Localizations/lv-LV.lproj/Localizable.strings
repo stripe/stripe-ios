@@ -24,6 +24,8 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Apstiprinot maksājumu PayPal, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu PayPal konta summas par turpmākajiem maksājumiem.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Turpinot doties uz Amazon Pay, jūs atļaujat %@ iekasēt no jūsu Amazon Pay konta turpmākajiem maksājumiem saskaņā ar Klarna noteikumiem.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Turpinot doties uz Paypal, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu Paypal konta summas par turpmākajiem maksājumiem.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Turpinot doties uz Revolut Pay, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu Revolut Pay konta summas par turpmākajiem maksājumiem.";

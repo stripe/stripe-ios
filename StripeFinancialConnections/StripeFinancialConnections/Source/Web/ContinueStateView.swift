@@ -9,30 +9,28 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-class ContinueStateView: UIView {
+final class ContinueStateViews {
 
-    // MARK: - Properties
-
-    private let didSelectContinue: () -> Void
-
-    // MARK: - UIView
+    let contentView: UIView
+    private var primaryButton: StripeUICore.Button?
+    private var secondaryButton: StripeUICore.Button?
+    let footerView: UIView?
 
     init(
         institutionImageUrl: String?,
-        didSelectContinue: @escaping () -> Void
+        didSelectContinue: @escaping () -> Void,
+        didSelectCancel: (() -> Void)? = nil
     ) {
-        self.didSelectContinue = didSelectContinue
-        super.init(frame: .zero)
-        backgroundColor = .customBackgroundColor
-
-        let paneLayoutView = PaneWithHeaderLayoutView(
-            icon: .view(
-                {
-                    let institutionIconView = InstitutionIconView(size: .large)
+        self.contentView = PaneLayoutView.createContentView(
+            iconView: {
+                if let institutionImageUrl {
+                    let institutionIconView = InstitutionIconView()
                     institutionIconView.setImageUrl(institutionImageUrl)
                     return institutionIconView
-                }()
-            ),
+                } else {
+                    return nil
+                }
+            }(),
             title: STPLocalizedString(
                 "Continue linking your account",
                 "Title for a label of a screen telling users to tap below to continue linking process."
@@ -41,42 +39,31 @@ class ContinueStateView: UIView {
                 "You haven't finished linking your account. Press continue to finish the process.",
                 "Title for a label explaining that the linking process hasn't finished yet."
             ),
-            contentView: {
-                let clearView = UIView()
-                clearView.backgroundColor = .clear
-                return clearView
-            }(),
-            footerView: CreateFooterView(
-                view: self
-            )
+            contentView: nil
         )
-        paneLayoutView.addTo(view: self)
+        let footerViewTuple = PaneLayoutView.createFooterView(
+            primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                title: "Continue", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`,
+                action: didSelectContinue
+            ),
+            secondaryButtonConfiguration: {
+                if let didSelectCancel {
+                    return PaneLayoutView.ButtonConfiguration(
+                        title: "Cancel", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
+                        action: didSelectCancel
+                    )
+                } else {
+                    return nil
+                }
+            }()
+        )
+        self.footerView = footerViewTuple.footerView
+        self.primaryButton = footerViewTuple.primaryButton
+        self.secondaryButton = footerViewTuple.secondaryButton
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    func showLoadingView(_ show: Bool) {
+        primaryButton?.isLoading = show
+        secondaryButton?.isEnabled = !show
     }
-
-    @objc fileprivate func didSelectContinueButton() {
-        didSelectContinue()
-    }
-}
-
-private func CreateFooterView(
-    view: ContinueStateView
-) -> UIView {
-    let continueButton = Button(configuration: .financialConnectionsPrimary)
-    continueButton.title = "Continue"  // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
-    continueButton.addTarget(view, action: #selector(ContinueStateView.didSelectContinueButton), for: .touchUpInside)
-    continueButton.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        continueButton.heightAnchor.constraint(equalToConstant: 56)
-    ])
-
-    let footerStackView = UIStackView()
-    footerStackView.axis = .vertical
-    footerStackView.spacing = 20
-    footerStackView.addArrangedSubview(continueButton)
-
-    return footerStackView
 }
