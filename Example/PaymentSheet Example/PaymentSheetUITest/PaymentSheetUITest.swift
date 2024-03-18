@@ -2818,7 +2818,14 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 //        let addCardButton = app.buttons["+ Add"]
 //        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
 //        addCardButton.tap()
-//        fillLinkAndPay(mode: .fieldConsent)
+//        fillLinkAndPay(mode: .fieldConsent, cardNumber: "5555555555554444")
+//
+//        // reload w/ same customer
+//        reload(app, settings: settings)
+//        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+//        // Ensure both PMs exist
+//        XCTAssertTrue(app.staticTexts["••••4242"].waitForExistence(timeout: 5.0))
+//        XCTAssertTrue(app.staticTexts["••••4444"].waitForExistence(timeout: 5.0))
 //    }
 
     // Tests the #6 flow in PaymentSheet where the merchant enables saved payment methods, buyer has SPMs and returning Link user
@@ -3084,9 +3091,10 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     private func fillLinkAndPay(mode: LinkMode,
                                 uiStyle: PaymentSheetTestPlaygroundSettings.UIStyle = .paymentSheet,
-                                showLinkWalletButton: Bool = true) {
+                                showLinkWalletButton: Bool = true,
+                                cardNumber: String? = nil) {
 
-        try! fillCardData(app)
+        try! fillCardData(app, cardNumber: cardNumber)
 
         if showLinkWalletButton {
             // Confirm Link wallet button is visible
