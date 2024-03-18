@@ -34,63 +34,58 @@ final class SuccessViewController: UIViewController {
         navigationItem.hidesBackButton = true
 
         let showSaveToLinkFailedNotice = (dataSource.saveToLinkWithStripeSucceeded == false)
-        let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
-            icon: .view(SuccessIconView()),
-            title: STPLocalizedString(
-                "Success!",
-                "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
-            ),
-            subtitle: CreateSubtitleText(
-                businessName: dataSource.manifest.businessName,
-                isLinkingOneAccount: (dataSource.linkedAccounts.count == 1),
-                isNetworkingUserFlow: dataSource.manifest.isNetworkingUserFlow,
-                saveToLinkWithStripeSucceeded: dataSource.saveToLinkWithStripeSucceeded
-            ),
-            contentView: SuccessBodyView(
-                institution: dataSource.institution,
-                linkedAccounts: dataSource.linkedAccounts,
-                isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
-                businessName: dataSource.manifest.businessName,
-                permissions: dataSource.manifest.permissions,
-                accountDisconnectionMethod: dataSource.manifest.accountDisconnectionMethod,
-                isEndUserFacing: dataSource.manifest.isEndUserFacing ?? false,
-                isNetworking: dataSource.manifest.isNetworkingUserFlow == true && dataSource.saveToLinkWithStripeSucceeded == true,
-                analyticsClient: dataSource.analyticsClient,
-                didSelectDisconnectYourAccounts: { [weak self] in
-                    guard let self = self else { return }
-                    self.dataSource
-                        .analyticsClient
-                        .log(
-                            eventName: "click.disconnect_link",
-                            pane: .success
-                        )
-                },
-                didSelectMerchantDataAccessLearnMore: { [weak self] in
-                    guard let self = self else { return }
-                    self.dataSource
-                        .analyticsClient
-                        .logMerchantDataAccessLearnMore(pane: .success)
-                }
-            ),
-            footerView: SuccessFooterView(
-                showFailedToLinkNotice: showSaveToLinkFailedNotice,
-                businessName: dataSource.manifest.businessName,
-                didSelectDone: { [weak self] footerView in
-                    guard let self = self else { return }
-                    // we NEVER set isLoading to `false` because
-                    // we will always close the Auth Flow
-                    footerView.setIsLoading(true)
-                    self.dataSource
-                        .analyticsClient
-                        .log(
-                            eventName: "click.done",
-                            pane: .success
-                        )
-                    self.delegate?.successViewControllerDidSelectDone(self)
-                }
+
+        let contentView = UIView()
+        view.addSubview(contentView)
+
+        let bodyView = CreateBodyView(
+            subtitle: dataSource.customSuccessPaneMessage ?? CreateSubtitleText(
+                // manual entry has "0" linked accounts count
+                isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
+                showSaveToLinkFailedNotice: showSaveToLinkFailedNotice
             )
         )
-        paneWithHeaderLayoutView.addTo(view: view)
+        contentView.addSubview(bodyView)
+
+        let footerView = SuccessFooterView(
+            didSelectDone: { [weak self] footerView in
+                guard let self = self else { return }
+                // we NEVER set isLoading to `false` because
+                // we will always close the Auth Flow
+                footerView.setIsLoading(true)
+                self.dataSource
+                    .analyticsClient
+                    .log(
+                        eventName: "click.done",
+                        pane: .success
+                    )
+                self.delegate?.successViewControllerDidSelectDone(self)
+            }
+        )
+        view.addSubview(footerView)
+
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        bodyView.translatesAutoresizingMaskIntoConstraints = false
+        footerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            // constraint `contentView` to the top of `view` and top of `footerView`
+            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
+            contentView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
+            contentView.bottomAnchor.constraint(equalTo: footerView.topAnchor),
+
+            // constraint `footerView` to the bottom of `view` and bottom of `contentView`
+            footerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            footerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            footerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+
+            // constraint `bodyView` to the center of `contentView`
+            bodyView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            bodyView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            // we assume `bodyView` will never be larger than `contentView`
+            // available space - as is in designs today
+            bodyView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+        ])
 
         dataSource
             .analyticsClient
@@ -105,58 +100,135 @@ final class SuccessViewController: UIViewController {
                 )
         }
     }
+
+    private var didFireFeedbackGenerator = false
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !didFireFeedbackGenerator {
+            didFireFeedbackGenerator = true
+            FeedbackGeneratorAdapter.successOccurred()
+        }
+    }
+}
+
+private func CreateBodyView(subtitle: String?) -> UIView {
+    let titleLabel = AttributedLabel(
+        font: .heading(.extraLarge),
+        textColor: .textDefault
+    )
+    titleLabel.setText(
+        STPLocalizedString(
+            "Success",
+            "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
+        )
+    )
+    let labelVerticalStackView = UIStackView(
+        arrangedSubviews: [titleLabel]
+    )
+    labelVerticalStackView.axis = .vertical
+    labelVerticalStackView.spacing = 8
+    labelVerticalStackView.alignment = .center
+
+    if let subtitle = subtitle {
+        let subtitleLabel = AttributedTextView(
+            font: .body(.medium),
+            boldFont: .body(.mediumEmphasized),
+            linkFont: .body(.medium),
+            textColor: .textDefault,
+            alignCenter: true
+        )
+        subtitleLabel.setText(subtitle)
+        labelVerticalStackView.addArrangedSubview(subtitleLabel)
+    }
+
+    let bodyVerticalStackView = UIStackView(
+        arrangedSubviews: [
+            CreateIconView(),
+            labelVerticalStackView,
+        ]
+    )
+    bodyVerticalStackView.axis = .vertical
+    bodyVerticalStackView.spacing = 16
+    bodyVerticalStackView.alignment = .center
+
+    // animate the whole view body to move down-to-up, and appear
+    bodyVerticalStackView.alpha = 0.0
+    bodyVerticalStackView.transform = CGAffineTransform(translationX: 0, y: 37)
+    UIView.animate(
+        withDuration: 0.35,
+        delay: 0.0,
+        options: [.curveEaseOut],
+        animations: {
+            bodyVerticalStackView.alpha = 1.0
+            bodyVerticalStackView.transform = .identity
+        }
+    )
+    return bodyVerticalStackView
+}
+
+private func CreateIconView() -> UIView {
+    let iconContainerView = UIView()
+    iconContainerView.backgroundColor = .iconActionPrimary
+    let iconRadius: CGFloat = 56
+    iconContainerView.layer.cornerRadius = iconRadius/2
+    iconContainerView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        iconContainerView.widthAnchor.constraint(equalToConstant: iconRadius),
+        iconContainerView.heightAnchor.constraint(equalToConstant: iconRadius),
+    ])
+
+    let iconImageView = UIImageView()
+    iconImageView.image = Image.check.makeImage().withTintColor(.white)
+    iconContainerView.addSubview(iconImageView)
+    iconImageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        iconImageView.widthAnchor.constraint(equalToConstant: 20),
+        iconImageView.heightAnchor.constraint(equalToConstant: 20),
+        iconImageView.centerXAnchor.constraint(equalTo: iconContainerView.centerXAnchor),
+        iconImageView.centerYAnchor.constraint(equalTo: iconContainerView.centerYAnchor),
+    ])
+
+    // animate the checkmark icon to bounce/appear
+    iconImageView.alpha = 0
+    iconImageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+    UIView.animate(
+        withDuration: 0.35,
+        delay: 0.35,
+        usingSpringWithDamping: 0.45,
+        initialSpringVelocity: 0.1,
+        animations: {
+            iconImageView.alpha = 1.0
+            iconImageView.transform = .identity
+        }
+    )
+    return iconContainerView
 }
 
 private func CreateSubtitleText(
-    businessName: String?,
     isLinkingOneAccount: Bool,
-    isNetworkingUserFlow: Bool?,
-    saveToLinkWithStripeSucceeded: Bool?
+    showSaveToLinkFailedNotice: Bool
 ) -> String {
-    if isNetworkingUserFlow == true && saveToLinkWithStripeSucceeded == true {
-        if let businessName = businessName {
-            return String(
-                format: STPLocalizedString(
-                    "Your account was successfully connected to %@ through Link.",
-                    "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."
-                ),
-                businessName
-            )
-        } else {
+    if showSaveToLinkFailedNotice {
+        if isLinkingOneAccount {
             return STPLocalizedString(
-                "Your account was successfully connected to Link.",
+                "Your account was connected, but couldn't be saved to Link.",
+                "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments."
+            )
+        } else { // multiple bank accounts
+            return STPLocalizedString(
+                "Your accounts were connected, but couldn't be saved to Link.",
                 "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments."
             )
         }
     } else if isLinkingOneAccount {
-        if let businessName = businessName {
-            return String(
-                format: STPLocalizedString(
-                    "Your account was successfully linked to %@ through Stripe.",
-                    "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."
-                ),
-                businessName
-            )
-        } else {
-            return STPLocalizedString(
-                "Your account was successfully linked to Stripe.",
-                "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
-            )
-        }
+        return STPLocalizedString(
+            "Your account was connected.",
+            "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
+        )
     } else {  // multiple bank accounts
-        if let businessName = businessName {
-            return String(
-                format: STPLocalizedString(
-                    "Your accounts were successfully linked to %@ through Stripe.",
-                    "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."
-                ),
-                businessName
-            )
-        } else {
-            return STPLocalizedString(
-                "Your accounts were successfully linked to Stripe.",
-                "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments."
-            )
-        }
+        return STPLocalizedString(
+            "Your accounts were connected.",
+            "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments."
+        )
     }
 }

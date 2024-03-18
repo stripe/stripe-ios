@@ -10,13 +10,15 @@ import XCTest
 
 class StringExtensionsTests: XCTestCase {
 
+    private let nonBreakingSpace = "\u{00a0}"
+
     func testExtractingLinksFromString() throws {
         XCTAssert("Not Equal Test".extractLinks() != ("Wrong Word", []))
         XCTAssert("No Link".extractLinks() == ("No Link", []))
         XCTAssert(
             "[One Link](https://www.stripe.com/terms)".extractLinks()
                 == (
-                    "One Link",
+                    "One\(nonBreakingSpace)Link",
                     [String.Link(range: NSRange(location: 0, length: 8), urlString: "https://www.stripe.com/terms")]
                 )
         )
@@ -24,7 +26,7 @@ class StringExtensionsTests: XCTestCase {
             "[Complex Link](https://stripe.com/docs/api/financial_connections/ownership/object#financial_connections_ownership_object-id)"
                 .extractLinks()
                 == (
-                    "Complex Link",
+                    "Complex\(nonBreakingSpace)Link",
                     [
                         String.Link(
                             range: NSRange(location: 0, length: 12),
@@ -38,7 +40,7 @@ class StringExtensionsTests: XCTestCase {
             "Word [Link 1](https://www.stripe.com/link1) word [Link 2](https://www.stripe.com/link2) word"
                 .extractLinks()
                 == (
-                    "Word Link 1 word Link 2 word",
+                    "Word Link\(nonBreakingSpace)1 word Link\(nonBreakingSpace)2 word",
                     [
                         String.Link(range: NSRange(location: 5, length: 6), urlString: "https://www.stripe.com/link1"),
                         String.Link(range: NSRange(location: 17, length: 6), urlString: "https://www.stripe.com/link2"),

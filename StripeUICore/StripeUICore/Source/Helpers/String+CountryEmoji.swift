@@ -9,7 +9,7 @@
 @_spi(STP) import StripeCore
 import UIKit
 
-extension String {
+@_spi(STP) public extension String {
     static func countryFlagEmoji(for countryCode: String) -> String? {
         let capitalized = countryCode.uppercased()
         guard Locale.stp_isoRegionCodes.contains(capitalized) else {

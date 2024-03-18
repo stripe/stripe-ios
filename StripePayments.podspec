@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
   s.weak_framework                 = 'SwiftUI'
   s.source_files                   = 'StripePayments/StripePayments/Source/**/*.swift'
-  s.ios.resource_bundle            = { 'StripePayments' => 'StripePayments/StripePayments/Resources/**/*.{lproj}' }
+  s.ios.resource_bundle            = { 'StripePaymentsBundle' => 'StripePayments/StripePayments/Resources/**/*.{lproj}' }
   s.dependency                       'StripeCore', s.version.to_s
   s.subspec 'Stripe3DS2' do |sp|
     sp.source_files = 'Stripe3DS2/Stripe3DS2/**/*.{h,m}'

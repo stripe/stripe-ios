@@ -17,7 +17,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        // Override point for customization after application launch.
+#if targetEnvironment(simulator)
+        if ProcessInfo.processInfo.environment["UITesting"] != nil {
+            // disable animations for UI tests which makes them a lot faster
+            UIView.setAnimationsEnabled(false)
+        }
+#endif
         return true
     }
 
