@@ -69,15 +69,21 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
-    @Published var enableTransactionsPermission: Bool = PlaygroundUserDefaults.enableTransactionsPermission {
+    @Published var enableOwnershipPermission: Bool = PlaygroundUserDefaults.enableOwnershipPermission {
         didSet {
-            PlaygroundUserDefaults.enableTransactionsPermission = enableTransactionsPermission
+            PlaygroundUserDefaults.enableOwnershipPermission = enableOwnershipPermission
         }
     }
 
     @Published var enableBalancesPermission: Bool = PlaygroundUserDefaults.enableBalancesPermission {
         didSet {
             PlaygroundUserDefaults.enableBalancesPermission = enableBalancesPermission
+        }
+    }
+
+    @Published var enableTransactionsPermission: Bool = PlaygroundUserDefaults.enableTransactionsPermission {
+        didSet {
+            PlaygroundUserDefaults.enableTransactionsPermission = enableTransactionsPermission
         }
     }
 
@@ -158,8 +164,9 @@ final class PlaygroundMainViewModel: ObservableObject {
             enableTestMode: enableTestMode,
             flow: flow.rawValue,
             email: email,
-            enableTransactionsPermission: enableTransactionsPermission,
+            enableOwnershipPermission: enableOwnershipPermission,
             enableBalancesPermission: enableBalancesPermission,
+            enableTransactionsPermission: enableTransactionsPermission,
             customScenario: customScenario.rawValue,
             customPublicKey: customPublicKey,
             customSecretKey: customSecretKey
@@ -226,8 +233,9 @@ private func SetupPlayground(
     enableTestMode: Bool,
     flow: String,
     email: String,
-    enableTransactionsPermission: Bool,
+    enableOwnershipPermission: Bool,
     enableBalancesPermission: Bool,
+    enableTransactionsPermission: Bool,
     customScenario: String,
     customPublicKey: String,
     customSecretKey: String,
@@ -248,8 +256,9 @@ private func SetupPlayground(
         requestBody["enable_test_mode"] = enableTestMode
         requestBody["flow"] = flow
         requestBody["email"] = email
-        requestBody["enable_transactions_permission"] = enableTransactionsPermission
+        requestBody["enable_ownership_permission"] = enableOwnershipPermission
         requestBody["enable_balances_permission"] = enableBalancesPermission
+        requestBody["enable_transactions_permission"] = enableTransactionsPermission
         requestBody["custom_scenario"] = customScenario
         requestBody["custom_public_key"] = customPublicKey
         requestBody["custom_secret_key"] = customSecretKey

@@ -14,7 +14,11 @@ protocol NetworkingLinkSignupDataSource: AnyObject {
 
     func synchronize() -> Future<FinancialConnectionsNetworkingLinkSignup>
     func lookup(emailAddress: String) -> Future<LookupConsumerSessionResponse>
-    func saveToLink(emailAddress: String, phoneNumber: String, countryCode: String) -> Future<Void>
+    func saveToLink(
+        emailAddress: String,
+        phoneNumber: String,
+        countryCode: String
+    ) -> Future<FinancialConnectionsSessionManifest>
 }
 
 final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDataSource {
@@ -60,7 +64,11 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         return apiClient.consumerSessionLookup(emailAddress: emailAddress, clientSecret: clientSecret)
     }
 
-    func saveToLink(emailAddress: String, phoneNumber: String, countryCode: String) -> Future<Void> {
+    func saveToLink(
+        emailAddress: String,
+        phoneNumber: String,
+        countryCode: String
+    ) -> Future<FinancialConnectionsSessionManifest> {
         return apiClient.saveAccountsToLink(
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
@@ -69,8 +77,5 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
             consumerSessionClientSecret: nil,
             clientSecret: clientSecret
         )
-        .chained { _ in
-            return Promise(value: ())
-        }
     }
 }

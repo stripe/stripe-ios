@@ -24,6 +24,8 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Når du stadfestar betalinga di med PayPal, gir du %@ tillating til å trekkje framtidige betalingar frå PayPal-kontoen din i samsvar med vilkåra deira.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ved å gå vidare til Amazon Pay gir du %@ tillating til å trekkje framtidige betalingar frå Amazon Pay-kontoen din i samsvar med vilkåra deira.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved å gå vidare til PayPal gir du %@ tillating til å trekkje framtidige betalingar frå PayPal-kontoen din i samsvar med vilkåra deira.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ved å gå vidare til Revolut Pay tillet du at %@ trekk framtidige betalingar frå Revolut Pay-kontoen din i samsvar med vilkåra deira.";

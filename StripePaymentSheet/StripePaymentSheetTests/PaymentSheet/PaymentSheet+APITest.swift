@@ -294,7 +294,7 @@ class PaymentSheetAPITest: XCTestCase {
                     configuration: self.configuration,
                     authenticationContext: self,
                     intent: paymentIntent,
-                    paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa"), confirmParams: nil),
+                    paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa", type: .card), confirmParams: nil),
                     paymentHandler: self.paymentHandler
                 ) { result, _ in
                     switch result {
@@ -500,7 +500,7 @@ class PaymentSheetAPITest: XCTestCase {
     }
 
     func testDeferredConfirm_saved_insufficient_funds_card() {
-        let insufficient_funds_saved_PM = STPPaymentMethod(stripeId: "pm_card_visa_chargeDeclinedInsufficientFunds")
+        let insufficient_funds_saved_PM = STPPaymentMethod(stripeId: "pm_card_visa_chargeDeclinedInsufficientFunds", type: .card)
         _testDeferredConfirm(
             inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM, confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
