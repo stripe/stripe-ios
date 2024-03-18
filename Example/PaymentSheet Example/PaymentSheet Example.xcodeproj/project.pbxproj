@@ -796,6 +796,7 @@
 			baseConfigurationReference = 4609AB90957A6F72852677BF /* PaymentSheet-Example-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
@@ -818,6 +819,7 @@
 			baseConfigurationReference = EFDB8AECB67684ACA122981F /* PaymentSheet-Example-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
