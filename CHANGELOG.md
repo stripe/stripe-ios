@@ -1,5 +1,9 @@
 ## 23.25.1 2024-03-18
 ### All
+* Added a [Privacy manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files).
+
+## 23.25.1 2024-03-18
+### All
 * Xcode 14 is [no longer supported by Apple](https://developer.apple.com/news/upcoming-requirements/). Please upgrade to Xcode 15 or later.
 
 ### PaymentSheet
