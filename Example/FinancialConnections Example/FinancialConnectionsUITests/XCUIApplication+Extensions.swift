@@ -77,7 +77,31 @@ extension XCUIApplication {
     var fc_nativePrepaneContinueButton: XCUIElement {
         let prepaneContinueButton = fc_nativePrepaneContinueButton_noWait
         XCTAssertTrue(prepaneContinueButton.waitForExistence(timeout: 60.0), "Failed to open Partner Auth Prepane - \(#function) waiting failed")
+        // sometimes the prepane cancel button could be
+        // in a loading state
+        XCTAssertTrue(prepaneContinueButton.wait(
+            until: {
+                $0.isHittable == true
+                && $0.isEnabled == true
+            },
+            timeout: 60
+        ), "Prepane continue button failed to be hittable")
         return prepaneContinueButton
+    }
+
+    var fc_nativePrepaneCancelButton: XCUIElement {
+        let prepaneCancelButton = buttons["prepane_cancel_button"]
+        XCTAssertTrue(prepaneCancelButton.waitForExistence(timeout: 5), "Failed to press/open Partner Auth Prepane cancel button - \(#function) waiting failed")
+        // sometimes the prepane cancel button could be
+        // in a loading state
+        XCTAssertTrue(prepaneCancelButton.wait(
+            until: {
+                $0.isHittable == true
+                && $0.isEnabled == true
+            },
+            timeout: 60
+        ), "Prepane cancel button failed to be hittable")
+        return prepaneCancelButton
     }
 
     var fc_nativeAccountPickerLinkAccountsButton: XCUIElement {
@@ -90,6 +114,12 @@ extension XCUIApplication {
         let successDoneButton = buttons["success_done_button"]
         XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link
         return successDoneButton
+    }
+
+    var fc_secureWebViewCancelButton: XCUIElement {
+        let secureWebViewCancelButton = otherElements["TopBrowserBar"].buttons["Cancel"]
+        XCTAssertTrue(secureWebViewCancelButton.waitForExistence(timeout: 5.0), "Failed to close secure browser - \(#function) waiting failed")  // wait for accounts to link
+        return secureWebViewCancelButton
     }
 
     func dismissKeyboard() {

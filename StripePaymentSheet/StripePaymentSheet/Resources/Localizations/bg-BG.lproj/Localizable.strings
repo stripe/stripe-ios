@@ -24,6 +24,8 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Потвърждавайки плащането си в PayPal, разрешавате на %@ да таксува Вашия PayPal акаунт при бъдещи плащания съгласно условията му.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Продължавайки към Amazon Pay, разрешавате на %@ да таксува Вашия акаунт в Amazon Pay за бъдещи плащания съгласно условията му.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Продължавайки към PayPal, разрешавате на %@ да таксува Вашия акаунт в PayPal при бъдещи плащания съгласно условията му.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Продължавайки към Revolut Pay, разрешавате на %@ да таксува Вашия акаунт в Revolut Pay при бъдещи плащания съгласно условията му.";

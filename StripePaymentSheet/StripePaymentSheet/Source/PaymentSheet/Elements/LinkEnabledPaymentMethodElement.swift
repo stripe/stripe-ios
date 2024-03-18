@@ -75,7 +75,7 @@ final class LinkEnabledPaymentMethodElement: ContainerElement {
                     phoneNumber: phoneNumber,
                     consentAction: inlineSignupElement.viewModel.consentAction,
                     legalName: legalName,
-                    paymentMethodParams: params.paymentMethodParams
+                    intentConfirmParams: params
                 )
             )
         case .continueWithoutLink:

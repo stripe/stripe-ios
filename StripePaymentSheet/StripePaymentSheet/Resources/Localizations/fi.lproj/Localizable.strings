@@ -24,6 +24,8 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Vahvistamalla maksusi PayPalin kanssa valtuutat %@ veloittamaan tulevia maksuja PayPal-tililtäsi heidän ehtojensa mukaisesti.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Jatkamalla Amazon Payhin valtuutat %@ veloittamaan tulevia maksuja Amazon Pay -tililtäsi heidän ehtojensa mukaisesti.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Jatkamalla PayPaliin valtuutat %@ veloittamaan tulevia maksuja PayPal-tililtäsi heidän ehtojensa mukaisesti.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Jatkamalla Revolut Payhin valtuutat %@ veloittamaan tulevia maksuja Revolut Pay -tililtäsi heidän ehtojensa mukaisesti.";

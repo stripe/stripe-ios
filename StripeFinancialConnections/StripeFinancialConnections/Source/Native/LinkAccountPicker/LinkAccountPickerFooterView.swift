@@ -16,7 +16,7 @@ final class LinkAccountPickerFooterView: UIView {
     private let didSelectConnectAccount: () -> Void
 
     private lazy var connectAccountButton: Button = {
-        let connectAccountButton = Button(configuration: .financialConnectionsPrimary)
+        let connectAccountButton = Button.primary()
         connectAccountButton.title = defaultCta
         connectAccountButton.isEnabled = false // disable by default
         connectAccountButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
@@ -34,7 +34,7 @@ final class LinkAccountPickerFooterView: UIView {
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         singleAccount: Bool,
         didSelectConnectAccount: @escaping () -> Void,
-        didSelectMerchantDataAccessLearnMore: @escaping () -> Void
+        didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {
         self.defaultCta = defaultCta
         self.singleAccount = singleAccount
@@ -48,8 +48,8 @@ final class LinkAccountPickerFooterView: UIView {
                     businessName: businessName,
                     permissions: permissions,
                     isNetworking: true,
-                    font: .body(.small),
-                    boldFont: .body(.smallEmphasized),
+                    font: .label(.small),
+                    boldFont: .label(.smallEmphasized),
                     alignCenter: true,
                     didSelectLearnMore: didSelectMerchantDataAccessLearnMore
                 ),
@@ -57,7 +57,14 @@ final class LinkAccountPickerFooterView: UIView {
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 24
+        verticalStackView.spacing = 16
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 16,
+            leading: 24,
+            bottom: 16,
+            trailing: 24
+        )
         addAndPinSubview(verticalStackView)
     }
 
@@ -77,5 +84,9 @@ final class LinkAccountPickerFooterView: UIView {
         }
 
         connectAccountButton.isEnabled = selectedAccountTuple != nil
+    }
+
+    func showLoadingView(_ show: Bool) {
+        connectAccountButton.isLoading = show
     }
 }

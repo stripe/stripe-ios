@@ -24,6 +24,8 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrzením platby prostřednictvím služby PayPal povolujete, aby společnost %@ účtovala z vašeho účtu PayPal budoucí platby v souladu s jejich podmínkami.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračováním v Amazon Pay povolujete společnosti %@, aby v souladu se svými podmínkami účtovala na váš účet Revolut Pay budoucí platby.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pokračováním na PayPal povolujete společnosti %@, aby v souladu se svými podmínkami strhávala z vašeho účtu PayPal budoucí platby.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pokračováním v Revolut Pay povolujete společnosti %@, aby v souladu se svými podmínkami účtovala na váš účet Revolut Pay budoucí platby.";
