@@ -223,7 +223,7 @@ extension String.Localized {
 
     static var klarna_mandate_text: String {
         STPLocalizedString(
-            "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms.",
+            "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@.",
             "Klarna mandate text"
         )
     }

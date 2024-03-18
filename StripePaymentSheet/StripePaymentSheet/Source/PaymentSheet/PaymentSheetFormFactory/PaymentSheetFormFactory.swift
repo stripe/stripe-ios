@@ -359,7 +359,9 @@ extension PaymentSheetFormFactory {
     }
 
     func makeKlarnaMandate() -> PaymentMethodElement {
-        let mandateText = String(format: String.Localized.klarna_mandate_text, configuration.merchantDisplayName)
+        let mandateText = String(format: String.Localized.klarna_mandate_text,
+                                 configuration.merchantDisplayName,
+                                 configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
     }
 
