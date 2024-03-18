@@ -205,7 +205,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             return nil
         }
 
-        let paymentMethod = self.init(stripeId: stripeId, 
+        let paymentMethod = self.init(stripeId: stripeId,
                                       type: self.type(from: dict.stp_string(forKey: "type") ?? ""))
         paymentMethod.allResponseFields = response
         paymentMethod.stripeId = stripeId

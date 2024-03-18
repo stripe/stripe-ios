@@ -258,11 +258,30 @@ final class PaymentSheetLoader {
                     continuation.resume(throwing: error)
                     return
                 }
-                // Remove cards that originated from Apple Pay, Google Pay, or Link
+                // Get Link payment methods
+                var dedupedLinkPaymentMethods: [STPPaymentMethod] = []
+                let linkPaymentMethods = paymentMethods.filter { paymentMethod in
+                    let isLinkCard = paymentMethod.type == .card && paymentMethod.card?.wallet?.type == .link
+                    return isLinkCard
+                }
+                for linkPM in linkPaymentMethods {
+                    // Only add the card if it doesn't already exist
+                    if !dedupedLinkPaymentMethods.contains(where: { existingPM in
+                        existingPM.card?.last4 == linkPM.card?.last4 &&
+                        existingPM.card?.expYear == linkPM.card?.expYear &&
+                        existingPM.card?.expMonth == linkPM.card?.expMonth &&
+                        existingPM.card?.brand == linkPM.card?.brand
+                    }) {
+                        dedupedLinkPaymentMethods.append(linkPM)
+                    }
+                }
+                // Remove cards that originated from Apple Pay, Google Pay, Link
                 paymentMethods = paymentMethods.filter { paymentMethod in
-                    let isWalletCard = paymentMethod.type == .card && [.applePay, .googlePay].contains(paymentMethod.card?.wallet?.type)
+                    let isWalletCard = paymentMethod.type == .card && [.applePay, .googlePay, .link].contains(paymentMethod.card?.wallet?.type)
                     return !isWalletCard
                 }
+                // Add in our deduped Link PMs, if any
+                paymentMethods += dedupedLinkPaymentMethods
                 continuation.resume(returning: paymentMethods)
             }
         }

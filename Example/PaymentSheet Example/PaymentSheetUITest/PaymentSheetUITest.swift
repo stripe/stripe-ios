@@ -2688,7 +2688,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
         fillLinkAndPay(mode: .fieldConsent, cardNumber: "5555555555554444")
-        
+
         // reload w/ same customer
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
