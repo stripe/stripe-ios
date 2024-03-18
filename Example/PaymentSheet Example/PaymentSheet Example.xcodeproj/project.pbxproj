@@ -314,7 +314,6 @@
 				7CDBD593EFEAD2EDA4D33D5D /* LaunchScreen.storyboard */,
 				F4B26C754925F8D2A5183B2E /* Main.storyboard */,
 				59EF54A49D2FCC743E9EBC5F /* Assets.xcassets */,
-				31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -413,6 +412,7 @@
 		C4BE75A2EECEF0AC9EC24CD8 /* PaymentSheet Example */ = {
 			isa = PBXGroup;
 			children = (
+				31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */,
 				132709C10C0114D239ED3FE9 /* Resources */,
 				05E317C6C8459B147C041D93 /* AppDelegate.swift */,
 				5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */,

@@ -1,4 +1,5 @@
 {
+  "originHash" : "d7295f1092f6d281e4e4e101a3568ffb6d9cd4f26e38d8698fdca544f7ef6857",
   "pins" : [
     {
       "identity" : "ios-snapshot-test-case",
@@ -7,15 +8,6 @@
       "state" : {
         "revision" : "7b10770333a961be6e5a41c9ce04b8c6d3990126",
         "version" : "8.0.0"
-      }
-    },
-    {
-      "identity" : "ocmock",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/erikdoe/ocmock",
-      "state" : {
-        "branch" : "master",
-        "revision" : "05cbc9d934e84ad32530fa53fd7d29c7966d5828"
       }
     },
     {
@@ -28,5 +20,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
