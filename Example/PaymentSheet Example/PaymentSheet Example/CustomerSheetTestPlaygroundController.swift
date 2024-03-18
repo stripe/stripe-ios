@@ -216,7 +216,7 @@ extension CustomerSheetTestPlaygroundController {
             }
             let ephemeralKey = json["customerEphemeralKeySecret"]
             let customerSessionClientSecret = json["customerSessionClientSecret"]
-            guard (ephemeralKey != nil || customerSessionClientSecret != nil) else {
+            guard ephemeralKey != nil || customerSessionClientSecret != nil else {
                 DispatchQueue.main.async {
                     self.isLoading = false
                     self.currentlyRenderedSettings = self.settings

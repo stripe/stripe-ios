@@ -110,7 +110,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
                 with: elementsSessionJSON.data(using: .utf8)!,
                 options: []
             ) as! [AnyHashable: Any]
-            if var customer = elementSession["customer"] as? [AnyHashable:Any],
+            if var customer = elementSession["customer"] as? [AnyHashable: Any],
                paymentMethodJSONs != nil {
                 customer["payment_methods"] = paymentMethodJSONs
                 elementSession["customer"] = customer
