@@ -43,10 +43,6 @@ final class PaymentSheetLoader {
                 // Fetch PaymentIntent, SetupIntent, or ElementsSession
                 async let _intent = fetchIntent(mode: mode, configuration: configuration, analyticsClient: analyticsClient)
 
-                // List the Customer's saved PaymentMethods
-                // TODO: Use v1/elements/sessions to fetch saved PMS https://jira.corp.stripe.com/browse/MOBILESDK-964
-                async let savedPaymentMethods = fetchSavedPaymentMethods(configuration: configuration)
-
                 // Load misc singletons
                 await loadMiscellaneousSingletons()
 
@@ -64,6 +60,9 @@ final class PaymentSheetLoader {
                         _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
                     }
                 }
+
+                // List the Customer's saved PaymentMethods
+                async let savedPaymentMethods = fetchSavedPaymentMethods(intent: intent, configuration: configuration)
 
                 // Load link account session. Continue without Link if it errors.
                 let linkAccount = try? await lookupLinkAccount(intent: intent, configuration: configuration)
@@ -168,7 +167,7 @@ final class PaymentSheetLoader {
         if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email)
         } else if let customerID = configuration.customer?.id,
-            let ephemeralKey = configuration.customer?.ephemeralKeySecret
+                  let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent)
         {
             let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
             // If there's an error in this call we can just ignore it
@@ -243,8 +242,18 @@ final class PaymentSheetLoader {
     }
 
     static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
-    static func fetchSavedPaymentMethods(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
-        guard let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret else {
+    static func fetchSavedPaymentMethods(intent: Intent, configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
+        if let elementsSessionPaymentMethods = intent.elementsSession.customer?.paymentMethods {
+            return elementsSessionPaymentMethods
+        } else {
+            return try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration)
+        }
+    }
+
+    static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentSheet.Configuration) async throws -> [STPPaymentMethod] {
+        guard let customerID = configuration.customer?.id,
+              let ephemeralKey = configuration.customer?.ephemeralKeySecret,
+              !ephemeralKey.isEmpty else {
             return []
         }
         return try await withCheckedThrowingContinuation { continuation in

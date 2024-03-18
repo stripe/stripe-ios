@@ -98,53 +98,53 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
             }
         }()
 
-        let reusableInformationView = ReusableInformationView(
-            iconType: .view(
-                {
-                    let institutionIconView = InstitutionIconView(
-                        size: .large,
-                        showWarning: true
-                    )
+        let paneLayoutView = PaneLayoutView(
+            contentView: PaneLayoutView.createContentView(
+                iconView: {
+                    let institutionIconView = InstitutionIconView()
                     institutionIconView.setImageUrl(institution.icon?.default)
                     return institutionIconView
-                }()
-            ),
-            title: {
-                if institutionSkipAccountSelection {
-                    if numberOfIneligibleAccounts == 1 {
-                        return STPLocalizedString(
-                                "The account you selected isn't available for payments",
-                                "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the account they selected isn't eligible."
-                            )
-                    } else {
-                        return STPLocalizedString(
-                                "The accounts you selected aren't available for payments",
-                                "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
-                            )
-                    }
-                } else {
-                    return STPLocalizedString(
-                        "No payment accounts available",
-                        "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
-                    )
-                }
-            }(),
-            subtitle: subtitleFirstSentence + " " + subtitleSecondSentence,
-            primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration(
+                }(),
                 title: {
                     if institutionSkipAccountSelection {
-                        return String.Localized.link_another_account
+                        if numberOfIneligibleAccounts == 1 {
+                            return STPLocalizedString(
+                                    "The account you selected isn't available for payments",
+                                    "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the account they selected isn't eligible."
+                                )
+                        } else {
+                            return STPLocalizedString(
+                                    "The accounts you selected aren't available for payments",
+                                    "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
+                                )
+                        }
                     } else {
-                        return String.Localized.select_another_bank
+                        return STPLocalizedString(
+                            "No payment accounts available",
+                            "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
+                        )
                     }
                 }(),
-                action: didSelectAnotherBank
+                subtitle: subtitleFirstSentence + " " + subtitleSecondSentence,
+                contentView: nil
             ),
-            secondaryButtonConfiguration: {
-                return nil
-            }()
+            footerView: PaneLayoutView.createFooterView(
+                primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
+                    title: {
+                        if institutionSkipAccountSelection {
+                            return STPLocalizedString(
+                                "Connect another account",
+                                "The title of a button. The button presents the user an option to select another bank account. For example, we may show this button after user failed to link their primary bank account, but maybe the user can try to link their secondary bank account!"
+                            )
+                        } else {
+                            return String.Localized.select_another_bank
+                        }
+                    }(),
+                    action: didSelectAnotherBank
+                )
+            ).footerView
         )
-        addAndPinSubview(reusableInformationView)
+        paneLayoutView.addTo(view: self)
     }
 
     required init?(coder: NSCoder) {
