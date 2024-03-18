@@ -65,11 +65,21 @@ extension String {
             let markdownLinkString = (modifiedString as NSString).substring(with: markdownLinkRange)
 
             var replacementString = ""
-            if let substring = markdownLinkString.extractStringInBrackets(),
+            if
+                let linkSubstring = markdownLinkString.extractStringInBrackets(),
                 let urlString = markdownLinkString.extractStringInParentheses()
             {
-                replacementString = substring
-                let linkRange = NSRange(location: markdownLinkRange.location, length: substring.count)
+                // `nonBreakingSpace` ensures links are always on the same line
+                let nonBreakingSpace = "\u{00a0}"
+                let linkSubstring = linkSubstring.replacingOccurrences(
+                    of: " ",
+                    with: nonBreakingSpace
+                )
+                replacementString = linkSubstring
+                let linkRange = NSRange(
+                    location: markdownLinkRange.location,
+                    length: linkSubstring.count
+                )
                 let link = Link(range: linkRange, urlString: urlString)
                 links.append(link)
             }

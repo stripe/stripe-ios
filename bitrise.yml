@@ -433,7 +433,7 @@ workflows:
         - lane: legacy_tests_15
         title: fastlane legacy_tests_15
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.4
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.5
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x

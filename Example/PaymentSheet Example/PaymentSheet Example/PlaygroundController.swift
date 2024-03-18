@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(EarlyAccessCVCRecollectionFeature) import StripePaymentSheet
 @_spi(STP) @_spi(PaymentSheetSkipConfirmation) import StripePaymentSheet
 @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import SwiftUI
@@ -71,7 +71,7 @@ class PlaygroundController: ObservableObject {
                 }
             )
             return PaymentSheet.ApplePayConfiguration(
-                merchantId: "com.foo.example",
+                merchantId: "merchant.com.stripe.umbrella.test",
                 merchantCountryCode: "US",
                 buttonType: buttonType,
                 customHandlers: customHandlers)
@@ -79,7 +79,7 @@ class PlaygroundController: ObservableObject {
 #endif
         if settings.applePayEnabled == .on  {
             return PaymentSheet.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe",
+                merchantId: "merchant.com.stripe.umbrella.test",
                 merchantCountryCode: "US",
                 buttonType: buttonType)
         } else {
@@ -87,11 +87,19 @@ class PlaygroundController: ObservableObject {
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
-        if let customerID = customerId,
-           let ephemeralKey = ephemeralKey,
-           settings.customerMode != .guest {
-            return PaymentSheet.CustomerConfiguration(
-                id: customerID, ephemeralKeySecret: ephemeralKey)
+        guard settings.customerMode != .guest,
+              let customerId = self.customerId else {
+            return nil
+        }
+        switch self.settings.customerKeyType {
+        case .legacy:
+            if let ephemeralKey {
+                return PaymentSheet.CustomerConfiguration(id: customerId, ephemeralKeySecret: ephemeralKey)
+            }
+        case .customerSession:
+            if let customerSessionClientSecret {
+                return PaymentSheet.CustomerConfiguration(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
+            }
         }
         return nil
     }
@@ -128,6 +136,8 @@ class PlaygroundController: ObservableObject {
             configuration.defaultBillingDetails.phone = "+13105551234"
         case .randomEmailNoPhone:
             configuration.defaultBillingDetails.email = "test-\(UUID().uuidString)@stripe.com"
+        case .customEmail:
+            configuration.defaultBillingDetails.email = settings.customEmail
         case .off:
             break
         }
@@ -258,6 +268,7 @@ class PlaygroundController: ObservableObject {
     var clientSecret: String?
     var customerId: String?
     var ephemeralKey: String?
+    var customerSessionClientSecret: String?
     var paymentMethodTypes: [String]?
     var amount: Int?
     var checkoutEndpoint: String = PaymentSheetTestPlaygroundSettings.defaultCheckoutEndpoint
@@ -415,6 +426,7 @@ extension PlaygroundController {
 
         let body = [
             "customer": customerIdOrType,
+            "customer_key_type": settings.customerKeyType.rawValue,
             "currency": settings.currency.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
@@ -464,6 +476,7 @@ extension PlaygroundController {
                 self.clientSecret = json["intentClientSecret"]
                 self.ephemeralKey = json["customerEphemeralKeySecret"]
                 self.customerId = json["customerId"]
+                self.customerSessionClientSecret = json["customerSessionClientSecret"]
                 self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
                 self.amount = Int(json["amount"] ?? "")
                 STPAPIClient.shared.publishableKey = json["publishableKey"]

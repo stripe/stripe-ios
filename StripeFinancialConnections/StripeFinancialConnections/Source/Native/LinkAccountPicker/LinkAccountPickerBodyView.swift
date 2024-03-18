@@ -20,37 +20,22 @@ protocol LinkAccountPickerBodyViewDelegate: AnyObject {
 
 final class LinkAccountPickerBodyView: UIView {
 
-    private let accountTuples: [FinancialConnectionsAccountTuple]
-    private let addNewAccount: FinancialConnectionsNetworkingAccountPicker.AddNewAccount
     weak var delegate: LinkAccountPickerBodyViewDelegate?
-
-    private lazy var verticalStackView: UIStackView = {
-        let verticalStackView = UIStackView()
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 12
-        return verticalStackView
-    }()
+    private var partnerAccountIdToRowView: [String: AccountPickerRowView] = [:]
 
     init(
         accountTuples: [FinancialConnectionsAccountTuple],
         addNewAccount: FinancialConnectionsNetworkingAccountPicker.AddNewAccount
     ) {
-        self.accountTuples = accountTuples
-        self.addNewAccount = addNewAccount
         super.init(frame: .zero)
-        addAndPinSubview(verticalStackView)
-    }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+        let verticalStackView = UIStackView()
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 16
 
-    func selectAccount(_ selectedAccountTuple: FinancialConnectionsAccountTuple?) {
-        // clear all previous state
-        verticalStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-
+        // add account rows
         accountTuples.forEach { accountTuple in
-            let accountRowView = LinkAccountPickerRowView(
+            let accountRowView = AccountPickerRowView(
                 isDisabled: !accountTuple.accountPickerAccount.allowSelection,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
@@ -60,26 +45,24 @@ final class LinkAccountPickerBodyView: UIView {
                     )
                 }
             )
-            let rowTitles = AccountPickerHelpers.rowTitles(
-                forAccount: accountTuple.partnerAccount,
-                captionWillHideAccountNumbers: accountTuple.accountPickerAccount.caption != nil
+            let rowTitles = AccountPickerHelpers.rowInfo(
+                forAccount: accountTuple.partnerAccount
             )
-            accountRowView.configure(
-                institutionImageUrl: accountTuple.partnerAccount.institution?.icon?.default,
-                leadingTitle: rowTitles.leadingTitle,
-                trailingTitle: rowTitles.trailingTitle,
+            accountRowView.set(
+                institutionIconUrl: accountTuple.partnerAccount.institution?.icon?.default,
+                title: rowTitles.accountName,
                 subtitle: {
                     if let caption = accountTuple.accountPickerAccount.caption {
                         return caption
                     } else {
-                        return AccountPickerHelpers.rowSubtitle(
-                            forAccount: accountTuple.partnerAccount
-                        )
+                        return rowTitles.accountNumbers
                     }
                 }(),
-                trailingIconImageUrl: accountTuple.accountPickerAccount.icon?.default,
-                isSelected: selectedAccountTuple?.partnerAccount.id == accountTuple.partnerAccount.id
+                balanceString:
+                    (accountTuple.accountPickerAccount.caption == nil) ? rowTitles.balanceString : nil,
+                isSelected: false // initially nothing is selected
             )
+            partnerAccountIdToRowView[accountTuple.partnerAccount.id] = accountRowView
             verticalStackView.addArrangedSubview(accountRowView)
         }
 
@@ -93,6 +76,21 @@ final class LinkAccountPickerBodyView: UIView {
             }
         )
         verticalStackView.addArrangedSubview(newAccountRowView)
+
+        addAndPinSubview(verticalStackView)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func selectAccount(_ selectedAccountTuple: FinancialConnectionsAccountTuple?) {
+        partnerAccountIdToRowView
+            .forEach { (partnerAccountId: String, rowView: AccountPickerRowView) in
+                rowView.set(
+                    isSelected: selectedAccountTuple?.partnerAccount.id == partnerAccountId
+                )
+            }
     }
 }
 

@@ -79,7 +79,7 @@ class MyCustomBackendCVCRecollectionModel: ObservableObject {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         var request = URLRequest(url: backendInitUrl)
         let body: [String: Any?] = [
-            "customer_id": self.getLastCustomerId()
+            "customer_id": self.getLastCustomerId(),
         ]
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -107,7 +107,9 @@ class MyCustomBackendCVCRecollectionModel: ObservableObject {
                     var configuration = PaymentSheet.Configuration()
                     configuration.merchantDisplayName = "Example, Inc."
                     configuration.applePay = .init(
-                        merchantId: "com.foo.example", merchantCountryCode: "US")
+                        merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
+                        merchantCountryCode: "US"
+                    )
                     configuration.customer = .init(
                         id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                     configuration.returnURL = "payments-example://stripe-redirect"

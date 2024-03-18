@@ -73,6 +73,9 @@ extension PaymentSheet {
 
     /// Configuration for PaymentSheet
     public struct Configuration {
+        // The text that shows in the header of the payment sheet when adding a card.
+        // If nil default text will be used.
+        @_spi(DashboardOnly) public var addCardHeaderText: String?
 
         /// If true, allows payment methods that do not move money at the end of the checkout. Defaults to false.
         /// - Description: Some payment methods can't guarantee you will receive funds from your customer at the end of the checkout because they take time to settle (eg. most bank debits, like SEPA or ACH) or require customer action to complete (e.g. OXXO, Konbini, Boleto). If this is set to true, make sure your integration listens to webhooks for notifications on whether a payment has succeeded or not.
@@ -195,6 +198,11 @@ extension PaymentSheet {
         @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
     }
 
+    internal enum CustomerAccessProvider {
+        case legacyCustomerEphemeralKey(String)
+        case customerSession(String)
+    }
+
     /// Configuration related to the Stripe Customer
     public struct CustomerConfiguration {
         /// The identifier of the Stripe Customer object.
@@ -204,10 +212,21 @@ extension PaymentSheet {
         /// A short-lived token that allows the SDK to access a Customer's payment methods
         public let ephemeralKeySecret: String
 
-        /// Initializes a CustomerConfiguration
+        internal let customerAccessProvider: CustomerAccessProvider
+
+        /// Initializes a CustomerConfiguration with an ephemeralKeySecret
         public init(id: String, ephemeralKeySecret: String) {
             self.id = id
+            self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
             self.ephemeralKeySecret = ephemeralKeySecret
+        }
+
+        /// Initializes a CustomerConfiguration with a customerSessionClientSecret
+        @_spi(CustomerSessionBetaAccess)
+        public init(id: String, customerSessionClientSecret: String) {
+            self.id = id
+            self.customerAccessProvider = .customerSession(customerSessionClientSecret)
+            self.ephemeralKeySecret = ""
         }
     }
 
@@ -472,5 +491,15 @@ extension STPPaymentMethodBillingDetails {
                                            email: self.email,
                                            name: self.name,
                                            phone: self.phone)
+    }
+}
+extension PaymentSheet.CustomerConfiguration {
+    func ephemeralKeySecretBasedOn(intent: Intent?) -> String? {
+        switch customerAccessProvider {
+        case .legacyCustomerEphemeralKey(let legacy):
+            return legacy
+        case .customerSession:
+            return intent?.elementsSession.customer?.customerSession.apiKey
+        }
     }
 }

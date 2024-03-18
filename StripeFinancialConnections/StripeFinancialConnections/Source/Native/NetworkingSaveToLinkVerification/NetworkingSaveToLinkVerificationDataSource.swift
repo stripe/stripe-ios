@@ -9,6 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol NetworkingSaveToLinkVerificationDataSource: AnyObject {
+    var manifest: FinancialConnectionsSessionManifest { get }
     var consumerSession: ConsumerSessionData { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var networkingOTPDataSource: NetworkingOTPDataSource { get }
@@ -21,6 +22,7 @@ protocol NetworkingSaveToLinkVerificationDataSource: AnyObject {
 
 final class NetworkingSaveToLinkVerificationDataSourceImplementation: NetworkingSaveToLinkVerificationDataSource {
 
+    let manifest: FinancialConnectionsSessionManifest
     private(set) var consumerSession: ConsumerSessionData
     private let selectedAccountId: String
     private let apiClient: FinancialConnectionsAPIClient
@@ -29,12 +31,14 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
     let networkingOTPDataSource: NetworkingOTPDataSource
 
     init(
+        manifest: FinancialConnectionsSessionManifest,
         consumerSession: ConsumerSessionData,
         selectedAccountId: String,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
+        self.manifest = manifest
         self.consumerSession = consumerSession
         self.selectedAccountId = selectedAccountId
         self.apiClient = apiClient
