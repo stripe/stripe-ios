@@ -465,16 +465,9 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
                 guard let updatedSavedPaymentMethods = await self.fetchSavedPaymentMethodsTest() else {
                     // SI was confirmed, PM is attached, but failed to refresh payment methods
-                    // Assume user wanted to select the payment method, so select it and dismiss the sheet.
-                    let savedPaymentMethodsCopy = self.savedPaymentMethods
-                    self.savedPaymentMethods = [paymentMethod] + savedPaymentMethodsCopy
-                    self.lastSavedPaymentMethod = paymentMethod
-
-                    let customerPaymentOption = CustomerPaymentOption(value: paymentMethod.stripeId)
-                    self.reinitSavedPaymentOptionsViewController(mostRecentlyAddedPaymentMethod: customerPaymentOption)
-                    self.mode = .selectingSaved
-                    self.handleDismissSheet(shouldDismissImmediately: false)
+                    // Sheet will dismiss and payment method will be unselected
                     self.processingInFlight = false
+                    self.handleDismissSheet(shouldDismissImmediately: true)
                     return
                 }
 
@@ -612,16 +605,9 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
                     guard let updatedSavedPaymentMethods = await self.fetchSavedPaymentMethods() else {
                         // PM is attached, but failed to refresh payment methods
-                        // Assume user wanted to select the payment method, so select it and dismiss the sheet.
-                        let savedPaymentMethodsCopy = self.savedPaymentMethods
-                        self.savedPaymentMethods = [paymentMethod] + savedPaymentMethodsCopy
-                        self.lastSavedPaymentMethod = paymentMethod
-
-                        let customerPaymentOption = CustomerPaymentOption(value: paymentMethod.stripeId)
-                        self.reinitSavedPaymentOptionsViewController(mostRecentlyAddedPaymentMethod: customerPaymentOption)
-                        self.mode = .selectingSaved
-                        self.handleDismissSheet(shouldDismissImmediately: false)
+                        // Sheet will dismiss and payment method will be unselected
                         self.processingInFlight = false
+                        self.handleDismissSheet(shouldDismissImmediately: true)
                         return
                     }
 
