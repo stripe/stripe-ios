@@ -57,6 +57,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func didTapResetConfig() {
         self.settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         self.appearance = PaymentSheet.Appearance.default
+        load()
     }
 
     func appearanceButtonTapped() {
@@ -129,8 +130,8 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         return configuration
     }
 
-    func customerAdapter(customerId: String, ephemeralKey: String?, customerSessionClientSecret: String?, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter {
-        let customerAdapter: StripeCustomerAdapter
+    func customerAdapter(customerId: String, ephemeralKey: String?, customerSessionClientSecret: String?, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter? {
+        var customerAdapter: StripeCustomerAdapter?
         switch settings.paymentMethodMode {
         case .setupIntent:
             if let customerSessionClientSecret {
@@ -140,19 +141,21 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
                 }, setupIntentClientSecretProvider: {
                     return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
                 })
-            } else {
+            } else if let ephemeralKey {
                 customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
                     // This should be a block that fetches this from your server
-                    return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey!)
+                    return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
                 }, setupIntentClientSecretProvider: {
                     return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
                 })
             }
         case .createAndAttach:
-            customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
-                // This should be a block that fetches this from your server
-                return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey!)
-            }, setupIntentClientSecretProvider: nil)
+            if let ephemeralKey {
+                customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+                    // This should be a block that fetches this from your server
+                    return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+                }, setupIntentClientSecretProvider: nil)
+            }
         }
         return customerAdapter
     }
@@ -231,10 +234,13 @@ extension CustomerSheetTestPlaygroundController {
                 // Create Customer Sheet
                 var configuration = self.customerSheetConfiguration(customerId: customerId)
                 configuration.applePayEnabled = self.applePayEnabled()
-                let customerAdapter = self.customerAdapter(customerId: customerId,
-                                                           ephemeralKey: ephemeralKey,
-                                                           customerSessionClientSecret: customerSessionClientSecret,
-                                                           configuration: configuration)
+                guard let customerAdapter = self.customerAdapter(customerId: customerId,
+                                                                 ephemeralKey: ephemeralKey,
+                                                                 customerSessionClientSecret: customerSessionClientSecret,
+                                                                 configuration: configuration) else {
+                    print("Failed to initalize CustomerAdapter")
+                    return
+                }
                 self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
 
                 // Retrieve selected PM

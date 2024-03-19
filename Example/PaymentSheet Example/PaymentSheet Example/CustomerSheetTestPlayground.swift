@@ -38,7 +38,7 @@ struct CustomerSheetTestPlayground: View {
                             }.buttonStyle(.bordered)
                         }
                         SettingView(setting: $playgroundController.settings.customerMode)
-                        SettingView(setting: $playgroundController.settings.customerKeyType)
+                        SettingView(setting: customerKeyTypeBinding)
                         TextField("CustomerId", text: customerIdBinding)
                     }
                     Group {
@@ -52,7 +52,7 @@ struct CustomerSheetTestPlayground: View {
                             }.buttonStyle(.bordered)
                         }
                         SettingPickerView(setting: merchantCountryBinding)
-                        SettingView(setting: $playgroundController.settings.paymentMethodMode)
+                        SettingView(setting: paymentMethodModeBinding)
                         SettingView(setting: $playgroundController.settings.applePay)
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
@@ -81,7 +81,28 @@ struct CustomerSheetTestPlayground: View {
                 .environmentObject(playgroundController)
         }
     }
-
+    var customerKeyTypeBinding: Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
+        Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
+            return playgroundController.settings.customerKeyType
+        } set: { newKeyType in
+            // If switching to customerSession preselect setupIntent
+            if playgroundController.settings.customerKeyType.rawValue != newKeyType.rawValue && newKeyType == .customerSession {
+                playgroundController.settings.paymentMethodMode = .setupIntent
+            }
+            playgroundController.settings.customerKeyType = newKeyType
+        }
+    }
+    var paymentMethodModeBinding: Binding<CustomerSheetTestPlaygroundSettings.PaymentMethodMode> {
+        Binding<CustomerSheetTestPlaygroundSettings.PaymentMethodMode> {
+            return playgroundController.settings.paymentMethodMode
+        } set: { newPaymentMethodMode in
+            // If switching to createAndAttach, ensure using legacy customer ephemeralKey
+            if playgroundController.settings.paymentMethodMode.rawValue != newPaymentMethodMode.rawValue && newPaymentMethodMode == .createAndAttach {
+                playgroundController.settings.customerKeyType = .legacy
+            }
+            playgroundController.settings.paymentMethodMode = newPaymentMethodMode
+        }
+    }
     var merchantCountryBinding: Binding<CustomerSheetTestPlaygroundSettings.MerchantCountry> {
         Binding<CustomerSheetTestPlaygroundSettings.MerchantCountry> {
             return playgroundController.settings.merchantCountryCode
