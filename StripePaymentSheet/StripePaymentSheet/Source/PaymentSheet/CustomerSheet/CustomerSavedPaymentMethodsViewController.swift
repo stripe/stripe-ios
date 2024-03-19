@@ -473,9 +473,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
                 self.lastSavedPaymentMethod = paymentMethod
                 self.savedPaymentMethods = updatedSavedPaymentMethods
-                // TODO: I'm pretty sure this will work, becasue we have effectively added a new payment method
-                // Be sure ot test with us bank account and sepa, it should work, lets just double check here.
-                // we should be able to take it's payment id, create a new customerPayment optino so that it will be selectd.
+
                 let customerPaymentOption = CustomerPaymentOption(value: paymentMethod.stripeId)
                 self.reinitSavedPaymentOptionsViewController(mostRecentlyAddedPaymentMethod: customerPaymentOption)
                 self.processingInFlight = false
