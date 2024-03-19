@@ -423,14 +423,29 @@ class CustomerSheetUITest: XCTestCase {
         // Requires FF: elements_enable_read_allow_redisplay, to return "1", otherwise 0
         XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
 
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+
+        // Remove one saved PM, which should remove both PMs
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Should be kicked out of edit mode now that we have one saved PM
+        XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
+
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
         closeButton.tap()
 
         dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
 
-        let selectButtonFinal = app.staticTexts["None"]
-        XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: 60.0))
+        let selectButton3 = app.staticTexts["None"]
+        XCTAssertTrue(selectButton3.waitForExistence(timeout: 60.0))
+        selectButton3.tap()
+
+        // There should be zero cards left, because both should have been deleted
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 0)
     }
     func testNoPrevPM_AddPM_noApplePay_closeInsteadOfConfirming() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
