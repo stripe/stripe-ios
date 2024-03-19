@@ -110,7 +110,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
 
         if settings.defaultBillingAddress == .on {
             configuration.defaultBillingDetails.name = "Jane Doe"
-            configuration.defaultBillingDetails.email = "foo@bar.com"
+            configuration.defaultBillingDetails.email = "foo-\(UUID().uuidString)@bar.com"
             configuration.defaultBillingDetails.phone = "+13105551234"
             configuration.defaultBillingDetails.address = .init(
                 city: "San Francisco",
