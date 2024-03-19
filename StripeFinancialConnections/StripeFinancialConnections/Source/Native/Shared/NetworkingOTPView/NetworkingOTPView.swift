@@ -19,8 +19,13 @@ protocol NetworkingOTPViewDelegate: AnyObject {
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData)
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error)
 
+    func networkingOTPViewWillConfirmVerification(_ view: NetworkingOTPView)
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView)
-    func networkingOTPView(_ view: NetworkingOTPView, didTerminallyFailToConfirmVerification error: Error)
+    func networkingOTPView(
+        _ view: NetworkingOTPView,
+        didFailToConfirmVerification error: Error,
+        isTerminal: Bool
+    )
 }
 
 final class NetworkingOTPView: UIView {
@@ -35,29 +40,38 @@ final class NetworkingOTPView: UIView {
             ]
         )
         otpVerticalStackView.axis = .vertical
-        otpVerticalStackView.spacing = 8
+        otpVerticalStackView.spacing = 16
         return otpVerticalStackView
     }()
-    // TODO(kgaidis): make changes to `OneTimeCodeTextField` to
-    // make the font larger
     private(set) lazy var otpTextField: OneTimeCodeTextField = {
-        let otpTextField = OneTimeCodeTextField(theme: theme)
+        let otpTextField = OneTimeCodeTextField(
+            configuration: OneTimeCodeTextField.Configuration(
+                itemSpacing: 8,
+                enableDigitGrouping: false,
+                font: UIFont.systemFont(ofSize: 28, weight: .regular),
+                itemCornerRadius: 12,
+                itemHeight: 58
+            ),
+            theme: theme
+        )
         otpTextField.tintColor = .textBrand
         otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
+        otpTextField.tintColor = .textActionPrimaryFocused
         return otpTextField
     }()
     private lazy var theme: ElementsUITheme = {
         var theme: ElementsUITheme = .default
         theme.colors = {
             var colors = ElementsUITheme.Color()
-            colors.border = .borderNeutral
+            colors.border = .borderDefault
             colors.background = .customBackgroundColor
-            colors.textFieldText = .textPrimary
+            colors.textFieldText = .textDefault
+            colors.danger = .textFeedbackCritical
             return colors
         }()
         return theme
     }()
-    private var lastErrorView: UIView?
+    private var lastFooterView: UIView?
 
     init(dataSource: NetworkingOTPDataSource) {
         self.dataSource = dataSource
@@ -77,14 +91,54 @@ final class NetworkingOTPView: UIView {
         }
     }
 
+    func showLoadingView(_ show: Bool) {
+        lastFooterView?.removeFromSuperview()
+        lastFooterView = nil
+
+        if show {
+            let activityIndicator = ActivityIndicator(size: .medium)
+            activityIndicator.color = .iconActionPrimary
+            activityIndicator.startAnimating()
+            let loadingView = UIStackView(
+                arrangedSubviews: [activityIndicator]
+            )
+            loadingView.isLayoutMarginsRelativeArrangement = true
+            loadingView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                top: 8,
+                leading: 0,
+                bottom: 8,
+                trailing: 0
+            )
+            self.lastFooterView = loadingView
+            verticalStackView.addArrangedSubview(loadingView)
+        }
+    }
+
     private func showErrorText(_ errorText: String?) {
-        lastErrorView?.removeFromSuperview()
-        lastErrorView = nil
+        lastFooterView?.removeFromSuperview()
+        lastFooterView = nil
 
         if let errorText = errorText {
-            // TODO(kgaidis): rename & move `ManualEntryErrorView` to be more generic
-            let errorView = ManualEntryErrorView(text: errorText)
-            self.lastErrorView = errorView
+            let errorLabel = AttributedTextView(
+                font: .label(.medium),
+                boldFont: .label(.mediumEmphasized),
+                linkFont: .label(.medium),
+                textColor: .textFeedbackCritical,
+                linkColor: .textFeedbackCritical,
+                alignCenter: true
+            )
+            errorLabel.setText(errorText)
+            let errorView = UIStackView(
+                arrangedSubviews: [errorLabel]
+            )
+            errorView.isLayoutMarginsRelativeArrangement = true
+            errorView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                top: 8,
+                leading: 0,
+                bottom: 0,
+                trailing: 0
+            )
+            self.lastFooterView = errorView
             verticalStackView.addArrangedSubview(errorView)
         }
     }
@@ -127,14 +181,19 @@ final class NetworkingOTPView: UIView {
 
     private func userDidEnterValidOTPCode(_ otpCode: String) {
         otpTextField.resignFirstResponder()
+        showLoadingView(true)
+        delegate?.networkingOTPViewWillConfirmVerification(self)
 
         dataSource.confirmVerificationSession(otpCode: otpCode)
             .observe { [weak self] result in
                 guard let self = self else { return }
+                self.showLoadingView(false)
+
                 switch result {
                 case .success:
                     self.delegate?.networkingOTPViewDidConfirmVerification(self)
                 case .failure(let error):
+                    let isTerminal: Bool
                     if let errorMessage = AuthFlowHelpers.networkingOTPErrorMessage(fromError: error, otpType: self.dataSource.otpType) {
                         self.dataSource
                             .analyticsClient
@@ -146,6 +205,7 @@ final class NetworkingOTPView: UIView {
 
                         self.otpTextField.performInvalidCodeAnimation(shouldClearValue: false)
                         self.showErrorText(errorMessage)
+                        isTerminal = false
                     } else {
                         self.dataSource
                             .analyticsClient
@@ -154,8 +214,13 @@ final class NetworkingOTPView: UIView {
                                 errorName: "ConfirmVerificationSessionError",
                                 pane: self.dataSource.pane
                             )
-                        self.delegate?.networkingOTPView(self, didTerminallyFailToConfirmVerification: error)
+                        isTerminal = true
                     }
+                    self.delegate?.networkingOTPView(
+                        self,
+                        didFailToConfirmVerification: error,
+                        isTerminal: isTerminal
+                    )
                 }
             }
     }

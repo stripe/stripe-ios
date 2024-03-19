@@ -71,6 +71,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case new
         case returning
     }
+    enum CustomerKeyType: String, PickerEnum {
+        static var enumName: String { "CustomerKeyType" }
+
+        case legacy
+        case customerSession = "customer_session"
+    }
 
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
@@ -152,6 +158,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case randomEmail
         case randomEmailNoPhone
+        case customEmail
         case off
     }
 
@@ -246,6 +253,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     var uiStyle: UIStyle
     var mode: Mode
+    var customerKeyType: CustomerKeyType
     var integrationType: IntegrationType
     var customerMode: CustomerMode
     var currency: Currency
@@ -257,6 +265,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
     var defaultBillingAddress: DefaultBillingAddress
+    var customEmail: String?
     var linkEnabled: LinkEnabled
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
@@ -278,6 +287,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
             mode: .payment,
+            customerKeyType: .legacy,
             integrationType: .normal,
             customerMode: .guest,
             currency: .usd,
@@ -288,6 +298,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayButtonType: .buy,
             allowsDelayedPMs: .off,
             defaultBillingAddress: .off,
+            customEmail: nil,
             linkEnabled: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,

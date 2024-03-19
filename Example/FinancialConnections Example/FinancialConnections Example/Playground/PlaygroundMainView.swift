@@ -77,6 +77,9 @@ struct PlaygroundMainView: View {
                     }
 
                     Section(header: Text("PERMISSIONS")) {
+                        Toggle("Ownership", isOn: $viewModel.enableOwnershipPermission)
+                            .accessibility(identifier: "playground-ownership-permission")
+
                         Toggle("Balances", isOn: $viewModel.enableBalancesPermission)
                             .accessibility(identifier: "playground-balances-permission")
 

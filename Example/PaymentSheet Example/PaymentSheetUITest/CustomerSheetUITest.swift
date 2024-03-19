@@ -524,10 +524,10 @@ class CustomerSheetUITest: XCTestCase {
         continueButton.tap()
 
         // Go through connections flow
-        app.buttons["Agree and continue"].tap()
+        app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
-        app.buttons["Link account"].tap()
+        app.buttons["account_picker_link_accounts_button"].tap()
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: 10.0) {
@@ -548,7 +548,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
         confirmButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
     func testCustomerSheetStandard_applePayOff_addSepa() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
@@ -608,10 +608,10 @@ class CustomerSheetUITest: XCTestCase {
         continueButton.tap()
 
         // Go through connections flow
-        app.buttons["Agree and continue"].tap()
+        app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
-        app.buttons["Link account"].tap()
+        app.buttons["account_picker_link_accounts_button"].tap()
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: 10.0) {
@@ -632,7 +632,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
         confirmButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
     func testCustomerSheetStandard_applePayOff_addUSBankAccount_MicroDeposit() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
@@ -659,14 +659,14 @@ class CustomerSheetUITest: XCTestCase {
         continueButton.tap()
 
         // Go through connections flow
-        app.links["Manually verify instead"].tap()
+        app.otherElements["consent_manually_verify_label"].links.firstMatch.tap()
         try! fillUSBankData_microdeposits(app)
 
         let continueManualEntry = app.buttons["manual_entry_continue_button"]
         XCTAssertTrue(continueManualEntry.waitForExistence(timeout: 60.0))
         continueManualEntry.tap()
 
-        let doneManualEntry = app.buttons["manual_entry_success_done_button"]
+        let doneManualEntry = app.buttons["success_done_button"]
         XCTAssertTrue(doneManualEntry.waitForExistence(timeout: 60.0))
         doneManualEntry.tap()
 
@@ -708,7 +708,6 @@ class CustomerSheetUITest: XCTestCase {
     }
 
     // MARK: - Card Brand Choice tests
-/* Temporarily disable CBC tests
     func testCardBrandChoiceSavedCard() {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -852,9 +851,8 @@ class CustomerSheetUITest: XCTestCase {
         let successText = app.staticTexts["Complete"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
-*/
+
     // MARK: - allowsRemovalOfLastSavedPaymentMethod
-/*
     func testRemoveLastSavedPaymentMethod() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.merchantCountryCode = .FR
@@ -915,7 +913,7 @@ class CustomerSheetUITest: XCTestCase {
         // ...but should not be able to remove it.
         XCTAssertFalse(app.buttons["Remove card"].exists)
     }
-*/
+
     // MARK: - Helpers
 
     func presentCSAndAddCardFrom(buttonLabel: String, cardNumber: String? = nil, tapAdd: Bool = true) {

@@ -189,6 +189,7 @@ import Foundation
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
+    case paymentSheetElementsSessionCustomerDeserializeFailed = "mc_elements_session_customer_deserialize_failed"
     case paymentSheetElementsSessionEPMLoadFailed = "mc_elements_session_epms_load_failed"
 
     // MARK: - PaymentSheet card brand choice
