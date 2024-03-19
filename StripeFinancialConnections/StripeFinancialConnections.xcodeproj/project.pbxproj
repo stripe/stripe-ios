@@ -35,6 +35,7 @@
 		2FADCA33DEC08E6551D94811 /* AttributedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97948A848C99ACD1A498F841 /* AttributedTextView.swift */; };
 		313F5F7F2B0BE5D100BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F7E2B0BE5D100BD98A9 /* Docs.docc */; };
 		31AD3BE92B0C2F000080C800 /* ScreenNativeScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BE82B0C2F000080C800 /* ScreenNativeScale.swift */; };
+		31CDFC342BA8E61F00B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC332BA8E61F00B3DD91 /* PrivacyInfo.xcprivacy */; };
 		333B9C3E3349F5369FBA7C32 /* NetworkingLinkVerificationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDB75C69FE9322C745943B3 /* NetworkingLinkVerificationDataSource.swift */; };
 		33FA1684CE79F21271D14F23 /* HitTestStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00D518C15FF3FAED7C193C2 /* HitTestStackView.swift */; };
 		3446145FCA3278D51A9D4B80 /* AttachLinkedPaymentAccountDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518F1F230FD4DF68E683C728 /* AttachLinkedPaymentAccountDataSource.swift */; };
@@ -289,6 +290,7 @@
 		313F5F7E2B0BE5D100BD98A9 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
 		314462DF7856349FF9775598 /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		31AD3BE82B0C2F000080C800 /* ScreenNativeScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenNativeScale.swift; sourceTree = "<group>"; };
+		31CDFC332BA8E61F00B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		32ED8A7E94822F14AD94A698 /* FinancialConnectionsDataAccessNotice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsDataAccessNotice.swift; sourceTree = "<group>"; };
 		33B1E2861FA7CA86FF79236C /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34452D5FDC1ED566A13427FE /* PaneLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PaneLayoutView.swift; path = StripeFinancialConnections/Source/Native/Shared/PaneLayoutView.swift; sourceTree = SOURCE_ROOT; };
@@ -873,6 +875,7 @@
 				78A335C396F4FDF349C7BD59 /* Source */,
 				1E80DD2D042B327D9756E083 /* Info.plist */,
 				F96A3BA5CCB8DCCFA3126974 /* StripeFinancialConnections.h */,
+				31CDFC332BA8E61F00B3DD91 /* PrivacyInfo.xcprivacy */,
 			);
 			path = StripeFinancialConnections;
 			sourceTree = "<group>";
@@ -1197,6 +1200,7 @@
 				755140DEEE50DCD6E939E528 /* check@3x.png in Resources */,
 				6A732CA02B6871EA00828CB1 /* panel_arrow_right@3x.png in Resources */,
 				16F2968DC3B2FC4558821970 /* chevron_down@3x.png in Resources */,
+				31CDFC342BA8E61F00B3DD91 /* PrivacyInfo.xcprivacy in Resources */,
 				6A13B9FC2B58545F00FFA327 /* person@3x.png in Resources */,
 				C747113C75AC92643B283CBD /* close@3x.png in Resources */,
 				CF47070B2A4CA27FEE9AE5FA /* generic_error@3x.png in Resources */,
