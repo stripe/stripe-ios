@@ -1,4 +1,7 @@
 ## X.X.X
+### PaymentSheet
+* [Fixed] When confirming a SetupIntent with Link, "Set up" will be shown as the confirm button text instead of "Pay".
+
 ### All
 * Added a [Privacy Manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files).
 
