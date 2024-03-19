@@ -3199,7 +3199,7 @@ extension PaymentSheetUITestCase {
         XCTAssertFalse(continueButton.isEnabled)
         app.textFields["Full name"].tap()
         app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("test-\(UUID().uuidString)@example.com" + XCUIKeyboardKey.return.rawValue)
         XCTAssertTrue(continueButton.isEnabled)
         continueButton.tap()
 

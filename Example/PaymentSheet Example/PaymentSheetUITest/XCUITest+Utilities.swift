@@ -139,7 +139,7 @@ extension XCTestCase {
 
         let emailField = context.textFields["Email"]
         emailField.forceTapWhenHittableInTestCase(self)
-        app.typeText("test@example.com")
+        app.typeText("test-\(UUID().uuidString)@example.com")
     }
     func fillUSBankData_microdeposits(_ app: XCUIApplication,
                                       container: XCUIElement? = nil) throws {
