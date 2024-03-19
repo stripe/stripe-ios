@@ -58,6 +58,11 @@ final class ConsentLogoView: UIView {
     }
 
     func animateDots() {
+#if targetEnvironment(simulator)
+        if ProcessInfo.processInfo.environment["UITesting"] != nil {
+            return
+        }
+#endif
         guard let multipleDotView = multipleDotView else {
             return
         }
