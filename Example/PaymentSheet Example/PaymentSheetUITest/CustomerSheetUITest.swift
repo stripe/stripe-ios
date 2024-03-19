@@ -601,6 +601,57 @@ class CustomerSheetUITest: XCTestCase {
 
         dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
+    func testCustomerSheetStandard_applePayOff_addUSBankAccount_customerSession() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .off
+        settings.customerKeyType = .customerSession
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let selectButton = app.staticTexts["None"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        selectButton.tap()
+
+        let usBankAccountPMSelectorButton = app.staticTexts["US Bank Account"]
+        XCTAssertTrue(usBankAccountPMSelectorButton.waitForExistence(timeout: 60.0))
+        usBankAccountPMSelectorButton.tap()
+
+        try! fillUSBankData(app)
+
+        let continueButton = app.buttons["Continue"]
+        XCTAssertTrue(continueButton.waitForExistence(timeout: 60.0))
+        continueButton.tap()
+
+        // Go through connections flow
+        app.buttons["consent_agree_button"].tap()
+        app.staticTexts["Test Institution"].forceTapElement()
+        app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
+        app.buttons["account_picker_link_accounts_button"].tap()
+
+        let notNowButton = app.buttons["Not now"]
+        if notNowButton.waitForExistence(timeout: 10.0) {
+            notNowButton.tap()
+        }
+
+        XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
+        app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
+
+        let testBankLinkedBankAccount = app.staticTexts["StripeBank"]
+        XCTAssertTrue(testBankLinkedBankAccount.waitForExistence(timeout: 60.0))
+
+        let saveButton = app.buttons["Save"]
+        XCTAssertTrue(saveButton.waitForExistence(timeout: 60.0))
+        saveButton.tap()
+
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        confirmButton.tap()
+
+        dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
+    }
     func testCustomerSheetStandard_applePayOff_addSepa() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
