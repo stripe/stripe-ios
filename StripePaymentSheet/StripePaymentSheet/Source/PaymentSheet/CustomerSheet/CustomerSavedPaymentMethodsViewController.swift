@@ -463,7 +463,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.handleDismissSheet(shouldDismissImmediately: true)
             } else {
 
-                guard let updatedSavedPaymentMethods = await self.fetchSavedPaymentMethodsTest() else {
+                guard let updatedSavedPaymentMethods = await self.fetchSavedPaymentMethods() else {
                     // SI was confirmed, PM is attached, but failed to refresh payment methods
                     // Sheet will dismiss and payment method will be unselected
                     self.processingInFlight = false
@@ -524,16 +524,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             return nil
         }
     }
-    private func fetchSavedPaymentMethodsTest() async -> [STPPaymentMethod]? {
-        return nil
-//        do {
-//            return try await customerAdapter.fetchPaymentMethods()
-//        } catch {
-//            self.error = error
-//            return nil
-//        }
-    }
-
 
     func confirm(intent: Intent?, paymentOption: PaymentOption) async -> STPSetupIntent? {
         var setupIntent: STPSetupIntent?
