@@ -4,7 +4,7 @@
 //
 
 import Combine
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -57,6 +57,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func didTapResetConfig() {
         self.settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         self.appearance = PaymentSheet.Appearance.default
+        load()
     }
 
     func appearanceButtonTapped() {
@@ -100,7 +101,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         })
     }
 
-    func customerSheetConfiguration(customerId: String, ephemeralKey: String) -> CustomerSheet.Configuration {
+    func customerSheetConfiguration(customerId: String) -> CustomerSheet.Configuration {
         var configuration = CustomerSheet.Configuration()
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
@@ -129,21 +130,32 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         return configuration
     }
 
-    func customerAdapter(customerId: String, ephemeralKey: String, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter {
-        let customerAdapter: StripeCustomerAdapter
+    func customerAdapter(customerId: String, ephemeralKey: String?, customerSessionClientSecret: String?, configuration: CustomerSheet.Configuration) -> StripeCustomerAdapter? {
+        var customerAdapter: StripeCustomerAdapter?
         switch settings.paymentMethodMode {
         case .setupIntent:
-            customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
-                // This should be a block that fetches this from your server
-                .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
-            }, setupIntentClientSecretProvider: {
-                return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
-            })
+            if let customerSessionClientSecret {
+                customerAdapter = StripeCustomerAdapter(customerSessionClientSecretProvider: {
+                    // This should be a block that fetches this from your server
+                    return .init(customerId: customerId, clientSecret: customerSessionClientSecret)
+                }, setupIntentClientSecretProvider: {
+                    return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
+                })
+            } else if let ephemeralKey {
+                customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+                    // This should be a block that fetches this from your server
+                    return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+                }, setupIntentClientSecretProvider: {
+                    return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
+                })
+            }
         case .createAndAttach:
-            customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
-                // This should be a block that fetches this from your server
-                .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
-            }, setupIntentClientSecretProvider: nil)
+            if let ephemeralKey {
+                customerAdapter = StripeCustomerAdapter(customerEphemeralKeyProvider: {
+                    // This should be a block that fetches this from your server
+                    return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
+                }, setupIntentClientSecretProvider: nil)
+            }
         }
         return customerAdapter
     }
@@ -188,6 +200,7 @@ extension CustomerSheetTestPlaygroundController {
 
         // TODO: Refactor this to make the ephemeral key and customerId fetching async
         self.backend.loadBackendCustomerEphemeralKey(customerType: customerType,
+                                                     customerKeyType: self.settings.customerKeyType,
                                                      merchantCountryCode: settings.merchantCountryCode.rawValue) { result in
             if settingsToLoad != self.settings {
                 DispatchQueue.main.async {
@@ -196,7 +209,6 @@ extension CustomerSheetTestPlaygroundController {
                 return
             }
             guard let json = result,
-                  let ephemeralKey = json["customerEphemeralKeySecret"], !ephemeralKey.isEmpty,
                   let customerId = json["customerId"], !customerId.isEmpty,
                   let publishableKey = json["publishableKey"] else {
                 DispatchQueue.main.async {
@@ -205,14 +217,30 @@ extension CustomerSheetTestPlaygroundController {
                 }
                 return
             }
+            let ephemeralKey = json["customerEphemeralKeySecret"]
+            let customerSessionClientSecret = json["customerSessionClientSecret"]
+            guard ephemeralKey != nil || customerSessionClientSecret != nil else {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
+                    print("Error: Backend did not return a customerSessionClientSecret or customerEphemeralKeySecret")
+                }
+                return
+            }
 
             STPAPIClient.shared.publishableKey = publishableKey
 
             Task {
                 // Create Customer Sheet
-                var configuration = self.customerSheetConfiguration(customerId: customerId, ephemeralKey: ephemeralKey)
+                var configuration = self.customerSheetConfiguration(customerId: customerId)
                 configuration.applePayEnabled = self.applePayEnabled()
-                let customerAdapter = self.customerAdapter(customerId: customerId, ephemeralKey: ephemeralKey, configuration: configuration)
+                guard let customerAdapter = self.customerAdapter(customerId: customerId,
+                                                                 ephemeralKey: ephemeralKey,
+                                                                 customerSessionClientSecret: customerSessionClientSecret,
+                                                                 configuration: configuration) else {
+                    print("Failed to initalize CustomerAdapter")
+                    return
+                }
                 self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
 
                 // Retrieve selected PM
@@ -269,9 +297,13 @@ class CustomerSheetBackend {
         self.endpoint = endpoint
     }
 
-    func loadBackendCustomerEphemeralKey(customerType: String, merchantCountryCode: String, completion: @escaping ([String: String]?) -> Void) {
+    func loadBackendCustomerEphemeralKey(customerType: String,
+                                         customerKeyType: CustomerSheetTestPlaygroundSettings.CustomerKeyType,
+                                         merchantCountryCode: String,
+                                         completion: @escaping ([String: String]?) -> Void) {
 
         let body = [ "customer_type": customerType,
+                     "customer_key_type": customerKeyType.rawValue,
                      "merchant_country_code": merchantCountryCode,
         ] as [String: Any]
 
