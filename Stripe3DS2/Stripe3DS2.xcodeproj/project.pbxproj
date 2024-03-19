@@ -55,6 +55,7 @@
 		3192FCC841152A7E5E6F19D6 /* STDSAlreadyInitializedException.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1FD11407319293954C6D81 /* STDSAlreadyInitializedException.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		319DD1C82B0D50FF0083BA32 /* STDSVisionSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 319DD1C72B0D50F80083BA32 /* STDSVisionSupport.h */; };
 		31C636A25BF83316EE7EB57D /* STDSThreeDS2Service.h in Headers */ = {isa = PBXBuildFile; fileRef = 5EAA444FA7C82BDA4AD907BF /* STDSThreeDS2Service.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		31CDFC322BA8E58100B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC312BA8E58100B3DD91 /* PrivacyInfo.xcprivacy */; };
 		326AD1DD7BB8A2A6DA66EC67 /* STDSThreeDSProtocolVersion+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 47C29E9F3D2A62676B424CD1 /* STDSThreeDSProtocolVersion+Private.h */; };
 		32BE38D04DD76CA4490389C6 /* STDSConfigParametersTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F551808E65CDADD9B3A9CB8 /* STDSConfigParametersTests.m */; };
 		3343DA94A5032627843A343C /* STDSEphemeralKeyPair+Testing.h in Headers */ = {isa = PBXBuildFile; fileRef = 52D6E4F76CBA258163E57DF3 /* STDSEphemeralKeyPair+Testing.h */; };
@@ -368,6 +369,7 @@
 		30D22985091381DFCDF077E9 /* STDSSecTypeUtilitiesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSecTypeUtilitiesTests.m; sourceTree = "<group>"; };
 		315AEE1534F9D9974DC1674B /* STDSChallengeResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSChallengeResponse.h; sourceTree = "<group>"; };
 		319DD1C72B0D50F80083BA32 /* STDSVisionSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSVisionSupport.h; sourceTree = "<group>"; };
+		31CDFC312BA8E58100B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		3255706D2304FB551C97305F /* STDSProtocolErrorEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSProtocolErrorEvent.m; sourceTree = "<group>"; };
 		33CEADC8006E456FD82CE134 /* STDSWhitelistView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSWhitelistView.h; sourceTree = "<group>"; };
 		371F8076630A8839C1F6A508 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -755,6 +757,7 @@
 				8B0F0485B7048DDAA7DA8F9B /* UIView+LayoutSupport.m */,
 				8F72413F99F8E50FD0FA085D /* UIViewController+Stripe3DS2.h */,
 				99451064136843047C7881AD /* UIViewController+Stripe3DS2.m */,
+				31CDFC312BA8E58100B3DD91 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Stripe3DS2;
 			sourceTree = "<group>";
@@ -1280,6 +1283,7 @@
 				81B1C12449852CEB3C59793F /* ul-test.der in Resources */,
 				125427F1322501AA12EAEBE6 /* visa.der in Resources */,
 				2D42EA44FC01C834209CFED4 /* Stripe3DS2.xcassets in Resources */,
+				31CDFC322BA8E58100B3DD91 /* PrivacyInfo.xcprivacy in Resources */,
 				6BA3F565B6C0B78F6DED8826 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
