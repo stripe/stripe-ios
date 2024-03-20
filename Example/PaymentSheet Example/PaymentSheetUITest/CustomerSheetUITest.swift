@@ -46,7 +46,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
     }
 
-    func testCustomerSheetStandard_applePayOn_addCard() throws {
+    func testCustomerSheetStandard_applePayOn_addCard_ensureCanDismissOnUnsupportedPaymentMethod() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePay = .on
@@ -70,6 +70,15 @@ class CustomerSheetUITest: XCTestCase {
 
         let paymentMethodButton = app.staticTexts["Success: ••••4242, selected"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
+
+        dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
+
+        // Piggy back on the original test to ensure we can dismiss the sheet if we have an unsupported payment method
+        app.buttons["SetPMLink"].tap()
+        app.staticTexts["None"].waitForExistenceAndTap()
+        app.buttons["Close"].waitForExistenceAndTap()
+
+        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
 
     func testCustomerSheetStandard_applePayOn_selectApplePay() throws {

@@ -754,7 +754,9 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     }
                 }
             default:
-                assertionFailure("Selected payment method was something other than a saved payment method or apple pay")
+                self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
+                    self.csCompletion?(.canceled(nil))
+                }
             }
 
         } else {

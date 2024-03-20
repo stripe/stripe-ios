@@ -35,6 +35,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     }
 
     var customerSheet: CustomerSheet?
+    var _customerAdapter: CustomerAdapter?
     var backend: CustomerSheetBackend!
     var currentEndpoint: String = defaultEndpoint
     var appearance = PaymentSheet.Appearance.default
@@ -58,6 +59,16 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         self.settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         self.appearance = PaymentSheet.Appearance.default
         load()
+    }
+    func didTapSetToUnsupported() {
+        Task {
+            do {
+                try await _customerAdapter?.setSelectedPaymentOption(paymentOption: .link)
+                self.load()
+            } catch {
+                // no-op
+            }
+        }
     }
 
     func appearanceButtonTapped() {
@@ -241,6 +252,7 @@ extension CustomerSheetTestPlaygroundController {
                     print("Failed to initalize CustomerAdapter")
                     return
                 }
+                self._customerAdapter = customerAdapter
                 self.customerSheet = CustomerSheet(configuration: configuration, customer: customerAdapter)
 
                 // Retrieve selected PM
