@@ -14,12 +14,6 @@ import Foundation
     var params: [String: Any] { get }
 }
 
-/// An error analytic that can be logged to our analytics system.
-/// TODO: Delete this and replace users with ErrorAnalytic or directly call the desired serialize method.
-@_spi(STP) public protocol ErrorAnalyticProtocol: Analytic {
-    var error: Error { get }
-}
-
 /// A generic analytic type.
 ///
 /// - NOTE: This should only be used to support legacy analytics.

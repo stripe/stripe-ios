@@ -8,7 +8,7 @@
 import Foundation
 
 /// An error analytic that can be logged to our analytics system.
-@_spi(STP) public struct ErrorAnalytic: Analytic, ErrorAnalyticProtocol {
+@_spi(STP) public struct ErrorAnalytic: Analytic {
     public let event: STPAnalyticEvent
     public let error: Error
     public var params: [String: Any] {

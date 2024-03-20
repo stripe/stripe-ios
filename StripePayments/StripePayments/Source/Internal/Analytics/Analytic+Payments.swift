@@ -19,7 +19,7 @@ struct GenericPaymentAnalytic: PaymentAnalytic {
 }
 
 /// Represents a generic payment error analytic
-struct GenericPaymentErrorAnalytic: PaymentAnalytic, ErrorAnalyticProtocol {
+struct GenericPaymentErrorAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
     let paymentConfiguration: NSObject?
     let additionalParams: [String: Any]
