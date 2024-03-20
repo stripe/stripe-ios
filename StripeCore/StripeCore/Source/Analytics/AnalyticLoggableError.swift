@@ -8,6 +8,33 @@
 
 import Foundation
 
+/// Conform your Error to this protocol to override the parameters that get logged when you either:
+/// 1. Use `ErrorAnalytic` to send error analytics.
+/// 2. Build your own `Analytic` and use `serializeForV1Analytics`.
+protocol AnalyticLoggableError: Error {
+    var errorType: String { get }
+    var errorCode: String { get }
+    var additionalNonPIIErrorDetails: [String: Any] { get }
+}
+
+// MARK: Default implementation
+extension AnalyticLoggableError {
+    var errorType: String {
+        Self.extractErrorType(from: self)
+    }
+
+    var errorCode: String {
+        Self.extractErrorCode(from: self)
+    }
+
+    var additionalNonPIIErrorDetails: [String: Any] {
+        return [:]
+    }
+}
+
+extension AnalyticLoggableError where Self: Error {}
+
+// MARK: - Error extension methods that serialize errors for analytics logging
 @_spi(STP) extension Error {
     /// This is like `serializeForV2Logging` but returns a single String instead of a dict.
     /// TODO(MOBILESDK-1547) I don't think pattern is very good but it's here to share between PaymentSheet and STPPaymentContext. Please rethink before spreading its usage.
