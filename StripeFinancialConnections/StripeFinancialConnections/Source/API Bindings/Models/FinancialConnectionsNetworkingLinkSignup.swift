@@ -13,6 +13,7 @@ struct FinancialConnectionsNetworkingLinkSignup: Decodable {
     let aboveCta: String
     let cta: String
     let skipCta: String
+    let legalDetailsNotice: FinancialConnectionsLegalDetailsNotice?
 
     struct Body: Decodable {
         let bullets: [FinancialConnectionsBulletPoint]

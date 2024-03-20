@@ -2818,7 +2818,14 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 //        let addCardButton = app.buttons["+ Add"]
 //        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
 //        addCardButton.tap()
-//        fillLinkAndPay(mode: .fieldConsent)
+//        fillLinkAndPay(mode: .fieldConsent, cardNumber: "5555555555554444")
+//
+//        // reload w/ same customer
+//        reload(app, settings: settings)
+//        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+//        // Ensure both PMs exist
+//        XCTAssertTrue(app.staticTexts["••••4242"].waitForExistence(timeout: 5.0))
+//        XCTAssertTrue(app.staticTexts["••••4444"].waitForExistence(timeout: 5.0))
 //    }
 
     // Tests the #6 flow in PaymentSheet where the merchant enables saved payment methods, buyer has SPMs and returning Link user
@@ -3084,9 +3091,10 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     private func fillLinkAndPay(mode: LinkMode,
                                 uiStyle: PaymentSheetTestPlaygroundSettings.UIStyle = .paymentSheet,
-                                showLinkWalletButton: Bool = true) {
+                                showLinkWalletButton: Bool = true,
+                                cardNumber: String? = nil) {
 
-        try! fillCardData(app)
+        try! fillCardData(app, cardNumber: cardNumber)
 
         if showLinkWalletButton {
             // Confirm Link wallet button is visible
@@ -3191,7 +3199,7 @@ extension PaymentSheetUITestCase {
         XCTAssertFalse(continueButton.isEnabled)
         app.textFields["Full name"].tap()
         app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("test-\(UUID().uuidString)@example.com" + XCUIKeyboardKey.return.rawValue)
         XCTAssertTrue(continueButton.isEnabled)
         continueButton.tap()
 
@@ -3199,7 +3207,7 @@ extension PaymentSheetUITestCase {
         app.buttons["Agree and continue"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
-        app.buttons["Link account"].tap()
+        app.buttons["account_picker_link_accounts_button"].tap()
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: 10.0) {
@@ -3218,7 +3226,7 @@ extension PaymentSheetUITestCase {
         // Reload and pay with the now-saved us bank account
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].tap()
-        XCTAssertTrue(app.buttons["••••6789"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["••••1113"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons[confirmButtonText].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }

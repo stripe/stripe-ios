@@ -58,6 +58,7 @@
 		313F5F832B0BE5FD00BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F822B0BE5FD00BD98A9 /* Docs.docc */; };
 		316B33122B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */; };
 		31AD3BE72B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */; };
+		31CDFC362BA8E66200B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */; };
 		31D224F42B4637BA003E3D8B /* PaymentDetailsShareResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D224F32B4637BA003E3D8B /* PaymentDetailsShareResponse.swift */; };
 		335A19D93A5979557DB4CA4D /* PaymentMethodElementWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5012364ED0F2EEC6EC2AB52 /* PaymentMethodElementWrapper.swift */; };
 		34CF08CBC636F596B8BA4C12 /* TextFieldElement+CardTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00C7F5905759525C9BF8BD4 /* TextFieldElement+CardTest.swift */; };
@@ -365,6 +366,7 @@
 		3168698F2C61B0F5EC1240FE /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StripePaymentSheetTest.swift"; sourceTree = "<group>"; };
 		31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIApplication+StripePaymentSheet.swift"; path = "StripePaymentSheet/Source/Categories/UIApplication+StripePaymentSheet.swift"; sourceTree = "<group>"; };
+		31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		31D224F32B4637BA003E3D8B /* PaymentDetailsShareResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsShareResponse.swift; sourceTree = "<group>"; };
 		32332E0DB0AE12377EBDDEF1 /* PaymentSheetIntentConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetIntentConfiguration.swift; sourceTree = "<group>"; };
 		32BDC53A88FB17F378C6B413 /* CardSectionWithScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSectionWithScannerView.swift; sourceTree = "<group>"; };
@@ -1329,6 +1331,7 @@
 				E3D86510CBD3EEB0652E38C2 /* Source */,
 				668A2F2E20F846FDAFEC1217 /* Info.plist */,
 				7AA6166F234C3A2129CBD573 /* StripePaymentSheet.h */,
+				31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */,
 			);
 			path = StripePaymentSheet;
 			sourceTree = "<group>";
@@ -1528,6 +1531,7 @@
 			files = (
 				DE6A86725BC219EF19EF29AC /* form_specs.json in Resources */,
 				83031AF789D0C08E7B2BABB1 /* Localizable.strings in Resources */,
+				31CDFC362BA8E66200B3DD91 /* PrivacyInfo.xcprivacy in Resources */,
 				07F6593974558290598467E5 /* StripePaymentSheet.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

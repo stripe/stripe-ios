@@ -24,6 +24,10 @@ struct LinkURLParams: Encodable {
         case link_payment_method
         case card_payment_method
     }
+    enum IntentMode: String, Encodable {
+        case payment
+        case setup
+    }
     var path = "mobile_pay"
     var integrationType = "mobile"
     var paymentObject: PaymentObjectMode
@@ -37,6 +41,8 @@ struct LinkURLParams: Encodable {
     var flags: [String: Bool]
     var loggerMetadata: [String: String]
     var locale: String
+    var intentMode: IntentMode
+    var setupFutureUsage: Bool
 }
 
 class LinkURLGenerator {
@@ -46,7 +52,7 @@ class LinkURLGenerator {
         }
 
         // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
-        let customerCountryCode = intent.countryCode(overrideCountry: configuration.userOverrideCountry) ?? configuration.defaultBillingDetails.address.country ?? Locale.current.stp_regionCode ?? "US"
+        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.stp_regionCode ?? intent.countryCode(overrideCountry: configuration.userOverrideCountry) ?? "US"
 
         let merchantCountryCode = intent.merchantCountryCode ?? customerCountryCode
 
@@ -75,6 +81,8 @@ class LinkURLGenerator {
 
         let paymentObjectType: LinkURLParams.PaymentObjectMode = intent.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
+        let intentMode: LinkURLParams.IntentMode = intent.isPaymentIntent ? .payment : .setup
+
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
                              paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
@@ -84,7 +92,9 @@ class LinkURLGenerator {
                              experiments: [:],
                              flags: intent.linkFlags,
                              loggerMetadata: loggerMetadata,
-                             locale: Locale.current.toLanguageTag())
+                             locale: Locale.current.toLanguageTag(),
+                             intentMode: intentMode,
+                             setupFutureUsage: intent.isSettingUp)
     }
 
     static func url(params: LinkURLParams) throws -> URL {
@@ -104,7 +114,10 @@ class LinkURLGenerator {
 
 extension LinkURLParams {
     func toURLEncodedBase64() throws -> String {
-        let encodedData = try JSONEncoder().encode(self)
+        let encoder = JSONEncoder()
+        // Sorting makes this a little easier to debug
+        encoder.outputFormatting = .sortedKeys
+        let encodedData = try encoder.encode(self)
         return encodedData.base64EncodedString()
     }
 }

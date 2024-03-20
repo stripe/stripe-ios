@@ -216,7 +216,7 @@ class CustomerSheetUITest: XCTestCase {
         let selectButtonFinal = app.staticTexts["••••4444"]
         XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: 60.0))
     }
-    func testAddPaymentMethod_createAndAttach_reInitAdddViewController() throws {
+    func testAddPaymentMethod_createAndAttach_reInitAddViewController() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePay = .on
@@ -380,7 +380,58 @@ class CustomerSheetUITest: XCTestCase {
         let selectButtonFinal = app.staticTexts["None"]
         XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: 60.0))
     }
+    func testAddTwoPaymentMethods_thenUseCustomerSessionOnePM() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .on
+        loadPlayground(
+            app,
+            settings
+        )
 
+        presentCSAndAddCardFrom(buttonLabel: "None")
+        presentCSAndAddCardFrom(buttonLabel: "••••4242")
+
+        // Reload
+        app.buttons["Reload"].tap()
+
+        // Present Sheet
+        let selectButton = app.staticTexts["••••4242"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        selectButton.tap()
+
+        let editButton = app.staticTexts["Edit"]
+        XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
+
+        // Assert there are two payment methods using legacy customer ephemeral key
+        // value == 2, 1 value on playground + 2 payment method
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 3)
+        app.buttons["Close"].tap()
+        dismissAlertView(alertBody: "Success: ••••4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
+
+        // Switch to use customer session
+        app.buttons["customer_session"].tap()
+
+        // TODO: Use default payment method from elements/sessions payload
+        let selectButton2 = app.staticTexts["None"]
+        XCTAssertTrue(selectButton2.waitForExistence(timeout: 60.0))
+        selectButton2.tap()
+
+        // Wait for sheet to present
+        XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
+
+        // Requires FF: elements_enable_read_allow_redisplay, to return "1", otherwise 0
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
+
+        let closeButton = app.buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
+        closeButton.tap()
+
+        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
+
+        let selectButtonFinal = app.staticTexts["None"]
+        XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: 60.0))
+    }
     func testNoPrevPM_AddPM_noApplePay_closeInsteadOfConfirming() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -524,10 +575,10 @@ class CustomerSheetUITest: XCTestCase {
         continueButton.tap()
 
         // Go through connections flow
-        app.buttons["Agree and continue"].tap()
+        app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
-        app.buttons["Link account"].tap()
+        app.buttons["account_picker_link_accounts_button"].tap()
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: 10.0) {
@@ -548,7 +599,58 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
         confirmButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
+    }
+    func testCustomerSheetStandard_applePayOff_addUSBankAccount_customerSession() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.applePay = .off
+        settings.customerKeyType = .customerSession
+        loadPlayground(
+            app,
+            settings
+        )
+
+        let selectButton = app.staticTexts["None"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        selectButton.tap()
+
+        let usBankAccountPMSelectorButton = app.staticTexts["US Bank Account"]
+        XCTAssertTrue(usBankAccountPMSelectorButton.waitForExistence(timeout: 60.0))
+        usBankAccountPMSelectorButton.tap()
+
+        try! fillUSBankData(app)
+
+        let continueButton = app.buttons["Continue"]
+        XCTAssertTrue(continueButton.waitForExistence(timeout: 60.0))
+        continueButton.tap()
+
+        // Go through connections flow
+        app.buttons["consent_agree_button"].tap()
+        app.staticTexts["Test Institution"].forceTapElement()
+        app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
+        app.buttons["account_picker_link_accounts_button"].tap()
+
+        let notNowButton = app.buttons["Not now"]
+        if notNowButton.waitForExistence(timeout: 10.0) {
+            notNowButton.tap()
+        }
+
+        XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
+        app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
+
+        let testBankLinkedBankAccount = app.staticTexts["StripeBank"]
+        XCTAssertTrue(testBankLinkedBankAccount.waitForExistence(timeout: 60.0))
+
+        let saveButton = app.buttons["Save"]
+        XCTAssertTrue(saveButton.waitForExistence(timeout: 60.0))
+        saveButton.tap()
+
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        confirmButton.tap()
+
+        dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
     func testCustomerSheetStandard_applePayOff_addSepa() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
@@ -608,10 +710,10 @@ class CustomerSheetUITest: XCTestCase {
         continueButton.tap()
 
         // Go through connections flow
-        app.buttons["Agree and continue"].tap()
+        app.buttons["consent_agree_button"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
         app.staticTexts["Success"].waitForExistenceAndTap(timeout: 10)
-        app.buttons["Link account"].tap()
+        app.buttons["account_picker_link_accounts_button"].tap()
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: 10.0) {
@@ -632,7 +734,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
         confirmButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••1113, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
     func testCustomerSheetStandard_applePayOff_addUSBankAccount_MicroDeposit() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
@@ -659,14 +761,14 @@ class CustomerSheetUITest: XCTestCase {
         continueButton.tap()
 
         // Go through connections flow
-        app.links["Manually verify instead"].tap()
+        app.otherElements["consent_manually_verify_label"].links.firstMatch.tap()
         try! fillUSBankData_microdeposits(app)
 
         let continueManualEntry = app.buttons["manual_entry_continue_button"]
         XCTAssertTrue(continueManualEntry.waitForExistence(timeout: 60.0))
         continueManualEntry.tap()
 
-        let doneManualEntry = app.buttons["manual_entry_success_done_button"]
+        let doneManualEntry = app.buttons["success_done_button"]
         XCTAssertTrue(doneManualEntry.waitForExistence(timeout: 60.0))
         doneManualEntry.tap()
 

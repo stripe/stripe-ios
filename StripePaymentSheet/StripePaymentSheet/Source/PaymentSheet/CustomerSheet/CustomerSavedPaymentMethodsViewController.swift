@@ -21,7 +21,6 @@ protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
 class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: - Read-only Properties
-    let savedPaymentMethods: [STPPaymentMethod]
     let selectedPaymentMethodOption: CustomerPaymentOption?
     let isApplePayEnabled: Bool
     let configuration: CustomerSheet.Configuration
@@ -29,6 +28,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let cbcEligible: Bool
 
     // MARK: - Writable Properties
+    var savedPaymentMethods: [STPPaymentMethod]
+    var lastSavedPaymentMethod: STPPaymentMethod?
     weak var delegate: CustomerSavedPaymentMethodsViewControllerDelegate?
     var csCompletion: CustomerSheet.CustomerSheetCompletion?
     private(set) var isDismissable: Bool = true
@@ -82,6 +83,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         return CustomerSavedPaymentMethodsCollectionViewController(
             savedPaymentMethods: savedPaymentMethods,
             selectedPaymentMethodOption: selectedPaymentMethodOption,
+            mostRecentlyAddedPaymentMethod: nil,
             savedPaymentMethodsConfiguration: self.configuration,
             customerAdapter: self.customerAdapter,
             configuration: .init(
@@ -456,11 +458,25 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
-            self.processingInFlight = false
             if shouldDismissSheetOnConfirm(paymentMethod: paymentMethod, setupIntent: setupIntent) {
+                self.processingInFlight = false
                 self.handleDismissSheet(shouldDismissImmediately: true)
             } else {
-                self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
+
+                guard let updatedSavedPaymentMethods = await self.fetchSavedPaymentMethods() else {
+                    // SI was confirmed, PM is attached, but failed to refresh payment methods
+                    // Sheet will dismiss and payment method will be unselected
+                    self.processingInFlight = false
+                    self.handleDismissSheet(shouldDismissImmediately: true)
+                    return
+                }
+
+                self.lastSavedPaymentMethod = paymentMethod
+                self.savedPaymentMethods = updatedSavedPaymentMethods
+
+                let customerPaymentOption = CustomerPaymentOption(value: paymentMethod.stripeId)
+                self.reinitSavedPaymentOptionsViewController(mostRecentlyAddedPaymentMethod: customerPaymentOption)
+                self.processingInFlight = false
                 self.mode = .selectingSaved
                 self.updateUI(animated: true)
                 self.reinitAddPaymentMethodViewController()
@@ -496,6 +512,15 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             self.error = error
         }
         return nil
+    }
+
+    private func fetchSavedPaymentMethods() async -> [STPPaymentMethod]? {
+        do {
+            return try await customerAdapter.fetchPaymentMethods()
+        } catch {
+            self.error = error
+            return nil
+        }
     }
 
     func confirm(intent: Intent?, paymentOption: PaymentOption) async -> STPSetupIntent? {
@@ -565,8 +590,22 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                         }
                         return
                     }
+
+                    guard let updatedSavedPaymentMethods = await self.fetchSavedPaymentMethods() else {
+                        // PM is attached, but failed to refresh payment methods
+                        // Sheet will dismiss and payment method will be unselected
+                        self.processingInFlight = false
+                        self.handleDismissSheet(shouldDismissImmediately: true)
+                        return
+                    }
+
+                    self.savedPaymentMethods = updatedSavedPaymentMethods
+                    self.lastSavedPaymentMethod = paymentMethod
+
+                    let customerPaymentOption = CustomerPaymentOption(value: paymentMethod.stripeId)
+                    self.reinitSavedPaymentOptionsViewController(mostRecentlyAddedPaymentMethod: customerPaymentOption)
                     self.processingInFlight = false
-                    self.savedPaymentOptionsViewController.didAddSavedPaymentMethod(paymentMethod: paymentMethod)
+
                     self.mode = .selectingSaved
                     self.updateUI(animated: true)
                     self.reinitAddPaymentMethodViewController()
@@ -584,6 +623,23 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             cbcEligible: cbcEligible,
             delegate: self)
         cachedClientSecret = nil
+    }
+    private func reinitSavedPaymentOptionsViewController(mostRecentlyAddedPaymentMethod: CustomerPaymentOption?) {
+        self.savedPaymentOptionsViewController = CustomerSavedPaymentMethodsCollectionViewController(
+            savedPaymentMethods: self.savedPaymentMethods,
+            selectedPaymentMethodOption: selectedPaymentMethodOption,
+            mostRecentlyAddedPaymentMethod: mostRecentlyAddedPaymentMethod,
+            savedPaymentMethodsConfiguration: self.configuration,
+            customerAdapter: self.customerAdapter,
+            configuration: .init(
+                showApplePay: isApplePayEnabled,
+                allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+                isTestMode: configuration.apiClient.isTestmode
+            ),
+            appearance: configuration.appearance,
+            cbcEligible: cbcEligible,
+            delegate: self
+        )
     }
 
     private func set(error: Error?) {
@@ -651,10 +707,11 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             self.handleDismissSheet_completion()
             return
         }
-        if mode == .selectingSaved && !self.savedPaymentOptionsViewController.unsyncedSavedPaymentMethods.isEmpty {
+        if mode == .selectingSaved,
+           let lastSavedPaymentMethodId = self.lastSavedPaymentMethod?.stripeId {
             if let selectedPaymentOption = self.savedPaymentOptionsViewController.selectedPaymentOption,
                case .saved(let selectedPaymentMethod, _) = selectedPaymentOption,
-               self.savedPaymentOptionsViewController.unsyncedSavedPaymentMethods.first?.stripeId == selectedPaymentMethod.stripeId {
+               lastSavedPaymentMethodId == selectedPaymentMethod.stripeId {
                 didTapActionButton()
             } else {
                 self.handleDismissSheet_completion()

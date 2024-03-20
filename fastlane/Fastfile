@@ -91,7 +91,7 @@ platform :ios do
   end
 
   lane :legacy_tests_15 do
-    legacy_tests(device: 'iPhone 12 mini', version: '15.4')
+    legacy_tests(device: 'iPhone 12 mini', version: '15.5')
   end
 
   lane :legacy_tests_16 do

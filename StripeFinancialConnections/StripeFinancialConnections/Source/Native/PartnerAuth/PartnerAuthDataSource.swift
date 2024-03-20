@@ -14,7 +14,6 @@ protocol PartnerAuthDataSource: AnyObject {
     var returnURL: String? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var pendingAuthSession: FinancialConnectionsAuthSession? { get }
-    var reduceManualEntryProminenceInErrors: Bool { get }
     var disableAuthSessionRetrieval: Bool { get }
 
     func createAuthSession() -> Future<FinancialConnectionsAuthSession>
@@ -33,7 +32,6 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
-    let reduceManualEntryProminenceInErrors: Bool
     var disableAuthSessionRetrieval: Bool {
         return manifest.features?["bank_connections_disable_defensive_auth_session_retrieval_on_complete"] == true
     }
@@ -46,21 +44,21 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     private(set) var pendingAuthSession: FinancialConnectionsAuthSession?
 
     init(
+        authSession: FinancialConnectionsAuthSession?,
         institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
         returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient,
-        reduceManualEntryProminenceInErrors: Bool
+        analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
+        self.pendingAuthSession = authSession
         self.institution = institution
         self.manifest = manifest
         self.returnURL = returnURL
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
-        self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors
     }
 
     func createAuthSession() -> Future<FinancialConnectionsAuthSession> {

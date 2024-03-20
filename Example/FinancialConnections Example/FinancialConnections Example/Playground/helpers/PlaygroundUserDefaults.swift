@@ -41,16 +41,22 @@ final class PlaygroundUserDefaults {
     static var email: String
 
     @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_TRANSACTIONS_PERMISSION",
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_OWNERSHIP_PERMISSION",
         defaultValue: false
     )
-    static var enableTransactionsPermission: Bool
+    static var enableOwnershipPermission: Bool
 
     @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_BALANCES_PERMISSION",
         defaultValue: false
     )
     static var enableBalancesPermission: Bool
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_TRANSACTIONS_PERMISSION",
+        defaultValue: false
+    )
+    static var enableTransactionsPermission: Bool
 
     @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_CUSTOM_SCENARIO",

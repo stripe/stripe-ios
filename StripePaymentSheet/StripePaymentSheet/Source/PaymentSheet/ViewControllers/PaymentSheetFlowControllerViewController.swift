@@ -114,7 +114,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
     }()
     private lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(
-            callToAction: .add(paymentMethodType: selectedPaymentMethodType),
+            callToAction: callToAction,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapAddButton()
@@ -122,6 +122,24 @@ class PaymentSheetFlowControllerViewController: UIViewController {
         )
         return button
     }()
+
+    private var callToAction: ConfirmButton.CallToActionType {
+        if let customCtaLabel = configuration.primaryButtonLabel {
+            switch mode {
+            case .selectingSaved:
+                return .customWithLock(title: customCtaLabel)
+            case .addingNew:
+                return .custom(title: customCtaLabel)
+            }
+        }
+
+        switch mode {
+        case .selectingSaved:
+            return .customWithLock(title: String.Localized.continue)
+        case .addingNew:
+            return .add(paymentMethodType: selectedPaymentMethodType)
+        }
+    }
 
     private lazy var bottomNoticeTextField: UITextView = {
         return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
@@ -388,7 +406,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                     }
                 }
                 confirmButton.update(state: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled,
-                                     callToAction: .customWithLock(title: String.Localized.continue), animated: true)
+                                     callToAction: callToAction, animated: true)
             } else {
                 if !confirmButton.isHidden {
                     UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
@@ -422,7 +440,7 @@ class PaymentSheetFlowControllerViewController: UIViewController {
                 }
             }()
 
-            var callToAction: ConfirmButton.CallToActionType = .add(paymentMethodType: selectedPaymentMethodType)
+            var callToAction: ConfirmButton.CallToActionType = callToAction
             if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
                 callToAction = overrideCallToAction
                 confirmButtonState = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled

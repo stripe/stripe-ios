@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '23.25.0'
+  s.version                        = '23.25.1'
 
   s.summary                        = 'StripeCore contains shared infrastructure used by all Stripe pods. '\
                                      'It is not meant to be used without other Stripe pods.'
@@ -17,5 +17,5 @@ Pod::Spec.new do |s|
   s.ios.deployment_target          = '13.0'
   s.swift_version		               = '5.0'
   s.source_files                   = 'StripeCore/StripeCore/**/*.swift'
-  s.ios.resource_bundle            = { 'StripeCoreBundle' => 'StripeCore/StripeCore/Resources/**/*.lproj' }
+  s.ios.resource_bundle            = { 'StripeCoreBundle' => ['StripeCore/StripeCore/Resources/**/*.lproj', 'StripeCore/StripeCore/PrivacyInfo.xcprivacy'] }
 end
