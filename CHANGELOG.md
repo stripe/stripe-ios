@@ -1,6 +1,7 @@
 ## X.X.X
 ### PaymentSheet
 * [Fixed] When confirming a SetupIntent with Link, "Set up" will be shown as the confirm button text instead of "Pay".
+* [Changed] Tapping a saved PM/Apple Pay/Link no longer sets it as the default; they are only set as the default after you successfully confirm.
 
 ### All
 * Added a [Privacy Manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files).
