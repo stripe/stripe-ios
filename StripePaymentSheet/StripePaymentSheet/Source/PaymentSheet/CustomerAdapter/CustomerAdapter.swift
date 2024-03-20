@@ -304,8 +304,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
         let config = try customerEphemeralKey.customerAdapterConfiguration()
         return try await withCheckedThrowingContinuation({ continuation in
             if config.shouldRemoveDuplicates {
-                // TODO: Call detachPaymentMethodRemoveDuplicates after removing unsynced payment methods
-                apiClient.detachPaymentMethod(paymentMethodId, fromCustomerUsing: config.ephemeralKey) { error in
+                apiClient.detachPaymentMethodRemoveDuplicates(paymentMethodId, customerId: config.customerId, fromCustomerUsing: config.ephemeralKey) { error in
                     if let error = error {
                         continuation.resume(throwing: error)
                         return

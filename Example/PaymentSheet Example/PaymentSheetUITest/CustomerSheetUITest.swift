@@ -59,7 +59,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
@@ -106,7 +106,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
@@ -146,7 +146,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
@@ -154,7 +154,7 @@ class CustomerSheetUITest: XCTestCase {
         let cardPresence = app.staticTexts["••••4242"]
         XCTAssertTrue(cardPresence.waitForExistence(timeout: 60.0))
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         if let cardInformation = app.textFields["Card number"].value as? String {
             XCTAssert(cardInformation.isEmpty)
@@ -188,7 +188,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
@@ -196,7 +196,7 @@ class CustomerSheetUITest: XCTestCase {
         let cardPresence = app.staticTexts["••••4242"]
         XCTAssertTrue(cardPresence.waitForExistence(timeout: 60.0))
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, cardNumber: "5555555555554444", postalEnabled: true)
         app.buttons["Save"].tap()
@@ -229,7 +229,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
@@ -237,7 +237,7 @@ class CustomerSheetUITest: XCTestCase {
         let cardPresence = app.staticTexts["••••4242"]
         XCTAssertTrue(cardPresence.waitForExistence(timeout: 60.0))
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         if let cardInformation = app.textFields["Card number"].value as? String {
             XCTAssert(cardInformation.isEmpty)
@@ -271,7 +271,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
@@ -279,7 +279,7 @@ class CustomerSheetUITest: XCTestCase {
         let cardPresence = app.staticTexts["••••4242"]
         XCTAssertTrue(cardPresence.waitForExistence(timeout: 60.0))
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, cardNumber: "5555555555554444", postalEnabled: true)
         app.buttons["Save"].tap()
@@ -423,14 +423,29 @@ class CustomerSheetUITest: XCTestCase {
         // Requires FF: elements_enable_read_allow_redisplay, to return "1", otherwise 0
         XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
 
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+
+        // Remove one saved PM, which should remove both PMs
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Should be kicked out of edit mode now that we have one saved PM
+        XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
+        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
+
         let closeButton = app.buttons["Close"]
         XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
         closeButton.tap()
 
         dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
 
-        let selectButtonFinal = app.staticTexts["None"]
-        XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: 60.0))
+        let selectButton3 = app.staticTexts["None"]
+        XCTAssertTrue(selectButton3.waitForExistence(timeout: 60.0))
+        selectButton3.tap()
+
+        // There should be zero cards left, because both should have been deleted
+        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 0)
     }
     func testNoPrevPM_AddPM_noApplePay_closeInsteadOfConfirming() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
@@ -472,9 +487,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
-        let addButton = app.staticTexts["+ Add"]
-        XCTAssertTrue(addButton.waitForExistence(timeout: 60.0))
-        addButton.tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
@@ -504,7 +517,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, cardNumber: "5555555555554444", postalEnabled: true)
         app.buttons["Save"].tap()
@@ -534,7 +547,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
         selectButton.tap()
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, cardNumber: "5555555555554444", postalEnabled: true)
         app.buttons["Save"].tap()
@@ -791,7 +804,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(button.waitForExistence(timeout: 60.0))
         button.forceTapElement()
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
@@ -823,7 +836,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(button.waitForExistence(timeout: 5))
         button.forceTapElement()
 
-        app.staticTexts["+ Add"].tap()
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         let numberField = app.textFields["Card number"]
         let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
@@ -906,7 +919,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(button.waitForExistence(timeout: 5))
         button.forceTapElement()
 
-        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 5)
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
 
         // We should have selected Visa due to preferreedNetworks configuration API
         let cardBrandTextField = app.textFields["Visa"]
@@ -1020,18 +1033,21 @@ class CustomerSheetUITest: XCTestCase {
 
     func presentCSAndAddCardFrom(buttonLabel: String, cardNumber: String? = nil, tapAdd: Bool = true) {
         let selectButton = app.staticTexts[buttonLabel]
-        XCTAssertTrue(selectButton.waitForExistence(timeout: 60.0))
+        XCTAssertTrue(selectButton.waitForExistence(timeout: 10.0))
         selectButton.tap()
 
         if tapAdd {
-            app.staticTexts["+ Add"].tap()
+            app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: 10)
         }
+
+        let numberField = app.textFields["Card number"]
+        XCTAssertTrue(numberField.waitForExistence(timeout: 10.0))
 
         try! fillCardData(app, cardNumber: cardNumber, postalEnabled: true)
         app.buttons["Save"].tap()
 
         let confirmButton = app.buttons["Confirm"]
-        XCTAssertTrue(confirmButton.waitForExistence(timeout: 60.0))
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 10.0))
         confirmButton.tap()
         if let cardNumber {
             let last4 = String(cardNumber.suffix(4))
