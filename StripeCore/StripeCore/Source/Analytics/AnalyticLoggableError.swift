@@ -12,8 +12,16 @@ import Foundation
 /// 1. Use `ErrorAnalytic` to send error analytics.
 /// 2. Build your own `Analytic` and use `serializeForV1Analytics`.
 protocol AnalyticLoggableError: Error {
+    /// The value used for `"error_type"` in the analytics payload.
+    /// The default implementation uses `Error.extractErrorType`
     var errorType: String { get }
+
+    /// The value used for `"error_code"` in the analytics payload.
+    /// The default implementation uses `Error.errorCode`
     var errorCode: String { get }
+
+    /// Additional, non-PII/PDE details about the error.
+    /// If non-empty, this is sent as the value for `"error_details"` in the analytics payload.
     var additionalNonPIIErrorDetails: [String: Any] { get }
 }
 
@@ -61,13 +69,28 @@ extension AnalyticLoggableError where Self: Error {}
     ///            For NSErrors, the error code e.g. “-1009”.
     ///            For Swift errors, the enum case name as a string for Swift errors e.g. “noPublishableKey”.
     public func serializeForV1Analytics() -> [String: Any] {
-        let errorType = Self.extractErrorType(from: self)
-        let errorCode = Self.extractErrorCode(from: self)
-
-        return [
+        let errorType: String = {
+            if let analyticLoggableError = self as? AnalyticLoggableError {
+                analyticLoggableError.errorType
+            } else {
+                Self.extractErrorType(from: self)
+            }
+        }()
+        let errorCode: String = {
+            if let analyticLoggableError = self as? AnalyticLoggableError {
+                analyticLoggableError.errorCode
+            } else {
+                Self.extractErrorCode(from: self)
+            }
+        }()
+        var params: [String: Any] = [
             "error_type": errorType,
             "error_code": errorCode,
         ]
+        if let analyticLoggableError = self as? AnalyticLoggableError {
+            params["error_details"] = analyticLoggableError.additionalNonPIIErrorDetails
+        }
+        return params
     }
 
     /// Extracts a value suitable for the `"error_type"` analytic parameter

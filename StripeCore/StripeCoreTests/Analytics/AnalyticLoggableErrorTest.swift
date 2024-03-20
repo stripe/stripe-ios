@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import XCTest
 @testable@_spi(STP) import StripeCore
+import XCTest
 
 class AnalyticLoggableErrorTest: XCTestCase {
     enum BasicSwiftError: Error {
@@ -29,7 +29,7 @@ class AnalyticLoggableErrorTest: XCTestCase {
             }
         }
     }
-    
+
     func testSerializeForV1Logging() {
         // Stripe API Error
         let stripeAPIError = NSError.stp_error(fromStripeResponse: [
@@ -110,5 +110,47 @@ class AnalyticLoggableErrorTest: XCTestCase {
                 "error_code": "-1009",
             ]
         )
+    }
+
+    func testAnalyticLoggableError() {
+        // Implementing `AnalyticLoggableError`...
+        enum MyError: Error, AnalyticLoggableError, CustomDebugStringConvertible {
+            case invalidClientSecret(clientSecret: String)
+            var debugDescription: String {
+                switch self {
+                case .invalidClientSecret(clientSecret: let clientSecret):
+                    return "Invalid client secret provided starting with \(clientSecret.prefix(5))"
+                }
+            }
+
+            // ...and overriding everything...
+            var errorType: String {
+                return "overriden error type"
+            }
+            var errorCode: String {
+                return "overridden error code"
+            }
+
+            // ...and using additionalNonPIIErrorDetails...
+            var additionalNonPIIErrorDetails: [String: Any] {
+                switch self {
+                case .invalidClientSecret(clientSecret: let clientSecret):
+                    return [
+                        "client_secret_snippet": String(clientSecret.prefix(5)),
+                    ]
+                }
+            }
+        }
+
+        // ...should use all the custom values...
+        let analyticsClient = STPAnalyticsClient()
+        analyticsClient.log(analytic: ErrorAnalytic(event: ._3DS2ChallengeFlowErrored, error: MyError.invalidClientSecret(clientSecret: "cs_12345")))
+
+        let log = analyticsClient._testLogHistory.first!
+        XCTAssertEqual(log["error_type"] as? String, "overriden error type")
+        XCTAssertEqual(log["error_code"] as? String, "overridden error code")
+        let errorDetails = log["error_details"] as? [String: Any]
+        XCTAssertEqual(errorDetails?["client_secret_snippet"] as? String, "cs_12")
+        XCTAssertEqual(errorDetails?.keys.count, 1)
     }
 }
