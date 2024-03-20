@@ -11,6 +11,7 @@
 
 ### PaymentSheet
 * [Fixed] A bug where `PaymentSheet.FlowController` was not respecting `PaymentSheet.Configuration.primaryButtonLabel`.
+* [Added] Support for Klarna with SetupIntents and PaymentIntents with `setup_future_usage`.
 
 ### Financial Connections
 * [Changed] Updated the design of Financial Connections authentication flow.
