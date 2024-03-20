@@ -32,8 +32,7 @@ where Self: RawRepresentable, Self.RawValue == String {
 
 @_spi(STP) extension Error {
     /// Serialize an Error for logging, suitable for the Identity and Financial Connections SDK.
-    // TODO: Rename to serializeForIdentityAndFinancialConnectionsSDKLogging()
-    public func serializeForLogging() -> [String: Any] {
+    public func serializeForV2Logging() -> [String: Any] {
         if let loggableError = self as? AnalyticLoggableError {
             return loggableError.analyticLoggableSerializeForLogging()
         }
@@ -52,7 +51,9 @@ where Self: RawRepresentable, Self.RawValue == String {
         return payload
     }
 
-    /// This is like `serializeForLogging` but returns a single String instead of a dict.
+    // MARK: - Serialize for v1 analytics helpers
+
+    /// This is like `serializeForV2Logging` but returns a single String instead of a dict.
     /// TODO(MOBILESDK-1547) I don't think pattern is very good but it's here to share between PaymentSheet and STPPaymentContext. Please rethink before spreading its usage.
     public func makeSafeLoggingString() -> String {
         let error = self as NSError
@@ -114,10 +115,7 @@ where Self: RawRepresentable, Self.RawValue == String {
     static func extractErrorCode(from error: Error) -> String {
         // Note: We explicitly avoid using String(describing:) or similar to prevent the edge case where an Error conforms to CustomDebugStringConvertible or similar and puts PII in the `description`
         let mirror = Mirror(reflecting: error)
-        if let self = self as? (any RawRepresentable), let rawValueString = self.rawValue as? String {
-            // For Swift string enums, use the raw value
-            return rawValueString
-        } else if mirror.displayStyle == .enum {
+        if mirror.displayStyle == .enum {
             if let caseLabel = mirror.children.first?.label {
                 // For enums with associated values, this returns the name of the case e.g. DecodingError.keyNotFound(...) -> "keyNotFound"
                 return caseLabel
@@ -134,11 +132,5 @@ where Self: RawRepresentable, Self.RawValue == String {
             // Default: Cast to Error and use the code.
             return String((error as NSError).code)
         }
-    }
-}
-
-extension Error {
-    var errorType: String {
-        return (self as NSError).domain
     }
 }

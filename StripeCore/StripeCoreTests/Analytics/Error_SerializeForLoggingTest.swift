@@ -32,7 +32,7 @@ class Error_SerializeForLoggingTest: XCTestCase {
             userInfo: ["description": "test-description"]
         )
 
-        let serializedError = error.serializeForLogging()
+        let serializedError = error.serializeForV2Logging()
 
         XCTAssertEqual(serializedError.count, 2)
         XCTAssertEqual("test-domain", serializedError["domain"] as? String)
@@ -44,7 +44,7 @@ class Error_SerializeForLoggingTest: XCTestCase {
     func testAnalyticLoggableSerializedForLogging() {
         let error: Error = CustomLoggableError()
 
-        let serializedError = error.serializeForLogging()
+        let serializedError = error.serializeForV2Logging()
 
         XCTAssertEqual(serializedError.count, 1)
         XCTAssertEqual(serializedError["foo"] as? String, "value")
@@ -53,7 +53,7 @@ class Error_SerializeForLoggingTest: XCTestCase {
     func testStringErrorSerializeForLogging() {
         let error: Error = StringError.foo
 
-        let serializedError = error.serializeForLogging()
+        let serializedError = error.serializeForV2Logging()
 
         print(serializedError)
 
@@ -113,7 +113,6 @@ class Error_SerializeForLoggingTest: XCTestCase {
 
         // Swift Error
         let swiftError = BasicSwiftError.foo
-        let swiftErrorWithPIIInAssociatedValue = BasicSwiftError.bar(pii: "pii")
         XCTAssertEqual(
             swiftError.serializeForV1Analytics() as? [String: String],
             [
@@ -121,6 +120,9 @@ class Error_SerializeForLoggingTest: XCTestCase {
                 "error_code": "foo",
             ]
         )
+
+        // Swift Error with associated value - shouldn't include associated value
+        let swiftErrorWithPIIInAssociatedValue = BasicSwiftError.bar(pii: "pii")
         XCTAssertEqual(
             swiftErrorWithPIIInAssociatedValue.serializeForV1Analytics() as? [String: String],
             [
@@ -129,9 +131,8 @@ class Error_SerializeForLoggingTest: XCTestCase {
             ]
         )
 
-        // Swift Error with debug description
+        // Swift Error with debug description - ok to use debug description for case w/o associated value
         let swiftErrorWithDebugDescription = BasicSwiftErrorWithDebugDescription.someErrorCase
-        let swiftErrorWithPIIInAssociatedValueAndDebugDescription = BasicSwiftErrorWithDebugDescription.someOtherCase(pii: "pii")
         XCTAssertEqual(
             swiftErrorWithDebugDescription.serializeForV1Analytics() as? [String: String],
             [
@@ -139,11 +140,28 @@ class Error_SerializeForLoggingTest: XCTestCase {
                 "error_code": "Some error occurred.",
             ]
         )
+
+        // Swift Error with associated value and debug description - should use case name
+        let swiftErrorWithPIIInAssociatedValueAndDebugDescription = BasicSwiftErrorWithDebugDescription.someOtherCase(pii: "pii")
         XCTAssertEqual(
             swiftErrorWithPIIInAssociatedValueAndDebugDescription.serializeForV1Analytics() as? [String: String],
             [
                 "error_type": "StripeCoreTests.Error_SerializeForLoggingTest.BasicSwiftErrorWithDebugDescription",
                 "error_code": "someOtherCase",
+            ]
+        )
+
+        // NSError
+        let nsURLError = NSError(
+            domain: NSURLErrorDomain,
+            code: NSURLErrorNotConnectedToInternet,
+            userInfo: nil
+        )
+        XCTAssertEqual(
+            nsURLError.serializeForV1Analytics() as? [String: String],
+            [
+                "error_type": "NSURLErrorDomain",
+                "error_code": "-1009",
             ]
         )
     }
