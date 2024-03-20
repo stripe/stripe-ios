@@ -200,7 +200,7 @@ def build_index_page(modules, release_version, docs_root_directory)
   modules.each do |m|
     # Load podspec to get module name and summary
     podspec = Pod::Specification.from_file(File.join_if_safe($ROOT_DIR, m['podspec']))
-    index_content += "**[#{podspec.name}](#{$HOSTING_BASE_PATH}#{m['framework_name'].downcase}/documentation/#{m['framework_name'].downcase})**\n\n#{podspec.summary}\n\n"
+    index_content += "**[#{podspec.name}](#{m['framework_name'].downcase}/documentation/#{m['framework_name'].downcase})**\n\n#{podspec.summary}\n\n"
   end
 
   File.write(index_path, index_content)
