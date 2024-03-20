@@ -13,7 +13,7 @@ import XCTest
 
 class Error_SerializeForLoggingTest: XCTestCase {
 
-    struct CustomLoggableError: Error, AnalyticLoggableError {
+    struct CustomLoggableError: Error, AnalyticLoggableErrorV2 {
         func analyticLoggableSerializeForLogging() -> [String: Any] {
             return [
                 "foo": "value",
@@ -21,7 +21,7 @@ class Error_SerializeForLoggingTest: XCTestCase {
         }
     }
 
-    enum StringError: String, AnalyticLoggableStringError {
+    enum StringError: String, AnalyticLoggableStringErrorV2 {
         case foo
     }
 
