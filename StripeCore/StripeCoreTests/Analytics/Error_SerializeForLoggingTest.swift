@@ -64,4 +64,87 @@ class Error_SerializeForLoggingTest: XCTestCase {
             "StripeCoreTests.Error_SerializeForLoggingTest.StringError"
         )
     }
+
+    enum BasicSwiftError: Error {
+        case foo
+        case bar(pii: String)
+    }
+
+    enum BasicSwiftErrorWithDebugDescription: Error, CustomDebugStringConvertible {
+        case someErrorCase
+        case someOtherCase(pii: String)
+
+        var debugDescription: String {
+            switch self {
+            case .someErrorCase:
+                "Some error occurred."
+            case .someOtherCase(let pii):
+                "Some other error occured with this PII: \(pii)"
+            }
+        }
+    }
+
+    func testSerializeForV1Logging() {
+        // Stripe API Error
+        let stripeAPIError = NSError.stp_error(fromStripeResponse: [
+            "error": [
+                "type": "card_error",
+                "message": "Your card number is incorrect.",
+                "code": "incorrect_number",
+            ],
+        ])!
+        XCTAssertEqual(
+            stripeAPIError.serializeForV1Analytics() as? [String: String],
+            [
+                "error_type": "card_error",
+                "error_code": "incorrect_number",
+            ]
+        )
+
+        // Decoding Error from an iOS library
+        let decodingError = DecodingError.keyNotFound(STPCodingKey(intValue: 0)!, .init(codingPath: [], debugDescription: "PII"))
+        XCTAssertEqual(
+            decodingError.serializeForV1Analytics() as? [String: String],
+            [
+                "error_type": "Swift.DecodingError",
+                "error_code": "keyNotFound",
+            ]
+        )
+
+        // Swift Error
+        let swiftError = BasicSwiftError.foo
+        let swiftErrorWithPIIInAssociatedValue = BasicSwiftError.bar(pii: "pii")
+        XCTAssertEqual(
+            swiftError.serializeForV1Analytics() as? [String: String],
+            [
+                "error_type": "StripeCoreTests.Error_SerializeForLoggingTest.BasicSwiftError",
+                "error_code": "foo",
+            ]
+        )
+        XCTAssertEqual(
+            swiftErrorWithPIIInAssociatedValue.serializeForV1Analytics() as? [String: String],
+            [
+                "error_type": "StripeCoreTests.Error_SerializeForLoggingTest.BasicSwiftError",
+                "error_code": "bar",
+            ]
+        )
+
+        // Swift Error with debug description
+        let swiftErrorWithDebugDescription = BasicSwiftErrorWithDebugDescription.someErrorCase
+        let swiftErrorWithPIIInAssociatedValueAndDebugDescription = BasicSwiftErrorWithDebugDescription.someOtherCase(pii: "pii")
+        XCTAssertEqual(
+            swiftErrorWithDebugDescription.serializeForV1Analytics() as? [String: String],
+            [
+                "error_type": "StripeCoreTests.Error_SerializeForLoggingTest.BasicSwiftErrorWithDebugDescription",
+                "error_code": "Some error occurred.",
+            ]
+        )
+        XCTAssertEqual(
+            swiftErrorWithPIIInAssociatedValueAndDebugDescription.serializeForV1Analytics() as? [String: String],
+            [
+                "error_type": "StripeCoreTests.Error_SerializeForLoggingTest.BasicSwiftErrorWithDebugDescription",
+                "error_code": "someOtherCase",
+            ]
+        )
+    }
 }

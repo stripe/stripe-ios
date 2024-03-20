@@ -15,7 +15,8 @@ import Foundation
 }
 
 /// An error analytic that can be logged to our analytics system.
-@_spi(STP) public protocol ErrorAnalytic: Analytic {
+/// TODO: Delete this and replace users with ErrorAnalytic or directly call the desired serialize method.
+@_spi(STP) public protocol ErrorAnalyticProtocol: Analytic {
     var error: Error { get }
 }
 

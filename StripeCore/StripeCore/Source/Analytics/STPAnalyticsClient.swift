@@ -96,17 +96,7 @@ import UIKit
         payload["additional_info"] = additionalInfo()
         payload["product_usage"] = productUsage.sorted()
 
-        // Attach error information if this is an error analytic
-        if let errorAnalytic = analytic as? ErrorAnalytic {
-            payload["error_dictionary"] = errorAnalytic.error.serializeForLogging()
-        }
-
-        payload.merge(analytic.params) { (commonPayloadValue, analyticPayloadValue) in
-            #if DEBUG
-            assertionFailure("\(analytic.event) is overwriting the common payload value: \(commonPayloadValue)!")
-            #endif
-            return analyticPayloadValue
-        }
+        payload.mergeAssertingOnOverwrites(analytic.params)
         return payload
     }
 

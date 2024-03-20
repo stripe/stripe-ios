@@ -63,6 +63,19 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         XCTAssertEqual(payload["install"] as? String, "X")
     }
 
+    // MARK: - Error tests
+
+    private struct MockErrorAnalytic: ErrorAnalyticProtocol {
+        let event = STPAnalyticEvent.sourceCreation
+
+        let params: [String: Any] = [
+            "test_param1": 1,
+            "test_param2": "two",
+        ]
+
+        let error: Error = NSError(domain: "domain", code: 100, userInfo: nil)
+    }
+
     func testPayloadFromErrorAnalytic() throws {
         client.addAdditionalInfo("test_additional_info")
 
@@ -90,6 +103,32 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
             )
         )
     }
+    enum MockError: Error {
+        case someErrorCase
+    }
+
+    func testLogError() {
+        let error = MockError.someErrorCase
+        let errorAnalytic = ErrorAnalytic(event: .luxeSerializeFailure, error: error)
+        let payload = client.payload(from: errorAnalytic)
+
+        // Verify payload event name is correct
+        XCTAssertEqual(payload["event"] as? String, STPAnalyticEvent.luxeSerializeFailure.rawValue)
+
+        // Verify error details are includeuccess
+        XCTAssertEqual(payload["error_type"] as? String, "StripeiOS_Tests.STPAnalyticsClientPaymentsTest.MockError")
+        XCTAssertEqual(payload["error_code"] as? String, "someErrorCase")
+
+        let errorAnalyticWithAdditionalParams = ErrorAnalytic(event: .luxeSerializeFailure, error: error, additionalNonPIIParams: ["additional_param": "value"])
+        let payloadWithAdditionalParams = client.payload(from: errorAnalyticWithAdditionalParams)
+        XCTAssertEqual(payloadWithAdditionalParams["additional_param"] as? String, "value")
+
+        enum MyCustomError: Error {
+            case foo(someExtraContext: String)
+        }
+    }
+
+    // MARK: - Other tests
 
     func testTokenTypeFromParameters() {
         let card = STPFixtures.cardParams()
@@ -218,17 +257,6 @@ private struct MockAnalytic: Analytic {
         "test_param1": 1,
         "test_param2": "two",
     ]
-}
-
-private struct MockErrorAnalytic: ErrorAnalytic {
-    let event = STPAnalyticEvent.sourceCreation
-
-    let params: [String: Any] = [
-        "test_param1": 1,
-        "test_param2": "two",
-    ]
-
-    let error: Error = NSError(domain: "domain", code: 100, userInfo: nil)
 }
 
 private struct MockAnalyticsClass1: STPAnalyticsProtocol {
