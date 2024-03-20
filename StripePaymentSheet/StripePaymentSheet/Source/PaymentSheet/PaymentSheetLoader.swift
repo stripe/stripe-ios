@@ -93,7 +93,7 @@ final class PaymentSheetLoader {
                     showLink: isFlowController ? isLinkEnabled : false
                 )
                 analyticsClient.logPaymentSheetLoadSucceeded(loadingStartDate: loadingStartDate,
-                                                             linkEnabled: intent.supportsLink, defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex))
+                                                             linkEnabled: intent.supportsLink(configuration.apiClient.publishableKeyIsUserKey), defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex))
                 if isFlowController {
                     AnalyticsHelper.shared.startTimeMeasurement(.checkout)
                 }
@@ -119,7 +119,7 @@ final class PaymentSheetLoader {
     // MARK: - Helpers
 
     static func isLinkEnabled(intent: Intent, configuration: PaymentSheet.Configuration) -> Bool {
-        guard intent.supportsLink else {
+        guard intent.supportsLink(configuration.apiClient.publishableKeyIsUserKey) else {
             return false
         }
         return !configuration.isUsingBillingAddressCollection()
@@ -146,7 +146,7 @@ final class PaymentSheetLoader {
 
     static func lookupLinkAccount(intent: Intent, configuration: PaymentSheet.Configuration) async throws -> PaymentSheetLinkAccount? {
         // Only lookup the consumer account if Link is supported
-        guard intent.supportsLink else {
+        guard intent.supportsLink(configuration.apiClient.publishableKeyIsUserKey) else {
             return nil
         }
 

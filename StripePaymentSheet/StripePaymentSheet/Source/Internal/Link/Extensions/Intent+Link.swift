@@ -9,17 +9,20 @@
 @_spi(STP) import StripePayments
 
 extension Intent {
-    var supportsLink: Bool {
+    func supportsLink(_ publishableKeyIsUserKey: Bool) -> Bool {
+        guard !publishableKeyIsUserKey else {
+            return false
+        }
         // Either Link is an allowed Payment Method in the elements/sessions response, or passthrough mode (Link as a Card PM) is allowed
         return recommendedPaymentMethodTypes.contains(.link) || linkPassthroughModeEnabled
     }
 
-    var supportsLinkCard: Bool {
-        return supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
+    func supportsLinkCard(_ publishableKeyIsUserKey: Bool) -> Bool {
+        return supportsLink(publishableKeyIsUserKey) && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }
 
-    var onlySupportsLinkBank: Bool {
-        return supportsLink && (linkFundingSources == [.bankAccount])
+    func onlySupportsLinkBank(_ publishableKeyIsUserKey: Bool) -> Bool {
+        return supportsLink(publishableKeyIsUserKey) && (linkFundingSources == [.bankAccount])
     }
 
     var linkFlags: [String: Bool] {

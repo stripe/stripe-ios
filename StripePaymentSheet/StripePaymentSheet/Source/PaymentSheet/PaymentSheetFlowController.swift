@@ -364,7 +364,7 @@ extension PaymentSheet {
                         isCustom: true,
                         paymentMethod: paymentOption.analyticsValue,
                         result: result,
-                        linkEnabled: intent.supportsLink,
+                        linkEnabled: intent.supportsLink(configuration.apiClient.publishableKeyIsUserKey),
                         activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified,
                         linkSessionType: intent.linkPopupWebviewOption,
                         currency: intent.currency,
