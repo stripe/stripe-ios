@@ -47,6 +47,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Missing Translations
       - uses: peter-evans/create-or-update-comment@v4
+        if: steps.missing.outputs.translations
         with:
           body: |
             ⚠️ Missing Translations
