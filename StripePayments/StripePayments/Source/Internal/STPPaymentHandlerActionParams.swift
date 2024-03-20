@@ -30,7 +30,7 @@ import Foundation
 }
 
 extension STPPaymentHandlerActionParams {
-    // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
+    // Alipay requires us to hit an endpoint before retrieving the intent, to ensure the status is up to date.
     @_spi(STP) public func pingMarlin(completion: @escaping () -> Void) {
         if  paymentMethodType == .alipay,
             let alipayHandleRedirect = nextAction()?.alipayHandleRedirect,
