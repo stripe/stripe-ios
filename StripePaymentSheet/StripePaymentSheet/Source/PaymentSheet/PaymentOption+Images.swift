@@ -26,7 +26,7 @@ extension PaymentOption {
         case .new(let confirmParams):
             return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
         case .link:
-            return Image.link_logo.makeImage()
+            return (LinkUI.useNewBrand ? Image.link_logo : Image.pm_type_link_deprecated).makeImage()
         case .external(let paymentMethod, _):
             return PaymentSheet.PaymentMethodType.external(paymentMethod).makeImage(
                 forDarkBackground: traitCollection?.isDarkMode ?? false,
@@ -46,7 +46,7 @@ extension PaymentOption {
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
         case .link:
-            return Image.link_logo.makeImage(template: false)
+            return (LinkUI.useNewBrand ? Image.link_logo : Image.carousel_link_deprecated).makeImage(template: false)
         case .external:
             assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")
             return UIImage()
@@ -91,7 +91,7 @@ extension STPPaymentMethod {
         case .SEPADebit:
             return Image.carousel_sepa.makeImage().withRenderingMode(.alwaysOriginal)
         case .link:
-            return Image.link_logo.makeImage().withRenderingMode(.alwaysOriginal)
+            return (LinkUI.useNewBrand ? Image.link_logo : Image.pm_type_link_deprecated).makeImage().withRenderingMode(.alwaysOriginal)
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()

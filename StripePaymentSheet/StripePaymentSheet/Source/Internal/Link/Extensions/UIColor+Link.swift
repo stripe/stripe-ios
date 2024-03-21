@@ -17,12 +17,16 @@ extension UIColor {
     /// Brand color for Link.
     ///
     /// Use it as accent color for controls and activity indicators.
-    static let linkBrand: UIColor = UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0)
+    static var linkBrand: UIColor {
+        LinkUI.useNewBrand ? UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0) : UIColor(red: 0.2, green: 0.867, blue: 0.702, alpha: 1.0)
+    }
 
     /// Level 400 variant of Link brand color.
     ///
     /// Use for separator bars over the Link brand color.
-    static let linkBrand400: UIColor = UIColor(red: 0.0, green: 0.64, blue: 0.33, alpha: 1.0)
+    static var linkBrand400: UIColor {
+        LinkUI.useNewBrand ? UIColor(red: 0.0, green: 0.64, blue: 0.33, alpha: 1.0) : UIColor(red: 0.102, green: 0.773, blue: 0.608, alpha: 1.0)
+    }
 
     /// Color of the Link logo in the navigation bar.
     static let linkNavLogo: UIColor = .dynamic(
@@ -37,7 +41,10 @@ extension UIColor {
     )
 
     /// Foreground color of the primary button.
-    static let linkPrimaryButtonForeground: UIColor = UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0)
+    static var linkPrimaryButtonForeground: UIColor {
+        LinkUI.useNewBrand ? UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0) : UIColor(red: 0.012, green: 0.141, blue: 0.149, alpha: 1.0)
+    }
+    
 
     /// Background color of the secondary button/
     static let linkSecondaryButtonBackground: UIColor = .dynamic(

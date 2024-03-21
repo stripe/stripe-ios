@@ -64,7 +64,55 @@ class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
     }
 
     func testRegistered_withLongEmailAddress() {
-        let sut = PayWithLinkButton()
+        let sut = makeSUT(useNewBrand: true)
+        sut.linkAccount = makeAccountStub(email: longEmailAddress, isRegistered: true)
+        verify(sut)
+    }
+    
+    func testDefault_legacy() {
+        let sut = makeSUT(useNewBrand: false)
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: false)
+        verify(sut)
+
+        sut.isHighlighted = true
+        verify(sut, identifier: "Highlighted")
+    }
+
+    func testDefault_rounded_legacy() {
+        let sut = makeSUT(useNewBrand: false)
+        sut.cornerRadius = 16
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: false)
+        verify(sut)
+    }
+
+    func testDisabled_legacy() {
+        let sut = makeSUT(useNewBrand: false)
+        sut.isEnabled = false
+        verify(sut)
+    }
+
+    func testRegistered_legacy() {
+        let sut = makeSUT(useNewBrand: false)
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
+        verify(sut)
+    }
+
+    func testRegistered_rounded_legacy() {
+        let sut = makeSUT(useNewBrand: false)
+        sut.cornerRadius = 16
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
+        verify(sut)
+    }
+
+    func testRegistered_square_legacy() {
+        let sut = makeSUT(useNewBrand: false)
+        sut.cornerRadius = 0
+        sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: true)
+        verify(sut)
+    }
+
+    func testRegistered_withLongEmailAddress_legacy() {
+        let sut = makeSUT(useNewBrand: false)
         sut.linkAccount = makeAccountStub(email: longEmailAddress, isRegistered: true)
         verify(sut)
     }
@@ -95,7 +143,8 @@ extension PayWithLinkButtonSnapshotTests {
         )
     }
 
-    fileprivate func makeSUT() -> PayWithLinkButton {
+    fileprivate func makeSUT(useNewBrand: Bool = true) -> PayWithLinkButton {
+        LinkUI.useNewBrand = useNewBrand
         return PayWithLinkButton()
     }
 
