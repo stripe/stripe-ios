@@ -15,11 +15,15 @@ import UIKit
 @objc(STP_Internal_LinkMoreInfoView)
 final class LinkMoreInfoView: UIView {
     struct Constants {
-        static let logoWidth: CGFloat = 31
-        static let logoHeight: CGFloat = 14
+        static var logoWidth: CGFloat {
+            LinkUI.useNewBrand ? 42 : 31
+        }
+        static var logoHeight: CGFloat {
+            LinkUI.useNewBrand ? 14 : 14
+        }
     }
     private lazy var logoView: UIImageView = {
-        let imageView = UIImageView(image: Image.link_logo.makeImage(template: true))
+        let imageView = UIImageView(image: LinkUI.useNewBrand ? Image.link_logo_grey.makeImage(template: false) : Image.link_logo_deprecated.makeImage(template: true))
         imageView.tintColor = theme.colors.secondaryText
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit

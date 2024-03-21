@@ -58,6 +58,7 @@ enum Image: String, CaseIterable, ImageMaker {
     // Link
     case link_logo = "link_logo"
     case link_logo_bw = "link_logo_bw"
+    case link_logo_grey = "link_logo_grey"
     case link_logo_deprecated = "link_logo_deprecated"
     case link_arrow_deprecated = "link_arrow_deprecated"
 
