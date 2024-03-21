@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '23.24.1'
+  s.version                        = '23.25.1'
 
   s.summary                        = "Stripe's prebuilt payment UI."
   s.license                        = { type: 'MIT', file: 'LICENSE' }
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
   s.weak_framework                 = 'SwiftUI'
   s.source_files                   = 'StripePaymentSheet/StripePaymentSheet/Source/**/*.swift'
-  s.ios.resource_bundle            = { 'StripePaymentSheet' => 'StripePaymentSheet/StripePaymentSheet/Resources/**/*.{lproj,png,xcassets,json}' }
+  s.ios.resource_bundle            = { 'StripePaymentSheetBundle' => ['StripePaymentSheet/StripePaymentSheet/Resources/**/*.{lproj,png,xcassets,json}', 'StripePaymentSheet/StripePaymentSheet/PrivacyInfo.xcprivacy'] }
   s.dependency                       'StripeCore', s.version.to_s
   s.dependency                       'StripePayments', s.version.to_s
   s.dependency                       'StripePaymentsUI', s.version.to_s

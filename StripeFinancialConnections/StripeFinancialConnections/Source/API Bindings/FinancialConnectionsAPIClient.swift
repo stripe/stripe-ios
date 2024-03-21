@@ -175,6 +175,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 var mobileParameters: [String: Any] = [
                     "fullscreen": true,
                     "hide_close_button": true,
+                    "forced_authflow_version": "v3",
                 ]
                 mobileParameters["app_return_url"] = returnURL
                 return mobileParameters

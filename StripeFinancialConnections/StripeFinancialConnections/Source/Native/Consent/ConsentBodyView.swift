@@ -21,7 +21,14 @@ class ConsentBodyView: UIView {
 
         let verticalStackView = HitTestStackView()
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 16
+        verticalStackView.spacing = 24
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 8,
+            leading: 8,
+            bottom: 0,
+            trailing: 8
+        )
         bulletItems.forEach { bulletItem in
             verticalStackView.addArrangedSubview(
                 CreateLabelView(
@@ -50,7 +57,7 @@ private func CreateLabelView(
     imageView.contentMode = .scaleAspectFit
     imageView.setImage(with: iconUrl)
     imageView.translatesAutoresizingMaskIntoConstraints = false
-    let imageDiameter: CGFloat = 16
+    let imageDiameter: CGFloat = 20
     NSLayoutConstraint.activate([
         imageView.widthAnchor.constraint(equalToConstant: imageDiameter),
         imageView.heightAnchor.constraint(equalToConstant: imageDiameter),
@@ -84,7 +91,7 @@ private func CreateLabelView(
         ]
     )
     horizontalStackView.axis = .horizontal
-    horizontalStackView.spacing = 12
+    horizontalStackView.spacing = 16
     horizontalStackView.alignment = .top
     return horizontalStackView
 }

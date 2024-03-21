@@ -48,7 +48,8 @@ let package = Package(
             path: "Stripe/StripeiOS",
             exclude: ["Info.plist"],
             resources: [
-                .process("Resources/StripeiOS.xcassets")
+                .process("Resources/StripeiOS.xcassets"),
+                .process("PrivacyInfo.xcprivacy")
             ]
         ),
         .target(
@@ -56,7 +57,8 @@ let package = Package(
             path: "Stripe3DS2/Stripe3DS2",
             exclude: ["Info.plist", "Resources/CertificateFiles", "include/Stripe3DS2-Prefix.pch"],
             resources: [
-                .process("Resources")
+                .process("Resources"),
+                .process("PrivacyInfo.xcprivacy")
             ],
             cSettings: [
                 .headerSearchPath(".")
@@ -71,7 +73,10 @@ let package = Package(
         .target(
             name: "StripeCore",
             path: "StripeCore/StripeCore",
-            exclude: ["Info.plist"]
+            exclude: ["Info.plist"],
+            resources: [
+                .process("PrivacyInfo.xcprivacy")
+            ]
         ),
         .target(
             name: "StripeApplePay",
@@ -134,7 +139,8 @@ let package = Package(
             exclude: ["Info.plist"],
             resources: [
                 .process("Resources/StripePaymentSheet.xcassets"),
-                .process("Resources/JSON")
+                .process("Resources/JSON"),
+                .process("PrivacyInfo.xcprivacy")
             ]
         ),
         .target(
@@ -144,6 +150,7 @@ let package = Package(
             exclude: ["Info.plist"],
             resources: [
                 .process("Resources/Images"),
+                .process("PrivacyInfo.xcprivacy")
             ]
         )
     ]

@@ -37,9 +37,8 @@ stages:
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
-    - test-builds-xcode-143: {}
     - test-builds-xcode-15: {}
-    - test-builds-xcode-143-release: {}
+    - test-builds-xcode-15-release: {}
     - test-builds-vision: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
@@ -52,7 +51,6 @@ stages:
   stage-releases-run-all:
     workflows:
     - framework-tests: {}
-    - test-builds-xcode-143: {}
     - test-builds-xcode-15: {}
     - test-builds-vision: {}
     - deploy-docs: {}
@@ -62,7 +60,6 @@ stages:
     - basic-integration-tests: {}
     - ui-tests-1: {}
     - ui-tests-2: {}
-    - legacy-tests-14: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - carthage-install-test: {}
@@ -72,7 +69,6 @@ stages:
     workflows:
     - basic-integration-tests: {}
     - check-docs: {}
-    - legacy-tests-14: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - carthage-install-test: {}
@@ -94,7 +90,7 @@ workflows:
     after_run:
     - notify_ci
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   carthage-install-test:
     steps:
     - fastlane@3:
@@ -106,7 +102,7 @@ workflows:
     after_run:
     - notify_ci
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   check-docs:
     steps:
     - script@1:
@@ -194,10 +190,10 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-14.1.x-ventura
+        stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   deploy-example-apps:
     steps:
     - set-xcode-build-number@1:
@@ -247,7 +243,7 @@ workflows:
         - webhook_url_on_error: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
     - deploy-to-bitrise-io@2: {}
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   financial-connections-stability-tests-for-edge:
     before_run:
     - prep_all
@@ -260,7 +256,7 @@ workflows:
         - scheme: FinancialConnections Example
     - deploy-to-bitrise-io@2: {}
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   framework-tests:
     steps:
     - fastlane@3:
@@ -344,31 +340,7 @@ workflows:
     after_run: []
     meta:
       bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
-        machine_type_id: g2-m1.8core
-  test-builds-xcode-143:
-    steps:
-    - xcode-build-for-test@2:
-        inputs:
-        - scheme: AllStripeFrameworks
-        - destination: $DEFAULT_TEST_DEVICE
-    before_run:
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
-        machine_type_id: g2-m1.8core
-  test-builds-xcode-143-release:
-    steps:
-    - script@1:
-        inputs:
-        - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
-        title: Build release builds
-    before_run:
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
+        stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core
   test-builds-xcode-15:
     steps:
@@ -379,6 +351,18 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 15,OS=17.0
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1.8core
+  test-builds-xcode-15-release:
+    steps:
+    - script@1:
+        inputs:
+        - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
+        title: Build release builds
     before_run:
     - prep_all
     meta:
@@ -423,7 +407,7 @@ workflows:
     before_run:
     - prep_all
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   integration-all:
     steps:
     - xcode-test@4:
@@ -438,27 +422,10 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-14.1.x-ventura
+        stack: osx-xcode-15.0.x
         machine_type_id: g2-m1-max.10core
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
-  legacy-tests-14:
-    steps:
-    - fastlane@3:
-        inputs:
-        - lane: legacy_tests_14
-        title: fastlane legacy_tests_14
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 8,OS=14.5
-    meta:
-      bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
-        machine_type_id: g2-m1.8core
-    before_run:
-    - prep_all
-    after_run:
-    - upload_logs
-    - notify_ci
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   legacy-tests-15:
     steps:
     - fastlane@3:
@@ -466,10 +433,10 @@ workflows:
         - lane: legacy_tests_15
         title: fastlane legacy_tests_15
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.4
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.5
     meta:
       bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
+        stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core
     before_run:
     - prep_all
@@ -491,7 +458,7 @@ workflows:
     - notify_ci   
     meta:
       bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
+        stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core     
   lint-tests:
     steps:
@@ -519,7 +486,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
+        stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core
   notify_ci:
     steps:
@@ -541,7 +508,7 @@ workflows:
       - LOKALISE_API_KEY: $LOKALISE_API_KEY
     meta:
       bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
+        stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core   
   pod-lint-tests:
     steps:
@@ -552,7 +519,7 @@ workflows:
     before_run:
     - prep_all
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.1
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   prep_all:
     steps:
     - xcode-start-simulator@0:
@@ -627,7 +594,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
+        stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core
   ui-tests-2:
     steps:
@@ -645,7 +612,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-14.3.x-ventura
+        stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core
   upload_logs:
     steps:
@@ -658,5 +625,5 @@ workflows:
         title: Deploy test log artifacts
 meta:
   bitrise.io:
-    stack: osx-xcode-14.1.x-ventura
+    stack: osx-xcode-15.0.x
     machine_type_id: g2-m1.8core
