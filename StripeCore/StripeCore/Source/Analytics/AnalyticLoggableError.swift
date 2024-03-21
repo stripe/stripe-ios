@@ -93,17 +93,17 @@ where Self: RawRepresentable, Self.RawValue == String {
     /// - For NSErrors, the error domain e.g. “NSURLErrorDomain”.
     static func extractErrorType(from error: Error) -> String {
         if type(of: error) is NSError.Type {
+            // Note: checking `error as NSError` always succeeds because Swift errors are bridged - this ensures the error is an instance of NSError.
             let error = error as NSError
             if error.domain == STPError.stripeDomain, let stripeAPIErrorType = error.userInfo[STPError.stripeErrorTypeKey] as? String {
                 // For Stripe API Error, use the error type key's value
                 return stripeAPIErrorType
             } else {
-                // Default behavior for other errors.
-                // Note: For Swift Error enums, `domain` is the type name
-                // e.g. `LinkURLGeneratorError.noPublishableKey` -> "StripePaymentSheet.LinkURLGeneratorError"
+                // For other NSErrors, use the domain
                 return "\(error.domain)"
             }
         } else {
+            // This is a Swift Error, use the qualified type name e.g. "Swift.DecodingError" or "StripePaymentSheet.PaymentSheetError"
             return String(reflecting: type(of: error))
         }
     }
