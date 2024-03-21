@@ -44,6 +44,16 @@ extension Dictionary {
         }
         return newDict
     }
+
+    @inlinable public mutating func mergeAssertingOnOverwrites(_ other: [Key: Value]) {
+        merge(other) { a, b in
+#if DEBUG
+assertionFailure("Dictionary merge is overwriting a key with values: \(a) and \(b)!")
+#endif
+            return a
+        }
+    }
+
 }
 
 extension Dictionary where Value == Any {
