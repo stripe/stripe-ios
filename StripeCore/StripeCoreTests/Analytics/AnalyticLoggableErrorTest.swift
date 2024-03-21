@@ -62,7 +62,7 @@ class AnalyticLoggableErrorTest: XCTestCase {
         XCTAssertEqual(
             swiftError.serializeForV1Analytics() as? [String: String],
             [
-                "error_type": "StripeCoreTests.Error_SerializeForLoggingTest.BasicSwiftError",
+                "error_type": "StripeCoreTests.AnalyticLoggableErrorTest.BasicSwiftError",
                 "error_code": "foo",
             ]
         )
@@ -72,7 +72,7 @@ class AnalyticLoggableErrorTest: XCTestCase {
         XCTAssertEqual(
             swiftErrorWithPIIInAssociatedValue.serializeForV1Analytics() as? [String: String],
             [
-                "error_type": "StripeCoreTests.Error_SerializeForLoggingTest.BasicSwiftError",
+                "error_type": "StripeCoreTests.AnalyticLoggableErrorTest.BasicSwiftError",
                 "error_code": "bar",
             ]
         )
@@ -82,7 +82,7 @@ class AnalyticLoggableErrorTest: XCTestCase {
         XCTAssertEqual(
             swiftErrorWithDebugDescription.serializeForV1Analytics() as? [String: String],
             [
-                "error_type": "StripeCoreTests.Error_SerializeForLoggingTest.BasicSwiftErrorWithDebugDescription",
+                "error_type": "StripeCoreTests.AnalyticLoggableErrorTest.BasicSwiftErrorWithDebugDescription",
                 "error_code": "Some error occurred.",
             ]
         )
@@ -92,7 +92,7 @@ class AnalyticLoggableErrorTest: XCTestCase {
         XCTAssertEqual(
             swiftErrorWithPIIInAssociatedValueAndDebugDescription.serializeForV1Analytics() as? [String: String],
             [
-                "error_type": "StripeCoreTests.Error_SerializeForLoggingTest.BasicSwiftErrorWithDebugDescription",
+                "error_type": "StripeCoreTests.AnalyticLoggableErrorTest.BasicSwiftErrorWithDebugDescription",
                 "error_code": "someOtherCase",
             ]
         )
