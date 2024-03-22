@@ -146,7 +146,7 @@ final class PayWithLinkButton: UIControl {
     private lazy var payWithStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             payWithLinkView,
-            LinkUI.useNewBrand ? nil : Self.makeDeprecatedArrowView()
+            LinkUI.useNewBrand ? nil : Self.makeDeprecatedArrowView(),
         ].compactMap({ $0 }))
         stackView.spacing = 6
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -162,7 +162,7 @@ final class PayWithLinkButton: UIControl {
             logoView,
             emailSeparatorView,
             emailLabel,
-            LinkUI.useNewBrand ? nil : Self.makeDeprecatedArrowView()
+            LinkUI.useNewBrand ? nil : Self.makeDeprecatedArrowView(),
         ].compactMap({ $0 }))
         if LinkUI.useNewBrand {
             stackView.spacing = 8
@@ -198,7 +198,7 @@ final class PayWithLinkButton: UIControl {
             cardBrandSeparatorView,
             cardBrandView,
             last4Label,
-            LinkUI.useNewBrand ? nil : Self.makeDeprecatedArrowView()
+            LinkUI.useNewBrand ? nil : Self.makeDeprecatedArrowView(),
         ].compactMap({ $0 }))
         stackView.spacing = 10
         stackView.setCustomSpacing(5, after: cardBrandView)
@@ -285,7 +285,7 @@ private extension PayWithLinkButton {
 
         return logoView
     }
-    
+
     static func makeDeprecatedArrowView() -> UIImageView {
         let arrowView = UIImageView(image: Image.link_arrow_deprecated.makeImage(template: true)
             .withAlignmentRectInsets(Constants.cardBrandInsets)

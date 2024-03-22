@@ -86,7 +86,7 @@ final class PaymentSheetLoader {
 
                 // If Link is enabled, set the `useNewBrand`
                 LinkUI.useNewBrand = intent.elementsSession.linkSettings?.useRebrand ?? false
-                
+
                 // Send load finished analytic
                 // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
                 let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(

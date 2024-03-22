@@ -68,7 +68,7 @@ class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         sut.linkAccount = makeAccountStub(email: longEmailAddress, isRegistered: true)
         verify(sut)
     }
-    
+
     func testDefault_legacy() {
         let sut = makeSUT(useNewBrand: false)
         sut.linkAccount = makeAccountStub(email: emailAddress, isRegistered: false)

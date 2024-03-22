@@ -44,7 +44,6 @@ extension UIColor {
     static var linkPrimaryButtonForeground: UIColor {
         LinkUI.useNewBrand ? UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0) : UIColor(red: 0.012, green: 0.141, blue: 0.149, alpha: 1.0)
     }
-    
 
     /// Background color of the secondary button/
     static let linkSecondaryButtonBackground: UIColor = .dynamic(
