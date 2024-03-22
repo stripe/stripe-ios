@@ -18,6 +18,10 @@ import UIKit
  `IntentConfirmParams`.
  */
 class PaymentSheetFormFactory {
+    enum Error: Swift.Error {
+        case missingFormSpec
+    }
+    
     enum SaveMode {
         /// We can't save the PaymentMethod. e.g., Payment mode without a customer
         case none
@@ -188,6 +192,8 @@ class PaymentSheetFormFactory {
 
         guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
             assertionFailure("Failed to get form spec!")
+            let errorAnalytic = ErrorAnalytic(event: .paymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             return FormElement(elements: [], theme: theme)
         }
         if paymentMethod == .iDEAL {

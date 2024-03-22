@@ -230,4 +230,7 @@ import Foundation
     case biFormInteracted = "bi_form_interacted"
     case biCardNumberCompleted = "bi_card_number_completed"
     case biDoneButtonTapped = "bi_done_button_tapped"
+    
+    // MARK: - PaymentSheet errors
+    case paymentSheetFormFactoryError = "paymentsheet.formfactory.error"
 }
