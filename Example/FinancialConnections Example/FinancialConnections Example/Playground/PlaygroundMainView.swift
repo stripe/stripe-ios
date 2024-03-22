@@ -69,6 +69,8 @@ struct PlaygroundMainView: View {
                                     .keyboardType(.emailAddress)
                                     .autocapitalization(.none)
                                     .accessibility(identifier: "playground-email")
+
+                                Toggle("Enable Multi Select", isOn: $viewModel.enableNetworkingMultiSelect)
                             }
                         } else if viewModel.customScenario == .customKeys {
                             TextField("Public Key (pk_)", text: $viewModel.customPublicKey)
