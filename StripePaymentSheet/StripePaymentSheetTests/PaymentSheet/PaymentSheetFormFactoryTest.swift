@@ -1332,6 +1332,32 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(params2.paymentMethodParams.nonnil_billingDetails.address?.postalCode)
     }
 
+    func testMissingFormSpec() {
+        let expectation = expectation(description: "Load specs")
+        FormSpecProvider.shared.load { _ in
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
+        let analyticsClient = STPAnalyticsClient()
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL, .card]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.cardPresent), // A payment method that doesn't have LUXE specs and in-code form definition
+            analyticsClient: analyticsClient
+        )
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        _ = factory.make()
+        XCTAssertEqual(STPAssertTestUtil.lastAssertMessage, "Failed to get form spec for card_present!")
+        let errorAnalytic = analyticsClient._testLogHistory.first!
+        XCTAssertEqual(errorAnalytic["event"] as? String, STPAnalyticEvent.paymentSheetFormFactoryError.rawValue)
+        XCTAssertEqual(errorAnalytic["payment_method"] as? String, "card_present")
+        XCTAssertEqual(errorAnalytic["error_code"] as? String, "missingFormSpec")
+    }
+
     // MARK: - Previous Customer Input tests
 
     // Covers:
