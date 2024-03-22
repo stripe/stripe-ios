@@ -69,6 +69,12 @@ final class PlaygroundMainViewModel: ObservableObject {
         }
     }
 
+    @Published var enableNetworkingMultiSelect: Bool = PlaygroundUserDefaults.enableNetworkingMultiSelect {
+        didSet {
+            PlaygroundUserDefaults.enableNetworkingMultiSelect = enableNetworkingMultiSelect
+        }
+    }
+
     @Published var enableOwnershipPermission: Bool = PlaygroundUserDefaults.enableOwnershipPermission {
         didSet {
             PlaygroundUserDefaults.enableOwnershipPermission = enableOwnershipPermission
@@ -164,6 +170,7 @@ final class PlaygroundMainViewModel: ObservableObject {
             enableTestMode: enableTestMode,
             flow: flow.rawValue,
             email: email,
+            enableNetworkingMultiSelect: enableNetworkingMultiSelect,
             enableOwnershipPermission: enableOwnershipPermission,
             enableBalancesPermission: enableBalancesPermission,
             enableTransactionsPermission: enableTransactionsPermission,
@@ -233,6 +240,7 @@ private func SetupPlayground(
     enableTestMode: Bool,
     flow: String,
     email: String,
+    enableNetworkingMultiSelect: Bool,
     enableOwnershipPermission: Bool,
     enableBalancesPermission: Bool,
     enableTransactionsPermission: Bool,
@@ -256,6 +264,7 @@ private func SetupPlayground(
         requestBody["enable_test_mode"] = enableTestMode
         requestBody["flow"] = flow
         requestBody["email"] = email
+        requestBody["enable_networking_multi_select"] = enableNetworkingMultiSelect
         requestBody["enable_ownership_permission"] = enableOwnershipPermission
         requestBody["enable_balances_permission"] = enableBalancesPermission
         requestBody["enable_transactions_permission"] = enableTransactionsPermission

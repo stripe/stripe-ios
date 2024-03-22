@@ -41,6 +41,12 @@ final class PlaygroundUserDefaults {
     static var email: String
 
     @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_NETWORKING_MULTI_SELECT",
+        defaultValue: false
+    )
+    static var enableNetworkingMultiSelect: Bool
+
+    @UserDefault(
         key: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_OWNERSHIP_PERMISSION",
         defaultValue: false
     )
