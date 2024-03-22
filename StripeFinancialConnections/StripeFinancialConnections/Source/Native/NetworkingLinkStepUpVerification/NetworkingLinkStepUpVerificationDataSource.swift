@@ -20,7 +20,7 @@ protocol NetworkingLinkStepUpVerificationDataSource: AnyObject {
 final class NetworkingLinkStepUpVerificationDataSourceImplementation: NetworkingLinkStepUpVerificationDataSource {
 
     private(set) var consumerSession: ConsumerSessionData
-    private let selectedAccountId: String
+    private let selectedAccountIds: [String]
     private let manifest: FinancialConnectionsSessionManifest
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
@@ -29,14 +29,14 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
 
     init(
         consumerSession: ConsumerSessionData,
-        selectedAccountId: String,
+        selectedAccountIds: [String],
         manifest: FinancialConnectionsSessionManifest,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.consumerSession = consumerSession
-        self.selectedAccountId = selectedAccountId
+        self.selectedAccountIds = selectedAccountIds
         self.manifest = manifest
         self.apiClient = apiClient
         self.clientSecret = clientSecret
@@ -62,7 +62,7 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
 
     func selectNetworkedAccount() -> Future<FinancialConnectionsInstitutionList> {
         return apiClient.selectNetworkedAccounts(
-            selectedAccountIds: [selectedAccountId],
+            selectedAccountIds: selectedAccountIds,
             clientSecret: clientSecret,
             consumerSessionClientSecret: consumerSession.clientSecret
         )

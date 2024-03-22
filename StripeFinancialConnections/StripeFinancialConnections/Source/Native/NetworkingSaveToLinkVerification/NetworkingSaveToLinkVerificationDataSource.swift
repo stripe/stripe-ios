@@ -24,7 +24,7 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
 
     let manifest: FinancialConnectionsSessionManifest
     private(set) var consumerSession: ConsumerSessionData
-    private let selectedAccountId: String
+    private let selectedAccountIds: [String]
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -33,14 +33,14 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
     init(
         manifest: FinancialConnectionsSessionManifest,
         consumerSession: ConsumerSessionData,
-        selectedAccountId: String,
+        selectedAccountIds: [String],
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.manifest = manifest
         self.consumerSession = consumerSession
-        self.selectedAccountId = selectedAccountId
+        self.selectedAccountIds = selectedAccountIds
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
@@ -100,7 +100,7 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
             emailAddress: nil,
             phoneNumber: nil,
             country: nil,
-            selectedAccountIds: [selectedAccountId],
+            selectedAccountIds: selectedAccountIds,
             consumerSessionClientSecret: consumerSession.clientSecret,
             clientSecret: clientSecret
         )
