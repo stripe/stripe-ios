@@ -27,7 +27,7 @@ final class LinkMoreInfoView: UIView {
         if LinkUI.useNewBrand {
             imageView = DynamicImageView(dynamicImage: Image.link_logo_knockout.makeImage(template: false), pairedColor: theme.colors.background)
         } else {
-            imageView = UIImageView(image: LinkUI.useNewBrand ? Image.link_logo_grey.makeImage(template: false) : Image.link_logo_deprecated.makeImage(template: true))
+            imageView = UIImageView(image: Image.link_logo_deprecated.makeImage(template: true))
             imageView.tintColor = theme.colors.secondaryText
         }
         imageView.translatesAutoresizingMaskIntoConstraints = false
