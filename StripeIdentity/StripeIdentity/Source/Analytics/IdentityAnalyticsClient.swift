@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
-enum IdentityAnalyticsClientError: AnalyticLoggableError {
+enum IdentityAnalyticsClientError: AnalyticLoggableErrorV2 {
     /// `startTrackingTimeToScreen` was called twice in a row without calling
     /// `stopTrackingTimeToScreenAndLogIfNeeded`
     case timeToScreenAlreadyStarted(
@@ -20,7 +20,7 @@ enum IdentityAnalyticsClientError: AnalyticLoggableError {
 
     func analyticLoggableSerializeForLogging() -> [String: Any] {
         var payload: [String: Any] = [
-            "domain": (self as NSError).domain
+            "domain": (self as NSError).domain,
         ]
         switch self {
         case .timeToScreenAlreadyStarted(let alreadyStartedForScreen, let requestedForScreen):
@@ -214,7 +214,7 @@ final class IdentityAnalyticsClient {
         logAnalytic(
             .sheetClosed,
             metadata: [
-                "session_result": sessionResult
+                "session_result": sessionResult,
             ]
         )
     }
@@ -289,7 +289,7 @@ final class IdentityAnalyticsClient {
         sheetController: VerificationSheetControllerProtocol
     ) {
         let metadata: [String: Any] = [
-            "screen_name": screenName.rawValue
+            "screen_name": screenName.rawValue,
         ]
 
         logAnalytic(.screenAppeared, metadata: metadata)

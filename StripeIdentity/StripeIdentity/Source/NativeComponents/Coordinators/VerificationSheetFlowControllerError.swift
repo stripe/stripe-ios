@@ -37,7 +37,7 @@ extension VerificationSheetFlowControllerError: LocalizedError {
     }
 }
 
-extension VerificationSheetFlowControllerError: AnalyticLoggableError {
+extension VerificationSheetFlowControllerError: AnalyticLoggableErrorV2 {
     func analyticLoggableSerializeForLogging() -> [String: Any] {
         var payload: [String: Any]
         switch self {

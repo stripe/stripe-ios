@@ -8,51 +8,42 @@
 
 import Foundation
 
-/// Defines a common loggable error to our analytics service.
-@_spi(STP) public protocol AnalyticLoggableError: Error {
+/// Conform your Error to this protocol to override the parameters that get logged when you either:
+/// 1. Use `ErrorAnalytic` to send error analytics.
+/// 2. Build your own `Analytic` and use `serializeForV1Analytics`.
+protocol AnalyticLoggableError: Error {
+    /// The value used for `"error_type"` in the analytics payload.
+    /// The default implementation uses `Error.extractErrorType`
+    var errorType: String { get }
 
-    /// Serializes this error for analytics logging.
-    ///
-    /// - Returns: A dictionary representing this error, not containing any PII or PDE
-    func analyticLoggableSerializeForLogging() -> [String: Any]
+    /// The value used for `"error_code"` in the analytics payload.
+    /// The default implementation uses `Error.errorCode`
+    var errorCode: String { get }
+
+    /// Additional, non-PII/PDE details about the error.
+    /// If non-empty, this is sent as the value for `"error_details"` in the analytics payload.
+    var additionalNonPIIErrorDetails: [String: Any] { get }
 }
 
-/// Error types that conform to this protocol and String-based RawRepresentable
-/// will automatically serialize the rawValue for analytics logging.
-@_spi(STP) public protocol AnalyticLoggableStringError: Error {
-    var loggableType: String { get }
-}
+// MARK: Default implementation
+extension AnalyticLoggableError {
+    var errorType: String {
+        Self.extractErrorType(from: self)
+    }
 
-@_spi(STP) extension AnalyticLoggableStringError
-where Self: RawRepresentable, Self.RawValue == String {
-    public var loggableType: String {
-        return rawValue
+    var errorCode: String {
+        Self.extractErrorCode(from: self)
+    }
+
+    var additionalNonPIIErrorDetails: [String: Any] {
+        return [:]
     }
 }
 
+extension AnalyticLoggableError where Self: Error {}
+
+// MARK: - Error extension methods that serialize errors for analytics logging
 @_spi(STP) extension Error {
-    /// Serialize an Error for logging, suitable for the Identity and Financial Connections SDK.
-    public func serializeForV2Logging() -> [String: Any] {
-        if let loggableError = self as? AnalyticLoggableError {
-            return loggableError.analyticLoggableSerializeForLogging()
-        }
-        let nsError = self as NSError
-
-        var payload: [String: Any] = [
-            "domain": nsError.domain,
-        ]
-
-        if let stringError = self as? AnalyticLoggableStringError {
-            payload["type"] = stringError.loggableType
-        } else {
-            payload["code"] = nsError.code
-        }
-
-        return payload
-    }
-
-    // MARK: - Serialize for v1 analytics helpers
-
     /// This is like `serializeForV2Logging` but returns a single String instead of a dict.
     /// TODO(MOBILESDK-1547) I don't think pattern is very good but it's here to share between PaymentSheet and STPPaymentContext. Please rethink before spreading its usage.
     public func makeSafeLoggingString() -> String {
@@ -78,13 +69,28 @@ where Self: RawRepresentable, Self.RawValue == String {
     ///            For NSErrors, the error code e.g. “-1009”.
     ///            For Swift errors, the enum case name as a string for Swift errors e.g. “noPublishableKey”.
     public func serializeForV1Analytics() -> [String: Any] {
-        let errorType = Self.extractErrorType(from: self)
-        let errorCode = Self.extractErrorCode(from: self)
-
-        return [
+        let errorType: String = {
+            if let analyticLoggableError = self as? AnalyticLoggableError {
+                analyticLoggableError.errorType
+            } else {
+                Self.extractErrorType(from: self)
+            }
+        }()
+        let errorCode: String = {
+            if let analyticLoggableError = self as? AnalyticLoggableError {
+                analyticLoggableError.errorCode
+            } else {
+                Self.extractErrorCode(from: self)
+            }
+        }()
+        var params: [String: Any] = [
             "error_type": errorType,
             "error_code": errorCode,
         ]
+        if let analyticLoggableError = self as? AnalyticLoggableError {
+            params["error_details"] = analyticLoggableError.additionalNonPIIErrorDetails
+        }
+        return params
     }
 
     /// Extracts a value suitable for the `"error_type"` analytic parameter
