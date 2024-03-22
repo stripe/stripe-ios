@@ -1023,7 +1023,8 @@ private func CreatePaneViewController(
                 institution: institution,
                 analyticsClient: dataManager.analyticsClient,
                 reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors,
-                dataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice
+                dataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice,
+                consumerSessionClientSecret: dataManager.consumerSession?.clientSecret
             )
             let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
             accountPickerViewController.delegate = nativeFlowController
@@ -1164,12 +1165,12 @@ private func CreatePaneViewController(
     case .networkingSaveToLinkVerification:
         if
             let consumerSession = dataManager.consumerSession,
-            let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first
+            let selectedAccountIds = dataManager.linkedAccounts?.map({ $0.id })
         {
             let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
                 manifest: dataManager.manifest,
                 consumerSession: consumerSession,
-                selectedAccountId: selectedAccountId,
+                selectedAccountIds: selectedAccountIds,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 analyticsClient: dataManager.analyticsClient
@@ -1186,11 +1187,11 @@ private func CreatePaneViewController(
     case .networkingLinkStepUpVerification:
         if
             let consumerSession = dataManager.consumerSession,
-            let selectedAccountId = dataManager.linkedAccounts?.map({ $0.id }).first
+            let selectedAccountIds = dataManager.linkedAccounts?.map({ $0.id })
         {
             let networkingLinkStepUpVerificationDataSource = NetworkingLinkStepUpVerificationDataSourceImplementation(
                 consumerSession: consumerSession,
-                selectedAccountId: selectedAccountId,
+                selectedAccountIds: selectedAccountIds,
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,

@@ -387,11 +387,42 @@ final class AccountPickerViewController: UIViewController {
                         selectedAccounts = self.dataSource.selectedAccounts
                     }
 
-                    self.delegate?.accountPickerViewController(
-                        self,
-                        didSelectAccounts: selectedAccounts,
-                        nextPane: linkedAccounts.nextPane
-                    )
+                    if
+                        self.dataSource.manifest.isNetworkingUserFlow == true,
+                        self.dataSource.manifest.accountholderIsLinkConsumer == true,
+                        !self.dataSource.manifest.shouldAttachLinkedPaymentMethod,
+                        selectedAccounts.count > 0,
+                        let consumerSessionClientSecret = self.dataSource.consumerSessionClientSecret
+                    {
+                        self.dataSource.saveToLink(
+                            consumerSessionClientSecret: consumerSessionClientSecret
+                        )
+                        .observe { [weak self] result in
+                            guard let self = self else { return }
+
+                            if case .failure(let error) = result {
+                                self.dataSource
+                                    .analyticsClient
+                                    .logUnexpectedError(
+                                        error,
+                                        errorName: "SaveToLinkError",
+                                        pane: .accountPicker
+                                    )
+                            }
+
+                            self.delegate?.accountPickerViewController(
+                                self,
+                                didSelectAccounts: selectedAccounts,
+                                nextPane: .success
+                            )
+                        }
+                    } else {
+                        self.delegate?.accountPickerViewController(
+                            self,
+                            didSelectAccounts: selectedAccounts,
+                            nextPane: linkedAccounts.nextPane
+                        )
+                    }
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient
