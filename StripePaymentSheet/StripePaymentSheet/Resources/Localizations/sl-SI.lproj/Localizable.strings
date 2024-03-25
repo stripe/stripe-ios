@@ -26,6 +26,8 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Če potrdite preusmeritev v storitev Amazon Pay, pooblaščate podjetje %@, da bremeni vaš račun Amazon Pay s prihodnjimi plačili v skladu s pogoji podjetja.";
 
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Če potrdite preusmeritev v storitev Klarna, pooblaščate podjetje %1$@, da bremeni vaš račun Klarna s prihodnjimi plačili v skladu s pogoji podjetja in pogoji storitve Klarna. To lahko kadar koli spremenite v aplikaciji Klarna ali tako, da pišete na naslov %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Če potrdite preusmeritev v storitev PayPal, pooblaščate podjetje %@, da bremeni vaš račun za PayPal s prihodnjimi plačili v skladu s pogoji podjetja.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Če potrdite preusmeritev v storitev Revolut Pay, pooblaščate podjetje %@, da bremeni vaš račun za Revolut Pay s prihodnjimi plačili v skladu s pogoji podjetja.";
@@ -97,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Plačajte hitreje pri podjetju %@ in več tisoč podjetjih.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Plačajte v <num_installments/> obrokih po <installment_price/> brez obresti s storitvijo <img/>.";
-
-"Pay later with Klarna." = "Plačajte pozneje s storitvijo Klarna.";
 
 "Pay over time with %@" = "Uporabite %@ za poznejše plačilo";
 

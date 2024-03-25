@@ -22,11 +22,13 @@
 
 "Buy using a UPI ID" = "Kopen met een UPI-ID";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Als je je betaling met PayPal bevestigt, geef je %@ toestemming om toekomstige betalingen in rekening te brengen op je PayPal-account in overeenstemming met hun voorwaarden.";
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Als je je betaling met PayPal bevestigt, geef je %@ toestemming om toekomstige betalingen af te schrijven van je PayPal-rekening in overeenstemming met hun voorwaarden.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Als je doorgaat naar Amazon Pay, geef je %@ toestemming om toekomstige betalingen in rekening te brengen op je Amazon Pay-account in overeenstemming met hun voorwaarden.";
 
-"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Als je doorgaat naar PayPal, geef je %@ toestemming om toekomstige betalingen in rekening te brengen op je PayPal-account in overeenstemming met hun voorwaarden.";
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Als je doorgaat naar Klarna, geef je %1$@ toestemming om toekomstige betalingen in rekening te brengen op je Klarna-account in overeenstemming met hun voorwaarden en de voorwaarden van Klarna. Je kunt dit altijd wijzigen in je Klarna-app of door contact op te nemen met %2$@.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Als je doorgaat naar PayPal, geef je %@ toestemming om toekomstige betalingen af te schrijven van je PayPal-rekening in overeenstemming met hun voorwaarden.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Als je doorgaat naar Revolut Pay, geef je %@ toestemming om toekomstige betalingen in rekening te brengen op je Revolut Pay-account in overeenstemming met hun voorwaarden.";
 
@@ -97,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Reken sneller af bij %@ en duizenden andere bedrijven.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betaal in <num_installments/> rentevrije termijnen van <installment_price/> met <img/>";
-
-"Pay later with Klarna." = "Betaal later met Klarna.";
 
 "Pay over time with %@" = "Betalen in termijnen met %@";
 
