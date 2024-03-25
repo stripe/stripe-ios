@@ -2,6 +2,9 @@
 ### PaymentSheet
 * [Fixed] When confirming a SetupIntent with Link, "Set up" will be shown as the confirm button text instead of "Pay".
 
+### Financial Connections
+* [Fixed] Improved the UX of an edge case in Financial Connections authentication flow.
+
 ### All
 * Added a [Privacy Manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files).
 
