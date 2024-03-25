@@ -26,6 +26,8 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Przechodząc do Amazon Pay, zezwalasz %@ na obciążenie Twojego konta Amazon Pay przyszłymi płatnościami zgodnie z ich warunkami.";
 
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Przechodząc do Klarna, zezwalasz %1$@ na obciążenie Twojego konta Klarna przyszłymi płatnościami zgodnie z ich warunkami i warunkami Klarna. Możesz to zmienić w dowolnym momencie w aplikacji Klarna lub kontaktując się z %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Przechodząc do PayPal, zezwalasz %@ na obciążenie Twojego konta PayPal przyszłymi płatnościami zgodnie z ich warunkami.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Przechodząc do Revolut Pay, zezwalasz %@ na obciążenie Twojego konta Revolut Pay przyszłymi płatnościami zgodnie z ich warunkami.";
@@ -97,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Płać szybciej w %@ i tysiącach innych firm.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Zapłacić w <num_installments/> nieoprocentowanych ratach <installment_price/> z <img/>";
-
-"Pay later with Klarna." = "Zapłać później za pomocą Klarna.";
 
 "Pay over time with %@" = "Zapłać później, korzystając z %@";
 

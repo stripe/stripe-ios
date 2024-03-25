@@ -26,6 +26,8 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Turpinot doties uz Amazon Pay, jūs atļaujat %@ iekasēt no jūsu Amazon Pay konta turpmākajiem maksājumiem saskaņā ar Klarna noteikumiem.";
 
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Turpinot doties uz Klarna, jūs atļaujat %1$@ iekasēt no jūsu Klarna konta turpmākajiem maksājumiem saskaņā viņu noteikumiem un Klarna noteikumiem. To jebkurā laikā varat mainīt savā Klarna lietotnē vai sazinoties ar %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Turpinot doties uz Paypal, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu Paypal konta summas par turpmākajiem maksājumiem.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Turpinot doties uz Revolut Pay, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu Revolut Pay konta summas par turpmākajiem maksājumiem.";
@@ -97,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Maksājiet ātrāk %@ un tūkstošiem citos uzņēmumos.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Maksāt ar <num_installments/> bezprocentu maksājumiem <installment_price/> ar <img/>";
-
-"Pay later with Klarna." = "Maksāt vēlāk ar Klarna.";
 
 "Pay over time with %@" = "Maksāt pakāpeniski ar %@";
 
