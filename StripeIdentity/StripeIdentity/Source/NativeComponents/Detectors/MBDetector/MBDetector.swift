@@ -260,7 +260,7 @@ extension StripeAPI.MBGlarePolicyType {
     }
 }
 
-extension MBDetector.MBDetectorError: AnalyticLoggableError {
+extension MBDetector.MBDetectorError: AnalyticLoggableErrorV2 {
     func analyticLoggableSerializeForLogging() -> [String: Any] {
         var payload: [String: Any]
         switch self {
