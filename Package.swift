@@ -155,7 +155,7 @@ let package = Package(
         ),
         .binaryTarget(
             name: "CaptureCore",
-            url: "https://qa-b.stripecdn.com/content/CaptureCore.xcframework.zip",
+            url: "https://b.stripecdn.com/content/CaptureCore.xcframework.zip",
             checksum: "9416daa35d71624865469250357a7d039e3ec40b0344522f1429773ac075f919")
     ]
 )
