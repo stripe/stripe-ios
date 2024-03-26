@@ -263,7 +263,7 @@ final class LinkAccountPickerViewController: UIViewController {
             )
 
         // TODO: remove all the extra logic of partner auth and bank repair!!!!!
-        
+
         if nextPane == .success {
             footerView?.showLoadingView(true)
             // prevent user from accidentally pressing
@@ -361,7 +361,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
         didSelectAccount selectedAccountTuple: FinancialConnectionsAccountTuple
     ) {
         FeedbackGeneratorAdapter.selectionChanged()
-        
+
         // unselecting
         if
             // unselecting in multi account flow is not allowed
@@ -381,7 +381,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                     ],
                     pane: .linkAccountPicker
                 )
-            
+
             dataSource.updateSelectedAccounts(
                 dataSource.selectedAccounts.filter(
                     { $0.partnerAccount.id != selectedAccountTuple.partnerAccount.id }
@@ -400,7 +400,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                     ],
                     pane: .linkAccountPicker
                 )
-            
+
             if dataSource.manifest.singleAccount {
                 dataSource.updateSelectedAccounts([selectedAccountTuple])
             } else {
@@ -417,7 +417,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                     // TODO: unselect account when drawer is dismissed
                     // TODO: present drawer
                 }
-                
+
                 dataSource.updateSelectedAccounts(
                     dataSource.selectedAccounts + [selectedAccountTuple]
                 )
