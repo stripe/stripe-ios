@@ -893,9 +893,9 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     ) {
-        dataManager.linkedAccounts = [selectedAccount]
+        dataManager.linkedAccounts = selectedAccounts
     }
 
     func linkAccountPickerViewController(

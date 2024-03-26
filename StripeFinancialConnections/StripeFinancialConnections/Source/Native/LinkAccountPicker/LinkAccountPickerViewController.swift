@@ -18,7 +18,7 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     )
 
     func linkAccountPickerViewController(
@@ -189,7 +189,7 @@ final class LinkAccountPickerViewController: UIViewController {
                 guard let self = self else {
                     return
                 }
-                self.didSelectConectAccount()
+                self.didSelectConnectAccounts()
             },
             didSelectMerchantDataAccessLearnMore: { [weak self] _ in
                 guard let self = self else { return }
@@ -217,11 +217,11 @@ final class LinkAccountPickerViewController: UIViewController {
         self.footerView = footerView
         footerContainerView.addAndPinSubview(footerView)
 
-        bodyView.selectAccount(nil) // activate the logic to list all accounts
+        bodyView.selectAccounts([]) // activate the logic to list all accounts
     }
 
-    private func didSelectConectAccount() {
-        guard let selectedAccountTuple = dataSource.selectedAccountTuple else {
+    private func didSelectConnectAccounts() {
+        guard let selectedAccountTuple = dataSource.selectedAccounts.first else {
             assertionFailure("user shouldn't be able to press the connect account button without an account")
             dataSource
                 .analyticsClient
@@ -241,10 +241,10 @@ final class LinkAccountPickerViewController: UIViewController {
             .partnerAccount
             .nextPaneOnSelection
 
-        // update data model with selected account
+        // update data model with selected accounts
         delegate?.linkAccountPickerViewController(
             self,
-            didSelectAccount: selectedAccountTuple.partnerAccount
+            didSelectAccounts: dataSource.selectedAccounts.map({ $0.partnerAccount })
         )
 
         self.delegate?.linkAccountPickerViewController(
@@ -262,6 +262,8 @@ final class LinkAccountPickerViewController: UIViewController {
                 pane: .linkAccountPicker
             )
 
+        // TODO: remove all the extra logic of partner auth and bank repair!!!!!
+        
         if nextPane == .success {
             footerView?.showLoadingView(true)
             // prevent user from accidentally pressing
@@ -270,7 +272,7 @@ final class LinkAccountPickerViewController: UIViewController {
             view.isUserInteractionEnabled = false
 
             dataSource
-                .selectNetworkedAccount(selectedAccountTuple.partnerAccount)
+                .selectNetworkedAccounts([selectedAccountTuple.partnerAccount])
                 .observe { [weak self] result in
                     guard let self = self else { return }
                     switch result {
@@ -359,17 +361,68 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
         didSelectAccount selectedAccountTuple: FinancialConnectionsAccountTuple
     ) {
         FeedbackGeneratorAdapter.selectionChanged()
-        dataSource
-            .analyticsClient
-            .log(
-                eventName: "click.account_picker.account_selected",
-                parameters: [
-                    "account": selectedAccountTuple.partnerAccount.id,
-                    "is_single_account": true,
-                ],
-                pane: .linkAccountPicker
+        
+        // unselecting
+        if
+            // unselecting in multi account flow is not allowed
+            !dataSource.manifest.singleAccount,
+            // unselect if the account is already selected
+            dataSource.selectedAccounts.contains(
+                where: { $0.partnerAccount.id == selectedAccountTuple.partnerAccount.id }
             )
-        dataSource.updateSelectedAccount(selectedAccountTuple)
+        {
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: "click.account_picker.account_unselected",
+                    parameters: [
+                        "account": selectedAccountTuple.partnerAccount.id,
+                        "is_single_account": dataSource.manifest.singleAccount,
+                    ],
+                    pane: .linkAccountPicker
+                )
+            
+            dataSource.updateSelectedAccounts(
+                dataSource.selectedAccounts.filter(
+                    { $0.partnerAccount.id != selectedAccountTuple.partnerAccount.id }
+                )
+            )
+        }
+        // selecting
+        else {
+            dataSource
+                .analyticsClient
+                .log(
+                    eventName: "click.account_picker.account_selected",
+                    parameters: [
+                        "account": selectedAccountTuple.partnerAccount.id,
+                        "is_single_account": dataSource.manifest.singleAccount,
+                    ],
+                    pane: .linkAccountPicker
+                )
+            
+            if dataSource.manifest.singleAccount {
+                dataSource.updateSelectedAccounts([selectedAccountTuple])
+            } else {
+                // some values for nextPane require immediate action (ie. popping up a drawer for repair)
+                // as opposed to pushing the next pane upon CTA click (ie. step-up verification)
+                if
+                    // repair flow
+                    selectedAccountTuple.partnerAccount.nextPaneOnSelection == .bankAuthRepair
+                        // supportability -- account requires re-sharing with additonal permissions
+                        || selectedAccountTuple.partnerAccount.nextPaneOnSelection == .partnerAuth
+                {
+                    // TODO: make sure we update institution for the drawer
+                    // TODO:  save the "accountIdPendingUpdate"
+                    // TODO: unselect account when drawer is dismissed
+                    // TODO: present drawer
+                }
+                
+                dataSource.updateSelectedAccounts(
+                    dataSource.selectedAccounts + [selectedAccountTuple]
+                )
+            }
+        }
     }
 
     func linkAccountPickerBodyViewSelectedNewBankAccount(_ view: LinkAccountPickerBodyView) {
@@ -393,10 +446,10 @@ extension LinkAccountPickerViewController: LinkAccountPickerDataSourceDelegate {
 
     func linkAccountPickerDataSource(
         _ dataSource: LinkAccountPickerDataSource,
-        didSelectAccount selectedAccountTuple: FinancialConnectionsAccountTuple?
+        didSelectAccounts selectedAccounts: [FinancialConnectionsAccountTuple]
     ) {
-        bodyView?.selectAccount(selectedAccountTuple)
-        footerView?.didSelectedAccount(selectedAccountTuple)
+        bodyView?.selectAccounts(selectedAccounts)
+        footerView?.didSelectedAccounts(selectedAccounts)
     }
 }
 
