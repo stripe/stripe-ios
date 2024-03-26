@@ -139,7 +139,7 @@ extension XCTestCase {
 
         let emailField = context.textFields["Email"]
         emailField.forceTapWhenHittableInTestCase(self)
-        app.typeText("test@example.com")
+        app.typeText("test-\(UUID().uuidString)@example.com")
     }
     func fillUSBankData_microdeposits(_ app: XCUIApplication,
                                       container: XCUIElement? = nil) throws {
@@ -250,10 +250,10 @@ extension XCTestCase {
         waitForReload(app, settings: settings)
     }
     func waitForReload(_ app: XCUIApplication, settings: CustomerSheetTestPlaygroundSettings) {
-        let customerId = app.textFields["CustomerId"]
+        let paymentMethodButton = app.buttons["Payment method"]
         expectation(
-            for: NSPredicate(format: "self BEGINSWITH 'cus_'"),
-            evaluatedWith: customerId.value,
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: paymentMethodButton,
             handler: nil
         )
         waitForExpectations(timeout: 10, handler: nil)

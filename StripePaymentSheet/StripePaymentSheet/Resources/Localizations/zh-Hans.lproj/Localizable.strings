@@ -26,6 +26,8 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "继续前往 Amazon Pay 即表示您允许 %@ 按照他们的条款从您的 Amazon Pay 账户扣取未来款项。";
 
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "继续前往 Klarna 即表示您允许 %1$@ 按照他们的条款和 Klarna 的条款从您的 Klarna 账户扣取未来款项。您可以在您的 Klarna 应用程序中随时对其进行修改，也可以联系 %2$@。";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "继续前往 PayPal 即表示您允许 %@ 按照他们的条款从您的 PayPal 扣取未来款项。";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "继续前往 Revolut Pay 即表示您允许 %@ 按照他们的条款从您的 Revolut Pay 扣取未来款项。";
@@ -97,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "在 %@ 及数千商家那里更快支付。";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "用 <img/> 分 <num_installments/> 支付，无利息，每期 <installment_price/>";
-
-"Pay later with Klarna." = "用 Klarna 延后支付。";
 
 "Pay over time with %@" = "用 %@ 慢慢支付";
 

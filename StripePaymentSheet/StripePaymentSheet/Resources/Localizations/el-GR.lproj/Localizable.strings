@@ -26,6 +26,8 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Αν συνεχίσετε στο Amazon Pay, επιτρέπετε στην %@ να χρεώνει τον λογαριασμό σας στο Amazon Pay για μελλοντικές πληρωμές σύμφωνα με τους όρους της.";
 
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Αν συνεχίσετε στην Klarna, επιτρέπετε στην %1$@ να χρεώνει τον λογαριασμό σας στην Klarna για μελλοντικές πληρωμές σύμφωνα με τους όρους της και τους όρους της Klarna. Μπορείτε να αλλάξετε αυτήν την επιλογή οποιαδήποτε στιγμή στην εφαρμογή Klarna ή επικοινωνώντας με την %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Εάν συνεχίσετε στο PayPal, επιτρέπετε στην %@ να χρεώσει τον λογαριασμό σας PayPal για μελλοντικές πληρωμές σύμφωνα με τους όρους της.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Αν συνεχίσετε στο Revolut Pay, επιτρέπετε στην %@ να χρεώνει τον λογαριασμό σας Revolut Pay για μελλοντικές πληρωμές σύμφωνα με τους όρους της.";
@@ -97,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Ταχύτερες πληρωμές στην %@ και σε χιλιάδες επιχειρήσεις.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Πληρώστε σε <num_installments/> άτοκες δόσεις των <installment_price/> με <img/>";
-
-"Pay later with Klarna." = "Πληρωμή αργότερα με Klarna.";
 
 "Pay over time with %@" = "Πληρωμή σταδιακά με %@";
 

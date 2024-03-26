@@ -26,6 +26,8 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 Amazon Pay 계정에 결제 대금을 청구할 수 있습니다.";
 
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Klarna를 계속 사용하면 %1$@에서 해당 회사 및 Klarna의 약관에 따라 향후 Klarna 계정에 결제 대금을 청구할 수 있습니다. 이 설정은 언제든지 Klarna 앱에서 또는 %2$@에 문의하여 변경할 수 있습니다.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal을 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Revolut Pay를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 Revolut Pay 계정에 대금을 청구할 수 있습니다.";
@@ -97,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "%@사를 비롯하여 수많은 비즈니스에서 더 빠르게 결제할 수 있습니다.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/>로 <installment_price/>의 <num_installments/>회 무이자 결제로 대금을 지급하십시오.";
-
-"Pay later with Klarna." = "Klarna로 나중에 결제";
 
 "Pay over time with %@" = "%@으로 할부 결제";
 

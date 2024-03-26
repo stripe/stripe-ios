@@ -48,9 +48,9 @@ extension MLModelUnexpectedOutputError {
     }
 }
 
-// MARK: - AnalyticLoggableError
+// MARK: - AnalyticLoggableErrorV2
 
-extension MLModelUnexpectedOutputError: AnalyticLoggableError {
+extension MLModelUnexpectedOutputError: AnalyticLoggableErrorV2 {
     func analyticLoggableSerializeForLogging() -> [String: Any] {
         return [
             "domain": (self as NSError).domain,

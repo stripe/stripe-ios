@@ -1,4 +1,10 @@
-## X.X.X
+## 23.26.0 2024-03-25
+### PaymentSheet
+* [Fixed] When confirming a SetupIntent with Link, "Set up" will be shown as the confirm button text instead of "Pay".
+
+### Financial Connections
+* [Fixed] Improved the UX of an edge case in Financial Connections authentication flow.
+
 ### All
 * Added a [Privacy Manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files).
 
@@ -8,6 +14,7 @@
 
 ### PaymentSheet
 * [Fixed] A bug where `PaymentSheet.FlowController` was not respecting `PaymentSheet.Configuration.primaryButtonLabel`.
+* [Added] Support for Klarna with SetupIntents and PaymentIntents with `setup_future_usage`.
 
 ### Financial Connections
 * [Changed] Updated the design of Financial Connections authentication flow.

@@ -38,13 +38,13 @@ struct VerificationSheetClosedAnalytic: VerificationSheetAnalytic {
 
     var additionalParams: [String: Any] {
         return [
-            "session_result": sessionResult
+            "session_result": sessionResult,
         ]
     }
 }
 
 /// Logged if there's an error presenting the sheet
-struct VerificationSheetFailedAnalytic: VerificationSheetAnalytic, ErrorAnalytic {
+struct VerificationSheetFailedAnalytic: VerificationSheetAnalytic {
     let event = STPAnalyticEvent.verificationSheetFailed
     let verificationSessionId: String?
     let additionalParams: [String: Any] = [:]

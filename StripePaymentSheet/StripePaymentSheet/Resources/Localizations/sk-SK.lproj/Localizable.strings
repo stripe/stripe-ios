@@ -26,6 +26,8 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračovaním na službu Amazon Pay povolíte spoločnosti %@, aby z vášho účtu Amazon Pay účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
 
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Pokračovaním na službu Klarna povolíte spoločnosti %1$@, aby z vášho účtu Klarna účtovala budúce platby v súlade s ich podmienkami a podmienkami služby Klarna. Toto môžete kedykoľvek zmeniť vo svojej aplikácii Klarna alebo oslovením spoločnosti %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pokračovaním na službu PayPal povolíte spoločnosti %@, aby z vášho účtu PayPal účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pokračovaním na službu Revolut Pay povolíte spoločnosti %@, aby z vášho účtu Revolut Pay účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
@@ -97,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Plaťte rýchlejšie u obchodníka %@ a tisícov ďalších spoločností.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Zaplaťte v <num_installments/>bezúročných splátkach čiastku <installment_price/> pomocou <img/>";
-
-"Pay later with Klarna." = "Zaplatiť neskôr pomocou služby Klarna";
 
 "Pay over time with %@" = "Zaplatiť postupne pomocou %@";
 

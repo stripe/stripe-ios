@@ -212,7 +212,7 @@ final class PartnerAuthViewController: SheetViewController {
                 self.authorizeAuthSession(authSession)
             } else {
                 // for legacy flows (non-OAuth), we do not need to fetch OAuth results, or call authorize
-                self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authSession)
+                self.didComplete(withAuthSession: authSession)
             }
         } else if status == "failure" {
             self.dataSource.recordAuthSessionEvent(
@@ -495,7 +495,7 @@ final class PartnerAuthViewController: SheetViewController {
                 guard let self = self else { return }
                 switch result {
                 case .success(let authSession):
-                    self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authSession)
+                    self.didComplete(withAuthSession: authSession)
 
                     // hide the loading view after a delay to prevent
                     // the screen from flashing _while_ the transition
@@ -600,10 +600,7 @@ final class PartnerAuthViewController: SheetViewController {
                             authSessionId: authSession.id
                         )
                         // abstract auth handles calling `authorize`
-                        self.delegate?.partnerAuthViewController(
-                            self,
-                            didCompleteWithAuthSession: authSession
-                        )
+                        self.didComplete(withAuthSession: authSession)
                     } else {
                         completionHandler(false)
                     }
@@ -636,6 +633,28 @@ final class PartnerAuthViewController: SheetViewController {
                 ],
                 pane: .partnerAuth
             )
+    }
+
+    // Defensive programming to avoid completing the same auth session twice.
+    //
+    // There's been a series of odd edge-cases where the same auth session
+    // could complete twice, so this acts as future-proofing that this
+    // never happens again.
+    private var lastCompletedAuthSessionId: String?
+    private func didComplete(withAuthSession authSession: FinancialConnectionsAuthSession) {
+        if lastCompletedAuthSessionId != authSession.id {
+            lastCompletedAuthSessionId = authSession.id
+            delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authSession)
+        } else {
+            dataSource
+                .analyticsClient.log(
+                    eventName: "ios_double_complete_attempt",
+                    parameters: [
+                        "auth_session_id": authSession.id,
+                    ],
+                    pane: .partnerAuth
+                )
+        }
     }
 }
 
