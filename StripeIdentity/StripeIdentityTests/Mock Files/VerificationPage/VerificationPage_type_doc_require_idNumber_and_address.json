@@ -205,5 +205,16 @@
     "button_text": "Complete",
     "title": "Verification submitted"
   },
-  "unsupported_client": false
+  "unsupported_client": false,
+  "user_session_id": "testUserSession",
+  "experiments": [
+    {
+        "experiment_name": "experiment1",
+        "event_name": "eventName1",
+        "event_metadata": {
+            "metadata1": "value1",
+            "metadata2": "value2"
+        }
+    }
+  ]
 }

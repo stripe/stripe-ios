@@ -27,32 +27,40 @@ extension DocumentCaptureViewController {
 
     func scanningInstructionText(
         for side: DocumentSide,
-        idDetectorOutput: IDDetectorOutput?
+        documentScannerOutput: DocumentScannerOutput?
     ) -> String {
-        let foundClassification = idDetectorOutput?.classification
-        let matchesClassification =
-        foundClassification?.matchesDocument(side: side) ?? false
-        let zoomLevel = idDetectorOutput?.computeZoomLevel()
-
-        guard let zoomLevel = zoomLevel else {
+        switch documentScannerOutput {
+        case .none:
             if side == .front {
                 return String.Localized.position_in_center
             } else {
                 return String.Localized.flip_to_other_side
             }
-        }
-
-        switch (side, matchesClassification, zoomLevel) {
-        case (.front, false, _):
-            return String.Localized.position_in_center
-        case (.back, false, _):
-            return String.Localized.flip_to_other_side
-        case (_, true, .ok):
-            return String.Localized.scanning
-        case (_, true, .tooClose):
-            return String.Localized.move_farther
-        case (_, true, .tooFar):
-            return String.Localized.move_closer
+        case .some(.legacy(let idDetectorOutput, _, _, _, _)):
+            let foundClassification = idDetectorOutput.classification
+            let matchesClassification = foundClassification.matchesDocument(side: side)
+            let zoomLevel = idDetectorOutput.computeZoomLevel()
+            switch (side, matchesClassification, zoomLevel) {
+            case (.front, false, _):
+                return String.Localized.position_in_center
+            case (.back, false, _):
+                return String.Localized.flip_to_other_side
+            case (_, true, .ok):
+                return String.Localized.scanning
+            case (_, true, .tooClose):
+                return String.Localized.move_farther
+            case (_, true, .tooFar):
+                return String.Localized.move_closer
+            }
+        case .some(.modern(_, let mbResult, _)):
+            guard case let .capturing(captureFeedback) = mbResult else {
+                if side == .front {
+                    return String.Localized.position_in_center
+                } else {
+                    return String.Localized.flip_to_other_side
+                }
+            }
+            return captureFeedback.getFeedbackMessage()
         }
     }
 

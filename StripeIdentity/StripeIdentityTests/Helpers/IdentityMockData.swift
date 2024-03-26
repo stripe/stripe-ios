@@ -20,6 +20,7 @@ enum VerificationPageMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
     case response200 = "VerificationPage_200"
+    case response200NoExp = "VerificationPage_200_no_exp"
     case response200NoConsentHeader = "VerificationPage_200_no_consent_header"
     case response200TestMode = "VerificationPage_200_testMode"
     case response200Submitted = "VerificationPage_200_submitted"
