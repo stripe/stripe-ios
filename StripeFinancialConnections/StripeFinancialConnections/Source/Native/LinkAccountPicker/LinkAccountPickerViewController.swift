@@ -87,6 +87,7 @@ final class LinkAccountPickerViewController: UIViewController {
     }()
     private weak var bodyView: LinkAccountPickerBodyView?
     private weak var footerView: LinkAccountPickerFooterView?
+    private weak var lastAccountUpdateRequiredViewController: UIViewController?
 
     init(dataSource: LinkAccountPickerDataSource) {
         self.dataSource = dataSource
@@ -404,23 +405,68 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
             if dataSource.manifest.singleAccount {
                 dataSource.updateSelectedAccounts([selectedAccountTuple])
             } else {
-                // some values for nextPane require immediate action (ie. popping up a drawer for repair)
-                // as opposed to pushing the next pane upon CTA click (ie. step-up verification)
-                if
-                    // repair flow
-                    selectedAccountTuple.partnerAccount.nextPaneOnSelection == .bankAuthRepair
-                        // supportability -- account requires re-sharing with additonal permissions
-                        || selectedAccountTuple.partnerAccount.nextPaneOnSelection == .partnerAuth
-                {
-                    // TODO: make sure we update institution for the drawer
-                    // TODO:  save the "accountIdPendingUpdate"
-                    // TODO: unselect account when drawer is dismissed
-                    // TODO: present drawer
-                }
-
                 dataSource.updateSelectedAccounts(
                     dataSource.selectedAccounts + [selectedAccountTuple]
                 )
+
+                // some values for nextPane require immediate action (ie. popping up a drawer for repair)
+                // as opposed to pushing the next pane upon CTA click (ie. step-up verification)
+                let selectedPartnerAccount = selectedAccountTuple.partnerAccount
+                if
+                    // repair flow
+                    selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair
+                        // supportability -- account requires re-sharing with additonal permissions
+                        || selectedPartnerAccount.nextPaneOnSelection == .partnerAuth
+                {
+                    // TODO: if we are looking at `bankAuthRepair`...
+                    // then we need to display an error as we can't select it!
+
+                    let deselectPreviouslySelectedAccount = { [weak self] in
+                        guard let self = self else { return }
+                        self.dataSource.updateSelectedAccounts(
+                            self.dataSource.selectedAccounts.filter(
+                                { $0.partnerAccount.id != selectedPartnerAccount.id }
+                            )
+                        )
+                    }
+
+                    var delayDeselectingAccounts = false
+                    let willDismissSheet = {
+                        if delayDeselectingAccounts {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                deselectPreviouslySelectedAccount()
+                            }
+                        } else {
+                            deselectPreviouslySelectedAccount()
+                        }
+                    }
+
+                    let accountUpdateRequiredViewController = AccountUpdateRequiredViewController(
+                        institution: selectedPartnerAccount.institution,
+                        didSelectContinue: { [weak self] in
+                            guard let self = self else { return }
+                            delayDeselectingAccounts = true
+                            self.lastAccountUpdateRequiredViewController?.dismiss(
+                                animated: true,
+                                completion: {
+                                    self.delegate?.linkAccountPickerViewController(
+                                        self,
+                                        requestedPartnerAuthWithInstitution: selectedPartnerAccount.institution! // TODO: Fix downcast
+                                    )
+                                }
+                            )
+                        },
+                        didSelectCancel: { [weak self] in
+                            delayDeselectingAccounts = false
+                            self?.lastAccountUpdateRequiredViewController?.dismiss(
+                                animated: true
+                            )
+                        },
+                        willDismissSheet: willDismissSheet
+                    )
+                    lastAccountUpdateRequiredViewController = accountUpdateRequiredViewController
+                    accountUpdateRequiredViewController.present(on: self)
+                }
             }
         }
     }
@@ -449,7 +495,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerDataSourceDelegate {
         didSelectAccounts selectedAccounts: [FinancialConnectionsAccountTuple]
     ) {
         bodyView?.selectAccounts(selectedAccounts)
-        footerView?.didSelectedAccounts(selectedAccounts)
+        footerView?.didSelectAccounts(selectedAccounts)
     }
 }
 

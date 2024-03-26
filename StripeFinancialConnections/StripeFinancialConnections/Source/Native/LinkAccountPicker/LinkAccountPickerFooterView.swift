@@ -76,8 +76,15 @@ final class LinkAccountPickerFooterView: UIView {
         didSelectConnectAccount()
     }
 
-    func didSelectedAccounts(_ selectedAccounts: [FinancialConnectionsAccountTuple]) {
-        connectAccountButton.title = defaultCta
+    func didSelectAccounts(_ selectedAccounts: [FinancialConnectionsAccountTuple]) {
+        if
+            singleAccount,
+            let selectionCta = selectedAccounts.first?.accountPickerAccount.selectionCta
+        {
+            connectAccountButton.title = selectionCta
+        } else {
+            connectAccountButton.title = defaultCta
+        }
         connectAccountButton.isEnabled = !selectedAccounts.isEmpty
     }
 
