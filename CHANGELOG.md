@@ -2,6 +2,9 @@
 ### PaymentSheet
 * [Fixed] When confirming a SetupIntent with Link, "Set up" will be shown as the confirm button text instead of "Pay".
 
+### CustomerSheet
+* [Fixed] Fixed an issue dismissing the sheet when Link is the default payment method.
+
 ### Financial Connections
 * [Fixed] Improved the UX of an edge case in Financial Connections authentication flow.
 
