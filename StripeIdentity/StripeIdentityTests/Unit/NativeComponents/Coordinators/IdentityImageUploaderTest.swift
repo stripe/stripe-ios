@@ -40,10 +40,12 @@ final class IdentityImageUploaderTest: XCTestCase {
         mockAnalyticsClient = MockAnalyticsClientV2()
         uploader = IdentityImageUploader(
             configuration: IdentityImageUploaderTest.mockConfig,
-            apiClient: mockAPIClient,
-            analyticsClient: IdentityAnalyticsClient(
-                verificationSessionId: "",
-                analyticsClient: mockAnalyticsClient
+            sheetController: VerificationSheetControllerMock(
+                apiClient: mockAPIClient,
+                analyticsClient: IdentityAnalyticsClient(
+                    verificationSessionId: "",
+                    analyticsClient: mockAnalyticsClient
+                )
             )
         )
     }

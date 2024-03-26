@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import CaptureCore
 import CoreVideo
 import Foundation
 @_spi(STP) import StripeCameraCore
@@ -24,6 +25,7 @@ final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManager
     func scanImage<ScannerOutput>(
         with scanner: AnyImageScanner<ScannerOutput>,
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraSession: CameraSessionProtocol,
         completeOn completionQueue: DispatchQueue,
         completion: @escaping (ScannerOutput) -> Void
