@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import CaptureCore
 import CoreVideo
 import Foundation
 @_spi(STP) import StripeCameraCore
@@ -29,9 +30,14 @@ final class ImageScannerMock<Output>: ImageScanner {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
-        cameraProperties: CameraSession.DeviceProperties?
-    ) throws -> Output {
-        return try scanResult.get()
+        sampleBuffer: CMSampleBuffer,
+        cameraProperties: StripeCameraCore.CameraSession.DeviceProperties?
+    ) -> StripeCore.Future<Output> {
+        do {
+            return Promise(value: try scanResult.get())
+        } catch {
+            return Promise(error: error)
+        }
     }
 
     func reset() {
