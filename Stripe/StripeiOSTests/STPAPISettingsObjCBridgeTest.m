@@ -51,6 +51,7 @@
 
     StripeAPI.additionalEnabledApplePayNetworks = @[PKPaymentNetworkCartesBancaires];
     XCTAssertTrue([StripeAPI.additionalEnabledApplePayNetworks containsObject:PKPaymentNetworkCartesBancaires]);
+    StripeAPI.additionalEnabledApplePayNetworks = @[];
     
     PKPaymentRequest *request = [StripeAPI paymentRequestWithMerchantIdentifier:@"test" country:@"US" currency:@"USD"];
     request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]]];
