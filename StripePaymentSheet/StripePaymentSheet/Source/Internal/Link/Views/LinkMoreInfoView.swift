@@ -18,9 +18,7 @@ final class LinkMoreInfoView: UIView {
         static var logoWidth: CGFloat {
             LinkUI.useNewBrand ? 42 : 31
         }
-        static var logoHeight: CGFloat {
-            LinkUI.useNewBrand ? 14 : 14
-        }
+        static let logoHeight: CGFloat = 14
     }
     private lazy var logoView: UIImageView = {
         let imageView: UIImageView

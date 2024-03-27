@@ -34,22 +34,10 @@ extension UIColor {
         dark: .white
     )
 
-    /// Color for borders and dividers.
-    static let linkSeparator: UIColor = .dynamic(
-        light: UIColor(red: 0.878, green: 0.902, blue: 0.922, alpha: 1),
-        dark: UIColor(red: 0.471, green: 0.471, blue: 0.502, alpha: 0.36)
-    )
-
     /// Foreground color of the primary button.
     static var linkPrimaryButtonForeground: UIColor {
         LinkUI.useNewBrand ? UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0) : UIColor(red: 0.012, green: 0.141, blue: 0.149, alpha: 1.0)
     }
-
-    /// Background color of the secondary button/
-    static let linkSecondaryButtonBackground: UIColor = .dynamic(
-        light: UIColor(red: 0.965, green: 0.973, blue: 0.980, alpha: 1.0),
-        dark: UIColor(red: 0.455, green: 0.455, blue: 0.502, alpha: 0.18)
-    )
 
 }
 

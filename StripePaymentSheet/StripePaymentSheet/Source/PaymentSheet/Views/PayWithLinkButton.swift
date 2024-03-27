@@ -112,18 +112,16 @@ final class PayWithLinkButton: UIControl {
         let linkImage = LinkUI.useNewBrand ? Image.link_logo_bw.makeImage(template: false) : Image.link_logo_deprecated.makeImage(template: true)
         let linkAttachment = NSTextAttachment(image: linkImage)
 
-        if LinkUI.useNewBrand {
-            let linkLogoRatio = linkImage.size.width / linkImage.size.height
+        let linkLogoRatio = linkImage.size.width / linkImage.size.height
 
-            let linkTextSpacing = 0.073 // the total top+bottom space outside the Link logo
+        let linkTextSpacing = 0.073 // the total top+bottom space outside the Link logo
+
+        if LinkUI.useNewBrand {
             let linkLogoHeight = (linkView.font.capHeight + (linkView.font.pointSize * 0.1)) *
             (1.0 + linkTextSpacing)
             let linkY = (linkTextSpacing) * linkLogoHeight
             linkAttachment.bounds = CGRect(x: 0, y: -linkY, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
         } else {
-            let linkLogoRatio = linkImage.size.width / linkImage.size.height
-
-            let linkTextSpacing = 0.073 // the total top+bottom space outside the Link logo
             // Link logo should be a little taller than the height of a cap in SF Medium
             let linkLogoHeight = linkView.font.capHeight + (linkView.font.pointSize * 0.1)
             linkAttachment.bounds = CGRect(x: 0, y: 0, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)

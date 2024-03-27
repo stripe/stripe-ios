@@ -65,7 +65,7 @@ import Foundation
         let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool ?? false
         let disableSignup = response["link_mobile_disable_signup"] as? Bool ?? false
         // Should default to true in case we remove the server-side flag someday
-        let useRebrand = response["link_2024_rebrand_m1"] as? Bool ?? true
+        let useRebrand = response["link_2024_rebrand_m1"] as? Bool
 
         // Collect the flags for the URL generator
         let linkFlags = response.reduce(into: [String: Bool]()) { partialResult, element in
