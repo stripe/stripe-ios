@@ -11,10 +11,10 @@ import XCTest
 
 class STPPaymentMethodAlmaTests: XCTestCase {
 
-    static let almaPaymentIntentClientSecret = "TODO"
+    static let almaPaymentIntentClientSecret = "pi_3Oz1AfKG6vc7r7YC0VaP6KiE_secret_SxVptpJ5PaAceAYCGetQh8FVv"
 
     func _retrieveAlmaJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
         client.retrievePaymentIntent(
             withClientSecret: Self.almaPaymentIntentClientSecret,
             expand: ["payment_method"]
