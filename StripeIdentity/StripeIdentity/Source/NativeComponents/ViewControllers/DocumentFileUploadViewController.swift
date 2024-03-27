@@ -11,7 +11,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-enum DocumentFileUploadViewControllerError: String, AnalyticLoggableStringError {
+enum DocumentFileUploadViewControllerError: String, AnalyticLoggableStringErrorV2 {
     /// The app cannot access to the photo library on this device
     case imagePickerSourcePhotoLibraryUnavailable
     /// This device does not have a camera available or the app does not have permissions to access it

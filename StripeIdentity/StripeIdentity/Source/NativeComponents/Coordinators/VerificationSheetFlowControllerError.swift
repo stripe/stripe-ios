@@ -37,7 +37,7 @@ extension VerificationSheetFlowControllerError: LocalizedError {
     }
 }
 
-extension VerificationSheetFlowControllerError: AnalyticLoggableError {
+extension VerificationSheetFlowControllerError: AnalyticLoggableErrorV2 {
     func analyticLoggableSerializeForLogging() -> [String: Any] {
         var payload: [String: Any]
         switch self {
@@ -69,7 +69,7 @@ extension VerificationSheetFlowControllerError: AnalyticLoggableError {
                 "type": "no_document_uploader",
             ]
         case .unknown(let error):
-            return error.serializeForLogging()
+            return error.serializeForV2Logging()
         }
 
         payload["domain"] = (self as NSError).domain

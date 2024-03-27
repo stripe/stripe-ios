@@ -26,6 +26,8 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Meta tkompli għal fuq Amazon Pay, tkun qed tagħti permess lil %@ biex fil-ġejjieni tiġbor il-pagamenti mill-kont Amazon Pay tiegħek skont ir-regoli tagħha.";
 
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Meta tkompli għal fuq Klarna, tkun qed tagħti permess lil %1$@ biex jiċċarġjaw il-kont ta' Klarna tiegħek għal pagamenti futuri skont it-termini tagħhom u ta' Klarna. Dan tista' tibdlu fi kwalunkwe ħin fl-app ta' Klarna billi tikkuntattja lil %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Meta tkompli għal PayPal tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' PayPal tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Meta tkompli għal Revolut Pay tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' Revolut Pay tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
@@ -97,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Ħallas lil %@ u lil eluf ta' negozji oħra iktar malajr.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Ħallas f'dan-numru ta' pagamenti: <num_installments/> ta' <installment_price/> mingħajr imgħax grazzi għal <img/>";
-
-"Pay later with Klarna." = "Ħlas aktar tard bil-Klarna.";
 
 "Pay over time with %@" = "Ħallas bin-nifs grazzi għal %@";
 

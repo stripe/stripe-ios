@@ -26,6 +26,8 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke Amazon Pay, anda membenarkan %@ mengecaj akaun Amazon Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
 
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Dengan meneruskan langkah ke Klarna, anda membenarkan %1$@ mengecaj akaun Klarna anda bagi pembayaran masa hadapan menurut terma mereka dan terma Klarna. Anda boleh mengubah tetapan ini pada bila-bila masa dalam app Klarna anda atau dengan menghubungi %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke Revolut Pay, anda membenarkan %@ mengecaj akaun Revolut Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
@@ -97,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Bayar dengan lebih cepat di %@ dan beribu-ribu perniagaan.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Bayar dalam <num_installments/> kali pembayaran tanpa faedah sebanyak <installment_price/> dengan <img/>";
-
-"Pay later with Klarna." = "Bayar kemudian dengan Klarna.";
 
 "Pay over time with %@" = "Bayar dari semasa ke semasa dengan %@";
 

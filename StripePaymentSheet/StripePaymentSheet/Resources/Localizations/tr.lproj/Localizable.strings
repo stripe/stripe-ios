@@ -26,6 +26,8 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay'a devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak Amazon Pay hesabınızı ücretlendirme izni vermiş olursunuz.";
 
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Klarna'ya devam ederek, %1$@ şirketine gelecekteki ödemeler için kendi koşullarına ve Klarna'nın koşullarına uygun olarak Klarna hesabınızı ücretlendirme izni vermiş olursunuz. Bunu dilediğiniz zaman Klarna uygulamanızdan veya %2$@ ile iletişime geçerek değiştirebilirsiniz.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal'a devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak PayPal hesabınızı ücretlendirme izni vermiş olursunuz.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Revolut Pay'e devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak Revolut Pay hesabınızı ücretlendirme izni vermiş olursunuz.";
@@ -97,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "%@ ve binlerce işletmede daha hızlı ödeme yapın.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/> ile <installment_price/> tutarında faizsiz <num_installments/> taksitle ödeyin";
-
-"Pay later with Klarna." = "Daha sonra Klarna ile ödeyin.";
 
 "Pay over time with %@" = "%@ ile zaman içinde ödeyin";
 

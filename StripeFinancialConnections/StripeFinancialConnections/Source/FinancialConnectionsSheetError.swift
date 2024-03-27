@@ -22,7 +22,7 @@ public enum FinancialConnectionsSheetError: Error, LocalizedError {
 }
 
 /// :nodoc:
-@_spi(STP) extension FinancialConnectionsSheetError: AnalyticLoggableError {
+@_spi(STP) extension FinancialConnectionsSheetError: AnalyticLoggableErrorV2 {
 
     /// The error code
     public var errorCode: Int {

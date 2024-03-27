@@ -59,6 +59,16 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
+                        HStack {
+                            Text("Macros").font(.headline)
+                            Spacer()
+                            Button {
+                                playgroundController.didTapSetToUnsupported()
+                            } label: {
+                                Text("SetPMLink")
+                                    .font(.callout.smallCaps())
+                            }.buttonStyle(.bordered)
+                        }
                     }
                     Divider()
                     Group {
