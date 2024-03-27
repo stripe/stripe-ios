@@ -698,7 +698,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     func testZipPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer
-        settings.apmsEnabled = .on
+        settings.apmsEnabled = .off
         settings.currency = .aud
         settings.merchantCountryCode = .AU
         loadPlayground(
