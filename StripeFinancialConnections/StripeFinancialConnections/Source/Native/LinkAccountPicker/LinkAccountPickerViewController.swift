@@ -376,13 +376,15 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
     ) {
         FeedbackGeneratorAdapter.selectionChanged()
 
+        let selectedPartnerAccount = selectedAccountTuple.partnerAccount
+
         // unselecting
         if
-            // unselecting in multi account flow is not allowed
+            // unselecting in single account flow is not allowed
             !dataSource.manifest.singleAccount,
             // unselect if the account is already selected
             dataSource.selectedAccounts.contains(
-                where: { $0.partnerAccount.id == selectedAccountTuple.partnerAccount.id }
+                where: { $0.partnerAccount.id == selectedPartnerAccount.id }
             )
         {
             dataSource
@@ -390,7 +392,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                 .log(
                     eventName: "click.account_picker.account_unselected",
                     parameters: [
-                        "account": selectedAccountTuple.partnerAccount.id,
+                        "account": selectedPartnerAccount.id,
                         "is_single_account": dataSource.manifest.singleAccount,
                     ],
                     pane: .linkAccountPicker
@@ -398,7 +400,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
 
             dataSource.updateSelectedAccounts(
                 dataSource.selectedAccounts.filter(
-                    { $0.partnerAccount.id != selectedAccountTuple.partnerAccount.id }
+                    { $0.partnerAccount.id != selectedPartnerAccount.id }
                 )
             )
         }
@@ -409,7 +411,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                 .log(
                     eventName: "click.account_picker.account_selected",
                     parameters: [
-                        "account": selectedAccountTuple.partnerAccount.id,
+                        "account": selectedPartnerAccount.id,
                         "is_single_account": dataSource.manifest.singleAccount,
                     ],
                     pane: .linkAccountPicker
@@ -426,7 +428,6 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
 
                 // some values for nextPane require immediate action (ie. popping up a sheet for repair)
                 // as opposed to pushing the next pane upon CTA click (ie. step-up verification)
-                let selectedPartnerAccount = selectedAccountTuple.partnerAccount
                 if
                     // repair flow
                     selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair

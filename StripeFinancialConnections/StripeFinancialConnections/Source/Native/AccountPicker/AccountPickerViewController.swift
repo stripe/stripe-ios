@@ -392,7 +392,7 @@ final class AccountPickerViewController: UIViewController {
                     // additional step of saving the accounts to Link
                     if
                         self.dataSource.manifest.isNetworkingUserFlow == true,
-                        // make sure current user is a Link consumer
+                        // make sure the current user is a Link consumer
                         self.dataSource.manifest.accountholderIsLinkConsumer == true,
                         // make sure this is not a payment flow; in payment flows,
                         // the AttachLinkedPaymentAccount handles saving to link
