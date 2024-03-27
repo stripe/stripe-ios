@@ -222,30 +222,38 @@ final class LinkAccountPickerViewController: UIViewController {
     }
 
     private func didSelectConnectAccounts() {
-        guard let selectedAccountTuple = dataSource.selectedAccounts.first else {
-            assertionFailure("user shouldn't be able to press the connect account button without an account")
+        let nextPane: FinancialConnectionsSessionManifest.NextPane? = {
+            if let mostRecentlySelectedAccount = dataSource.selectedAccounts.last {
+                return mostRecentlySelectedAccount.partnerAccount.nextPaneOnSelection
+            } else {
+                return nil
+            }
+        }()
+        guard let nextPane = nextPane else {
             dataSource
                 .analyticsClient
                 .logUnexpectedError(
                     FinancialConnectionsSheetError
                         .unknown(
-                            debugDescription: "Selected to connect an account, but no account is selected."
+                            debugDescription: "Selected connect account, but next pane is NULL."
                         ),
                     errorName: "ConnectUnselectedAccountError",
                     pane: .linkAccountPicker
                 )
-            delegate?.linkAccountPickerViewController(self, didRequestNextPane: .institutionPicker)
+            // instead of having the user be stuck, we forward them to pick a bank instead
+            delegate?.linkAccountPickerViewController(
+                self,
+                didRequestNextPane: .institutionPicker
+            )
             return
         }
 
-        let nextPane = selectedAccountTuple
-            .partnerAccount
-            .nextPaneOnSelection
+        let selectedPartnerAccounts = dataSource.selectedAccounts.map({ $0.partnerAccount })
 
         // update data model with selected accounts
         delegate?.linkAccountPickerViewController(
             self,
-            didSelectAccounts: dataSource.selectedAccounts.map({ $0.partnerAccount })
+            didSelectAccounts: selectedPartnerAccounts
         )
 
         self.delegate?.linkAccountPickerViewController(
@@ -256,14 +264,19 @@ final class LinkAccountPickerViewController: UIViewController {
         dataSource
             .analyticsClient
             .log(
-                eventName: "account_picker.accounts_submitted",
-                parameters: [
-                    "account_ids": [selectedAccountTuple.partnerAccount.id]
-                ],
+                eventName: "click.link_accounts",
                 pane: .linkAccountPicker
             )
 
-        // TODO: remove all the extra logic of partner auth and bank repair!!!!!
+        dataSource
+            .analyticsClient
+            .log(
+                eventName: "account_picker.accounts_submitted",
+                parameters: [
+                    "account_ids": selectedPartnerAccounts.map({ $0.id })
+                ],
+                pane: .linkAccountPicker
+            )
 
         if nextPane == .success {
             footerView?.showLoadingView(true)
@@ -273,18 +286,11 @@ final class LinkAccountPickerViewController: UIViewController {
             view.isUserInteractionEnabled = false
 
             dataSource
-                .selectNetworkedAccounts([selectedAccountTuple.partnerAccount])
+                .selectNetworkedAccounts(selectedPartnerAccounts)
                 .observe { [weak self] result in
                     guard let self = self else { return }
                     switch result {
                     case .success(let institutionList):
-                        self.dataSource
-                            .analyticsClient
-                            .log(
-                                eventName: "click.link_accounts",
-                                pane: .linkAccountPicker
-                            )
-
                         if let institution = institutionList.data.first {
                             self.delegate?.linkAccountPickerViewController(
                                 self,
@@ -319,37 +325,44 @@ final class LinkAccountPickerViewController: UIViewController {
                         self.delegate?.linkAccountPickerViewController(self, didReceiveTerminalError: error)
                     }
                 }
-        } else if nextPane == .partnerAuth {
-            if let institution = selectedAccountTuple.partnerAccount.institution {
-                delegate?.linkAccountPickerViewController(
-                    self,
-                    requestedPartnerAuthWithInstitution: institution
-                )
-            } else {
-                delegate?.linkAccountPickerViewController(
-                    self,
-                    didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
-                        debugDescription: "LinkAccountPicker wanted to go to partner_auth but there is no institution."
-                    )
-                )
-            }
-        } else if let nextPane = nextPane {
-            if nextPane == .bankAuthRepair {
+        } else {
+            // we should never push here to these panes since we will present
+            // as sheet when the user selects an account that needs to be repaired
+            // or requires additional permissions (supportability)
+            if nextPane == .partnerAuth {
                 dataSource
                     .analyticsClient
-                    .log(
-                        eventName: "click.repair_accounts",
+                    .logUnexpectedError(
+                        FinancialConnectionsSheetError
+                            .unknown(
+                                debugDescription: "Connecting a supportability account, but user shouldn't be able to."
+                            ),
+                        errorName: "ConnectSupportabilityAccountError",
                         pane: .linkAccountPicker
                     )
-            }
-            delegate?.linkAccountPickerViewController(self, didRequestNextPane: nextPane)
-        } else {
-            delegate?.linkAccountPickerViewController(
-                self,
-                didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
-                    debugDescription: "LinkAccountPicker pressed account but no nextPane returned."
+                delegate?.linkAccountPickerViewController(
+                    self,
+                    didRequestNextPane: .institutionPicker
                 )
-            )
+            } else if nextPane == .bankAuthRepair {
+                dataSource
+                    .analyticsClient
+                    .logUnexpectedError(
+                        FinancialConnectionsSheetError
+                            .unknown(
+                                debugDescription: "Connecting a repair account, but user shouldn't be able to."
+                            ),
+                        errorName: "ConnectRepairAccountError",
+                        pane: .linkAccountPicker
+                    )
+                delegate?.linkAccountPickerViewController(
+                    self,
+                    didRequestNextPane: .institutionPicker
+                )
+            } else {
+                // non-sheet next pane -- likely step up
+                delegate?.linkAccountPickerViewController(self, didRequestNextPane: nextPane)
+            }
         }
     }
 }
@@ -404,12 +417,14 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
 
             if dataSource.manifest.singleAccount {
                 dataSource.updateSelectedAccounts([selectedAccountTuple])
-            } else {
+            }
+            // multi-select
+            else {
                 dataSource.updateSelectedAccounts(
                     dataSource.selectedAccounts + [selectedAccountTuple]
                 )
 
-                // some values for nextPane require immediate action (ie. popping up a drawer for repair)
+                // some values for nextPane require immediate action (ie. popping up a sheet for repair)
                 // as opposed to pushing the next pane upon CTA click (ie. step-up verification)
                 let selectedPartnerAccount = selectedAccountTuple.partnerAccount
                 if
@@ -418,8 +433,21 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                         // supportability -- account requires re-sharing with additonal permissions
                         || selectedPartnerAccount.nextPaneOnSelection == .partnerAuth
                 {
-                    // TODO: if we are looking at `bankAuthRepair`...
-                    // then we need to display an error as we can't select it!
+                    if selectedPartnerAccount.nextPaneOnSelection == .bankAuthRepair {
+                        dataSource
+                            .analyticsClient
+                            .log(
+                                eventName: "click.repair_accounts",
+                                pane: .linkAccountPicker
+                            )
+                    } else {
+                        dataSource
+                            .analyticsClient
+                            .log(
+                                eventName: "click.supportability_account",
+                                pane: .linkAccountPicker
+                            )
+                    }
 
                     let deselectPreviouslySelectedAccount = { [weak self] in
                         guard let self = self else { return }
@@ -441,18 +469,52 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                         }
                     }
 
+                    let didSelectContinue: () -> Void = { [weak self] in
+                        guard let self else { return }
+                        if selectedPartnerAccount.nextPaneOnSelection == .partnerAuth {
+                            if let institution = selectedPartnerAccount.institution {
+                                self.delegate?.linkAccountPickerViewController(
+                                    self,
+                                    requestedPartnerAuthWithInstitution: institution
+                                )
+                            } else {
+                                self.delegate?.linkAccountPickerViewController(
+                                    self,
+                                    didRequestNextPane: .institutionPicker
+                                )
+                            }
+                        }
+                        // nextPaneOnSelection == bankAuthRepair
+                        else {
+                            dataSource
+                                .analyticsClient
+                                .logUnexpectedError(
+                                    FinancialConnectionsSheetError
+                                        .unknown(
+                                            debugDescription: "Updating a repair account, but repairs are not supported in Mobile."
+                                        ),
+                                    errorName: "UpdateRepairAccountError",
+                                    pane: .linkAccountPicker
+                                )
+                            delegate?.linkAccountPickerViewController(
+                                self,
+                                didRequestNextPane: .institutionPicker
+                            )
+                        }
+                    }
+
                     let accountUpdateRequiredViewController = AccountUpdateRequiredViewController(
                         institution: selectedPartnerAccount.institution,
                         didSelectContinue: { [weak self] in
-                            guard let self = self else { return }
+                            guard let self else { return }
+                            // delay deselecting accounts while we animate to the
+                            // next screen to reduce "animation jank" of
+                            // the account getting deselected
                             delayDeselectingAccounts = true
                             self.lastAccountUpdateRequiredViewController?.dismiss(
                                 animated: true,
                                 completion: {
-                                    self.delegate?.linkAccountPickerViewController(
-                                        self,
-                                        requestedPartnerAuthWithInstitution: selectedPartnerAccount.institution! // TODO: Fix downcast
-                                    )
+                                    didSelectContinue()
                                 }
                             )
                         },
