@@ -9,12 +9,12 @@ import Foundation
 import UIKit
 
 final class AccountUpdateRequiredViewController: SheetViewController {
-    
+
     private let institution: FinancialConnectionsInstitution?
     private let didSelectContinue: () -> Void
     private let didSelectCancel: () -> Void
     private let willDismissSheet: () -> Void
-    
+
     init(
         institution: FinancialConnectionsInstitution?,
         didSelectContinue: @escaping () -> Void,
@@ -27,11 +27,11 @@ final class AccountUpdateRequiredViewController: SheetViewController {
         self.willDismissSheet = willDismissSheet
         super.init(panePresentationStyle: .sheet)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setup(
@@ -58,7 +58,7 @@ final class AccountUpdateRequiredViewController: SheetViewController {
             ).footerView
         )
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if isBeingDismissed {
