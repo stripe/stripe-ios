@@ -12,8 +12,16 @@ import UIKit
 // Reusing these colors from Link:
 private let headerColor = Color(UIColor.linkPrimaryText)
 private let secondaryTextColor = Color(UIColor.linkSecondaryText)
-private let borderColor = Color(UIColor.linkSeparator)
-private let backgroundColor = Color(UIColor.linkSecondaryButtonBackground)
+
+private var borderColor = Color(.dynamic(
+    light: UIColor(red: 0.878, green: 0.902, blue: 0.922, alpha: 1),
+    dark: UIColor(red: 0.471, green: 0.471, blue: 0.502, alpha: 0.36)
+))
+
+private var backgroundColor = Color(.dynamic(
+    light: UIColor(red: 0.965, green: 0.973, blue: 0.980, alpha: 1.0),
+    dark: UIColor(red: 0.455, green: 0.455, blue: 0.502, alpha: 0.18)
+))
 
 private let shadow1Color = Color(red: 18/255, green: 42/255, blue: 66/255, opacity: 0.04)
 private let shadow2Color = Color(red: 0/255, green: 0/255, blue: 0/255, opacity: 0.04)

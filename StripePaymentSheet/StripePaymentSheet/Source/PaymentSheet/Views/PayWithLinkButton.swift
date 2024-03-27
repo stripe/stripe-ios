@@ -74,7 +74,7 @@ final class PayWithLinkButton: UIControl {
 
     private lazy var emailLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
             .scaled(withTextStyle: .callout, maximumPointSize: 16)
 
@@ -109,13 +109,23 @@ final class PayWithLinkButton: UIControl {
         let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link)
 
         // Create the Link logo attachment
-        let linkImage = Image.link_logo.makeImage(template: true)
+        let linkImage = LinkUI.useNewBrand ? Image.link_logo_bw.makeImage(template: false) : Image.link_logo_deprecated.makeImage(template: true)
         let linkAttachment = NSTextAttachment(image: linkImage)
+
         let linkLogoRatio = linkImage.size.width / linkImage.size.height
 
-        // Link logo should be a little taller than the height of a cap in SF Medium
-        let linkLogoHeight = linkView.font.capHeight + (linkView.font.pointSize * 0.1)
-        linkAttachment.bounds = CGRect(x: 0, y: 0, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
+        let linkTextSpacing = 0.073 // the total top+bottom space outside the Link logo
+
+        if LinkUI.useNewBrand {
+            let linkLogoHeight = (linkView.font.capHeight + (linkView.font.pointSize * 0.1)) *
+            (1.0 + linkTextSpacing)
+            let linkY = (linkTextSpacing) * linkLogoHeight
+            linkAttachment.bounds = CGRect(x: 0, y: -linkY, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
+        } else {
+            // Link logo should be a little taller than the height of a cap in SF Medium
+            let linkLogoHeight = linkView.font.capHeight + (linkView.font.pointSize * 0.1)
+            linkAttachment.bounds = CGRect(x: 0, y: 0, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
+        }
 
         // Add a spacer before the Link logo and after the Link logo
         let range = payWithLinkString.mutableString.range(of: "Link")
@@ -134,8 +144,8 @@ final class PayWithLinkButton: UIControl {
     private lazy var payWithStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             payWithLinkView,
-            Self.makeArrowView(),
-        ])
+            LinkUI.useNewBrand ? nil : Self.makeDeprecatedArrowView(),
+        ].compactMap({ $0 }))
         stackView.spacing = 6
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fill
@@ -145,14 +155,20 @@ final class PayWithLinkButton: UIControl {
 
     private lazy var emailSeparatorView: UIView = Self.makeSeparatorView()
     private lazy var emailStackView: UIStackView = {
+        let logoView = Self.makeLogoView()
         let stackView = UIStackView(arrangedSubviews: [
-            Self.makeLogoView(),
+            logoView,
             emailSeparatorView,
             emailLabel,
-            Self.makeArrowView(),
-        ])
-        stackView.spacing = 10
-        stackView.setCustomSpacing(8, after: emailLabel)
+            LinkUI.useNewBrand ? nil : Self.makeDeprecatedArrowView(),
+        ].compactMap({ $0 }))
+        if LinkUI.useNewBrand {
+            stackView.spacing = 8
+            stackView.setCustomSpacing(14, after: logoView)
+        } else {
+            stackView.spacing = 10
+            stackView.setCustomSpacing(8, after: emailLabel)
+        }
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fill
         stackView.alignment = .center
@@ -180,8 +196,8 @@ final class PayWithLinkButton: UIControl {
             cardBrandSeparatorView,
             cardBrandView,
             last4Label,
-            Self.makeArrowView(),
-        ])
+            LinkUI.useNewBrand ? nil : Self.makeDeprecatedArrowView(),
+        ].compactMap({ $0 }))
         stackView.spacing = 10
         stackView.setCustomSpacing(5, after: cardBrandView)
         stackView.setCustomSpacing(8, after: last4Label)
@@ -256,7 +272,7 @@ private extension PayWithLinkButton {
     }
 
     static func makeLogoView() -> UIImageView {
-        let logoView = UIImageView(image: Image.link_logo.makeImage(template: true))
+        let logoView = UIImageView(image: LinkUI.useNewBrand ? Image.link_logo_bw.makeImage(template: false) : Image.link_logo_deprecated.makeImage(template: true))
         logoView.translatesAutoresizingMaskIntoConstraints = false
         logoView.contentMode = .scaleAspectFill
 
@@ -268,8 +284,8 @@ private extension PayWithLinkButton {
         return logoView
     }
 
-    static func makeArrowView() -> UIImageView {
-        let arrowView = UIImageView(image: Image.link_arrow.makeImage(template: true)
+    static func makeDeprecatedArrowView() -> UIImageView {
+        let arrowView = UIImageView(image: Image.link_arrow_deprecated.makeImage(template: true)
             .withAlignmentRectInsets(Constants.cardBrandInsets)
         )
         arrowView.translatesAutoresizingMaskIntoConstraints = false
@@ -416,11 +432,11 @@ private extension PayWithLinkButton {
     func separatorColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
-            return UIColor.linkBrand600.darken(by: 0.2)
+            return UIColor.linkBrand400.darken(by: 0.2)
         case .disabled:
-            return UIColor.linkBrand600.withAlphaComponent(0.5)
+            return UIColor.linkBrand400.withAlphaComponent(0.5)
         default:
-            return UIColor.linkBrand600
+            return UIColor.linkBrand400
         }
     }
 
@@ -485,6 +501,7 @@ struct LinkButtonPreviews_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             UIViewPreview {
+                LinkUI.useNewBrand = true
                 let lb = PayWithLinkButton()
                 return lb
             }.padding()

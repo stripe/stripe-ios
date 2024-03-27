@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Light.svg",
+      "filename" : "link_logo_knockout_dark.svg",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Dark.svg",
+      "filename" : "link_logo_knockout.svg",
       "idiom" : "universal"
     }
   ],
