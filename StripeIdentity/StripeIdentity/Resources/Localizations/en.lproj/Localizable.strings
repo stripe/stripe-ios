@@ -42,6 +42,11 @@
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Date of birth does not look valid";
 
+/* Instructional text when environement is too bright
+   Instructional text when the document is too glarry
+   Instructional text when user needs remove anything blocking the document */
+"Details not visible" = "Details not visible";
+
 /* driver's license */
 "driver's license" = "driver's license";
 
@@ -79,11 +84,18 @@
 /* Label for the ID field to collect individual CPF for Brazilian ID */
 "Individual CPF" = "Individual CPF";
 
+/* Instructional text when user align the edge with camera
+   Instructional text when user needs to rorate to document to align with camera */
+"Keep ID level" = "Keep ID level";
+
 /* Label for the ID field to collect last 4 of social security number for US ID */
 "Last 4 of Social Security number" = "Last 4 of Social Security number";
 
 /* Status while screen is loading */
 "Loading" = "Loading";
+
+/* Instructional text when the document is too blurry */
+"Make sure all details are visible and focus" = "Make sure all details are visible and focus";
 
 /* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
@@ -93,6 +105,12 @@
 
 /* Instructional text when camera is too close to a document */
 "Move farther" = "Move farther";
+
+/* Instructional text when environement is too dark */
+"Move to a well-lit area" = "Move to a well-lit area";
+
+/* Instructional text when there is no document in camera frame */
+"No document detected" = "No document detected";
 
 /* Label for the ID field to collect NRIC or FIN for Singaporean ID */
 "NRIC or FIN" = "NRIC or FIN";

@@ -13,5 +13,5 @@ import Vision
 struct IDDetectorConstants {
     /// Images must adhere to this pixel format to be interpreted correctly by
     /// the document scanning models
-    static let requiredPixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
+    static let mbRequiredPixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
 }

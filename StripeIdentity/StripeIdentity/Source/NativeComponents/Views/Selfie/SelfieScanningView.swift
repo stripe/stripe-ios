@@ -212,7 +212,7 @@ final class SelfieScanningView: UIView {
 
     // MARK: Configure
 
-    func configure(with viewModel: ViewModel, analyticsClient: IdentityAnalyticsClient?) {
+    func configure(with viewModel: ViewModel, sheetController: VerificationSheetControllerProtocol?) {
 
         instructionLabelView.configure(from: viewModel.instructionalLabelViewModel)
 
@@ -268,7 +268,9 @@ final class SelfieScanningView: UIView {
             } catch {
                 // Keep the consent checkbox hidden and treat this case the same
                 // as if the user did not give consent.
-                analyticsClient?.logGenericError(error: error)
+                if let sheetController = sheetController {
+                    sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
+                }
             }
         case .saving(let images, consentHTMLText: let consentText):
             scannedImageScrollView.isHidden = false
@@ -289,7 +291,9 @@ final class SelfieScanningView: UIView {
             } catch {
                 // Keep the consent checkbox hidden and treat this case the same
                 // as if the user did not give consent.
-                analyticsClient?.logGenericError(error: error)
+                if let sheetController = sheetController {
+                    sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
+                }
             }
         }
     }

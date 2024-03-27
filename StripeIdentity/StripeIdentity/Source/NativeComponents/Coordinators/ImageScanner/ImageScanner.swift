@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import CoreMedia
 import CoreVideo
 import Foundation
 @_spi(STP) import StripeCameraCore
@@ -20,8 +21,9 @@ protocol ImageScanner {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraProperties: CameraSession.DeviceProperties?
-    ) throws -> Output
+    ) -> Future<Output>
 
     func reset()
 }
@@ -35,8 +37,9 @@ struct AnyImageScanner<Output> {
     private let _scanImage:
         (
             _ pixelBuffer: CVPixelBuffer,
+            _ sampleBuffer: CMSampleBuffer,
             _ cameraProperties: CameraSession.DeviceProperties?
-        ) throws -> Output
+        ) -> Future<Output>
 
     private let _reset: () -> Void
 
@@ -46,12 +49,14 @@ struct AnyImageScanner<Output> {
         _getModelMetricsTrackers = {
             return imageScanner.mlModelMetricsTrackers
         }
-        _scanImage = { pixelBuffer, cameraProperties in
-            try imageScanner.scanImage(
+        _scanImage = { pixelBuffer, sampleBuffer, cameraProperties in
+            return imageScanner.scanImage(
                 pixelBuffer: pixelBuffer,
+                sampleBuffer: sampleBuffer,
                 cameraProperties: cameraProperties
             )
         }
+
         _reset = {
             imageScanner.reset()
         }
@@ -63,9 +68,10 @@ struct AnyImageScanner<Output> {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraProperties: CameraSession.DeviceProperties?
-    ) throws -> Output {
-        return try _scanImage(pixelBuffer, cameraProperties)
+    ) -> Future<Output> {
+        return _scanImage(pixelBuffer, sampleBuffer, cameraProperties)
     }
 
     func reset() {

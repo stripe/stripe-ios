@@ -34,18 +34,51 @@ final class IdentityImageUploader {
 
     let apiClient: IdentityAPIClient
     let analyticsClient: IdentityAnalyticsClient
+    let sheetController: VerificationSheetControllerProtocol
 
     /// Worker queue to encode the image to jpeg
     let imageEncodingQueue = DispatchQueue(label: "com.stripe.identity.image-encoding")
 
     init(
         configuration: Configuration,
-        apiClient: IdentityAPIClient,
-        analyticsClient: IdentityAnalyticsClient
+        sheetController: VerificationSheetControllerProtocol
     ) {
         self.configuration = configuration
-        self.apiClient = apiClient
-        self.analyticsClient = analyticsClient
+        self.apiClient = sheetController.apiClient
+        self.analyticsClient = sheetController.analyticsClient
+        self.sheetController = sheetController
+    }
+
+    func uploadLowAndHighResImagesNoCropping(
+        highResImage: CGImage,
+        lowResImage: CGImage,
+        highResFileName: String,
+        lowResFileName: String
+    ) -> Future<LowHighResFiles> {
+        let lowResUploadFuture = uploadLowResImage(
+            lowResImage,
+            fileName: lowResFileName
+        )
+
+        return uploadJPEGResize(
+            image: highResImage,
+            fileName: highResFileName,
+            jpegCompressionQuality: configuration.highResImageCompressionQuality,
+            newSize: CGSize(
+                width: configuration.highResImageMaxDimension,
+                height: configuration.highResImageMaxDimension
+            )
+        ).chained { highResFile in
+            return lowResUploadFuture.chained { lowResFile in
+                // Convert promise to a tuple of file IDs
+                return Promise(
+                    value: (
+                        lowRes: lowResFile,
+                        highRes: highResFile
+                    )
+                )
+            }
+        }
     }
 
     func uploadLowAndHighResImages(
@@ -96,17 +129,14 @@ final class IdentityImageUploader {
                 )
             }
 
-            let resizedImage = try imageToResize.scaledDown(
-                toMaxPixelDimension: CGSize(
+            return uploadJPEGResize(
+                image: imageToResize,
+                fileName: fileName,
+                jpegCompressionQuality: configuration.highResImageCompressionQuality,
+                newSize: CGSize(
                     width: configuration.highResImageMaxDimension,
                     height: configuration.highResImageMaxDimension
                 )
-            )
-
-            return uploadJPEG(
-                image: resizedImage,
-                fileName: fileName,
-                jpegCompressionQuality: configuration.highResImageCompressionQuality
             )
         } catch {
             return Promise(error: error)
@@ -118,18 +148,30 @@ final class IdentityImageUploader {
         _ image: CGImage,
         fileName: String
     ) -> Future<StripeFile> {
-        do {
-            let resizedImage = try image.scaledDown(
-                toMaxPixelDimension: CGSize(
-                    width: configuration.lowResImageMaxDimension,
-                    height: configuration.lowResImageMaxDimension
-                )
+        return uploadJPEGResize(
+            image: image,
+            fileName: fileName,
+            jpegCompressionQuality: configuration.lowResImageCompressionQuality,
+            newSize: CGSize(
+                width: configuration.lowResImageMaxDimension,
+                height: configuration.lowResImageMaxDimension
             )
+        )
+    }
+
+    func uploadJPEGResize(
+        image: CGImage,
+        fileName: String,
+        jpegCompressionQuality: CGFloat,
+        newSize: CGSize
+    ) -> Future<StripeFile> {
+        do {
+            let resizedImage = try image.scaledDown(toMaxPixelDimension: newSize)
 
             return uploadJPEG(
                 image: resizedImage,
                 fileName: fileName,
-                jpegCompressionQuality: configuration.lowResImageCompressionQuality
+                jpegCompressionQuality: jpegCompressionQuality
             )
         } catch {
             return Promise(error: error)
@@ -163,7 +205,8 @@ final class IdentityImageUploader {
                         compressionQuality: jpegCompressionQuality,
                         fileId: file.id,
                         fileName: fileName,
-                        fileSizeBytes: metrics.fileSizeBytes
+                        fileSizeBytes: metrics.fileSizeBytes,
+                        sheetController: self.sheetController
                     )
                 }
             }

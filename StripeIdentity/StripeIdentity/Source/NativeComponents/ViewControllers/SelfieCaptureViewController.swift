@@ -237,7 +237,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                 scanner: anyFaceScanner,
                 concurrencyManager: concurrencyManager
                     ?? ImageScanningConcurrencyManager(
-                        analyticsClient: sheetController.analyticsClient
+                        sheetController: sheetController
                     ),
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper
@@ -290,7 +290,7 @@ extension SelfieCaptureViewController {
         )
         selfieCaptureView.configure(
             with: selfieCaptureViewModel,
-            analyticsClient: sheetController?.analyticsClient
+            sheetController: sheetController
         )
     }
 
@@ -379,7 +379,9 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         _ scanningSession: SelfieImageScanningSession,
         didTimeoutForClassification classification: EmptyClassificationType
     ) {
-        sheetController?.analyticsClient.logSelfieCaptureTimeout()
+        if let sheetController = sheetController {
+            sheetController.analyticsClient.logSelfieCaptureTimeout(sheetController: sheetController)
+        }
     }
 
     func imageScanningSession(
@@ -397,15 +399,21 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         scanningSession.concurrencyManager.getPerformanceMetrics(completeOn: .main) {
             [weak sheetController] averageFPS, numFramesScanned in
             guard let averageFPS = averageFPS else { return }
-            sheetController?.analyticsClient.logAverageFramesPerSecond(
-                averageFPS: averageFPS,
-                numFrames: numFramesScanned,
-                scannerName: .selfie
+            if let sheetController = sheetController {
+                sheetController.analyticsClient.logAverageFramesPerSecond(
+                    averageFPS: averageFPS,
+                    numFrames: numFramesScanned,
+                    scannerName: .selfie,
+                    sheetController: sheetController
+                )
+            }
+        }
+        if let sheetController = sheetController {
+            sheetController.analyticsClient.logModelPerformance(
+                mlModelMetricsTrackers: scanningSession.scanner.mlModelMetricsTrackers,
+                sheetController: sheetController
             )
         }
-        sheetController?.analyticsClient.logModelPerformance(
-            mlModelMetricsTrackers: scanningSession.scanner.mlModelMetricsTrackers
-        )
     }
 
     func imageScanningSessionDidStopScanning(_ scanningSession: SelfieImageScanningSession) {

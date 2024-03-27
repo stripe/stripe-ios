@@ -64,7 +64,7 @@ extension SelfieCaptureViewSnapshotTest {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        view.configure(with: viewModel, analyticsClient: nil)
+        view.configure(with: viewModel, sheetController: nil)
         view.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
         STPSnapshotVerifyView(view, file: file, line: line)
     }

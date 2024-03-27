@@ -18,6 +18,7 @@ protocol ImageScanningConcurrencyManagerProtocol {
     func scanImage<ScannerOutput>(
         with scanner: AnyImageScanner<ScannerOutput>,
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraSession: CameraSessionProtocol,
         completeOn completionQueue: DispatchQueue,
         completion: @escaping (ScannerOutput) -> Void
@@ -57,12 +58,14 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     private let semaphore: DispatchSemaphore
 
     private let analyticsClient: IdentityAnalyticsClient
+    private let sheetController: VerificationSheetControllerProtocol
 
     init(
-        analyticsClient: IdentityAnalyticsClient,
+        sheetController: VerificationSheetControllerProtocol,
         maxConcurrentScans: Int = kConcurrentImageScannerDefaultMaxConcurrentScans
     ) {
-        self.analyticsClient = analyticsClient
+        self.analyticsClient = sheetController.analyticsClient
+        self.sheetController = sheetController
         self.semaphore = DispatchSemaphore(value: maxConcurrentScans)
     }
 
@@ -90,6 +93,7 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     func scanImage<ScannerOutput>(
         with scanner: AnyImageScanner<ScannerOutput>,
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraSession: CameraSessionProtocol,
         completeOn completionQueue: DispatchQueue,
         completion: @escaping (ScannerOutput) -> Void
@@ -112,17 +116,17 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         }
 
         semaphore.wait()
-        concurrentQueue.async { [weak self] in
-            guard let self = self else { return }
 
-            do {
-                let output = try scanner.scanImage(
-                    pixelBuffer: pixelBuffer,
-                    cameraProperties: cameraProperties
-                )
-                wrappedCompletion(output)
-            } catch {
-                self.analyticsClient.logGenericError(error: error)
+        scanner.scanImage(
+            pixelBuffer: pixelBuffer,
+            sampleBuffer: sampleBuffer,
+            cameraProperties: cameraProperties
+        ).observe(on: concurrentQueue) { result in
+            switch result {
+            case .success(let scannerOutput):
+                wrappedCompletion(scannerOutput)
+            case .failure(let error):
+                self.analyticsClient.logGenericError(error: error, sheetController: self.sheetController)
             }
 
             // Track when the scan ended

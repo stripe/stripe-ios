@@ -144,10 +144,6 @@ modules:
   localization_dir: StripeIdentity/StripeIdentity
   custom_string_convertible_dir: StripeIdentity/StripeIdentity/Source
   supports_catalyst: false
-  size_report:
-    max_compressed_size: 1500
-    max_uncompressed_size: 3500
-    max_incremental_uncompressed_size: 100
   docs:
     output: docs/stripeidentity
     readme: StripeIdentity/README.md

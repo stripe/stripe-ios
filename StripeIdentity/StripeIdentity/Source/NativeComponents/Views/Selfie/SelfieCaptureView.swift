@@ -51,19 +51,19 @@ final class SelfieCaptureView: UIView {
 
     // MARK: Configure
 
-    func configure(with viewModel: ViewModel, analyticsClient: IdentityAnalyticsClient?) {
+    func configure(with viewModel: ViewModel, sheetController: VerificationSheetControllerProtocol?) {
         switch viewModel {
         case .scan(let scanningViewModel):
             scanningView.configure(
                 with: scanningViewModel,
-                analyticsClient: analyticsClient
+                sheetController: sheetController
             )
             scanningView.isHidden = false
             errorView.isHidden = true
         case .saving(let scanningViewModel):
             scanningView.configure(
                 with: scanningViewModel,
-                analyticsClient: analyticsClient
+                sheetController: sheetController
             )
             scanningView.isHidden = false
             errorView.isHidden = true
