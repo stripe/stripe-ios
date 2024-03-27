@@ -30,7 +30,7 @@ protocol AccountPickerDataSource: AnyObject {
     func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts>
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount])
     func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthSessionAccounts>
-    func saveToLink(consumerSessionClientSecret: String) -> Future<Void>
+    func saveAccountsToLink(consumerSessionClientSecret: String) -> Future<Void>
 }
 
 final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
@@ -94,7 +94,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         )
     }
 
-    func saveToLink(consumerSessionClientSecret: String) -> Future<Void> {
+    func saveAccountsToLink(consumerSessionClientSecret: String) -> Future<Void> {
         return apiClient.saveAccountsToLink(
             emailAddress: nil,
             phoneNumber: nil,

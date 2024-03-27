@@ -387,14 +387,20 @@ final class AccountPickerViewController: UIViewController {
                         selectedAccounts = self.dataSource.selectedAccounts
                     }
 
+                    // for data flows (external_api), where the user is already
+                    // determined to be a Link consumer, we need to take an
+                    // additional step of saving the accounts to Link
                     if
                         self.dataSource.manifest.isNetworkingUserFlow == true,
+                        // make sure current user is a Link consumer
                         self.dataSource.manifest.accountholderIsLinkConsumer == true,
+                        // make sure this is not a payment flow; in payment flows,
+                        // the AttachLinkedPaymentAccount handles saving to link
                         !self.dataSource.manifest.shouldAttachLinkedPaymentMethod,
                         selectedAccounts.count > 0,
                         let consumerSessionClientSecret = self.dataSource.consumerSessionClientSecret
                     {
-                        self.dataSource.saveToLink(
+                        self.dataSource.saveAccountsToLink(
                             consumerSessionClientSecret: consumerSessionClientSecret
                         )
                         .observe { [weak self] result in
@@ -416,7 +422,11 @@ final class AccountPickerViewController: UIViewController {
                                 nextPane: .success
                             )
                         }
-                    } else {
+                    }
+                    // for networking payment flows, and networking data flows where
+                    // user will go through Link sign-up (or Link sign-in verification),
+                    // we do not need to call `saveAccountsToLink`
+                    else {
                         self.delegate?.accountPickerViewController(
                             self,
                             didSelectAccounts: selectedAccounts,
