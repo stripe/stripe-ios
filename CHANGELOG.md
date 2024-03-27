@@ -1,6 +1,6 @@
 ## x.x.x x-x-x
 ### Payments
-* [Added] Support for Amazon Pay bindings.
+* [Added] Support for Alma bindings.
 
 ## 23.26.0 2024-03-25
 ### PaymentSheet
