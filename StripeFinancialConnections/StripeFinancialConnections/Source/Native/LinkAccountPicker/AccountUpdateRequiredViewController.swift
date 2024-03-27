@@ -41,18 +41,24 @@ final class AccountUpdateRequiredViewController: SheetViewController {
                     institutionIconView.setImageUrl(institution?.icon?.default)
                     return institutionIconView
                 }(),
-                title: "Update required", // TODO: localize
-                subtitle: "Next, you'll be prompted to log in and connect your accounts.",  // TODO: localize
+                title: STPLocalizedString(
+                    "Update required",
+                    "The title of a screen that allows users to choose whether they want to proceed to update their bank accocunt."
+                ),
+                subtitle: STPLocalizedString(
+                    "Next, you'll be prompted to log in and connect your accounts.",
+                    "The subtitle of a screen that allows users to choose whether they want to proceed to update their bank accocunt."
+                ),
                 contentView: nil,
                 isSheet: true
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                    title: "Continue",  // TODO: localize
+                    title: "Continue", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
                     action: didSelectContinue
                 ),
                 secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                    title: "Cancel",  // TODO: localize
+                    title: "Cancel", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
                     action: didSelectCancel
                 )
             ).footerView
