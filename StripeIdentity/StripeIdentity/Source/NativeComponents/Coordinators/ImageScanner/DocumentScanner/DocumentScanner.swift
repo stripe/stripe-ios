@@ -24,6 +24,7 @@ final class DocumentScanner {
     private let barcodeDetector: BarcodeDetector?
     private let blurDetector: LaplacianBlurDetector
     private let highResImageCropPadding: CGFloat
+    private let mbDetector = MBDetector()
 
     /// Initializes a DocumentScanner with detectors.
     ///
@@ -84,8 +85,12 @@ extension DocumentScanner: ImageScanner {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraProperties: CameraSession.DeviceProperties?
     ) throws -> DocumentScannerOutput? {
+        mbDetector.analyze(sampleBuffer: sampleBuffer)
+        
+        
         // Scan for ID Document Classification
         guard let idDetectorOutput = try self.idDetector.scanImage(pixelBuffer: pixelBuffer) else {
             return nil

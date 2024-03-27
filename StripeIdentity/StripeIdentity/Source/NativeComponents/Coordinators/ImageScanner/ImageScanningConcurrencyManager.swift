@@ -18,6 +18,7 @@ protocol ImageScanningConcurrencyManagerProtocol {
     func scanImage<ScannerOutput>(
         with scanner: AnyImageScanner<ScannerOutput>,
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraSession: CameraSessionProtocol,
         completeOn completionQueue: DispatchQueue,
         completion: @escaping (ScannerOutput) -> Void
@@ -90,6 +91,7 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     func scanImage<ScannerOutput>(
         with scanner: AnyImageScanner<ScannerOutput>,
         pixelBuffer: CVPixelBuffer,
+        sampleBuffer: CMSampleBuffer,
         cameraSession: CameraSessionProtocol,
         completeOn completionQueue: DispatchQueue,
         completion: @escaping (ScannerOutput) -> Void
@@ -118,6 +120,7 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
             do {
                 let output = try scanner.scanImage(
                     pixelBuffer: pixelBuffer,
+                    sampleBuffer: sampleBuffer,
                     cameraProperties: cameraProperties
                 )
                 wrappedCompletion(output)

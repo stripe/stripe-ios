@@ -325,6 +325,7 @@ final class ImageScanningSession<
         concurrencyManager.scanImage(
             with: scanner,
             pixelBuffer: pixelBuffer,
+            sampleBuffer: sampleBuffer,
             cameraSession: cameraSession,
             completeOn: .main
         ) { [weak self] scannerOutput in
