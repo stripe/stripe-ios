@@ -131,8 +131,8 @@ extension STPElementsSession: STPAPIResponseDecodable {
         // Optional fields:
         let unactivatedPaymentMethodTypeStrings = response["unactivated_payment_method_types"] as? [String] ?? []
         let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: response["card_brand_choice"] as? [AnyHashable: Any])
-        let applePayPreference = response["apple_pay_preference"] as? String
-        let isApplePayEnabled = applePayPreference != "disabled"
+        let orderedPMTsAndWallets = response["ordered_payment_method_types_and_wallets"] as? [String]
+        let isApplePayEnabled = orderedPMTsAndWallets.contains("apple_pay")
         let customer: ElementsCustomer? = {
             let customerDataKey = "customer"
             guard response[customerDataKey] != nil, !(response[customerDataKey] is NSNull) else {

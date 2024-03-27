@@ -1,5 +1,4 @@
 {
-  "apple_pay_preference": "enabled",
   "business_name": "Mobile Example Account",
   "experiments": {
     "miui_payment_element_aa_experiment": "control"
@@ -9,7 +8,6 @@
     "elements_enable_mx_card_installments": false,
     "elements_enable_br_card_installments": false
   },
-  "google_pay_preference": "disabled",
   "link_consumer_info": null,
   "link_settings": {
     "instant_debits_inline_institution": true,

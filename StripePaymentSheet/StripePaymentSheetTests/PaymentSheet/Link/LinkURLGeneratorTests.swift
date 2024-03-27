@@ -79,7 +79,6 @@ extension STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
-                                          "apple_pay_preference": "enabled",
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }

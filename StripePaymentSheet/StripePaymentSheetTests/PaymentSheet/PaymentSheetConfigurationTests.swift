@@ -117,7 +117,6 @@ extension STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
-                                          "apple_pay_preference": "enabled",
                                           "customer": ["payment_methods": [["id": "pm_1234"], ["id": "pm_4567"], ],
                                                        "customer_session": ["id": "cuss_123",
                                                                             "livemode": false,
