@@ -13,7 +13,7 @@ import XCTest
 
 class Error_SerializeForLoggingTest: XCTestCase {
 
-    struct CustomLoggableError: Error, AnalyticLoggableError {
+    struct CustomLoggableError: Error, AnalyticLoggableErrorV2 {
         func analyticLoggableSerializeForLogging() -> [String: Any] {
             return [
                 "foo": "value",
@@ -21,7 +21,7 @@ class Error_SerializeForLoggingTest: XCTestCase {
         }
     }
 
-    enum StringError: String, AnalyticLoggableStringError {
+    enum StringError: String, AnalyticLoggableStringErrorV2 {
         case foo
     }
 
@@ -32,7 +32,7 @@ class Error_SerializeForLoggingTest: XCTestCase {
             userInfo: ["description": "test-description"]
         )
 
-        let serializedError = error.serializeForLogging()
+        let serializedError = error.serializeForV2Logging()
 
         XCTAssertEqual(serializedError.count, 2)
         XCTAssertEqual("test-domain", serializedError["domain"] as? String)
@@ -44,7 +44,7 @@ class Error_SerializeForLoggingTest: XCTestCase {
     func testAnalyticLoggableSerializedForLogging() {
         let error: Error = CustomLoggableError()
 
-        let serializedError = error.serializeForLogging()
+        let serializedError = error.serializeForV2Logging()
 
         XCTAssertEqual(serializedError.count, 1)
         XCTAssertEqual(serializedError["foo"] as? String, "value")
@@ -53,7 +53,7 @@ class Error_SerializeForLoggingTest: XCTestCase {
     func testStringErrorSerializeForLogging() {
         let error: Error = StringError.foo
 
-        let serializedError = error.serializeForLogging()
+        let serializedError = error.serializeForV2Logging()
 
         print(serializedError)
 

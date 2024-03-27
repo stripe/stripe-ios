@@ -40,6 +40,9 @@
 /* Amazon Pay mandate text */
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
 
+/* Klarna mandate text */
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "By continuing to Klarna, you allow %1$@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %2$@.";
+
 /* Paypal mandate text */
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
@@ -156,9 +159,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Pay in templated string for afterpay/clearpay */
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";
-
-/* Klarna pay later copy */
-"Pay later with Klarna." = "Pay later with Klarna.";
 
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";

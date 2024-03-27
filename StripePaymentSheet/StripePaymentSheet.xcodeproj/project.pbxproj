@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		00A3805F91E6F903FA677393 /* SimpleMandateElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCB22C60E716A575DA8180A /* SimpleMandateElement.swift */; };
 		01D46644D87983FC4387B92C /* InstantDebitsOnlyFinancialConnectionsAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C3318ED094D63626740234 /* InstantDebitsOnlyFinancialConnectionsAuthManager.swift */; };
-		0372AB6A0796DEAE92602DD1 /* KlarnaHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474CD260E1A4EFE05ABF3320 /* KlarnaHelper.swift */; };
 		041E3F2DFDFD8FA7D3353CDB /* PaymentSheetSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2803AA0D975AF78D787757 /* PaymentSheetSnapshotTests.swift */; };
 		04FEA90F2D0CB9D1C2029D21 /* CardSectionWithScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BDC53A88FB17F378C6B413 /* CardSectionWithScannerView.swift */; };
 		057A899F4123F3716F2AC0FA /* USBankAccountPaymentMethodElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F8B6F8B253A009E6216478 /* USBankAccountPaymentMethodElement.swift */; };
@@ -58,6 +57,7 @@
 		313F5F832B0BE5FD00BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F822B0BE5FD00BD98A9 /* Docs.docc */; };
 		316B33122B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */; };
 		31AD3BE72B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */; };
+		31CDFC362BA8E66200B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */; };
 		31D224F42B4637BA003E3D8B /* PaymentDetailsShareResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D224F32B4637BA003E3D8B /* PaymentDetailsShareResponse.swift */; };
 		335A19D93A5979557DB4CA4D /* PaymentMethodElementWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5012364ED0F2EEC6EC2AB52 /* PaymentMethodElementWrapper.swift */; };
 		34CF08CBC636F596B8BA4C12 /* TextFieldElement+CardTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00C7F5905759525C9BF8BD4 /* TextFieldElement+CardTest.swift */; };
@@ -365,6 +365,7 @@
 		3168698F2C61B0F5EC1240FE /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StripePaymentSheetTest.swift"; sourceTree = "<group>"; };
 		31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIApplication+StripePaymentSheet.swift"; path = "StripePaymentSheet/Source/Categories/UIApplication+StripePaymentSheet.swift"; sourceTree = "<group>"; };
+		31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		31D224F32B4637BA003E3D8B /* PaymentDetailsShareResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsShareResponse.swift; sourceTree = "<group>"; };
 		32332E0DB0AE12377EBDDEF1 /* PaymentSheetIntentConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetIntentConfiguration.swift; sourceTree = "<group>"; };
 		32BDC53A88FB17F378C6B413 /* CardSectionWithScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSectionWithScannerView.swift; sourceTree = "<group>"; };
@@ -389,7 +390,6 @@
 		441C3414745D483C9A47ED0B /* VerificationSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSession.swift; sourceTree = "<group>"; };
 		446E3BBF316178C04343B193 /* STPApplePayContext+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPApplePayContext+PaymentSheet.swift"; sourceTree = "<group>"; };
 		45B6DC9BD9183495E5649369 /* LinkAccountService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountService.swift; sourceTree = "<group>"; };
-		474CD260E1A4EFE05ABF3320 /* KlarnaHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaHelper.swift; sourceTree = "<group>"; };
 		47C5DB8C01BA7137369C8B4D /* TextFieldElement+Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Card.swift"; sourceTree = "<group>"; };
 		492B254E43F3BB9F9CEAEA06 /* PaymentSheetLoaderStubbedTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetLoaderStubbedTest.swift; sourceTree = "<group>"; };
 		4BEFE8C0CFEAE73F9FD736D3 /* STPStringUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPStringUtils.swift; sourceTree = "<group>"; };
@@ -747,7 +747,6 @@
 				0EA56C3880C50858583CE468 /* Error+PaymentSheet.swift */,
 				22552CD237A259249CD0C592 /* Intent.swift */,
 				CCA2B5817236F64A212A8C61 /* IntentConfirmParams.swift */,
-				474CD260E1A4EFE05ABF3320 /* KlarnaHelper.swift */,
 				9A0D887C5AC6EFFAFE1AFD77 /* PaymentMethodType.swift */,
 				2A19DBD87D0EBC7FA3DFB2A7 /* PaymentOption+Images.swift */,
 				6B680A2FF197F612D065F16C /* PaymentSheet.swift */,
@@ -1329,6 +1328,7 @@
 				E3D86510CBD3EEB0652E38C2 /* Source */,
 				668A2F2E20F846FDAFEC1217 /* Info.plist */,
 				7AA6166F234C3A2129CBD573 /* StripePaymentSheet.h */,
+				31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */,
 			);
 			path = StripePaymentSheet;
 			sourceTree = "<group>";
@@ -1528,6 +1528,7 @@
 			files = (
 				DE6A86725BC219EF19EF29AC /* form_specs.json in Resources */,
 				83031AF789D0C08E7B2BABB1 /* Localizable.strings in Resources */,
+				31CDFC362BA8E66200B3DD91 /* PrivacyInfo.xcprivacy in Resources */,
 				07F6593974558290598467E5 /* StripePaymentSheet.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1684,7 +1685,6 @@
 				F90B7028426261188B66C834 /* Error+PaymentSheet.swift in Sources */,
 				FB653AA92B68F73344835A50 /* Intent.swift in Sources */,
 				253EED99635621AC0E788EBC /* IntentConfirmParams.swift in Sources */,
-				0372AB6A0796DEAE92602DD1 /* KlarnaHelper.swift in Sources */,
 				313F5F832B0BE5FD00BD98A9 /* Docs.docc in Sources */,
 				BB73C2D2DB79BFC0A3186711 /* LinkPaymentController.swift in Sources */,
 				88BA38BE8949815F4DB79509 /* PayWithLinkController.swift in Sources */,

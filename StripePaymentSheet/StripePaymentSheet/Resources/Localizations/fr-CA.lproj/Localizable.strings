@@ -24,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En confirmant votre paiement avec PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "En poursuivant sur Amazon Pay, vous autorisez %@ à débiter votre compte Amazon Pay pour les paiements à venir, conformément à ses conditions.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "En poursuivant sur Klarna, vous autorisez %1$@ à débiter votre compte Klarna pour les paiements à venir, conformément aux conditions du marchand et de Klarna. Vous pouvez modifier cela à tout moment dans votre application Klarna ou en contactant %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En continuant sur PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "En poursuivant avec Revolut Pay, vous autorisez %@ à débiter votre compte Revolut Pay pour les paiements à venir, conformément à ses conditions.";
@@ -95,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Payez plus rapidement après du marchand %@ et de milliers d'autres entreprises.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Payer en <num_installments/> versements sans intérêts de <installment_price/> avec <img/>";
-
-"Pay later with Klarna." = "Payez plus tard avec Klarna.";
 
 "Pay over time with %@" = "Payer par versements échelonnés avec %@";
 

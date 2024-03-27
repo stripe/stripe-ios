@@ -1,0 +1,66 @@
+name: Check Missing Translations
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled, synchronize]
+    paths:
+      - '**/Localizable.strings' # Only run this check if localized string files have changed, exclude non-payments projects.
+      - '!StripeFinancialConnections/**'
+      - '!StripeIdentity/**'
+      - '!StripeConnections/**'
+
+jobs:
+  check-translations:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+        with:
+            fetch-depth: 0
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+      - name: Install dependencies
+        run: gem install net-http net-uri json
+      - name: Run translation check script
+        env:
+          LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY_READONLY }}
+        run: ruby ci_scripts/check_for_untranslated_strings.rb
+      - name: Read missing translations
+        id: missing
+        run: echo "::set-output name=translations::$(<missing_translations.txt)"
+      - name: Exit if no missing translations
+        id: check_translations
+        run: |
+          if [ -z "${{ steps.missing.outputs.translations }}" ]; then
+            echo "No missing translations found, exiting..."
+            exit 0
+          else
+            echo "Missing translations detected, continue workflow..."
+          fi
+      - uses: peter-evans/find-comment@v3.0.0
+        id: find_comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Missing Translations
+      - uses: peter-evans/create-or-update-comment@v4
+        if: steps.missing.outputs.translations
+        with:
+          body: |
+            ⚠️ Missing Translations
+             
+            The following translations are missing in Lokalise. While they don't need to be downloaded into the codebase as part of this PR, they do need to exist in Lokalise so that they can be downloaded as part of the release process.
+            
+            ${{ steps.missing.outputs.translations }}
+            
+            By adding the label `ship without translations` to this PR, I acknowledge that there are missing translations.
+          edit-mode: replace
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fail if not accepted
+        if: "steps.missing.outputs.translations && !contains(github.event.pull_request.labels.*.name, 'ship without translations')"
+        run: exit 1

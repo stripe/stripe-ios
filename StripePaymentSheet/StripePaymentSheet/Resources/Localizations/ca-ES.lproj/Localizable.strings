@@ -24,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Si confirmeu el pagament amb PayPal, permeteu que %@ faci càrrecs al vostre compte de PayPal per a pagaments en el futur d'acord amb les seves condicions.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "En continuar a Amazon Pay, permeteu que %@ cobri pagaments futurs al vostre compte de d'Amazon Pay d'acord amb les seves condicions.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "En continuar a Klarna, permeteu que %1$@ cobri pagaments futurs al vostre compte de Klarna d'acord amb les seves condicions. Podeu canviar aquesta opció en qualsevol moment a l'aplicació Klarna o posant-vos en contacte amb %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Si continueu a PayPal, permeteu que %@ faci càrrecs al vostre compte de PayPal per a pagaments en el futur d'acord amb les seves condicions.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Si continueu a Revolut Pay, permeteu que %@ faci càrrecs al vostre compte de Revolut Pay per a pagaments en el futur d'acord amb les seves condicions.";
@@ -95,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Pagueu més ràpidament a %@ i a milers de negocis.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Feu <num_installments/> pagaments sense interessos de <installment_price/> amb <img/>";
-
-"Pay later with Klarna." = "Paga més endavant amb Klarna.";
 
 "Pay over time with %@" = "Pagueu a terminis amb %@";
 

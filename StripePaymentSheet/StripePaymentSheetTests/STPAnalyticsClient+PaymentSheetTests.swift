@@ -28,6 +28,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         }
 
         case foo
+        case bar
     }
 
     func testMakeSafeLoggingString() {
@@ -41,8 +42,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
              "cardError"),
             (NSError(domain: STPError.stripeDomain, code: STPErrorCode.invalidRequestError.rawValue),
              "invalidRequestError"),
-            (MyError.foo,
-             "StripePaymentSheetTests.STPAnalyticsClientPaymentSheetTest.MyError, 0"),
+            (MyError.bar,
+             "StripePaymentSheetTests.STPAnalyticsClientPaymentSheetTest.MyError, 1"),
 
         ]
         for testCase in testCases {

@@ -24,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Prin confirmarea plății cu PayPal, permiteți %@ să vă taxeze contul PayPal pentru plățile viitoare în conformitate cu termenii acesteia.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Prin continuarea către Amazon Pay, permiteți %@ să vă taxeze contul Amazon Pay pentru plățile viitoare în conformitate cu termenii acesteia.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Prin continuarea către Klarna, permiteți %1$@ să vă taxeze contul Klarna pentru plățile viitoare în conformitate cu termenii acesteia și termenii Klarna. Puteți schimba acest lucru în orice moment din aplicația dvs. Klarna sau contactându-ne la %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Prin continuarea cu PayPal, permiteți %@ să vă taxeze contul PayPal pentru plățile viitoare în conformitate cu termenii acesteia.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Prin continuarea cu Revolut Pay, permiteți %@ să vă taxeze contul Revolut Pay pentru plățile viitoare în conformitate cu termenii acesteia.";
@@ -95,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Plătiți mai rapid la %@ și la alte mii de întreprinderi.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Plătiți în <num_installments/> plăți fără dobândă a câte <installment_price/> cu <img/>";
-
-"Pay later with Klarna." = "Plătiți mai târziu folosind Klarna.";
 
 "Pay over time with %@" = "Folosiți ca metodă de plată de-a lungul timpului %@";
 

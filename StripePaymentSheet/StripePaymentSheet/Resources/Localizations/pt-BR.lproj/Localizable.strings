@@ -24,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao confirmar seu pagamento com o PayPal, você permite que %@ cobre sua conta do PayPal por pagamentos futuros em conformidade com os termos definidos pela empresa.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ao continuar para o Amazon Pay, você permite que %@ cobre sua conta do Amazon Pay por pagamentos futuros em conformidade com os termos da empresa.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Ao continuar para a Klarna, você permite que %1$@ cobre sua conta Klarna por pagamentos futuros em conformidade com os termos da empresa e da Klarna. É possível alterar essa opção a qualquer momento no aplicativo Klarna ou entrando em contato com %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao continuar para o PayPal, você permite que %@ cobre sua conta do PayPal por pagamentos futuros em conformidade com os termos definidos com a empresa.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ao continuar para o Revolut Pay, você permite que %@ cobre sua conta do Revolut Pay por pagamentos futuros em conformidade com os termos da empresa.";
@@ -95,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Pague mais rápido em %@ e milhares de empresas.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pague em <num_installments/> vezes sem juros de <installment_price/> com <img/>";
-
-"Pay later with Klarna." = "Pagar depois com Klarna.";
 
 "Pay over time with %@" = "Pagar depois com %@";
 

@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-struct BottomSheetError: AnalyticLoggableStringError {
+struct BottomSheetError: AnalyticLoggableStringErrorV2 {
     let loggableType: String
 }
 

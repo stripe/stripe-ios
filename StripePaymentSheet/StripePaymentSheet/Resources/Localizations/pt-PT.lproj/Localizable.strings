@@ -24,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao confirmar o seu pagamento com o PayPal, autoriza %@ a cobrar pagamentos futuros à sua conta PayPal de acordo com as respetivas condições.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ao continuar para Amazon Pay, autoriza %@ a cobrar pagamentos futuros à sua conta Amazon Pay de acordo com as respetivas condições.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Ao continuar para Klarna, autoriza %1$@ a cobrar pagamentos futuros à sua conta Klarna de acordo com as respetivas condições e as condições da Klarna. Pode alterar isto a qualquer momento na sua aplicação Klarna ou contactando %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao continuar para o PayPal, autoriza %@ a cobrar pagamentos futuros à sua conta PayPal de acordo com as respetivas condições.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ao continuar para o Revolut Pay, autoriza %@ a cobrar pagamentos futuros à sua conta Revolut Pay de acordo com as respetivas condições.";
@@ -95,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Pague mais rapidamente em %@ e milhares de outras empresas.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pagar em <num_installments/> pagamentos sem juros de <installment_price/> com <img/>";
-
-"Pay later with Klarna." = "Pagar mais tarde com Klarna.";
 
 "Pay over time with %@" = "Pagar ao longo do tempo com %@";
 

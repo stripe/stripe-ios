@@ -261,12 +261,15 @@ extension PaymentSheet {
             // Parameters:
             // - paymentMethodParams: The params to use for the payment.
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
-            let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?) -> Void = { paymentMethodParams, linkAccount in
+            let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
                 switch intent {
                 case .paymentIntent(_, let paymentIntent):
                     let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                     paymentIntentParams.paymentMethodParams = paymentMethodParams
                     paymentIntentParams.returnURL = configuration.returnURL
+                    let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
+                    paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, paymentMethodType: paymentMethodParams.type, customer: configuration.customer)
+                    paymentIntentParams.paymentMethodOptions = paymentOptions
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
@@ -293,7 +296,7 @@ extension PaymentSheet {
                         confirmType: .new(
                             params: paymentMethodParams,
                             paymentOptions: STPConfirmPaymentMethodOptions(),
-                            shouldSave: false
+                            shouldSave: shouldSave
                         ),
                         configuration: configuration,
                         intentConfig: intentConfig,
@@ -307,7 +310,7 @@ extension PaymentSheet {
                     )
                 }
             }
-            let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?) -> Void = { paymentMethod, linkAccount in
+            let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethod, linkAccount, shouldSave in
                 let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
                 let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                 // Tell Stripe to infer mandate info from client
@@ -321,6 +324,9 @@ extension PaymentSheet {
                     paymentIntentParams.paymentMethodId = paymentMethod.stripeId
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+                    let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
+                    paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, paymentMethodType: paymentMethod.type, customer: configuration.customer)
+                    paymentIntentParams.paymentMethodOptions = paymentOptions
                     paymentIntentParams.mandateData = mandateData
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
@@ -363,29 +369,31 @@ extension PaymentSheet {
                 (
                     PaymentSheetLinkAccount,
                     ConsumerPaymentDetails,
-                    String?
-                ) -> Void = { linkAccount, paymentDetails, cvc in
+                    String?,
+                    Bool
+                ) -> Void = { linkAccount, paymentDetails, cvc, shouldSave in
                     guard let paymentMethodParams = linkAccount.makePaymentMethodParams(from: paymentDetails, cvc: cvc) else {
                         let error = PaymentSheetError.payingWithoutValidLinkSession
                         completion(.failed(error: error), nil)
                         return
                     }
 
-                    confirmWithPaymentMethodParams(paymentMethodParams, linkAccount)
+                    confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
                 }
 
             let createPaymentDetailsAndConfirm:
                 (
                     PaymentSheetLinkAccount,
-                    STPPaymentMethodParams
-                ) -> Void = { linkAccount, paymentMethodParams in
+                    STPPaymentMethodParams,
+                    Bool
+                ) -> Void = { linkAccount, paymentMethodParams, shouldSave in
                     guard linkAccount.sessionState == .verified else {
                         // We don't support 2FA in the native mobile Link flow, so if 2FA is required then this is a no-op.
                         // Just fall through and don't save the card details to Link.
                         STPAnalyticsClient.sharedClient.logLinkPopupSkipped()
 
                         // Attempt to confirm directly with params
-                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount)
+                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
                         return
                     }
 
@@ -397,21 +405,21 @@ extension PaymentSheet {
                                 linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
                                     switch result {
                                     case .success(let shareResponse):
-                                        confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod), linkAccount)
+                                        confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod, type: .card), linkAccount, shouldSave)
                                     case .failure(let error):
                                         STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                                         // If this fails, confirm directly
-                                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount)
+                                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
                                     }
                                 }
                             } else {
                                 // If not passthrough mode, confirm details directly
-                                confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc)
+                                confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc, shouldSave)
                             }
                         case .failure(let error):
                             STPAnalyticsClient.sharedClient.logLinkCreatePaymentDetailsFailure(error: error)
                             // Attempt to confirm directly with params
-                            confirmWithPaymentMethodParams(paymentMethodParams, linkAccount)
+                            confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
                         }
                     }
                 }
@@ -420,22 +428,22 @@ extension PaymentSheet {
             case .wallet:
                 let linkController = PayWithLinkController(intent: intent, configuration: configuration)
                 linkController.present(completion: completion)
-            case .signUp(let linkAccount, let phoneNumber, let consentAction, let legalName, let paymentMethodParams):
+            case .signUp(let linkAccount, let phoneNumber, let consentAction, let legalName, let intentConfirmParams):
                 linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: consentAction) { result in
                     UserDefaults.standard.markLinkAsUsed()
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
 
-                        createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams)
+                        createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
                         // Attempt to confirm directly with params as a fallback.
-                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount)
+                        confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     }
                 }
             case .withPaymentMethod(let paymentMethod):
-                confirmWithPaymentMethod(paymentMethod, nil)
+                confirmWithPaymentMethod(paymentMethod, nil, false)
             }
         case let .external(paymentMethod, billingDetails):
             guard let confirmHandler = configuration.externalPaymentMethodConfiguration?.externalPaymentMethodConfirmHandler else {
@@ -557,7 +565,7 @@ extension PaymentSheet {
                 paymentMethodType = paymentMethodParams.type
             }
 
-            let requiresMandateData: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .amazonPay]
+            let requiresMandateData: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna]
             if requiresMandateData.contains(paymentMethodType) && paymentIntent.setupFutureUsage == .offSession
             {
                 params.mandateData = .makeWithInferredValues()

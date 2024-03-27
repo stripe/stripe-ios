@@ -24,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Az Amazon Payre történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje az Amazon Pay-számláját.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "A Klarna fizetési módra történő továbblépéssel Ön engedélyezi, hogy a(z) %1$@ és a Klarna feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a Klarna-számláját. Ezt bármikor megváltoztathatja a Klarna alkalmazásban vagy a(z) %2$@ felkeresésével.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A PayPalra történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "A Revolut Payre történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a Revolut Pay számláját.";
@@ -95,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Gyorsabban fizethet a(z) %@ számára és még ezernyi vállalkozásnak.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Fizetés <num_installments/>, egyenként <installment_price/> összegű kamatmentes részletben <img/> használatával";
-
-"Pay later with Klarna." = "Fizetés később Klarnával.";
 
 "Pay over time with %@" = "Fizessen később a következővel: %@";
 

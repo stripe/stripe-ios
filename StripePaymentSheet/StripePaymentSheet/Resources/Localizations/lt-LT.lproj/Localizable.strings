@@ -24,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą „PayPal“ leidžiate „%@“ nuskaityti mokestį nuo jūsų „PayPal“ sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pereidami prie „Amazon Pay“ leisite „%@“ nuskaityti mokestį nuo jūsų „Amazon Pay“ sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Pereidami prie „Klarna“ leidžiate „%1$@“ nuskaityti mokestį nuo jūsų „Klarna“ sąskaitos vėlesniems mokėjimams pagal jų ir „Klarna“ sąlygas. Galite bet kada tai pakeisti „Klarna“ programėlėje arba susisiekdami su „%2$@“.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pereidami į „PayPal“ leisite „%@“ nuskaityti mokestį nuo jūsų „PayPal“ sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pereidami į „Revolut Pay“ leisite %@ nuskaityti mokestį nuo jūsų „Revolut Pay“ sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
@@ -95,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Mokėkite greičiau „%@“ ir daugybei kitų įmonių.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Mokėti <num_installments/> be palūkanų <installment_price/> mokėjimus naudojant <img/>";
-
-"Pay later with Klarna." = "Mokėkite vėliau naudodami \"Klarna\".";
 
 "Pay over time with %@" = "Mokėkite vėliau naudodami %@";
 

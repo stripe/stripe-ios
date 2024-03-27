@@ -24,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal による支払いを確定すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Amazon Pay アカウントに請求することを許可することになります。";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Klarna への処理を続行すると、%1$@ が自社の規約と Klarna の規約に従って今後の支払いをお客様の Klarna アカウントに請求することを許可することになります。この設定はいつでも変更できます。Klarna アプリから変更するか、%2$@ までお問い合わせください。";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal を継続すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Revolut Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Revolut Pay アカウントに請求することを許可することになります。";
@@ -95,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "%@ やその他多数のサイトで、すばやく支払うことができます。";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/> で毎回 <installment_price/> ずつ、無利息の <num_installments/> 回の分割払いで支払う";
-
-"Pay later with Klarna." = "Klarna での後払いにします。";
 
 "Pay over time with %@" = "%@ で時間をかけて支払う";
 

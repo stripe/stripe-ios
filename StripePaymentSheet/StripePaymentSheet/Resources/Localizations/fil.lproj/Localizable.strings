@@ -24,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Sa pagkumpirma sa iyong pagbabayad sa PayPal, pinapayagan mo ang %@ na singilin ang iyong PayPal account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Sa pagpapatuloy sa Amazon Pay, pinahihintulutan mo ang %@ na singilin ang iyong Amazon Pay account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Sa pagpapatuloy sa Klarna, pinahihintulutan mo ang %1$@ na singilin ang iyong Klarna account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin. Maaari mong palitan ito anumang oras sa iyong Klarna app o sa pakikipag-ugnayan sa %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Sa pagpapatuloy sa PayPal, pinapayagan mo ang %@ na singilin ang iyong PayPal account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Sa pagpapatuloy sa Revolut Pay, pinapayagan mo ang %@ na singilin ang iyong Revolut Pay account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
@@ -95,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Magbayad nang mas mabilis sa %@ at sa libu-libong mga negosyo.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Magbayad ng <num_installments/> na walang interes na pagbabayad ng <installment_price/> gamit ang <img/>";
-
-"Pay later with Klarna." = "Magbayad sa ibang pagkakataon gamit ang Klarna.";
 
 "Pay over time with %@" = "Magbayad ng over time gamit ang %@";
 

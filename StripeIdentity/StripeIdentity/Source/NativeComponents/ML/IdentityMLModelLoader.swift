@@ -11,7 +11,7 @@ import Foundation
 @_spi(STP) import StripeCore
 import Vision
 
-enum IdentityMLModelLoaderError: Error, AnalyticLoggableError {
+enum IdentityMLModelLoaderError: Error, AnalyticLoggableErrorV2 {
     /// Attempted to open a URL that could not be constructed from the given string
     case malformedURL(String)
     /// The ML model never started loading on the client
@@ -26,7 +26,7 @@ enum IdentityMLModelLoaderError: Error, AnalyticLoggableError {
             ]
         case .mlModelNeverLoaded:
             return [
-                "type": "ml_model_never_loaded"
+                "type": "ml_model_never_loaded",
             ]
         }
     }

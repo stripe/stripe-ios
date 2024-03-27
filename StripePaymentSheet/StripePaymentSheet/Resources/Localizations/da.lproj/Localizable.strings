@@ -24,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved at bekræfte din betaling med PayPal, tillader du %@ at debitere din PayPal-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ved at fortsætte til Amazon Pay, tillader du %@ at debitere din Revolut Pay-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Når du fortsætter til Klarna, giver du %1$@ tilladelse til at debitere din Klarna-konto for fremtidige betalinger i overensstemmelse med deres vilkår og Klarnas vilkår. Du kan til enhver tid ændre dette i din Klarna-app eller ved at kontakte %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved at fortsætte til PayPal tillader du %@ at debitere din PayPal-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ved at fortsætte til Revolut Pay tillader du %@ at debitere din Revolut Pay-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
@@ -95,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Betal hurtigere hos %@ og tusinder af virksomheder.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betal i <num_installments/> rentefri afdrag på <installment_price/> hver med <img/>";
-
-"Pay later with Klarna." = "Betal senere med Klarna.";
 
 "Pay over time with %@" = "Betal over tid med %@";
 

@@ -24,6 +24,10 @@
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran menggunakan PayPal, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun PayPal Anda sesuai dengan ketentuan mereka.";
 
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Dengan melanjutkan ke Amazon Pay, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun Amazon Pay Anda sesuai dengan ketentuan mereka.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Dengan melanjutkan ke Klarna, berarti Anda mengizinkan %1$@ mengenakan charge untuk pembayaran mendatang pada akun Klarna Anda sesuai dengan ketentuan mereka dan ketentuan Klarna. Anda dapat mengubahnya kapan saja di aplikasi Klarna atau dengan menghubungi %2$@.";
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan melanjutkan ke PayPal, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun PayPal Anda sesuai dengan ketentuan mereka.";
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Dengan melanjutkan ke Revolut Pay, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun Revolut Pay Anda sesuai dengan ketentuan mereka.";
@@ -95,8 +99,6 @@
 "Pay faster at %@ and thousands of businesses." = "Bayar lebih cepat di %@ dan ribuan bisnis.";
 
 "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Bayar dalam <num_installments/> angsuran bebas bunga sebesar <installment_price/> dengan <img/>";
-
-"Pay later with Klarna." = "Bayar nanti dengan Klarna.";
 
 "Pay over time with %@" = "Bayar dengan jangka waktu dengan %@";
 

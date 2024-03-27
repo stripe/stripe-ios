@@ -584,7 +584,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     }
 
     /// Only send card number completed analytic once per time the card number changes from invalid to valid
-    var shouldSendCardNumberCompletedAnalytic = false
+    var shouldSendCardNumberCompletedAnalytic = true
     func sendCardNumberCompletedAnalyticIfNecessary(cardNumber: String?) {
         let isCardNumberValid = STPCardValidator.validationState(forNumber: cardNumber, validatingCardBrand: true) == .valid
         if isCardNumberValid, shouldSendCardNumberCompletedAnalytic {
