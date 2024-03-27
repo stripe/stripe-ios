@@ -447,6 +447,24 @@ extension STPAPIClient {
         }
     }
 
+    @_spi(STP) public func refreshPaymentIntent(withClientSecret secret: String,
+                                                completion: @escaping STPPaymentIntentCompletionBlock) {
+        let endpoint = "\(paymentIntentEndpoint(from: secret))/refresh"
+        var parameters: [String: Any] = [:]
+
+        if !publishableKeyIsUserKey {
+            parameters["client_secret"] = secret
+        }
+
+        APIRequest<STPPaymentIntent>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { paymentIntent, _, error in
+            completion(paymentIntent, error)
+        }
+    }
+
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
     /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
@@ -724,6 +742,23 @@ extension STPAPIClient {
             ]
         ) { setupIntent, _, responseError in
             completion(setupIntent, responseError)
+        }
+    }
+
+    @_spi(STP) public func refreshSetupIntent(withClientSecret secret: String, completion: @escaping STPSetupIntentCompletionBlock) {
+        let endpoint = "\(setupIntentEndpoint(from: secret))/refresh"
+        var parameters: [String: Any] = [:]
+
+        if !publishableKeyIsUserKey {
+            parameters["client_secret"] = secret
+        }
+
+        APIRequest<STPSetupIntent>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { setupIntent, _, error in
+            completion(setupIntent, error)
         }
     }
 }
