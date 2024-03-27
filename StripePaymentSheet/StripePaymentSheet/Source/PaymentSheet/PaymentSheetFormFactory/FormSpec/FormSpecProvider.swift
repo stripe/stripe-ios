@@ -74,7 +74,8 @@ class FormSpecProvider {
                 }
                 self.formSpecs[decodedFormSpec.type] = decodedFormSpec
             } catch {
-                STPAnalyticsClient.sharedClient.logLUXESpecSerilizeFailure(error: error)
+                let paymentMethodType = formSpec["type"] as? String ?? ""
+                STPAnalyticsClient.sharedClient.logLUXESpecSerilizeFailure(error: error, paymentMethod: paymentMethodType)
                 decodedSuccessfully = false
             }
         }
