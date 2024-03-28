@@ -85,6 +85,7 @@ final class PaymentSheetLoader {
                     && intent.isApplePayEnabled
 
                 // If Link is enabled, set the `useNewBrand`
+                // Should default to true in case we remove the server-side flag someday
                 LinkUI.useNewBrand = intent.elementsSession.linkSettings?.useRebrand ?? true
 
                 // Send load finished analytic
