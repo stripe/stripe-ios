@@ -900,15 +900,6 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didRequestSuccessPaneWithInstitution institution: FinancialConnectionsInstitution
-    ) {
-        assert(dataManager.linkedAccounts?.count == 1, "expected a selected account to be set")
-        dataManager.institution = institution
-        pushPane(.success, animated: true)
-    }
-
-    func linkAccountPickerViewController(
-        _ viewController: LinkAccountPickerViewController,
         requestedPartnerAuthWithInstitution institution: FinancialConnectionsInstitution
     ) {
         dataManager.institution = institution

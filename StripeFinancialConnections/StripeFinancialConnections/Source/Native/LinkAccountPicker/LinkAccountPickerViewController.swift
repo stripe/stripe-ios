@@ -23,11 +23,6 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didRequestSuccessPaneWithInstitution institution: FinancialConnectionsInstitution
-    )
-
-    func linkAccountPickerViewController(
-        _ viewController: LinkAccountPickerViewController,
         requestedPartnerAuthWithInstitution institution: FinancialConnectionsInstitution
     )
 
@@ -290,30 +285,11 @@ final class LinkAccountPickerViewController: UIViewController {
                 .observe { [weak self] result in
                     guard let self = self else { return }
                     switch result {
-                    case .success(let institutionList):
-                        if let institution = institutionList.data.first {
-                            self.delegate?.linkAccountPickerViewController(
-                                self,
-                                didRequestSuccessPaneWithInstitution: institution
-                            )
-                        } else {
-                            // this should never happen, but in case it does we want to force a
-                            // a terminal error so user can start again with a fresh state
-                            let error = FinancialConnectionsSheetError.unknown(
-                                debugDescription: "Successfully selected an networked account but no institution was returned."
-                            )
-                            self.dataSource
-                                .analyticsClient
-                                .logUnexpectedError(
-                                    error,
-                                    errorName: "SelectNetworkedAccountNoInstitutionError",
-                                    pane: .linkAccountPicker
-                                )
-                            self.delegate?.linkAccountPickerViewController(
-                                self,
-                                didReceiveTerminalError: error
-                            )
-                        }
+                    case .success:
+                        self.delegate?.linkAccountPickerViewController(
+                            self,
+                            didRequestNextPane: .success
+                        )
                     case .failure(let error):
                         self.dataSource
                             .analyticsClient
