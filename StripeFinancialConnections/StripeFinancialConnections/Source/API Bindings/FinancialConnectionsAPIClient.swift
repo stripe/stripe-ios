@@ -87,6 +87,19 @@ protocol FinancialConnectionsAPIClient {
 
     // MARK: - Networking
 
+    func saveAccountsToNetworkAndLink(
+        shouldPollAccounts: Bool,
+        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        emailAddress: String?,
+        phoneNumber: String?,
+        country: String?,
+        consumerSessionClientSecret: String?,
+        clientSecret: String
+    ) -> Future<(
+        manifest: FinancialConnectionsSessionManifest,
+        customSuccessPaneMessage: String?
+    )>
+
     func saveAccountsToLink(
         emailAddress: String?,
         phoneNumber: String?,
@@ -480,6 +493,85 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
     // MARK: - Networking
 
+    func saveAccountsToNetworkAndLink(
+        shouldPollAccounts: Bool,
+        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        emailAddress: String?,
+        phoneNumber: String?,
+        country: String?,
+        consumerSessionClientSecret: String?,
+        clientSecret: String
+    ) -> Future<(
+        manifest: FinancialConnectionsSessionManifest,
+        customSuccessPaneMessage: String?
+    )> {
+        let saveAccountsToLinkHandler: () -> Future<(
+            manifest: FinancialConnectionsSessionManifest,
+            customSuccessPaneMessage: String?
+        )> = {
+            return self.saveAccountsToLink(
+                emailAddress: emailAddress,
+                phoneNumber: phoneNumber,
+                country: country,
+                selectedAccountIds: selectedAccounts.map({ $0.id }),
+                consumerSessionClientSecret: consumerSessionClientSecret,
+                clientSecret: clientSecret
+            )
+            .chained { manifest in
+                return Promise(
+                    value: (
+                        manifest: manifest,
+                        customSuccessPaneMessage: manifest.displayText?.successPane?.subCaption
+                    )
+                )
+            }
+        }
+        let linkedAccountIds = selectedAccounts.compactMap({ $0.linkedAccountId })
+        if
+            shouldPollAccounts,
+            !linkedAccountIds.isEmpty
+        {
+            return pollAccountNumbersForSelectedAccounts(
+                linkedAccountIds: linkedAccountIds,
+                clientSecret: clientSecret
+            )
+            .chained { _ in
+                return saveAccountsToLinkHandler()
+            }
+        } else {
+            return saveAccountsToLinkHandler()
+        }
+    }
+
+    private func pollAccountNumbersForSelectedAccounts(
+        linkedAccountIds: [String],
+        clientSecret: String
+    ) -> Future<EmptyResponse> {
+        let body: [String: Any] = [
+            "linked_accounts": linkedAccountIds,
+        ]
+        let pollingHelper = APIPollingHelper(
+            apiCall: { [weak self] in
+                guard let self = self else {
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(
+                            debugDescription: "STPAPIClient deallocated."
+                        )
+                    )
+                }
+                return self.get(
+                    resource: APIEndpointPollAccountNumbers,
+                    parameters: body
+                )
+            },
+            pollTimingOptions: APIPollingHelper<EmptyResponse>.PollTimingOptions(
+                initialPollDelay: 1.0,
+                maxNumberOfRetries: 20
+            )
+        )
+        return pollingHelper.startPollingApiCall()
+    }
+
     func saveAccountsToLink(
         emailAddress: String?,
         phoneNumber: String?,
@@ -637,3 +729,4 @@ private let APIEndpointNetworkedAccounts = "link_account_sessions/networked_acco
 private let APIEndpointSaveAccountsToLink = "link_account_sessions/save_accounts_to_link"
 private let APIEndpointShareNetworkedAccount = "link_account_sessions/share_networked_account"
 private let APIEndpointConsumerSessions = "connections/link_account_sessions/consumer_sessions"
+private let APIEndpointPollAccountNumbers = "link_account_sessions/poll_account_numbers"

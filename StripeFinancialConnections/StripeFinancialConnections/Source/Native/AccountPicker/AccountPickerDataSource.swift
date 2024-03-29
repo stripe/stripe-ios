@@ -30,7 +30,10 @@ protocol AccountPickerDataSource: AnyObject {
     func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts>
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount])
     func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthSessionAccounts>
-    func saveAccountsToLink(consumerSessionClientSecret: String) -> Future<Void>
+    func saveToLink(
+        accounts: [FinancialConnectionsPartnerAccount],
+        consumerSessionClientSecret: String
+    ) -> Future<String?>
 }
 
 final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
@@ -94,17 +97,26 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         )
     }
 
-    func saveAccountsToLink(consumerSessionClientSecret: String) -> Future<Void> {
-        return apiClient.saveAccountsToLink(
+    func saveToLink(
+        accounts: [FinancialConnectionsPartnerAccount],
+        consumerSessionClientSecret: String
+    ) -> Future<String?> {
+        let shouldPollAccounts = !manifest.shouldAttachLinkedPaymentMethod
+        assert(
+            shouldPollAccounts,
+            "expected to only save accounts to link for non-payment flows"
+        )
+        return apiClient.saveAccountsToNetworkAndLink(
+            shouldPollAccounts: shouldPollAccounts,
+            selectedAccounts: accounts,
             emailAddress: nil,
             phoneNumber: nil,
             country: nil,
-            selectedAccountIds: selectedAccounts.map({ $0.id }),
             consumerSessionClientSecret: consumerSessionClientSecret,
             clientSecret: clientSecret
         )
-        .chained { _ in
-            return Promise(value: ())
+        .chained { (_, customSuccessPaneMessage) in
+            return Promise(value: customSuccessPaneMessage)
         }
     }
 }
