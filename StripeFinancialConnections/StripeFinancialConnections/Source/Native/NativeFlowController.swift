@@ -935,11 +935,13 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDelegate {
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
-        saveToLinkWithStripeSucceeded: Bool?
+        saveToLinkWithStripeSucceeded: Bool?,
+        customSuccessPaneMessage: String?
     ) {
         if saveToLinkWithStripeSucceeded != nil {
             dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
         }
+        dataManager.customSuccessPaneMessage = customSuccessPaneMessage
         pushPane(.success, animated: true)
     }
 
@@ -1158,12 +1160,12 @@ private func CreatePaneViewController(
     case .networkingSaveToLinkVerification:
         if
             let consumerSession = dataManager.consumerSession,
-            let selectedAccountIds = dataManager.linkedAccounts?.map({ $0.id })
+            let selectedAccounts = dataManager.linkedAccounts
         {
             let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
                 manifest: dataManager.manifest,
                 consumerSession: consumerSession,
-                selectedAccountIds: selectedAccountIds,
+                selectedAccounts: selectedAccounts,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 analyticsClient: dataManager.analyticsClient
