@@ -1121,10 +1121,10 @@ private func CreatePaneViewController(
         manualEntryViewController.delegate = nativeFlowController
         viewController = manualEntryViewController
     case .networkingLinkSignupPane:
-        if let linkedAccountIds = dataManager.linkedAccounts?.map({ $0.id }) {
+        if let selectedAccounts = dataManager.linkedAccounts {
             let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
                 manifest: dataManager.manifest,
-                selectedAccountIds: linkedAccountIds,
+                selectedAccounts: selectedAccounts,
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
