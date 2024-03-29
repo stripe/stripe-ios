@@ -100,15 +100,6 @@ protocol FinancialConnectionsAPIClient {
         customSuccessPaneMessage: String?
     )>
 
-    func saveAccountsToLink(
-        emailAddress: String?,
-        phoneNumber: String?,
-        country: String?,
-        selectedAccountIds: [String],
-        consumerSessionClientSecret: String?,
-        clientSecret: String
-    ) -> Future<FinancialConnectionsSessionManifest>
-
     func disableNetworking(
         disabledReason: String?,
         clientSecret: String
@@ -572,7 +563,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return pollingHelper.startPollingApiCall()
     }
 
-    func saveAccountsToLink(
+    private func saveAccountsToLink(
         emailAddress: String?,
         phoneNumber: String?,
         country: String?,

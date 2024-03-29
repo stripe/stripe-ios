@@ -46,6 +46,12 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         clear(textField: playgroundEmailTextField)
         app.dismissKeyboard() // dismiss keyboard (warning: ensure keyboard is visible if manually testing)
 
+        let multiSelectSwitch = app.switches["networking-multi-select"]
+        XCTAssertTrue(multiSelectSwitch.waitForExistence(timeout: 60.0))
+        multiSelectSwitch.turnSwitch(on: false)
+
+        app.swipeUp(velocity: .slow)
+
         let playgroundTransactionsPermissionsSwitch = app.switches["playground-transactions-permission"]
         XCTAssertTrue(playgroundTransactionsPermissionsSwitch.waitForExistence(timeout: 60.0))
         playgroundTransactionsPermissionsSwitch.turnSwitch(on: true)
